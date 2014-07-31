@@ -11,6 +11,8 @@ JHTML::_('behavior.calendar');
 $datos = $this->data;
 $postUrl = $datos->action->post;
 
+$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
 ?>
 
 
@@ -68,8 +70,7 @@ $postUrl = $datos->action->post;
 		<div class="form-group">
 			<label for="fechaNacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?></label>
 			<?php 
-			$atts = array('class'=>'inputbox', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-			echo JHTML::_('calendar',date('d-m-Y'),'fechaNacimiento', 'fechaNacimiento', $format = '%d-%m-%Y', $atts);
+			echo JHTML::_('calendar',date('d-m-Y'),'fechaNacimiento', 'fechaNacimiento', $format = '%d-%m-%Y', $attsCal);
 			?>
 		</div>
 		<div class="form-group">
@@ -305,8 +306,7 @@ $postUrl = $datos->action->post;
 			<div class="form-group">
 				<label for="testimonio1-fecha-const"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?></label>
 				<?php 
-				$atts = array('class'=>'inputbox', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-				echo JHTML::_('calendar',date('d-m-Y'),'testimonio1-fecha-const', 'testimonio1-fecha-const', $format = '%d-%m-%Y', $atts);
+				echo JHTML::_('calendar',date('d-m-Y'),'testimonio1-fecha-const', 'testimonio1-fecha-const', $format = '%d-%m-%Y', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
@@ -345,8 +345,7 @@ $postUrl = $datos->action->post;
 			<div class="form-group">
 				<label for="testimonio2-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				$atts = array('class'=>'inputbox', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-				echo JHTML::_('calendar',date('d-m-Y'),'testimonio2-fecha-const', 'testimonio2-fecha-const', $format = '%d-%m-%Y', $atts);
+				echo JHTML::_('calendar',date('d-m-Y'),'testimonio2-fecha-const', 'testimonio2-fecha-const', $format = '%d-%m-%Y', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
@@ -385,8 +384,7 @@ $postUrl = $datos->action->post;
 			<div class="form-group">
 				<label for="poder-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				$atts = array('class'=>'inputbox', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-				echo JHTML::_('calendar',date('d-m-Y'),'poder-fecha-const', 'poder-fecha-const', $format = '%d-%m-%Y', $atts);
+				echo JHTML::_('calendar',date('d-m-Y'),'poder-fecha-const', 'poder-fecha-const', $format = '%d-%m-%Y', $attsCalendar);
 				?>
 			</div>
 			<div class="form-group">
@@ -429,8 +427,7 @@ $postUrl = $datos->action->post;
 			<div class="form-group">
 				<label for="rpp-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				$atts = array('class'=>'inputbox', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-				echo JHTML::_('calendar',date('d-m-Y'),'rpp-fecha-const', 'rpp-fecha-const', $format = '%d-%m-%Y', $atts);
+				echo JHTML::_('calendar',date('d-m-Y'),'rpp-fecha-const', 'rpp-fecha-const', $format = '%d-%m-%Y', $attsCal);
 				?>
 			</div>
 			<div class="form-group">

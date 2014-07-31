@@ -1,3 +1,6 @@
 .esconder {
 	display: none;
 }
+.forceinline {
+	display: inline-block !important;
+}
