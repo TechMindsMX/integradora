@@ -15,10 +15,23 @@ class Catalogos {
 		
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->quoteName('#__paises_catalog'));
-		$result->nacionalidad = $db->setQuery($query)->loadObjectList();
+			->from($db->quoteName('#__catalog_paises'))
+			->order('nombre ASC');
+		$result = $db->setQuery($query)->loadObjectList();
 		
-		return $result;
+		$this->nacionalidades = $result;
+	}
+	public function getEstados()
+	{
+		$db = JFactory::getDbo();
+		
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__catalog_estados'))
+			->order('nombre ASC');
+		$result = $db->setQuery($query)->loadObjectList();
+		
+		$this->estados = $result;
 	}
 }
 	

@@ -27,9 +27,12 @@ class IntegradoModelSolicitud extends JModelItem {
 	}
 	
 	public function getCatalogos() {
-		$nacionalidad = new Catalogos;
+		$catalogos = new Catalogos;
 		
-		return $nacionalidad->getNacionalidades();
+		$catalogos->getNacionalidades();
+		$catalogos->getEstados();
+		
+		return $catalogos;
 	}
 }
 
