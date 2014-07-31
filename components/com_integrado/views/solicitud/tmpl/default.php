@@ -498,8 +498,9 @@ $postUrl = $datos->action->post;
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.endTabSet');
 	?>
-
-
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary span3"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		</div>
 	
 </form>
 <?php
