@@ -15,7 +15,6 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
 ?>
 
-
 <form action="" class="form" id="solicitud" name="solicitud" >
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
