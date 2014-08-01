@@ -35,9 +35,9 @@ class IntegradoController extends JControllerLegacy {
 		 
 		// Select all records from the user profile table where key begins with "custom.".
 		// Order it by the ordering field.
-		$query->select($db->quoteName('*'));
-		$query->from($db->quoteName('#__integrado'));
-		$query->where($db->quoteName('integrado_id') . ' = '. $db->quote($data['integrado_Id']));
+		$query->select('*')
+				->from($db->quoteName('#__integrado'))
+				->where($db->quoteName('integrado_id') . ' = '. $db->quote($data['integrado_Id']));
  
 		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
