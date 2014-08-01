@@ -29,6 +29,11 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 			<label><input type="radio" name="perFisicaMoral" id="perFisicaMoral2" value="2" /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
 		</div>
 	</fieldset>
+	
+	<div class="form-actions">
+		<button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+	</div>
+
 	<?php
 		echo JHtml::_('bootstrap.endTab');
 
@@ -200,6 +205,12 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	<?php
 		echo JHtml::_('bootstrap.endSlide');
 		echo JHtml::_('bootstrap.endAccordion');
+	?>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary span3" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		</div>
+	
+	<?php
 		echo JHtml::_('bootstrap.endTab');
 		
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'empresa', JText::_('LBL_TAB_EMPRESA'));
@@ -453,10 +464,16 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 			</div>
 		</div>
 
+
 	</fieldset>
 	<?php
 		echo JHtml::_('bootstrap.endSlide');
 		echo JHtml::_('bootstrap.endAccordion');
+	?>
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary span3" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		</div>
+	<?php
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'banco', JText::_('LBL_TAB_BANCO'));
 	?>
@@ -490,14 +507,15 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 			<label for="banco-file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
 			<input name="banco-file" type="file" maxlength="" />
 		</div>
+
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary span3" id="bancos"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		</div>
 	</fieldset>	
 	<?php
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.endTabSet');
 	?>
-		<div class="form-actions">
-			<button type="submit" class="btn btn-primary span3"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-		</div>
 	
 </form>
 <?php
