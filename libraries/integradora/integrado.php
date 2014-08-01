@@ -12,23 +12,26 @@ class Integrado {
 	
 	protected $user;
 	
-	protected $db;
 	
 	function __construct() {
 		$this->user = JFactory::getUser();
-		$this->db = JFactory::getDbo();
+		
+		// Se crea variable interna para acceso a base de datos
+		$db = JFactory::getDbo();
 
-		$this->integrados = $this->getIntegradosCurrUser();
+		$this->integrados = $this->getIntegradosCurrUser($db);
 		
 		$this->nombres = $this->separaNombre($this->user->name);
+		
+		unset($this->user->password);
 	}
-	function getIntegradosCurrUser()
+	function getIntegradosCurrUser($db)
 	{
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('integrado_id'))
-			->from($this->db->quoteName('#__integrado_users'))
-			->where($this->db->quoteName('user_id') . '=' . $this->db->quote($this->user->id));
-		$result = $this->db->setQuery($query)->loadObjectList();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('integrado_id'))
+			->from($db->quoteName('#__integrado_users'))
+			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
+		$result = $db->setQuery($query)->loadObjectList();
 		
 		$instance->intergrado->ids = $result;
 		
