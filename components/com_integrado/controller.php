@@ -27,24 +27,19 @@ class IntegradoController extends JControllerLegacy {
 	}
 	
 	public static function insertData($data){
-		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db 	= JFactory::getDbo();
+		$query 	= $db->getQuery(true);
 		 
-		// Create a new query object.
-		$query = $db->getQuery(true);
-		 
-		// Select all records from the user profile table where key begins with "custom.".
-		// Order it by the ordering field.
 		$query->select('*')
-				->from($db->quoteName('#__integrado'))
-				->where($db->quoteName('integrado_id') . ' = '. $db->quote($data['integrado_Id']));
+			  ->from($db->quoteName('#__integrado'))
+			  ->where($db->quoteName('integrado_id') . ' = '. $db->quote($data['integrado_Id']));
  
-		// Reset the query using our newly populated query object.
 		$db->setQuery($query);
 		 
-		// Load the results as a list of stdClass objects (see later for more options on retrieving data).
 		$results = $db->loadObjectList();
 
 		return $results;
-	}	
+	}
+	
+		
 }

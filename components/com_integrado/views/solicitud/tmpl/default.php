@@ -23,10 +23,10 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	?>
 	<fieldset>
 		<div class="radio">
-			<label><input type="radio" name="perFisicaMoral" id="perFisicaMoral1" value="1" /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+			<label><input type="radio" name="pers_juridica" id="perFisicaMoral1" value="1" /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
 		</div>
 		<div class="radio">
-			<label><input type="radio" name="perFisicaMoral" id="perFisicaMoral2" value="2" /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+			<label><input type="radio" name="pers_juridica" id="perFisicaMoral2" value="2" /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
 		</div>
 	</fieldset>
 	

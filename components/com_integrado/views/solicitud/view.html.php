@@ -21,9 +21,10 @@ class IntegradoViewSolicitud extends JViewLegacy {
 		$script = <<<EOD
 			jQuery(document).ready(function(){
 				jQuery('button').click(function(){
+					var serializado = jQuery('form#solicitud').serialize();
 					var request = jQuery.ajax({
 						url: "index.php?option=com_integrado&task=saveform&format=raw",
-						data: jQuery('form#solicitud').serialize(),
+						data: serializado+'&tab='+jQuery(this).prop('id'),
 		 				type: 'post'
 					});
 				});
