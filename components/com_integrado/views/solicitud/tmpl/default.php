@@ -16,6 +16,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 ?>
 
 <form action="" class="form" id="solicitud" name="solicitud" >
+	<input type="hidden" name="integrado_Id" value="<?php echo $datos->userId; ?>" />
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));

@@ -23,6 +23,9 @@ class IntegradoModelSolicitud extends JModelItem {
 			$ruta = new IntRoute;
 			$this->dataModelo->action = $ruta->getUrl('integrado','solicitud');
 		}
+		
+		$this->dataModelo->userId = JFactory::getUser()->id;
+		
 		return $this->dataModelo;
 	}
 	
