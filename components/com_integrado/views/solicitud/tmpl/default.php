@@ -514,6 +514,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	<?php
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.endTabSet');
+	
+		echo JHtml::_('form.token');
 	?>
 	
 </form>

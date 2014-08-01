@@ -18,17 +18,12 @@ class IntegradoViewSolicitud extends JViewLegacy {
                 return false;
         }
 
-		//JHTML::_( 'behavior.mootools' );
-			
 		$script = <<<EOD
 			jQuery(document).ready(function(){
 				jQuery('button').click(function(){
 					var request = jQuery.ajax({
 						url: "index.php?option=com_integrado&task=saveform&format=raw",
-						data: {
-		  					"clabe"	: 8,
-		  					"fun"	: 5
-		 				},
+						data: jQuery('form#solicitud').serialize(),
 		 				type: 'post'
 					});
 				});
