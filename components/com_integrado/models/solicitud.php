@@ -26,6 +26,10 @@ class IntegradoModelSolicitud extends JModelItem {
 		
 		$this->dataModelo->userId = JFactory::getUser()->id;
 		
+		$integrado = new Integrado;
+		
+		$this->dataModelo->integrado = $integrado->getIntegradosCurrUser(JFactory::getDbo());
+		
 		return $this->dataModelo;
 	}
 	

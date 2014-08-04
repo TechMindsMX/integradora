@@ -24,7 +24,7 @@ class IntegradoViewSolicitud extends JViewLegacy {
 					var serializado = jQuery('form#solicitud').serialize();
 					var request = jQuery.ajax({
 						url: "index.php?option=com_integrado&task=saveform&format=raw",
-						data: serializado+'&tab='+jQuery(this).prop('id'),
+						data: serializado+'&tab='+jQuery(this).prop('id')+'&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val(),
 		 				type: 'post'
 					});
 				});
