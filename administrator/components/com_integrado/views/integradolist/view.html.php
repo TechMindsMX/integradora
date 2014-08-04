@@ -11,7 +11,6 @@ class IntegradoViewIntegradolist extends JViewLegacy {
 		function display($tpl = null) {
 
                 $items = $this->get('Items');
-				var_dump($items);
                 $pagination = $this->get('Pagination');
  
                 if (count($errors = $this->get('Errors'))) 
