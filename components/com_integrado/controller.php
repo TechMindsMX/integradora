@@ -53,7 +53,7 @@ class IntegradoController extends JControllerLegacy {
 			case 'personales':
 				$table 		= 'integrado_datos_personales';
 				$columnas[] = 'integrado_id';
-				$valores[]	= $db->quoteName( $integrado_id );
+				$valores[]	= $integrado_id;
 				
 				foreach ($data as $key => $value) {
 					$columna 	= substr($key, 3);
@@ -61,26 +61,46 @@ class IntegradoController extends JControllerLegacy {
 					
 					if($clave == 'dp'){
 						$columnas[] = $columna;
-						$valores[] = $db->quoteName($value);
+						$valores[] = $db->quote($value);
 					}
 				}
-				$columnas[] = 'url_identificacion';
-				$columnas[] = 'url_rfc';
-				$columnas[] = 'url_comprobante_domicilio';
-				
 				break;
 			case 'empresa':
-				$table = 'integrados_datos_empresa';
+				$table = 'integrado_datos_empresa';
+				$columnas[] = 'integrado_id';
+				$valores[]	= $integrado_id;
+				
+				foreach ($data as $key => $value) {
+					$columna 	= substr($key, 3);
+					$clave 		= substr($key, 0,2);
+					
+					if($clave == 'de'){
+						$columnas[] = $columna;
+						$valores[] = $db->quote($value);
+					}
+				}
 				break;
 			case 'bancos':
 				$table = 'integrado_datos_bancarios';
+				$columnas[] = 'integrado_id';
+				$valores[]	= $integrado_id;
+				
+				foreach ($data as $key => $value) {
+					$columna 	= substr($key, 3);
+					$clave 		= substr($key, 0,2);
+					
+					if($clave == 'db'){
+						$columnas[] = $columna;
+						$valores[] = $db->quote($value);
+					}
+				}
 				break;
 		}
-		
+
 		$existe = self::checkData($integrado_id, $table, 'integrado_id');
 
 		if( is_null($existe) ){
-			self::insertData($table, $columnas, $valores);
+			$algo = self::insertData($table, $columnas, $valores);
 		}
 	}
 	
@@ -90,8 +110,8 @@ class IntegradoController extends JControllerLegacy {
 		
 		$query->select('*')
 		      ->from($db->quoteName('#__'.$table))
-			  ->where($where.' = '.$userId);
-			  
+			  ->where($db->quoteName($where).' = '.$userId);
+
 		$db->setQuery($query);
 	 
 		$results = $db->loadAssoc();
@@ -100,14 +120,24 @@ class IntegradoController extends JControllerLegacy {
 	}
 	
 	public static function insertData($tabla, $columnas, $valores){
-		$db		= JFactory::getDbo();
-		$query 	= $db->getQuery(true);
-		
-		$query->insert($db->quoteName('#__'.$tabla))
-			  ->columns($db->quoteName($columnas))
-			  ->values(implode(',',$valores));
-		$db->setQuery($query);
-		$db->query();
+		try{
+			$db		= JFactory::getDbo();
+			$query 	= $db->getQuery(true);
+			
+			$query->insert($db->quoteName('#__'.$tabla))
+				  ->columns($db->quoteName($columnas))
+				  ->values(implode(',',$valores));
+	
+			$db->setQuery($query);
+			$db->execute();
+			
+			return 'saved';
+			
+		}
+		catch(Exception $e){
+			$response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
+			echo json_encode($response);
+		}
 	}
 	
 		
