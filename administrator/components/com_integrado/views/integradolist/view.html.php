@@ -11,6 +11,8 @@ class IntegradoViewIntegradolist extends JViewLegacy {
 		function display($tpl = null) {
 
                 $items = $this->get('Items');
+		        $state = $this->get('State');
+				
                 $pagination = $this->get('Pagination');
  
                 if (count($errors = $this->get('Errors'))) 
@@ -23,8 +25,13 @@ class IntegradoViewIntegradolist extends JViewLegacy {
                 $this->pagination = $pagination;
 				
 				$this->addToolBar();
- 
+				
+				$this->sortDirection = $state->get('list.direction');
+				$this->sortColumn = $state->get('list.ordering');
+				
                 parent::display($tpl);
+				
+				$this->setDocument();
         }
 		
 		protected function addToolBar() 
@@ -35,4 +42,9 @@ class IntegradoViewIntegradolist extends JViewLegacy {
                 // JToolBarHelper::addNew('integrado.add');
         }
 		
+		protected function setDocument() 
+        {
+                $document = JFactory::getDocument();
+                $document->setTitle(JText::_('COM_INTEGRADO_ADMINISTRATION'));
+        }
 }

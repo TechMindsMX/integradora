@@ -3,6 +3,19 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 ?>
+
+<script language="javascript" type="text/javascript">
+function tableOrdering( order, dir, task )
+{
+        var form = document.adminForm;
+ 
+        form.filter_order.value = order;
+        form.filter_order_Dir.value = dir;
+        document.adminForm.submit( task );
+}
+</script>
+
+
 <form action="<?php echo JRoute::_('index.php?option=com_integrado'); ?>" method="post" name="adminForm">
 <table class="adminlist table">
  	<thead>
@@ -11,13 +24,16 @@ JHtml::_('behavior.tooltip');
 			<?php echo JHtml::_('grid.checkall'); ?>
 			</th>
 			<th>
-			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_ID'); ?>
+				<?php echo JHTML::_( 'grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_ID'), 'a.integrado_id', $this->sortDirection, $this->sortColumn); ?>
 			</th>
 			<th>
-			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_NAME'); ?>
+			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_R_SOCIAL'); ?>
 			</th>
 			<th>
-			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'); ?>
+			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_CONTACTO'); ?>
+			</th>
+			<th>
+				<?php echo JHTML::_( 'grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'), 'a.status', $this->sortDirection, $this->sortColumn); ?>
 			</th>
 			<th>
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_PERS_JURIDICA'); ?>
@@ -37,6 +53,9 @@ JHtml::_('behavior.tooltip');
 			<?php $nombre = ($item->razon_social) ? $item->razon_social : $item->name ; echo $nombre; ?>
 			</td>
 			<td>
+			<?php echo $item->name; ?>
+			</td>
+			<td>
 			<?php echo $item -> status; ?>
 			</td>
 			<td>
@@ -52,5 +71,8 @@ JHtml::_('behavior.tooltip');
 		</tr>
 	</tfoot>
 </table>
+
+        <input type="hidden" name="filter_order" value="<?php echo $this->sortColumn; ?>" />
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $this->sortDirection; ?>" />
 
 </form>
