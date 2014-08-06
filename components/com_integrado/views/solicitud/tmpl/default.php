@@ -9,24 +9,83 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $datos = $this->data;
+
+var_dump($datos);
 $postUrl = $datos->action->post;
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
+echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
+
+if(!is_null($datos->integrado)){
+	if($datos->integrado->pers_juridica == 1){
+		$moral = 'checked="checked"';
+		$fisica = '';
+	}elseif($datos->integrado->pers_juridica == 2){
+		$fisica = 'checked="checked"';
+		$moral = '';
+	}elseif($datos->integrado->pers_juridica == 0){
+		$fisica = '';
+		$moral = '';
+	}
+}else{
+	$fisica = '';
+	$moral = '';
+}
+
 ?>
+<script>
+	jQuery(document).ready(function(){
+		<?php
+		if(!is_null($datos->datos_personales)){
+		?>
+			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
+			var datos_personales = eval ("(" + datos_personales + ")");
+				
+			jQuery.each(datos_personales, function(key, value){
+				jQuery('#dp_'+key).val(value);
+			});
+		<?php
+		}
+		if(!is_null($datos->datos_empresa)){
+		?>
+			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
+			var datos_personales = eval ("(" + datos_personales + ")");
+				
+			jQuery.each(datos_personales, function(key, value){
+				jQuery('#de_'+key).val(value);
+			});
+		<?php
+		}
+		if(!is_null($datos->datos_bancarios)){
+		?>
+			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
+			var datos_personales = eval ("(" + datos_personales + ")");
+				
+			jQuery.each(datos_personales, function(key, value){
+				jQuery('#de_'+key).val(value);
+			});
+		<?php
+		}
+		?>
+		
+		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
+		jQuery('#dp_cod_postal').trigger('click');
+	});
+</script>
 
 <form action="" class="form" id="solicitud" name="solicitud" >
-	<input type="hidden" name="user_id" value="<?php echo $datos->userId; ?>" />
+	<input type="hidden" name="user_id" value="<?php echo $datos->user->id; ?>" />
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
 	?>
 	<fieldset>
 		<div class="radio">
-			<label><input type="radio" name="pers_juridica" id="perFisicaMoral1" value="1" /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+			<label><input type="radio" name="pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
 		</div>
 		<div class="radio">
-			<label><input type="radio" name="pers_juridica" id="perFisicaMoral2" value="2" /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+			<label><input type="radio" name="pers_juridica" id="perFisicaMoral2" value="2" <?php echo $fisica; ?> /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
 		</div>
 	</fieldset>
 	
@@ -44,7 +103,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	<fieldset>
 		<div class="form-group">
 			<label for="apePat"><?php echo JText::_('APE_PAT'); ?></label>
-			<input name="apePat" type="text" maxlength="50" value="<?php echo '';?>" />
+			<input name="apePat" type="text" maxlength="50" value="" />
 		</div>
 		<div class="form-group">
 			<label for="apeMat"><?php echo JText::_('APE_MAT'); ?></label>
@@ -52,11 +111,11 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 		</div>
 		<div class="form-group">
 			<label for="nombre"><?php echo JText::_('LBL_NOMBRE'); ?></label>
-			<input name="nombre" type="text" maxlength="50" />
+			<input name="nombre" type="text" maxlength="50" value="<?php echo isset($datos->user)?$datos->user->name:''; ?>" />
 		</div>
 		<div class="form-group">
 			<label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
-			<select name="dp_nacionalidad">
+			<select name="dp_nacionalidad" id="dp_nacionalidad">
 				<?php 
 				foreach ($this->catalogos->nacionalidades as $key => $value) {
 					$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -67,20 +126,21 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 		</div>
 		<div class="form-group">
 			<label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?></label>
-			<select name="dp_sexo">
-				<option value="masculino"><?php echo JText::_('SEXO_MASCULINO'); ?></option>
-				<option value="femenino"><?php echo JText::_('SEXO_FEMENINO'); ?></option>
+			<select name="dp_sexo" id="dp_sexo">
+				<option value="masculino" ><?php echo JText::_('SEXO_MASCULINO'); ?></option>
+				<option value="femenino" ><?php echo JText::_('SEXO_FEMENINO'); ?></option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?></label>
 			<?php 
-			echo JHTML::_('calendar',date('d-m-Y'),'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
+			$default = date('Y-m-d');
+			echo JHTML::_('calendar',$default,'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
 			?>
 		</div>
 		<div class="form-group">
 			<label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
-			<input name="dp_rfc" type="text" maxlength="18" />
+			<input name="dp_rfc" id="dp_rfc" type="text" maxlength="18" />
 		</div>
 	</fieldset>	
 	<?php
@@ -121,30 +181,45 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         </div>
         
         <div class="form-group">
-           	<label for="dp_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
-           	<input 
-           		name		="dp_cod_postal" 
-           		class		="validate[required,custom[onlyNumberSp], minSize[5]]"  
-           		type		="text" 
-           		id			="dp_cod_postal" 
-           		size		="10" 
-           		maxlength	="5" />
-        </div>
-        
-        <div class="form-group">
-           	<label for="dp_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
-           	<select name="dp_colonia"id="colonia"></select>
-        </div> 
-        
-        <div class="form-group">
-           	<label for="dp_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-           	<select name="dp_estado" id="estado"></select>
-        </div>
-        
+        <label for="dp_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
+       	<input 
+       		type		= "text"
+       		name		= "dp_cod_postal"
+       		class		= "validate[required,custom[onlyNumberSp]] input_chica"
+       		id			= "dp_cod_postal"
+       		size		= "10"
+       		maxlength	= "5" />
+    	</div>
+    	<div class="form-group">
+	       	<label for="dp_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
+    	   	<select name="colonia" id="dp_colonia" ></select>
+    	</div>
+    	
+    	<div class="form-group">
+	    	<label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
+	    	<input 
+	    		type	= "text" 
+	    		name	= "delegacion"
+	    		id		= "dp_delegacion" />
+   		</div>
+   		
+   		<div class="form-group">
+       		<label for="dp_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+       		<input 
+       			type	= "text"
+       			name	= "estado"
+       			id		= "dp_estado" />
+    	</div>
+
         <div class="form-group">
            	<label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
            	<select name="pais" id="pais" >
-           		<option value="1" selected="selected">M&eacute;xico</option>
+           		<?php
+           		foreach ($this->catalogos->nacionalidades as $key => $value) {
+           			$selected = $value->id == 146?'selected="selected"':'';
+           			echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
+				}
+           		?>
 			</select>
 		</div>
 		
@@ -157,27 +232,27 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	<fieldset>
 		<div class="form-group">
 			<label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?></label>
-			<input name="dp_tel_fijo" type="text" maxlength="10" />
+			<input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" />
 		</div>
 		<div class="form-group">
 			<label for="dp_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
-			<input name="dp_tel_fijo_extension" type="text" maxlength="5" />
+			<input name="dp_tel_fijo_extension" id="dp_tel_fijo_extension" type="text" maxlength="5" />
 		</div>
 		<div class="form-group">
 			<label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?></label>
-			<input name="dp_tel_movil" type="text" maxlength="" />
+			<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="" />
 		</div>
 		<div class="form-group">
 			<label for="email"><?php echo JText::_('LBL_CORREO'); ?></label>
-			<input name="email" type="email" maxlength="" />
+			<input name="dp_email" id="dp_email" type="email" maxlength="" />
 		</div>
 		<div class="form-group">
 			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
-			<input name="dp_nom_comercial" type="text" maxlength="" />
+			<input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="" />
 		</div>
 		<div class="form-group">
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
-			<input name="curp" type="text" maxlength="" />
+			<input name="dp_curp" id="dp_curp" type="text" maxlength="" />
 		</div>
 		<div class="form-group">
 			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
@@ -261,37 +336,49 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         </div>
         
         <div class="form-group">
-           	<label for="de_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
-           	<input 
-           		name		="de_cod_postal" 
-           		class		="validate[required,custom[onlyNumberSp], minSize[5]]"  
-           		type		="text" 
-           		id			="de_cod_postal" 
-           		size		="10" 
-           		maxlength	="5" />
-        </div>
-        
-        <div class="form-group">
-           	<label for="de_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
-           	<select name="de_colonia"id="colonia"></select>
-        </div>
-        
-        <div class="form-group">
-        	<label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
-        	<select name="delegacion" id="delegacion"></select>
-        </div> 
-        
-        <div class="form-group">
-           	<label for="de_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-           	<select name="de_estado" id="estado"></select>
-        </div>
-        
+        <label for="de_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
+       	<input 
+       		type		= "text"
+       		name		= "de_cod_postal"
+       		class		= "validate[required,custom[onlyNumberSp]] input_chica"
+       		id			= "de_cod_postal"
+       		size		= "10"
+       		maxlength	= "5" />
+    	</div>
+    	
+    	<div class="form-group">
+	       	<label for="de_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
+    	   	<select name="de_colonia" id="de_colonia" ></select>
+    	</div>
+    	
+    	<div class="form-group">
+	    	<label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
+	    	<input 
+	    		type	= "text" 
+	    		name	= "delegacion"
+	    		id		= "de_delegacion" />
+   		</div>
+   		
+   		<div class="form-group">
+       		<label for="de_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+       		<input 
+       			type	= "text"
+       			name	= "de_estado"
+       			id		= "de_estado" />
+    	</div>
+
         <div class="form-group">
            	<label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
            	<select name="pais" id="pais" >
-           		<option value="1" selected="selected">M&eacute;xico</option>
+           		<?php
+           		foreach ($this->catalogos->nacionalidades as $key => $value) {
+           			$selected = $value->id == 146?'selected="selected"':'';
+           			echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
+				}
+           		?>
 			</select>
 		</div>
+		
 	</fieldset>
 
 	<?php
@@ -468,13 +555,11 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         <div class="form-group">
            	<label for="db_banco_nombre"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
            	<select name="db_banco_nombre">
+           		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
-/*
-				foreach ($this->catalogos->estados as $key => $value) {
-					$default = ($value->nombre == 'MÃ©xico') ? 'selected' : '';
-					echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
+				foreach ($this->catalogos->bancos as $key => $value) {
+					echo '<option value="'.$value->clave.'">'.$value->banco.'</option>';
 				}
-*/
 				?>
 			</select>
         </div>

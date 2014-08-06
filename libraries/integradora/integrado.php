@@ -10,23 +10,23 @@ jimport('joomla.factory');
  */
 class Integrado {
 	
-	protected $user;
+	public $user;
+	
 	
 	
 	function __construct() {
 		$this->user = JFactory::getUser();
 		
-		// Se crea variable interna para acceso a base de datos
-		$db = JFactory::getDbo();
-
-		$this->integrados = $this->getIntegradosCurrUser($db);
-		
+		$this->integrados = $this->getIntegradosCurrUser();
+		$this->dataSolicitud = $this->getsolicitud();
 		$this->nombres = $this->separaNombre($this->user->name);
 		
 		unset($this->user->password);
 	}
-	function getIntegradosCurrUser($db)
+	function getIntegradosCurrUser()
 	{
+		$db = JFactory::getDbo();
+		
 		$query = $db->getQuery(true)
 			->select($db->quoteName('integrado_id'))
 			->from($db->quoteName('#__integrado_users'))
@@ -40,6 +40,42 @@ class Integrado {
 	function separaNombre($value)
 	{
 		
+	}
+	
+	function getsolicitud(){
+		$this->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
+		$integrado_id 					= isset($this->gral->integrado_id)?$this->gral->integrado_id:null;
+		
+		if(!is_null($integrado_id)){
+			$this->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
+			$this->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
+			$this->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
+			$this->datos_bancarios 	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
+		}else{
+			$this->integrado 			= null;
+			$this->datos_personales 	= null;
+			$this->datos_empresa 		= null;
+			$this->datos_bancarios 		= null;
+		}
+		
+		return $this;
+	}
+	
+	function selectDataSolicitud($table, $where, $id){
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__'.$table))
+			->where($db->quoteName($where) . '=' . $db->quote($id));
+		$result = $db->setQuery($query)->loadObjectList();
+		
+		if(!empty($result)){
+			$return = $result[0];
+		}else{
+			$return = null;
+		}
+		
+		return $return;
 	}
 }
 

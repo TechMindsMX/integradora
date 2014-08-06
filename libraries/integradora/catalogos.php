@@ -33,5 +33,21 @@ class Catalogos {
 		
 		$this->estados = $result;
 	}
+	
+	public function getBancos(){
+		$catalogo = json_decode(@file_get_contents('http://192.168.0.122:7272/trama-middleware/rest/stp/listBankCodes'));
+		
+		foreach ($catalogo as $key => $value) {
+			$objeto = new stdClass;
+			
+			$objeto->banco = $value->name;
+			$objeto->clave = $value->bankCode;
+			$objeto->claveClabe = substr($value->bankCode, -3);
+			
+			$cat[] = $objeto;
+		}
+		
+		$this->bancos = $cat;
+	}
 }
 	

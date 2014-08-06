@@ -24,12 +24,6 @@ class IntegradoModelSolicitud extends JModelItem {
 			$this->dataModelo->action = $ruta->getUrl('integrado','solicitud');
 		}
 		
-		$this->dataModelo->userId = JFactory::getUser()->id;
-		
-		$integrado = new Integrado;
-		
-		$this->dataModelo->integrado = $integrado->getIntegradosCurrUser(JFactory::getDbo());
-		
 		return $this->dataModelo;
 	}
 	
@@ -38,6 +32,7 @@ class IntegradoModelSolicitud extends JModelItem {
 		
 		$catalogos->getNacionalidades();
 		$catalogos->getEstados();
+		$catalogos->getBancos();
 		
 		return $catalogos;
 	}
