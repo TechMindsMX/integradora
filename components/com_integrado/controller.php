@@ -102,11 +102,31 @@ class IntegradoController extends JControllerLegacy {
 					$clave 		= substr($key, 0,3);
 					
 					if($clave == 'de_'){
-						$columnas[] = $columna;
-						$valores[] = $db->quote($value);
+						$columnas[] 	= $columna;
+						$valores[] 		= $db->quote($value);
 						$updateSet[]	= $db->quoteName($columna).' = '.$db->quote($value);
+						$valoresvalidaicon[$columna] = $value;
 					}
 				}
+				
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'int','length'=>10),
+									  'razon_social'	 	=> array('tipo'=>'string','length'=>255),
+									  'rfc'				 	=> array('tipo'=>'string','length'=>45),
+									  'calle'				=> array('tipo'=>'string','length'=>45),
+									  'num_exterior'		=> array('tipo'=>'string','length'=>45),
+									  'num_interior'		=> array('tipo'=>'string','length'=>45),
+									  'cod_postal'			=> array('tipo'=>'string','length'=>5),
+									  'tel_fijo'			=> array('tipo'=>'string','length'=>10),
+									  'tel_fijo_extension'	=> array('tipo'=>'string','length'=>10),
+									  'sitio_web' 			=> array('tipo'=>'string','length'=>255),
+									  'tel_fax'				=> array('tipo'=>'string','length'=>100),
+									  'testimonio_1'	 	=> array('tipo'=>'int','length'=>10),
+									  'testimonio_2' 		=> array('tipo'=>'int','length'=>10),
+									  'poder'				=> array('tipo'=>'int','length'=>10),
+									  'reg_propiedad' 		=> array('tipo'=>'int','length'=>10));
+				
+				validador::procesamiento($data, $diccionario,$data['tab']);
+				
 				break;
 			case 'bancos':
 				$table = 'integrado_datos_bancarios';
@@ -121,8 +141,18 @@ class IntegradoController extends JControllerLegacy {
 						$columnas[] = $columna;
 						$valores[] = $db->quote($value);
 						$updateSet[]	= $db->quoteName($columna).' = '.$db->quote($value);
+						$valoresvalidaicon[$columna] = $value;
 					}
 				}
+				
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'int','length'=>10),
+									  'banco_nombre'	 	=> array('tipo'=>'string','length'=>255),
+									  'banco_cuenta'	 	=> array('tipo'=>'string','length'=>45),
+									  'banco_sucursal'		=> array('tipo'=>'string','length'=>45),
+									  'banco_clabe'			=> array('tipo'=>'string','length'=>45));
+				
+				validador::procesamiento($data, $diccionario,$data['tab']);
+				
 				break;
 		}
 

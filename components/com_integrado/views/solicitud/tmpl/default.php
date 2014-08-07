@@ -10,12 +10,13 @@ JHTML::_('behavior.calendar');
 
 $datos = $this->data;
 
-var_dump($datos);
 $postUrl = $datos->action->post;
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
+
+var_dump($datos);
 
 if(!is_null($datos->integrado)){
 	if($datos->integrado->pers_juridica == 1){
@@ -36,41 +37,44 @@ if(!is_null($datos->integrado)){
 ?>
 <script>
 	jQuery(document).ready(function(){
+		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		<?php
 		if(!is_null($datos->datos_personales)){
 		?>
 			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
 			var datos_personales = eval ("(" + datos_personales + ")");
-				
+
 			jQuery.each(datos_personales, function(key, value){
 				jQuery('#dp_'+key).val(value);
 			});
+			
+			jQuery('#dp_cod_postal').trigger('click');
 		<?php
 		}
 		if(!is_null($datos->datos_empresa)){
 		?>
-			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
-			var datos_personales = eval ("(" + datos_personales + ")");
+			var datos_empresa = '<?php echo json_encode($datos->datos_empresa); ?>';
+			var datos_empresa = eval ("(" + datos_empresa + ")");
+
 				
-			jQuery.each(datos_personales, function(key, value){
+			jQuery.each(datos_empresa, function(key, value){
 				jQuery('#de_'+key).val(value);
 			});
+			
+			jQuery('#de_cod_postal').trigger('click');
 		<?php
 		}
 		if(!is_null($datos->datos_bancarios)){
 		?>
-			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
-			var datos_personales = eval ("(" + datos_personales + ")");
-				
-			jQuery.each(datos_personales, function(key, value){
-				jQuery('#de_'+key).val(value);
+			var datos_bancarios = '<?php echo json_encode($datos->datos_bancarios); ?>';
+			var datos_bancarios = eval ("(" + datos_bancarios + ")");
+
+			jQuery.each(datos_bancarios, function(key, value){
+				jQuery('#db_'+key).val(value);
 			});
 		<?php
 		}
 		?>
-		
-		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-		jQuery('#dp_cod_postal').trigger('click');
 	});
 </script>
 
@@ -287,11 +291,11 @@ if(!is_null($datos->integrado)){
 	<fieldset>
 		<div class="form-group">
 			<label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?></label>
-			<input name="de_razon_social" type="text" maxlength="100" />
+			<input name="de_razon_social" id="de_razon_social" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
 			<label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
-			<input name="de_rfc" type="text" maxlength="18" />
+			<input name="de_rfc" id="de_rfc" type="text" maxlength="18" />
 		</div>
 		<div class="form-group">
 			<label for="de_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
@@ -348,7 +352,7 @@ if(!is_null($datos->integrado)){
     	
     	<div class="form-group">
 	       	<label for="de_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
-    	   	<select name="de_colonia" id="de_colonia" ></select>
+    	   	<select name="colonia" id="de_colonia" ></select>
     	</div>
     	
     	<div class="form-group">
@@ -363,13 +367,13 @@ if(!is_null($datos->integrado)){
        		<label for="de_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
        		<input 
        			type	= "text"
-       			name	= "de_estado"
+       			name	= "estado"
        			id		= "de_estado" />
     	</div>
 
         <div class="form-group">
            	<label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
-           	<select name="pais" id="pais" >
+           	<select name="pais" id="de_pais" >
            		<?php
            		foreach ($this->catalogos->nacionalidades as $key => $value) {
            			$selected = $value->id == 146?'selected="selected"':'';
@@ -554,30 +558,30 @@ if(!is_null($datos->integrado)){
 	<fieldset>
         <div class="form-group">
            	<label for="db_banco_nombre"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
-           	<select name="db_banco_nombre">
+           	<select name="db_banco_nombre" id="db_banco_nombre">
            		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
 				foreach ($this->catalogos->bancos as $key => $value) {
-					echo '<option value="'.$value->clave.'">'.$value->banco.'</option>';
+					echo '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
 				}
 				?>
 			</select>
         </div>
 		<div class="form-group">
 			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-			<input name="db_banco_cuenta" type="text" maxlength="10" />
+			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="16" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-			<input name="db_banco_sucursal" type="text" maxlength="10" />
+			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="10" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
-			<input name="db_banco_clabe" type="text" maxlength="10" />
+			<input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco__file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
-			<input name="db_banco_file" type="file" maxlength="" />
+			<input name="db_banco_file" id="db_banco_file" type="file" maxlength="" />
 		</div>
 
 		<div class="form-actions">
