@@ -1,12 +1,18 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
-jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controlleradmin');
 
 /**
  * 
  */
-class IntegardoControllerIntegradoList extends JControllerForm {
-	
+class IntegardoControllerIntegradoList extends JControllerAdmin {
+
+	public function getModel($name = 'Integrado', $prefix = 'IntegradoModel') 
+	{
+	        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+	        return $model;
+	}	
+
 }
 

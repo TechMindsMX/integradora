@@ -5,18 +5,17 @@ JHtml::_('behavior.tooltip');
 ?>
 
 <script language="javascript" type="text/javascript">
-function tableOrdering( order, dir, task )
-{
-        var form = document.adminForm;
- 
-        form.filter_order.value = order;
-        form.filter_order_Dir.value = dir;
-        document.adminForm.submit( task );
-}
+	function tableOrdering(order, dir, task) {
+		var form = document.adminForm;
+
+		form.filter_order.value = order;
+		form.filter_order_Dir.value = dir;
+		document.adminForm.submit(task);
+	}
 </script>
 
 
-<form action="<?php echo JRoute::_('index.php?option=com_integrado'); ?>" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_integrado'); ?>" method="post" name="adminForm" id="adminForm">
 
 <table class="adminlist table">
  	<thead>
@@ -25,7 +24,7 @@ function tableOrdering( order, dir, task )
 			<?php echo JHtml::_('grid.checkall'); ?>
 			</th>
 			<th>
-				<?php echo JHTML::_( 'grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_ID'), 'a.integrado_id', $this->sortDirection, $this->sortColumn); ?>
+				<?php echo JHTML::_('grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_ID'), 'a.integrado_id', $this -> sortDirection, $this -> sortColumn); ?>
 			</th>
 			<th>
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_R_SOCIAL'); ?>
@@ -34,7 +33,7 @@ function tableOrdering( order, dir, task )
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_CONTACTO'); ?>
 			</th>
 			<th>
-				<?php echo JHTML::_( 'grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'), 'a.status', $this->sortDirection, $this->sortColumn); ?>
+				<?php echo JHTML::_('grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'), 'a.status', $this -> sortDirection, $this -> sortColumn); ?>
 			</th>
 			<th>
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_PERS_JURIDICA'); ?>
@@ -51,10 +50,12 @@ function tableOrdering( order, dir, task )
 			<?php echo $item -> integrado_id; ?>
 			</td>
 			<td>
-			<?php $nombre = ($item->razon_social) ? $item->razon_social : $item->name ; echo $nombre; ?>
+			<?php $nombre = ($item -> razon_social) ? $item -> razon_social : $item -> name;
+				echo $nombre;
+ ?>
 			</td>
 			<td>
-			<?php echo $item->name; ?>
+			<?php echo $item -> name; ?>
 			</td>
 			<td>
 			<?php echo $item -> status; ?>
@@ -73,7 +74,12 @@ function tableOrdering( order, dir, task )
 	</tfoot>
 </table>
 
-        <input type="hidden" name="filter_order" value="<?php echo $this->sortColumn; ?>" />
-        <input type="hidden" name="filter_order_Dir" value="<?php echo $this->sortDirection; ?>" />
+        <input type="hidden" name="filter_order" value="<?php echo $this -> sortColumn; ?>" />
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $this -> sortDirection; ?>" />
+       <div>
+            <input type="hidden" name="task" value="" />
+            <input type="hidden" name="boxchecked" value="0" />
+            <?php echo JHtml::_('form.token'); ?>
+        </div>
 
 </form>

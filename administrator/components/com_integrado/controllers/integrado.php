@@ -6,7 +6,14 @@ jimport('joomla.application.component.controllerform');
 /**
  * 
  */
-class IntegardoControllerIntegrado extends JControllerForm {
+class IntegradoControllerIntegrado extends JControllerForm {
 	
+	public $id;
+	
+	function __construct(){
+		var_dump($this);
+		$this->id = JRequest::get('id');
+	}
+
 }
 

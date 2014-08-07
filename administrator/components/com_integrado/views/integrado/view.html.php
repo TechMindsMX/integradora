@@ -1,62 +1,36 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.view');
 
-/**
- * 
- */
 class IntegradoViewIntegrado extends JViewLegacy {
 
-	protected $items;
+	public function display($tpl = null) {
 
-	protected $pagination;
+		$form = $this -> get('Form');
+		$item = $this -> get('Item');
 
-	protected $state;
-	
-	function display($tpl = null) {
 
-        $items = $this->get('Item');
-		echo "<pre>";
-		print_r($items);
-		echo "</pre>";
-		exit;
-		
-        $state = $this->get('State');
-		
-		$pagination = $this->get('Pagination');
- 
-                if (count($errors = $this->get('Errors'))) 
-        {
-                JError::raiseError(500, implode('<br />', $errors));
-                return false;
-        }
+		if (count($errors = $this -> get('Errors'))) {
+			JError::raiseError(500, implode('<br />', $errors));
+			return false;
+		}
 
-        $this->items = $items;
-        $this->pagination = $pagination;
-		
-		$this->addToolBar();
-		
-		$this->sortDirection = $state->get('list.direction');
-		$this->sortColumn = $state->get('list.ordering');
-		
-        parent::display($tpl);
-		
-		$this->setDocument();
-    }
-	
-	protected function addToolBar() 
-    {
-        JToolBarHelper::title(JText::_('COM_INTEGRADO_MANAGER_TITULO'));
-        // JToolBarHelper::deleteList('', 'integrado.delete');
-        JToolBarHelper::editList('integrado.edit');
-        // JToolBarHelper::addNew('integrado.add');
-    }
-	
-	protected function setDocument() 
-    {
-        $document = JFactory::getDocument();
-        $document->setTitle(JText::_('COM_INTEGRADO_ADMINISTRATION'));
-    }
+		$this -> form = $form;
+		$this -> item = $item;
+
+		$this -> addToolBar();
+
+		parent::display($tpl);
+	}
+
+	protected function addToolBar() {
+		$input = JFactory::getApplication() -> input;
+		$input -> set('hidemainmenu', true);
+		$isNew = ($this -> item -> id == 0);
+		JToolBarHelper::title($isNew ? JText::_('COM_INTEGRADO_MANAGER_INTEGRADO_NEW') : JText::_('COM_INEGRADO_MANAGER_INTEGRADO_EDIT'));
+		JToolBarHelper::save('integrado.save');
+		JToolBarHelper::cancel('integrado.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+	}
 
 }
