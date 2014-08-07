@@ -14,11 +14,11 @@ class Integrado {
 	
 	
 	
-	function __construct() {
+	function __construct($integ_id = null) {
 		$this->user = JFactory::getUser();
 		
 		$this->integrados = $this->getIntegradosCurrUser();
-		$this->dataSolicitud = $this->getsolicitud();
+		$this->getsolicitud($integ_id);
 		$this->nombres = $this->separaNombre($this->user->name);
 		
 		unset($this->user->password);
@@ -42,15 +42,17 @@ class Integrado {
 		
 	}
 	
-	function getsolicitud(){
-		$this->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
-		$integrado_id 					= isset($this->gral->integrado_id)?$this->gral->integrado_id:null;
+	function getsolicitud($integ_id = null){
+		if ($integ_id == null){
+			$this->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
+		}
+		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
 		
 		if(!is_null($integrado_id)){
 			$this->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
 			$this->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
-			$this->datos_bancarios 	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
+			$this->datos_bancarios 		= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
 		}else{
 			$this->integrado 			= null;
 			$this->datos_personales 	= null;
@@ -58,7 +60,6 @@ class Integrado {
 			$this->datos_bancarios 		= null;
 		}
 		
-		return $this;
 	}
 	
 	function selectDataSolicitud($table, $where, $id){

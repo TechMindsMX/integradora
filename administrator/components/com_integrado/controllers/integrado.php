@@ -6,7 +6,7 @@ jimport('joomla.application.component.controllerform');
 /**
  * 
  */
-class IntegardoControllerIntegradoList extends JControllerForm {
+class IntegardoControllerIntegrado extends JControllerForm {
 	
 }
 

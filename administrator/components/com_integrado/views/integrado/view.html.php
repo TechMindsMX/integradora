@@ -6,7 +6,7 @@ jimport('joomla.application.component.view');
 /**
  * 
  */
-class IntegradoViewIntegradolist extends JViewLegacy {
+class IntegradoViewIntegrado extends JViewLegacy {
 
 	protected $items;
 
@@ -16,7 +16,12 @@ class IntegradoViewIntegradolist extends JViewLegacy {
 	
 	function display($tpl = null) {
 
-        $items = $this->get('Items');
+        $items = $this->get('Item');
+		echo "<pre>";
+		print_r($items);
+		echo "</pre>";
+		exit;
+		
         $state = $this->get('State');
 		
 		$pagination = $this->get('Pagination');
