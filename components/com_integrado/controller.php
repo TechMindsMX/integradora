@@ -50,9 +50,9 @@ class IntegradoController extends JControllerLegacy {
 				$columnas 	  = array('integrado_id','status','pers_juridica');
 				$valores	  = array( $integrado_id, '0', $data['pers_juridica'] );
 				$updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pers_juridica'] );
-				$diccionario  = array('integrado_id' 	=> 'int',
-									  'status'		 	=> 'int',
-									  'pers_juridica'	=> 'int');
+				$diccionario  = array('integrado_id' 	=> array('tipo'=>'int','length'=>10),
+									  'status'		 	=> array('tipo'=>'int','length'=>10),
+									  'pers_juridica'	=> array('tipo'=>'int','length'=>10));
 									  
 				validador::procesamiento($data, $diccionario, $data['tab']);
 				
@@ -74,21 +74,21 @@ class IntegradoController extends JControllerLegacy {
 						$valoresvalidaicon[$columna] = $value;
 					}
 				}
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'int','length'=>10),
-									  'nacionalidad'	 	=> array('tipo'=>'string','length'=>45),
-									  'sexo'			 	=> array('tipo'=>'string','length'=>45),
-									  'calle'				=> array('tipo'=>'string','length'=>45),
-									  'rfc'					=> array('tipo'=>'string','length'=>45),
-									  'num_exterior'		=> array('tipo'=>'string','length'=>45),
-									  'num_interior'		=> array('tipo'=>'string','length'=>45),
-									  'cod_postal'			=> array('tipo'=>'string','length'=>5),
-									  'tel_fijo'			=> array('tipo'=>'string','length'=>10),
-									  'tel_fijo_extension'	=> array('tipo'=>'string','length'=>10),
-									  'tel_movil' 			=> array('tipo'=>'string','length'=>13),
-									  'email' 				=> array('tipo'=>'string','length'=>100),
-									  'nom_comercial'	 	=> array('tipo'=>'string','length'=>100),
-									  'curp' 				=> array('tipo'=>'string','length'=>18),
-									  'fecha_nacimiento'	=> array('tipo'=>'string','length'=>10));
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',		'length'=>10),
+									  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
+									  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
+									  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
+									  'rfc'					=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>45),
+									  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
+									  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
+									  'cod_postal'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_CP'),				'length'=>5,	'minlength' => 5),
+									  'tel_fijo'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10,	'minlength' => 10),
+									  'tel_fijo_extension'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_EXT'),				'length'=>10),
+									  'tel_movil' 			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_MOVIL'),			'length'=>13,	'minlength' => 13),
+									  'email' 				=> array('label'=>JText::_('LBL_CORREO'),			'length'=>100),
+									  'nom_comercial'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
+									  'curp' 				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18,	'minlength' => 18),
+									  'fecha_nacimiento'	=> array('label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10));
 									  
 				validador::procesamiento($data, $diccionario,$data['tab']);
 				break;
@@ -109,21 +109,21 @@ class IntegradoController extends JControllerLegacy {
 					}
 				}
 				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'int','length'=>10),
-									  'razon_social'	 	=> array('tipo'=>'string','length'=>255),
-									  'rfc'				 	=> array('tipo'=>'string','length'=>45),
-									  'calle'				=> array('tipo'=>'string','length'=>45),
-									  'num_exterior'		=> array('tipo'=>'string','length'=>45),
-									  'num_interior'		=> array('tipo'=>'string','length'=>45),
-									  'cod_postal'			=> array('tipo'=>'string','length'=>5),
-									  'tel_fijo'			=> array('tipo'=>'string','length'=>10),
-									  'tel_fijo_extension'	=> array('tipo'=>'string','length'=>10),
-									  'sitio_web' 			=> array('tipo'=>'string','length'=>255),
-									  'tel_fax'				=> array('tipo'=>'string','length'=>100),
-									  'testimonio_1'	 	=> array('tipo'=>'int','length'=>10),
-									  'testimonio_2' 		=> array('tipo'=>'int','length'=>10),
-									  'poder'				=> array('tipo'=>'int','length'=>10),
-									  'reg_propiedad' 		=> array('tipo'=>'int','length'=>10));
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'int',		'length'=>10),
+									  'razon_social'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),	'length'=>255),
+									  'rfc'				 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),		'length'=>45),
+									  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),		'length'=>45),
+									  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),		'length'=>45),
+									  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),		'length'=>45),
+									  'cod_postal'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CP'),		'length'=>5,	'minlength' => 5),
+									  'tel_fijo'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_TEL_FIJO'),	'length'=>10,	'minlength' => 10),
+									  'tel_fijo_extension'	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_EXT'),		'length'=>10),
+									  'sitio_web' 			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CORREO'),	'length'=>255),
+									  'tel_fax'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),		'length'=>10),
+									  'testimonio_1'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),		'length'=>10),
+									  'testimonio_2' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),		'length'=>10),
+									  'poder'				=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),		'length'=>10),
+									  'reg_propiedad' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),		'length'=>10));
 				
 				validador::procesamiento($data, $diccionario,$data['tab']);
 				
@@ -145,11 +145,11 @@ class IntegradoController extends JControllerLegacy {
 					}
 				}
 				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'int','length'=>10),
-									  'banco_nombre'	 	=> array('tipo'=>'string','length'=>255),
-									  'banco_cuenta'	 	=> array('tipo'=>'string','length'=>45),
-									  'banco_sucursal'		=> array('tipo'=>'string','length'=>45),
-									  'banco_clabe'			=> array('tipo'=>'string','length'=>45));
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'int',		'length'=>10),
+									  'banco_nombre'	 	=> array('tipo'=>'string',	'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
+									  'banco_cuenta'	 	=> array('tipo'=>'int',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>18,	'minlength' => 18),
+									  'banco_sucursal'		=> array('tipo'=>'int',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>10),
+									  'banco_clabe'			=> array('tipo'=>'int',		'label'=>JText::_('LBL_NUMERO_CLABE'),	'length'=>18),	'minlength' => 18);
 				
 				validador::procesamiento($data, $diccionario,$data['tab']);
 				
@@ -193,11 +193,10 @@ class IntegradoController extends JControllerLegacy {
 			$db->setQuery($query);
 			$db->execute();
 			
-			return array('success' => false , 'msg' => 'Datos Almacenados correctamente');
+			return array('success' => true , 'msg' => 'Datos Almacenados correctamente');
 			
 		}
 		catch(Exception $e){
-			echo $db->getErrorMsg();
 			$response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
 			echo json_encode($response);
 		}
@@ -213,14 +212,14 @@ class IntegradoController extends JControllerLegacy {
 				  ->where($condicion);
 			$db->setQuery($query);
 			$db->execute();
-			
-			return array('success' => false , 'msg' => 'Datos Actualizados correctamente');
+
+			return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
 			
 		}
 		catch(Exception $e){
-			echo $db->getErrorMsg();
 			$response = array('success' => false , 'msg' => 'Error al Actualizar intente nuevamente');
 			echo json_encode($response);
+			exit;
 		}
 	}
 	

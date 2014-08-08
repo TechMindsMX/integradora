@@ -16,8 +16,6 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 
-var_dump($datos);
-
 if(!is_null($datos->integrado)){
 	if($datos->integrado->pers_juridica == 1){
 		$moral = 'checked="checked"';
@@ -569,7 +567,7 @@ if(!is_null($datos->integrado)){
         </div>
 		<div class="form-group">
 			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="16" />
+			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="18" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>

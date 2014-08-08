@@ -18,23 +18,59 @@ class validador {
 				$post[$columna] = $value;
 			}
 		}
-		$post['integrado_id'] = $data['integrado_id'];
-		$post['pers_juridica'] = $data['pers_juridica'];
+		
 
 		foreach ($post as $key => $value) {
 			
 			if(isset($diccionario[$key]['length']) ){
-				$respuesta[$key] = self::validalength($value,$diccionario[$key]['length']);
+				$minlength = isset($diccionario[$key]['minlength'])?$diccionario[$key]['minlength']:null;
+				$respuesta[$key] = self::validalength($value,$diccionario[$key]['length'], $minlength);
+				if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
 			}
-			$method = 'valida_'.$key;
 			
-			if(method_exists(new validador,$method) && ($value != '') ){
+			$method = 'valida_'.$key;
+
+			if(method_exists('validador',$method) && ($value != '') ){
 				$respuesta[$key] = call_user_func(array('validador',$method), $post);
+				if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', verifique tenga el formato adecuado');
+			}
+			
+			if( isset($diccionario[$key]['tipo']) ){
+				switch($diccionario[$key]['tipo']){
+					case 'sting':
+						$respuesta[$key] = self::valida_strings($value);
+						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo letras');
+						break;
+					case 'number':
+						$respuesta[$key] = self::valida_numeros($value);
+						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros enteros');
+						break;
+					case 'alphaNumber':
+						$respuesta[$key] = self::valida_alfanumericos($value);
+						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros y letras');
+						break;
+				}
 			}
 		}
-		
-		var_dump($respuesta);
+	}
+	
+	public static function salir($campo){
+		$response = array('success' => false , 'msg' => 'Error en el campo '.$campo);
+		echo json_encode($response);
 		exit;
+	}
+	
+	public static function valida_email($data){
+		$email	= $data['email'];
+		$regex	= '/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/';
+		
+		if( preg_match($regex, $email) == 1){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+		
+		return $respuesta;
 	}
 	
 	public static function valida_curp($data){
@@ -64,7 +100,6 @@ class validador {
 	}
 	
 	public static function valida_rfc($data){
-		$tipoPersona 	= $data['pers_juridica'];
 		$rfc			= $data['rfc'];
 		$regex			= '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 		
@@ -78,20 +113,26 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function validalength($valor,$length){
-		if(strlen($valor) <= $length){
-			$respuesta = true;
+	public static function validalength($valor,$length, $minlength = null){
+		if(is_null($minlength)){
+			if(strlen($valor) <= $length){
+				$respuesta = true;
+			}else{
+				$respuesta = false;
+			}
 		}else{
-			$respuesta = false;
+			if( (strlen($valor) == $length) && (strlen($valor) == $minlength) ){
+				$respuesta = true;
+			}else{
+				$respuesta = false;
+			}
 		}
-		
+
 		return $respuesta;
 	}
 	
 	public static function valida_banco_clabe($data){
 		$clabe				= $data['banco_clabe'];
-		$clabe	= '012180028515732163';
-	
 		$paso3 				= 0;
 		$clabeTmp			= str_split($clabe,17);
 		$codigoVerificador	= intval($clabeTmp[1]);
@@ -114,7 +155,40 @@ class validador {
 		$verificacion	= $paso6 == $codigoVerificador;
 		$verificabanco	= $claveBanco == $claveBancoClabe;
 		
-		if($verificacion and $verificabanco){
+		if($verificacion && $verificabanco){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+
+		return $respuesta;
+	}
+	
+	public static function valida_numeros($valor){
+		$regex	= '/^[0-9\ ]+$/';
+		if(preg_match($regex, $valor)){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+		
+		return $respuesta;
+	}
+	
+	public static function valida_strings($valor){
+		$regex	= '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
+		if(preg_match($regex, $valor)){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+		
+		return $respuesta;
+	}
+	
+	public static function valida_alfanumericos($valor){
+		$regex	= '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . ]+$/';
+		if(preg_match($regex, $valor)){
 			$respuesta = true;
 		}else{
 			$respuesta = false;

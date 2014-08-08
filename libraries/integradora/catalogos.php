@@ -46,7 +46,7 @@ class Catalogos {
 			
 			$cat[] = $objeto;
 		}
-		
+
 		$this->bancos = $cat;
 	}
 }

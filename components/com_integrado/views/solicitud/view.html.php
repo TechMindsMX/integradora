@@ -27,6 +27,20 @@ class IntegradoViewSolicitud extends JViewLegacy {
 						data: serializado+'&tab='+jQuery(this).prop('id')+'&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val(),
 		 				type: 'post'
 					});
+					
+					request.done(function(result){
+						if(typeof(result) != 'object'){
+							var obj = eval('('+result+')');
+						}else{
+							var obj = result;
+						}
+						
+						alert(obj.msg);
+					});
+					
+					request.fail(function (jqXHR, textStatus) {
+						console.log(jqXHR, textStatus);
+					});
 				});
 			});
 EOD;
