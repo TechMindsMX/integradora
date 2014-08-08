@@ -34,12 +34,14 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
             <legend><?php echo JText::_('COM_INTEGRADO_INTEGRADO_DETAILS'); ?></legend>
             <div class="row-fluid">
                 <div class="span6">
-                    <?php foreach ($this->form->getFieldset() as $field): ?>
-                        <div class="control-group">
-                            <div class="control-label"><?php echo $field -> label; ?></div>
-                            <div class="controls"><?php echo $field -> input; ?></div>
-                        </div>
-                    <?php endforeach; ?>
+                    <div class="control-group">
+                        <div class="control-label"><?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'); ?></div>
+                        <div class="controls"><select name="status">
+                        	<?php foreach ($this->item->catalogos->statusSolicitud as $value): ?>
+                        		<option value="<?php echo $value->status; ?>"><?php echo $value->status_name; ?></option>
+                    		<?php endforeach; ?>
+                        </select></div>
+                    </div>
                 </div>
             </div>
         </fieldset>
@@ -58,4 +60,4 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
-<?php var_dump($this->item); ?>
+<?php var_dump($this->item->catalogos); ?>

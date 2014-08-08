@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modeladmin');
 jimport('integradora.integrado');
+jimport('integradora.catalogos');
 
 class IntegradoModelIntegrado extends JModelAdmin
 {
@@ -17,9 +18,18 @@ class IntegradoModelIntegrado extends JModelAdmin
 		
     	$integrado = new ReflectionClass('Integrado');
 		$item = $integrado->newInstance($integ_id);
+		
+		$item->catalogos = $this->getCatalogos();
 
 		return $item;
     }
+	public function getCatalogos() {
+		$catalogos = new Catalogos;
+		
+		$catalogos->getStatusSolicitud();
+		
+		return $catalogos;
+	}
 
     public function getTable($type = 'Integrado', $prefix = 'IntegradoTable', $config = array()) 
     {

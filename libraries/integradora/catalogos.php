@@ -35,7 +35,7 @@ class Catalogos {
 	}
 	
 	public function getBancos(){
-		$catalogo = json_decode(@file_get_contents('http://192.168.0.122:7272/trama-middleware/rest/stp/listBankCodes'));
+		$catalogo = json_decode(@file_get_contents(MIDDLE.PUERTO.TIMONE.'stp/listBankCodes'));
 		
 		foreach ($catalogo as $key => $value) {
 			$objeto = new stdClass;
@@ -48,6 +48,18 @@ class Catalogos {
 		}
 
 		$this->bancos = $cat;
+	}
+	
+	public function getStatusSolicitud()
+	{
+		$db = JFactory::getDbo();
+		
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__integrado_status_catalog'));
+		$status = $db->setQuery($query)->loadObjectList(); 
+
+		$this->statusSolicitud = $status;
 	}
 }
 	
