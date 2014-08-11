@@ -3,7 +3,6 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modeladmin');
 jimport('integradora.integrado');
-jimport('integradora.catalogos');
 
 class IntegradoModelIntegrado extends JModelAdmin
 {
@@ -16,9 +15,9 @@ class IntegradoModelIntegrado extends JModelAdmin
 		$input = JFactory::getApplication()->input;
 		$integ_id = $input->get('integrado_id',0,'int');
 		
-    	$integrado = new ReflectionClass('Integrado');
+    	$integrado = new ReflectionClass('IntegradoSimple');
 		$item = $integrado->newInstance($integ_id);
-		
+
 		$item->catalogos = $this->getCatalogos();
 
 		return $item;
@@ -56,5 +55,5 @@ class IntegradoModelIntegrado extends JModelAdmin
             $data = $this->getItem();
         }
         return $data;
-    }		
+    }
 }

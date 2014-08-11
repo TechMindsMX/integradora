@@ -3,6 +3,7 @@ defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.user.user');
 jimport('joomla.factory');
+jimport('integradora.catalogos');
 
 
 /**
@@ -106,7 +107,10 @@ class Integrado {
 class IntegradoSimple extends Integrado {
 	
 	function __construct($integ_id) {
+		$this->id = $integ_id;
 		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
+		
+		parent::getSolicitud($integ_id, 0);
 	}
 }
 

@@ -12,7 +12,7 @@
 			description="COM_INTEGRADO_INTEGRADO_STATUS_DESC"
 			class="chzn-color-state"
 			size="1"
-			default="1">
+			default="1"
 		/>
 	</fieldset>
 </form>
