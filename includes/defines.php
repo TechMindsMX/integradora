@@ -30,7 +30,6 @@ $hostname = $middle.$puertoTimOne.$controllerTimOne;
 
 $connection = @fsockopen($hostname);
 
-var_dump($connection);
 if (!is_resource($connection)){
 	$puertoTimOne =  ":7272";	
 	$controllerTimOne =  "/trama-middleware/rest/";
