@@ -29,15 +29,15 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		$valido = $this->cambioStatusValido($object->integrado_id, $object->datosIntegrado->integrados[0]->integrado->status, $object->status);
 		
 		if (!$valido) {
+			$this->setMessage(JText::_('JERROR_VALIDACION_STATUS'),'error');
 			$this->setRedirect(
 				JRoute::_(
 					'index.php?option=' . $this->option . '&view=' . $this->view_item
 					. $this->getRedirectToItemAppend($object->integrado_id, 'id' ) , false
 				)
 			);
-			return false;
+			return true;
 		}
-var_dump($valido); exit;
 		
 		// Update their details in the users table using id as the primary key.
 		$result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
@@ -60,7 +60,6 @@ var_dump($valido); exit;
 	public function cambioStatusValido($id, $oldStatus, $newStatus)
 	{
 		$catalogos = $this->getCatalogos();
-		
 		switch (intval($oldStatus)) {
 			case 0: // Nueva solicitud
 					$validos = array(2,3,99);
@@ -85,7 +84,6 @@ var_dump($valido); exit;
 				break;
 		}
 
-var_dump($oldStatus, $newStatus, $validos);		
 		return (in_array($newStatus, $validos)) ? true : false ;
 	}
 	public function getCatalogos() {

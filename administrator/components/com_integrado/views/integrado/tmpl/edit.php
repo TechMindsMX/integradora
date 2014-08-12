@@ -4,7 +4,8 @@ defined('_JEXEC') or die('Restricted access');
 JHtml::_('behavior.tooltip');
 jimport('joomla.html.html.bootstrap');
 
-$nombre = (isset($this->item->integrados[0]->datos_empresa->razon_social)) ? $this->item->integrados[0]->datos_empresa->razon_social : $this->item->usuarios[0]->name;
+$integ = $this->item->integrados[0];
+$nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->razon_social : $this->item->usuarios[0]->name;
 
 function tabValores($obj, $tab_name, $tab_group, $jtext_label)
 {
@@ -39,11 +40,17 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
                     <div class="control-group">
                         <div class="control-label"><?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'); ?></div>
                         <div class="controls">
-                        	<select name="status">
                         	<?php foreach ($this->item->catalogos->statusSolicitud as $value): ?>
-                        		<option value="<?php echo $value->status; ?>"><?php echo $value->status_name; ?></option>
+                        		<label class="radio-inline">
+                        			<?php 
+                        			$params = ($integ->integrado->status == $value->status) ? 'checked' : '' ;
+	$expression = in_array($value->status, $this->item->transicion_status) OR $integ->integrado->status == $value->status;
+                        			$params .= ($expression === true) ? '' : ' disabled' ;
+                        			?>
+								  <input type="radio" name="status" value="<?php echo $value->status; ?>" <?php echo $params; ?>>
+								  <?php echo $value->status_name; ?>
+								</label>
                     		<?php endforeach; ?>
-                        	</select>
                         </div>
                     </div>
                 </div>
@@ -52,9 +59,9 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
 	<?php
 	$tab_group = 'tabs-solicitud';
 		echo JHtml::_('bootstrap.startTabSet', $tab_group, array('active' => 'personales'));
-			tabValores($this->item->integrados[0]->datos_personales, 'personales', $tab_group, 'LBL_SLIDE_BASIC');
-			tabValores($this->item->integrados[0]->datos_empresa, 'empresa', $tab_group, 'LBL_TAB_EMPRESA');
-			tabValores($this->item->integrados[0]->datos_bancarios, 'bancarios', $tab_group, 'LBL_TAB_BANCO');
+			tabValores($integ->datos_personales, 'personales', $tab_group, 'LBL_SLIDE_BASIC');
+			tabValores($integ->datos_empresa, 'empresa', $tab_group, 'LBL_TAB_EMPRESA');
+			tabValores($integ->datos_bancarios, 'bancarios', $tab_group, 'LBL_TAB_BANCO');
 					echo JHtml::_('bootstrap.endTabSet');
 	?>
              </div>
@@ -64,4 +71,3 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
-<?php var_dump($this->item); ?>

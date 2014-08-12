@@ -12,6 +12,12 @@ JHtml::_('behavior.tooltip');
 		form.filter_order_Dir.value = dir;
 		document.adminForm.submit(task);
 	}
+	jQuery(document).ready(function() {
+		jQuery("input:checkbox").click(function(){
+	        var group = "input:checkbox[name='"+jQuery(this).prop("name")+"']";
+	        jQuery(group).not(this).prop("checked",false);
+    	});
+	});
 </script>
 
 
@@ -21,7 +27,6 @@ JHtml::_('behavior.tooltip');
  	<thead>
 		<tr>
 			<th width="20">
-			<?php echo JHtml::_('grid.checkall'); ?>
 			</th>
 			<th>
 				<?php echo JHTML::_('grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_ID'), 'a.integrado_id', $this -> sortDirection, $this -> sortColumn); ?>
