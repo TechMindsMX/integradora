@@ -76,7 +76,7 @@ if(!is_null($datos->integrado)){
 	});
 </script>
 
-<form action="" class="form" id="solicitud" name="solicitud" >
+<form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
 	<input type="hidden" name="user_id" value="<?php echo $datos->user->id; ?>" />
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
@@ -256,20 +256,6 @@ if(!is_null($datos->integrado)){
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
 			<input name="dp_curp" id="dp_curp" type="text" maxlength="" />
 		</div>
-		<div class="form-group">
-			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
-			<input name="dp_url_identificacion" type="file" maxlength="" />
-		</div>
-		<div class="form-group">
-			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
-			<input name="dp_url_rfc" type="file" maxlength="" />
-		</div>
-		
-		<div class="form-group">
-			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
-			<input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
-		</div>
-		
 	</fieldset>
 	<?php
 		echo JHtml::_('bootstrap.endSlide');
@@ -294,10 +280,6 @@ if(!is_null($datos->integrado)){
 		<div class="form-group">
 			<label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
 			<input name="de_rfc" id="de_rfc" type="text" maxlength="18" />
-		</div>
-		<div class="form-group">
-			<label for="de_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
-			<input name="de_rfc" type="file" maxlength="" />
 		</div>
 	</fieldset>
 	<?php
@@ -391,19 +373,19 @@ if(!is_null($datos->integrado)){
 		<div id="testimonio1">
 			<h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
 			<div class="form-group">
-				<label for="testimonio1-fecha-const"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?></label>
+				<label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?></label>
 				<?php 
-				echo JHTML::_('calendar',date('d-m-Y'),'testimonio1-fecha-const', 'testimonio1-fecha-const', $format = '%d-%m-%Y', $attsCal);
+				echo JHTML::_('calendar',date('Y-m-d'),'t1_instrum_fecha', 't1_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
-				<label for="testimonio1-notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="testimonio1-notaria" type="text" maxlength="3" />
+				<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
+				<input name="t1_instrum_notaria" type="text" />
 			</div>
 	 
 	        <div class="form-group">
-	           	<label for="doFi_nomEstado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="testimonio1-estado">
+	           	<label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+	           	<select name="t1_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -414,35 +396,32 @@ if(!is_null($datos->integrado)){
 	        </div>
 	
 			<div class="form-group">
-				<label for="testimonio1-notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="testimonio1-notario" type="text" maxlength="3" />
+				<label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
+				<input name="t1_instrum_nom_notario" type="text" />
 			</div>
 			<div class="form-group">
-				<label for="testimonio1-numero"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="testimonio1-numero" type="text" maxlength="3" />
+				<label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+				<input name="t1_instrum_num_instrumento" type="text" />
 			</div>
-			<div class="form-group">
-				<label for="testimonio1-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
-				<input name="testimonio1-file" type="file" maxlength="" />
-			</div>
+			
 		</div>
 
 		<div id="testimonio2">
 			<h3><?php echo JText::_('LBL_TESTIMONIO2'); ?></h3>
 			<div class="form-group">
-				<label for="testimonio2-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
+				<label for="t2_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				echo JHTML::_('calendar',date('d-m-Y'),'testimonio2-fecha-const', 'testimonio2-fecha-const', $format = '%d-%m-%Y', $attsCal);
+				echo JHTML::_('calendar',date('Y-m-d'),'t2_instrum_fecha', 't2_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
-				<label for="testimonio2-notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="testimonio2-notaria" type="text" maxlength="3" />
+				<label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
+				<input name="t2_instrum_notaria" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
-	           	<label for="testimonio2-estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="testimonio2-estado">
+	           	<label for="t2_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+	           	<select name="t2_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -453,35 +432,31 @@ if(!is_null($datos->integrado)){
 	        </div>
 	
 			<div class="form-group">
-				<label for="testimonio2-notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="testimonio2-notario" type="text" maxlength="3" />
+				<label for="t2_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
+				<input name="t2_instrum_nom_notario" type="text" maxlength="3" />
 			</div>
 			<div class="form-group">
-				<label for="testimonio2-numero"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="testimonio2-numero" type="text" maxlength="3" />
-			</div>
-			<div class="form-group">
-				<label for="testimonio2-file"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
-				<input name="testimonio2-file" type="file" maxlength="" />
+				<label for="t2_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+				<input name="t2_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 		</div>
 
 		<div id="poder">
 			<h3><?php echo JText::_('LBL_PODER'); ?></h3>
 			<div class="form-group">
-				<label for="poder-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
+				<label for="pn_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				echo JHTML::_('calendar',date('d-m-Y'),'poder-fecha-const', 'poder-fecha-const', $format = '%d-%m-%Y', $attsCal);
+				echo JHTML::_('calendar',date('Y-m-d'),'pn_instrum_fecha', 'pn_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
-				<label for="poder-notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="poder-notaria" type="text" maxlength="3" />
+				<label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
+				<input name="pn_instrum_notaria" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
-	           	<label for="poder-estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="poder-estado">
+	           	<label for="pn_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+	           	<select name="pn_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -492,16 +467,12 @@ if(!is_null($datos->integrado)){
 	        </div>
 	
 			<div class="form-group">
-				<label for="poder-notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="poder-notario" type="text" maxlength="3" />
+				<label for="pn_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
+				<input name="pn_instrum_nom_notario" type="text" maxlength="3" />
 			</div>
 			<div class="form-group">
-				<label for="poder-numero"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="poder-numero" type="text" maxlength="3" />
-			</div>
-			<div class="form-group">
-				<label for="poder-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
-				<input name="poder-file" type="file" maxlength="" />
+				<label for="pn_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+				<input name="pn_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 		</div>
 
@@ -512,19 +483,19 @@ if(!is_null($datos->integrado)){
 
 			<h3><?php echo JText::_('LBL_RPP'); ?></h3>
 			<div class="form-group">
-				<label for="rpp-fecha-const"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
+				<label for="rp_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
 				<?php 
-				echo JHTML::_('calendar',date('d-m-Y'),'rpp-fecha-const', 'rpp-fecha-const', $format = '%d-%m-%Y', $attsCal);
+				echo JHTML::_('calendar',date('Y-m-d'),'rp_instrum_fecha', 'rp_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
 				?>
 			</div>
 			<div class="form-group">
-				<label for="rpp-numero"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="rpp-numero" type="text" maxlength="3" />
+				<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+				<input name="rp_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
-	           	<label for="rpp-estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="rpp-estado">
+	           	<label for="rp_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+	           	<select name="rp_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -533,11 +504,6 @@ if(!is_null($datos->integrado)){
 					?>
 				</select>
 	        </div>
-	
-			<div class="form-group">
-				<label for="rpp-file"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
-				<input name="rpp-file" type="file" maxlength="" />
-			</div>
 		</div>
 
 
@@ -577,15 +543,66 @@ if(!is_null($datos->integrado)){
 			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
 			<input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
 		</div>
+		
+
+		<div class="form-actions">
+			<button type="button" class="btn btn-primary span3" id="bancos"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		</div>
+	</fieldset>
+	<?php
+		echo JHtml::_('bootstrap.endTab');
+		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'files', JText::_('LBL_TAB_BANCOS'));
+	?>
+	<fieldset>
+		
 		<div class="form-group">
+			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
+			<input name="dp_url_identificacion" type="file" maxlength="" />
+		</div>
+		<div class="form-group">
+			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+			<input name="dp_url_rfc" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
+			<input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+			<label for="de_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+			<input name="de_rfc" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+			<label for="testimonio1-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+			<input name="testimonio1-file" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+			<label for="testimonio2-file"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
+			<input name="testimonio2-file" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+			<label for="poder-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+			<input name="poder-file" type="file" maxlength="" />
+		</div>
+		
+		<div class="form-group">
+				<label for="rpp-file"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
+				<input name="rpp-file" type="file" maxlength="" />
+			</div>
+
+        <div class="form-group">
 			<label for="db_banco__file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
 			<input name="db_banco_file" id="db_banco_file" type="file" maxlength="" />
 		</div>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="bancos"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="submit" class="btn btn-primary span3" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		</div>
-	</fieldset>	
+	</fieldset>
 	<?php
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.endTabSet');

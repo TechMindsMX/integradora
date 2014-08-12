@@ -3,7 +3,6 @@ defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
 
-
 jimport('integradora.integrado');
 jimport('integradora.rutas');
 jimport('integradora.catalogos');
@@ -23,7 +22,7 @@ class IntegradoModelSolicitud extends JModelItem {
 			$ruta = new IntRoute;
 			$this->dataModelo->action = $ruta->getUrl('integrado','solicitud');
 		}
-		
+		 
 		return $this->dataModelo;
 	}
 	

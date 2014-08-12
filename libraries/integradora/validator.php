@@ -10,6 +10,7 @@ class validador {
 			$columna 	= substr($key, 3);
 			$clave 		= substr($key, 0,3);
 			
+			
 			if($clave == 'dp_' && ('personales' == $seccion) ){
 				$post[$columna] = $value;
 			}elseif($clave == 'de_' && ('empresa' == $seccion) ){
@@ -17,9 +18,8 @@ class validador {
 			}elseif($clave == 'db_' && ('bancos' == $seccion) ){
 				$post[$columna] = $value;
 			}
+			
 		}
-		
-
 		foreach ($post as $key => $value) {
 			
 			if(isset($diccionario[$key]['length']) ){
