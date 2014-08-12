@@ -3,7 +3,6 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modeladmin');
 jimport('integradora.integrado');
-jimport('integradora.catalogos');
 
 class IntegradoModelIntegrado extends JModelAdmin
 {
@@ -14,12 +13,37 @@ class IntegradoModelIntegrado extends JModelAdmin
     public function getItem()
     {
 		$input = JFactory::getApplication()->input;
-		$integ_id = $input->get('integrado_id',0,'int');
+		$integ_id = ($input->get('integrado_id',0,'int') ? $input->get('integrado_id',0,'int') : $input->get('id',0,'int'));
 		
-    	$integrado = new ReflectionClass('Integrado');
+    	$integrado = new ReflectionClass('IntegradoSimple');
 		$item = $integrado->newInstance($integ_id);
-		
+
 		$item->catalogos = $this->getCatalogos();
+
+		switch (intval($item->integrados[0]->integrado->status)) {
+			case 0: // Nueva solicitud 0
+					$validos = array(2,3,99);
+				break;
+			case 1: // para revision nuevamente 1
+					$validos = array(2,3,99);
+				break;
+			case 2: // Devuelto 2
+					$validos = array(1);
+				break;
+			case 3: // contrato 3
+					$validos = array(50,99);
+				break;
+			case 50: // integrado 50
+					$validos = array();
+				break;
+			case 99: // cancelada 99
+					$validos = array();
+				break;
+			default:
+					$validos = array();
+				break;
+		}
+		$item->transicion_status = $validos;
 
 		return $item;
     }
@@ -56,5 +80,5 @@ class IntegradoModelIntegrado extends JModelAdmin
             $data = $this->getItem();
         }
         return $data;
-    }		
+    }
 }

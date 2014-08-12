@@ -26,8 +26,9 @@ define('JPATH_MANIFESTS',     JPATH_ADMINISTRATOR . '/manifests');
 $middle = "192.168.0.122";
 $puertoTimOne =  ":8081";
 $controllerTimOne =  "/timone/services/";
+$hostname = $middle.$puertoTimOne.$controllerTimOne;
 
-$connection = @fsockopen($middle, $puertoTimOne);
+$connection = @fsockopen($hostname);
 
 if (!is_resource($connection)){
 	$puertoTimOne =  ":7272";	
