@@ -32,14 +32,13 @@ class IntegradoController extends JControllerLegacy {
 		
 		// Change the suggested filename.
 		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
-		
 		echo json_encode($response);
 	}
 	
 	public static function manejoDatos($data){
 		$db	= JFactory::getDbo();
 		
-		$integrado = self::checkdata($data['user_id'], 'integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
+		$integrado = self::checkdata('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
 		
 		if( is_null($integrado) ){
 			$columnas = array('user_id');
@@ -47,23 +46,25 @@ class IntegradoController extends JControllerLegacy {
 			
 			self::insertData('integrado_users', $columnas, $valores);
 			
-			$integrado_id = self::checkData($data['user_id'], 'integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
+			$integrado_id = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
 			
 			$integrado_id = $integrado_id['integrado_id'];
 		}else{
 			$integrado_id = $integrado['integrado_id'];
 		}
+
 		$data['integrado_id'] = $integrado_id;
-		
+
 		switch($data['tab']){
 			case 'juridica':
 				$table 		  = 'integrado';
 				$columnas 	  = array('integrado_id','status','pers_juridica');
 				$valores	  = array( $integrado_id, '0', $data['pers_juridica'] );
 				$updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pers_juridica'] );
-				$diccionario  = array('integrado_id' 	=> array('tipo'=>'int','length'=>10),
-									  'status'		 	=> array('tipo'=>'int','length'=>10),
-									  'pers_juridica'	=> array('tipo'=>'int','length'=>10));
+				
+				$diccionario  = array('integrado_id' 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
+									  'status'		 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
+									  'pers_juridica'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10));
 									  
 				validador::procesamiento($data, $diccionario, $data['tab']);
 				
@@ -79,12 +80,13 @@ class IntegradoController extends JControllerLegacy {
 					$clave 		= substr($key, 0,3);
 					
 					if($clave == 'dp_'){
-						$columnas[] 	= $columna;
-						$valores[] 		= $db->quote($value);
-						$updateSet[]	= $db->quoteName($columna).' = '.$db->quote($value);
-						$valoresvalidaicon[$columna] = $value;
+						$columnas[]					 	= $columna;
+						$valores[] 						= $db->quote($value);
+						$updateSet[]					= $db->quoteName($columna).' = '.$db->quote($value);
+						$valoresvalidaicon[$columna] 	= $value;
 					}
 				}
+				
 				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',													'length'=>10),
 									  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
 									  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
@@ -169,7 +171,7 @@ class IntegradoController extends JControllerLegacy {
 				break;
 		}
 
-		$existe = self::checkData($integrado_id, $table, $db->quoteName('integrado_id').' = '.$integrado_id);
+		$existe = self::checkData($table, $db->quoteName('integrado_id').' = '.$integrado_id);
 		
 		if( is_null($existe) ){
 			 $respuesta = self::insertData($table, $columnas, $valores);
@@ -177,28 +179,29 @@ class IntegradoController extends JControllerLegacy {
 			$condicion 	= array($db->quoteName('integrado_id').' = '.$integrado_id ); 
 			$respuesta = self::updateData($table, $updateSet, $condicion);
 		}
-		$alldata = new Integrado;
 		
-		if( !is_null($alldata->datos_personales) && !is_null($alldata->datos_empresa) && !is_null($alldata->datos_bancarios) ){
-			$respuesta['cargar_imagenes'] = true;
-		}
 		return $respuesta;
 	}
 	
-	public static function checkData($userId, $table, $where){
-		$db		= JFactory::getDbo();
-		$query 	= $db->getQuery(true);
-		
-		$query->select('*')
-		      ->from($db->quoteName('#__'.$table))
-			  ->where($where);
-
-
-		$db->setQuery($query);
-	 
-		$results = $db->loadAssoc();
-
-		return $results;
+	public static function checkData($table, $where){
+		try{
+			$db		= JFactory::getDbo();
+			$query 	= $db->getQuery(true);
+			
+			$query->select('*')
+			      ->from($db->quoteName('#__'.$table))
+				  ->where($where);
+	
+			$db->setQuery($query);
+		 
+			$results = $db->loadAssoc();
+	
+			return $results;
+		}
+		catch(Exception $e){
+			$response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
+			echo json_encode($response);
+		}
 	}
 	
 	public static function insertData($tabla, $columnas, $valores){
@@ -211,12 +214,10 @@ class IntegradoController extends JControllerLegacy {
 				  ->values(implode(',',$valores));
 			$db->setQuery($query);
 			$db->execute();
-
 			return array('success' => true , 'msg' => 'Datos Almacenados correctamente');
 			
 		}
 		catch(Exception $e){
-			var_dump($e);
 			$response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
 			echo json_encode($response);
 		}
@@ -239,7 +240,6 @@ class IntegradoController extends JControllerLegacy {
 			echo $query;
 			$response = array('success' => false , 'msg' => 'Error al Actualizar intente nuevamente');
 			echo json_encode($response);
-			exit;
 		}
 	}
 	
@@ -249,7 +249,7 @@ class IntegradoController extends JControllerLegacy {
 	}
 	
 	public static function saveInstrumentos($data){
-		$db		= JFactory::getDbo();
+		$db				= JFactory::getDbo();
 		$columnast1[] 	= 'integrado_id';
 		$columnast2[] 	= 'integrado_id';
 		$columnasPN[] 	= 'integrado_id';
@@ -298,36 +298,64 @@ class IntegradoController extends JControllerLegacy {
 					break;
 			}
 		}
-		
+
 		$where = $db->quoteName('integrado_id').' = '.$data['integrado_id'].' AND '.$db->quoteName('instrum_type').' = 1';		
-		$existet1 = self::checkData($data['integrado_id'], 'integrado_instrumentos', $where);
+		$existet1 = self::checkData('integrado_instrumentos', $where);
 		if(is_null($existet1) ){
 			self::insertData('integrado_instrumentos', $columnast1, $valort1);
+			$existet1 = self::checkData('integrado_instrumentos', $where);
 		}else{
 			self::updateData('integrado_instrumentos', $updateSett1, $where);
+			$existet1 = self::checkData('integrado_instrumentos', $where);
 		}
+		self::saveInstrumentosEmpresa($data['integrado_id'], $existet1['id'], 'testimonio_1');
+
 		$where = $db->quoteName('integrado_id').' = '.$data['integrado_id'].' AND '.$db->quoteName('instrum_type').' = 2';		
-		$existet2 = self::checkData($data['integrado_id'], 'integrado_instrumentos', $where);
+		$existet2 = self::checkData('integrado_instrumentos', $where);
 		if(is_null($existet2) ){
 			self::insertData('integrado_instrumentos', $columnast2, $valort2);
+			$existet2 = self::checkData('integrado_instrumentos', $where);
 		}else{
 			self::updateData('integrado_instrumentos', $updateSett2, $where);
+			$existet2 = self::checkData('integrado_instrumentos', $where);
 		}
+		self::saveInstrumentosEmpresa($data['integrado_id'], $existet2['id'], 'testimonio_2');
 		
 		$where = $db->quoteName('integrado_id').' = '.$data['integrado_id'].' AND '.$db->quoteName('instrum_type').' = 3';		
-		$existepn = self::checkData($data['integrado_id'], 'integrado_instrumentos', $where);
+		$existepn = self::checkData('integrado_instrumentos', $where);
 		if(is_null($existepn) ){
 			self::insertData('integrado_instrumentos', $columnasPN, $valorPN);
+			$existepn = self::checkData('integrado_instrumentos', $where);
 		}else{
 			self::updateData('integrado_instrumentos', $updateSetpn, $where);
+			$existepn = self::checkData('integrado_instrumentos', $where);
 		}
+		self::saveInstrumentosEmpresa($data['integrado_id'], $existepn['id'], 'poder');
 
 		$where = $db->quoteName('integrado_id').' = '.$data['integrado_id'].' AND '.$db->quoteName('instrum_type').' = 4';		
-		$existerp = self::checkData($data['integrado_id'], 'integrado_instrumentos', $where);
+		$existerp = self::checkData('integrado_instrumentos', $where);
 		if(is_null($existerp) ){
 			self::insertData('integrado_instrumentos', $columnasRP, $valorRP);
+			$existerp = self::checkData('integrado_instrumentos', $where);
 		}else{
 			self::updateData('integrado_instrumentos', $updateSetrp, $where);
+			$existerp = self::checkData('integrado_instrumentos', $where);
+		}
+		self::saveInstrumentosEmpresa($data['integrado_id'], $existerp['id'], 'reg_propiedad');
+	}
+
+	public static function saveInstrumentosEmpresa($integrado_id, $id_instrumento, $campo){
+		$db				= JFactory::getDbo();
+		$where			= $db->quoteName('integrado_id').' = '.$integrado_id;
+		$dataEmpresa 	= self::checkData('integrado_datos_empresa', $where);
+		$columna[] 		= $campo;
+		$valor[]		= $id_instrumento;
+		$updateSet[] 	= $db->quoteName($campo).' = '.$db->quote($id_instrumento);
+		
+		if(is_null($dataEmpresa)){
+			self::insertData('integrado_datos_empresa', $columna, $valor);
+		}else{
+			self::updateData('integrado_datos_empresa', $updateSet, $where);
 		}
 	}
 }

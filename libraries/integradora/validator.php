@@ -17,15 +17,22 @@ class validador {
 				$post[$columna] = $value;
 			}elseif($clave == 'db_' && ('bancos' == $seccion) ){
 				$post[$columna] = $value;
+			}else{
+				$post[$key] = $value;
 			}
 			
 		}
+
 		foreach ($post as $key => $value) {
 			
 			if(isset($diccionario[$key]['length']) ){
-				$minlength = isset($diccionario[$key]['minlength'])?$diccionario[$key]['minlength']:null;
+				$minlength = isset($diccionario[$key]['minlength']) ? $diccionario[$key]['minlength'] : null;
+				
 				$respuesta[$key] = self::validalength($value,$diccionario[$key]['length'], $minlength);
-				if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
+				
+				if(!$respuesta[$key]){
+					self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
+				}
 			}
 			
 			$method = 'valida_'.$key;
@@ -37,7 +44,7 @@ class validador {
 			
 			if( isset($diccionario[$key]['tipo']) ){
 				switch($diccionario[$key]['tipo']){
-					case 'sting':
+					case 'string':
 						$respuesta[$key] = self::valida_strings($value);
 						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo letras');
 						break;

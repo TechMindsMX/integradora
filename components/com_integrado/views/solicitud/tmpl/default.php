@@ -8,15 +8,15 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-$datos = $this->data;
+$datos = $this->data->integrados[0];
 
-$postUrl = $datos->action->post;
+//$postUrl = $datos->action->post;
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 
-if(!is_null($datos->integrado)){
+if(!empty($datos->integrado)){
 	if($datos->integrado->pers_juridica == 1){
 		$moral = 'checked="checked"';
 		$fisica = '';
@@ -31,13 +31,12 @@ if(!is_null($datos->integrado)){
 	$fisica = '';
 	$moral = '';
 }
-
 ?>
 <script>
 	jQuery(document).ready(function(){
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		<?php
-		if(!is_null($datos->datos_personales)){
+		if(!empty($datos->datos_personales)){
 		?>
 			var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
 			var datos_personales = eval ("(" + datos_personales + ")");
@@ -49,7 +48,7 @@ if(!is_null($datos->integrado)){
 			jQuery('#dp_cod_postal').trigger('click');
 		<?php
 		}
-		if(!is_null($datos->datos_empresa)){
+		if(!empty($datos->datos_empresa)){
 		?>
 			var datos_empresa = '<?php echo json_encode($datos->datos_empresa); ?>';
 			var datos_empresa = eval ("(" + datos_empresa + ")");
@@ -62,7 +61,7 @@ if(!is_null($datos->integrado)){
 			jQuery('#de_cod_postal').trigger('click');
 		<?php
 		}
-		if(!is_null($datos->datos_bancarios)){
+		if(!empty($datos->datos_bancarios)){
 		?>
 			var datos_bancarios = '<?php echo json_encode($datos->datos_bancarios); ?>';
 			var datos_bancarios = eval ("(" + datos_bancarios + ")");
@@ -72,12 +71,52 @@ if(!is_null($datos->integrado)){
 			});
 		<?php
 		}
+		if(!empty($datos->testimonio1)){
+		?>
+			var testimonio_1 = '<?php echo json_encode($datos->testimonio1); ?>';
+			var testimonio_1 = eval ("(" + testimonio_1 + ")");
+
+			jQuery.each(testimonio_1, function(key, value){
+				jQuery('#t1_'+key).val(value);
+			});
+		<?php
+		}
+		if(!empty($datos->testimonio2)){
+		?>
+			var testimonio_2 = '<?php echo json_encode($datos->testimonio2); ?>';
+			var testimonio_2 = eval ("(" + testimonio_2 + ")");
+
+			jQuery.each(testimonio_2, function(key, value){
+				jQuery('#t2_'+key).val(value);
+			});
+		<?php
+		}
+		if(!empty($datos->poder)){
+		?>
+			var poder = '<?php echo json_encode($datos->poder); ?>';
+			var poder = eval ("(" + testimonio_1 + ")");
+
+			jQuery.each(poder, function(key, value){
+				jQuery('#pn_'+key).val(value);
+			});
+		<?php
+		}
+		if(!empty($datos->reg_propiedad)){
+		?>
+			var reg_propiedad = '<?php echo json_encode($datos->reg_propiedad); ?>';
+			var reg_propiedad = eval ("(" + reg_propiedad + ")");
+
+			jQuery.each(reg_propiedad, function(key, value){
+				jQuery('#rp_'+key).val(value);
+			});
+		<?php
+		}
 		?>
 	});
 </script>
 
 <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
-	<input type="hidden" name="user_id" value="<?php echo $datos->user->id; ?>" />
+	<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
@@ -380,12 +419,12 @@ if(!is_null($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="t1_instrum_notaria" type="text" />
+				<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" />
 			</div>
 	 
 	        <div class="form-group">
 	           	<label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="t1_instrum_estado">
+	           	<select name="t1_instrum_estado" id="t1_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -397,11 +436,11 @@ if(!is_null($datos->integrado)){
 	
 			<div class="form-group">
 				<label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="t1_instrum_nom_notario" type="text" />
+				<input name="t1_instrum_nom_notario" id="t1_instrum_nom_notario" type="text" />
 			</div>
 			<div class="form-group">
 				<label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="t1_instrum_num_instrumento" type="text" />
+				<input name="t1_instrum_num_instrumento" id="t1_instrum_num_instrumento" type="text" />
 			</div>
 			
 		</div>
@@ -416,12 +455,12 @@ if(!is_null($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="t2_instrum_notaria" type="text" maxlength="3" />
+				<input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
 	           	<label for="t2_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="t2_instrum_estado">
+	           	<select name="t2_instrum_estado" id="t2_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -433,11 +472,11 @@ if(!is_null($datos->integrado)){
 	
 			<div class="form-group">
 				<label for="t2_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="t2_instrum_nom_notario" type="text" maxlength="3" />
+				<input name="t2_instrum_nom_notario" id="t2_instrum_nom_notario" type="text" maxlength="3" />
 			</div>
 			<div class="form-group">
 				<label for="t2_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="t2_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="t2_instrum_num_instrumento" id="t2_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 		</div>
 
@@ -451,12 +490,12 @@ if(!is_null($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="pn_instrum_notaria" type="text" maxlength="3" />
+				<input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
 	           	<label for="pn_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="pn_instrum_estado">
+	           	<select name="pn_instrum_estado" id="pn_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
@@ -468,11 +507,11 @@ if(!is_null($datos->integrado)){
 	
 			<div class="form-group">
 				<label for="pn_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="pn_instrum_nom_notario" type="text" maxlength="3" />
+				<input name="pn_instrum_nom_notario" id="pn_instrum_nom_notario" type="text" maxlength="3" />
 			</div>
 			<div class="form-group">
 				<label for="pn_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="pn_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="pn_instrum_num_instrumento" id="pn_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 		</div>
 
@@ -490,12 +529,12 @@ if(!is_null($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="rp_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="rp_instrum_num_instrumento" id="rp_instrum_num_instrumento" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
 	           	<label for="rp_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-	           	<select name="rp_instrum_estado">
+	           	<select name="rp_instrum_estado" id="rp_instrum_estado">
 					<?php 
 					foreach ($this->catalogos->estados as $key => $value) {
 						$default = ($value->nombre == 'México') ? 'selected' : '';
