@@ -8,8 +8,9 @@ jimport('integradora.imagenes');
 
 class IntegradoController extends JControllerLegacy {
 	function uploadFiles(){
+		var_dump($_FILES);
 		foreach ($_FILES as $key => $value) {
-			manejoImagenes::cargar_imagen($value['type'], JFactory::getUser()->id, $_FILES[$key]);
+			manejoImagenes::cargar_imagen('image/jpeg', JFactory::getUser()->id, $_FILES[$key]);
 		}
 		exit('termino');
 		//JApplication::redirect('index.php?option=com_integrado&view=solicitud', false);

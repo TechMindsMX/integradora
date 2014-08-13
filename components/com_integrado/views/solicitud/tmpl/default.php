@@ -8,7 +8,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-$datos = $this->data->integrados[0];
+$datos = @$this->data->integrados[0];
 
 //$postUrl = $datos->action->post;
 
@@ -94,7 +94,7 @@ if(!empty($datos->integrado)){
 		if(!empty($datos->poder)){
 		?>
 			var poder = '<?php echo json_encode($datos->poder); ?>';
-			var poder = eval ("(" + testimonio_1 + ")");
+			var poder = eval ("(" + poder + ")");
 
 			jQuery.each(poder, function(key, value){
 				jQuery('#pn_'+key).val(value);
@@ -590,7 +590,7 @@ if(!empty($datos->integrado)){
 	</fieldset>
 	<?php
 		echo JHtml::_('bootstrap.endTab');
-		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'files', JText::_('LBL_TAB_BANCOS'));
+		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'files', JText::_('LBL_TAB_ARCHIVOS'));
 	?>
 	<fieldset>
 		
