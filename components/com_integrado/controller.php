@@ -13,7 +13,7 @@ class IntegradoController extends JControllerLegacy {
 		$usuario = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$usuario);
 
 		foreach ($_FILES as $key => $value) {
-			manejoImagenes::cargar_imagen('image/jpeg', $usuario['integrado_id'], $value, $key);
+			manejoImagenes::cargar_imagen($value['type'], $usuario['integrado_id'], $value, $key);
 			$columna 	= substr($key, 3);
 			$clave 		= substr($key, 0,3);
 			$where		= $db->quoteName('integrado_id').' = '.$usuario['integrado_id'];
