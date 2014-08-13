@@ -609,32 +609,32 @@ if(!empty($datos->integrado)){
 		</div>
 		
 		<div class="form-group">
-			<label for="de_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
-			<input name="de_rfc" type="file" maxlength="" />
+			<label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+			<input name="de_url_rfc" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-			<label for="testimonio1-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
-			<input name="testimonio1-file" type="file" maxlength="" />
+			<label for="t1_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+			<input name="t1_url_instrumento" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-			<label for="testimonio2-file"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
-			<input name="testimonio2-file" type="file" maxlength="" />
+			<label for="t2_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
+			<input name="t2_url_instrumento" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-			<label for="poder-file"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
-			<input name="poder-file" type="file" maxlength="" />
+			<label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+			<input name="pn_url_instrumento" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-				<label for="rpp-file"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
-				<input name="rpp-file" type="file" maxlength="" />
+				<label for="rp_url_instrumento"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
+				<input name="rp_url_instrumento" type="file" maxlength="" />
 			</div>
 
         <div class="form-group">
-			<label for="db_banco__file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
+			<label for="db_banco_file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
 			<input name="db_banco_file" id="db_banco_file" type="file" maxlength="" />
 		</div>
 
