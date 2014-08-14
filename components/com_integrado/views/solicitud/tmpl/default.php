@@ -9,7 +9,6 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $datos = @$this->data->integrados[0];
-
 //$postUrl = $datos->action->post;
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
@@ -635,7 +634,7 @@ if(!empty($datos->integrado)){
 
         <div class="form-group">
 			<label for="db_banco_file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
-			<input name="db_banco_file" id="db_banco_file" type="file" maxlength="" />
+			<input name="db_banco_file" type="file" maxlength="" />
 		</div>
 
 		<div class="form-actions">
