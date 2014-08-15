@@ -7,6 +7,15 @@ jimport('integradora.integrado');
 jimport('integradora.imagenes');
 
 class IntegradoController extends JControllerLegacy {
+	function savealta(){
+		$data = JRequest::get();
+		
+		$columnas = array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
+		$valores = array($data['integrado_id'], $data['userId'], 0, $data['permission_level']);
+		
+		self::insertData('integrado_users', $columnas, $valores);
+	}
+	
 	function uploadFiles(){
 		$db = JFactory::getDbo();
 		$usuario = JFactory::getUser()->id;
@@ -75,14 +84,36 @@ class IntegradoController extends JControllerLegacy {
 		echo json_encode($response);
 	}
 	
+	function checkUser(){
+		$db = JFactory::getDbo();
+		
+		$email = JRequest::get();
+		$diccionario  = array('email' 	=> array('label'=>JText::_('LBL_INTEGRADO_EMAIL'),		'length'=>100));
+		validador::procesamiento($email, $diccionario);
+		
+		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['email']));
+		
+		if(!is_null($respuesta)){
+			$response = array('success' => true, 'name' => $respuesta['name'], 'userId' => $respuesta['id']);
+		}else{
+			$response = array('success' => false, 'msg' => 'El usuario no existe');
+		}
+		$document = JFactory::getDocument();
+		
+		$document->setMimeEncoding('application/json');
+		
+		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
+		echo json_encode($response);
+	}
+	
 	public static function manejoDatos($data){
 		$db	= JFactory::getDbo();
 		
 		$integrado = self::checkdata('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
 		
 		if( is_null($integrado) ){
-			$columnas = array('user_id');
-			$valores = array($data['user_id']);
+			$columnas = array('user_id', 'integrado_principal', 'integrado_permission_level');
+			$valores = array($data['user_id'], 1, 3);
 			
 			self::insertData('integrado_users', $columnas, $valores);
 			

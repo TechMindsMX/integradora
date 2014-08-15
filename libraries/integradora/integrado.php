@@ -18,7 +18,7 @@ class Integrado {
 		$this->user = JFactory::getUser();
 		
 		$this->integrados = $this->getIntegradosCurrUser();
-		
+
 		foreach ($this->integrados as $key => $value) {
 			$id = $value->integrado_id;
 			$this->getSolicitud($id, $key);
@@ -33,7 +33,7 @@ class Integrado {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-			->select($db->quoteName('integrado_id'))
+			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
 		$result = $db->setQuery($query)->loadObjectList();
@@ -112,9 +112,6 @@ class Integrado {
 	}
 }
 
-/**
- * 
- */
 class IntegradoSimple extends Integrado {
 	
 	function __construct($integ_id) {
@@ -122,6 +119,23 @@ class IntegradoSimple extends Integrado {
 		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
 		
 		parent::getSolicitud($integ_id, 0);
+	}
+	
+	function getIntegrado_id($joomla_id){
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__'.$table))
+			->where($db->quoteName($where) . '=' . $db->quote($id));
+		$result = $db->setQuery($query)->loadObjectList();
+		
+		if(!empty($result)){
+			$return = $result[0];
+		}else{
+			$return = null;
+		}
+		
+		return $return;
 	}
 }
 
