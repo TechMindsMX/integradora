@@ -88,10 +88,11 @@ class IntegradoController extends JControllerLegacy {
 		$db = JFactory::getDbo();
 		
 		$email = JRequest::get();
+		
 		$diccionario  = array('email' 	=> array('label'=>JText::_('LBL_INTEGRADO_EMAIL'),		'length'=>100));
 		validador::procesamiento($email, $diccionario);
 		
-		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['email']));
+		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['data']));
 		
 		if(!is_null($respuesta)){
 			$response = array('success' => true, 'name' => $respuesta['name'], 'userId' => $respuesta['id']);
