@@ -13,7 +13,6 @@ class Integrado {
 	
 	public $user;
 	
-	
 	function __construct($integ_id = null) {
 		$this->user = JFactory::getUser();
 		
@@ -114,6 +113,7 @@ class Integrado {
 		
 		return $return;
 	}
+	
 }
 
 class IntegradoSimple extends Integrado {
@@ -126,3 +126,11 @@ class IntegradoSimple extends Integrado {
 	}
 }
 
+class Autoriza {
+	
+	public static function __($usuario='')
+	{
+		$checkUsuario = is_a($usuario, 'JUser');
+		var_dump($checkUsuario);
+	}	
+}
