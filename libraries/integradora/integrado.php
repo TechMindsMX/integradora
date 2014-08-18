@@ -114,6 +114,34 @@ class Integrado {
 		return $return;
 	}
 	
+	public static function checkPermisos($class, $failUrl = null)
+	{
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		
+		$query = $db->getQuery(true)
+					->select($db->quoteName(array('min_to_view','min_to_edit')))
+					->from($db->quoteName('#__integrado_permisos'))
+					->where($db->quoteName('view_component') . '=' . $db->quote($class));
+		$result = $db->setQuery($query)->loadAssoc();
+		
+		foreach ($result as $key => $value) {
+			$result[$key] = json_decode($value);
+		}
+		
+		$canView = array_intersect($result['min_to_view'], $user->getAuthorisedViewLevels());
+		
+		if (empty($canView)) {
+			$failUrl = (is_null($failUrl)) ? JUri::base() : $failUrl ;
+			// JFactory::getApplication()->redirect($failUrl, JText::_('JERROR_LAYOUT_YOU_HAVE_NO_ACCESS_TO_THIS_PAGE'), 'error');
+		}
+		
+		// verifica si puede editar
+		$canEdit = array_intersect($result['min_to_edit'], $user->getAuthorisedGroups());
+		
+		return (!empty($canEdit));
+		
+	}
 }
 
 class IntegradoSimple extends Integrado {
