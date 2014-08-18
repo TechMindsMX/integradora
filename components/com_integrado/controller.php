@@ -8,12 +8,23 @@ jimport('integradora.imagenes');
 
 class IntegradoController extends JControllerLegacy {
 	function savealta(){
-		$data = JRequest::get();
+		$db = JFactory::getDbo();
+		$input = JFactory::getApplication()->input;
+		$data = $input->getArray();
+
+		$columnas	= array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
+		$update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
+		$valores	= array($data['integrado_id'], $data['userId'], 0, $data['permission_level']);
+
+		$existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId']);
+
+		if( is_null($existe) ){
+			self::insertData('integrado_users', $columnas, $valores);
+		}else{
+			self::updateData('integrado_users', $update, $db->quoteName('user_id').' = '.$data['userId']);
+		}
 		
-		$columnas = array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
-		$valores = array($data['integrado_id'], $data['userId'], 0, $data['permission_level']);
-		
-		self::insertData('integrado_users', $columnas, $valores);
+		JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
 	}
 	
 	function uploadFiles(){
@@ -70,7 +81,8 @@ class IntegradoController extends JControllerLegacy {
 			echo json_encode($response);
 			return true;
 		}
-		$post = JRequest::get();
+		$input = JFactory::getApplication()->input;
+		$post = $input->getArray();
 		
 		$response = self::manejoDatos($post);
 		// Get the document object.
@@ -84,18 +96,35 @@ class IntegradoController extends JControllerLegacy {
 		echo json_encode($response);
 	}
 	
+	function deleteUser(){
+		$db			= JFactory::getDbo();
+		$document	= JFactory::getDocument();
+		$input		= JFactory::getApplication()->input;
+		
+		$user		= $input->getArray();
+		$where 		= array($db->quoteName('user_id') . ' = ' . $user['data']);
+		
+		$response 	= self::deleteData('integrado_users', $where);
+		$response['delete']	= true;
+		$response['id']		= $user['data'];
+		
+		$document->setMimeEncoding('application/json');
+		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
+		
+		echo json_encode($response);
+	}
+	
 	function checkUser(){
 		$db = JFactory::getDbo();
-		
-		$email = JRequest::get();
+		$input = JFactory::getApplication()->input;
+		$email = $input->getArray();
 		
 		$diccionario  = array('email' 	=> array('label'=>JText::_('LBL_INTEGRADO_EMAIL'),		'length'=>100));
 		validador::procesamiento($email, $diccionario);
-		
 		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['data']));
 		
 		if(!is_null($respuesta)){
-			$response = array('success' => true, 'name' => $respuesta['name'], 'userId' => $respuesta['id']);
+			$response = array('success' => true, 'name' => $respuesta['name'], 'userId' => $respuesta['id'], 'delete' => false);
 		}else{
 			$response = array('success' => false, 'msg' => 'El usuario no existe');
 		}
@@ -105,6 +134,15 @@ class IntegradoController extends JControllerLegacy {
 		
 		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
 		echo json_encode($response);
+	}
+	
+	function sepomex(){
+		$input = JFactory:: getApplication()->input;
+		$cp = $input->getArray();
+
+		$url = "http://192.168.0.122:7272/sepomex-middleware/rest/sepomex/get/".$cp['cp'];
+
+		echo file_get_contents($url);
 	}
 	
 	public static function manejoDatos($data){
@@ -271,6 +309,7 @@ class IntegradoController extends JControllerLegacy {
 			return $results;
 		}
 		catch(Exception $e){
+			var_dump($e);
 			$response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
 			echo json_encode($response);
 		}
@@ -309,15 +348,28 @@ class IntegradoController extends JControllerLegacy {
 			return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
 		}
 		catch(Exception $e){
-			echo $query;
+			var_dump($e);
 			$response = array('success' => false , 'msg' => 'Error al Actualizar intente nuevamente');
 			echo json_encode($response);
 		}
 	}
 	
-	function sepomex(){
-		$url = "http://192.168.0.122:7272/sepomex-middleware/rest/sepomex/get/".$_POST["cp"];
-		echo file_get_contents($url);
+	public static function deleteData($table, $where){
+		try{
+			$db		= JFactory::getDbo();
+			$query	= $db->getQuery(true);
+			 
+			$query->delete($db->quoteName('#__'.$table));
+			$query->where($where);
+			
+			$db->setQuery($query);
+			$db->execute();
+
+			return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
+		}
+		catch(Exception $e){
+			return array('success' => false , 'msg' => 'Error al eliminar el usuario');
+		}
 	}
 	
 	public static function saveInstrumentos($data){
