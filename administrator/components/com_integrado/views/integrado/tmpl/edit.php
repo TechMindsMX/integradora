@@ -7,28 +7,6 @@ jimport('joomla.html.html.bootstrap');
 $integ = $this->item->integrados[0];
 $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->razon_social : $this->item->usuarios[0]->name;
 
-function tabValores($obj, $tab_name, $tab_group, $jtext_label)
-{
-	echo JHtml::_('bootstrap.addTab', $tab_group, $tab_name, JText::_($jtext_label));
-	?>
-     <div class="span6">
-        <?php 
-        if ($obj) :
-        foreach ($obj as $label => $field): ?>
-            <div class="control-group">
-                <div class="control-label"><?php echo $label; ?></div>
-                <div class="controls"><?php echo $field; ?></div>
-            </div>
-        <?php 
-        endforeach; 
-        endif;
-        ?>
-    </div>
-	<?php
-		echo JHtml::_('bootstrap.endTab');
-
-}
-
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_integrado&layout=edit&id=' . (int)$this -> item -> id); ?>"
     method="post" name="adminForm" id="adminForm">
@@ -57,12 +35,13 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
             </div>
         </fieldset>
 	<?php
-	$tab_group = 'tabs-solicitud';
-		echo JHtml::_('bootstrap.startTabSet', $tab_group, array('active' => 'personales'));
-			tabValores($integ->datos_personales, 'personales', $tab_group, 'LBL_SLIDE_BASIC');
-			tabValores($integ->datos_empresa, 'empresa', $tab_group, 'LBL_TAB_EMPRESA');
-			tabValores($integ->datos_bancarios, 'bancarios', $tab_group, 'LBL_TAB_BANCO');
-					echo JHtml::_('bootstrap.endTabSet');
+	$jhtml_group = 'slide-detalle-integrado';
+
+		echo JHtml::_('bootstrap.startAccordion', $jhtml_group, array('active' => 'LBL_SLIDE_BASIC'));
+			tabValores($integ->datos_personales, 	'personales', 	$jhtml_group, 'LBL_SLIDE_BASIC');
+			tabValores($integ->datos_empresa, 		'empresa', 		$jhtml_group, 'LBL_TAB_EMPRESA');
+			tabValores($integ->datos_bancarios, 	'bancarios', 	$jhtml_group, 'LBL_TAB_BANCO');
+		echo JHtml::_('bootstrap.endAccordion');
 	?>
              </div>
         </fieldset>
@@ -71,3 +50,67 @@ function tabValores($obj, $tab_name, $tab_group, $jtext_label)
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
+<?php 
+function tabValores($obj, $tab_name, $jhtml_group, $jtext_label)
+{
+	$campos = getCampos($jtext_label);
+	
+	echo JHtml::_('bootstrap.addSlide', $jhtml_group, JText::_($jtext_label), $jtext_label);
+	?>
+     <div>
+        <?php 
+        if ($obj) :
+	        foreach ($obj as $label => $field): 
+	        	if (in_array($label, $campos)) : 
+	        	?>
+	            <div class="control-group">
+	                <div class="control-label"><?php echo $label; ?></div>
+	                <div class="controls"><?php echo $field; ?></div>
+	            </div>
+	       		<?php 
+	        	endif;
+        	endforeach; 
+    	endif;
+        ?>
+    </div>
+	<?php
+		echo JHtml::_('bootstrap.endSlide');
+}
+
+function getCampos($jtext_label) {
+	$campos = array();
+	switch ($jtext_label) {
+		case 'LBL_SLIDE_BASIC':
+			$campos = array('nacionalidad', 
+							'sexo', 
+							'fecha_nacimiento', 
+							'RFC', 
+							'calle', 
+							'num_exterior', 
+							'num_interior', 
+							'cod_postal'
+							);
+			break;
+		
+		case 'LBL_TAB_EMPRESA':
+			$campos = array('razon_social',
+							'rfc'
+							);
+			break;
+			
+		case 'LBL_TAB_BANCO':
+			$campos = array('nacionalidad', 
+							'sexo', 
+							'fecha_nacimiento', 
+							'RFC', 
+							'calle', 
+							'num_exterior', 
+							'num_interior', 
+							'cod_postal'
+							);
+			break;
+	}
+	
+	return $campos;
+}
+?>

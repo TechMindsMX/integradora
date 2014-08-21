@@ -77,12 +77,14 @@ class Integrado {
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
-			
+
 			$empresa = $this->integrados[$key]->datos_empresa;
-			$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
-			$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
-			$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
-			$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
+			if (isset($empresa)){		
+				$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
+				$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
+				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
+				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
+			}
 		}else{
 			$this->integrados[$key]->integrado 			= null;
 			$this->integrados[$key]->datos_personales 	= null;
@@ -141,6 +143,17 @@ class Integrado {
 		
 		return (!empty($canEdit));
 		
+	}
+	public static function getNationalityNameFromId($id) {
+		$db = JFactory::getDbo();
+		
+		$query = $db->getQuery(true)
+					->select($db->quoteName('nombre'))
+					->from($db->quoteName('#__catalog_paises'))
+					->where('id ='. (int)$id);
+		$result = $db->setQuery($query)->loadResult();
+		
+		return $result;
 	}
 }
 
