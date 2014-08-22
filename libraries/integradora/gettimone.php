@@ -84,5 +84,89 @@ class getFromTimOne{
 		
 		return $array;
 	}
+	
+	public static function getProducts($userId){
+		$productos = new stdClass;
+		$productos->id			= 1;
+		$productos->name		= 'Bra';
+		$productos->medida		= '5 X 5 cm';
+		$productos->precio		= '$1000';
+		$productos->iva			= '$150';
+		$productos->ieps		= '$100';
+		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
+		I am the League of Shadows.
+		It will be extremely painful... for you
+		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+		Search him. Then I will kill you.
+		Citizens, take control. Take control of your ...";
+		
+		$array[] = $productos;
+		
+		$productos = new stdClass;
+		$productos->id			= 1;
+		$productos->name		= 'Chanclas';
+		$productos->medida		= '5 X 5 cm';
+		$productos->precio		= '$1000';
+		$productos->iva			= '$150';
+		$productos->ieps		= '$100';
+		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
+		I am the League of Shadows.
+		It will be extremely painful... for you
+		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+		Search him. Then I will kill you.
+		Citizens, take control. Take control of your ...";
+		
+		$array[] = $productos;
+		
+		$productos = new stdClass;
+		$productos->id			= 1;
+		$productos->name		= 'Huaraches';
+		$productos->medida		= '5 X 5 cm';
+		$productos->precio		= '$1000';
+		$productos->iva			= '$150';
+		$productos->ieps		= '$100';
+		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
+		I am the League of Shadows.
+		It will be extremely painful... for you
+		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+		Search him. Then I will kill you.
+		Citizens, take control. Take control of your ...";
+		
+		$array[] = $productos;
+		
+		$productos = new stdClass;
+		$productos->id			= 1;
+		$productos->name		= 'Tangas';
+		$productos->medida		= '5 X 5 cm';
+		$productos->precio		= '$1000';
+		$productos->iva			= '$150';
+		$productos->ieps		= '$100';
+		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
+		I am the League of Shadows.
+		It will be extremely painful... for you
+		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+		Search him. Then I will kill you.
+		Citizens, take control. Take control of your ...";
+		
+		$array[] = $productos;
+		
+		$productos = new stdClass;
+		$productos->id			= 1;
+		$productos->name		= 'Chanclas';
+		$productos->medida		= '5 X 5 cm';
+		$productos->precio		= '$1000';
+		$productos->iva			= '$150';
+		$productos->ieps		= '$100';
+		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
+		I am the League of Shadows.
+		It will be extremely painful... for you
+		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+		Search him. Then I will kill you.
+		Citizens, take control. Take control of your ...";
+		
+		$array[] = $productos;
+		
+		return $array;
+	}
 }
 ?>

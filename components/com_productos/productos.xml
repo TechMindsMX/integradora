@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+ 
+        <name>Productos</name>
+        <!-- The following elements are optional and free of formatting constraints -->
+        <creationDate>Agosto 2014</creationDate>
+        <author>Lutek</author>
+        <authorEmail>lutek.valhalla@gmail.com</authorEmail>
+        <authorUrl></authorUrl>
+        <copyright>Copyright Info</copyright>
+        <license>License Info</license>
+        <!--  The version string is recorded in the components table -->
+        <version>0.0.1</version>
+        <!-- The description is optional and defaults to the name -->
+        <description>Componente para mostrar, dar de alta y editar productos</description>
+ 
+        <update> <!-- Runs on update; New in 2.5 -->
+                <schemas>
+                        <schemapath type="mysql">sql/updates/mysql/</schemapath>
+                </schemas>
+        </update>
+ 
+        <!-- Site Main File Copy Section -->
+        <!-- Note the folder attribute: This attribute describes the folder
+                to copy FROM in the package to install therefore files copied
+                in this section are copied from /site/ in the package -->
+        <files folder="site">
+			<!-- Admin Main File Copy Section -->
+			<filename>index.html</filename>
+			<filename>productos.php</filename>
+			<filename>controller.php</filename>
+			<!-- SQL files section -->
+			<folder>models</folder>
+			<folder>views</folder>
+		</files>
+        
+</extension>
