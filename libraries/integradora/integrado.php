@@ -74,12 +74,14 @@ class Integrado {
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
-			
+
 			$empresa = $this->integrados[$key]->datos_empresa;
-			$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
-			$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
-			$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
-			$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
+			if (isset($empresa)){		
+				$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
+				$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
+				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
+				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
+			}
 		}else{
 			$this->integrados[$key]->integrado 			= null;
 			$this->integrados[$key]->datos_personales 	= null;
@@ -110,6 +112,45 @@ class Integrado {
 		return $return;
 	}
 	
+	public static function checkPermisos($class, $failUrl = null)
+	{
+		$db = JFactory::getDbo();
+		$user = JFactory::getUser();
+		
+		$query = $db->getQuery(true)
+					->select($db->quoteName(array('min_to_view','min_to_edit')))
+					->from($db->quoteName('#__integrado_permisos'))
+					->where($db->quoteName('view_component') . '=' . $db->quote($class));
+		$result = $db->setQuery($query)->loadAssoc();
+		
+		foreach ($result as $key => $value) {
+			$result[$key] = json_decode($value);
+		}
+		
+		$canView = array_intersect($result['min_to_view'], $user->getAuthorisedViewLevels());
+		
+		if (empty($canView)) {
+			$failUrl = (is_null($failUrl)) ? JUri::base() : $failUrl ;
+			// JFactory::getApplication()->redirect($failUrl, JText::_('JERROR_LAYOUT_YOU_HAVE_NO_ACCESS_TO_THIS_PAGE'), 'error');
+		}
+		
+		// verifica si puede editar
+		$canEdit = array_intersect($result['min_to_edit'], $user->getAuthorisedGroups());
+		
+		return (!empty($canEdit));
+		
+	}
+	public static function getNationalityNameFromId($id) {
+		$db = JFactory::getDbo();
+		
+		$query = $db->getQuery(true)
+					->select($db->quoteName('nombre'))
+					->from($db->quoteName('#__catalog_paises'))
+					->where('id ='. (int)$id);
+		$result = $db->setQuery($query)->loadResult();
+		
+		return $result;
+	}
 }
 
 class IntegradoSimple extends Integrado {

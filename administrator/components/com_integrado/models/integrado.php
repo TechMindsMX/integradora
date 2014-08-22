@@ -45,6 +45,8 @@ class IntegradoModelIntegrado extends JModelAdmin
 		}
 		$item->transicion_status = $validos;
 
+		$item->integrados[0]->datos_personales->nacionalidad = $this->getNacionalidad($item->integrados[0]->datos_personales->nacionalidad);
+		
 		return $item;
     }
 	public function getCatalogos() {
@@ -81,4 +83,7 @@ class IntegradoModelIntegrado extends JModelAdmin
         }
         return $data;
     }
+	function getNacionalidad($id) {
+		return Integrado::getNationalityNameFromId($id);
+	} 
 }
