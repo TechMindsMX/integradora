@@ -93,7 +93,7 @@ class IntegradoController extends JControllerLegacy {
 		
 		// Change the suggested filename.
 		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
-		sleep(5);
+
 		echo json_encode($response);
 	}
 	

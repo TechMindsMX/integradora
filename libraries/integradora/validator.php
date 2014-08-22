@@ -22,40 +22,43 @@ class validador {
 			}
 			
 		}
-
+		$post['pers_juridica'] = $data['pers_juridica'];
+		
 		foreach ($post as $key => $value) {
-			
-			if(isset($diccionario[$key]['length']) ){
-				$minlength = isset($diccionario[$key]['minlength']) ? $diccionario[$key]['minlength'] : null;
-				
-				$respuesta[$key] = self::validalength($value,$diccionario[$key]['length'], $minlength);
-				
-				if(!$respuesta[$key]){
-					self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
+			if($value != ''){
+				if(isset($diccionario[$key]['length']) ){
+					$minlength = isset($diccionario[$key]['minlength']) ? $diccionario[$key]['minlength'] : null;
+					
+					$respuesta[$key] = self::validalength($value,$diccionario[$key]['length'], $minlength);
+					
+					if(!$respuesta[$key]){
+						self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
+					}
 				}
-			}
-			
-			$method = 'valida_'.$key;
-
-			if(method_exists('validador',$method) && ($value != '') ){
-				$respuesta[$key] = call_user_func(array('validador',$method), $post);
-				if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', verifique tenga el formato adecuado');
-			}
-			
-			if( isset($diccionario[$key]['tipo']) ){
-				switch($diccionario[$key]['tipo']){
-					case 'string':
-						$respuesta[$key] = self::valida_strings($value);
-						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo letras');
-						break;
-					case 'number':
-						$respuesta[$key] = self::valida_numeros($value);
-						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros enteros');
-						break;
-					case 'alphaNumber':
-						$respuesta[$key] = self::valida_alfanumericos($value);
-						if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros y letras');
-						break;
+				
+				$method = 'valida_'.$key;
+	
+				if(method_exists('validador',$method) && ($value != '') ){
+					$respuesta[$key] = call_user_func(array('validador',$method), $post);
+					
+					if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', verifique tenga el formato adecuado');
+				}
+				
+				if( isset($diccionario[$key]['tipo']) ){
+					switch($diccionario[$key]['tipo']){
+						case 'string':
+							$respuesta[$key] = self::valida_strings($value);
+							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo letras');
+							break;
+						case 'number':
+							$respuesta[$key] = self::valida_numeros($value);
+							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros enteros');
+							break;
+						case 'alphaNumber':
+							$respuesta[$key] = self::valida_alfanumericos($value);
+							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros y letras');
+							break;
+					}
 				}
 			}
 		}
@@ -108,8 +111,13 @@ class validador {
 	
 	public static function valida_rfc($data){
 		$rfc			= $data['rfc'];
-		$regex			= '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+		$personalidad	= $data['pers_juridica'];
 		
+		if($personalidad == 1){
+			$regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+		}else{
+			$regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+		}
 		
 		if( preg_match($regex, $rfc, $coicidencias) == 1){
 			$respuesta = true;

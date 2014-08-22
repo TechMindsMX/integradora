@@ -280,19 +280,19 @@ if(!empty($datos->integrado)){
 		</div>
 		<div class="form-group">
 			<label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?></label>
-			<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="" />
+			<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" />
 		</div>
 		<div class="form-group">
 			<label for="email"><?php echo JText::_('LBL_CORREO'); ?></label>
-			<input name="dp_email" id="dp_email" type="email" maxlength="" />
+			<input name="dp_email" id="dp_email" type="email" maxlength="100" />
 		</div>
 		<div class="form-group">
 			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
-			<input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="" />
+			<input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
-			<input name="dp_curp" id="dp_curp" type="text" maxlength="" />
+			<input name="dp_curp" id="dp_curp" type="text" maxlength="18" />
 		</div>
 	</fieldset>
 	<?php
@@ -418,7 +418,7 @@ if(!empty($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-				<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" />
+				<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
 			</div>
 	 
 	        <div class="form-group">
@@ -439,7 +439,7 @@ if(!empty($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="t1_instrum_num_instrumento" id="t1_instrum_num_instrumento" type="text" />
+				<input name="t1_instrum_num_instrumento" id="t1_instrum_num_instrumento" type="text" maxlength="10"/>
 			</div>
 			
 		</div>
@@ -471,11 +471,11 @@ if(!empty($datos->integrado)){
 	
 			<div class="form-group">
 				<label for="t2_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="t2_instrum_nom_notario" id="t2_instrum_nom_notario" type="text" maxlength="3" />
+				<input name="t2_instrum_nom_notario" id="t2_instrum_nom_notario" type="text" maxlength="" />
 			</div>
 			<div class="form-group">
 				<label for="t2_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="t2_instrum_num_instrumento" id="t2_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="t2_instrum_num_instrumento" id="t2_instrum_num_instrumento" type="text" maxlength="10" />
 			</div>
 		</div>
 
@@ -506,11 +506,11 @@ if(!empty($datos->integrado)){
 	
 			<div class="form-group">
 				<label for="pn_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
-				<input name="pn_instrum_nom_notario" id="pn_instrum_nom_notario" type="text" maxlength="3" />
+				<input name="pn_instrum_nom_notario" id="pn_instrum_nom_notario" type="text" maxlength="" />
 			</div>
 			<div class="form-group">
 				<label for="pn_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="pn_instrum_num_instrumento" id="pn_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="pn_instrum_num_instrumento" id="pn_instrum_num_instrumento" type="text" maxlength="10" />
 			</div>
 		</div>
 
@@ -571,7 +571,7 @@ if(!empty($datos->integrado)){
         </div>
 		<div class="form-group">
 			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="18" />
+			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
