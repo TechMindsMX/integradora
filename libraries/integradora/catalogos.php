@@ -21,6 +21,7 @@ class Catalogos {
 		
 		$this->nacionalidades = $result;
 	}
+	
 	public function getEstados()
 	{
 		$db = JFactory::getDbo();

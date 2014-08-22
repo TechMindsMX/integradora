@@ -15,7 +15,7 @@ class IntegradoViewAltausuarios extends JViewLegacy {
 		$modelo  = $this->getModel();
 		
 		$canDo = Autoriza::__($usuario);
-		var_dump($canDo, $usuario, $modelo);
+		//var_dump($canDo, $usuario, $modelo);
 		
 		// Check for errors.
         if (count($errors = $this->get('Errors'))) 

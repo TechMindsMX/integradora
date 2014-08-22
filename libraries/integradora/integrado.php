@@ -10,9 +10,7 @@ jimport('integradora.catalogos');
  * Clase datos de integrado
  */
 class Integrado {
-	
 	public $user;
-	
 	function __construct($integ_id = null) {
 		$this->user = JFactory::getUser();
 		
@@ -34,7 +32,7 @@ class Integrado {
 		$query = $db->getQuery(true)
 			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal'))
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
+			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id).' AND '.$db->quoteName('integrado_principal').' = 1');
 		$result = $db->setQuery($query)->loadObjectList();
 		
 		$instance->intergrado->ids = $result;
@@ -65,7 +63,6 @@ class Integrado {
 	function separaNombre($value)
 	{
 	}
-	
 	function getSolicitud($integ_id = null, $key){
 		if ($integ_id == null){
 			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
@@ -96,7 +93,6 @@ class Integrado {
 		}
 		
 	}
-	
 	function selectDataSolicitud($table, $where, $id){
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
@@ -131,6 +127,6 @@ class Autoriza {
 	public static function __($usuario='')
 	{
 		$checkUsuario = is_a($usuario, 'JUser');
-		var_dump($checkUsuario);
+		//var_dump($checkUsuario);
 	}	
 }

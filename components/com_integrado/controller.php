@@ -93,6 +93,7 @@ class IntegradoController extends JControllerLegacy {
 		
 		// Change the suggested filename.
 		JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
+		sleep(5);
 		echo json_encode($response);
 	}
 	
@@ -148,7 +149,7 @@ class IntegradoController extends JControllerLegacy {
 	public static function manejoDatos($data){
 		$db	= JFactory::getDbo();
 		
-		$integrado = self::checkdata('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
+		$integrado = self::checkdata('integrado_users', $db->quoteName('user_id').' = '.$data['user_id'].' AND '.$db->quoteName('integrado_principal').' = 1');
 		
 		if( is_null($integrado) ){
 			$columnas = array('user_id', 'integrado_principal', 'integrado_permission_level');
@@ -270,11 +271,11 @@ class IntegradoController extends JControllerLegacy {
 					}
 				}
 				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'int',												'length'=>10),
-									  'banco_nombre'	 	=> array('tipo'=>'string',	'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
-									  'banco_cuenta'	 	=> array('tipo'=>'int',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>18,	'minlength' => 18),
-									  'banco_sucursal'		=> array('tipo'=>'int',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>10),
-									  'banco_clabe'			=> array('tipo'=>'int',		'label'=>JText::_('LBL_NUMERO_CLABE'),	'length'=>18),	'minlength' => 18);
+				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',												'length'=>10),
+									  'banco_nombre'	 	=> array('tipo'=>'number',	'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
+									  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>18,	'minlength' => 18),
+									  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>10),
+									  'banco_clabe'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_NUMERO_CLABE'),	'length'=>18),	'minlength' => 18);
 				
 				validador::procesamiento($data, $diccionario,$data['tab']);
 				

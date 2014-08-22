@@ -4,3 +4,26 @@
 .forceinline {
 	display: inline-block !important;
 }
+.proyectos{
+	width: 100%;
+	display: inline-table;
+	margin-top: 50px;
+}
+li.proyectoslist {
+	list-style-type: disc;
+}
+.columnas:nth-of-type(2) {
+	position: absolute;
+	left: 700px;
+}
+.columnas:nth-of-type(3) {
+	position: absolute;
+	left: 820px;
+}
+.filas {
+	display: inline-flex;
+	height: 30px;
+}
+.status1{
+	color:#FF0000;
+}
