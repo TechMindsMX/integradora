@@ -23,9 +23,9 @@ class ProyectosController extends JControllerLegacy {
 		foreach ($proyectos as $key => $value) {
 			if($data['proyId'] == $value->id){
 				if($value->parentId == 0){
-					$app->redirect('index.php/component/proyectos/?view=altaproyectos&proyId='.$data['proyId']);
+					$app->redirect('index.php?option=com_proyectos&view=altaproyectos&proyId='.$data['proyId']);
 				}else{
-					$app->redirect('index.php/component/proyectos/?view=altasubproyectos&proyId='.$data['proyId']);
+					$app->redirect('index.php?option=com_proyectos&view=altasubproyectos&proyId='.$data['proyId']);
 				}
 			}
 		}
