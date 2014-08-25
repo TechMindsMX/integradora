@@ -22,7 +22,7 @@ class validador {
 			}
 			
 		}
-		$post['pers_juridica'] = $data['pers_juridica'];
+		$post['pers_juridica'] = isset($data['pers_juridica']) ? $data['pers_juridica']:'';
 		
 		foreach ($post as $key => $value) {
 			if($value != ''){
@@ -155,7 +155,7 @@ class validador {
 		$ponderaciones 		= array(3,7,1,3,7,1,3,7,1,3,7,1,3,7,1,3,7);
 		$claveBanco			= $data['banco_nombre'];
 		$claveBancoClabe	= $clabesepa[0].$clabesepa[1].$clabesepa[2];
-		
+
 		foreach ($clabesepa as $key => $value) {
 			$paso1[] = intval($value)*$ponderaciones[$key];
 		

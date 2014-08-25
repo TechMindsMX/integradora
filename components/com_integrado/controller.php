@@ -5,6 +5,7 @@ jimport('joomla.application.component.controller');
 jimport('integradora.validator');
 jimport('integradora.integrado');
 jimport('integradora.imagenes');
+jimport('integradora.gettimone');
 
 class IntegradoController extends JControllerLegacy {
 	function savealta(){
@@ -120,7 +121,6 @@ class IntegradoController extends JControllerLegacy {
 		$input = JFactory::getApplication()->input;
 		$email = $input->getArray();
 		
-		$diccionario  = array('email' 	=> array('label'=>JText::_('LBL_INTEGRADO_EMAIL'),		'length'=>100));
 		validador::procesamiento($email, $diccionario);
 		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['data']));
 		
@@ -152,14 +152,15 @@ class IntegradoController extends JControllerLegacy {
 		$integrado = self::checkdata('integrado_users', $db->quoteName('user_id').' = '.$data['user_id'].' AND '.$db->quoteName('integrado_principal').' = 1');
 		
 		if( is_null($integrado) ){
-			$columnas = array('user_id', 'integrado_principal', 'integrado_permission_level');
-			$valores = array($data['user_id'], 1, 3);
+			$integrado_id = getFromTimOne::getIntegradoId(); //self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
+			
+			$integrado_id = $integrado_id['integrado_id']+1;
+			
+			$columnas = array('user_id', 'integrado_id', 'integrado_principal', 'integrado_permission_level');
+			$valores = array($data['user_id'], $integrado_id, 1, 3);
 			
 			self::insertData('integrado_users', $columnas, $valores);
-			
-			$integrado_id = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['user_id']);
-			
-			$integrado_id = $integrado_id['integrado_id'];
+
 		}else{
 			$integrado_id = $integrado['integrado_id'];
 		}
@@ -272,9 +273,9 @@ class IntegradoController extends JControllerLegacy {
 				}
 				
 				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',												'length'=>10),
-									  'banco_nombre'	 	=> array('tipo'=>'number',	'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
-									  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>18,	'minlength' => 18),
-									  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>10),
+									  'banco_nombre'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
+									  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>10,	'minlength' => 10),
+									  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>3),
 									  'banco_clabe'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_NUMERO_CLABE'),	'length'=>18),	'minlength' => 18);
 				
 				validador::procesamiento($data, $diccionario,$data['tab']);

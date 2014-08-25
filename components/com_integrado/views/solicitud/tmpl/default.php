@@ -575,7 +575,7 @@ if(!empty($datos->integrado)){
 		</div>
 		<div class="form-group">
 			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="10" />
+			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
