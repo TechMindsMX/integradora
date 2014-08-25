@@ -2,14 +2,15 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.view');
+jimport('integradora.gettimone');
 
 class IntegradoViewAltausuarios extends JViewLegacy {
 	
 	function display($tpl = null)
 	{
-		$this->data = $this->get('Usuarios');
-		
-		$this->catalogos = $this->get('catalogos');
+		$this->data 		= $this->get('Usuarios');
+		$this->token 		= getFromTimOne::token(); 
+		$this->catalogos	= $this->get('catalogos');
 		
 		$usuario = JFactory::getUser();
 		$modelo  = $this->getModel();

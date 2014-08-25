@@ -23,7 +23,7 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 <form id="form_alta" method="post" action="#">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 	
-	
+	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<input type="text" name="name" id="name" value="<?php echo !is_null($proyecto)?$proyecto->name:''; ?>">

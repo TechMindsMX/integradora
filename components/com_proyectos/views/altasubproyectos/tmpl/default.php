@@ -25,6 +25,7 @@ $selected 	= '';
 	<input type="hidden" name="id" value="<?php echo !is_null($proyecto)?$proyecto->id:'0'; ?>" />
 	<input type="hidden" name="user" value="<?php echo !is_null($proyecto)?$proyecto->user:'0'; ?>" />
 	<input type="hidden" name="status" value="<?php echo !is_null($proyecto)?$proyecto->status:'0'; ?>" />
+	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
 	
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 	

@@ -279,5 +279,11 @@ class getFromTimOne{
 
 		return $results;
 	}
+	
+	public static function token(){
+		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
+		
+		return file_get_contents($url);
+	}
 }
 ?>

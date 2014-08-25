@@ -2,12 +2,15 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.view');
+jimport('integradora.gettimone');
 
 class ProyectosViewAltaproyectos extends JViewLegacy {
 	
 	function display($tpl = null){
 		$input 		= JFactory::getApplication()->input;
 		$data		= $input->getArray();
+		
+		$this->token = getFromTimOne::token();
 		
 		if( isset($data['proyId']) ){
 			$this->titulo = 'COM_PROYECTOS_EDICION_PROY_TITULO';
