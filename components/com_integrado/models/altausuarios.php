@@ -20,7 +20,11 @@ class IntegradoModelAltausuarios extends JModelItem {
 			$this->dataModelo = new Integrado;
 			$integrado = new ReflectionClass('integradoSimple');
 			
+			if (count($this->dataModelo->integrados) == 0) {
+				return false;
+			}
 			$this->dataModelo = $integrado->newInstance($this->dataModelo->integrados[0]->integrado_id);
+			
 		}
 
 		return $this->dataModelo;
