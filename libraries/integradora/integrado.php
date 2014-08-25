@@ -47,6 +47,7 @@ class Integrado {
 			->select($db->quoteName('user_id').','.$db->quoteName('integrado_principal').','.$db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('integrado_id') . '=' . $integ_id);
+		
 		$result = $db->setQuery($query)->loadObjectList();
 
 		foreach ($result as $key => $value) {

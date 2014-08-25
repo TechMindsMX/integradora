@@ -17,7 +17,7 @@ class IntegradoController extends JControllerLegacy {
 		$update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
 		$valores	= array($data['integrado_id'], $data['userId'], 0, $data['permission_level']);
 
-		$existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId']);
+		$existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
 
 		if( is_null($existe) ){
 			self::insertData('integrado_users', $columnas, $valores);
@@ -121,7 +121,6 @@ class IntegradoController extends JControllerLegacy {
 		$input = JFactory::getApplication()->input;
 		$email = $input->getArray();
 		
-		validador::procesamiento($email, $diccionario);
 		$respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['data']));
 		
 		if(!is_null($respuesta)){

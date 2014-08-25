@@ -13,7 +13,7 @@ function functionajax(){
 	var data 	= '';
 	var task 	= '';
 	var $campo 	= jQuery(this);
-	var token	= <?php echo $this->token; ?>
+	var token	= '<?php echo $this->token; ?>';
 	
 	if( $campo.prop('id') == 'email_user' ){
 		data = $campo.val();
