@@ -25,12 +25,12 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 	
 	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
 	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
+		<label for="name"><?php echo JText::_('COM_MANDATOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<input type="text" name="name" id="name" value="<?php echo !is_null($proyecto)?$proyecto->name:''; ?>">
 	</div>
 	
 	<div class="form-group">
-		<label for="description"><?php echo JText::_('COM_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
+		<label for="description"><?php echo JText::_('COM_MANDATOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<textarea name="description" id="description" rows="10" style="width: 90%;"><?php echo !is_null($proyecto)?$proyecto->description:''; ?></textarea>
 	</div>
 	

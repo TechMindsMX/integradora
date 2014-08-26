@@ -12,11 +12,11 @@ class MandatosViewAltasubproyectos extends JViewLegacy {
 		$this->token = getFromTimOne::token();
 		
 		if( isset($data['proyId']) ){
-			$this->titulo = 'COM_PROYECTOS_EDICION_SUB_TITULO';
+			$this->titulo = 'COM_MANDATOS_EDICION_SUB_TITULO';
 			$this->data = $this->get('proyectos');
 			$this->proyecto = $this->get('proyecto');
 		}else{
-			$this->titulo = 'COM_PROYECTOS_ALTA_SUB_TITULO';
+			$this->titulo = 'COM_MANDATOS_ALTA_SUB_TITULO';
 			$this->data = $this->get('proyectos');
 		}
 		

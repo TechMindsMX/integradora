@@ -33,25 +33,25 @@ jQuery(document).ready(function()
     } 
 ); 
 </script>
-<h1><?php echo JText::_('COM_PRODUCTOS_LBL_TITULO'); ?></h1>
+<h1><?php echo JText::_('COM_MANDATOS_LBL_TITULO'); ?></h1>
 
 <div class="agregarProducto">
-	<?php echo JText::_('COM_PRODUCTOS_LBL_AGREGAR'); ?> 
+	<?php echo JText::_('COM_MANDATOS_LBL_AGREGAR'); ?> 
 </div>
 
 <div class="table-responsive">
 	<table id="myTable" class="table table-bordered tablesorter">
 		<thead>
 			<tr>
-				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_NAME'); ?></span> </th>
-				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_DESCRIPTION'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_MEDIDAS'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_PRECIO'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_IVA'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_IEPS'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PRODUCTOS_LBL_MONEDA'); ?> </span> </th>
+				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_NAME'); ?></span> </th>
+				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_DESCRIPTION'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_MEDIDAS'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_PRECIO'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_IVA'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_IEPS'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LBL_MONEDA'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ></th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_PROYECTOS_LISTADO_DESHABILITA_PROYECTO'); ?></span></th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LISTADO_DESHABILITA_PROYECTO'); ?></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -68,7 +68,7 @@ jQuery(document).ready(function()
 			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->iva.'</td>';
 			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'</td>';
 			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->moneda.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
+			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_MANDATOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
 			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="radio" id=baja_"'.$value->id.'" name="baja_'.$value->id.'" '.$selected.' /></td>';
 			echo '</tr>';
 		} 
