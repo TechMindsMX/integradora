@@ -26,7 +26,8 @@ class IntegradoModelIntegrados extends JModelList
 			->join('LEFT', $db->quoteName('#__users', 'c') . ' ON ('. $db->quoteName('c.id') . ' = (' .
 				$q2->select($db->quoteName('d.user_id'))
 				 	->from($db->quoteName('#__integrado_users', 'd'))
-				 	->where($db->quoteName('d.integrado_id') . ' = ' . $db->quoteName('a.integrado_id'))
+				 	->where($db->quoteName('d.integrado_id') . ' = ' . $db->quoteName('a.integrado_id')
+							.' AND '.$db->quoteName('integrado_principal').' = 1')
 				 	.'))' )
 			->where($db->quoteName('a.status'). ' IS NOT NULL')
 			->order($db->escape($this->getState('list.ordering', 'a.status')).' '.
