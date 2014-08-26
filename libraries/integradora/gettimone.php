@@ -282,10 +282,7 @@ class getFromTimOne{
 	
 	public static function token(){
 		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
-		
-		if( @file_get_contents($url) ){
-			$token = file_get_contents($url); 
-		}else{
+		if( !$token = file_get_contents($url) ){
 			JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
 		}
 		
