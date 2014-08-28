@@ -7,6 +7,8 @@ jimport('integradora.catalogos');
 
 class getFromTimOne{
 	public static function getProyects($userId = null){
+		$respuesta = array();
+		
 		$proyectos = new stdClass;
 		$proyectos->id			= 1;
 		$proyectos->integradoid	= 1;
@@ -240,7 +242,149 @@ class getFromTimOne{
 		
 		return $respuesta;
 	}
-
+	
+	public static function getClientes($userId = null){
+		$respuesta = array();
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 1;
+		$clientes->type				= 0;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'AAML810328EH8';
+		$clientes->tradeName 		= 'Cliente A';
+		$clientes->corporateName	= 'z';
+		$clientes->contact			= 'Contacto A';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 0;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 2;
+		$clientes->type				= 1;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'BAML810328EH8';
+		$clientes->tradeName 		= 'Proveedor A';
+		$clientes->corporateName	= 'y';
+		$clientes->contact			= 'Contacto B';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 0;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 3;
+		$clientes->type				= 0;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'CAML810328EH8';
+		$clientes->tradeName 		= 'Cliente B';
+		$clientes->corporateName	= 'x';
+		$clientes->contact			= 'Contacto C';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 0;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 4;
+		$clientes->type				= 1;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'DAML810328EH8';
+		$clientes->tradeName 		= 'Proveedor B';
+		$clientes->corporateName	= 'w';
+		$clientes->contact			= 'Contacto D';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 0;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 5;
+		$clientes->type				= 0;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'EAML810328EH8';
+		$clientes->tradeName 		= 'Cliente C';
+		$clientes->corporateName	= 'v';
+		$clientes->contact			= 'Contacto E';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 0;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 6;
+		$clientes->type				= 1;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'FAML810328EH8';
+		$clientes->tradeName 		= 'Proveedor C';
+		$clientes->corporateName	= 'u';
+		$clientes->contact			= 'Contacto F';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= '0';
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 7;
+		$clientes->type				= 0;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'GAML810328EH8';
+		$clientes->tradeName 		= 'Cliente D';
+		$clientes->corporateName	= 't';
+		$clientes->contact			= 'Contacto G';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= '0';
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 8;
+		$clientes->type				= 1;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'HAML810328EH8';
+		$clientes->tradeName 		= 'Proveedor D';
+		$clientes->corporateName	= 's';
+		$clientes->contact			= 'Contacto H';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= '0';
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 9;
+		$clientes->type				= 0;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'IAML810328EH8';
+		$clientes->tradeName 		= 'Cliente E';
+		$clientes->corporateName	= 'r';
+		$clientes->contact			= 'Contacto I';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 1;
+		
+		$array[] = $clientes;
+		
+		$clientes 					= new stdClass;
+		$clientes->id				= 10;
+		$clientes->type				= 1;
+		$clientes->integradoId		= 1;
+		$clientes->rfc				= 'IAML810328EH8';
+		$clientes->tradeName 		= 'Proveedor E';
+		$clientes->corporateName	= 'q';
+		$clientes->contact			= 'Contacto J';
+		$clientes->phone			= '5556183180';
+		$clientes->status			= 1;
+		
+		$array[] = $clientes;
+		
+		foreach ($array as $key => $value) {
+			if($userId == $value->integradoId){
+				$respuesta[] = $value;
+			}
+		}
+		
+		return $respuesta;
+	}
+	
 	public static function getIntegradoId($userId = null){
 		$db 	= JFactory::getDbo();
 		$db		= JFactory::getDbo();

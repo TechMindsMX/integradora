@@ -12,3 +12,4 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 ?>
 <div style="margin-top: 50px;"><a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=proyectos'); ?>" /><?php echo JText::_('COM_MANDATOS_LISTAD_PROYECTOS'); ?></a></div>
 <div style="margin-top: 20px;"><a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productos'); ?>" /><?php echo JText::_('COM_MANDATOS_LISTAD_PRODUCTOS'); ?></a></div>
+<div style="margin-top: 20px;"><a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=clientes'); ?>" /><?php echo JText::_('COM_MANDATOS_LISTAD_CLIENTES'); ?></a></div>

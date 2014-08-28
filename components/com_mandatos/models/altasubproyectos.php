@@ -16,21 +16,16 @@ class MandatosModelAltasubproyectos extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProyectos(){
-		$app		= JFactory::getApplication();
-		$currUser	= JFactory::getUser();
+		$joomlaId		= JFactory::getUser()->id;
+		$integradoId	= getFromTimOne::getIntegradoId($joomlaId);
+		$allProjects = getFromTimOne::getProyects($integradoId['integrado_id']);
 		
-		if($currUser->guest){
-			$app->redirect('index.php/login');
-		}
-		
-		$allproyects = getFromTimOne::getProyects($currUser->id);
-
-		foreach ($allproyects as $key => $value) {
-			if($value->parentId == 0){
-				$this->dataModelo[] = $value; 
+		foreach ($allProjects as $key => $value) {
+			if( $value->parentId == 0){
+				$this->dataModelo[] = $value;
 			}
 		}
-
+		
 		return $this->dataModelo;
 	}
 	

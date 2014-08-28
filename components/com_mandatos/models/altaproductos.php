@@ -45,6 +45,7 @@ class MandatosModelAltaproductos extends JModelItem {
 		}else{
 			$this->producto = null;
 		}
+		
 		return $this->producto;
 	}
 }

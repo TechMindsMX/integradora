@@ -58,8 +58,8 @@ $selected 	= '';
 	</div>
 	
 	<div class="form-actions">
-		<button type="button" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		<button type="button" class="btn btn-primary span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+		<button type="button" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 	</div>
 	
 	<?php if( is_null($proyecto) ){ ?>

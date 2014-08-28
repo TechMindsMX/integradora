@@ -64,22 +64,26 @@ function editarProd(){
 		</thead>
 		<tbody>
 		<?php
-		foreach ($productos as $key => $value) {
-			$selected = $value->status == 0?'':'checked';
-			$class = $value->status == 0?'':'status1';
-			
-			echo '<tr>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->productName.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->description.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->measure.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->price.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->iva.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
-			echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="radio" id=baja_"'.$value->id.'" name="baja_'.$value->id.'" '.$selected.' /></td>';
-			echo '</tr>';
-		} 
+		if( !is_null($productos) ){
+			foreach ($productos as $key => $value) {
+				$selected = $value->status == 0?'':'checked';
+				$class = $value->status == 0?'':'status1';
+				
+				echo '<tr>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->productName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->description.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->measure.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->price.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->iva.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="radio" id=baja_"'.$value->id.'" name="baja_'.$value->id.'" '.$selected.' /></td>';
+				echo '</tr>';
+			}
+		}else{
+			JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_PRODUCTS'));
+		}
 		?>
 		</tbody>
 	</table>
