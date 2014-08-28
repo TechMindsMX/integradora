@@ -20,7 +20,7 @@ function proyectos ($parent, $proys){
 			echo '<li class="proyectoslist">'.
 				 	'<div class="filas">'.
 				 		'<div class="columnas"><span class="status'.$value->status.'">'.$value->name.'</span></div>'.
-						 '<div class="columnas"><input type="button" class="btn btn-primary editar" id="'.$value->id.'" value="'.JText::_('COM_MANDATOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
+						 '<div class="columnas"><input type="button" class="btn btn-primary editar" id="'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
 						 '<div class="columnas"><input type="checkbox" class="deshabilitar" id="'.$value->id.'" '.$checked.' /></div>'.
 				 	'</div>';
 				
@@ -33,7 +33,7 @@ function proyectos ($parent, $proys){
 }
 $proyectos = $this->data;
 if( !is_null($proyectos) ){
-	$agregarSubproyecto = '<a class="btn btn-primary span3" href="'.JRoute::_('index.php?option=com_mandatos&view=altasubproyectos').'">'.JText::_('COM_MANDATOS_LISTADO_AGREGAR_SUBPROYECTO').'</a>';
+	$agregarSubproyecto = '<a class="btn btn-primary span3" href="'.JRoute::_('index.php?option=com_mandatos&view=altasubproyectos').'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_AGREGAR_SUBPROYECTO').'</a>';
 }else{
 	$agregarSubproyecto = '';
 }
@@ -60,18 +60,24 @@ if( !is_null($proyectos) ){
 		window.location = 'index.php?option=com_mandatos&task=editarproyecto&proyId='+id;
 	}
 </script>
-	<h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_LISTADO_TITULO'); ?></h1>
+	<h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TITULO'); ?></h1>
 
 	<a class="btn btn-primary span3" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaproyectos'); ?>">
-		<?php echo JText::_('COM_MANDATOS_LISTADO_AGREGAR_PROYECTO'); ?>
+		<?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_AGREGAR_PROYECTO'); ?>
 	</a>
 	<?php echo $agregarSubproyecto; ?>
 
 	<div class="proyectos">
 		<div class="filas" style="margin-bottom: 30px;">
-			<div class="columnas"><?php echo JText::_('COM_MANDATOS_LISTADO_TH_NAME_PROYECTO'); ?></div>
+			<div class="columnas"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO'); ?></div>
 			<div class="columnas">&nbsp;</div>
-			<div class="columnas"><?php echo JText::_('COM_MANDATOS_LISTADO_DESHABILITA_PROYECTO'); ?></div>
+			<div class="columnas"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESHABILITA_PROYECTO'); ?></div>
 		</div>
 		<?php !is_null($proyectos)?proyectos(0, $proyectos):''; ?>
+	</div>
+
+	<div style="margin-top: 20px;">
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>" />
+			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
+		</a>
 	</div>

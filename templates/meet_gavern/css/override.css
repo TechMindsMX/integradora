@@ -46,3 +46,10 @@ background-image: url('../../../libraries/integradora/js/themes/blue/asc.gif');
 table.tablesorter thead tr .headerSortDown {
 background-image: url('../../../libraries/integradora/js/themes/blue/desc.gif');
 }
+.agregarProducto {
+	text-align: center;
+	margin: 20px;
+}
+.alto{
+	height: 34px !important;
+}

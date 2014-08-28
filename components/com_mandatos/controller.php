@@ -9,8 +9,14 @@ jimport('integradora.gettimone');
 
 $app = JFactory::getApplication();
 $currUser	= JFactory::getUser();
+$integradoId = getFromTimOne::getIntegradoId($currUser->id);
+
 if($currUser->guest){
-	$app->redirect('index.php/login');
+	$app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+}
+
+if( is_null($integradoId) ){
+	$app->redirect('index.php/component/integrado/?view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
 }
 
 class MandatosController extends JControllerLegacy {
@@ -36,5 +42,25 @@ class MandatosController extends JControllerLegacy {
 			}
 		}
 		exit;
-	}	
+	}
+	
+	function editarproducto(){
+		$app			= JFactory::getApplication();
+		$input	 		= JFactory::getApplication()->input;
+		$data 			= $input->getArray();
+		$userLog		= JFactory::getUser();
+		
+		$integrado_id	= getFromTimOne::getIntegradoId($userLog->id);
+		
+		$productos 		= getFromTimOne::getProducts($integrado_id['integrado_id']);
+		if($userLog->guest){
+			$app->redirect('index.php/login');
+		}
+		
+		foreach ($productos as $key => $value) {
+			if( $data['prodId'] == $value->id ){
+				$app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproductos&prodId='.$data['prodId']));
+			}
+		}
+	}
 }

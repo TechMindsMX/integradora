@@ -16,14 +16,10 @@ class MandatosModelProyectos extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProyectos(){
-		$app		= JFactory::getApplication();
-		$currUser	= JFactory::getUser();
-		if($currUser->guest){
-			$app->redirect('index.php/login');
-		}
-		
-		$this->dataModelo = getFromTimOne::getProyects($currUser->id);
-		
+		$joomlaId		= JFactory::getUser()->id;
+		$integradoId	= getFromTimOne::getIntegradoId($joomlaId);
+		$this->dataModelo = getFromTimOne::getProyects($integradoId['integrado_id']);
+
 		return $this->dataModelo;
 	}
 }

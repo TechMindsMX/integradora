@@ -6,10 +6,10 @@ jimport('joomla.factory');
 jimport('integradora.catalogos');
 
 class getFromTimOne{
-	public static function getProyects($userId){
+	public static function getProyects($userId = null){
 		$proyectos = new stdClass;
 		$proyectos->id			= 1;
-		$proyectos->user		= $userId;
+		$proyectos->integradoid	= 1;
 		$proyectos->parentId 	= 0;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Proyecto 1';
@@ -24,7 +24,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 2;
-		$proyectos->user		= $userId;
+		$proyectos->integradoid	= 2;
 		$proyectos->parentId 	= 0;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Proyecto 2';
@@ -39,7 +39,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 3;
-		$proyectos->user		= $userId;
+		$proyectos->integradoid	= 1;
 		$proyectos->parentId 	= 1;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Subproyecto 1';
@@ -54,7 +54,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 4;
-		$proyectos->user		= $userId;
+		$proyectos->integradoid	= 1;
 		$proyectos->parentId 	= 1;
 		$proyectos->status	 	= 1;
 		$proyectos->name 		= 'Subproyecto 2';
@@ -69,7 +69,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 5;
-		$proyectos->user		= $userId;
+		$proyectos->integradoid	= 2;
 		$proyectos->parentId 	= 2;
 		$proyectos->status	 	= 1;
 		$proyectos->name 		= 'Subproyecto 1 del proyecto 2';
@@ -82,197 +82,178 @@ class getFromTimOne{
 		
 		$array[] = $proyectos;
 		
-		return $array;
+		foreach ($array as $key => $value) {
+			if($userId == $value->integradoid){
+				$respuesta[] = $value;
+			}
+		}
+		
+		return $respuesta;
 	}
 	
-	public static function getProducts($userId){
-		$productos = new stdClass;
+	public static function getProducts($userId = null){
+		$productos 				= new stdClass;
 		$productos->id			= 1;
-		$productos->name		= 'Producto 1';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 1;
+		$productos->productName	= 'Producto A';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
+		$productos->currency	= 'MXN';
 		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->description = "U Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 2;
-		$productos->name		= 'Producto 2';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 1;
+		$productos->productName	= 'Producto B';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
+		$productos->currency	= 'MXN';
 		$productos->status		= '1';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->description = "O Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 3;
-		$productos->name		= 'Producto 3';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 1;
+		$productos->productName	= 'Producto C';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
-		$productos->status		= '1';
-		$productos->description 	= "It doesn't matter who we are.";
+		$productos->currency	= 'MXN';
+		$productos->status		= '0';
+		$productos->description = "I Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 4;
-		$productos->name		= 'Producto 4';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 1;
+		$productos->productName	= 'Producto D';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
-		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->currency	= 'MXN';
+		$productos->status		= '1';
+		$productos->description = "E Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 5;
-		$productos->name		= 'Producto 5';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 1;
+		$productos->productName	= 'Producto E';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
+		$productos->currency	= 'MXN';
 		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->description = "A Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 6;
-		$productos->name		= 'Producto 6';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 2;
+		$productos->productName	= 'Producto F';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
+		$productos->currency	= 'MXN';
 		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->description = "U Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 7;
-		$productos->name		= 'Producto 7';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 2;
+		$productos->productName	= 'Producto G';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
+		$productos->currency	= 'MXN';
 		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->description = "O Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 8;
-		$productos->name		= 'Producto 8';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 2;
+		$productos->productName	= 'Producto H';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
-		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->currency	= 'MXN';
+		$productos->status		= '1';
+		$productos->description = "I Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 9;
-		$productos->name		= 'Producto 9';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 2;
+		$productos->productName	= 'Producto I';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
-		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->currency	= 'MXN';
+		$productos->status		= '1';
+		$productos->description = "E Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		$productos = new stdClass;
+		$productos 				= new stdClass;
 		$productos->id			= 10;
-		$productos->name		= 'Producto 10';
-		$productos->medida		= '5 X 5 cm';
-		$productos->precio		= '$1000';
+		$productos->integradoid	= 2;
+		$productos->productName	= 'Producto 2';
+		$productos->measure		= 'Litros';
+		$productos->price		= '$1000';
 		$productos->iva			= '$150';
 		$productos->ieps		= '$100';
-		$productos->moneda		= 'MXN';
-		$productos->status		= '0';
-		$productos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
+		$productos->currency	= 'MXN';
+		$productos->status		= '1';
+		$productos->description = "A Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 		
 		$array[] = $productos;
 		
-		return $array;
+		foreach ($array as $key => $value) {
+			if($userId == $value->integradoid){
+				$respuesta[] = $value;
+			}
+		}
+		
+		return $respuesta;
 	}
 
-	public static function getIntegradoId(){
-		$db = JFactory::getDbo();
-		
+	public static function getIntegradoId($userId = null){
+		$db 	= JFactory::getDbo();
 		$db		= JFactory::getDbo();
 		$query 	= $db->getQuery(true);
 		
-		$query->select('*')
-		      ->from($db->quoteName('#__integrado_users'));
-
+		if( is_null($userId) ){
+			$query->select('*')
+		      	  ->from($db->quoteName('#__integrado_users'));
+		}else{
+			$query->select('*')
+		      	  ->from($db->quoteName('#__integrado_users'))
+				  ->where($db->quoteName('user_id').' = '.$userId.' AND '.$db->quoteName('integrado_principal').' = 1');
+		}
 		$db->setQuery($query);
 	 
 		$results = $db->loadAssoc();
@@ -287,6 +268,14 @@ class getFromTimOne{
 		}
 		
 		return $token;
+	}
+	
+	public static function getMedidas(){
+		$respuesta['litros'] 			= 'litros';
+		$respuesta['Metros'] 			= 'Metros';
+		$respuesta['Metros Cúbicos'] 	= 'Metros Cúbicos';
+		
+		return $respuesta;
 	}
 }
 ?>

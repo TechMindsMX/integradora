@@ -16,7 +16,9 @@ class MandatosModelProductos extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProductos($integradoId = null){
-		$productos = getFromTimOne::getProducts(JFactory::getUser()->id);
+		$joomlaId		= JFactory::getUser()->id;
+		$integradoId	= getFromTimOne::getIntegradoId($joomlaId);	
+		$productos		= getFromTimOne::getProducts($integradoId['integrado_id']);
 		
 		$this->dataModelo = $productos;
 		

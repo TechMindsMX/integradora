@@ -7,6 +7,13 @@ jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 
+$app = JFactory::getApplication();
+$currUser	= JFactory::getUser();
+
+if($currUser->guest){
+	$app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+}
+
 class IntegradoController extends JControllerLegacy {
 	function savealta(){
 		$db = JFactory::getDbo();
