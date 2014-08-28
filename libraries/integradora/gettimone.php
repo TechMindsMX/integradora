@@ -367,7 +367,7 @@ class getFromTimOne{
 		$clientes->id				= 10;
 		$clientes->type				= 1;
 		$clientes->integradoId		= 1;
-		$clientes->rfc				= 'IAML810328EH8';
+		$clientes->rfc				= 'JAML810328EH8';
 		$clientes->tradeName 		= 'Proveedor E';
 		$clientes->corporateName	= 'q';
 		$clientes->contact			= 'Contacto J';

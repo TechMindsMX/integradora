@@ -18,7 +18,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 ?>
 <script>
 jQuery(document).ready(function(){
-	jQuery('.btn').on('click',editarProd);
+	jQuery('#search').on('click', busqueda);
 	jQuery('.filtro').on('click', filtro);
 	
 	jQuery('.status1 input:button').prop('disabled', true);
@@ -36,6 +36,8 @@ jQuery(document).ready(function(){
 
 function filtro(){
 	var valor	= parseInt( jQuery(this).val() );
+	var campoRFC = jQuery('input[name$="rfc"]');
+	var campoCN  = jQuery('input[name$="corporateName"]');
 	
 	switch(valor){
 		case 0:
@@ -49,33 +51,62 @@ function filtro(){
 		case 3:
 			jQuery('.type_0').show();
 			jQuery('.type_1').show();
+			campoCN.val('');
+			campoRFC.val('');
 			break;
 	}
 }
 
-function editarProd(){
-	var clickedBtn	= jQuery(this).prop('id');
-	var productId	= clickedBtn.split('_')[1];
+function busqueda(){
+	var campoRFC = jQuery('input[name$="rfc"]');
+	var campoCN  = jQuery('input[name$="corporateName"]');
+	var valorRFC = campoRFC.val();
+	var valorCN  = campoCN.val();
 	
-	window.location = 'index.php?option=com_mandatos&task=editarproducto&prodId='+productId;
+	if( (valorRFC != '') && (valorCN == '') ){
+		busquedapor(valorRFC, 'rfc');
+	}
+	
+	if( (valorRFC == '') && (valorCN != '') ){
+	  	busquedapor(valorCN, 'rz');
+	}
+	
+	if( (valorRFC == '') && (valorCN == '') ){
+	  	jQuery('#showall').trigger('click');
+	}
+	if( (valorRFC != '') && (valorCN != '') ){
+	  	jQuery('#showall').trigger('click');
+	}
+}
+
+function busquedapor(valor, campo){
+	jQuery.each(jQuery('#myTable tbody tr'), function(key, value){
+		if( jQuery(value).find('.'+campo).text() == valor ){
+			jQuery(value).show();
+		}else{
+			jQuery(value).hide();
+		}
+	});
 }
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_TITULO'); ?></h1>
 
 <div class="agregarProducto">
-	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaclientes'); ?>" />
-		<?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?>
-	</a>
-
+	<form class="form-inline" role="form" id="form_busqueda" method="post" action="#">
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaclientes'); ?>" />
+			<?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?>
+		</a>
+		
+		<span class="radio" style="margin-left: 25px; margin-right: 15px;">
 		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_PROVEEDOR'); ?></label>
 		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_CLIENTE'); ?></label>
-		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" checked="checked">Todos</label>
+		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" id="showall" checked="checked">Todos</label>
+		</span>
+		<input type="text" name="rfc" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_RFC') ?>" />
+		<input type="text" name="corporateName" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_CORPORATENAME') ?>" />
 		
-		
-		<form id="form_busqueda" method="post" action="#">
-			<input type="text" name="rfc" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_RFC') ?>" />
-			<input type="text" name="corporateName" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_CORPORATENAME') ?>" />
-		</form>
+		<input type="button" class="btn btn-primary" id="search" value="buscar" />
+	</form>
 </div>
 
 <div class="table-responsive">
@@ -103,14 +134,18 @@ function editarProd(){
 				
 				echo '<tr class="type_'.$value->type.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$type[$value->type].'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->rfc.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->rfc.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->tradeName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->corporateName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rz '.$class.'" >'.$value->corporateName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->contact.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->phone.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$status[$value->status].'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
+				echo '  	<a class="btn btn-primary" href="index.php?option=com_mandatos&task=editarproducto&prodId='.$value->id.'">';
+				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
+				echo '		</a>';
+				echo '	</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id.'" name="baja" '.$selected.' /></td>';
 				echo '</tr>';
 			}
