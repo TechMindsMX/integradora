@@ -15,6 +15,10 @@ $status		= array('Activo', 'Inactivo');
 
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+
+if(!is_null($clientes)){
+	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_CLIENTS'), 'Message');
+}
 ?>
 <script>
 jQuery(document).ready(function(){
