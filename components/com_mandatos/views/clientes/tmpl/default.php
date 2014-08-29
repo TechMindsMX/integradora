@@ -74,39 +74,57 @@ function busqueda(){
 	if( (valorRFC == '') && (valorCN == '') ){
 	  	jQuery('#showall').trigger('click');
 	}
+	
 	if( (valorRFC != '') && (valorCN != '') ){
 	  	jQuery('#showall').trigger('click');
 	}
 }
 
 function busquedapor(valor, campo){
+	var elementos	= new Array();
+	var msg			= new Array();
+	
+	msg['rfc'] 	= '<?php echo JText::_('COM_MANDATOS_CLIENTES_NF_RFC'); ?>';
+	msg['rz'] 	= '<?php echo JText::_('COM_MANDATOS_CLIENTES_NF_CORPORATENAME'); ?>';
+	
 	jQuery.each(jQuery('#myTable tbody tr'), function(key, value){
+		elementos[key] = jQuery(value).find('.'+campo).text();
+		
 		if( jQuery(value).find('.'+campo).text() == valor ){
 			jQuery(value).show();
 		}else{
 			jQuery(value).hide();
 		}
 	});
+	
+	if(jQuery.inArray(valor, elementos) == -1){
+		jQuery('#msg_busqueda').text(msg[campo]);
+		jQuery('#msg_busqueda').fadeIn(200);
+		jQuery('#msg_busqueda').fadeOut(5000);
+	}
 }
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_TITULO'); ?></h1>
 
-<div class="agregarProducto">
-	<form class="form-inline" role="form" id="form_busqueda" method="post" action="#">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaclientes'); ?>" />
-			<?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?>
-		</a>
-		
-		<span class="radio" style="margin-left: 25px; margin-right: 15px;">
-		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_PROVEEDOR'); ?></label>
-		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_CLIENTE'); ?></label>
-		<label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" id="showall" checked="checked">Todos</label>
-		</span>
+<div>
+	<div class="col-md-4">
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaclientes'); ?>" /><?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?></a>
+	</div>
+	
+	<div class="col-md-4">
+		<div class="radio">
+			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_PROVEEDOR'); ?></label>
+			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_CLIENTE'); ?></label>
+			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" id="showall" checked="checked">Todos</label>
+		</div>
+	</div>
+	
+	<div class="col-md-4">
 		<input type="text" name="rfc" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_RFC') ?>" />
 		<input type="text" name="corporateName" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_CORPORATENAME') ?>" />
-		
 		<input type="button" class="btn btn-primary" id="search" value="buscar" />
-	</form>
+		<span id="msg_busqueda"></span>
+	</div>
 </div>
 
 <div class="table-responsive">
