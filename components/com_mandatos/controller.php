@@ -21,12 +21,12 @@ if( is_null($integradoId) ){
 
 class MandatosController extends JControllerLegacy {
 	function editarproyecto(){
-		$app		= JFactory::getApplication();
-		$input 		= JFactory::getApplication()->input;
-		$data 		= $input->getArray();
-		$userLog	= JFactory::getUser();
-		
-		$proyectos 	= getFromTimOne::getProyects();
+		$app			= JFactory::getApplication();
+		$input 			= JFactory::getApplication()->input;
+		$data 			= $input->getArray();
+		$userLog		= JFactory::getUser();
+		$integradoId	= getFromTimOne::getIntegradoId($userLog->id);
+		$proyectos 		= getFromTimOne::getProyects($integradoId['integrado_id']);
 		
 		if($userLog->guest){
 			$app->redirect('index.php/login');

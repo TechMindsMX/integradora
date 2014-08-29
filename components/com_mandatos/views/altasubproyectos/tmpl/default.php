@@ -23,7 +23,7 @@ $selected 	= '';
 </script>
 <form id="form_alta" method="post" action="#">
 	<input type="hidden" name="id" value="<?php echo !is_null($proyecto)?$proyecto->id:'0'; ?>" />
-	<input type="hidden" name="user" value="<?php echo !is_null($proyecto)?$proyecto->user:'0'; ?>" />
+	<input type="hidden" name="user" value="<?php echo !is_null($proyecto)?$proyecto->integradoid:'0'; ?>" />
 	<input type="hidden" name="status" value="<?php echo !is_null($proyecto)?$proyecto->status:'0'; ?>" />
 	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
 	
