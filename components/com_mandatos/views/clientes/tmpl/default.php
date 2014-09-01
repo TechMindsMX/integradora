@@ -24,6 +24,7 @@ if(is_null($clientes) || empty($clientes)){
 jQuery(document).ready(function(){
 	jQuery('#search').on('click', busqueda);
 	jQuery('.filtro').on('click', filtro);
+	jQuery('input[name$="rfc"]').on('change', limpiarfc);
 	
 	jQuery('.status1 input:button').prop('disabled', true);
 	
@@ -37,6 +38,14 @@ jQuery(document).ready(function(){
 		} 
 	});
 });
+
+function limpiarfc(){
+	var rfc 		= jQuery(this);
+	var cadena 		= rfc.val().toUpperCase();
+	var rfclimpio 	= cadena.split(' ').join('');
+
+	rfc.val(rfclimpio);
+}
 
 function filtro(){
 	var valor	= parseInt( jQuery(this).val() );
@@ -124,7 +133,7 @@ function busquedapor(valor, campo){
 	</div>
 	
 	<div class="col-md-4">
-		<input type="text" name="rfc" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_RFC') ?>" />
+		<input type="text" name="rfc" maxlength="13" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_RFC') ?>" />
 		<input type="text" name="corporateName" placeholder="<?php echo JText::_('COM_MANDATOS_CLIENTES_CORPORATENAME') ?>" />
 		<input type="button" class="btn btn-primary" id="search" value="buscar" />
 		<span id="msg_busqueda"></span>
