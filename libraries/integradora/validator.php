@@ -6,25 +6,11 @@ include_once 'catalogos.php';
 
 class validador {
 	public static function procesamiento($data, $diccionario, $seccion = null){
+
 		foreach ($data as $key => $value) {
 			$columna 	= substr($key, 3);
 			$clave 		= substr($key, 0,3);
-			
-			
-			if($clave == 'dp_' && ('personales' == $seccion) ){
-				$post[$columna] = $value;
-			}elseif($clave == 'de_' && ('empresa' == $seccion) ){
-				$post[$columna] = $value;
-			}elseif($clave == 'db_' && ('bancos' == $seccion) ){
-				$post[$columna] = $value;
-			}else{
-				$post[$key] = $value;
-			}
-			
-		}
-		$post['pers_juridica'] = isset($data['pers_juridica']) ? $data['pers_juridica']:'';
-		
-		foreach ($post as $key => $value) {
+
 			if($value != ''){
 				if(isset($diccionario[$key]['length']) ){
 					$minlength = isset($diccionario[$key]['minlength']) ? $diccionario[$key]['minlength'] : null;
@@ -34,14 +20,6 @@ class validador {
 					if(!$respuesta[$key]){
 						self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
 					}
-				}
-				
-				$method = 'valida_'.$key;
-	
-				if(method_exists('validador',$method) && ($value != '') ){
-					$respuesta[$key] = call_user_func(array('validador',$method), $post);
-					
-					if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', verifique tenga el formato adecuado');
 				}
 				
 				if( isset($diccionario[$key]['tipo']) ){
@@ -60,6 +38,14 @@ class validador {
 							break;
 					}
 				}
+				
+				$method = 'valida_'.$columna;
+	
+				if(method_exists('validador',$method) && ($value != '') ){
+					$respuesta[$key] = call_user_func(array('validador',$method), $data, $key, $clave);
+					
+					if(!$respuesta[$key])self::salir($diccionario[$columna]['label'].', verifique tenga el formato adecuado');
+				}
 			}
 		}
 	}
@@ -70,8 +56,8 @@ class validador {
 		exit;
 	}
 	
-	public static function valida_email($data){
-		$email	= $data['email'];
+	public static function valida_email($data, $campo, $clave){
+		$email	= $data[$campo];
 		$regex	= '/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/';
 		
 		if( preg_match($regex, $email) == 1){
@@ -83,8 +69,8 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_curp($data){
-		$curp	= $data['curp'];
+	public static function valida_curp($data, $campo, $clave){
+		$curp	= $data[$campo];
 		$regex	= '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([H M]{1})([A-Z]{2})([A-Z]{3})([A-Z0-9]{2})$/';
 		
 		if( preg_match($regex, $curp, $coicidencias) == 1){
@@ -96,8 +82,8 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_fecha_nacimiento($data){
-		$fecha = $data['fecha_nacimiento'];
+	public static function valida_fecha_nacimiento($data, $campo, $clave){
+		$fecha = $data[$campo];
 		$regex = '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/';
 		
 		if( preg_match($regex, $fecha) == 1){
@@ -109,22 +95,23 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_rfc($data){
-		$rfc			= $data['rfc'];
-		$personalidad	= $data['pers_juridica'];
-		
-		if($personalidad == 1){
+	public static function valida_rfc($data, $campo, $clave){
+		$rfc			= $data[$campo];
+
+		if($clave == 'de_'){
 			$regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
-		}else{
+		}elseif($clave == 'dp_'){
 			$regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+		}else{
+			$regex = '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 		}
-		
+	
 		if( preg_match($regex, $rfc, $coicidencias) == 1){
 			$respuesta = true;
 		}else{
 			$respuesta = false;
 		}
-		
+
 		return $respuesta;
 	}
 	
@@ -146,27 +133,27 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_banco_clabe($data){
-		$clabe				= $data['banco_clabe'];
+	public static function valida_banco_clabe($data, $campo, $clave){
+		$clabe				= $data[$campo];
 		$paso3 				= 0;
 		$clabeTmp			= str_split($clabe,17);
 		$codigoVerificador	= intval($clabeTmp[1]);
 		$clabesepa			= str_split($clabeTmp[0]);
 		$ponderaciones 		= array(3,7,1,3,7,1,3,7,1,3,7,1,3,7,1,3,7);
-		$claveBanco			= $data['banco_nombre'];
+		$claveBanco			= $data['db_banco_nombre'];
 		$claveBancoClabe	= $clabesepa[0].$clabesepa[1].$clabesepa[2];
 
 		foreach ($clabesepa as $key => $value) {
-			$paso1[] = intval($value)*$ponderaciones[$key];
+			$paso1[] = intval($value) * $ponderaciones[$key];
 		
-			$paso2[] = $paso1[$key]%10;
+			$paso2[] = $paso1[$key] % 10;
 			
 			$paso3 = $paso3+$paso2[$key];
 		}
 		
-		$paso4 			= $paso3%10;
-		$paso5 			= 10-$paso4;
-		$paso6 			= $paso5%10;
+		$paso4 			= $paso3 % 10;
+		$paso5 			= 10 - $paso4;
+		$paso6 			= $paso5 % 10;
 		$verificacion	= $paso6 == $codigoVerificador;
 		$verificabanco	= $claveBanco == $claveBancoClabe;
 		
@@ -192,6 +179,7 @@ class validador {
 	
 	public static function valida_strings($valor){
 		$regex	= '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
+		
 		if(preg_match($regex, $valor)){
 			$respuesta = true;
 		}else{

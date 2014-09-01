@@ -55,7 +55,11 @@ if( !is_null($proyectos) ){
 		var boton = jQuery(this);
 		
 		if(confirm('<?php echo JText::_('LAB_WARNING_DISABLED'); ?>')){
-			console.log('llamado ajax');
+			if(!boton.prop('checked')){
+				boton.parent().parent().find('.editar').prop('disabled', false);
+			}else{
+				boton.parent().parent().find('.editar').prop('disabled', true);
+			}
 		}else{
 			console.log('no hago nada');
 		}

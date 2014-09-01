@@ -78,7 +78,7 @@ function editarProd(){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="radio" id=baja_"'.$value->id.'" name="baja_'.$value->id.'" '.$selected.' /></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id.'" name="baja_'.$value->id.'" '.$selected.' /></td>';
 				echo '</tr>';
 			}
 		}else{

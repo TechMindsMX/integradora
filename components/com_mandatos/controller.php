@@ -63,4 +63,9 @@ class MandatosController extends JControllerLegacy {
 			}
 		}
 	}
+	
+	function editarclientes(){
+		$app = JFactory::getApplication();
+		$app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
+	}
 }

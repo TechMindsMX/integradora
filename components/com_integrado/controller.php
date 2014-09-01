@@ -173,19 +173,53 @@ class IntegradoController extends JControllerLegacy {
 
 		$data['integrado_id'] = $integrado_id;
 
+		$diccionario  = array('integrado_id' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
+							  'status'		 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
+							  'pers_juridica'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10),
+							  'integrado_id'		=> array('tipo'=>'number',													'length'=>10),
+							  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
+							  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
+							  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
+							  'rfc'					=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>45),
+							  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
+							  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
+							  'cod_postal'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_CP'),				'length'=>5),
+							  'tel_fijo'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10),
+							  'tel_fijo_extension'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_EXT'),				'length'=>10),
+							  'tel_movil' 			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_MOVIL'),			'length'=>13),
+							  'email' 				=> array(						'label'=>JText::_('LBL_CORREO'),			'length'=>100),
+							  'nom_comercial'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
+							  'curp' 				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18),
+							  'fecha_nacimiento'	=> array(						'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10),
+							  'integrado_id'		=> array('tipo'=>'int',														'length'=>10),
+							  'razon_social'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>255),
+							  'rfc'				 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>45),
+							  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
+							  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
+							  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
+							  'cod_postal'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CP'),				'length'=>5),
+							  'tel_fijo'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10),
+							  'tel_fijo_extension'	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_EXT'),				'length'=>10),
+							  'sitio_web' 			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CORREO'),			'length'=>255),
+							  'tel_fax'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+							  'testimonio_1'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
+							  'testimonio_2' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
+							  'poder'				=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
+							  'reg_propiedad' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
+							  'integrado_id'		=> array('tipo'=>'number',													'length'=>10),
+							  'banco_nombre'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCOS'),			'length'=>5),
+							  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),		'length'=>10),
+							  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),	'length'=>3),
+							  'banco_clabe'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_NUMERO_CLABE'),		'length'=>18));
+							  
+		validador::procesamiento($data, $diccionario);
+
 		switch($data['tab']){
 			case 'juridica':
 				$table 		  = 'integrado';
 				$columnas 	  = array('integrado_id','status','pers_juridica');
-				$valores	  = array( $integrado_id, '0', $data['pers_juridica'] );
-				$updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pers_juridica'] );
-				
-				$diccionario  = array('integrado_id' 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
-									  'status'		 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
-									  'pers_juridica'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10));
-									  
-				validador::procesamiento($data, $diccionario, $data['tab']);
-				
+				$valores	  = array( $integrado_id, '0', $data['pj_pers_juridica'] );
+				$updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pj_pers_juridica'] );
 				break;
 			case 'personales':
 				$table 		= 'integrado_datos_personales';
@@ -204,24 +238,6 @@ class IntegradoController extends JControllerLegacy {
 						$valoresvalidaicon[$columna] 	= $value;
 					}
 				}
-				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',													'length'=>10),
-									  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
-									  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
-									  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
-									  'rfc'					=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>45),
-									  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
-									  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
-									  'cod_postal'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_CP'),				'length'=>5,	'minlength' => 5),
-									  'tel_fijo'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10,	'minlength' => 10),
-									  'tel_fijo_extension'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_EXT'),				'length'=>10),
-									  'tel_movil' 			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_MOVIL'),			'length'=>13,	'minlength' => 13),
-									  'email' 				=> array(						'label'=>JText::_('LBL_CORREO'),			'length'=>100),
-									  'nom_comercial'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
-									  'curp' 				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18,	'minlength' => 18),
-									  'fecha_nacimiento'	=> array(						'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10));
-									  
-				validador::procesamiento($data, $diccionario,$data['tab']);
 				break;
 			case 'empresa':
 				$table = 'integrado_datos_empresa';
@@ -242,24 +258,6 @@ class IntegradoController extends JControllerLegacy {
 					}
 				}
 				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'int',													'length'=>10),
-									  'razon_social'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),	'length'=>255),
-									  'rfc'				 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),			'length'=>45),
-									  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),			'length'=>45),
-									  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),			'length'=>45),
-									  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),			'length'=>45),
-									  'cod_postal'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CP'),			'length'=>5,	'minlength' => 5),
-									  'tel_fijo'			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_TEL_FIJO'),		'length'=>10,	'minlength' => 10),
-									  'tel_fijo_extension'	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_EXT'),			'length'=>10),
-									  'sitio_web' 			=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CORREO'),		'length'=>255),
-									  'tel_fax'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),			'length'=>10),
-									  'testimonio_1'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),			'length'=>10),
-									  'testimonio_2' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),			'length'=>10),
-									  'poder'				=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),			'length'=>10),
-									  'reg_propiedad' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),			'length'=>10));
-				
-				validador::procesamiento($data, $diccionario,$data['tab']);
-				
 				break;
 			case 'bancos':
 				$table = 'integrado_datos_bancarios';
@@ -277,15 +275,6 @@ class IntegradoController extends JControllerLegacy {
 						$valoresvalidaicon[$columna] = $value;
 					}
 				}
-				
-				$diccionario  = array('integrado_id'		=> array('tipo'=>'number',												'length'=>10),
-									  'banco_nombre'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCOS'),		'length'=>5),
-									  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),	'length'=>10,	'minlength' => 10),
-									  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),'length'=>3),
-									  'banco_clabe'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_NUMERO_CLABE'),	'length'=>18),	'minlength' => 18);
-				
-				validador::procesamiento($data, $diccionario,$data['tab']);
-				
 				break;
 		}
 
