@@ -596,45 +596,72 @@ if(!empty($datos->integrado)){
 		<div class="form-group">
 			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
 			<input name="dp_url_identificacion" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->datos_personales->url_identificacion; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
 			<input name="dp_url_rfc" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->datos_personales->url_rfc; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
 			<input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->datos_personales->url_comprobante_domicilio; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
 			<input name="de_url_rfc" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->datos_empresa->url_rfc; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="t1_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
 			<input name="t1_url_instrumento" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->testimonio1->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="t2_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
 			<input name="t2_url_instrumento" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->testimonio2->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
 			<input name="pn_url_instrumento" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->poder->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 		
 		<div class="form-group">
 				<label for="rp_url_instrumento"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
 				<input name="rp_url_instrumento" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->reg_propiedad->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 			</div>
 
         <div class="form-group">
 			<label for="db_banco_file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
 			<input name="db_banco_file" type="file" maxlength="" />
+			<div>
+				<a href="<?php echo $datos->datos_bancarios->banco_file; ?>" target="_blank">Abrir Archivo</a>
+			</div>
 		</div>
 
 		<div class="form-actions">
