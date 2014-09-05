@@ -11,6 +11,7 @@ jimport('integradora.catalogos');
  */
 class Integrado {
 	public $user;
+	
 	function __construct($integ_id = null) {
 		$this->user = JFactory::getUser();
 		
@@ -25,6 +26,8 @@ class Integrado {
 		
 		unset($this->user->password);
 	}
+	
+	//retorna todos los integrados (solicitudes) relacionadas al idJoomla
 	function getIntegradosCurrUser()
 	{
 		$db = JFactory::getDbo();
@@ -39,38 +42,43 @@ class Integrado {
 		
 		return $result;
 	}
-	public function getUsersOfIntegrado($integ_id)
-	{
+	
+	//Retorna todos los usuarios agregados a un Integrado
+	public function getUsersOfIntegrado($integ_id){
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-			->select($db->quoteName('user_id').','.$db->quoteName('integrado_principal').','.$db->quoteName('integrado_permission_level'))
+			->select($db->quoteName('user_id').','.$db->quoteName('integrado_principal').','.$db->quoteName('integrado_permission_level').','.$db->quoteName('integrado_id'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('integrado_id') . '=' . $integ_id);
-		
+
 		$result = $db->setQuery($query)->loadObjectList();
 
 		foreach ($result as $key => $value) {
 			$user = JFactory::getUser($value->user_id);
-			$user->integrado_principal 	= $value->integrado_principal;
-			$user->permission_level		= $value->integrado_permission_level;
-			$result[$key] = $user;
 			
+			$user->permission_level		= $value->integrado_permission_level;
+			$user->integradoId			= $value->integrado_id;
+			$user->integrado_principal	= $value->integrado_principal;
+			
+			$result[$key] = $user;
+
 			unset($result[$key]->password);
 		}
-		
+
 		return $result;
 	}
-	function separaNombre($value)
-	{
+	
+	function separaNombre($value){
 	}
+	
 	function getSolicitud($integ_id = null, $key){
 		if ($integ_id == null){
-			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
+			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
 		}
 		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
-		
-		if(!is_null($integrado_id)){
+
+		if(!is_null($integrado_id) && $integrado_id != 0){
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
@@ -94,8 +102,8 @@ class Integrado {
 			$this->integrados[$key]->poder				= null;
 			$this->integrados[$key]->reg_propiedad		= null;
 		}
-		
 	}
+
 	function selectDataSolicitud($table, $where, $id){
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
@@ -152,11 +160,35 @@ class Integrado {
 		
 		return $result;
 	}
+	
+	public static function isValid($integ_id, $userJoomla){
+		$isValid 	= true;
+		$db 		= JFactory::getDbo();
+		
+		if(!is_null($integ_id) ){
+			$query = $db->getQuery(true)
+						->select($db->quoteName('user_id'))
+						->from($db->quoteName('#__integrado_users'))
+						->where($db->quoteName('integrado_id').' = '.$integ_id.' AND '.$db->quoteName('integrado_principal').' = 1');
+			
+			$result = $db->setQuery($query)->loadResult();
+			
+			if( !is_null($result) ){
+				$isValid = $result==$userJoomla?true:false;
+			}
+		}
+		return $isValid;
+	}
 }
 
 class IntegradoSimple extends Integrado {
 	
 	function __construct($integ_id) {
+		$this->user = JFactory::getUser();
+		
+		if( is_null($integ_id) ){
+			$integ_id = 0;
+		}
 		$this->id = $integ_id;
 		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
 		

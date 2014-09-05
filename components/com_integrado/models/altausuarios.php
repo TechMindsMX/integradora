@@ -14,8 +14,10 @@ class IntegradoModelAltausuarios extends JModelItem {
 	
 	protected $dataModelo;
 	
-	public function getUsuarios($integradoId = null)
-	{
+	public function getUsuarios($integradoId = null){
+		$data = JFactory::getApplication()->input->getArray();
+		$integradoId = $data['integradoId'];
+		
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 			$integrado = new ReflectionClass('integradoSimple');
@@ -23,8 +25,7 @@ class IntegradoModelAltausuarios extends JModelItem {
 			if (count($this->dataModelo->integrados) == 0) {
 				return false;
 			}
-			$this->dataModelo = $integrado->newInstance($this->dataModelo->integrados[0]->integrado_id);
-			
+			$this->dataModelo = $integrado->newInstance($integradoId);
 		}
 
 		return $this->dataModelo;

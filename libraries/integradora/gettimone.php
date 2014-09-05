@@ -385,23 +385,19 @@ class getFromTimOne{
 		return $respuesta;
 	}
 	
-	public static function getIntegradoId($userId = null){
+	public static function newIntegradoId(){
 		$db 	= JFactory::getDbo();
-		$db		= JFactory::getDbo();
 		$query 	= $db->getQuery(true);
 		
-		if( is_null($userId) ){
-			$query->select('*')
-		      	  ->from($db->quoteName('#__integrado_users'));
-		}else{
-			$query->select('*')
-		      	  ->from($db->quoteName('#__integrado_users'))
-				  ->where($db->quoteName('user_id').' = '.$userId.' AND '.$db->quoteName('integrado_principal').' = 1');
-		}
+		$query->select('max(integrado_id)')
+	      	  ->from($db->quoteName('#__integrado_users'));
+
 		$db->setQuery($query);
 	 
-		$results = $db->loadAssoc();
-
+		$results = $db->loadResult();
+		
+		$results = $results+1;
+		
 		return $results;
 	}
 	

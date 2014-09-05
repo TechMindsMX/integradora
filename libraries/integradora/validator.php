@@ -6,10 +6,13 @@ include_once 'catalogos.php';
 
 class validador {
 	public static function procesamiento($data, $diccionario, $seccion = null){
-
 		foreach ($data as $key => $value) {
 			$columna 	= substr($key, 3);
 			$clave 		= substr($key, 0,3);
+			
+			if(!$columna){
+				$columna = $key;
+			}
 
 			if($value != ''){
 				if(isset($diccionario[$key]['length']) ){
@@ -18,7 +21,7 @@ class validador {
 					$respuesta[$key] = self::validalength($value,$diccionario[$key]['length'], $minlength);
 					
 					if(!$respuesta[$key]){
-						self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
+						$respuesta[$key] = self::salir($diccionario[$key]['label'].', deben ser '.$diccionario[$key]['length'].' posiciones');
 					}
 				}
 				
@@ -26,34 +29,44 @@ class validador {
 					switch($diccionario[$key]['tipo']){
 						case 'string':
 							$respuesta[$key] = self::valida_strings($value);
-							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo letras');
+							if(!$respuesta[$key]){
+								$respuesta[$key] = self::salir($diccionario[$key]['label'].', solo letras');
+							}
 							break;
 						case 'number':
 							$respuesta[$key] = self::valida_numeros($value);
-							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros enteros');
+							if(!$respuesta[$key]){
+								$respuesta[$key] = self::salir($diccionario[$key]['label'].', solo numeros enteros');
+							}
 							break;
 						case 'alphaNumber':
 							$respuesta[$key] = self::valida_alfanumericos($value);
-							if(!$respuesta[$key])self::salir($diccionario[$key]['label'].', solo numeros y letras');
+							if(!$respuesta[$key]){
+								$respuesta[$key] = self::salir($diccionario[$key]['label'].', solo numeros y letras');
+							}
 							break;
 					}
 				}
 				
 				$method = 'valida_'.$columna;
-	
+
 				if(method_exists('validador',$method) && ($value != '') ){
 					$respuesta[$key] = call_user_func(array('validador',$method), $data, $key, $clave);
 					
-					if(!$respuesta[$key])self::salir($diccionario[$columna]['label'].', verifique tenga el formato adecuado');
+					if(!$respuesta[$key]){
+						$respuesta[$key] = self::salir($diccionario[$columna]['label'].', verifique tenga el formato adecuado');
+					}
 				}
 			}
 		}
+		
+		return $respuesta;
 	}
 	
 	public static function salir($campo){
 		$response = array('success' => false , 'msg' => 'Error en el campo '.$campo);
-		echo json_encode($response);
-		exit;
+		
+		return $response;
 	}
 	
 	public static function valida_email($data, $campo, $clave){
@@ -95,7 +108,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_rfc($data, $campo, $clave){
+	public static function valida_rfc($data, $campo, $clave=null){
 		$rfc			= $data[$campo];
 
 		if($clave == 'de_'){
@@ -105,7 +118,7 @@ class validador {
 		}else{
 			$regex = '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 		}
-	
+
 		if( preg_match($regex, $rfc, $coicidencias) == 1){
 			$respuesta = true;
 		}else{

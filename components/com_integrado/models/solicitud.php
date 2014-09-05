@@ -14,15 +14,25 @@ class IntegradoModelSolicitud extends JModelItem {
 	
 	protected $dataModelo;
 	
-	public function getSolicitud($integradoId = null)
-	{
+	public function getSolicitud($integradoId = null){
+		$app 			= JFactory::getApplication();
+		$input 			= $app->input;
+		$data			= $input->getArray();
+		$integradoId	= isset($data['integradoId'])?$data['integradoId']:null;
+
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 			
-			$ruta = new IntRoute;
-			$this->dataModelo->action = $ruta->getUrl('integrado','solicitud');
+			if( !$this->dataModelo->isValid($integradoId, JFactory::getUser()->id) ){
+				JFactory::getApplication()->redirect('index.php/component/mandatos', 'no tienes permisos para ver este elemento');
+			}
+			
+			$integrado = new ReflectionClass('integradoSimple');
+			$this->dataModelo = $integrado->newInstance($integradoId);
 		}
-		 
+		$this->dataModelo->user->integradoId = $integradoId;
+		$this->dataModelo->integrados = $this->dataModelo->integrados[0];
+
 		return $this->dataModelo;
 	}
 	

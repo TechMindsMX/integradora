@@ -20,7 +20,7 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 		window.history.back();
 	}
 </script>
-<form id="form_alta" method="post" action="#">
+<form id="form_alta" method="post" action="index.php/component/mandatos/?task=simulaenvio">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 	
 	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
@@ -36,7 +36,7 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 	
 	<div class="form-actions">
 		<button type="button" class="btn btn-primary span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-		<button type="button" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		<button type="submit" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		
 	</div>
 	

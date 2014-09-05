@@ -8,7 +8,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-$datos = @$this->data->integrados[0];
+$datos = @$this->data->integrados;
 //$postUrl = $datos->action->post;
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
@@ -116,6 +116,8 @@ if(!empty($datos->integrado)){
 
 <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
 	<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
+	<input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
+	
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
@@ -528,7 +530,7 @@ if(!empty($datos->integrado)){
 			</div>
 			<div class="form-group">
 				<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-				<input name="rp_instrum_num_instrumento" id="rp_instrum_num_instrumento" type="text" maxlength="3" />
+				<input name="rp_instrum_num_instrumento" id="rp_instrum_num_instrumento" type="text" maxlength="10" />
 			</div>
 	 
 	        <div class="form-group">
@@ -596,72 +598,127 @@ if(!empty($datos->integrado)){
 		<div class="form-group">
 			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
 			<input name="dp_url_identificacion" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->datos_personales->url_identificacion; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->datos_personales->url_identificacion; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		<div class="form-group">
 			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
 			<input name="dp_url_rfc" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->datos_personales->url_rfc; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->datos_personales->url_rfc; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
+			
 		</div>
 		
 		<div class="form-group">
 			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
 			<input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->datos_personales->url_comprobante_domicilio; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->datos_personales->url_comprobante_domicilio; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		
 		<div class="form-group">
 			<label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
 			<input name="de_url_rfc" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->datos_empresa->url_rfc; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->datos_empresa->url_rfc; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		
 		<div class="form-group">
 			<label for="t1_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
 			<input name="t1_url_instrumento" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->testimonio1->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->testimonio1->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		
 		<div class="form-group">
 			<label for="t2_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
 			<input name="t2_url_instrumento" type="file" maxlength="" />
-			<div>
-				<a href="<?php echo $datos->testimonio2->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-			</div>
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
+				<div>
+					<a href="<?php echo @$datos->testimonio2->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		
 		<div class="form-group">
 			<label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
 			<input name="pn_url_instrumento" type="file" maxlength="" />
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
 			<div>
-				<a href="<?php echo $datos->poder->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+				<a href="<?php echo @$datos->poder->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
 			</div>
+			<?php
+			}
+			?>
 		</div>
 		
 		<div class="form-group">
 				<label for="rp_url_instrumento"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
 				<input name="rp_url_instrumento" type="file" maxlength="" />
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>	
 			<div>
-				<a href="<?php echo $datos->reg_propiedad->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
+				<a href="<?php echo @$datos->reg_propiedad->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
 			</div>
+			<?php
+			}
+			?>
 			</div>
 
         <div class="form-group">
 			<label for="db_banco_file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
 			<input name="db_banco_file" type="file" maxlength="" />
+			<?php 
+			if( isset($datos->datos_personales->url_identificacion) ){
+			?>
 			<div>
-				<a href="<?php echo $datos->datos_bancarios->banco_file; ?>" target="_blank">Abrir Archivo</a>
+				<a href="<?php echo @$datos->datos_bancarios->banco_file; ?>" target="_blank">Abrir Archivo</a>
 			</div>
+			<?php
+			}
+			?>
 		</div>
 
 		<div class="form-actions">

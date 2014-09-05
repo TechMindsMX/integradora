@@ -10,12 +10,11 @@ class IntegradoViewSolicitud extends JViewLegacy {
 		$this->data = $this->get('Solicitud');
 		
 		$this->catalogos = $this->get('catalogos');
-		
+
 		// Check for errors.
-        if (count($errors = $this->get('Errors'))) 
-        {
-                JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
-                return false;
+        if (count($errors = $this->get('Errors'))){
+        	Log::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
+        	return false;
         }
 
 		$script = <<<EOD
@@ -47,7 +46,12 @@ class IntegradoViewSolicitud extends JViewLegacy {
 								var obj = result;
 							}
 							
-							alert(obj.msg);
+							if(obj.success){
+								alert(obj.msg);
+								jQuery('#integradoId').val(obj.integradoId);
+							}else{
+								alert(obj.msg);
+							}
 						});
 						
 						request.fail(function (jqXHR, textStatus) {

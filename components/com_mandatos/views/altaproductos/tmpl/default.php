@@ -33,7 +33,7 @@ $producto 	= isset($this->producto)?$this->producto:null;
 
 <h1><?php echo ucwords(JText::_($this->titulo)); ?></h1>
 
-<form class="form-inline" role="form" method="post" action="#">
+<form class="form-inline" role="form" method="post" action="index.php/component/mandatos/?task=simulaenvio">
 	<div class="row">
 		<div class="col-md-6">
 	    <label for="productName"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_NAME'); ?></label>

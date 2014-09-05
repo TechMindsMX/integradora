@@ -115,7 +115,7 @@ if( count($data->usuarios) > 1 ){
 
 <!--a class="button" href="<?php echo JRoute::_('index.php/su/template/users-manager/registration-form'); ?>">Ir a Solicitud de alta de Integrado</a-->
 
-<form id="from_alta" action="index.php?option=com_integrado&task=savealta" method="post">
+<form id="from_alta" action="index.php?option=com_integrado&task=savaAltaNewUserOfInteg" method="post">
 	<input type="hidden" name="integrado_id" value="<?php echo $data->id; ?>">
 	<input type="hidden" name="userId" id="userId">
 	<div class="form-group">
