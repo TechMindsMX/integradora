@@ -21,17 +21,18 @@ jQuery(document).ready(function() {
 	var $ancho = jQuery(window).width()*.8;
 	var $alto = jQuery(window).height()*.8;
 	$div.height($alto);
-	console.log($div.width());
 	$ifr.width($div.width());
 	$ifr.height($alto);
 	
+	jQuery('#enviar-registro').attr('disabled', 'disabled');
+	
 	jQuery('#aceptado').click(function() {
-		var chequeado = jQuery('#aceptado').prop('checked');
+		var chequeado = jQuery(this).prop('checked');
 		if (chequeado == true ) {
-			jQuery('.validate').prop('disabled', false);
+			jQuery('#enviar-registro').prop('disabled', false);
 		}
 		else {
-			jQuery('.validate').attr('disabled', 'disabled');
+			jQuery('#enviar-registro').attr('disabled', 'disabled');
 		}
 	});
 });
@@ -80,7 +81,7 @@ jQuery(document).ready(function() {
 			</span>
 		</div>
 		<div class="form-actions">
-			<button type="submit" class="btn btn-primary validate"><?php echo JText::_('JREGISTER');?></button>
+			<button id="enviar-registro" type="submit" class="btn btn-primary validate"><?php echo JText::_('JREGISTER');?></button>
 			<a class="btn" href="<?php echo JRoute::_('');?>" title="<?php echo JText::_('JCANCEL');?>"><?php echo JText::_('JCANCEL');?></a>
 			<input type="hidden" name="option" value="com_users" />
 			<input type="hidden" name="task" value="registration.register" />
