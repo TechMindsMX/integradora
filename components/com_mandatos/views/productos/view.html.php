@@ -5,10 +5,11 @@ jimport('joomla.application.component.view');
 
 class MandatosViewProductos extends JViewLegacy {
 	
-	function display($tpl = null)
-	{
-		$this->data = $this->get('productos');
+	function display($tpl = null){
+		$data = JFactory::getApplication()->input->getArray();
 		
+		$this->data = $this->get('productos');
+		$this->integradoId = $data['integradoId'];
 		// Check for errors.
         if (count($errors = $this->get('Errors'))) 
         {

@@ -36,13 +36,13 @@ function editarProd(){
 	var clickedBtn	= jQuery(this).prop('id');
 	var productId	= clickedBtn.split('_')[1];
 	
-	window.location = 'index.php?option=com_mandatos&task=editarproducto&prodId='+productId;
+	window.location = 'index.php?option=com_mandatos&task=editarproducto&prodId='+productId+'&integradoId=<?php echo $this->integradoId; ?>';
 }
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></h1>
 
 <div class="agregarProducto">
-	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaproductos'); ?>" />
+	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaproductos&integradoId='.$this->integradoId); ?>" />
 		<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_AGREGAR'); ?>
 	</a>
 </div>
@@ -90,7 +90,7 @@ function editarProd(){
 </div>
 
 	<div style="margin-top: 20px;">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>" />
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
 			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 		</a>
 	</div>

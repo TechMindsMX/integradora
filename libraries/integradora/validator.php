@@ -146,7 +146,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_banco_clabe($data, $campo, $clave){
+	public static function valida_banco_clabe($data, $campo, $clave=null){
 		$clabe				= $data[$campo];
 		$paso3 				= 0;
 		$clabeTmp			= str_split($clabe,17);

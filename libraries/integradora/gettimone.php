@@ -384,6 +384,100 @@ class getFromTimOne{
 		
 		return $respuesta;
 	}
+
+	public static function getOrdenesCompra($integradoId){
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 1;
+		$ordenes->proyecto			= 2;
+		$ordenes->proveedor			= 1;
+		$ordenes->integradoId		= 1;
+		$ordenes->folio				= 988976;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1408632478029;
+		$ordenes->amount			= 12000.50;
+		$ordenes->paymentType		= 0;
+		$ordenes->ieps				= '10%';
+		$ordenes->iva				= '10%';
+		$ordenes->pUnitario			= '3.00';
+		$ordenes->unidad			= 1;
+		$ordenes->status			= 0;
+		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->cantUnidades		= 20.00;
+		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		
+		$array[] = $ordenes;
+		
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 2;
+		$ordenes->proyecto			= 1;
+		$ordenes->proveedor			= 3;
+		$ordenes->integradoId		= 1;
+		$ordenes->folio				= 588973;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1408632478029;
+		$ordenes->amount			= 1000;
+		$ordenes->paymentType		= 0;
+		$ordenes->status			= 1;
+		$ordenes->ieps				= '10%';
+		$ordenes->iva				= '10%';
+		$ordenes->pUnitario			= '3.00';
+		$ordenes->unidad			= 1;
+		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->cantUnidades		= 20.00;
+		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		
+		$array[] = $ordenes;
+		
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 3;
+		$ordenes->proyecto			= 1;
+		$ordenes->proveedor			= 2;
+		$ordenes->integradoId		= 1;
+		$ordenes->folio				= 988975;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1408632478029;
+		$ordenes->amount			= 3000;
+		$ordenes->paymentType		= 0;
+		$ordenes->status			= 0;
+		$ordenes->ieps				= '10%';
+		$ordenes->iva				= '10%';
+		$ordenes->pUnitario			= '3.00';
+		$ordenes->unidad			= 1;
+		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->cantUnidades		= 20.00;
+		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		
+		$array[] = $ordenes;
+		
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 4;
+		$ordenes->proyecto			= 1;
+		$ordenes->proveedor			= 4;
+		$ordenes->integradoId		= 2;
+		$ordenes->folio				= 988977;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1408632478029;
+		$ordenes->amount			= 100;
+		$ordenes->paymentType		= 0;
+		$ordenes->status			= 0;
+		$ordenes->ieps				= '10%';
+		$ordenes->iva				= '10%';
+		$ordenes->pUnitario			= '3.00';
+		$ordenes->unidad			= 1;
+		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->cantUnidades		= 20.00;
+		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		
+		$array[] = $ordenes;
+		
+		foreach ($array as $key => $value) {
+			if($integradoId == $value->integradoId){
+				$respuesta[] = $value;
+			}
+		}
+		
+		return $respuesta;
+	}
 	
 	public static function newIntegradoId(){
 		$db 	= JFactory::getDbo();

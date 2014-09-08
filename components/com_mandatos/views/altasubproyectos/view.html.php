@@ -7,9 +7,9 @@ jimport('integradora.gettimone');
 class MandatosViewAltasubproyectos extends JViewLegacy {
 	
 	function display($tpl = null){
-		$input 		= JFactory::getApplication()->input;
-		$data		= $input->getArray();
-		$this->token = getFromTimOne::token();
+		$input 				= JFactory::getApplication()->input;
+		$data				= $input->getArray();
+		$this->token 		= getFromTimOne::token();
 		
 		if( isset($data['proyId']) ){
 			$this->titulo = 'COM_MANDATOS_PROYECTOS_EDICION_SUB_TITULO';

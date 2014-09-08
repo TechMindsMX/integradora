@@ -20,7 +20,7 @@ class MandatosModelAltaproductos extends JModelItem {
 		$currUser		= JFactory::getUser();
 		$input 			= JFactory::getApplication()->input;
 		$data			= $input->getArray();
-		$integrado_id	= getFromTimOne::getIntegradoId($currUser->id);
+		$integrado_id	= $data['integradoId'];
 		
 		if($data['prodId'] == ''){
 			unset($data['prodId']);

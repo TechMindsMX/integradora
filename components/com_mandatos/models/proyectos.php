@@ -17,7 +17,9 @@ class MandatosModelProyectos extends JModelItem {
 	
 	public function getProyectos(){
 		$joomlaId		= JFactory::getUser()->id;
-		$integradoId	= getFromTimOne::getIntegradoId($joomlaId);
+		$data			= JFactory::getApplication()->input->getArray();
+		$integradoId	= $data['integradoId'];
+		
 		$this->dataModelo = getFromTimOne::getProyects($integradoId['integrado_id']);
 
 		return $this->dataModelo;

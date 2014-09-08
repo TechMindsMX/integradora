@@ -14,10 +14,11 @@ class MandatosModelClientes extends JModelItem {
 	protected $dataModelo;
 	
 	public function getclientes($integradoId = null){
-		$integradoId = getFromTimOne::getIntegradoId(JFactory::getUser()->id);
+		$data 		 = JFactory::getApplication()->input->getArray();
+		$integradoId = $data['integradoId'];
 		
 		if (!isset($this->dataModelo)) {
-			$this->dataModelo = getFromTimOne::getClientes($integradoId['integrado_id']);
+			$this->dataModelo = getFromTimOne::getClientes($integradoId);
 		}
 
 		return $this->dataModelo;

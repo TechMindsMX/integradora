@@ -6,7 +6,9 @@ jimport('joomla.application.component.view');
 class MandatosViewProyectos extends JViewLegacy {
 	
 	function display($tpl = null){
-		$this->data = $this->get('proyectos');
+		$this->data 		= $this->get('proyectos');
+		$data 				= JFactory::getApplication()->input->getArray();
+		$this->integradoId	= $data['integradoId'];
 		
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){

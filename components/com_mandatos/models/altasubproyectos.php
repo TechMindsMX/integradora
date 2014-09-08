@@ -17,8 +17,9 @@ class MandatosModelAltasubproyectos extends JModelItem {
 	
 	public function getProyectos(){
 		$joomlaId		= JFactory::getUser()->id;
-		$integradoId	= getFromTimOne::getIntegradoId($joomlaId);
-		$allProjects = getFromTimOne::getProyects($integradoId['integrado_id']);
+		$data			= JFactory::getApplication()->input->getArray();
+		$integradoId	= $data['integradoId'];
+		$allProjects 	= getFromTimOne::getProyects($integradoId);
 		
 		foreach ($allProjects as $key => $value) {
 			if( $value->parentId == 0){
@@ -34,13 +35,13 @@ class MandatosModelAltasubproyectos extends JModelItem {
 		$currUser	= JFactory::getUser();
 		$input 		= JFactory::getApplication()->input;
 		$data		= $input->getArray();
-		$integradoId	= getFromTimOne::getIntegradoId($currUser->id);
+		$integradoId	= $data['integradoId'];
 		
 		if($currUser->guest){
 			$app->redirect('index.php/login');
 		}
 		
-		$allproyects = getFromTimOne::getProyects($integradoId['integrado_id']);
+		$allproyects = getFromTimOne::getProyects($integradoId);
 
 		foreach ($allproyects as $key => $value) {
 			if($value->id == $data['proyId']){

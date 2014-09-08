@@ -48,12 +48,12 @@ $selected 	= '';
 	</div>
 	
 	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
+		<label for="name"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_SUBPROYECTO') ?></label>
 		<input type="text" name="name" id="name" value="<?php echo !is_null($proyecto)?$proyecto->name:''; ?>" />
 	</div>
 	
 	<div class="form-group">
-		<label for="description"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
+		<label for="description"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESCRIPCION') ?></label>
 		<textarea name="description" id="description" rows="10" style="width: 90%;"><?php echo !is_null($proyecto)?$proyecto->description:''; ?></textarea>
 	</div>
 	

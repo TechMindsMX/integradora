@@ -39,7 +39,7 @@ function proyectos ($parent, $proys){
 $proyectos = $this->data;
 
 if( !is_null($proyectos) ){
-	$agregarSubproyecto = '<a class="btn btn-primary span3" href="'.JRoute::_('index.php?option=com_mandatos&view=altasubproyectos').'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_AGREGAR_SUBPROYECTO').'</a>';
+	$agregarSubproyecto = '<a class="btn btn-primary span3" href="'.JRoute::_('index.php?option=com_mandatos&view=altasubproyectos&integradoId='.$this->integradoId).'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_AGREGAR_SUBPROYECTO').'</a>';
 }else{
 	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_PROJECTS'), 'Message');
 	$agregarSubproyecto = '';
@@ -68,12 +68,12 @@ if( !is_null($proyectos) ){
 	function editarProy(){
 		var id = jQuery(this).prop('id');
 		
-		window.location = 'index.php?option=com_mandatos&task=editarproyecto&proyId='+id;
+		window.location = 'index.php?option=com_mandatos&task=editarproyecto&proyId='+id+'&integradoId=<?php echo $this->integradoId; ?>';
 	}
 </script>
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TITULO'); ?></h1>
 
-	<a class="btn btn-primary span3" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaproyectos'); ?>">
+	<a class="btn btn-primary span3" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=altaproyectos&integradoId='.$this->integradoId); ?>">
 		<?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_AGREGAR_PROYECTO'); ?>
 	</a>
 	<?php echo $agregarSubproyecto; ?>
@@ -88,7 +88,7 @@ if( !is_null($proyectos) ){
 	</div>
 
 	<div style="margin-top: 20px;">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>" />
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
 			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 		</a>
 	</div>
