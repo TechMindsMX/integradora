@@ -18,7 +18,6 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	
 	function muestraboton(){
 		var valorCampo = jQuery(this).val();
-		console.log(valorCampo);
 		
 		if(valorCampo == 'other'){
 			jQuery('#agregarProveedor').show();
@@ -63,10 +62,36 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 	</div>
 	
 	<div class="form-group">
-		<label for="created"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?></label>
+		<label for="created"><?php echo JText::_('LBL_CREATED'); ?></label>
 		<?php 
 		$default = date('Y-m-d');
-		echo JHTML::_('calendar',$default,'created', 'created', $format = '%Y-%m-%d', $attsCal);
+		echo JHTML::_('calendar',$default, 'created', 'created', $format = '%Y-%m-%d', $attsCal);
 		?>
+	</div>
+	
+	<div class="form-group">
+		<label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
+		<?php 
+		$default = date('Y-m-d');
+		echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
+		?>
+	</div>
+	
+	<div class="form-group">
+		<label for="paymentform"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
+		<select id="paymentform">
+			<option value="0"><?php echo JText::_('LBL_SPEI'); ?></option>
+			<option value="1"><?php echo JText::_('LBL_CHEQUE'); ?></option>
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label for="factura"><?php echo JText::_('LBL_FACTURA'); ?></label>
+		<input type="file" name="factura" id="factura" />
+	</div>
+	
+	<div class="form-group">
+		<label for="observaciones"><?php echo JText::_('LBL_OBSERVACIONES'); ?></label>
+		<textarea name="observaciones" id="observaciones"></textarea>
 	</div>
 </form>
