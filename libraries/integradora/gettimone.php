@@ -472,12 +472,22 @@ class getFromTimOne{
 		
 		foreach ($array as $key => $value) {
 			if($integradoId == $value->integradoId){
+				self::convierteFechas($value);
 				$respuesta[] = $value;
 			}
 		}
 		
 		return $respuesta;
 	}
+
+	public static function convierteFechas($objeto){
+		foreach ($objeto as $key => $value) {
+			if($key == 'created' || $key == 'payment'){
+				$objeto->$key = date('d-m-Y', ($value/1000) );				
+			}
+		}
+		
+	} 
 	
 	public static function newIntegradoId(){
 		$db 	= JFactory::getDbo();
