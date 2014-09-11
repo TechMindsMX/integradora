@@ -8,40 +8,47 @@ jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.classDB');
 
-$app 		 = JFactory::getApplication();
-$currUser	 = JFactory::getUser();
-$data 		 = JFactory::getApplication()->input->getArray();
-$integradoId = $data['integradoId'];
-$integrado	 = new Integrado;
-$isValid 	 = $integrado->isValid($integradoId, $currUser->id);
-
-if($currUser->guest){
-	$app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
-}
-
-if( is_null($integradoId) || !$isValid){
-	$app->redirect('index.php/component/integrado/?view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
-}
 
 class MandatosController extends JControllerLegacy {
-	function editarproyecto(){
-		$app			= JFactory::getApplication();
-		$input 			= $app->input;
-		$data 			= $input->getArray();
-		$userLog		= JFactory::getUser();
-		$integradoId	= $data['integradoId'];
-		$proyectos 		= getFromTimOne::getProyects($integradoId);
+	
+	public function __construct()
+	{
+		parent::__construct();
+
+		$integrado	 = new Integrado;
+
+		$this->app			= JFactory::getApplication();
+		$this->input_data	= $this->app->input;
+
+		$data		 		= $this->input_data->getArray();
+		$integradoId 		= $data['integradoId'];
+		$this->currUser	 	= JFactory::getUser();
+		$isValid 	 		= $integrado->isValid($integradoId, $this->currUser->id);
+
+		if($this->currUser->guest){
+			$this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+		}
 		
-		if($userLog->guest){
-			$app->redirect('index.php/login');
+		if(is_null($integradoId) || !$isValid){
+			$this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
+		}
+	}
+	
+	function editarproyecto(){
+		$data 				= $this->input_data->getArray();
+		$integradoId		= $data['integradoId'];
+		$proyectos 			= getFromTimOne::getProyects($integradoId);
+		
+		if($this->currUser->guest){
+			$this->app->redirect('index.php/login');
 		}
 
 		foreach ($proyectos as $key => $value) {
 			if($data['proyId'] == $value->id){
 				if($value->parentId == 0){
-					$app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
 				}else{
-					$app->redirect(JRoute::_('index.php?option=com_mandatos&view=altasubproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altasubproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
 				}
 			}
 		}
@@ -49,39 +56,31 @@ class MandatosController extends JControllerLegacy {
 	}
 	
 	function editarproducto(){
-		$app			= JFactory::getApplication();
-		$input	 		= JFactory::getApplication()->input;
-		$data 			= $input->getArray();
-		$userLog		= JFactory::getUser();
+		$data 			= $this->input_data->getArray();
 		$integrado_id	= $data['integradoId'];
 		$productos 		= getFromTimOne::getProducts($integrado_id);
 
-		if($userLog->guest){
-			$app->redirect('index.php/login');
+		if($this->currUser->guest){
+			$this->app->redirect('index.php/login');
 		}
 		
 		foreach ($productos as $key => $value) {
 			if( $data['prodId'] == $value->id ){
-				$app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproductos&prodId='.$data['prodId'].'&integradoId='.$data['integradoId']));
+				$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproductos&prodId='.$data['prodId'].'&integradoId='.$data['integradoId']));
 			}
 		}
 	}
 	
 	function editarclientes(){
-		$app = JFactory::getApplication();
-		$app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
+		$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
 	}
 
 	function simulaenvio(){
-		$app = JFactory::getApplication();
-		$app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
+		$this->app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
 	}
 	
 	function searchrfc(){
-		$app	= JFactory::getApplication();
-		$db		= JFactory::getDbo();
-		$input 	= $app->input;
-		$data 	= $input->getArray();
+		$data 			= $this->input_data->getArray();
 		$where	= $db->quoteName('rfc').' = '.$db->quote($data['rfc']);
 		$respuesta = '';
 		
@@ -119,11 +118,8 @@ class MandatosController extends JControllerLegacy {
 	}
 
 	function agregarBanco(){
-		$app 		= JFactory::getApplication();
-		$db			= JFactory::getDbo();
-		$input		= $app->input;
-		$data		= $input->getArray();
-		$validacion = validador::valida_banco_clabe($data, 'db_banco_clabe');
+		$data 			= $this->input_data->getArray();
+		$validacion 	= validador::valida_banco_clabe($data, 'db_banco_clabe');
 		
 		$respuesta['banco'] 	= $data['db_banco_nombre'];
   		$respuesta['cuenta'] 	= $data['db_banco_cuenta'];
