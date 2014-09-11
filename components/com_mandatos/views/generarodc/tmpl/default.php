@@ -9,6 +9,8 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+var_dump($_FILES);
 ?>
 <script>
 	jQuery(document).ready(function(){
@@ -33,7 +35,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
 <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
-<form id="generaODC" method="post" action="#" role="form">
+<form id="generaODC" method="post" action="/post.php" role="form" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="proyecto"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<select id="proyecto">
@@ -94,4 +96,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 		<label for="observaciones"><?php echo JText::_('LBL_OBSERVACIONES'); ?></label>
 		<textarea name="observaciones" id="observaciones"></textarea>
 	</div>
+
+    <div class="form-group">
+        <input type="submit" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
+    </div>
 </form>
