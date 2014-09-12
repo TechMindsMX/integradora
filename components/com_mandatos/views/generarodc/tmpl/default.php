@@ -35,7 +35,7 @@ var_dump($_FILES);
 
 <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
-<form id="generaODC" method="post" action="/post.php" role="form" enctype="multipart/form-data">
+<form id="generaODC" method="post" action="/integradora/post.php" role="form" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="proyecto"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<select id="proyecto">
