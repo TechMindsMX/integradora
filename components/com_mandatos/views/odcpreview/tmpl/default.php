@@ -12,14 +12,12 @@ $app 		= JFactory::getApplication();
 // Datos
 $params 	= $app->input->getArray();
 
-
-// var_dump($this->odc, $this->proyectos);
 ?>
 
 <div id="odc_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 box text-center"><?php echo $this->odc->id; ?></h3>
+		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odc->id; ?></h3>
 	</div>	
 		<h1><?php echo JText::_('LBL_ORDEN_DE_COMPRA'); ?></h1>
 	<div class="clearfix" id="cabecera">
@@ -56,7 +54,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_SUBPROY'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->sub_proyecto->name)) { $this->odc->sub_proyecto->name; } ?>
+				<?php if (isset($this->odc->sub_proyecto->name)) { echo $this->odc->sub_proyecto->name; } ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -94,7 +92,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_BANCOS'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->banco)) { $this->odc->banco; } ?>
+				<?php if (isset($this->odc->banco)) { echo $this->odc->banco; } ?>
 			</div>
 		</div>
 		<div>
@@ -108,7 +106,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->cuenta)) { $this->odc->cuenta; } ?>
+				<?php if (isset($this->odc->cuenta)) { echo $this->odc->cuenta; } ?>
 			</div>
 		</div>
 		<div>
@@ -122,15 +120,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->clabe)) { $this->odc->clabe; } ?>
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_PUESTO'); ?>
-			</div>
-			<div class="span4">
-
+				<?php if (isset($this->odc->clabe)) { echo $this->odc->clabe; } ?>
 			</div>
 		</div>
 		<div class="clearfix">

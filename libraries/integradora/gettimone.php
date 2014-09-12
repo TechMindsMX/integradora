@@ -388,11 +388,12 @@ class getFromTimOne{
 	public static function getOrdenesCompra($integradoId){
 		$ordenes 					= new stdClass;
 		$ordenes->id				= 1;
-		$ordenes->proyecto			= 2;
-		$ordenes->proveedor			= 1;
+		$ordenes->proyecto			= 3;
+		$ordenes->proveedor			= 2;
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 988976;
 		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1410000000000;
 		$ordenes->productos			= array(
 											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
@@ -402,11 +403,8 @@ class getFromTimOne{
 		$ordenes->paymentType		= 0;
 		$ordenes->ieps				= .1;
 		$ordenes->iva				= .16;
-		$ordenes->pUnitario			= '3.00';
-		$ordenes->unidad			= 1;
 		$ordenes->status			= 0;
 		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		$ordenes->cantUnidades		= 20.00;
 		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 		$ordenes->currency			= 'MXN';
 		
@@ -414,11 +412,12 @@ class getFromTimOne{
 		
 		$ordenes 					= new stdClass;
 		$ordenes->id				= 2;
-		$ordenes->proyecto			= 1;
-		$ordenes->proveedor			= 3;
+		$ordenes->proyecto			= 3;
+		$ordenes->proveedor			= 4;
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 588973;
 		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1410000000000;
 		$ordenes->productos			= array(
 											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
 											array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
@@ -441,7 +440,7 @@ class getFromTimOne{
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 988975;
 		$ordenes->created			= 1408632474029;
-		$ordenes->payment			= 1408662478029;
+		$ordenes->payment			= 1410000000000;
 		$ordenes->productos			= array(
 											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
@@ -464,6 +463,7 @@ class getFromTimOne{
 		$ordenes->integradoId		= 2;
 		$ordenes->folio				= 988977;
 		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1410000000000;
 		$ordenes->productos			= array(
 											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),

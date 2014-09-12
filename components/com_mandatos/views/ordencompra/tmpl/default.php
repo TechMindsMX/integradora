@@ -91,19 +91,22 @@ function filtro(){
 		<?php
 		if( !is_null($ordenes) ){
 			foreach ($ordenes as $key => $value) {
-				$selected = $value->status == 1?'':'checked';
+				if ($value->status == 0){
+					$urlAtuh = JRoute::_('index.php?option=com_mandatos&view=odcpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id.'&task=authorize');
+					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$urlAtuh.'">'.JText::_("LBL_ÄUTORIZE") .'</a>';
+					$edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+				} else {
+					$auth_button = JText::_('LBL_AUTHORIZED');
+					$edit_button = JText::_('LBL_NOT_EDITABLE');
+				}
 				$class = $value->status == 0?'':'status1';
 				
 				echo '<tr class="type_'.$value->status.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->folio.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$<span class="number">'.$value->amount.'</span></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id.'" name="baja" '.$selected.' /></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
-				echo '  	<a class="btn btn-primary" href="#">';
-				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
-				echo '		</a>';
-				echo '	</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->amount,2).'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
 				echo '</tr>';
 			}
 		}else{

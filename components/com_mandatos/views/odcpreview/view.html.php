@@ -8,7 +8,6 @@ class MandatosViewOdcpreview extends JViewLegacy {
 	function display($tpl = null){
 		$data				= JFactory::getApplication()->input->getArray();
 		$this->integradoId	= $data['integradoId'];
-		$this->proveedores	= $this->get('providers');
 		
 		$this->odc		 		= $this->get('ordenes');
 
