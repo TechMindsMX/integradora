@@ -15,6 +15,17 @@ class MandatosViewOrdencompra extends JViewLegacy {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
                 return false;
         }
+		
+		$this->loadHelper('Mandatos');
+		
+		$newListado = array();
+		
+		foreach ($this->data as $key => $odc) {
+			$odc->proveedor = MandatosHelper::getProviderFromID($odc->proveedor, $this->integradoId);
+			
+			$this->data[$key] = $odc;  
+		}
+		
 		parent::display($tpl);
 	}
 }

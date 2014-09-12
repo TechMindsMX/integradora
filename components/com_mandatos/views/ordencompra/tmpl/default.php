@@ -82,6 +82,7 @@ function filtro(){
 			<tr>
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?></span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_PROVEEDOR'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
@@ -101,9 +102,11 @@ function filtro(){
 				}
 				$class = $value->status == 0?'':'status1';
 				
+				var_dump($value);
 				echo '<tr class="type_'.$value->status.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->folio.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->proveedor->tradeName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->amount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
