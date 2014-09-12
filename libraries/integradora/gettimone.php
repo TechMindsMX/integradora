@@ -393,17 +393,22 @@ class getFromTimOne{
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 988976;
 		$ordenes->created			= 1408632474029;
-		$ordenes->payment			= 1408632478029;
-		$ordenes->amount			= 12000.50;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 384.35;
 		$ordenes->paymentType		= 0;
-		$ordenes->ieps				= '10%';
-		$ordenes->iva				= '10%';
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
 		$ordenes->pUnitario			= '3.00';
 		$ordenes->unidad			= 1;
 		$ordenes->status			= 0;
 		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 		$ordenes->cantUnidades		= 20.00;
-		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
 		
 		$array[] = $ordenes;
 		
@@ -414,38 +419,41 @@ class getFromTimOne{
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 588973;
 		$ordenes->created			= 1408632474029;
-		$ordenes->payment			= 1408632478029;
-		$ordenes->amount			= 1000;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 1227.85;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 1;
-		$ordenes->ieps				= '10%';
-		$ordenes->iva				= '10%';
-		$ordenes->pUnitario			= '3.00';
-		$ordenes->unidad			= 1;
-		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		$ordenes->cantUnidades		= 20.00;
-		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
 		
 		$array[] = $ordenes;
 		
 		$ordenes 					= new stdClass;
 		$ordenes->id				= 3;
-		$ordenes->proyecto			= 1;
+		$ordenes->proyecto			= 3;
 		$ordenes->proveedor			= 2;
 		$ordenes->integradoId		= 1;
 		$ordenes->folio				= 988975;
 		$ordenes->created			= 1408632474029;
-		$ordenes->payment			= 1408632478029;
-		$ordenes->amount			= 3000;
+		$ordenes->payment			= 1408662478029;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 0;
-		$ordenes->ieps				= '10%';
-		$ordenes->iva				= '10%';
-		$ordenes->pUnitario			= '3.00';
-		$ordenes->unidad			= 1;
-		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		$ordenes->cantUnidades		= 20.00;
-		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
 		
 		$array[] = $ordenes;
 		
@@ -456,17 +464,18 @@ class getFromTimOne{
 		$ordenes->integradoId		= 2;
 		$ordenes->folio				= 988977;
 		$ordenes->created			= 1408632474029;
-		$ordenes->payment			= 1408632478029;
-		$ordenes->amount			= 100;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 0;
-		$ordenes->ieps				= '10%';
-		$ordenes->iva				= '10%';
-		$ordenes->pUnitario			= '3.00';
-		$ordenes->unidad			= 1;
-		$ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		$ordenes->cantUnidades		= 20.00;
-		$ordenes->obsevacioes		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
 		
 		$array[] = $ordenes;
 		
@@ -479,7 +488,6 @@ class getFromTimOne{
 		
 		return $respuesta;
 	}
-
 	public static function convierteFechas($objeto){
 		foreach ($objeto as $key => $value) {
 			if($key == 'created' || $key == 'payment'){

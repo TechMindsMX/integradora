@@ -13,12 +13,12 @@ jimport('integradora.catalogos');
 class MandatosModelGenerarodc extends JModelItem {
 	protected $dataModelo;
 	
-	public function getorden($integradoId = null){
+	public function getOrden($integradoId = null){
 		$data 		 = JFactory::getApplication()->input->getArray();
 		$integradoId = $data['integradoId'];
 		
 		if (!isset($this->dataModelo)) {
-			$this->dataModelo = getFromTimOne::getClientes($integradoId);
+			$this->dataModelo = getFromTimOne::getOrdenesCompra($integradoId);
 		}
 
 		return $this->dataModelo;
