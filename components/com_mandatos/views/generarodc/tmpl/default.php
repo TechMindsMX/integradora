@@ -9,8 +9,6 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-
-var_dump($_FILES);
 ?>
 <script>
 	jQuery(document).ready(function(){
