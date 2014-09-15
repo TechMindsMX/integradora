@@ -221,14 +221,14 @@ $params 	= $app->input->getArray();
 
         <div class="container botones">
         <?php
-        /*var_dump($this);*/
         if(isset($this->acciones->autoriza) && $this->acciones->autoriza === true && $this->odc->status === 0 ):
+            $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=authorize&integradoId='.$this->integradoId.'&odcnum='.$this->odc->id);
         ?>
-            <a class="btn btn-success"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
         <?php
         endif;
         ?>
-            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=ordencompra&integradoId='.$this->integradoId); ?>" ><?php echo JText::_('LBL_CANCEL'); ?></a>
+            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=ordencompra&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>
 </div>
