@@ -23,13 +23,13 @@ class MandatosController extends JControllerLegacy {
 		$data		 		= $this->input_data->getArray();
 		$integradoId 		= $data['integradoId'];
 		$this->currUser	 	= JFactory::getUser();
-		$isValid 	 		= $integrado->isValid($integradoId, $this->currUser->id);
+        $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
+
 
 		if($this->currUser->guest){
 			$this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
 		}
-		
-		if(is_null($integradoId) || !$isValid){
+		if(is_null($integradoId)){
 			$this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
 		}
 	}
@@ -54,7 +54,7 @@ class MandatosController extends JControllerLegacy {
 		}
 		exit;
 	}
-	
+
 	function editarproducto(){
 		$data 			= $this->input_data->getArray();
 		$integrado_id	= $data['integradoId'];

@@ -48,7 +48,11 @@ class Integrado {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
+<<<<<<< Updated upstream
 			->select($db->quoteName('user_id').','.$db->quoteName('integrado_principal').','.$db->quoteName('integrado_permission_level').','.$db->quoteName('integrado_id'))
+=======
+			->select('*')
+>>>>>>> Stashed changes
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('integrado_id') . '=' . $integ_id);
 
@@ -58,8 +62,13 @@ class Integrado {
 			$user = JFactory::getUser($value->user_id);
 			
 			$user->permission_level		= $value->integrado_permission_level;
+<<<<<<< Updated upstream
 			$user->integradoId			= $value->integrado_id;
 			$user->integrado_principal	= $value->integrado_principal;
+=======
+			$user->integrado_rep_legal	= (bool)$value->integrado_rep_legal;
+			$result[$key] = $user;
+>>>>>>> Stashed changes
 			
 			$result[$key] = $user;
 

@@ -26,7 +26,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->integCurrent->datos_empresa->razon_social; ?>
+				<?php echo $this->integCurrent->integrado[0]->datos_empresa->razon_social; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -219,6 +219,16 @@ $params 	= $app->input->getArray();
 			</div>
 		</div>
 
-	</div>
-	
+        <div class="container botones">
+        <?php
+        /*var_dump($this);*/
+        if(isset($this->acciones->autoriza) && $this->acciones->autoriza === true && $this->odc->status === 0 ):
+        ?>
+            <a class="btn btn-success"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+        <?php
+        endif;
+        ?>
+            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=ordencompra&integradoId='.$this->integradoId); ?>" ><?php echo JText::_('LBL_CANCEL'); ?></a>
+        </div>
+    </div>
 </div>

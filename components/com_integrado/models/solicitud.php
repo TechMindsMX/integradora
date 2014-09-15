@@ -23,7 +23,7 @@ class IntegradoModelSolicitud extends JModelItem {
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 			
-			if( !$this->dataModelo->isValid($integradoId, JFactory::getUser()->id) ){
+			if( !$this->dataModelo->isValidPrincipal($integradoId, JFactory::getUser()->id) ){
 				JFactory::getApplication()->redirect('index.php/component/mandatos', 'no tienes permisos para ver este elemento');
 			}
 			

@@ -35,7 +35,7 @@ class MandatosModelAltaproyectos extends JModelItem {
 		$data			= $input->getArray();
 		$integradoId	= $data['integradoId'];
 		$integrado		= new Integrado;
-		$isValid		= $integrado->isValid($integradoId, $currUser->id);
+		$isValid		= $integrado->isValidPrincipal($integradoId, $currUser->id);
 		
 		if($currUser->guest){
 			$app->redirect('index.php/login');
