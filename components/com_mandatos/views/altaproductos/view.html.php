@@ -7,8 +7,9 @@ jimport('integradora.gettimone');
 class MandatosViewAltaproductos extends JViewLegacy {
 	
 	function display($tpl = null){
-		$input 		= JFactory::getApplication()->input;
-		$data		= $input->getArray();
+		$app 				= JFactory::getApplication();
+		$data				= $app->input->getArray();
+		$this->integradoId 	= $data['integradoId'];
 
 		if( isset($data['prodId']) ){
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_EDITAR';
@@ -24,6 +25,18 @@ class MandatosViewAltaproductos extends JViewLegacy {
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 			return false;
         }
+		
+		$this->loadHelper('Mandatos');
+		
+		// Verifica los permisos de edición y autorización
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+
+		if (!$this->permisos['canEdit']) {
+			$url = 'index.php?option=com_mandatos&view=productos&integradoId='.$this->integradoId;
+			$msg = JText::_('JERROR_ALERTNOAUTHOR');
+			$app->redirect(JRoute::_($url), $msg, 'error');
+		}
+		
 		parent::display($tpl);
 	}
 }

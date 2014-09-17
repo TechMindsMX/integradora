@@ -28,7 +28,7 @@ $params 	= $app->input->getArray();
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->integCurrent->integrado[0]->datos_empresa->razon_social; ?>
+				<?php echo $this->integCurrent->integrados[0]->datos_empresa->razon_social; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -223,7 +223,7 @@ $params 	= $app->input->getArray();
 
         <div class="container botones">
         <?php
-        if(isset($this->acciones->autoriza) && $this->acciones->autoriza === true && $this->odc->status === 0 ):
+        if($this->permisos['canAuth'] && $this->odc->status === 0 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=authorize&integradoId='.$this->integradoId.'&odcnum='.$this->odc->id);
         ?>
             <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>

@@ -60,7 +60,6 @@ class Integrado {
 			$user->permission_level		= $value->integrado_permission_level;
 			$user->integradoId			= $value->integrado_id;
 			$user->integrado_principal	= $value->integrado_principal;
-			$user->integrado_rep_legal	= (bool)$value->integrado_rep_legal;
 
 			$result[$key] = $user;
 
