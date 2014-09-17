@@ -98,7 +98,7 @@ if(!isset($this->datos['confirmacion'])){
 
     <div class="form-group">
         <input type="submit" class="btn btn-primary" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
-        <input type="button" class="btn btn-primary" value="<?php echo jText"
+        <input type="button" class="btn btn-primary"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
     </div>
 </form>
 <?php
