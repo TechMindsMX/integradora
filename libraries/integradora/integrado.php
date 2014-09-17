@@ -122,13 +122,12 @@ class Integrado {
 		return $return;
 	}
 	
-	public static function checkPermisos($class, $failUrl = null)
+	public static function checkPermisos($class, $userId, $integradoId)
 	{
 		$db = JFactory::getDbo();
-		$user = JFactory::getUser();
 		
 		$query = $db->getQuery(true)
-					->select($db->quoteName(array('min_to_view','min_to_edit')))
+					->select($db->quoteName(array('lvls_to_edit','lvls_to_auth')))
 					->from($db->quoteName('#__integrado_permisos'))
 					->where($db->quoteName('view_component') . '=' . $db->quote($class));
 		$result = $db->setQuery($query)->loadAssoc();
@@ -137,17 +136,19 @@ class Integrado {
 			$result[$key] = json_decode($value);
 		}
 		
-		$canView = array_intersect($result['min_to_view'], $user->getAuthorisedViewLevels());
-		
-		if (empty($canView)) {
-			$failUrl = (is_null($failUrl)) ? JUri::base() : $failUrl ;
-			// JFactory::getApplication()->redirect($failUrl, JText::_('JERROR_LAYOUT_YOU_HAVE_NO_ACCESS_TO_THIS_PAGE'), 'error');
-		}
+		// busca el usuario en este integrado
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__integrado_users'))
+			->where($db->quoteName('integrado_id') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
+		$perm_level = $db->setQuery($query)->loadObject();
+
+		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $result['lvls_to_edit'] );
 		
 		// verifica si puede editar
-		$canEdit = array_intersect($result['min_to_edit'], $user->getAuthorisedGroups());
+		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $result['lvls_to_auth']);
 		
-		return (!empty($canEdit));
+		return $permisos;
 		
 	}
 	public static function getNationalityNameFromId($id) {

@@ -26,6 +26,8 @@ class MandatosViewOrdencompra extends JViewLegacy {
 			$this->data[$key] = $odc;  
 		}
 		
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+		
 		parent::display($tpl);
 	}
 }

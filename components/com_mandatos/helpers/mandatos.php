@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
-
+jimport('integradora.integrado');
 /**
  * helper class for mandatos component
  */
@@ -48,6 +48,14 @@ class MandatosHelper {
 		$proveedor = $proveedores[$providerId];
 		
 		return $proveedor;
+	}
+	
+	public static function checkPermisos($viewClass, $integradoId) {
+		$user = JFactory::getUser();
+		
+		$permisos = Integrado::checkPermisos($viewClass, $user->id, $integradoId);
+		
+		return $permisos;;
 	}
 	
 }

@@ -63,7 +63,8 @@ function filtro(){
 
 <div>
 	<div class="col-md-4">
-		<a class="btn btn-primary" href="#" /><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_AGREGAR'); ?></a>
+		<?php $newOdcUrl = jRoute::_('index.php?option=com_mandatos&view=generarodc&integradoId='.$this->integradoId); ?>
+		<a class="btn btn-primary" href="<?php echo $newOdcUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_AGREGAR'); ?></a>
 	</div>
 	
 	<div class="col-md-4">
@@ -92,9 +93,12 @@ function filtro(){
 		<?php
 		if( !is_null($ordenes) ){
 			foreach ($ordenes as $key => $value) {
-				if ($value->status == 0){
+				if ($value->status == 0 && $this->permisos['canAuth']){
 					$urlAtuh = JRoute::_('index.php?option=com_mandatos&view=odcpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id.'&task=authorize');
 					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$urlAtuh.'">'.JText::_("LBL_ÄUTORIZE") .'</a>';
+					$edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+				} elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
+					$auth_button = JText::_("LBL_CANT_ÄUTHORIZE") ;
 					$edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
 				} else {
 					$auth_button = JText::_('LBL_AUTHORIZED');
@@ -102,7 +106,6 @@ function filtro(){
 				}
 				$class = $value->status == 0?'':'status1';
 				
-				var_dump($value);
 				echo '<tr class="type_'.$value->status.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->folio.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
