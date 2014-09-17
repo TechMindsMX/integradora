@@ -6,6 +6,7 @@ jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
 jimport('integradora.rutas');
 jimport('integradora.catalogos');
+jimport('integradora.xmlparser');
 
 /**
  * Modelo de datos para Formulario p/generar Ordenes de Compra de un integrado
@@ -45,6 +46,15 @@ class MandatosModelGenerarodc extends JModelItem {
 		}
 		
 		return $proveedores;
+	}
+	
+	public function getdata2xml(){
+		move_uploaded_file($_FILES['factura']['tmp_name'], "media/archivosJoomla/".$_FILES['factura']['name']);
+		$xmlFileData    = file_get_contents("media/archivosJoomla/".$_FILES['factura']['name']);
+		$data 			= new xml2Array();
+		$datos 			= $data->manejaXML($xmlFileData);
+		
+		return $datos;
 	}
 }
 
