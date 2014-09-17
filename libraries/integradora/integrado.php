@@ -131,6 +131,10 @@ class Integrado {
 					->from($db->quoteName('#__integrado_permisos'))
 					->where($db->quoteName('view_component') . '=' . $db->quote($class));
 		$result = $db->setQuery($query)->loadAssoc();
+
+		if(count($result) === 0) {
+			die('No se han creado los permisos de esta vista');
+		}		
 		
 		foreach ($result as $key => $value) {
 			$result[$key] = json_decode($value);
