@@ -27,12 +27,11 @@ class MandatosViewGenerarodc extends JViewLegacy {
 		
 		$this->loadHelper('Mandatos');
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
-		
+
 		if (!$this->permisos['canEdit']) {
 			$url = 'index.php?option=com_mandatos&view=ordencompra&integradoId='.$this->integradoId;
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
-			var_dump($url,$msg);exit;
-			$app->redirect(JRoute::_($url, $msg, 'error'));
+			$app->redirect(JRoute::_($url), $msg, 'error');
 		}
 		
 		parent::display($tpl);
