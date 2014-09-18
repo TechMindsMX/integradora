@@ -12,9 +12,20 @@ jimport('integradora.catalogos');
  */
 class MandatosModelOddlist extends JModelItem {
 	protected $dataModelo;
+
+    function __construct(){
+        $this->data 		= JFactory::getApplication()->input->getArray();
+        $this->integradoId  = $this->data['integradoId'];
+        $this->integrado 	= new Integrado;
+        $this->currUser	    = Jfactory::getUser();
+
+        parent::__construct();
+    }
 	
 	public function getOrdenes($integradoId = null){
-		exit('LAKDJFLKSAJDLSKADJ');
-	}
+        $listado = getFromTimOne::getOrdenesDeposito($this->integradoId);
+
+        return $listado;
+    }
 }
 ?>
