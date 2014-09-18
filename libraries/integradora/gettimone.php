@@ -495,8 +495,11 @@ class getFromTimOne{
         $ordenes->id                = 1;
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 1;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -504,8 +507,11 @@ class getFromTimOne{
         $ordenes->id                = 2;
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 2;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -513,8 +519,11 @@ class getFromTimOne{
         $ordenes->id                = 3;
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 3;
-        $ordenes->created           = 1408632474029;
+      	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -522,8 +531,11 @@ class getFromTimOne{
         $ordenes->id                = 4;
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 4;
-        $ordenes->created           = 1408632474029;
+       $ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -531,8 +543,11 @@ class getFromTimOne{
         $ordenes->id                = 5;
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 5;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -540,8 +555,11 @@ class getFromTimOne{
         $ordenes->id                = 6;
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 6;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -549,8 +567,11 @@ class getFromTimOne{
         $ordenes->id                = 7;
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 7;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -558,8 +579,11 @@ class getFromTimOne{
         $ordenes->id                = 8;
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 8;
-        $ordenes->created           = 1408632474029;
+      	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
@@ -567,8 +591,11 @@ class getFromTimOne{
         $ordenes->id                = 9;
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 9;
-        $ordenes->created           = 1408632474029;
+       	$ordenes->created           = 1408632474029;
+		$ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+		$ordenes->paymentType		= 0;
 
         $array[] = $ordenes;
 
