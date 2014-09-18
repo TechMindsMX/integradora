@@ -489,7 +489,7 @@ class getFromTimOne{
 		return $respuesta;
 	}
 
-    public static function getOrdenesDeposito(){
+    public static function getOrdenesDeposito($integradoId){
         $respuesta                  = null;
         $ordenes 					= new stdClass;
         $ordenes->id                = 1;
@@ -609,10 +609,11 @@ class getFromTimOne{
         $array[] = $ordenes;
 
         foreach ($array as $key => $value) {
-            self::convierteFechas($value);
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
         }
-
-        $respuesta = $array;
 
         return $respuesta;
     }
