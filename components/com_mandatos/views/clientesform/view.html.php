@@ -33,7 +33,7 @@ class MandatosViewClientesform extends JViewLegacy {
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
 		if (!$this->permisos['canEdit']) {
-			$url = 'index.php?option=com_mandatos&view=clienteslistado&integradoId='.$this->integradoId;
+			$url = 'index.php?option=com_mandatos&view=clienteslist&integradoId='.$this->integradoId;
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
 			$app->redirect(JRoute::_($url), $msg, 'error');
 		}
