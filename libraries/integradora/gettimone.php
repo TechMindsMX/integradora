@@ -500,6 +500,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -512,6 +513,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 1;
 
         $array[] = $ordenes;
 
@@ -524,6 +526,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -536,6 +539,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -548,6 +552,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -560,6 +565,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -572,6 +578,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -584,6 +591,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
@@ -596,6 +604,7 @@ class getFromTimOne{
         $ordenes->totalmount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
+        $ordenes->status            = 0;
 
         $array[] = $ordenes;
 
