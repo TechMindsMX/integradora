@@ -207,7 +207,7 @@ $params 	= $app->input->getArray();
 					<?php echo JText::_('LBL_CON_FACTURA'); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO'); ?>
+					<?php echo JText::_('LBL_AUTORIZO_ODC'); ?>
 				</div>
 				<div class="row">
 					<div class="span4 text-center"><?php echo JText::_('LBL_FIRMA_1'); ?></div>

@@ -121,10 +121,10 @@ $integrado 	= $this->integCurrent->integrados[0];
 		<div id="footer">
 			<div class="container">
 				<div class="control-group">
-					<?php echo JText::_('LBL_CON_FACTURA'); ?>
+					<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO'); ?>
+					<?php echo JText::_('LBL_AUTORIZO_ODD'); ?>
 				</div>
 				<div class="row">
 					<div class="span4 text-center"><?php echo JText::_('LBL_FIRMA_1'); ?></div>
