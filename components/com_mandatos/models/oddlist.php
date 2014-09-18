@@ -10,7 +10,7 @@ jimport('integradora.catalogos');
 /**
  * Modelo de datos para Listado de las Ordenes de Deposito para un integrado
  */
-class MandatosModelOddlistado extends JModelItem {
+class MandatosModelOddlist extends JModelItem {
 	protected $dataModelo;
 	
 	public function getOrdenes($integradoId = null){

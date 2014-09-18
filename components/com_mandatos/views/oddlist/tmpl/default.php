@@ -7,5 +7,4 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-
 ?>
