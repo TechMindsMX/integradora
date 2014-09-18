@@ -230,7 +230,7 @@ $params 	= $app->input->getArray();
         <?php
         endif;
         ?>
-            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=ordencompra&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclistado&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>
 </div>

@@ -46,9 +46,9 @@ class MandatosController extends JControllerLegacy {
 		foreach ($proyectos as $key => $value) {
 			if($data['proyId'] == $value->id){
 				if($value->parentId == 0){
-					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
 				}else{
-					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altasubproyectos&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
 				}
 			}
 		}
@@ -66,7 +66,7 @@ class MandatosController extends JControllerLegacy {
 		
 		foreach ($productos as $key => $value) {
 			if( $data['prodId'] == $value->id ){
-				$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=altaproductos&prodId='.$data['prodId'].'&integradoId='.$data['integradoId']));
+				$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productosform&prodId='.$data['prodId'].'&integradoId='.$data['integradoId']));
 			}
 		}
 	}
