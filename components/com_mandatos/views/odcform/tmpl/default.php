@@ -106,8 +106,9 @@ if(!isset($this->datos['confirmacion'])){
 	$created = new DateTime($this->datos['created']);
 	$datePayment = new DateTime($this->datos['paymentDate']);
 
-	$impuestos = $this->dataXML->impuestos;
-	$conceptos = $this->dataXML->conceptos;
+    $comprobante    = $this->dataXML->comprobante;
+	$impuestos      = $this->dataXML->impuestos;
+	$conceptos      = $this->dataXML->conceptos;
 ?>
 <div id="odc_preview">
 	<h1><?php echo JText::_('MANDATOS_ODC_CONFIRMACION'); ?></h1>
@@ -179,23 +180,21 @@ if(!isset($this->datos['confirmacion'])){
 	</thead>
 	<tbody>
 		<?php
-        $subtotal = 0;
 		foreach ($conceptos as $key => $value) {
-            $subtotal = $subtotal + $value['IMPORTE'];
 		?>
 				<tr>
 					<td><?php echo $key+1; ?></td>
-					<td><?php echo number_format($value['CANTIDAD']); ?></td>
+					<td style="text-align: center;"><?php echo number_format($value['CANTIDAD']); ?></td>
 					<td><?php echo $value['DESCRIPCION']; ?></td>
 					<td><?php echo $value['UNIDAD']; ?></td>
 					<td>
 						<div class="text-right">
-							$<?php echo number_format($value['VALORUNITARIO']); ?>
+							$<?php echo number_format($value['VALORUNITARIO'], 2); ?>
 						</div>
 					</td>
 					<td>
 						<div class="text-right">
-							$<?php echo number_format($value['IMPORTE']); ?>
+							$<?php echo number_format($value['IMPORTE'], 2); ?>
 						</div>
 					</td>
 				</tr>
@@ -210,7 +209,7 @@ if(!isset($this->datos['confirmacion'])){
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
 			</td>
 			<td>
-				<div class="text-right">$<?php echo number_format($subtotal); ?></div>
+				<div class="text-right">$<?php echo number_format($comprobante['SUBTOTAL'], 2); ?></div>
 			</td>
 		</tr>
 		<tr>
@@ -218,7 +217,7 @@ if(!isset($this->datos['confirmacion'])){
 				<?php echo number_format($impuestos->iva->tasa).'%'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 			</td>
 			<td>
-				<div class="text-right"><?php echo number_format($impuestos->iva->importe); ?></div>
+				<div class="text-right">$<?php echo number_format($impuestos->iva->importe, 2); ?></div>
 			</td>
 		</tr>
 		<tr>
@@ -226,7 +225,7 @@ if(!isset($this->datos['confirmacion'])){
 				<?php echo JText::_('LBL_TOTAL'); ?>
 			</td>
 			<td>
-				<div class="text-right">$<?php echo number_format(($subtotal+$impuestos->iva->importe)) ?></div>
+				<div class="text-right">$<?php echo number_format($comprobante['TOTAL'], 2); ?></div>
 			</td>
 		</tr>
 	</tbody>

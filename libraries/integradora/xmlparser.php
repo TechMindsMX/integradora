@@ -49,6 +49,7 @@ class xml2Array {
     function manejaXML($xmlFileData){
         $xml                = $this->parse($xmlFileData);
         $datosXML           = new stdClass();
+        $comprobante        = $xml[0]['attrs'];
         $emisor             = $xml[0]['children'][0];
         $receptor           = $xml[0]['children'][1];
         $conceptos          = $xml[0]['children'][2];
@@ -61,7 +62,7 @@ class xml2Array {
         $datosXML->impuestos->totalTrasladados  = $impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
         $datosXML->impuestos->iva->tasa         = $impuestos['children'][0]['children'][0]['attrs']['TASA'];
         $datosXML->impuestos->iva->importe      = $impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
-
+        $datosXML->comprobante                  = $comprobante;
         return $datosXML;
     }
 }

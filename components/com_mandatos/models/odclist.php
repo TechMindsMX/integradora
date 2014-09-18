@@ -2,26 +2,24 @@
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
-
 jimport('integradora.integrado');
-jimport('integradora.rutas');
-jimport('integradora.catalogos');
+jimport('integradora.gettimone');
 
 /**
- * Modelo de datos para Listado de los clientes dados de alta para un integrado
+ * Modelo de datos para Listado de las Ordenes de Deposito para un integrado
  */
-class MandatosModelOdclist extends JModelItem {
+class MandatosModelOddlist extends JModelItem {
 	protected $dataModelo;
+
+    function __construct(){
+        $this->data 		= JFactory::getApplication()->input->getArray();
+        $this->integradoId  = $data['integradoId'];
+        $this->integrado 	= new Integrado;
+        $this->currUser	    = Jfactory::getUser();
+    }
 	
-	public function getOrdenes($integradoId = null){
-		$data 		 = JFactory::getApplication()->input->getArray();
-		$integradoId = $data['integradoId'];
-		$integrado 	 = new Integrado;
-		$currUser	 = Jfactory::getUser();
-		
-		$listado = getFromTimOne::getOrdenesCompra($integradoId);
-		
-		return $listado;
+	public function getDeposito($integradoId = null){
+        var_dump($this);exit;
 	}
 }
 
