@@ -179,10 +179,12 @@ if(!isset($this->datos['confirmacion'])){
 	</thead>
 	<tbody>
 		<?php
+        $subtotal = 0;
 		foreach ($conceptos as $key => $value) {
+            $subtotal = $subtotal + $value['IMPORTE'];
 		?>
 				<tr>
-					<td><?php echo $key; ?></td>
+					<td><?php echo $key+1; ?></td>
 					<td><?php echo number_format($value['CANTIDAD']); ?></td>
 					<td><?php echo $value['DESCRIPCION']; ?></td>
 					<td><?php echo $value['UNIDAD']; ?></td>
@@ -208,15 +210,15 @@ if(!isset($this->datos['confirmacion'])){
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
 			</td>
 			<td>
-				<div class="text-right">&nbsp;</div>
+				<div class="text-right">$<?php echo number_format($subtotal); ?></div>
 			</td>
 		</tr>
 		<tr>
 			<td class="span2">
-				<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'  %'; ?>
+				<?php echo number_format($impuestos->iva->tasa).'%'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 			</td>
 			<td>
-				<div class="text-right">&nbsp;</div>
+				<div class="text-right"><?php echo number_format($impuestos->iva->importe); ?></div>
 			</td>
 		</tr>
 		<tr>
@@ -224,7 +226,7 @@ if(!isset($this->datos['confirmacion'])){
 				<?php echo JText::_('LBL_TOTAL'); ?>
 			</td>
 			<td>
-				<div class="text-right">&nbsp;</div>
+				<div class="text-right">$<?php echo number_format(($subtotal+$impuestos->iva->importe)) ?></div>
 			</td>
 		</tr>
 	</tbody>

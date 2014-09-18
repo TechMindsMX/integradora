@@ -49,6 +49,10 @@ class MandatosHelper {
 		
 		return $proveedor;
 	}
+
+    public static function getOddListado(){
+
+    }
 	
 	public static function checkPermisos($viewClass, $integradoId) {
 		$user = JFactory::getUser();

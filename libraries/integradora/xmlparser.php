@@ -54,11 +54,10 @@ class xml2Array {
         $conceptos          = $xml[0]['children'][2];
         $impuestos          = $xml[0]['children'][3];
         $complemento        = $xml[0]['children'][4];
-for($i=0;$i<=1; $i++){
+
         foreach($conceptos['children'] as $key => $value){
-            $datosXML->conceptos[$i]   = $value['attrs'];
+            $datosXML->conceptos[$key]   = $value['attrs'];
         }
-}
         $datosXML->impuestos->totalTrasladados  = $impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
         $datosXML->impuestos->iva->tasa         = $impuestos['children'][0]['children'][0]['attrs']['TASA'];
         $datosXML->impuestos->iva->importe      = $impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
