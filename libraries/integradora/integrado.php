@@ -60,7 +60,6 @@ class Integrado {
 			$user->permission_level		= $value->integrado_permission_level;
 			$user->integradoId			= $value->integrado_id;
 			$user->integrado_principal	= $value->integrado_principal;
-			$user->integrado_rep_legal	= (bool)$value->integrado_rep_legal;
 
 			$result[$key] = $user;
 
@@ -127,17 +126,15 @@ class Integrado {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-					->select($db->quoteName(array('lvls_to_edit','lvls_to_auth')))
-					->from($db->quoteName('#__integrado_permisos'))
-					->where($db->quoteName('view_component') . '=' . $db->quote($class));
-		$result = $db->setQuery($query)->loadAssoc();
+					->select('*')
+					->from($db->quoteName('#__integrado_permisos'));
+		$result = $db->setQuery($query)->loadObjectList();
 
-		if(count($result) === 0) {
-			die('No se han creado los permisos de esta vista');
-		}		
-		
 		foreach ($result as $key => $value) {
-			$result[$key] = json_decode($value);
+			if($value->view_component === 'default' OR $value->view_component === $class) {
+				$lvls['lvls_to_edit'] = json_decode($value->lvls_to_edit);
+				$lvls['lvls_to_auth'] = json_decode($value->lvls_to_auth);
+			}
 		}
 		
 		// busca el usuario en este integrado
@@ -147,10 +144,10 @@ class Integrado {
 			->where($db->quoteName('integrado_id') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
 
-		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $result['lvls_to_edit'] );
+		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
 		
 		// verifica si puede editar
-		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $result['lvls_to_auth']);
+		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_auth']);
 		
 		return $permisos;
 		

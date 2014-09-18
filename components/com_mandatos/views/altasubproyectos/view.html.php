@@ -7,8 +7,9 @@ jimport('integradora.gettimone');
 class MandatosViewAltasubproyectos extends JViewLegacy {
 	
 	function display($tpl = null){
-		$input 				= JFactory::getApplication()->input;
-		$data				= $input->getArray();
+		$app 				= JFactory::getApplication();
+		$data				= $app->input->getArray();
+		$this->integradoId 	= $data['integradoId'];
 		$this->token 		= getFromTimOne::token();
 		
 		if( isset($data['proyId']) ){
@@ -20,12 +21,23 @@ class MandatosViewAltasubproyectos extends JViewLegacy {
 			$this->data = $this->get('proyectos');
 		}
 		
-		
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 			return false;
         }
+
+		$this->loadHelper('Mandatos');
+
+		// Verifica los permisos de edición y autorización
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+
+		if (!$this->permisos['canEdit']) {
+			$url = 'index.php?option=com_mandatos&view=proyectos&integradoId='.$this->integradoId;
+			$msg = JText::_('JERROR_ALERTNOAUTHOR');
+			$app->redirect(JRoute::_($url), $msg, 'error');
+		}
+
 		parent::display($tpl);
 	}
 }

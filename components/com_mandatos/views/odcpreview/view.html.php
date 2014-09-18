@@ -6,8 +6,9 @@ jimport('joomla.application.component.view');
 class MandatosViewOdcpreview extends JViewLegacy {
 	
 	function display($tpl = null){
-		$data				= JFactory::getApplication()->input->getArray();
-		$this->integradoId	= $data['integradoId'];
+		$app 				= JFactory::getApplication();
+		$data				= $app->input->getArray();
+		$this->integradoId 	= $data['integradoId'];
 
 		$this->odc		 	= $this->get('ordenes');
 
@@ -18,10 +19,10 @@ class MandatosViewOdcpreview extends JViewLegacy {
                 return false;
         }
 
+		$this->loadHelper('Mandatos');
 
-        if($this->integCurrent->usuarios[0]->permission_level >= 3) {
-            $this->acciones->autoriza = true;
-        }
+		// Verifica los permisos de edición y autorización
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
 		parent::display($tpl);
 	}
