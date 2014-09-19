@@ -16,7 +16,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 
 ?>
 
-<div id="odc_preview">
+<div id="odd_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
 		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odd->id; ?></h3>
@@ -141,13 +141,13 @@ $integrado 	= $this->integCurrent->integrados[0];
         <div class="container botones">
         <?php
         if($this->permisos['canAuth'] && $this->odd->status === 0 ):
-            $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=authorize&integradoId='.$this->integradoId.'&odcnum='.$this->odd->id);
+            $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&task=authorize&integradoId='.$this->integradoId.'&oddnum='.$this->odd->id);
         ?>
             <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
         <?php
         endif;
         ?>
-            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=oddlist&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>
 </div>
