@@ -66,7 +66,7 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach ($ordenes as $key => $value) {
-                $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id);
+                $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
                 if ($value->status == 0 && $this->permisos['canAuth']){
                     $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id.'&task=authorize');
