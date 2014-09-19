@@ -32,9 +32,10 @@ class MandatosModelOddpreview extends JModelItem {
 				$this->odd = $value;
 			}
 		}
+		
 		// Verifica si la ODD exite para el integrado o redirecciona
 		if (is_null($this->odd)){
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODD_INVALID'), 'error');
+			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODD_INVALID'), 'error');
 		}
 		
 		return $this->odd;
