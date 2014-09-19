@@ -3,17 +3,18 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
+jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
-$document	= JFactory::getDocument();
-$app 		= JFactory::getApplication();
+$document	 = JFactory::getDocument();
+$app 		 = JFactory::getApplication();
 
 // Datos
-$params 	= $app->input->getArray();
+$params 	 = $app->input->getArray();
 
-$integrado 	= $this->integCurrent->integrados[0];
-
+$integrado 	 = $this->integCurrent->integrados[0];
+$number2word = new AifLibNumber;
 ?>
 
 <div id="odd_preview">
@@ -106,7 +107,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 			<tbody>
 				<tr>
 					<td><?php echo '$ '.number_format($this->odd->totalmount,2). ' ' . $this->odd->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odd->totalmount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo $number2word->toCurrency('$ '.number_format($this->odd->totalmount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>

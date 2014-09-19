@@ -3,12 +3,14 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
+jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+$number2word    = new AifLibNumber;
+$attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 if(!isset($this->datos['confirmacion'])){
 ?>
 <script>
@@ -204,6 +206,7 @@ if(!isset($this->datos['confirmacion'])){
 		<tr>
 			<td colspan="4" rowspan="3">
 				<?php echo JText::_('LBL_MONTO_LETRAS'); ?>
+                <span id="wordAmount"><?php echo $number2word->toCurrency('$'.number_format($comprobante['TOTAL'], 2)); ?></span>
 			</td>
 			<td class="span2">
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>

@@ -3,14 +3,15 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
+jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
-$document	= JFactory::getDocument();
-$app 		= JFactory::getApplication();
-
+$document	 = JFactory::getDocument();
+$app 		 = JFactory::getApplication();
+$number2word = new AifLibNumber;
 // Datos
-$params 	= $app->input->getArray();
+$params 	 = $app->input->getArray();
 
 ?>
 
@@ -166,7 +167,7 @@ $params 	= $app->input->getArray();
 				?>
 				<tr>
 					<td colspan="4" rowspan="3">
-						<?php echo JText::_('LBL_MONTO_LETRAS'); ?>
+						<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odc->amount + ($this->odc->amount * $this->odc->iva), 2)); ?></span>
 					</td>
 					<td class="span2">
 						<?php echo JText::_('LBL_SUBTOTAL'); ?>
@@ -177,7 +178,7 @@ $params 	= $app->input->getArray();
 				</tr>
 				<tr>
 					<td class="span2">
-						<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'  '.($this->odc->iva * 100).'%'; ?>
+						<?php echo ($this->odc->iva * 100).'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 					</td>
 					<td><div class="text-right">
 						<?php echo number_format($this->odc->amount * $this->odc->iva, 2); ?>
