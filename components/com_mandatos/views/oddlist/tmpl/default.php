@@ -21,6 +21,9 @@ if(is_null($ordenes) || empty($ordenes)){
 ?>
 <script>
     jQuery(document).ready(function(){
+
+		jQuery('.filtro').on('click', filtro);
+
         jQuery("#myTable").tablesorter({
             sortList: [[0,0]],
             headers: {
@@ -31,6 +34,25 @@ if(is_null($ordenes) || empty($ordenes)){
             }
         });
     });
+    
+function filtro(){
+	var valor	= parseInt( jQuery(this).val() );
+
+	switch(valor){
+		case 0:
+			jQuery('.type_0').show();
+			jQuery('.type_1').hide();
+			break;
+		case 1:
+			jQuery('.type_1').show();
+			jQuery('.type_0').hide();
+			break;
+		case 3:
+			jQuery('.type_0').show();
+			jQuery('.type_1').show();
+			break;
+	}
+}
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_TITULO'); ?></h1>
 
@@ -45,8 +67,8 @@ if(is_null($ordenes) || empty($ordenes)){
     <div class="col-md-4">
         <div><?php echo JText::_('COM_MANDATOS_ORDENES_FILTRO'); ?>:</div>
         <div class="radio">
-            <label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_STATUS_BAJA'); ?></label>
-            <label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_STATUS_ACTIVO'); ?></label>
+            <label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_STATUS_PENDING_AUTH'); ?></label>
+            <label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_STATUS_ACTIVO'); ?></label>
             <label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" id="showall" checked="checked">Todos</label>
         </div>
     </div>
