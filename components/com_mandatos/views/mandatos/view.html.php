@@ -6,9 +6,11 @@ jimport('joomla.application.component.view');
 class MandatosViewMandatos extends JViewLegacy {
 	
 	function display($tpl = null){
+		$integrado	 		= new Integrado;
+
 		$data				= JFactory::getApplication()->input->getArray();
 		$this->data 		= $this->get('Solicitud');
-		$this->integradoId	= $data['integradoId'];
+		$this->integradoId	= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
 		$this->catalogos 	= $this->get('catalogos');
 		
         if (count($errors = $this->get('Errors'))) {

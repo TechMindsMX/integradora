@@ -35,7 +35,7 @@ class Integrado {
 		$query = $db->getQuery(true)
 			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal'))
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id).' AND '.$db->quoteName('integrado_principal').' = 1');
+			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
 		$result = $db->setQuery($query)->loadObjectList();
 		
 		$instance->intergrado->ids = $result;
