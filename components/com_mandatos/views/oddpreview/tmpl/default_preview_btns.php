@@ -7,7 +7,7 @@ defined('_JEXEC') or die('Restricted access');
         if($this->permisos['canAuth'] && $this->odd->status === 0 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&integradoId='.$this->integradoId.'&oddnum='.$this->odd->id);
         ?>
-            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
         endif;
         ?>

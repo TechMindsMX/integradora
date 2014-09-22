@@ -227,7 +227,7 @@ $params 	 = $app->input->getArray();
         if($this->permisos['canAuth'] && $this->odc->status === 0 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=authorize&integradoId='.$this->integradoId.'&odcnum='.$this->odc->id);
         ?>
-            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
         endif;
         ?>

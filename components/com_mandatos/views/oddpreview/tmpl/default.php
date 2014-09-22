@@ -144,7 +144,7 @@ $number2word = new AifLibNumber;
         if($this->permisos['canAuth'] && $this->odd->status === 0 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&task=authorize&integradoId='.$this->integradoId.'&oddnum='.$this->odd->id);
         ?>
-            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
         endif;
         ?>

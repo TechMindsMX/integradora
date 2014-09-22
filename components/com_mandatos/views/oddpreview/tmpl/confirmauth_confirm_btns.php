@@ -8,7 +8,7 @@ defined('_JEXEC') or die('Restricted access');
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&task=authorize&integradoId='.$this->integradoId.'&oddnum='.$this->odd->id);
         ?>
         	<p class="text-warning"><?php echo JText::_('LBL_CONFIRM_AUTH_ODD'); ?></p>
-            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_ÄUTORIZE'); ?></a>
+            <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
         endif;
         ?>

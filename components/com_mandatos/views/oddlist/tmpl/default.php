@@ -70,14 +70,17 @@ if(is_null($ordenes) || empty($ordenes)){
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
                 if ($value->status == 0 && $this->permisos['canAuth']){
                     $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->id.'&task=authorize');
-                    $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_ÄUTORIZE") .'</a>';
+                    $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
                     $edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
-                    $auth_button = JText::_("LBL_CANT_ÄUTHORIZE") ;
+                    $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
                     $edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
-                } else {
-                    $auth_button = JText::_('LBL_AUTHORIZED');
-                    $edit_button = JText::_('LBL_NOT_EDITABLE');
+				} elseif ($value->status == 1) {
+					$auth_button = JText::_('LBL_AUTHORIZED');
+					$edit_button = JText::_('LBL_NOT_EDITABLE');
+				} else {
+					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
+					$edit_button = JText::_('LBL_NOT_EDITABLE');
                 }
                 $class = $value->status == 0?'':'status1';
 
