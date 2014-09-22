@@ -9,6 +9,8 @@ JHtml::_('behavior.keepalive');
 $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
+if($this->confirmacion){
 ?>
 <h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
 <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
@@ -41,7 +43,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <input type="button" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
+        <input type="submit" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
         <input type="button" class="btn btn-primary" value="<?php echo JText::_('LBL_CANCELAR'); ?>">
     </div>
 </form>
+<?php
+}else{
+var_dump($this->dato);
+?>
+<?php
+}
+?>

@@ -11,6 +11,15 @@ class MandatosViewOddform extends JViewLegacy {
 		$this->integradoId 	= $data['integradoId'];
 		$this->odd		 	= $this->get('orden');
         $this->actionUrl    = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'&confirmacion=1'):'#';
+        $this->datos        = $data;
+
+        if(isset($data['confirmacion'])){
+            $this->confirmacion = true;
+            $this->datos        = $data;
+        }else{
+            $this->confirmacion = false;
+            $this->datos        = null;
+        }
 
         if (count($errors = $this->get('Errors'))) {
             JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
