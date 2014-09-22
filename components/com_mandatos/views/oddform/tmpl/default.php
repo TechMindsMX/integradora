@@ -10,7 +10,7 @@ $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
-if($this->confirmacion){
+if(!$this->confirmacion){
 ?>
 <h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
 <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
@@ -49,7 +49,7 @@ if($this->confirmacion){
 </form>
 <?php
 }else{
-var_dump($this->dato);
+var_dump($this->datos);
 ?>
 <?php
 }

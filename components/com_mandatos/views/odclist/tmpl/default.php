@@ -70,8 +70,8 @@ function filtro(){
 	<div class="col-md-4">
 		<div><?php echo JText::_('COM_MANDATOS_ORDENES_FILTRO'); ?>:</div>
 		<div class="radio">
-			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_STATUS_BAJA'); ?></label>
-			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_STATUS_ACTIVO'); ?></label>
+			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_STATUS_BAJA'); ?></label>
+			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="1"><?php echo JText::_('LBL_STATUS_ACTIVO'); ?></label>
 			<label for="filtro"><input type="radio" name="filtro" class="filtro" value="3" id="showall" checked="checked">Todos</label>
 		</div>
 	</div>

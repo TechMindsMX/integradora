@@ -477,6 +477,48 @@ class getFromTimOne{
 		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 		$ordenes->currency			= 'MXN';
 		
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 4;
+		$ordenes->proyecto			= 1;
+		$ordenes->proveedor			= 4;
+		$ordenes->integradoId		= 2;
+		$ordenes->folio				= 988978;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1410000000000;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 1384.35;
+		$ordenes->paymentType		= 0;
+		$ordenes->status			= 0;
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
+
+		$ordenes 					= new stdClass;
+		$ordenes->id				= 4;
+		$ordenes->proyecto			= 1;
+		$ordenes->proveedor			= 4;
+		$ordenes->integradoId		= 2;
+		$ordenes->folio				= 988979;
+		$ordenes->created			= 1408632474029;
+		$ordenes->payment			= 1410000000000;
+		$ordenes->productos			= array(
+											array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+											);
+		$ordenes->amount			= 4500.00;
+		$ordenes->paymentType		= 0;
+		$ordenes->status			= 1;
+		$ordenes->ieps				= .1;
+		$ordenes->iva				= .16;
+		$ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$ordenes->currency			= 'MXN';
+
 		$array[] = $ordenes;
 		
 		foreach ($array as $key => $value) {
