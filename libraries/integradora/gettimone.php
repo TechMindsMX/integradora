@@ -676,6 +676,7 @@ class getFromTimOne{
         $ordenes->id                = 9;
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 9;
+        $ordenes->proyectId         = 2;
         $ordenes->created           = 1408632474029;
         $ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
