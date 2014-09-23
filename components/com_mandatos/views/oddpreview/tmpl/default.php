@@ -127,11 +127,6 @@ $number2word = new AifLibNumber;
 				<div class="container text-uppercase control-group">
 					<?php echo JText::_('LBL_AUTORIZO_ODD'); ?>
 				</div>
-				<div class="row">
-					<div class="span4 text-center"><?php echo JText::_('LBL_FIRMA_1'); ?></div>
-					<div class="span4 text-center"><?php echo JText::_('LBL_FIRMA_2'); ?></div>
-					<div class="span4 text-center"><?php echo JText::_('LBL_FIRMA_3'); ?></div>
-				</div>
 			</div>
 			<div class="text-center">
 				<p class="text-capitalize"><?php echo JText::_('LBL_INTEGRADORA'); ?></p>
