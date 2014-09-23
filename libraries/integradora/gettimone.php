@@ -669,6 +669,32 @@ class getFromTimOne{
         return $respuesta;
     }
 
+    public static function getOrdenesVenta($integradoId) {
+        $respuesta = null;
+
+        $ordenes 					= new stdClass;
+        $ordenes->id                = 9;
+        $ordenes->integradoId       = 2;
+        $ordenes->numOrden          = 9;
+        $ordenes->created           = 1408632474029;
+        $ordenes->payment			= 1428632474029;
+        $ordenes->totalmount        = 10000;
+        $ordenes->currency        	= 'MXN';
+        $ordenes->status            = 0;
+
+        $array[] = $ordenes;
+
+        foreach ($array as $key => $value) {
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
+        }
+
+        return $respuesta;
+
+    }
+
     public static function getMedidas(){
         $respuesta['litros'] 			= 'litros';
         $respuesta['Metros'] 			= 'Metros';
