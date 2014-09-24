@@ -64,7 +64,7 @@ function filtro(){
 
 <div>
 	<div class="col-md-4">
-		<?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId); ?>
+		<?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odrform&integradoId='.$this->integradoId); ?>
 		<a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" ><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></a>
 	</div>
 	
