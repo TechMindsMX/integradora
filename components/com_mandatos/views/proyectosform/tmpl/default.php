@@ -30,7 +30,7 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 	</div>
 	
 	<div class="form-group">
-		<label for="description"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
+		<label for="description"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESCRIPCION_PROY') ?></label>
 		<textarea name="description" id="description" rows="10" style="width: 90%;"><?php echo !is_null($proyecto)?$proyecto->description:''; ?></textarea>
 	</div>
 	
