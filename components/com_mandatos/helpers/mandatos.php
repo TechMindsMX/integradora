@@ -44,7 +44,7 @@ class MandatosHelper {
 				$proveedores[$value->id] = $value;
 			}
 		}
-		
+
 		$proveedor = $proveedores[$providerId];
 		
 		return $proveedor;

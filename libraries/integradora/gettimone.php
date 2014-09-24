@@ -672,11 +672,54 @@ class getFromTimOne{
     public static function getOrdenesVenta($integradoId) {
         $respuesta = null;
 
-        $ordenes 					= new stdClass;
-        $ordenes->id                = 9;
+	    $ordenes 					= new stdClass;
+	    $ordenes->id                = 1;
+	    $ordenes->integradoId       = 1;
+	    $ordenes->numOrden          = 1;
+	    $ordenes->proyectId         = 1;
+	    $ordenes->clientId          = 2;
+	    $ordenes->created           = 1408632474029;
+	    $ordenes->payment			= 1428632474029;
+	    $ordenes->totalmount        = 10000;
+	    $ordenes->currency        	= 'MXN';
+	    $ordenes->status            = 0;
+
+	    $array[] = $ordenes;
+
+	    $ordenes 					= new stdClass;
+	    $ordenes->id                = 2;
+	    $ordenes->integradoId       = 1;
+	    $ordenes->numOrden          = 2;
+	    $ordenes->proyectId         = 1;
+	    $ordenes->clientId          = 4;
+	    $ordenes->created           = 1408632474029;
+	    $ordenes->payment			= 1428632474029;
+	    $ordenes->totalmount        = 10000;
+	    $ordenes->currency        	= 'MXN';
+	    $ordenes->status            = 0;
+
+	    $array[] = $ordenes;
+
+	    $ordenes 					= new stdClass;
+	    $ordenes->id                = 3;
+	    $ordenes->integradoId       = 1;
+	    $ordenes->numOrden          = 3;
+	    $ordenes->proyectId         = 1;
+	    $ordenes->clientId          = 6;
+	    $ordenes->created           = 1408632474029;
+	    $ordenes->payment			= 1428632474029;
+	    $ordenes->totalmount        = 10000;
+	    $ordenes->currency        	= 'MXN';
+	    $ordenes->status            = 1;
+
+	    $array[] = $ordenes;
+
+	    $ordenes 					= new stdClass;
+        $ordenes->id                = 6;
         $ordenes->integradoId       = 2;
-        $ordenes->numOrden          = 9;
+        $ordenes->numOrden          = 6;
         $ordenes->proyectId         = 2;
+	    $ordenes->clientId          = 1;
         $ordenes->created           = 1408632474029;
         $ordenes->payment			= 1428632474029;
         $ordenes->totalmount        = 10000;
