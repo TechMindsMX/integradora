@@ -539,7 +539,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 1;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -553,7 +553,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 2;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 1;
@@ -567,7 +567,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 3;
       	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -581,7 +581,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 4;
 		$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -595,7 +595,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 5;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -609,7 +609,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 6;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -623,7 +623,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 7;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -637,7 +637,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 8;
       	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -651,7 +651,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 9;
        	$ordenes->created           = 1408632474029;
 		$ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
 		$ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -680,7 +680,7 @@ class getFromTimOne{
 	    $ordenes->clientId          = 2;
 	    $ordenes->created           = 1408632474029;
 	    $ordenes->payment			= 1428632474029;
-	    $ordenes->totalmount        = 10000;
+	    $ordenes->totalamount        = 10000;
 	    $ordenes->currency        	= 'MXN';
 	    $ordenes->status            = 0;
 
@@ -694,7 +694,7 @@ class getFromTimOne{
 	    $ordenes->clientId          = 4;
 	    $ordenes->created           = 1408632474029;
 	    $ordenes->payment			= 1428632474029;
-	    $ordenes->totalmount        = 10000;
+	    $ordenes->totalamount        = 10000;
 	    $ordenes->currency        	= 'MXN';
 	    $ordenes->status            = 0;
 
@@ -708,7 +708,7 @@ class getFromTimOne{
 	    $ordenes->clientId          = 6;
 	    $ordenes->created           = 1408632474029;
 	    $ordenes->payment			= 1428632474029;
-	    $ordenes->totalmount        = 10000;
+	    $ordenes->totalamount        = 10000;
 	    $ordenes->currency        	= 'MXN';
 	    $ordenes->status            = 1;
 
@@ -722,7 +722,7 @@ class getFromTimOne{
 	    $ordenes->clientId          = 1;
         $ordenes->created           = 1408632474029;
         $ordenes->payment			= 1428632474029;
-        $ordenes->totalmount        = 10000;
+        $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
 
