@@ -71,7 +71,6 @@ if(!$this->confirmacion){
 <?php
 }else{
     $datos = $this->datos;
-    $archivo = $this->file;
     $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
 ?>
     <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_CONFIMACION'); ?></h1>
@@ -84,23 +83,9 @@ if(!$this->confirmacion){
     </div>
 
     <div class="form-group">
-        <span class="label-default"><?php echo JText::_('LBL_DEPOSIT_DATE'); ?>: </span>
-        <span>
-            <?php echo $datos['depositDate'] ?>
-        </span>
-    </div>
-
-    <div class="form-group">
         <span class="label-default"><?php echo JText::_('LBL_AMOUNT_DEPOSITED'); ?>: </span>
         <span>
-            $<?php echo number_format($datos['amountDeposited'],2 ); ?>
-        </span>
-    </div>
-
-    <div class="form-group">
-        <span class="label-default"><?php echo JText::_('LBL_ONLY_PROOF'); ?>: </span>
-        <span>
-            <a href="<?php echo JRoute::_($archivo['ruta']); ?>"><?php echo $archivo['name']; ?></a>
+            $<?php echo number_format($datos['amountRequested'],2 ); ?>
         </span>
     </div>
 
