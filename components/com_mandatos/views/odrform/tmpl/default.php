@@ -18,20 +18,24 @@ if(!$this->confirmacion){
     });
 
     function validaSaldo(){
-        var monto           = jQuery(this).val();
-        var saldo           = jQuery('#balance').val();
+        var monto           = parseFloat(jQuery(this).val());
+        var saldo           = parseFloat(jQuery('#balance').val());
         var errormsg        = jQuery('#errormsg');
         var fielderrormsg   = jQuery('#amountRequested');
 
-        errormsg.text('<?php echo JText::_('COM_MANDATOS_ORDEN_RETIRO_AMOUNT_ERROR'); ?>');
-        errormsg.fadeIn();
-        fielderrormsg.css('border-color', '#FF0000');
+        if(saldo < monto){
+            errormsg.text('<?php echo JText::_('COM_MANDATOS_ORDEN_RETIRO_AMOUNT_ERROR'); ?>');
+            errormsg.fadeIn();
+            fielderrormsg.css('border-color', '#FF0000');
 
-        if(saldo > monto){
             errormsg.delay(800).fadeOut(4000, function(){
                 fielderrormsg.css('border-color', '');
                 errormsg.text('');
             });
+        }else{
+            fielderrormsg.css('border-color', '');
+            errormsg.hide();
+            errormsg.text('');
         }
     }
 </script>
