@@ -38,8 +38,6 @@ class Integrado {
 			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
 		$result = $db->setQuery($query)->loadObjectList();
 		
-		$instance->intergrado->ids = $result;
-		
 		return $result;
 	}
 	
@@ -143,6 +141,12 @@ class Integrado {
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('integrado_id') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
+
+		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
+		if(is_null($perm_level)) {
+			$app = JFactory::getApplication();
+			$app->redirect(JRoute::_('index.php'), JText::_('LBL_SECURITY_PROBLEM'), 'error');
+		}
 
 		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
 		
