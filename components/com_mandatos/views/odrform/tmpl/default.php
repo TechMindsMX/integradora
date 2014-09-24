@@ -22,17 +22,20 @@ if(!$this->confirmacion){
         var saldo           = parseFloat(jQuery('#balance').val());
         var errormsg        = jQuery('#errormsg');
         var fielderrormsg   = jQuery('#amountRequested');
+        var boton           = jQuery('#btn_submit');
 
         if(saldo < monto){
             errormsg.text('<?php echo JText::_('COM_MANDATOS_ORDEN_RETIRO_AMOUNT_ERROR'); ?>');
             errormsg.fadeIn();
             fielderrormsg.css('border-color', '#FF0000');
+            boton.prop('disabled', true);
 
             errormsg.delay(800).fadeOut(4000, function(){
                 fielderrormsg.css('border-color', '');
                 errormsg.text('');
             });
         }else{
+            boton.prop('disabled', false);
             fielderrormsg.css('border-color', '');
             errormsg.hide();
             errormsg.text('');
@@ -64,7 +67,7 @@ if(!$this->confirmacion){
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
+        <input type="submit" class="btn btn-primary" id="btn_submit" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
         <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
     </div>
 </form>
