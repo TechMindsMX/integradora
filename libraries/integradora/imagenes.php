@@ -4,14 +4,19 @@ class manejoImagenes {
 
 	public static function cargar_imagen($tipo, $usuario, $archivos, $key) {
 		$validaciones = (($tipo === 'image/jpeg') || ($tipo === 'image/gif') || ($tipo === 'image/png'));
+
 			if ($validaciones && getimagesize($archivos["tmp_name"])) {
 				move_uploaded_file($archivos["tmp_name"], "media/archivosJoomla/" . $usuario.'_'.$key . ".jpg");
-				//self::resize("media/archivosJoomla/" . $usuario.'_'.$key . ".jpg", "media/archivosJoomla/resize/" ,$archivos['type'], $key, 400, 300);
+                $regreso = "media/archivosJoomla/" . $usuario.'_'.$key . ".jpg";
 			} elseif('application/pdf' == $archivos['type']) {
 				move_uploaded_file($archivos["tmp_name"], "media/archivosJoomla/" . $usuario.'_'.$key . ".pdf");
+                $regreso = "media/archivosJoomla/" . $usuario.'_'.$key . ".pdf";
 			} else{
-				echo 'no es imagen o el archivo esta corrupto <br />';				
+				echo 'no es imagen o el archivo esta corrupto <br />';
+                $regreso = 'verificar';
 			}
+
+        return $regreso;
 	}
 
 	public static function resize($uploaded, $ruta, $tipo, $nombre, $max_ancho, $max_alto) {

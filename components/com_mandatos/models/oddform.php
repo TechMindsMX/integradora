@@ -5,19 +5,20 @@ jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
 jimport('integradora.rutas');
 jimport('integradora.catalogos');
+jimport('integradora.imagenes');
 
 //Modelo de datos para formulario para crear una Orden de Deposito dado un integrado
 class MandatosModelOddform extends JModelItem {
     protected $dataModelo;
 
     public function getOrden($integradoId = null){
-        $integrado 	 = new Integrado;
-        $currUser	 = Jfactory::getUser();
-        $data 		 = JFactory::getApplication()->input->getArray();
-        $integradoId = $data['integradoId'];
-        $oddNum      = isset($data['oddnum'])?$data['oddnum']:null;
-        $datos       = null;
-        $listado = getFromTimOne::getOrdenesCompra($integradoId);
+        $integrado 	    = new Integrado;
+        $currUser	    = Jfactory::getUser();
+        $data 		    = JFactory::getApplication()->input->getArray();
+        $integradoId    = $data['integradoId'];
+        $oddNum         = isset($data['oddnum'])?$data['oddnum']:null;
+        $datos          = null;
+        $listado        = getFromTimOne::getOrdenesCompra($integradoId);
 
         if(!is_null($oddNum)){
             foreach($listado as $key => $value){
@@ -26,6 +27,7 @@ class MandatosModelOddform extends JModelItem {
                 }
             }
         }
+
 
         return $datos;
     }

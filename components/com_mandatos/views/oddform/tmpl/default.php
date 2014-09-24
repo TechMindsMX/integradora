@@ -44,13 +44,51 @@ if(!$this->confirmacion){
 
     <div class="form-group">
         <input type="submit" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
-        <input type="button" class="btn btn-primary"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
+        <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
     </div>
 </form>
 <?php
 }else{
-var_dump($this->datos);
+    $datos = $this->datos;
+    $archivo = $this->file;
+    $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
 ?>
+    <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_CONFIMACION'); ?></h1>
+
+    <div class="form-group">
+        <span class="label-default"><?php echo JText::_('LBL_FORMA_PAGO'); ?>: </span>
+        <span>
+            <?php echo $formadepago[$datos['paymentform']]; ?>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <span class="label-default"><?php echo JText::_('LBL_DEPOSIT_DATE'); ?>: </span>
+        <span>
+            <?php echo $datos['depositDate'] ?>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <span class="label-default"><?php echo JText::_('LBL_AMOUNT_DEPOSITED'); ?>: </span>
+        <span>
+            $<?php echo number_format($datos['amountDeposited'],2 ); ?>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <span class="label-default"><?php echo JText::_('LBL_ONLY_PROOF'); ?>: </span>
+        <span>
+            <a href="<?php echo JRoute::_($archivo['ruta']); ?>"><?php echo $archivo['name']; ?></a>
+        </span>
+    </div>
+
+    <div class="clearfix">&nbsp;</div>
+
+    <div class="form-group">
+        <input type="button" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
+        <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
+    </div>
 <?php
 }
 ?>
