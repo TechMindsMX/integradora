@@ -42,7 +42,7 @@ function editarProd(){
 <h1><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></h1>
 
 <div class="agregarProducto">
-	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productosform&integradoId='.$this->integradoId); ?>" />
+	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productosform&integradoId='.$this->integradoId); ?>">
 		<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_AGREGAR'); ?>
 	</a>
 </div>
