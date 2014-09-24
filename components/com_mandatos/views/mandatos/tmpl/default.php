@@ -16,26 +16,32 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
     </a>
 </div>
 
-<div style="margin-top: 20px;">
+<div class="margen-fila">
     <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productoslist&integradoId='.$this->integradoId); ?>" />
         <?php echo JText::_('COM_MANDATOS_LISTAD_PRODUCTOS'); ?>
     </a>
 </div>
 
-<div style="margin-top: 20px;">
+<div class="margen-fila">
     <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=clienteslist&integradoId='.$this->integradoId); ?>" />
         <?php echo JText::_('COM_MANDATOS_LISTAD_CLIENTES'); ?>
     </a>
 </div>
 
-<div style="margin-top: 20px;">
+<div class="margen-fila">
     <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId); ?>" />
         <?php echo JText::_('COM_MANDATOS_LISTAD_ORDENES'); ?>
     </a>
 </div>
 
-<div style="margin-top: 20px;">
+<div class="margen-fila">
     <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=oddlist&integradoId='.$this->integradoId); ?>" />
         <?php echo JText::_('COM_MANDATOS_LISTAD_ORDENES_DEPOSITO'); ?>
     </a>
+</div>
+
+<div class="margen-fila">
+	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId='.$this->integradoId); ?>" />
+	<?php echo JText::_('COM_MANDATOS_LISTAD_ORDENES_VENTA'); ?>
+	</a>
 </div>

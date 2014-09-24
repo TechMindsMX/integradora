@@ -106,8 +106,8 @@ $number2word = new AifLibNumber;
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odd->totalmount,2). ' ' . $this->odd->currency; ?></td>
-					<td><?php echo $number2word->toCurrency('$ '.number_format($this->odd->totalmount,2)); ?></td>
+					<td><?php echo '$ '.number_format($this->odd->totalamount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo $number2word->toCurrency('$ '.number_format($this->odd->totalamount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>

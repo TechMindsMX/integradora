@@ -71,3 +71,7 @@ background-image: url('../../../libraries/integradora/js/themes/blue/desc.gif');
 .factura{
 	margin-left: 37px;
 }
+
+.margen-fila {
+    margin: 20px 0;
+}

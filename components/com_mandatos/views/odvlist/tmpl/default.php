@@ -59,12 +59,12 @@ function filtro(){
 	}
 }
 </script>
-<h1><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_TITULO'); ?></h1>
+<h1><?php echo JText::_('COM_MANDATOS_ODV_LIST'); ?></h1>
 
 <div>
 	<div class="col-md-4">
-		<?php $newOdcUrl = jRoute::_('index.php?option=com_mandatos&view=odcform&integradoId='.$this->integradoId); ?>
-		<a class="btn btn-primary" href="<?php echo $newOdcUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_AGREGAR'); ?></a>
+		<?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId); ?>
+		<a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORV_LBL_AGREGAR'); ?></a>
 	</div>
 	
 	<div class="col-md-4">
@@ -83,7 +83,7 @@ function filtro(){
 			<tr>
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?></span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_PROVEEDOR'); ?> </span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BENEFICIARIO'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
@@ -93,11 +93,11 @@ function filtro(){
 		<?php
 		if( !is_null($ordenes) ){
 			foreach ($ordenes as $key => $value) {
-				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odcpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id);
+				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
 				$preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
 				if ($value->status == 0 && $this->permisos['canAuth']){
-					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odcpreview&integradoId='.$this->integradoId.'&odcnum='.$value->id);
+					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
 					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
 					$edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
 				} elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
@@ -113,10 +113,10 @@ function filtro(){
 				$class = $value->status == 0?'':'status1';
 				
 				echo '<tr class="type_'.$value->status.'">';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->folio.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->proveedor->tradeName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->amount,2).'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalamount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
 				echo '</tr>';

@@ -113,8 +113,8 @@ $integrado 	= $this->integCurrent->integrados[0];
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odd->totalmount,2). ' ' . $this->odd->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odd->totalmount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odd->totalamount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odd->totalamount,2). ' ' . $this->odd->currency; ?></td>
 				</tr>
 			</tbody>
 		</table>
