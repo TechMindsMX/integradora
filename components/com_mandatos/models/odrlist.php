@@ -8,18 +8,24 @@ jimport('integradora.rutas');
 jimport('integradora.catalogos');
 
 /**
- * Modelo de datos para el listado de las Ordenes de Retiro para un integrado
+ * Modelo de datos para Listado de las Ordenes de Deposito para un integrado
  */
 class MandatosModelOdrlist extends JModelItem {
     protected $dataModelo;
 
-    public function getOrdenes($integradoId = null){
-        $data 		 = JFactory::getApplication()->input->getArray();
-        $integradoId = $data['integradoId'];
+    function __construct(){
+        $this->data 		= JFactory::getApplication()->input->getArray();
+        $this->integradoId  = $this->data['integradoId'];
+        $this->integrado 	= new Integrado;
+        $this->currUser	    = Jfactory::getUser();
 
-        $listado = getFromTimOne::getOrdenesCompra($integradoId);
+        parent::__construct();
+    }
+
+    public function getOrdenes($integradoId = null){
+        $listado = getFromTimOne::getOrdenesRetiro($this->integradoId);
 
         return $listado;
     }
 }
-
+?>

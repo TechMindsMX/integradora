@@ -747,9 +747,7 @@ class getFromTimOne{
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 1;
         $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 2;
         $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
         $ordenes->totalamount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
@@ -759,12 +757,10 @@ class getFromTimOne{
         $ordenes 					= new stdClass;
         $ordenes->id                = 2;
         $ordenes->integradoId       = 1;
-        $ordenes->numOrden          = 2;
+        $ordenes->numOrden          = 20;
         $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 4;
         $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalamount        = 10000;
+        $ordenes->totalamount        = 11000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
 
@@ -775,10 +771,8 @@ class getFromTimOne{
         $ordenes->integradoId       = 1;
         $ordenes->numOrden          = 3;
         $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 6;
         $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalamount        = 10000;
+        $ordenes->totalamount        = 12000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 1;
 
@@ -789,10 +783,8 @@ class getFromTimOne{
         $ordenes->integradoId       = 2;
         $ordenes->numOrden          = 6;
         $ordenes->proyectId         = 2;
-        $ordenes->clientId          = 1;
         $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalamount        = 10000;
+        $ordenes->totalamount        = 13000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
 
