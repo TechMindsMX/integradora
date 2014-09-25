@@ -64,8 +64,8 @@ function filtro(){
 
 <div>
 	<div class="col-md-4">
-		<?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odrform&integradoId='.$this->integradoId); ?>
-		<a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" ><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></a>
+		<?php $newOdrUrl = jRoute::_('index.php?option=com_mandatos&view=odrform&integradoId='.$this->integradoId); ?>
+		<a class="btn btn-primary" href="<?php echo $newOdrUrl; ?>" ><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></a>
 	</div>
 	
 	<div class="col-md-4">
@@ -93,11 +93,11 @@ function filtro(){
 		<?php
 		if( !is_null($ordenes) ){
 			foreach ($ordenes as $key => $value) {
-				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
+				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odrpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
 				$preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
 				if ($value->status == 0 && $this->permisos['canAuth']){
-					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
+					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odrpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
 					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
 					$edit_button = '<a class="btn btn-primary" href="#">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
 				} elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
