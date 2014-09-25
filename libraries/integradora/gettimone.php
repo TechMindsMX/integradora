@@ -809,6 +809,40 @@ class getFromTimOne{
 
     }
 
+	public static function getComisiones () {
+		$commissions = null;
+
+		$commissions 				    = new stdClass;
+		$commissions->id                = 1;
+		$commissions->description		= 'Cobro por retiro';
+		$commissions->type           	= 1;
+		$commissions->frequencyType    	= 1;
+		$commissions->frequencyTime		= 14;
+		$commissions->status			= 1;
+
+		$array[] = $commissions;
+
+		$commissions 				    = new stdClass;
+		$commissions->id                = 2;
+		$commissions->description		= 'Cobro por compra';
+		$commissions->type           	= 1;
+		$commissions->frequencyType    	= 1;
+		$commissions->frequencyTime		= 90;
+		$commissions->status			= 1;
+
+		$array[] = $commissions;
+
+		foreach ($array as $key => $value) {
+			if($integradoId == $value->integradoId){
+				self::convierteFechas($value);
+				$respuesta[] = $value;
+			}
+		}
+
+		return $respuesta;
+
+	}
+
     public static function getMedidas(){
         $respuesta['litros'] 			= 'litros';
         $respuesta['Metros'] 			= 'Metros';
