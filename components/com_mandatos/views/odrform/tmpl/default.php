@@ -87,7 +87,7 @@ if(!$this->confirmacion){
     </div>
 
     <div class="form-group">
-        <span class="label-default"><?php echo JText::_('LBL_AMOUNT_DEPOSITED'); ?>: </span>
+        <span class="label-default"><?php echo JText::_('LBL_AMOUNT_REQUESTED'); ?>: </span>
         <span>
             $<?php echo number_format($datos['amountRequested'],2 ); ?>
         </span>
