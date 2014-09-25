@@ -42,7 +42,7 @@ if(!$this->confirmacion){
         }
     }
 </script>
-<h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
+<h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></h1>
 <div style="margin-bottom: 10px;">
     <span class="label-default"><?php echo JText::_('COM_MANDATOS_ORDEN_RETIRO_BALANCE'); ?></span>
     <span>$<?php echo number_format($this->balance); ?></span>
