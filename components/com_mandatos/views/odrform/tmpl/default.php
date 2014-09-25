@@ -50,6 +50,7 @@ if(!$this->confirmacion){
 
 <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
     <input type="hidden" id="balance" value="<?php echo $this->balance; ?>">
+    <input type="hidden" id="integradoId" name="integradoId" value="<?php echo $this->integradoId; ?>">
 
     <div class="form-group">
         <label for="paymentform"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>

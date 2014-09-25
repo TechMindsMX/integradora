@@ -116,7 +116,7 @@ function filtro(){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->folio.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->proveedor->tradeName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->amount,2).'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
 				echo '</tr>';
