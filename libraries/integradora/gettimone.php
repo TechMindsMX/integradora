@@ -11,7 +11,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 1;
-		$proyectos->integradoid	= 1;
+		$proyectos->integradoId	= 1;
 		$proyectos->parentId 	= 0;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Proyecto 1';
@@ -26,7 +26,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 2;
-		$proyectos->integradoid	= 2;
+		$proyectos->integradoId	= 2;
 		$proyectos->parentId 	= 0;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Proyecto 2';
@@ -41,7 +41,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 3;
-		$proyectos->integradoid	= 1;
+		$proyectos->integradoId	= 1;
 		$proyectos->parentId 	= 1;
 		$proyectos->status	 	= 0;
 		$proyectos->name 		= 'Subproyecto 1';
@@ -56,7 +56,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 4;
-		$proyectos->integradoid	= 1;
+		$proyectos->integradoId	= 1;
 		$proyectos->parentId 	= 1;
 		$proyectos->status	 	= 1;
 		$proyectos->name 		= 'Subproyecto 2';
@@ -71,7 +71,7 @@ class getFromTimOne{
 		
 		$proyectos = new stdClass;
 		$proyectos->id			= 5;
-		$proyectos->integradoid	= 2;
+		$proyectos->integradoId	= 2;
 		$proyectos->parentId 	= 2;
 		$proyectos->status	 	= 1;
 		$proyectos->name 		= 'Subproyecto 1 del proyecto 2';
@@ -85,7 +85,7 @@ class getFromTimOne{
 		$array[] = $proyectos;
 		
 		foreach ($array as $key => $value) {
-			if($userId == $value->integradoid){
+			if($userId == $value->integradoId){
 				$respuesta[] = $value;
 			}
 		}
@@ -96,7 +96,7 @@ class getFromTimOne{
 	public static function getProducts($userId = null){
 		$productos 				= new stdClass;
 		$productos->id			= 1;
-		$productos->integradoid	= 1;
+		$productos->integradoId	= 1;
 		$productos->productName	= 'Producto A';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -110,7 +110,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 2;
-		$productos->integradoid	= 1;
+		$productos->integradoId	= 1;
 		$productos->productName	= 'Producto B';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -124,7 +124,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 3;
-		$productos->integradoid	= 1;
+		$productos->integradoId	= 1;
 		$productos->productName	= 'Producto C';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -138,7 +138,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 4;
-		$productos->integradoid	= 1;
+		$productos->integradoId	= 1;
 		$productos->productName	= 'Producto D';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -152,7 +152,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 5;
-		$productos->integradoid	= 1;
+		$productos->integradoId	= 1;
 		$productos->productName	= 'Producto E';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -166,7 +166,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 6;
-		$productos->integradoid	= 2;
+		$productos->integradoId	= 2;
 		$productos->productName	= 'Producto F';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -180,7 +180,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 7;
-		$productos->integradoid	= 2;
+		$productos->integradoId	= 2;
 		$productos->productName	= 'Producto G';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -194,7 +194,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 8;
-		$productos->integradoid	= 2;
+		$productos->integradoId	= 2;
 		$productos->productName	= 'Producto H';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -208,7 +208,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 9;
-		$productos->integradoid	= 2;
+		$productos->integradoId	= 2;
 		$productos->productName	= 'Producto I';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -222,7 +222,7 @@ class getFromTimOne{
 		
 		$productos 				= new stdClass;
 		$productos->id			= 10;
-		$productos->integradoid	= 2;
+		$productos->integradoId	= 2;
 		$productos->productName	= 'Producto 2';
 		$productos->measure		= 'Litros';
 		$productos->price		= '$1000';
@@ -235,7 +235,7 @@ class getFromTimOne{
 		$array[] = $productos;
 		
 		foreach ($array as $key => $value) {
-			if($userId == $value->integradoid){
+			if($userId == $value->integradoId){
 				$respuesta[] = $value;
 			}
 		}
@@ -399,7 +399,7 @@ class getFromTimOne{
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 384.35;
+		$ordenes->totalAmount   	= 384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->ieps				= .1;
 		$ordenes->iva				= .16;
@@ -423,7 +423,7 @@ class getFromTimOne{
 											array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 1227.85;
+		$ordenes->totalAmount   	=    1227.85;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 1;
 		$ordenes->ieps				= .1;
@@ -446,7 +446,7 @@ class getFromTimOne{
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 384.35;
+		$ordenes->totalAmount   	=    384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 0;
 		$ordenes->ieps				= .1;
@@ -469,7 +469,7 @@ class getFromTimOne{
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 384.35;
+		$ordenes->totalAmount   	=    384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 0;
 		$ordenes->ieps				= .1;
@@ -490,7 +490,7 @@ class getFromTimOne{
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 1384.35;
+		$ordenes->totalAmount   	=    1384.35;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 0;
 		$ordenes->ieps				= .1;
@@ -511,7 +511,7 @@ class getFromTimOne{
 											array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
 											array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
 											);
-		$ordenes->amount			= 4500.00;
+		$ordenes->totalAmount   	=    4500.00;
 		$ordenes->paymentType		= 0;
 		$ordenes->status			= 1;
 		$ordenes->ieps				= .1;
@@ -818,7 +818,7 @@ class getFromTimOne{
 		
 	} 
 	
-	public static function newIntegradoId(){
+	public static function newintegradoId(){
 		$db 	= JFactory::getDbo();
 		$query 	= $db->getQuery(true);
 		

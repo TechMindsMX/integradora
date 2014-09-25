@@ -195,7 +195,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
 		<div class="form-group">
 			<input type="button" class="btn btn-primary" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
-			<input type="button" class="btn btn-primary" onclick="window.history.back()" value="<?php echo JText::_("LBL_CANCELAR"); ?>" />
+			<input type="button" class="btn btn-danger" onclick="window.history.back()" value="<?php echo JText::_("LBL_CANCELAR"); ?>" />
 		</div>
 	</fieldset>
 	<?php

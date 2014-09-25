@@ -89,7 +89,6 @@ $producto 	= isset($this->producto)?$this->producto:null;
 	
 	<div class="clearfix">&nbsp;</div>
 	
-	<button type="button" class="btn btn-primary" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-	
 	<button type="submit" class="btn btn-primary"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+    <button type="button" class="btn btn-danger" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 </form>

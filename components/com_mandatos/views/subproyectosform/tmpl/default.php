@@ -23,10 +23,9 @@ $selected 	= '';
 </script>
 <form id="form_alta" method="post" action="index.php/component/mandatos/?task=simulaenvio">
 	<input type="hidden" name="id" value="<?php echo !is_null($proyecto)?$proyecto->id:'0'; ?>" />
-	<input type="hidden" name="user" value="<?php echo !is_null($proyecto)?$proyecto->integradoid:'0'; ?>" />
+	<input type="hidden" name="integradoId" value="<?php echo !is_null($proyecto)?$proyecto->integradoId:'0'; ?>" />
 	<input type="hidden" name="status" value="<?php echo !is_null($proyecto)?$proyecto->status:'0'; ?>" />
-	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
-	
+
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 	
 	<div class="form-group">
@@ -58,8 +57,8 @@ $selected 	= '';
 	</div>
 	
 	<div class="form-actions">
-		<button type="button" class="btn btn-primary span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 		<button type="submit" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+        <button type="button" class="btn btn-danger span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 	</div>
 	
 	<?php if( is_null($proyecto) ){ ?>
