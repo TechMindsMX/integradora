@@ -22,7 +22,7 @@ $integrado 	= $this->integCurrent->integrados[0];
                 // $href = '"index.php?option=com_mandatos&view=oddpreview&integradoId='.$params['integradoId'].'&oddnum='.$params['oddnum'].'&tmpl=component&print=1" '.$href;
         // }
 // ?>
-        // <a href=<?php echo $href; ?> >Click for Printing</a>
+<!--        <a href=--><?php //echo $href; ?><!-- >Click for Printing</a>-->
 
 <div id="odd_preview">
 	<div class="clearfix" id="logo">
@@ -113,8 +113,8 @@ $integrado 	= $this->integCurrent->integrados[0];
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odd->totalamount,2). ' ' . $this->odd->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odd->totalamount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odd->totalAmount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odd->totalAmount,2). ' ' . $this->odd->currency; ?></td>
 				</tr>
 			</tbody>
 		</table>

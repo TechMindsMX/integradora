@@ -114,8 +114,8 @@ $integrado 	= $this->integCurrent->integrados[0];
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odv->totalamount,2). ' ' . $this->odv->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odv->totalamount,2). ' ' . $this->odv->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odv->totalAmount,2). ' ' . $this->odv->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odv->totalAmount,2). ' ' . $this->odv->currency; ?></td>
 				</tr>
 			</tbody>
 		</table>

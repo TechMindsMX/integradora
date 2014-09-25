@@ -2,6 +2,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
+jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
@@ -12,6 +13,8 @@ $app 		= JFactory::getApplication();
 $params 	= $app->input->getArray();
 
 $integrado 	= $this->integCurrent->integrados[0];
+
+$number2word = new AifLibNumber();
 
        // $isModal = $app->input->get('print') == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
         // if( $isModal) {
@@ -96,7 +99,31 @@ $integrado 	= $this->integCurrent->integrados[0];
 				<?php echo $integrado->datos_personales->email; ?>
 			</div>
 			<div class="span2 text-right">
+				<?php echo JText::_('LBL_BANCOS'); ?>
+			</div>
+			<div class="span4">
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
+			</div>
+		</div>
+		<div>
+			<div class="span2 text-right">
+			</div>
+			<div class="span4">
+			</div>
+			<div class="span2 text-right">
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
+			</div>
+			<div class="span4">
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
+			</div>
+		</div>
+		<div>
+			<div class="span2 text-right">
+			</div>
+			<div class="span4">
+			</div>
+			<div class="span2 text-right">
+				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 			</div>
 			<div class="span4">
 				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
@@ -104,18 +131,18 @@ $integrado 	= $this->integCurrent->integrados[0];
 		</div>
 	</div>
 	<div class="clearfix" id="cuerpo">
-		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_DEPOSITAR'); ?></h3>
+		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_RETIRAR'); ?></h3>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th class="span7"></th>
+					<th class="span7"><?php echo JText::_('LBL_CANTIDAD'); ?></th>
 					<th class="span5"><?php echo JText::_('LBL_MONTO_LETRAS'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odr->totalamount,2). ' ' . $this->odr->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odr->totalamount,2). ' ' . $this->odr->currency; ?></td>
+					<td><?php echo '$ '.number_format($this->odr->totalAmount,2). ' ' . $this->odr->currency; ?></td>
+					<td><?php echo $number2word->toCurrency('$'.number_format($this->odr->totalAmount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>

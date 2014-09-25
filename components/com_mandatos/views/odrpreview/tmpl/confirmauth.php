@@ -9,6 +9,7 @@ JHtml::_('behavior.keepalive');
 $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 
+$document->addScript('libraries/integradora/js/confirm-btns.js');
 // Datos
 $params 	= $app->input->getArray();
 
