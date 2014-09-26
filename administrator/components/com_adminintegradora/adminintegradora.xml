@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="1.6.0" method="upgrade">
+
+	<name>AdminIntegradora</name>
+	<!-- The following elements are optional and free of formatting conttraints -->
+	<creationDate>Septiembre 2014</creationDate>
+	<author>Ricardo Lyon</author>
+	<authorEmail>ricardolyon@gmail.com</authorEmail>
+	<authorUrl></authorUrl>
+	<copyright></copyright>
+	<license></license>
+	<!--  The version string is recorded in the components table -->
+	<version>0.0.1</version>
+	<!-- The description is optional and defaults to the name -->
+	<description>Componente de administración de comisiones y conciliaciones</description>
+
+	<!-- Site Main File Copy Section -->
+	<!-- Note the folder attribute: This attribute describes the folder
+	to copy FROM in the package to install therefore files copied
+	in this section are copied from /site/ in the package -->
+	<files folder="site">
+		<filename>index.html</filename>
+		<filename>adminintegradora.php</filename>
+	</files>
+	<administration>
+		<!-- Administration Menu Section -->
+		<menu>Administracion Integradora</menu>
+		<!-- Administration Main File Copy Section -->
+		<!-- Note the folder attribute: This attribute describes the folder
+		to copy FROM in the package to install therefore files copied
+		in this section are copied from /admin/ in the package -->
+		<files folder="admin">
+			<!-- Admin Main File Copy Section -->
+			<filename>index.html</filename>
+			<filename>adminintegradora.php</filename>
+			<filename>controller.php</filename>
+			<!-- SQL files section -->
+			<folder>models</folder>
+			<folder>views</folder>
+		</files>
+	</administration>
+
+</extension>
+
