@@ -832,14 +832,8 @@ class getFromTimOne{
 
 		$array[] = $commissions;
 
-		foreach ($array as $key => $value) {
-			if($integradoId == $value->integradoId){
-				self::convierteFechas($value);
-				$respuesta[] = $value;
-			}
-		}
 
-		return $respuesta;
+		return $array;
 
 	}
 
@@ -860,28 +854,77 @@ class getFromTimOne{
 
     }
 
-    public static function newintegradoId(){
-        $db 	= JFactory::getDbo();
-        $query 	= $db->getQuery(true);
+	public static function token(){
+		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
+		if( !$token = file_get_contents($url) ){
+			JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
+		}
 
-        $query->select('max(integrado_id)')
-            ->from($db->quoteName('#__integrado_users'));
+		return $token;
+	}
 
-        $db->setQuery($query);
+	public static function newintegradoId($envio, $callback){
+		$jsonData = json_encode($envio);
 
-        $results = $db->loadResult();
+//		$serviceUrl = MIDDLE.PUERTO.'/tim-integradora/user/save';
+		$serviceUrl = 'http://192.168.0.126:8090/tim-integradora/user/save';
 
-        $results = $results+1;
+		$results = self::to_timone($jsonData, $serviceUrl);
 
+		echo $results;
+		exit;
         return $results;
     }
 
-    public static function token(){
-        $url = MIDDLE.PUERTO.TIMONE.'security/getKey';
-        if( !$token = file_get_contents($url) ){
-            JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
-        }
+	private static function to_timone ($jsonData, $serviceUrl) {
 
-        return $token;
-    }
+//		$credentials = array('username' => '' ,'password' => '');
+
+		$verbose = fopen('/curl.log', 'a+');
+
+		$ch = curl_init();
+		curl_setopt_array($ch, array(
+			CURLOPT_URL            => $serviceUrl,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_POST           => true,
+			CURLOPT_POSTFIELDS     => $jsonData,
+			CURLOPT_HEADER         => true,
+//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+			CURLOPT_FOLLOWLOCATION => false,
+			CURLOPT_VERBOSE        => true,
+			CURLOPT_STDERR		   => $verbose,
+			CURLOPT_HTTPHEADER	   => array(
+				'Content-Type: application/json',
+				'Content-Length: ' . strlen($jsonData)
+			)
+			)
+		);
+		$result = curl_exec($ch);
+
+		rewind($verbose);
+		$verboseLog = stream_get_contents($verbose);
+		echo "Verbose information:\n<pre>", htmlspecialchars($verboseLog), "</pre>\n".curl_errno($ch).curl_error($ch);
+
+		$code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		var_dump($code,  $jsonData, $serviceUrl);
+		switch ($code) {
+			case 200:
+				$message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
+				$success = 1;
+				break;
+			case 401:
+				$message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
+				break;
+			default:
+				$message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
+				break;
+		}
+
+		var_dump($message);
+
+		return $result;
+	}
 }

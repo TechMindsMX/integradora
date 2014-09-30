@@ -30,6 +30,7 @@ class AdminintegradoraModelComisions extends JModelList
 			$value->typeName = $this->getTypeName($value->type);
 			$value->frequencyTypeName = $this->getFrequencyTypeName($value->frequencyType);
 			$value->statusName = $this->getStatusName($value->status);
+			$value->frequencyMsg = $this->getFrequencyMsg($value->frequencyTime);
 
 			$this->items[$key] = $value;
 		}
@@ -53,6 +54,10 @@ class AdminintegradoraModelComisions extends JModelList
 		$array = $this->cat->getStatusComisiones();
 
 		return $array[$value];
+	}
+
+	private function getFrequencyMsg ($frequencyTime) {
+		return JText::sprintf('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTime);
 	}
 
 }

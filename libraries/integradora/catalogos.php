@@ -62,5 +62,18 @@ class Catalogos {
 
 		$this->statusSolicitud = $status;
 	}
+
+	public function getTypesComisiones () {
+		return array(0 => 'Fija', 1 => 'Variable');
+	}
+
+	public function getFrequenciesComisiones () {
+		return array(0 => 'Por transacción', 1 => 'Recurrente');
+	}
+
+	public function getStatusComisiones () {
+		return array(0 => 'Desabilitada', 1 => 'Habilitada');
+	}
+
 }
 	

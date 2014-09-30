@@ -165,10 +165,12 @@ class IntegradoController extends JControllerLegacy {
 	
 	public static function manejoDatos($data){
 		$db	= JFactory::getDbo();
-		$integrado_id = empty($data['integradoId'])?true:$data['integradoId'];
+		$integrado_id = empty($data['integradoId']) ? true : $data['integradoId'];
 
-		if( gettype($integrado_id) == 'boolean'){
-			$integrado_id 	= getFromTimOne::newIntegradoId();
+		$user = JFactory::getUser();
+		if($integrado_id === true){
+			$callback		= JRoute::_('index.php?option=com_integrado&view=solicitud');
+			$integrado_id 	= getFromTimOne::newIntegradoId(array('email' => $user->email,'name' => $user->name), $callback);
 			$columnas 		= array('user_id', 'integrado_id', 'integrado_principal', 'integrado_permission_level');
 			$valores 		= array($data['user_id'], $integrado_id, 1, 3);
 			
@@ -180,7 +182,6 @@ class IntegradoController extends JControllerLegacy {
 		$diccionario  = array('integradoId' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
 							  'status'		 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
 							  'pers_juridica'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10),
-							  'integradoId'			=> array('tipo'=>'number',													'length'=>10),
 							  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
 							  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
 							  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
@@ -210,7 +211,7 @@ class IntegradoController extends JControllerLegacy {
 		$resultado = validador::procesamiento($data, $diccionario);
 
 		foreach ($resultado as $key => $value) {
-			if( gettype($value) == 'array'){
+			if( is_array($value) ){
 				return $value;
 			}
 		}

@@ -76,7 +76,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 					<?php echo $value->typeName; ?>
 				</td>
 				<td class="small hidden-phone">
-					<?php echo $value->frequencyTypeName; ?>
+					<?php echo $value->frequencyTypeName.' '.$value->frequencyMsg; ?>
 				</td>
 				<td class="nowrap small hidden-phone">
 					<?php echo $value->statusName; ?>
