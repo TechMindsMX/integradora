@@ -37,7 +37,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 				   ); ?>">
 					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_TIPO'); ?> </a>
 			</th>
-			<th width="10%" class="nowrap hidden-phone">
+			<th width="15%" class="nowrap hidden-phone">
 				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.created_by"
 				   data-direction="ASC" data-name="Frecuencia" title=""
 				   data-original-title="<strong>Frecuencia</strong><br /><?php echo JText::_ (
@@ -45,7 +45,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 				   ); ?>">
 					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_FRECUENCIA'); ?> </a>
 			</th>
-			<th width="5%" class="nowrap hidden-phone">
+			<th width="10%" class="nowrap hidden-phone">
 				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="language"
 				   data-direction="ASC" data-name="Estado" title=""
 				   data-original-title="<strong>Estado</strong><br /><?php echo JText::_ (
@@ -63,11 +63,11 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 
 			<tr class="row0">
 				<td class="has-context">
-					<div class="pull-left">
+					<div class="small hidden-phone">
 						<?php echo $value->id; ?>
 					</div>
 				</td>
-				<td class="small hidden-phone">
+				<td class="small">
 					<a href="index.php?option=com_adminintegradora&task=comisions.editar&id=<?php echo $value->id; ?>"
 					   title="Descripcion">
 						<?php echo $value->description; ?></a>

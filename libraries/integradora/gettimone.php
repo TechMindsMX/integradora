@@ -812,7 +812,7 @@ class getFromTimOne{
 	public static function getComisiones () {
 		$commissions = null;
 
-		$commissions 				    = new stdClass;
+		$commissions 				    = new comisionItem();
 		$commissions->id                = 1;
 		$commissions->description		= 'Cobro por retiro';
 		$commissions->type           	= 1;
@@ -822,7 +822,7 @@ class getFromTimOne{
 
 		$array[] = $commissions;
 
-		$commissions 				    = new stdClass;
+		$commissions 				    = new comisionItem;
 		$commissions->id                = 2;
 		$commissions->description		= 'Cobro por compra';
 		$commissions->type           	= 1;
@@ -927,4 +927,29 @@ class getFromTimOne{
 
 		return $result;
 	}
+
+	public static function getComisionById ($id) {
+		$comision = null;
+		$comisiones = self::getComisiones();
+
+		foreach ($comisiones as $value) {
+			if($value->id == $id) {
+				$comision = $value;
+			}
+		}
+		return $comision;
+	}
+}
+
+class comisionItem{
+	public $id;
+	public $description;
+	public $type;
+	public $frequencyType;
+	public $frequencyTime;
+	public $status;
+	public $typeName;
+	public $frequencyTypeName;
+	public $statusName;
+	public $frequencyMsg;
 }
