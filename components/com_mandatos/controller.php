@@ -14,7 +14,6 @@ class MandatosController extends JControllerLegacy {
 	public function __construct()
 	{
 		parent::__construct();
-
 		$integrado	 		= new Integrado;
 
 		$this->app			= JFactory::getApplication();
@@ -128,4 +127,12 @@ class MandatosController extends JControllerLegacy {
 		
 		echo json_encode($respuesta);
 	}
+
+    function saveforms(){
+        $data   =   $this->input_data->getArray();
+
+        //$this->app->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$data['integradoId']), 'Datos Guardados', 'message');
+        var_dump($data);
+        exit;
+    }
 }

@@ -14,16 +14,26 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 <script>
 	jQuery(document).ready(function(){
 		jQuery('#cancel').on('click', cancelfunction);
+        jQuery('#send').on('click', confirmacion);
 	});
 	
 	function cancelfunction(){
 		window.history.back();
 	}
+    function confirmacion(){
+        var formulario = jQuery('#form_alta');
+        var confirmacion    = jQuery('#confirmacion');
+
+        formulario.hide();
+        confirmacion.show();
+    }
 </script>
-<form id="form_alta" method="post" action="index.php/component/mandatos/?task=simulaenvio">
+<form id="form_alta" method="post" action="<?php echo JRoute::_('http://localhost/integradora/index.php?option=com_mandatos&view=proyectosform&integradoId='.$this->integradoId); ?>">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 	
 	<input type="hidden" name="token" value="<?php echo $this->token; ?>" />
+    <input type="hidden" name="confirm" value="1" />
+
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
 		<input type="text" name="name" id="name" value="<?php echo !is_null($proyecto)?$proyecto->name:''; ?>">
@@ -35,7 +45,7 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 	</div>
 	
 	<div class="form-actions">
-		<button type="submit" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		<button type="button" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
         <button type="button" class="btn btn-danger span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 		
 	</div>
@@ -46,3 +56,6 @@ $proyecto 	= isset($this->proyecto)?$this->proyecto:null;
 		</div>
 	<?php } ?>
 </form>
+<div id="confirmacion">
+    <div></div>
+</div>

@@ -111,6 +111,8 @@ if(!isset($this->datos['confirmacion'])){
     $comprobante    = $this->dataXML->comprobante;
 	$impuestos      = $this->dataXML->impuestos;
 	$conceptos      = $this->dataXML->conceptos;
+
+    $datos = $this->datos;
 ?>
 <div id="odc_preview">
 	<h1><?php echo JText::_('MANDATOS_ODC_CONFIRMACION'); ?></h1>
@@ -241,6 +243,20 @@ if(!isset($this->datos['confirmacion'])){
 		<?php echo $this->datos['observaciones']; ?>
 	</div>
 </div>
+
+<form action="<?php echo JRoute::_('index.php?option=com_mandatos&task=saveforms'); ?>" method="post">
+    <input type="hidden" name="integradoId" value="<?php echo $datos['integradoId']; ?>" />
+    <input type="hidden" name="project" value="<?php echo $datos['project']; ?>" />
+    <input type="hidden" name="provider" value="<?php echo $datos['provider']; ?>" />
+    <input type="hidden" name="paymentDate" value="<?php echo $datos['paymentDate']; ?>" />
+    <input type="hidden" name="paymentMethod" value="<?php echo $datos['paymentMethod']; ?>" />
+    <input type="hidden" name="observaciones" value="<?php echo $datos['observaciones']; ?>" />
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
+        <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
+    </div>
+</form>
 <?php
 }
 ?>
