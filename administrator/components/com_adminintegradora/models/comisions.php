@@ -28,7 +28,6 @@ class AdminintegradoraModelComisions extends JModelList
 	private function idToNames () {
 		foreach ($this->items as $key => $value) {
 			$value->typeName = $this->getTypeName($value->type);
-			$value->frequencyTypeName = $this->getFrequencyTypeName($value->frequencyType);
 			$value->statusName = $this->getStatusName($value->status);
 			$value->frequencyMsg = $this->getFrequencyMsg($value->frequencyTime);
 
@@ -39,19 +38,13 @@ class AdminintegradoraModelComisions extends JModelList
 	}
 
 	private function getTypeName ($value) {
-		$array = $this->cat->getTypesComisiones();
-
-		return $array[$value];
-	}
-
-	private function getFrequencyTypeName ($value) {
-		$array = $this->cat->getFrequenciesComisiones();
+		$array = $this->cat->getComisionesTypes();
 
 		return $array[$value];
 	}
 
 	private function getStatusName ($value) {
-		$array = $this->cat->getStatusComisiones();
+		$array = $this->cat->getComisionesStatus();
 
 		return $array[$value];
 	}

@@ -816,8 +816,7 @@ class getFromTimOne{
 		$commissions->id                = 1;
 		$commissions->description		= 'Cobro por retiro';
 		$commissions->type           	= 1;
-		$commissions->frequencyType    	= 1;
-		$commissions->frequencyTime		= 14;
+		$commissions->frequencyTime		= 15;
 		$commissions->status			= 1;
 
 		$array[] = $commissions;
@@ -826,8 +825,16 @@ class getFromTimOne{
 		$commissions->id                = 2;
 		$commissions->description		= 'Cobro por compra';
 		$commissions->type           	= 1;
-		$commissions->frequencyType    	= 1;
 		$commissions->frequencyTime		= 90;
+		$commissions->status			= 1;
+
+		$array[] = $commissions;
+
+		$commissions 				    = new comisionItem;
+		$commissions->id                = 2;
+		$commissions->description		= 'Cobro por compra';
+		$commissions->type           	= 0;
+		$commissions->frequencyTime		= null;
 		$commissions->status			= 1;
 
 		$array[] = $commissions;
@@ -945,11 +952,9 @@ class comisionItem{
 	public $id;
 	public $description;
 	public $type;
-	public $frequencyType;
 	public $frequencyTime;
 	public $status;
 	public $typeName;
-	public $frequencyTypeName;
 	public $statusName;
 	public $frequencyMsg;
 }

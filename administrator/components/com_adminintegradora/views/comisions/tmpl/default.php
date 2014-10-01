@@ -29,21 +29,13 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 				   ); ?>">
 					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_DESCRIPCION'); ?> </a>
 			</th>
-			<th width="10%" class="nowrap hidden-phone">
+			<th width="20%" class="nowrap hidden-phone">
 				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.access"
 				   data-direction="ASC" data-name="Tipo" title=""
 				   data-original-title="<strong>Tipo</strong><br /><?php echo JText::_ (
 					   'COM_ADMININTEGRADORA_COMISIONES_LIST_TIPO_TOOLTIP'
 				   ); ?>">
 					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_TIPO'); ?> </a>
-			</th>
-			<th width="15%" class="nowrap hidden-phone">
-				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.created_by"
-				   data-direction="ASC" data-name="Frecuencia" title=""
-				   data-original-title="<strong>Frecuencia</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_COMISIONES_LIST_FRECUENCIA_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_FRECUENCIA'); ?> </a>
 			</th>
 			<th width="10%" class="nowrap hidden-phone">
 				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="language"
@@ -73,10 +65,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegrado
 						<?php echo $value->description; ?></a>
 				</td>
 				<td class="small hidden-phone">
-					<?php echo $value->typeName; ?>
-				</td>
-				<td class="small hidden-phone">
-					<?php echo $value->frequencyTypeName.' '.$value->frequencyMsg; ?>
+					<?php echo $value->typeName.' '.$value->frequencyMsg; ?>
 				</td>
 				<td class="nowrap small hidden-phone">
 					<?php echo $value->statusName; ?>

@@ -63,16 +63,16 @@ class Catalogos {
 		$this->statusSolicitud = $status;
 	}
 
-	public function getTypesComisiones () {
-		return array(0 => 'Fija', 1 => 'Variable');
+	public function getComisionesTypes () {
+		return array('Fija - Por transacción', 'Variable - Recurrente');
 	}
 
-	public function getFrequenciesComisiones () {
-		return array(0 => 'Por transacción', 1 => 'Recurrente');
+	public function getComisionesStatus () {
+		return array('Desabilitada', 'Habilitada');
 	}
 
-	public function getStatusComisiones () {
-		return array(0 => 'Desabilitada', 1 => 'Habilitada');
+	public function getComisionesFrecuencyTimes () {
+		return array(7,15,30,60,90,120,180,360);
 	}
 
 }

@@ -6,17 +6,20 @@ jimport('joomla.application.component.view');
 /**
  *
  */
-class AdminintegradoraViewAdminintegradora extends JViewLegacy {
+class AdminintegradoraViewComision extends JViewLegacy {
 
-	protected $items;
+	public $comision;
 
-	protected $pagination;
+	public $cats;
 
-	protected $state;
+//	protected $pagination;
+//
+//	protected $state;
 
 	function display($tpl = null) {
 
-		$items = $this->get('Items');
+		$comision = $this->get('Comision');
+		$cats = $this->get('CatalogosComisiones');
 
 		if (count($errors = $this->get('Errors')))
 		{
@@ -24,7 +27,8 @@ class AdminintegradoraViewAdminintegradora extends JViewLegacy {
 			return false;
 		}
 
-		$this->items = $items;
+		$this->comision = $comision;
+		$this->cats = $cats;
 
 		$this->addToolBar();
 
@@ -36,9 +40,9 @@ class AdminintegradoraViewAdminintegradora extends JViewLegacy {
 	protected function addToolBar()
 	{
 		JToolBarHelper::title(JText::_('COM_ADMININTEGRADORA_MANAGER_TITULO'));
-//		JToolBarHelper::deleteList('', 'adminintegradora.delete');
-//		JToolBarHelper::editList('adminintegradora.edit');
-		JToolBarHelper::addNew('adminintegradora.add');
+		JToolbarHelper::apply('comision.apply');
+		JToolBarHelper::save('comision.save');
+		JToolbarHelper::cancel('comision.cancel');
 	}
 
 	protected function setDocument()

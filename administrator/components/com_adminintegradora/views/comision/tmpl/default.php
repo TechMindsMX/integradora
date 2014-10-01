@@ -3,94 +3,90 @@ defined ('_JEXEC') or die('Restricted Access');
 
 JHtml::_ ('bootstrap.tooltip');
 
-$items = $this->items;
+$items = $this->comision[0];
 
-$accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegradora');
+$accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
 ?>
-<form action="<?php echo $accion; ?>" method="post"
-	  name="adminForm" id="adminForm">
 
-	<table class="table table-striped" id="articleList">
-		<thead>
-		<tr>
-			<th width="1%" style="min-width:55px" class="nowrap center">
-				<a href="#" onclick="return false;" class="hasTooltip" data-order="a.state"
-				   data-direction="ASC" data-name="ID" title=""
-				   data-original-title="<strong>ID</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_ID_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_ID'); ?> </a>
-			</th>
-			<th>
-				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.title"
-				   data-direction="ASC" data-name="Descripción" title=""
-				   data-original-title="<strong>Descripción</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_COMISIONES_LIST_DESCRIPCION_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_DESCRIPCION'); ?> </a>
-			</th>
-			<th width="10%" class="nowrap hidden-phone">
-				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.access"
-				   data-direction="ASC" data-name="Tipo" title=""
-				   data-original-title="<strong>Tipo</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_COMISIONES_LIST_TIPO_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_TIPO'); ?> </a>
-			</th>
-			<th width="10%" class="nowrap hidden-phone">
-				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="a.created_by"
-				   data-direction="ASC" data-name="Frecuencia" title=""
-				   data-original-title="<strong>Frecuencia</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_COMISIONES_LIST_FRECUENCIA_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_FRECUENCIA'); ?> </a>
-			</th>
-			<th width="5%" class="nowrap hidden-phone">
-				<a href="#" onclick="return false;" class="js-stools-column-order hasTooltip" data-order="language"
-				   data-direction="ASC" data-name="Estado" title=""
-				   data-original-title="<strong>Estado</strong><br /><?php echo JText::_ (
-					   'COM_ADMININTEGRADORA_COMISIONES_LIST_ESTADO_TOOLTIP'
-				   ); ?>">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_LIST_ESTADO'); ?> </a>
-			</th>
-		</tr>
-		</thead>
-		<tbody>
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (task == 'comision.cancel' || document.formvalidator.isValid(document.id('comision-form')))
+		{
+			Joomla.submitform(task, document.getElementById('comision-form'));
+		}
+	}
 
-		<?php
-		foreach ($items as $key => $value) :
-			?>
+	jQuery(document).ready(function(){
+		jQuery('#type').checkType();
+	});
+	(function($){
+		//Attach this new method to jQuery
+		$.fn.extend({
 
-			<tr class="row0">
-				<td class="has-context">
-					<div class="pull-left">
-						<?php echo $value->id; ?>
-					</div>
-				</td>
-				<td class="small hidden-phone">
-					<a href="index.php?option=com_adminintegradora&task=listado.editar&id=<?php echo $value->id; ?>"
-					   title="Descripcion">
-						<?php echo $value->description; ?></a>
-				</td>
-				<td class="small hidden-phone">
-					<?php echo $value->typeName; ?>
-				</td>
-				<td class="small hidden-phone">
-					<?php echo $value->frequencyTypeName; ?>
-				</td>
-				<td class="nowrap small hidden-phone">
-					<?php echo $value->statusName; ?>
-				</td>
-			</tr>
+			//This is where you write your plugin's name
+			checkType: function() {
+				//Iterate over the current set of matched elements
+				return this.each(function() {
 
-		<?php
-		endforeach;
-		?>
+					var $freqTime = $('#frequency');
 
-		</tbody>
-	</table>
+					if($type.val() == 1) {
+						$freqTime.hide();
+					} else {
+						$freqTime.show('300');
+					}
+
+				});
+			}
+		});
+
+//pass jQuery to the function,
+//So that we will able to use any valid Javascript variable name
+//to replace "$" SIGN. But, we'll stick to $ (I like dollar sign: ) )
+	})(jQuery);
+</script>
+
+<form action="<?php echo $accion; ?>"
+	  method="post" name="adminForm" id="comision-form" class="form-validate">
+
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="description">
+				<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_DESCRIPTION'); ?>
+			</label>
+			<input type="text" name="description" id="description" value="<?php echo @$items->description; ?>" class="input-xxlarge input-large-text invalid" required="" aria-required="true" aria-invalid="true">
+		</div>
+	</div>
+
+	<div class="control-group span6">
+		<div class="span6 control-group">
+			<label class="control-label" for="type">
+				<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_TYPE'); ?>
+			</label>
+			<select id="type" name="type">
+				<?php foreach ($this->cats->types as $key => $value):
+					$selected = ($items->type == $key) ? 'selected' : '';
+					?>
+					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<label class="control-label" for="frequency">
+			<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME'); ?>
+		</label>
+		<select id="type" name="type">
+			<?php foreach ($this->cats->frequencyTimes as $key => $value):
+				$selected = ($items->frequencyTime == $value) ? 'selected' : '';
+				?>
+				<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+			<?php endforeach; ?>
+		</select>
+	</div>
 
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
 	<?php echo JHtml::_ ('form.token'); ?>
 </form>
+
+<?php
