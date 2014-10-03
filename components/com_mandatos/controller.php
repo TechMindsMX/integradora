@@ -129,9 +129,9 @@ class MandatosController extends JControllerLegacy {
 	}
 
     function saveforms(){
+        $filtro = array('campo'=>'tipodato');
         $data   =   $this->input_data->getArray();
 
-        //$this->app->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$data['integradoId']), 'Datos Guardados', 'message');
         var_dump($data);
         exit;
     }
