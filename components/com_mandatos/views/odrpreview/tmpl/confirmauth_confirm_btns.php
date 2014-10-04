@@ -17,7 +17,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=odrlist&integradoId='
 	        </p>
             <a id="authorize-btn" class="btn btn-success esconder" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
-            endif;
+        endif;
         ?>
             <a class="btn btn-danger" href="<?php echo $returnUrl; ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </legend>

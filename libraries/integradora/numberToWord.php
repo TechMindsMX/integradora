@@ -136,6 +136,7 @@ class AifLibNumber {
             $number = preg_match('/uno$/', $number) ? (preg_replace('/uno$/',
                             '', $number) . ' un peso ') : ($number . ' pesos ');
         $decimal = round($decimal[0] . $decimal[1] . '.' . substr($decimal, 2));
+	    $decimal = ($decimal == 0) ? '00' : $decimal ;
         return $number . $decimal . '/100 M.N.';
     }
 }
