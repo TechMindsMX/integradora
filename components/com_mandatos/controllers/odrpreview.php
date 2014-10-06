@@ -9,11 +9,11 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
  * @property mixed app
  * @property mixed permisos
  */
-class MandatosControllerOdcpreview extends JControllerAdmin {
+class MandatosControllerOdrpreview extends JControllerAdmin {
 	
 	function authorize() {
-        $this->app 			= JFactory::getApplication();
-        $this->parametros	= $this->app->input->getArray();
+		$this->app 			= JFactory::getApplication();
+		$this->parametros	= $this->app->input->getArray();
 
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
 
