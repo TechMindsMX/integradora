@@ -60,7 +60,6 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th class="span1">#</th>
             <th class="span2"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></th>
             <th class="span4"><?php echo JText::_('LBL_CANTIDAD'); ?></th>
             <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?></th>
