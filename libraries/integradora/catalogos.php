@@ -66,7 +66,7 @@ class Catalogos {
 	}
 
 	public function getComisionesTypes () {
-		return array('Fija - Por transacción', 'Variable - Recurrente');
+		return array('Fija - Recurrente', 'Variable - Por transacción');
 	}
 
 	public function getComisionesStatus () {
