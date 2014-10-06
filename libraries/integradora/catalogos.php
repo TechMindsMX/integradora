@@ -31,8 +31,10 @@ class Catalogos {
 			->from($db->quoteName('#__catalog_estados'))
 			->order('nombre ASC');
 		$result = $db->setQuery($query)->loadObjectList();
-		
+
 		$this->estados = $result;
+
+        return $result;
 	}
 	
 	public function getBancos(){
@@ -64,7 +66,7 @@ class Catalogos {
 	}
 
 	public function getComisionesTypes () {
-		return array('Fija - Por transacción', 'Variable - Recurrente');
+		return array('Fija - Recurrente', 'Variable - Por transacción');
 	}
 
 	public function getComisionesStatus () {

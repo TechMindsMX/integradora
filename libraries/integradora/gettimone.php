@@ -26,7 +26,7 @@ class getFromTimOne{
 
         $proyectos = new stdClass;
         $proyectos->id			= 2;
-        $proyectos->integradoId	= 2;
+        $proyectos->integradoId	= 1;
         $proyectos->parentId 	= 0;
         $proyectos->status	 	= 0;
         $proyectos->name 		= 'Proyecto 2';
@@ -71,7 +71,7 @@ class getFromTimOne{
 
         $proyectos = new stdClass;
         $proyectos->id			= 5;
-        $proyectos->integradoId	= 2;
+        $proyectos->integradoId	= 1;
         $proyectos->parentId 	= 2;
         $proyectos->status	 	= 1;
         $proyectos->name 		= 'Subproyecto 1 del proyecto 2';
@@ -818,6 +818,8 @@ class getFromTimOne{
 		$commissions->type           	= 1;
 		$commissions->frequencyTime		= 15;
 		$commissions->status			= 1;
+		$commissions->amount			= null;
+		$commissions->rate				= 0.25;
 
 		$array[] = $commissions;
 
@@ -827,15 +829,19 @@ class getFromTimOne{
 		$commissions->type           	= 1;
 		$commissions->frequencyTime		= 90;
 		$commissions->status			= 1;
+		$commissions->amount			= null;
+		$commissions->rate				= 0.25;
 
 		$array[] = $commissions;
 
 		$commissions 				    = new comisionItem;
 		$commissions->id                = 2;
-		$commissions->description		= 'Cobro por compra';
+		$commissions->description		= 'Contabilidad';
 		$commissions->type           	= 0;
 		$commissions->frequencyTime		= null;
 		$commissions->status			= 1;
+		$commissions->amount			= 1000;
+		$commissions->rate				= null;
 
 		$array[] = $commissions;
 
@@ -957,4 +963,6 @@ class comisionItem{
 	public $typeName;
 	public $statusName;
 	public $frequencyMsg;
+	public $amount;
+	public $rate;
 }
