@@ -74,7 +74,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         <tbody>
             <tr class="trOdv">
                 <td>
-                    <select name="productos">
+                    <select id='productos' name="productos">
                         <option value="abierto">Abierto</option>
                         <option value="p1">P 1</option>
                         <option value="p2">P 2</option>
