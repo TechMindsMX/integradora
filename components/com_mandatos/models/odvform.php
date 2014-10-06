@@ -68,6 +68,10 @@ class MandatosModelOdvform extends JModelItem {
         return $data;
     }
 
+    public function getProductos(){
+        $allproducts = getFromTimOne::getProducts($this->integradoId);
 
+        return $allproducts;
+    }
 }
 

@@ -8,18 +8,84 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
+
 ?>
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 <?php
 echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
 echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
+
+
 ?>
 
 <script>
-    var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>
+    var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>;
+    var global_var=0;
+    var productos='productos';
+    var arrayProd = <?php echo json_encode($this->products)?>;
 
     jQuery(document).ready(function(){
         jQuery('#project').on('change', llenasubproject);
+        jQuery.each(arrayProd,function(key,value){
+           jQuery('#productos').append('<option value="'+value.id+'">'+value.productName+'</option>');
+        });
+        jQuery('.productos').on('change', llenatabla);
+
+        jQuery('#button').click(function(){
+            var serializado     =   jQuery('table#odv').find('input,select').serialize();
+            var produc = new Array(3)
+            produc[0] = "Abierto"
+            produc[1] = "P 1"
+            produc[2] = "P 2"
+            produc[3] = "P 3"
+            produc[4] = "P 4"
+            produc[5] = "P 5"
+            produc[6] = "P 6"
+            produc[7] = "P 7"
+            produc[8] = "P 8"
+            var tabla=document.getElementById("odv");
+            var tr=document.createElement("tr");
+            for (var j = 0; j < 9; j++) {
+                var celda     =   document.createElement("td");
+                var random    =   2;
+
+                switch (j) {
+                    case 0:
+                        var select          =   document.createElement('select');
+                        var posicion        =   document.getElementById(productos).options.selectedIndex;
+                        var eliminar        =   document.getElementById(productos).options[posicion].text;
+                        productos   =   productos+global_var;
+                        select.name         =   productos;
+                        for (i=0; i<9; i++){
+                            opt             = document.createElement('option');
+                            opt.value       = i;
+                            if (eliminar != produc[i]){
+                                opt.innerHTML   = produc[i];
+                                select.appendChild(opt);
+                            }
+                        }
+
+                        celda.appendChild(select);
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                        var input = document.createElement("input");
+                        celda.appendChild(input);
+                        break;
+                    default:
+                        break;
+                }
+                tr.appendChild(celda);
+            }
+            tabla.appendChild(tr);
+
+            global_var  =   global_var+1;
+
+        });
     });
 
     function llenasubproject(){
@@ -37,6 +103,27 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
           selectSPro.append('<option value="'+value.id+'">'+value.name+'</option>');
         });
     }
+
+    function llenatabla(){
+        var idproducto = jQuery(this).val();
+        var trproductos = jQuery('.productos').parent().parent();
+        var producto = '';
+
+        jQuery.each(arrayProd,function(key,value){
+            if(idproducto == value.id){
+                producto = value;
+            }
+        });
+
+        trproductos.find('[name*="descripcion"]').val(producto.description);
+        trproductos.find('[name*="unidad"]').val(producto.measure);
+        trproductos.find('[name*="p_unitario"]').val(producto.price);
+        trproductos.find('[name*="iva"]').val(producto.iva);
+        trproductos.find('[name*="ieps"]').val(producto.ieps);
+    }
+
+
+
 </script>
 <fieldset>
     <select name="projectId" id="project">
@@ -120,11 +207,8 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         <tbody>
             <tr class="trOdv">
                 <td>
-                    <select id='productos' name="productos">
+                    <select id='productos' name="productos" class="productos">
                         <option value="abierto">Abierto</option>
-                        <option value="p1">P 1</option>
-                        <option value="p2">P 2</option>
-                        <option value="p2">P 3</option>
                     </select>
                 </td>
                 <td><input id="cantidad" type="text" name="cantidad" value=""></td>
