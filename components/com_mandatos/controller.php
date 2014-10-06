@@ -136,4 +136,16 @@ class MandatosController extends JControllerLegacy {
         var_dump($data);
         exit;
     }
+
+    function  cargaProducto(){
+        $data = $this->input_data->getArray();
+        $productos = getFromTimOne::getProducts($data['integradoId']);
+        foreach ($productos as $key => $val) {
+                if($data['id'] == $val->id){
+                    $producto = $val;
+                }
+        }
+
+        echo json_encode($producto);
+    }
 }

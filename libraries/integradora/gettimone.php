@@ -26,7 +26,7 @@ class getFromTimOne{
 
         $proyectos = new stdClass;
         $proyectos->id			= 2;
-        $proyectos->integradoId	= 2;
+        $proyectos->integradoId	= 1;
         $proyectos->parentId 	= 0;
         $proyectos->status	 	= 0;
         $proyectos->name 		= 'Proyecto 2';
@@ -71,7 +71,7 @@ class getFromTimOne{
 
         $proyectos = new stdClass;
         $proyectos->id			= 5;
-        $proyectos->integradoId	= 2;
+        $proyectos->integradoId	= 1;
         $proyectos->parentId 	= 2;
         $proyectos->status	 	= 1;
         $proyectos->name 		= 'Subproyecto 1 del proyecto 2';

@@ -31,8 +31,10 @@ class Catalogos {
 			->from($db->quoteName('#__catalog_estados'))
 			->order('nombre ASC');
 		$result = $db->setQuery($query)->loadObjectList();
-		
+
 		$this->estados = $result;
+
+        return $result;
 	}
 	
 	public function getBancos(){

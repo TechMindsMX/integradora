@@ -10,23 +10,142 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 ?>
-
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 <?php
 echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
 echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
+
+
 ?>
+
+<script>
+    var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>;
+    var global_var=0;
+    var productos='productos';
+    var arrayProd = <?php echo json_encode($this->products)?>;
+
+    jQuery(document).ready(function(){
+        jQuery('#project').on('change', llenasubproject);
+        jQuery.each(arrayProd,function(key,value){
+           jQuery('#productos').append('<option value="'+value.id+'">'+value.productName+'</option>');
+        });
+        jQuery('.productos').on('change', llenatabla);
+
+        jQuery('#button').click(function(){
+            var serializado     =   jQuery('table#odv').find('input,select').serialize();
+            var produc = new Array(3)
+            produc[0] = "Abierto"
+            produc[1] = "P 1"
+            produc[2] = "P 2"
+            produc[3] = "P 3"
+            produc[4] = "P 4"
+            produc[5] = "P 5"
+            produc[6] = "P 6"
+            produc[7] = "P 7"
+            produc[8] = "P 8"
+            var tabla=document.getElementById("odv");
+            var tr=document.createElement("tr");
+            for (var j = 0; j < 9; j++) {
+                var celda     =   document.createElement("td");
+                var random    =   2;
+
+                switch (j) {
+                    case 0:
+                        var select          =   document.createElement('select');
+                        var posicion        =   document.getElementById(productos).options.selectedIndex;
+                        var eliminar        =   document.getElementById(productos).options[posicion].text;
+                        productos   =   productos+global_var;
+                        select.name         =   productos;
+                        for (i=0; i<9; i++){
+                            opt             = document.createElement('option');
+                            opt.value       = i;
+                            if (eliminar != produc[i]){
+                                opt.innerHTML   = produc[i];
+                                select.appendChild(opt);
+                            }
+                        }
+
+                        celda.appendChild(select);
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                        var input = document.createElement("input");
+                        celda.appendChild(input);
+                        break;
+                    default:
+                        break;
+                }
+                tr.appendChild(celda);
+            }
+            tabla.appendChild(tr);
+
+            global_var  =   global_var+1;
+
+        });
+    });
+
+    function llenasubproject(){
+        var select          = jQuery(this).val();
+        var selectSPro      = jQuery('#subproject')
+        var subprojectos    = subprojects[select];
+
+        jQuery.each(jQuery('#subproject').find('option'),function(){
+            console.log(jQuery(this).remove());
+        });
+
+        selectSPro.append('<option value="0">Subproyecto</option>');
+
+        jQuery.each(subprojectos, function(key, value){
+          selectSPro.append('<option value="'+value.id+'">'+value.name+'</option>');
+        });
+    }
+
+    function llenatabla(){
+        var idproducto = jQuery(this).val();
+        var trproductos = jQuery('.productos').parent().parent();
+        var producto = '';
+
+        jQuery.each(arrayProd,function(key,value){
+            if(idproducto == value.id){
+                producto = value;
+            }
+        });
+
+        trproductos.find('[name*="descripcion"]').val(producto.description);
+        trproductos.find('[name*="unidad"]').val(producto.measure);
+        trproductos.find('[name*="p_unitario"]').val(producto.price);
+        trproductos.find('[name*="iva"]').val(producto.iva);
+        trproductos.find('[name*="ieps"]').val(producto.ieps);
+    }
+
+
+
+</script>
 <fieldset>
-    <select name="projectId">
+    <select name="projectId" id="project">
         <option value="0">Proyecto</option>
+        <?php
+        foreach ($this->proyectos['proyectos'] as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->name.'</option>';
+        }
+        ?>
     </select>
 
-    <select name="projectId2">
+    <select name="projectId2" id="subproject">
         <option value="0">Subproyecto</option>
     </select>
 
     <select name="clientId">
         <option value="0">Cliente</option>
+        <?php
+        foreach ($this->clientes as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->tradeName.'</option>';
+        }
+        ?>
     </select>
 </fieldset>
 
@@ -42,22 +161,36 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
 <fieldset>
     <select name="account">
         <option value="0">Cuenta</option>
+        <?php
+        $datosBancarios = $this->solicitud->datos_bancarios;
+        echo '<option value="'.$datosBancarios->datosBan_id.'">'.$datosBancarios->banco_cuenta.'</option>';
+        ?>
     </select>
 
     <select name="paymentMethod">
         <option value="0">Método de pago</option>
+        <option value="1">Cheque</option>
+        <option value="2">Transferencia</option>
+        <option value="3">Efectivo</option>
     </select>
 
     <select name="conditions">
         <option value="0">Condiciones</option>
+        <option value="1">Contado</option>
+        <option value="2">Parcialidades</option>
     </select>
 
     <select name="placeIssue">
         <option value="0">Lugar de Expedición</option>
+        <?php
+        foreach ($this->estados as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
+        }
+        ?>
     </select>
 
     <h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="odv">
         <thead>
         <tr>
             <th class="span2"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></th>
@@ -72,10 +205,25 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         </tr>
         </thead>
         <tbody>
-            <tr class="trOdv"></tr>
+            <tr class="trOdv">
+                <td>
+                    <select id='productos' name="productos" class="productos">
+                        <option value="abierto">Abierto</option>
+                    </select>
+                </td>
+                <td><input id="cantidad" type="text" name="cantidad" value=""></td>
+                <td><input id="descripcion" type="text" name="descripcion" value=""></td>
+                <td><input id="unidad" type="text" name="unidad" value=""></td>
+                <td><input id="p_unitario" type="text" name="p_unitario" value=""></td>
+                <td><input id="iva" type="text" name="iva" value=""></td>
+                <td><input id="ieps" type="text" name="ieps" value=""></td>
+                <td><div id="subtotal"></div></td>
+                <td><div id="total"></div> </td>
+
+            </tr>
         </tbody>
     </table>
-
+<button type="button" id="button" name="button">+</button>
 </fieldset>
 
 <div class="form-actions">
