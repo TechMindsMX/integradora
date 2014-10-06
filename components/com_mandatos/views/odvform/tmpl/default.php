@@ -57,7 +57,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
     </select>
 
     <div>
-        
+
     </div>
 </fieldset>
 
