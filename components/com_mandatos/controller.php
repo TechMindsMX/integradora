@@ -79,6 +79,7 @@ class MandatosController extends JControllerLegacy {
 	
 	function searchrfc(){
 		$data 			= $this->input_data->getArray();
+		$db		= JFactory::getDbo();
 		$where	= $db->quoteName('rfc').' = '.$db->quote($data['rfc']);
 		$respuesta = '';
 		

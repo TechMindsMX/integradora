@@ -5,20 +5,48 @@ JHtml::_ ('bootstrap.tooltip');
 
 $items = $this->comision[0];
 
-$accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
-?>
+JFactory::getDocument()->addScript(JUri::root().'libraries/integradora/js/tim-validation.js');
 
+$accion = 'index.php?option=com_adminintegradora';
+?>
 	<script type="text/javascript">
-		Joomla.submitbutton = function (task) {
-			if (task == 'comision.cancel' || document.formvalidator.isValid(document.id('comision-form'))) {
-				Joomla.submitform(task, document.getElementById('comision-form'));
-			}
+
+		function envioAjax () {
+
 		}
+
+
+//		Joomla.submitbutton = function (task) {
+//			if (task != 'comision.cancel') {
+//				Joomla.submitform(task, document.getElementById('comision-form'));
+//			}
+//		}
 
 		jQuery(document).ready(function () {
 			var $type = jQuery('#type');
 			$type.change($type, checkType);
 			$type.triggerHandler('change');
+
+			jQuery('button#toolbar-apply').click(function() {
+				var data = jQuery('#comision-form').find('select, input').serialize();
+
+				var parametros = {
+					'link'  : '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
+					'datos' : data
+				};
+
+				var request = jQuery.ajax({
+					url: parametros.link,
+					data: parametros.datos,
+					type: 'post'
+				});
+
+				var resultado = request(parametros);
+
+				resultado.done(function(response){
+
+				});
+			});
 		});
 
 		function checkType() {
@@ -35,6 +63,11 @@ $accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
 		}
 	</script>
 
+<div class="btn-toolbar">
+	<button id="toolbar-apply" class="btn btn-small btn-success"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_GUARDAR'); ?></button>
+	<button class="btn btn-small btn-danger"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_CANCEL'); ?></button>
+</div>
+
 	<form action="<?php echo $accion; ?>"
 		  method="post" name="adminForm" id="comision-form" class="form-validate">
 
@@ -45,7 +78,7 @@ $accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
 				</label>
 				<input type="text" name="description" id="description" value="<?php echo @$items->description; ?>"
 					   class="input-xxlarge input-large-text" required="" aria-required="true"
-					   aria-invalid="true">
+					   aria-invalid="true" maxlength="255">
 			</div>
 		</div>
 
@@ -64,7 +97,7 @@ $accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
 			<label class="control-label" for="frequencyTimes">
 				<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME'); ?>
 			</label>
-			<select id="frequencyTimes" name="type">
+			<select id="frequencyTimes" name="frequencyTimes">
 				<?php foreach ($this->cats->frequencyTimes as $key => $value):
 					$selected = ($items->frequencyTime == $value) ? 'selected' : '';
 					?>
@@ -79,19 +112,18 @@ $accion = 'index.php?option=com_adminintegradora&view=adminintegradora';
 				</label>
 				<input type="text" name="monto" id="monto" value="<?php echo @$items->amount; ?>"
 					   class="" required="" aria-required="true"
-					   aria-invalid="true">
+					   aria-invalid="true" maxlength="10">
 			</div>
 			<div class="control-group" id="percentage">
 				<label class="control-label" for="rate">
 					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_RATE'); ?>
 				</label>
 				<input type="text" name="rate" id="rate" value="<?php echo @$items->rate; ?>"
-					   class="" required="required">
+					   class="" required="required" maxlength="5">
 			</div>
 		</div>
 
 		<input type="hidden" name="task" value=""/>
-		<input type="hidden" name="boxchecked" value="0"/>
 		<?php echo JHtml::_ ('form.token'); ?>
 	</form>
 
