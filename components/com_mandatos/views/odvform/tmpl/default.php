@@ -8,9 +8,8 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-
+var_dump($this->estados);
 ?>
-
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 <?php
 echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
@@ -19,6 +18,11 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 <fieldset>
     <select name="projectId">
         <option value="0">Proyecto</option>
+        <?php
+        foreach ($this->proyectos['proyectos'] as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->name.'</option>';
+        }
+        ?>
     </select>
 
     <select name="projectId2">
@@ -27,6 +31,11 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
     <select name="clientId">
         <option value="0">Cliente</option>
+        <?php
+        foreach ($this->clientes as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->tradeName.'</option>';
+        }
+        ?>
     </select>
 </fieldset>
 
@@ -42,18 +51,32 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
 <fieldset>
     <select name="account">
         <option value="0">Cuenta</option>
+        <?php
+        $datosBancarios = $this->solicitud->datos_bancarios;
+        echo '<option value="'.$datosBancarios->datosBan_id.'">'.$datosBancarios->banco_cuenta.'</option>';
+        ?>
     </select>
 
     <select name="paymentMethod">
         <option value="0">Método de pago</option>
+        <option value="1">Cheque</option>
+        <option value="2">Transferencia</option>
+        <option value="3">Efectivo</option>
     </select>
 
     <select name="conditions">
         <option value="0">Condiciones</option>
+        <option value="1">Contado</option>
+        <option value="2">Parcialidades</option>
     </select>
 
     <select name="placeIssue">
         <option value="0">Lugar de Expedición</option>
+        <?php
+        foreach ($this->estados as $key => $value) {
+            echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
+        }
+        ?>
     </select>
 
     <h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>

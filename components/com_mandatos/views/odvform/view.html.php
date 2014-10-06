@@ -6,12 +6,10 @@ jimport('joomla.application.component.view');
 class MandatosViewOdvform extends JViewLegacy {
 	
 	function display($tpl = null){
-
-
-            $this->clientes     = $this->get('clientes');
-            $this->proyectos    = $this->get('proyectos');
-            $this->estados      = $this->get('estados');
-            $this->solicitud    = $this->get('datosSolicitud');
+        $this->clientes     = $this->get('clientes');
+        $this->proyectos    = $this->get('proyectos');
+        $this->estados      = $this->get('estados');
+        $this->solicitud    = $this->get('datosSolicitud');
 
         if (count($errors = $this->get('Errors'))) {
 	        JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
