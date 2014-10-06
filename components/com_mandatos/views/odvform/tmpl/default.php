@@ -8,15 +8,38 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-var_dump($this->estados);
 ?>
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 <?php
 echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
 echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
 ?>
+
+<script>
+    var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>
+
+    jQuery(document).ready(function(){
+        jQuery('#project').on('change', llenasubproject);
+    });
+
+    function llenasubproject(){
+        var select          = jQuery(this).val();
+        var selectSPro      = jQuery('#subproject')
+        var subprojectos    = subprojects[select];
+
+        jQuery.each(jQuery('#subproject').find('option'),function(){
+            console.log(jQuery(this).remove());
+        });
+
+        selectSPro.append('<option value="0">Subproyecto</option>');
+
+        jQuery.each(subprojectos, function(key, value){
+          selectSPro.append('<option value="'+value.id+'">'+value.name+'</option>');
+        });
+    }
+</script>
 <fieldset>
-    <select name="projectId">
+    <select name="projectId" id="project">
         <option value="0">Proyecto</option>
         <?php
         foreach ($this->proyectos['proyectos'] as $key => $value) {
@@ -25,7 +48,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
         ?>
     </select>
 
-    <select name="projectId2">
+    <select name="projectId2" id="subproject">
         <option value="0">Subproyecto</option>
     </select>
 
