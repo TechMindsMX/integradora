@@ -57,10 +57,9 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
     </select>
 
     <h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="odv">
         <thead>
         <tr>
-            <th class="span1">#</th>
             <th class="span2"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></th>
             <th class="span4"><?php echo JText::_('LBL_CANTIDAD'); ?></th>
             <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?></th>
@@ -73,10 +72,28 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         </tr>
         </thead>
         <tbody>
-            <tr class="trOdv"></tr>
+            <tr class="trOdv">
+                <td>
+                    <select name="productos">
+                        <option value="abierto">Abierto</option>
+                        <option value="p1">P 1</option>
+                        <option value="p2">P 2</option>
+                        <option value="p2">P 3</option>
+                    </select>
+                </td>
+                <td><input id="cantidad" type="text" name="cantidad" value=""></td>
+                <td><input id="descripcion" type="text" name="descripcion" value=""></td>
+                <td><input id="unidad" type="text" name="unidad" value=""></td>
+                <td><input id="p_unitario" type="text" name="p_unitario" value=""></td>
+                <td><input id="iva" type="text" name="iva" value=""></td>
+                <td><input id="ieps" type="text" name="ieps" value=""></td>
+                <td><div id="subtotal"></div></td>
+                <td><div id="total"></div> </td>
+
+            </tr>
         </tbody>
     </table>
-
+<button type="button" id="button" name="button">+</button>
 </fieldset>
 
 <div class="form-actions">
