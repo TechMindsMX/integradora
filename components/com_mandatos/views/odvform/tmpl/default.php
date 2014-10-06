@@ -56,9 +56,27 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         <option value="0">Lugar de Expedición</option>
     </select>
 
-    <div>
+    <h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="span1">#</th>
+            <th class="span2"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></th>
+            <th class="span4"><?php echo JText::_('LBL_CANTIDAD'); ?></th>
+            <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?></th>
+            <th class="span2"><?php echo JText::_('LBL_UNIDAD'); ?></th>
+            <th class="span2"><?php echo JText::_('LBL_P_UNITARIO'); ?></th>
+            <th class="span4"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></th>
+            <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?></th>
+            <th class="span2"><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
+            <th class="span2"><?php echo JText::_('LBL_TOTAL'); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr class="trOdv"></tr>
+        </tbody>
+    </table>
 
-    </div>
 </fieldset>
 
 <div class="form-actions">
