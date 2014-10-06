@@ -63,13 +63,13 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function salir($campo){
+	protected static function salir($campo){
 		$response = array('success' => false , 'msg' => 'Error en el campo '.$campo);
 		
 		return $response;
 	}
 	
-	public static function valida_email($data, $campo, $clave){
+	protected function valida_email($data, $campo, $clave){
 		$email	= $data[$campo];
 		$regex	= '/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/';
 		
@@ -82,7 +82,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_curp($data, $campo, $clave){
+	protected function valida_curp($data, $campo, $clave){
 		$curp	= $data[$campo];
 		$regex	= '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([H M]{1})([A-Z]{2})([A-Z]{3})([A-Z0-9]{2})$/';
 		
@@ -95,7 +95,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_fecha_nacimiento($data, $campo, $clave){
+	protected function valida_fecha_nacimiento($data, $campo, $clave){
 		$fecha = $data[$campo];
 		$regex = '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/';
 		
@@ -108,7 +108,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_rfc($data, $campo, $clave=null){
+	public function valida_rfc($data, $campo, $clave=null){
 		$rfc			= $data[$campo];
 
 		if($clave == 'de_'){
@@ -128,7 +128,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function validalength($valor,$length, $minlength = null){
+	protected function validalength($valor,$length, $minlength = null){
 		if(is_null($minlength)){
 			if(strlen($valor) <= $length){
 				$respuesta = true;
@@ -146,7 +146,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_banco_clabe($data, $campo, $clave=null){
+	public function valida_banco_clabe($data, $campo, $clave=null){
 		$clabe				= $data[$campo];
 		$paso3 				= 0;
 		$clabeTmp			= str_split($clabe,17);
@@ -179,7 +179,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_numeros($valor){
+	protected function valida_numeros($valor){
 		$regex	= '/^[0-9\ ]+$/';
 		if(preg_match($regex, $valor)){
 			$respuesta = true;
@@ -189,8 +189,19 @@ class validador {
 		
 		return $respuesta;
 	}
-	
-	public static function valida_strings($valor){
+
+	protected function valida_float ($valor){
+		$regex	= '/^(\d+(?:\.\d+)?)';
+		if(preg_match($regex, $valor)){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+
+		return $respuesta;
+	}
+
+	protected function valida_strings($valor){
 		$regex	= '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
 		
 		if(preg_match($regex, $valor)){
@@ -202,7 +213,7 @@ class validador {
 		return $respuesta;
 	}
 	
-	public static function valida_alfanumericos($valor){
+	protected function valida_alfanumericos($valor){
 		$regex	= '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . ]+$/';
 		if(preg_match($regex, $valor)){
 			$respuesta = true;

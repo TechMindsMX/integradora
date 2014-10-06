@@ -40,9 +40,6 @@ class AdminintegradoraViewComision extends JViewLegacy {
 	protected function addToolBar()
 	{
 		JToolBarHelper::title(JText::_('COM_ADMININTEGRADORA_MANAGER_TITULO'));
-		JToolbarHelper::apply('comision.apply');
-		JToolBarHelper::save('comision.save');
-		JToolbarHelper::cancel('comision.cancel');
 	}
 
 	protected function setDocument()
