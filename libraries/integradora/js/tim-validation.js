@@ -1,18 +1,18 @@
 function mensajes($msg, $tipo, $campo){
-    var spanError = jQuery($campo);
-
-    spanError.text($msg);
-    spanError.fadeIn();
+    var spanError = jQuery('#'+$campo);
 
     switch($tipo){
-        case 'msg':
-            spanError.delay(800).fadeOut(4000);
-            break;
         case 'error':
-            jQuery('#bu_rfc').css('border-color', '#FF0000');
-            spanError.delay(800).fadeOut(4000, function(){
-                jQuery('#bu_rfc').css('border-color', '');
+            spanError.css('border-color', '#FF0000')
+            var $errMsg = '<span class="error">'+$msg+'</span>';
+            spanError.after($errMsg);
+
+            spanError.focus(function(){
+                spanError.css('border-color', '');
+                jQuery('.error').remove();
             });
+            break;
+        default :
             break;
     }
 

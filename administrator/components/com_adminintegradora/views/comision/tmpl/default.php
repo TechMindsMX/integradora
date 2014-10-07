@@ -31,7 +31,7 @@ $accion = 'index.php?option=com_adminintegradora';
 				var data = jQuery('#comision-form').find('select, input').serialize();
 
 				var parametros = {
-					'link'  : '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
+					'link'  : '<?php echo $accion; ?>&task=savecomision&format=raw',
 					'datos' : data
 				};
 
@@ -41,10 +41,12 @@ $accion = 'index.php?option=com_adminintegradora';
 					type: 'post'
 				});
 
-				var resultado = request(parametros);
-
-				resultado.done(function(response){
-
+				request.done(function(response){
+					jQuery.each( response, function(i, v) {
+						if (v !== true) {
+							mensajes(v.msg, 'error', i)
+						}
+					});
 				});
 			});
 		});
@@ -123,7 +125,6 @@ $accion = 'index.php?option=com_adminintegradora';
 			</div>
 		</div>
 
-		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_ ('form.token'); ?>
 	</form>
 
