@@ -59,10 +59,10 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
             tds += '</tr>';
             jQuery("#odv").append(tds);
 
-
+            jQuery('.productos').on('change', llenatabla);
         }
 
-            function llenasubproject() {
+        function llenasubproject() {
             var select = jQuery(this).val();
             var selectSPro = jQuery('#subproject')
             var subprojectos = subprojects[select];
@@ -79,25 +79,22 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
         }
 
         function llenatabla() {
-alert('algo');
-                var idproducto = jQuery(this).val();
-                var trproductos = jQuery('#productos').parent().parent();
-                var producto = '';
+            var idproducto  = jQuery(this).val();
+            var trproductos = jQuery(this).parent().parent();
+            var producto = '';
 
-                jQuery.each(arrayProd, function (key, value) {
-                    if (idproducto == value.id) {
-                        producto = value;
-                    }
-                });
+            jQuery.each(arrayProd, function (key, value) {
+                if (idproducto == value.id) {
+                    producto = value;
+                }
+            });
 
-                trproductos.find('[name*="descripcion"]').val(producto.description);
-                trproductos.find('[name*="unidad"]').val(producto.measure);
-                trproductos.find('[name*="p_unitario"]').val(producto.price);
-                trproductos.find('[name*="iva"]').val(producto.iva);
-                trproductos.find('[name*="ieps"]').val(producto.ieps);
-            }
-
-
+            trproductos.find('[name*="descripcion"]').val(producto.description);
+            trproductos.find('[name*="unidad"]').val(producto.measure);
+            trproductos.find('[name*="p_unitario"]').val(producto.price);
+            trproductos.find('[name*="iva"]').val(producto.iva);
+            trproductos.find('[name*="ieps"]').val(producto.ieps);
+        }
     });
 
 </script>

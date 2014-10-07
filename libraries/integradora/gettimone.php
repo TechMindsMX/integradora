@@ -99,7 +99,7 @@ class getFromTimOne{
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto A';
         $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
+        $productos->price		= '$10000';
         $productos->iva			= '$150';
         $productos->ieps		= '$100';
         $productos->currency	= 'MXN';
@@ -112,8 +112,8 @@ class getFromTimOne{
         $productos->id			= 2;
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto B';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
+        $productos->measure		= 'Centimetros';
+        $productos->price		= '$100000';
         $productos->iva			= '$150';
         $productos->ieps		= '$100';
         $productos->currency	= 'MXN';
@@ -126,7 +126,7 @@ class getFromTimOne{
         $productos->id			= 3;
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto C';
-        $productos->measure		= 'Litros';
+        $productos->measure		= 'Pieza';
         $productos->price		= '$1000';
         $productos->iva			= '$150';
         $productos->ieps		= '$100';
@@ -140,7 +140,7 @@ class getFromTimOne{
         $productos->id			= 4;
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto D';
-        $productos->measure		= 'Litros';
+        $productos->measure		= 'Rads';
         $productos->price		= '$1000';
         $productos->iva			= '$150';
         $productos->ieps		= '$100';
@@ -154,7 +154,7 @@ class getFromTimOne{
         $productos->id			= 5;
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto E';
-        $productos->measure		= 'Litros';
+        $productos->measure		= 'DB';
         $productos->price		= '$1000';
         $productos->iva			= '$150';
         $productos->ieps		= '$100';
