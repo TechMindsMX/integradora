@@ -17,7 +17,25 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
 
 ?>
+<style>
+    #odv {
+        display: table;
+        border: 1px solid #000;
+        width: 100%;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .contenidos, .head, #content {
+        display: table-row;
+    }
+    #columna1, #columna2{
+        display: table-cell;
+        border: 1px solid #000;
+        vertical-align: middle;
+        padding: 10px;
+    }
 
+</style>
 <script>
     var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>;
     var global_var=0;
@@ -36,30 +54,23 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
         jQuery('#button').on('click', addrow);
 
+        jQuery('#p_unitario').on('change', suma);
+
+        function suma(){
+
+        }
+
         function addrow(){
             nextinput++;
-            var tds = '<tr>';
 
-                tds += '<td>' +
-                        "<select id='productos"+nextinput+"' name='productos' class='productos'>";
-
-                jQuery.each(arrayProd, function (key, value) {
-
-                    tds+='<option value="' + value.id + '">' + value.productName + '</option>';
-                });
-
-                tds += '<td><input id="cantidad'+nextinput+'" type="text" name="cantidad" value=""></td>';
-                tds += '<td><input id="descripcion'+nextinput+'" type="text" name="descripcion" value=""></td>';
-                tds += '<td><input id="unidad'+nextinput+'" type="text" name="unidad" value=""></td>';
-                tds += '<td><input id="p_unitario'+nextinput+'" type="text" name="p_unitario" value=""></td>';
-                tds += '<td><input id="iva'+nextinput+'" type="text" name="iva" value=""></td>';
-                tds += '<td><input id="ieps'+nextinput+'" type="text" name="ieps" value=""></td>';
-                tds += '<td><div id="subtotal"></div></td>';
-                tds += '<td><div id="total"></div> </td>';
-            tds += '</tr>';
-            jQuery("#odv").append(tds);
-
+            jQuery("#contenidos" ).attr('id','content'+nextinput+'');
+            jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
+            jQuery("#content"+nextinput+"").attr('id','contenidos');
+            jQuery("#content"+nextinput+"").find("input:text").val("");
             jQuery('.productos').on('change', llenatabla);
+
+
+
         }
 
         function llenasubproject() {
@@ -94,6 +105,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
             trproductos.find('[name*="p_unitario"]').val(producto.price);
             trproductos.find('[name*="iva"]').val(producto.iva);
             trproductos.find('[name*="ieps"]').val(producto.ieps);
+
         }
     });
 
@@ -163,39 +175,34 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
     </select>
 
     <h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
-    <table class="table table-bordered" id="odv">
-        <thead>
-        <tr>
-            <th class="span2"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></th>
-            <th class="span4"><?php echo JText::_('LBL_CANTIDAD'); ?></th>
-            <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?></th>
-            <th class="span2"><?php echo JText::_('LBL_UNIDAD'); ?></th>
-            <th class="span2"><?php echo JText::_('LBL_P_UNITARIO'); ?></th>
-            <th class="span4"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></th>
-            <th class="span1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?></th>
-            <th class="span2"><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
-            <th class="span2"><?php echo JText::_('LBL_TOTAL'); ?></th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr class="trOdv">
-                <td>
-                    <select id='productos' name="productos" class="productos">
-                        <option value="abierto">Abierto</option>
-                    </select>
-                </td>
-                <td><input id="cantidad" type="text" name="cantidad" value=""></td>
-                <td><input id="descripcion" type="text" name="descripcion" value=""></td>
-                <td><input id="unidad" type="text" name="unidad" value=""></td>
-                <td><input id="p_unitario" type="text" name="p_unitario" value=""></td>
-                <td><input id="iva" type="text" name="iva" value=""></td>
-                <td><input id="ieps" type="text" name="ieps" value=""></td>
-                <td><div id="subtotal"></div></td>
-                <td><div id="total"></div> </td>
-
-            </tr>
-        </tbody>
-    </table>
+    <div  class="table table-bordered" id="odv">
+        <div class="head" id="head" >
+            <div id="columna1" ><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></div>
+            <div id="columna1" ><?php echo JText::_('LBL_CANTIDAD'); ?></div>
+            <div id="columna1" ><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?></div>
+            <div id="columna1" ><?php echo JText::_('LBL_UNIDAD'); ?></div>
+            <div id="columna1" ><?php echo JText::_('LBL_P_UNITARIO'); ?></div>
+            <div id="columna1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></div>
+            <div id="columna1" ><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?></div>
+            <div id="columna1" ><?php echo JText::_('LBL_SUBTOTAL'); ?></div>
+            <div id="columna1" ><?php echo JText::_('LBL_TOTAL'); ?></div>
+        </div>
+        <div class="contenidos" id="contenidos">
+            <div id="columna2">
+                <select id='productos' name="productos" class="productos">
+                    <option value="abierto">Abierto</option>
+                </select>
+            </div>
+            <div id="columna2"><input id="cantidad" type="text" name="cantidad" value=""></div>
+            <div id="columna2"><input id="descripcion" type="text" name="descripcion" value=""></div>
+            <div id="columna2"><input id="unidad" type="text" name="unidad" value=""></div>
+            <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" value=""></div>
+            <div id="columna2"><input id="iva" type="text" name="iva" value=""></div>
+            <div id="columna2"><input id="ieps" type="text" name="ieps" value=""></div>
+            <div id="columna2"><div id="subtotal"></div></div>
+            <div id="columna2"><div id="total"></div> </div>
+        </div>
+    </div>
 <button type="button" id="button" name="button">+</button>
 </fieldset>
 
