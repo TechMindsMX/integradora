@@ -2,6 +2,8 @@
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('integradora.validator');
+jimport('integradora.gettimone');
+jimport('integradora.rutas');
 
 /**
  * 
@@ -29,12 +31,24 @@ class AdminintegradoraController extends JControllerLegacy {
 
 		$validaResult = validador::procesamiento($envio, $diccionario);
 
-		$document = JFactory::getDocument();
+		if (validador::noErrors($validaResult)) {
+			$request = new sendToTimOne();
+			$serviceUrl = new IntRoute();
 
-		$document->setMimeEncoding('application/json');
+			$request->setServiceUrl($serviceUrl->saveComisionServiceUrl());
+			$request->setJsonData($envio);
 
-		echo json_encode($validaResult);
+			$request->to_timone(); // realiza el envio
+
+		} else {
+			$document = JFactory::getDocument();
+			$document->setMimeEncoding('application/json');
+			echo json_encode($validaResult);
+		}
+
 	}
+
+
 
 
 }

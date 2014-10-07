@@ -18,9 +18,6 @@ class MandatosModelMandatos extends JModelItem {
 	{
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
-			
-			$ruta = new IntRoute;
-			$this->dataModelo->action = $ruta->getUrl('integrado','solicitud');
 		}
 		 
 		return $this->dataModelo;

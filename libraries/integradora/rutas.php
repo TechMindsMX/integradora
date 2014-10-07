@@ -8,45 +8,32 @@ jimport('joomla.factory');
  * Clase rutas de servicios
  */
 class IntRoute {
-	
+
 	protected $ssl;
+
+	protected $schema = MIDDLE;
+
+	protected $ip = TIMONE;
 	
-	protected $ip = '192.168.0.122';
-	
-	protected $port = ':7272';
+	protected $port = PUERTO;
 	
 	protected $urls;
-	
-	public function getUrl($comp,$param) {
+
+	private function getUrl() {
 		
 		$juri = JUri::getInstance();
 		
 		$this->ssl = $juri->getScheme();
-		
-		$componentes = array('integrado', 'mandatos','comisiones');
-		
-		if (in_array($comp, $componentes)) {
-			switch ($comp) {
-				case $componentes[0]:
-					// componente Integrados
-					switch ($param) {
-						case 'solicitud':
-							$urls->post = $this->ssl.'://'.$this->ip.$this->port.DIRECTORY_SEPARATOR.'index.php?option=com_';
-							break;
-						
-						default:
-							$urls->post = 'index.php?option=com_';
-							break;
-					}
-					break;
-				
-				default:
-					$urls = false;
-					break;
-			}
-		}
-		
-		return $urls;
+
+		$url = $this->ssl.$this->ip.$this->port.$this->urls;
+
+		return $url;
 	}
-	
+
+	public function saveComisionServiceUrl () {
+		$this->urls = 'comisions/save';
+
+		return $this->getUrl();
+	}
+
 }

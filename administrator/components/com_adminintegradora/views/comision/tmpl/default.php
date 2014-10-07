@@ -11,17 +11,6 @@ $accion = 'index.php?option=com_adminintegradora';
 ?>
 	<script type="text/javascript">
 
-		function envioAjax () {
-
-		}
-
-
-//		Joomla.submitbutton = function (task) {
-//			if (task != 'comision.cancel') {
-//				Joomla.submitform(task, document.getElementById('comision-form'));
-//			}
-//		}
-
 		jQuery(document).ready(function () {
 			var $type = jQuery('#type');
 			$type.change($type, checkType);
