@@ -45,8 +45,8 @@ class validador
 		return $respuesta;
 	}
 
-	protected static function salir ($campo) {
-		$response = array ('success' => false, 'msg' => 'Error en el campo ' . $campo);
+	protected static function salir ($msg) {
+		$response = array ('success' => false, 'msg' => $msg);
 
 		return $response;
 	}
