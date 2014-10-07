@@ -37,11 +37,13 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
 </style>
 <script>
-    var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>;
-    var global_var=0;
-    var arrayProd = <?php echo json_encode($this->products)?>;
-    var nextinput = 0;
-    var pre="";
+    var subprojects     = <?php echo json_encode($this->proyectos['subproyectos']);?>;
+    var global_var      = 0;
+    var arrayProd       = <?php echo json_encode($this->products)?>;
+    var nextinput       = 0;
+    var pre             = "";
+    var precio          = 0;
+    var total           = 0;
 
     jQuery(document).ready(function() {
         jQuery('#project').on('change', llenasubproject);
@@ -54,11 +56,23 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
         jQuery('#button').on('click', addrow);
 
-        jQuery('#p_unitario').on('change', suma);
+        jQuery('.cantidad').on('change', function(){
 
-        function suma(){
+            var cantidad= jQuery(this).val();
 
-        }
+            var precio=jQuery('.p_unit').val();
+            var iva=jQuery('.iva').val();
+            var ieps=jQuery('.ieps').val();
+
+            precio= precio.replace('$','');
+            iva= iva.replace('$','');
+            ieps=ieps.replace('$','');
+
+
+            jQuery('#subtotal').html('$'+precio);
+            jQuery('#total').html('$'+total);
+
+        });
 
         function addrow(){
             nextinput++;
@@ -193,12 +207,12 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
                     <option value="abierto">Abierto</option>
                 </select>
             </div>
-            <div id="columna2"><input id="cantidad" type="text" name="cantidad" value=""></div>
-            <div id="columna2"><input id="descripcion" type="text" name="descripcion" value=""></div>
+            <div id="columna2"><input id="cantidad" type="text" name="cantidad" class="cantidad" value=""></div>
+            <div id="columna2"><input id="descripcion" type="text" name="descripcion"  value=""></div>
             <div id="columna2"><input id="unidad" type="text" name="unidad" value=""></div>
-            <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" value=""></div>
-            <div id="columna2"><input id="iva" type="text" name="iva" value=""></div>
-            <div id="columna2"><input id="ieps" type="text" name="ieps" value=""></div>
+            <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" class="p_unit" value=""></div>
+            <div id="columna2"><input id="iva" type="text" name="iva" value="" class="iva"></div>
+            <div id="columna2"><input id="ieps" type="text" name="ieps" value="" class="ieps"></div>
             <div id="columna2"><div id="subtotal"></div></div>
             <div id="columna2"><div id="total"></div> </div>
         </div>
