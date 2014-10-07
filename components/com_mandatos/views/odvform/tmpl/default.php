@@ -22,8 +22,8 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
     var subprojects = <?php echo json_encode($this->proyectos['subproyectos']);?>;
     var global_var=0;
     var arrayProd = <?php echo json_encode($this->products)?>;
-    var idpro='productos';
-    var idpro2="productos0";
+    var nextinput = 0;
+    var pre="";
 
     jQuery(document).ready(function() {
         jQuery('#project').on('change', llenasubproject);
@@ -32,60 +32,32 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
             jQuery('#productos').append('<option value="' + value.id + '">' + value.productName + '</option>');
         });
 
-        jQuery('#productos').on('change', llenatabla);
+        jQuery('.productos').on('change', llenatabla);
 
         jQuery('#button').on('click', addrow);
 
-        function addrow() {
-            var idproducto = jQuery(this).val();
-            var trproductos = jQuery('.productos').parent().parent();
-            var producto = '';
+        function addrow(){
+            nextinput++;
+            var tds = '<tr>';
 
-            var tabla = document.getElementById("odv");
-            var tr = document.createElement("tr");
-            for (var j = 0; j < 9; j++) {
-                var celda = document.createElement("td");
-                var random = 2;
+                tds += '<td>' +
+                        "<select id='productos"+nextinput+"' name='productos' class='productos'>";
 
-                switch (j) {
-                    case 0:
+                jQuery.each(arrayProd, function (key, value) {
 
-                        var select = document.createElement('select');
-                        var posicion = document.getElementById(idpro).options.selectedIndex;
+                    tds+='<option value="' + value.id + '">' + value.productName + '</option>';
+                });
 
-
-                        select.name         = idpro2;
-                        select.id           = idpro2;
-                        select.className    ='productos';
-
-                        jQuery.each(arrayProd, function (key, value) {
-                            opt             = document.createElement('option');
-                            opt.value       = value.productName;
-
-                                opt.innerHTML = value.productName;
-                                select.appendChild(opt);
-                        });
-                        celda.appendChild(select);
-
-                        idpro=idpro2;
-                        global_var=global_var+1;
-                        idpro2='productos'+global_var;
-                        break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                        var input = document.createElement("input");
-                        celda.appendChild(input);
-                        break;
-                    default:
-                        break;
-                }
-                tr.appendChild(celda);
-            }
-            tabla.appendChild(tr);
+                tds += '<td><input id="cantidad'+nextinput+'" type="text" name="cantidad" value=""></td>';
+                tds += '<td><input id="descripcion'+nextinput+'" type="text" name="descripcion" value=""></td>';
+                tds += '<td><input id="unidad'+nextinput+'" type="text" name="unidad" value=""></td>';
+                tds += '<td><input id="p_unitario'+nextinput+'" type="text" name="p_unitario" value=""></td>';
+                tds += '<td><input id="iva'+nextinput+'" type="text" name="iva" value=""></td>';
+                tds += '<td><input id="ieps'+nextinput+'" type="text" name="ieps" value=""></td>';
+                tds += '<td><div id="subtotal"></div></td>';
+                tds += '<td><div id="total"></div> </td>';
+            tds += '</tr>';
+            jQuery("#odv").append(tds);
 
 
         }
@@ -107,22 +79,24 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
         }
 
         function llenatabla() {
-            var idproducto = jQuery(this).val();
-            var trproductos = jQuery('#productos').parent().parent();
-            var producto = '';
+alert('algo');
+                var idproducto = jQuery(this).val();
+                var trproductos = jQuery('#productos').parent().parent();
+                var producto = '';
 
-            jQuery.each(arrayProd, function (key, value) {
-                if (idproducto == value.id) {
-                    producto = value;
-                }
-            });
+                jQuery.each(arrayProd, function (key, value) {
+                    if (idproducto == value.id) {
+                        producto = value;
+                    }
+                });
 
-            trproductos.find('[name*="descripcion"]').val(producto.description);
-            trproductos.find('[name*="unidad"]').val(producto.measure);
-            trproductos.find('[name*="p_unitario"]').val(producto.price);
-            trproductos.find('[name*="iva"]').val(producto.iva);
-            trproductos.find('[name*="ieps"]').val(producto.ieps);
-        }
+                trproductos.find('[name*="descripcion"]').val(producto.description);
+                trproductos.find('[name*="unidad"]').val(producto.measure);
+                trproductos.find('[name*="p_unitario"]').val(producto.price);
+                trproductos.find('[name*="iva"]').val(producto.iva);
+                trproductos.find('[name*="ieps"]').val(producto.ieps);
+            }
+
 
     });
 
