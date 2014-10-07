@@ -889,7 +889,40 @@ class getFromTimOne{
         return $results;
     }
 
-	private static function to_timone ($jsonData, $serviceUrl) {
+	public static function getComisionById ($id) {
+		$comision = null;
+		$comisiones = self::getComisiones();
+
+		foreach ($comisiones as $value) {
+			if($value->id == $id) {
+				$comision = $value;
+			}
+		}
+		return $comision;
+	}
+}
+
+class sendToTimOne {
+
+	protected $serviceUrl;
+
+	protected $jsonData;
+
+	/**
+	 * @param mixed $serviceUrl
+	 */
+	public function setServiceUrl ($serviceUrl) {
+		$this->serviceUrl = $serviceUrl;
+	}
+
+	/**
+	 * @param mixed $jsonData
+	 */
+	public function setJsonData ($jsonData) {
+		$this->jsonData = $jsonData;
+	}
+
+	public function to_timone() {
 
 //		$credentials = array('username' => '' ,'password' => '');
 
@@ -897,20 +930,20 @@ class getFromTimOne{
 
 		$ch = curl_init();
 		curl_setopt_array($ch, array(
-			CURLOPT_URL            => $serviceUrl,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_POST           => true,
-			CURLOPT_POSTFIELDS     => $jsonData,
-			CURLOPT_HEADER         => true,
+				CURLOPT_URL            => $serviceUrl,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_POST           => true,
+				CURLOPT_POSTFIELDS     => $jsonData,
+				CURLOPT_HEADER         => true,
 //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-			CURLOPT_FOLLOWLOCATION => false,
-			CURLOPT_VERBOSE        => true,
-			CURLOPT_STDERR		   => $verbose,
-			CURLOPT_HTTPHEADER	   => array(
-				'Content-Type: application/json',
-				'Content-Length: ' . strlen($jsonData)
-			)
+				CURLOPT_FOLLOWLOCATION => false,
+				CURLOPT_VERBOSE        => true,
+				CURLOPT_STDERR		   => $verbose,
+				CURLOPT_HTTPHEADER	   => array(
+					'Content-Type: application/json',
+					'Content-Length: ' . strlen($jsonData)
+				)
 			)
 		);
 		$result = curl_exec($ch);
@@ -941,17 +974,6 @@ class getFromTimOne{
 		return $result;
 	}
 
-	public static function getComisionById ($id) {
-		$comision = null;
-		$comisiones = self::getComisiones();
-
-		foreach ($comisiones as $value) {
-			if($value->id == $id) {
-				$comision = $value;
-			}
-		}
-		return $comision;
-	}
 }
 
 class comisionItem{

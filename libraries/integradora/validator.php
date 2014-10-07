@@ -51,6 +51,15 @@ class validador
 		return $response;
 	}
 
+	public static function noErrors ($array) {
+		foreach($array as $value){
+			if(is_array($value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected function valida_email ($data,
 									 $campo) {
 		$email = $data[$campo];
