@@ -56,23 +56,33 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
         jQuery('#button').on('click', addrow);
 
-        jQuery('.cantidad').on('change', function(){
-
-            var cantidad= jQuery(this).val();
-
-            var precio=jQuery('.p_unit').val();
-            var iva=jQuery('.iva').val();
-            var ieps=jQuery('.ieps').val();
-
-            precio= precio.replace('$','');
-            iva= iva.replace('$','');
-            ieps=ieps.replace('$','');
+        jQuery('.cantidad').on('change', sum);
 
 
-            jQuery('#subtotal').html('$'+precio);
-            jQuery('#total').html('$'+total);
+        function sum(){
+            var cantidad    = jQuery(this).val();
+            var trproductos = jQuery(this).parent().parent();
 
-        });
+            var precio      = trproductos.find('.p_unit').val();
+            var iva         = trproductos.find('.iva').val();
+            var ieps        = trproductos.find('.ieps').val();
+
+            cantidad        = parseInt(cantidad.replace('$',''));
+            precio          = parseInt(precio.replace('$',''));
+            iva             = parseInt(iva.replace('$',''));
+            ieps            = parseInt(ieps.replace('$',''));
+
+
+            console.log(iva);
+            if(isNaN(iva)  || isNaN(precio)){
+                alert("Seleccione primero el producto");
+            }else{
+                var total       = (precio+iva+ieps)*cantidad;
+                trproductos.find('#subtotal').html('$'+precio);
+                trproductos.find('#total').html('$'+total);
+            }
+            jQuery('.cantidad').on('change', sum);
+        }
 
         function addrow(){
             nextinput++;
@@ -81,6 +91,8 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
             jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
             jQuery("#content"+nextinput+"").attr('id','contenidos');
             jQuery("#content"+nextinput+"").find("input:text").val("");
+            jQuery("#content"+nextinput+"").find("#subtotal").html("");
+            jQuery("#content"+nextinput+"").find("#total").html("");
             jQuery('.productos').on('change', llenatabla);
 
 
