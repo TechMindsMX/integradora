@@ -81,7 +81,6 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
                 trproductos.find('#subtotal').html('$'+precio);
                 trproductos.find('#total').html('$'+total);
             }
-            jQuery('.cantidad').on('change', sum);
         }
 
         function addrow(){
@@ -94,7 +93,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
             jQuery("#content"+nextinput+"").find("#subtotal").html("");
             jQuery("#content"+nextinput+"").find("#total").html("");
             jQuery('.productos').on('change', llenatabla);
-
+            jQuery('.cantidad').on('change', sum);
 
 
         }
