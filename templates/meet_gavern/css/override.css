@@ -75,3 +75,28 @@ background-image: url('../../../libraries/integradora/js/themes/blue/desc.gif');
 .margen-fila {
     margin: 20px 0;
 }
+#odv {
+    display: table;
+    border: 1px solid #000;
+    width: 95%;
+    text-align: center;
+    margin: 0 auto;
+}
+.contenidos, .head, #content {
+    display: table-row;
+}
+#columna1, #columna2{
+    display: table-cell;
+    border: 1px solid #000;
+    vertical-align: middle;
+    padding: 5px;
+}
+.cantidades{
+    width: 70px;
+}
+input#cantidad, input#iva, input#ieps{
+    width: 38px;
+}
+select#productos{
+    width: 80px;
+}

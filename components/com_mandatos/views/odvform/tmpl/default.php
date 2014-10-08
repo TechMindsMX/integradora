@@ -17,25 +17,6 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
 
 ?>
-<style>
-    #odv {
-        display: table;
-        border: 1px solid #000;
-        width: 100%;
-        text-align: center;
-        margin: 0 auto;
-    }
-    .contenidos, .head, #content {
-        display: table-row;
-    }
-    #columna1, #columna2{
-        display: table-cell;
-        border: 1px solid #000;
-        vertical-align: middle;
-        padding: 10px;
-    }
-
-</style>
 <script>
     var subprojects     = <?php echo json_encode($this->proyectos['subproyectos']);?>;
     var global_var      = 0;
@@ -218,12 +199,12 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
                     <option value="abierto">Abierto</option>
                 </select>
             </div>
-            <div id="columna2"><input id="cantidad" type="text" name="cantidad" class="cantidad" value=""></div>
-            <div id="columna2"><input id="descripcion" type="text" name="descripcion"  value=""></div>
-            <div id="columna2"><input id="unidad" type="text" name="unidad" value=""></div>
-            <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" class="p_unit" value=""></div>
-            <div id="columna2"><input id="iva" type="text" name="iva" value="" class="iva"></div>
-            <div id="columna2"><input id="ieps" type="text" name="ieps" value="" class="ieps"></div>
+            <div id="columna2"><input id="cantidad" type="text" name="cantidad" class="cantidad cantidades" ></div>
+            <div id="columna2"><input id="descripcion" type="text" name="descripcion" readonly></div>
+            <div id="columna2"><input id="unidad" type="text" name="unidad" class="cantidades"></div>
+            <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" class="p_unit cantidades" ></div>
+            <div id="columna2"><input id="iva" type="text" name="iva" value="" class="iva cantidades"></div>
+            <div id="columna2"><input id="ieps" type="text" name="ieps" value="" class="ieps cantidades"></div>
             <div id="columna2"><div id="subtotal"></div></div>
             <div id="columna2"><div id="total"></div> </div>
         </div>
