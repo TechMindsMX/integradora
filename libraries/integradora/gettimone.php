@@ -882,10 +882,11 @@ class getFromTimOne{
 //		$serviceUrl = MIDDLE.PUERTO.'/tim-integradora/user/save';
 		$serviceUrl = 'http://192.168.0.126:8090/tim-integradora/user/save';
 
-		$results = self::to_timone($jsonData, $serviceUrl);
+        $sendToTimone = new sendToTimOne();
+        $results = $sendToTimone->to_timone($jsonData, $serviceUrl);
 
-		echo $results;
-		exit;
+		//$results = self::to_timone($jsonData, $serviceUrl);
+
         return $results;
     }
 
