@@ -140,58 +140,58 @@ class IntegradoController extends JControllerLegacy {
 			return true;
 		}
 		$input 	= JFactory::getApplication()->input;
-        $arrayPost =array('user_id'=> 'string',
-                          'integradoId'=> 'string',
-                          'pj_pers_juridica'=> 'string',
-                          'apePat'=> 'string',
-                          'apeMat'=> 'string',
-                          'nombre'=> 'string',
-                          'dp_nacionalidad'=> 'string',
-                          'dp_sexo'=> 'string',
-                          'dp_rfc'=> 'string',
-                          'dp_calle'=> 'string',
-                          'dp_num_exterior'=> 'string',
-                          'dp_num_interior'=> 'string',
-                          'dp_cod_postal'=> 'string',
-                          'delegacion'=> 'string',
-                          'estado'=> 'string',
-                          'pais'=> 'string',
-                          'dp_tel_fijo'=> 'string',
-                          'dp_tel_fijo_extension'=> 'string',
-                          'dp_tel_movil'=> 'string',
-                          'dp_email'=> 'string',
-                          'dp_nom_comercial'=> 'string',
-                          'dp_curp'=> 'string',
-                          'de_razon_social'=> 'string',
-                          'de_rfc'=> 'string',
-                          'de_calle'=> 'string',
-                          'de_num_exterior'=> 'string',
-                          'de_num_interior'=> 'string',
-                          'de_cod_postal'=> 'string',
-                          't1_instrum_notaria'=> 'string',
-                          't1_instrum_estado'=> 'string',
-                          't1_instrum_nom_notario'=> 'string',
-                          't1_instrum_num_instrumento'=> 'string',
-                          't2_instrum_notaria'=> 'string',
-                          't2_instrum_estado'=> 'string',
-                          't2_instrum_nom_notario'=> 'string',
-                          't2_instrum_num_instrumento'=> 'string',
-                          'pn_instrum_notaria'=> 'string',
-                          'pn_instrum_estado'=> 'string',
-                          'pn_instrum_nom_notario'=> 'string',
-                          'pn_instrum_num_instrumento'=> 'string',
-                          'rp_instrum_num_instrumento'=> 'string',
-                          'rp_instrum_estado'=> 'string',
-                          'db_banco_nombre'=> 'string',
-                          'db_banco_cuenta'=> 'string',
-                          'db_banco_sucursal'=> 'string',
-                          'db_banco_clabe'=> 'string',
-                          'tab'=> 'string',
-                          'dp_fecha_nacimiento'=> 'string',
-                          't1_instrum_fecha'=> 'string',
-                          't2_instrum_fecha'=> 'string',
-                          'pn_instrum_fecha'=> 'string',
-                          'rp_instrum_fecha'=> 'string');
+        $arrayPost =array('user_id'                     => 'string',
+                          'integradoId'                 => 'string',
+                          'pj_pers_juridica'            => 'string',
+                          'apePat'                      => 'string',
+                          'apeMat'                      => 'string',
+                          'nombre'                      => 'string',
+                          'dp_nacionalidad'             => 'string',
+                          'dp_sexo'                     => 'string',
+                          'dp_rfc'                      => 'string',
+                          'dp_calle'                    => 'string',
+                          'dp_num_exterior'             => 'string',
+                          'dp_num_interior'             => 'string',
+                          'dp_cod_postal'               => 'string',
+                          'delegacion'                  => 'string',
+                          'estado'                      => 'string',
+                          'pais'                        => 'string',
+                          'dp_tel_fijo'                 => 'string',
+                          'dp_tel_fijo_extension'       => 'string',
+                          'dp_tel_movil'                => 'string',
+                          'dp_email'                    => 'string',
+                          'dp_nom_comercial'            => 'string',
+                          'dp_curp'                     => 'string',
+                          'de_razon_social'             => 'string',
+                          'de_rfc'                      => 'string',
+                          'de_calle'                    => 'string',
+                          'de_num_exterior'             => 'string',
+                          'de_num_interior'             => 'string',
+                          'de_cod_postal'               => 'string',
+                          't1_instrum_notaria'          => 'string',
+                          't1_instrum_estado'           => 'string',
+                          't1_instrum_nom_notario'      => 'string',
+                          't1_instrum_num_instrumento'  => 'string',
+                          't2_instrum_notaria'          => 'string',
+                          't2_instrum_estado'           => 'string',
+                          't2_instrum_nom_notario'      => 'string',
+                          't2_instrum_num_instrumento'  => 'string',
+                          'pn_instrum_notaria'          => 'string',
+                          'pn_instrum_estado'           => 'string',
+                          'pn_instrum_nom_notario'      => 'string',
+                          'pn_instrum_num_instrumento'  => 'string',
+                          'rp_instrum_num_instrumento'  => 'string',
+                          'rp_instrum_estado'           => 'string',
+                          'db_banco_codigo'             => 'string',
+                          'db_banco_cuenta'             => 'string',
+                          'db_banco_sucursal'           => 'string',
+                          'db_banco_clabe'              => 'string',
+                          'tab'                         => 'string',
+                          'dp_fecha_nacimiento'         => 'string',
+                          't1_instrum_fecha'            => 'string',
+                          't2_instrum_fecha'            => 'string',
+                          'pn_instrum_fecha'            => 'string',
+                          'rp_instrum_fecha'            => 'string');
 
         $post 	= $input->getArray($arrayPost);
 		
@@ -232,40 +232,66 @@ class IntegradoController extends JControllerLegacy {
 			$data['integradoId'] = $integrado_id;
 		}
 
-		$diccionario  = array('integradoId' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
-							  'status'		 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
-							  'pers_juridica'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10),
-							  'nacionalidad'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
-							  'sexo'			 	=> array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
-							  'calle'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
-							  'rfc'					=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>45),
-							  'num_exterior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
-							  'num_interior'		=> array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
-							  'cod_postal'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_CP'),				'length'=>5),
-							  'tel_fijo'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10),
-							  'tel_fijo_extension'	=> array('tipo'=>'number',		'label'=>JText::_('LBL_EXT'),				'length'=>10),
-							  'tel_movil' 			=> array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_MOVIL'),			'length'=>13),
-							  'email' 				=> array(						'label'=>JText::_('LBL_CORREO'),			'length'=>100),
-							  'nom_comercial'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
-							  'curp' 				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18),
-							  'fecha_nacimiento'	=> array(						'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10),
-							  'razon_social'	 	=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>255),
-							  'tel_fax'				=> array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
-							  'testimonio_1'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
-							  'testimonio_2' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
-							  'poder'				=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
-							  'reg_propiedad' 		=> array('tipo'=>'number',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
-							  'banco_nombre'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCOS'),			'length'=>5),
-							  'banco_cuenta'	 	=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_CUENTA'),		'length'=>10),
-							  'banco_sucursal'		=> array('tipo'=>'number',		'label'=>JText::_('LBL_BANCO_SUCURSAL'),	'length'=>3),
-							  'banco_clabe'			=> array('tipo'=>'number',		'label'=>JText::_('LBL_NUMERO_CLABE'),		'length'=>18));
-							  
-		//envia la data a validacion y regresa un arreglo con los resultados para cada uno de los campos que esten llenados
-		$resultado = validador::procesamiento($data, $diccionario);
+		$diccionario  = array('user_id'                    => array('tipo'=>'number',		'label'=>JText::_('LBL_INTEGRADO_ID'),		'length'=>10),
+                              'integradoId'                => array('tipo'=>'number',		'label'=>JText::_('LBL_STATUS'),			'length'=>10),
+                              'pj_pers_juridica'           => array('tipo'=>'number',		'label'=>JText::_('LBL_PERSONALIDADJ'),		'length'=>10),
+                              'apePat'                     => array('tipo'=>'number',		'label'=>JText::_('LBL_NACIONALIDAD'),		'length'=>45),
+                              'apeMat'                     => array('tipo'=>'string',		'label'=>JText::_('LBL_SEXO'),				'length'=>45),
+                              'nombre'                     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CALLE'),				'length'=>45),
+                              'dp_nacionalidad'            => array('tipo'=>'alphaNumber',  'label'=>JText::_('LBL_RFC'),				'length'=>45),
+                              'dp_sexo'                    => array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
+                              'dp_rfc'                     => array('tipo'=>'rfc',      	'label'=>JText::_('NUM_INT'),				'length'=>45),
+                              'dp_calle'                   => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CP'),			    'length'=>5),
+                              'dp_num_exterior'            => array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_FIJO'),		    'length'=>10),
+                              'dp_num_interior'            => array('tipo'=>'number',		'label'=>JText::_('LBL_EXT'),			    'length'=>10),
+                              'dp_cod_postal'              => array('tipo'=>'number',		'label'=>JText::_('LBL_TEL_MOVIL'),		    'length'=>13),
+                              'delegacion'                 => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CORREO'),		    'length'=>100),
+                              'estado'                     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
+                              'pais'                       => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18),
+                              'dp_tel_fijo'                => array('tipo'=>'alphaNumber',  'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10),
+                              'dp_tel_fijo_extension'      => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>255),
+                              'dp_tel_movil'               => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'dp_email'                   => array('tipo'=>'email',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'dp_nom_comercial'           => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'dp_curp'                    => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'de_razon_social'            => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'de_rfc'                     => array('tipo'=>'rfc',  		'label'=>JText::_('LBL_BANCOS'),			'length'=>5),
+                              'de_calle'                   => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_BANCO_CUENTA'),		'length'=>10),
+                              'de_num_exterior'            => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_BANCO_SUCURSAL'),	'length'=>3),
+                              'de_num_interior'            => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NUMERO_CLABE'),		'length'=>18),
+                              'de_cod_postal'              => array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_EXT'),				'length'=>45),
+                              't1_instrum_notaria'         => array('tipo'=>'alphaNumber',	'label'=>JText::_('NUM_INT'),				'length'=>45),
+                              't1_instrum_estado'          => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CP'),				'length'=>5),
+                              't1_instrum_nom_notario'     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_TEL_FIJO'),			'length'=>10),
+                              't1_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_EXT'),				'length'=>10),
+                              't2_instrum_notaria'         => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_TEL_MOVIL'),			'length'=>13),
+                              't2_instrum_estado'          => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CORREO'),			'length'=>100),
+                              't2_instrum_nom_notario'     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
+                              't2_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18),
+                              'pn_instrum_notaria'         => array('tipo'=>'alphaNumber', 	'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>18),
+                              'pn_instrum_estado'          => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>255),
+                              'pn_instrum_nom_notario'     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'pn_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'rp_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'rp_instrum_estado'          => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'db_banco_codigo'            => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              'db_banco_cuenta'            => array('tipo'=>'alphaNumber','label'=>JText::_('LBL_BANCOS'),			'length'=>10),
+                              'db_banco_sucursal'          => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_BANCO_CUENTA'),		'length'=>10),
+                              'db_banco_clabe'             => array('tipo'=>'banco_clabe',	'label'=>JText::_('LBL_BANCO_SUCURSAL'),	'length'=>3),
+                              'tab'                        => array('tipo'=>'string',   	'label'=>JText::_('LBL_NUMERO_CLABE'),		'length'=>18),
+                              'dp_fecha_nacimiento'        => array('tipo'=>'fecha',	    'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              't1_instrum_fecha'           => array('tipo'=>'fecha',	    'label'=>JText::_('LBL_RFC'),				'length'=>10),
+                              't2_instrum_fecha'           => array('tipo'=>'fecha',	    'label'=>JText::_('LBL_BANCOS'),			'length'=>5),
+                              'pn_instrum_fecha'           => array('tipo'=>'fecha',	    'label'=>JText::_('LBL_BANCO_CUENTA'),		'length'=>10),
+                              'rp_instrum_fecha'           => array('tipo'=>'fecha',	    'label'=>JText::_('LBL_BANCO_SUCURSAL'),	'length'=>3));
 
+		//envia la data a validacion y regresa un arreglo con los resultados para cada uno de los campos que esten llenados
+        $validador = new validador();
+		$resultado = $validador->procesamiento($data, $diccionario);
 		foreach ($resultado as $key => $value) {
 			if( is_array($value) ){
-				return $value;
+                $resultado['integradoId']= $integrado_id;
+				return $resultado;
 			}
 		}
 
@@ -281,7 +307,7 @@ class IntegradoController extends JControllerLegacy {
 				$columnas[] = 'integrado_id';
 				$valores[]	= $integrado_id;
 				$valoresvalidaicon['integradoId']= $integrado_id;
-				
+
 				foreach ($data as $key => $value) {
 					$columna 	= substr($key, 3);
 					$clave 		= substr($key, 0,3);
@@ -342,9 +368,9 @@ class IntegradoController extends JControllerLegacy {
 			$respuesta = self::updateData($table, $updateSet, $condicion);
 		}
 		
-		$respuesta['integradoId'] = $integrado_id;
-		
-		return $respuesta;
+		$resultado['integradoId'] = $integrado_id;
+
+		return $resultado;
 	}
 	
 	public static function checkData($table, $where){

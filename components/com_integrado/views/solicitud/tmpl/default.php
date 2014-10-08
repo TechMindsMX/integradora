@@ -14,6 +14,7 @@ $datos = @$this->data->integrados;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
+echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
 
 if(!empty($datos->integrado)){
 	if($datos->integrado->pers_juridica == 1){
@@ -33,6 +34,52 @@ if(!empty($datos->integrado)){
 ?>
 <script>
 	jQuery(document).ready(function(){
+        jQuery('button').click(function(){
+            var boton = jQuery(this).prop('id');
+
+            if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'bancos')){
+                var serializado = jQuery('form#solicitud').serialize();
+                datos = serializado
+                datos += '&tab='+boton
+                datos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+                datos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
+                datos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
+                datos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
+                datos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+
+                var request = jQuery.ajax({
+                    url: "index.php?option=com_integrado&task=saveform&format=raw",
+                    data: datos,
+                    type: 'post',
+                    async: false
+                });
+
+                request.done(function(result){
+                    if(typeof(result) != 'object'){
+                        var obj = eval('('+result+')');
+                    }else{
+                        var obj = result;
+                    }
+
+                    jQuery.each(obj, function(k,v){
+                        if(v != true && k != 'integradoId'){
+                            mensajes(v.msg,'error',k);
+                            bandera= false;
+                        }else{
+                            bandera=true;
+                        }
+
+                    });
+                    alert(bandera);
+                    jQuery('#integradoId').val(obj.integradoId);
+                });
+
+                request.fail(function (jqXHR, textStatus) {
+                    console.log(jqXHR, textStatus);
+                });
+            }
+        });
+
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		<?php
 		if(!empty($datos->datos_personales)){
@@ -561,8 +608,8 @@ if(!empty($datos->integrado)){
 	?>
 	<fieldset>
         <div class="form-group">
-           	<label for="db_banco_nombre"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
-           	<select name="db_banco_nombre" id="db_banco_nombre">
+           	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
+           	<select name="db_banco_codigo" id="db_banco_nombre">
            		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
 				foreach ($this->catalogos->bancos as $key => $value) {
