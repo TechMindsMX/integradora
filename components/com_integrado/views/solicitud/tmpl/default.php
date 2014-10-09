@@ -60,17 +60,18 @@ if(!empty($datos->integrado)){
                     }else{
                         var obj = result;
                     }
+                    console.log(obj);
+                    if(obj.safeComplete){
+                        alert('Datos Almacenados');
+                    }
 
                     jQuery.each(obj, function(k,v){
-                        if(v != true && k != 'integradoId'){
+                        if(v != true && k != 'integradoId' && k != 'safeComplete'){
                             mensajes(v.msg,'error',k);
-                            bandera= false;
-                        }else{
-                            bandera=true;
                         }
 
                     });
-                    alert(bandera);
+
                     jQuery('#integradoId').val(obj.integradoId);
                 });
 
@@ -609,7 +610,7 @@ if(!empty($datos->integrado)){
 	<fieldset>
         <div class="form-group">
            	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
-           	<select name="db_banco_codigo" id="db_banco_nombre">
+           	<select name="db_banco_codigo" id="db_banco_codigo">
            		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
 				foreach ($this->catalogos->bancos as $key => $value) {

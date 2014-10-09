@@ -249,7 +249,7 @@ class IntegradoController extends JControllerLegacy {
                               'estado'                     => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_NOM_COMERCIAL'),		'length'=>100),
                               'pais'                       => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_CURP'),				'length'=>18),
                               'dp_tel_fijo'                => array('tipo'=>'alphaNumber',  'label'=>JText::_('LBL_FECHA_NACIMIENTO'),	'length'=>10),
-                              'dp_tel_fijo_extension'      => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>255),
+                              'dp_tel_fijo_extension'      => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RAZON_SOCIAL'),		'length'=>5),
                               'dp_tel_movil'               => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
                               'dp_email'                   => array('tipo'=>'email',		'label'=>JText::_('LBL_RFC'),				'length'=>10),
                               'dp_nom_comercial'           => array('tipo'=>'alphaNumber',	'label'=>JText::_('LBL_RFC'),				'length'=>10),
@@ -290,7 +290,8 @@ class IntegradoController extends JControllerLegacy {
 		$resultado = $validador->procesamiento($data, $diccionario);
 		foreach ($resultado as $key => $value) {
 			if( is_array($value) ){
-                $resultado['integradoId']= $integrado_id;
+                $resultado['safeComplete']  = false;
+                $resultado['integradoId']   = $integrado_id;
 				return $resultado;
 			}
 		}
@@ -367,8 +368,9 @@ class IntegradoController extends JControllerLegacy {
 			$condicion 	= array($db->quoteName('integrado_id').' = '.$integrado_id ); 
 			$respuesta = self::updateData($table, $updateSet, $condicion);
 		}
-		
-		$resultado['integradoId'] = $integrado_id;
+
+        $resultado['safeComplete']  = true;
+        $resultado['integradoId'] = $integrado_id;
 
 		return $resultado;
 	}
