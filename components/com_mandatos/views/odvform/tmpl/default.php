@@ -209,11 +209,13 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
             <div id="columna2"><div id="total"></div> </div>
         </div>
     </div>
-<button type="button" id="button" name="button">+</button>
+<button type="button" id="button" class="btn btn-success" name="button"> + </button>
 </fieldset>
 
-<div class="form-actions">
+<div class="form-actions" style="max-width: 30%">
+    <button type="button" class="btn btn-baja span3" id="tipoAlta"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
     <button type="button" class="btn btn-primary span3" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+    <button type="button" class="btn btn-danger span3" id="tipoAlta"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 </div>
 <?php
 echo JHtml::_('bootstrap.endTab');

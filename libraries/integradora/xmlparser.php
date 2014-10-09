@@ -63,6 +63,10 @@ class xml2Array {
         $datosXML->impuestos->iva->tasa         = $impuestos['children'][0]['children'][0]['attrs']['TASA'];
         $datosXML->impuestos->iva->importe      = $impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
         $datosXML->comprobante                  = $comprobante;
+        $datosXML->emisor                       = $emisor;
+        $datosXML->receptor                     = $receptor;
+        $datosXML->complemento                  = $complemento;
+
         return $datosXML;
     }
 }
