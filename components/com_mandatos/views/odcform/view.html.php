@@ -19,9 +19,6 @@ class MandatosViewOdcform extends JViewLegacy {
         $this->proyectos 	= $this->get('proyectos');
         $this->proveedores	= $this->get('providers');
 
-        var_dump($this->dataXML);
-        exit;
-		
         if (count($errors = $this->get('Errors'))) {
 	        JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
             return false;

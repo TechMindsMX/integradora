@@ -9,13 +9,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-?>
-<form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
-<?php
-echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
-echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
-
-
+echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
 ?>
 <script>
     var subprojects     = <?php echo json_encode($this->proyectos['subproyectos']);?>;
@@ -28,94 +22,152 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 
     jQuery(document).ready(function() {
         jQuery('#project').on('change', llenasubproject);
-
+        jQuery('.productos').on('change', llenatabla);
+        jQuery('#button').on('click', addrow);
+        jQuery('.cantidad').on('change', sum);
+        jQuery('button').on('click', envio);
         jQuery.each(arrayProd, function (key, value) {
             jQuery('#productos').append('<option value="' + value.id + '">' + value.productName + '</option>');
         });
-
-        jQuery('.productos').on('change', llenatabla);
-
-        jQuery('#button').on('click', addrow);
-
-        jQuery('.cantidad').on('change', sum);
-
-
-        function sum(){
-            var cantidad    = jQuery(this).val();
-            var trproductos = jQuery(this).parent().parent();
-
-            var precio      = trproductos.find('.p_unit').val();
-            var iva         = trproductos.find('.iva').val();
-            var ieps        = trproductos.find('.ieps').val();
-
-            cantidad        = parseInt(cantidad.replace('$',''));
-            precio          = parseInt(precio.replace('$',''));
-            iva             = parseInt(iva.replace('$',''));
-            ieps            = parseInt(ieps.replace('$',''));
-
-
-            console.log(iva);
-            if(isNaN(iva)  || isNaN(precio)){
-                alert("Seleccione primero el producto");
-            }else{
-                var total       = (precio+iva+ieps)*cantidad;
-                trproductos.find('#subtotal').html('$'+precio);
-                trproductos.find('#total').html('$'+total);
-            }
-        }
-
-        function addrow(){
-            nextinput++;
-
-            jQuery("#contenidos" ).attr('id','content'+nextinput+'');
-            jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
-            jQuery("#content"+nextinput+"").attr('id','contenidos');
-            jQuery("#content"+nextinput+"").find("input:text").val("");
-            jQuery("#content"+nextinput+"").find("#subtotal").html("");
-            jQuery("#content"+nextinput+"").find("#total").html("");
-            jQuery('.productos').on('change', llenatabla);
-            jQuery('.cantidad').on('change', sum);
-
-
-        }
-
-        function llenasubproject() {
-            var select = jQuery(this).val();
-            var selectSPro = jQuery('#subproject')
-            var subprojectos = subprojects[select];
-
-            jQuery.each(jQuery('#subproject').find('option'), function () {
-                console.log(jQuery(this).remove());
-            });
-
-            selectSPro.append('<option value="0">Subproyecto</option>');
-
-            jQuery.each(subprojectos, function (key, value) {
-                selectSPro.append('<option value="' + value.id + '">' + value.name + '</option>');
-            });
-        }
-
-        function llenatabla() {
-            var idproducto  = jQuery(this).val();
-            var trproductos = jQuery(this).parent().parent();
-            var producto = '';
-
-            jQuery.each(arrayProd, function (key, value) {
-                if (idproducto == value.id) {
-                    producto = value;
-                }
-            });
-
-            trproductos.find('[name*="descripcion"]').val(producto.description);
-            trproductos.find('[name*="unidad"]').val(producto.measure);
-            trproductos.find('[name*="p_unitario"]').val(producto.price);
-            trproductos.find('[name*="iva"]').val(producto.iva);
-            trproductos.find('[name*="ieps"]').val(producto.ieps);
-
-        }
     });
 
+    function sum(){
+        var cantidad    = jQuery(this).val();
+        var trproductos = jQuery(this).parent().parent();
+
+        var precio      = trproductos.find('.p_unit').val();
+        var iva         = trproductos.find('.iva').val();
+        var ieps        = trproductos.find('.ieps').val();
+
+        cantidad        = parseInt(cantidad.replace('$',''));
+        precio          = parseInt(precio.replace('$',''));
+        iva             = parseInt(iva.replace('$',''));
+        ieps            = parseInt(ieps.replace('$',''));
+
+        if(isNaN(iva)  || isNaN(precio)){
+            alert("Seleccione primero el producto");
+        }else{
+            var total       = (precio+iva+ieps)*cantidad;
+            trproductos.find('#subtotal').html('$'+precio);
+            trproductos.find('#total').html('$'+total);
+        }
+    }
+
+    function addrow(){
+        nextinput++;
+
+        jQuery("#contenidos" ).attr('id','content'+nextinput+'');
+        jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
+        jQuery("#content"+nextinput+"").attr('id','contenidos');
+
+
+        jQuery("#content"+nextinput+"").find("input:text").val("");
+        jQuery("#content"+nextinput+"").find("#subtotal").html("");
+        jQuery("#content"+nextinput+"").find("#total").html("");
+
+        jQuery('.productos').on('change', llenatabla);
+        jQuery('.cantidad').on('change', sum);
+
+        var select = jQuery("#content"+nextinput+"").find('select');
+        var inputs = jQuery("#content"+nextinput+"").find('input');
+        var nameCampoS = select.prop('name');
+        var nameCampoI = '';
+
+        select.prop('name',nameCampoS+nextinput);
+        select.prop('id',nameCampoS+nextinput);
+
+        jQuery.each(inputs, function(k,v){
+            nameCampoI = jQuery(v).prop('name');
+            jQuery(v).prop('name', nameCampoI+nextinput);
+            jQuery(v).prop('id', nameCampoI+nextinput);
+        });
+    }
+
+    function llenasubproject() {
+        var select = jQuery(this).val();
+        var selectSPro = jQuery('#subproject')
+        var subprojectos = subprojects[select];
+
+        jQuery.each(jQuery('#subproject').find('option'), function () {
+            jQuery(this).remove();
+        });
+
+        selectSPro.append('<option value="0">Subproyecto</option>');
+
+        jQuery.each(subprojectos, function (key, value) {
+            selectSPro.append('<option value="' + value.id + '">' + value.name + '</option>');
+        });
+    }
+
+    function llenatabla() {
+        var idproducto  = jQuery(this).val();
+        var trproductos = jQuery(this).parent().parent();
+        var producto = '';
+
+        jQuery.each(arrayProd, function (key, value) {
+            if (idproducto == value.id) {
+                producto = value;
+            }
+        });
+
+        trproductos.find('[name*="descripcion"]').val(producto.description);
+        trproductos.find('[name*="unidad"]').val(producto.measure);
+        trproductos.find('[name*="p_unitario"]').val(producto.price);
+        trproductos.find('[name*="iva"]').val(producto.iva);
+        trproductos.find('[name*="ieps"]').val(producto.ieps);
+
+    }
+
+    function envioAjax(data) {
+
+        var request = jQuery.ajax({
+            url: "index.php?option=com_mandatos&task=saveforms&format=raw",
+            data: data,
+            type: 'post',
+            async: false
+        });
+
+        request.done(function(result){
+            var odv = eval('('+result.odv+')');
+            var response = eval('('+result+')');
+
+            if(typeof(odv) == 'undefined' ){
+                jQuery.each(response, function(k, v){
+                    if(v != true){
+                        mensajes(v.msg,'error',k);
+                    }
+                });
+            }
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            console.log(jqXHR, textStatus);
+        });
+    }
+
+    function envio() {
+        var boton = jQuery(this).prop('id');
+        var data = jQuery('#altaC_P').serialize();
+
+        switch (boton){
+            case 'seleccion':
+                data += '&tab='+boton;
+                envioAjax(data);
+                break;
+            case 'ordenVenta':
+                data += '&tab='+boton;
+                envioAjax(data);
+                break;
+        }
+    }
 </script>
+
+<form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
+<?php
+echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
+echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
+?>
+
 <fieldset>
     <select name="projectId" id="project">
         <option value="0">Proyecto</option>
@@ -141,9 +193,9 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATO
 </fieldset>
 
 <div class="form-actions" style="max-width: 30%">
-    <button type="button" class="btn btn-baja span3" id="tipoAlta"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-    <button type="button" class="btn btn-primary span3" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-    <button type="button" class="btn btn-danger span3" id="tipoAlta"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+    <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
+    <button type="button" class="btn btn-primary span3" id="seleccion"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+    <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 </div>
 <?php
 echo JHtml::_('bootstrap.endTab');
@@ -209,13 +261,17 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
             <div id="columna2"><div id="total"></div> </div>
         </div>
     </div>
-<button type="button" id="button" class="btn btn-success" name="button"> + </button>
+
+    <div class="clearfix">
+        <button type="button" id="button" class="btn btn-success" name="button"> + </button>
+    </div>
+
 </fieldset>
 
 <div class="form-actions" style="max-width: 30%">
-    <button type="button" class="btn btn-baja span3" id="tipoAlta"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-    <button type="button" class="btn btn-primary span3" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-    <button type="button" class="btn btn-danger span3" id="tipoAlta"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+    <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
+    <button type="button" class="btn btn-primary span3" id="ordenVenta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+    <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
 </div>
 <?php
 echo JHtml::_('bootstrap.endTab');

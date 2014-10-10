@@ -117,6 +117,12 @@ class MandatosController extends JControllerLegacy {
 	}
 
 	function agregarBanco(){
+        $document = JFactory::getDocument();
+        // Set the MIME type for JSON output.
+        $document->setMimeEncoding('application/json');
+        // Change the suggested filename.
+        JResponse::setHeader('Content-Disposition','attachment; filename="result.json"');
+
 		$data 			= $this->input_data->getArray();
 		$validacion 	= validador::valida_banco_clabe($data, 'db_banco_clabe');
 		
@@ -125,16 +131,86 @@ class MandatosController extends JControllerLegacy {
   		$respuesta['sucursal'] 	= $data['db_banco_sucursal'];
   		$respuesta['clabe']	 	= $data['db_banco_clabe'];
 		$respuesta['idCuenta']	= ($data['db_banco_sucursal']*1)+1;
-		
+
 		echo json_encode($respuesta);
 	}
 
     function saveforms(){
-        $filtro = array('campo'=>'tipodato');
+        //$filtro = array('campo'=>'tipodato');
         $data   =   $this->input_data->getArray();
+        $odv    = array();
 
-        var_dump($data);
+        $validacion = new validador();
+
+        $diccionario = array('account'       => array('tipo'=>'number', 'length' => ''),
+                             'clientId'      => array('tipo'=>'number', 'length' => ''),
+                             'conditions'    => array('tipo'=>'number', 'length' => ''),
+                             'paymentMethod' => array('tipo'=>'number', 'length' => ''),
+                             'placeIssue'	 => array('tipo'=>'number', 'length' => ''),
+                             'projectId'	 => array('tipo'=>'number', 'length' => ''),
+                             'projectId2'	 => array('tipo'=>'number', 'length' => ''));
+        foreach($diccionario as $key => $value){
+            $envio[$key] = $data[$key];
+        }
+
+        foreach ($data as $key => $value) {
+            if(!is_bool(strpos($key, 'cantidad'))){
+                $cantidades[] = $value;
+                $diccionario[$key] = array('tipo' => 'number', 'length' => '6');
+            }
+            if(!is_bool(strpos($key, 'productos'))){
+                $productos[] = $value;
+                $diccionario[$key] = array('tipo' => 'number', 'length' => '6');
+            }
+            if(!is_bool(strpos($key, 'descripcion'))){
+                $descriptions[] = $value;
+                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '2500');
+            }
+            if(!is_bool(strpos($key, 'p_unitario'))){
+                $punitario[] = $value;
+                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '50');
+            }
+            if(!is_bool(strpos($key, 'unidad'))){
+                $unidades[] = $value;
+                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
+            }
+            if(!is_bool(strpos($key, 'iva'))){
+                $iva[] = $value;
+                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
+            }
+            if(!is_bool(strpos($key, 'ieps'))){
+                $ieps[] = $value;
+                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
+            }
+
+        }
+
+        $resultValidacion  = $validacion->procesamiento($data, $diccionario);
+        foreach($resultValidacion as $value){
+            if(!is_bool($value)){
+                echo json_encode($resultValidacion);
+                return;
+            }
+        }
         exit;
+
+        for($i = 0; $i < count($cantidades); $i++){
+            $obj = new stdClass();
+
+            $obj->productos     = $productos[$i];
+            $obj->cantidades    = $cantidades[$i];
+            $obj->descripcion   = $descriptions[$i];
+            $obj->unidades      = $unidades[$i];
+            $obj->pUnitario     = $punitario[$i];
+            $obj->iva           = $iva[$i];
+            $obj->ieps          = $ieps[$i];
+
+            $odv[]= $obj;
+        }
+
+        $envio['odv'] = json_encode($odv);
+
+        echo json_encode($envio);
     }
 
     function  cargaProducto(){

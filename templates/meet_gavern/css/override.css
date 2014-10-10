@@ -94,9 +94,9 @@ background-image: url('../../../libraries/integradora/js/themes/blue/desc.gif');
 .cantidades{
     width: 70px;
 }
-input#cantidad, input#iva, input#ieps{
+input.cantidad, input.iva, input.ieps{
     width: 38px;
 }
-select#productos{
+select.productos{
     width: 80px;
 }
