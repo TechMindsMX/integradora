@@ -5,7 +5,7 @@ JHtml::_ ('bootstrap.tooltip');
 
 $items = $this->items;
 
-$accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=adminintegradora');
+$accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&id=');
 ?>
 <form action="<?php echo $accion; ?>" method="post"
 	  name="adminForm" id="adminForm">

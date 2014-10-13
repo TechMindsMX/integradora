@@ -26,9 +26,14 @@ class AdminintegradoraModelComision extends JModelItem
 
 	public function getComision () {
 		$params = $this->app->input->getArray (array ('id' => 'int'));
-		$this->comision = getFromTimOne::getComisionById ($params['id']);
 
-		$this->idToNames ();
+		if($params === 0) {
+			$this->comision = getFromTimOne::getComisionById ($params['id']);
+
+			$this->idToNames ();
+		} else {
+			$this->comision = null;
+		}
 
 		$comision[] = $this->comision;
 

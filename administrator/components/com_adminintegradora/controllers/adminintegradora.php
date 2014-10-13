@@ -6,7 +6,7 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * 
  */
-class AdminintegradoraControllerComisions extends JControllerAdmin {
+class  AdminintegradoraControllerAdminintegradora extends JControllerAdmin {
 
 	public function getModel($name = 'Adminintegradora', $prefix = 'ComisionModel')
 	{
