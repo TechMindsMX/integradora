@@ -119,9 +119,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     }
 
     function envioAjax(data) {
-
         var request = jQuery.ajax({
-            url: "index.php?option=com_mandatos&task=saveforms&format=raw",
+            url: "index.php?option=com_mandatos&task=odvform.safeform&format=raw",
             data: data,
             type: 'post',
             async: false
@@ -129,14 +128,17 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 
         request.done(function(result){
             var odv = eval('('+result.odv+')');
-            var response = eval('('+result+')');
 
             if(typeof(odv) == 'undefined' ){
-                jQuery.each(response, function(k, v){
+                jQuery.each(result, function(k, v){
                     if(v != true){
                         mensajes(v.msg,'error',k);
                     }
                 });
+            }else{
+                if(result.redirect){
+                    jQuery(location).attr('href',result.url);
+                }
             }
         });
 
@@ -248,7 +250,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
         <div class="contenidos" id="contenidos">
             <div id="columna2">
                 <select id='productos' name="productos" class="productos">
-                    <option value="abierto">Abierto</option>
+                    <option value="0">Abierto</option>
                 </select>
             </div>
             <div id="columna2"><input id="cantidad" type="text" name="cantidad" class="cantidad cantidades" ></div>
@@ -272,40 +274,6 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
     <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
     <button type="button" class="btn btn-primary span3" id="ordenVenta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
     <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-</div>
-<?php
-echo JHtml::_('bootstrap.endTab');
-echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'previewodv', JText::_('COM_MANDATOS_ODV_PREV'));
-?>
-<fieldset>
-   pantalla 3
-</fieldset>
-
-<div class="form-actions">
-    <button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-</div>
-
-<?php
-echo JHtml::_('bootstrap.endTab');
-echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'pers-juridica', JText::_('COM_MANDATOS_ODV_FACTURA'));
-?>
-<fieldset>
-    pantalla 4
-</fieldset>
-
-<div class="form-actions">
-    <button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-</div>
-<?php
-echo JHtml::_('bootstrap.endTab');
-echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'pers-juridica', JText::_('COM_MANDATOS_ODV_COMPROBANTE'));
-?>
-<fieldset>
-    pantalla 5
-</fieldset>
-
-<div class="form-actions">
-    <button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 </div>
 <?php
 echo JHtml::_('bootstrap.endTab');

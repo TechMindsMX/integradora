@@ -683,6 +683,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+        $ordenes->paymentType       = 1;
+        $ordenes->observaciones       = 'Orden de venta de ejemplo';
 
         $array[] = $ordenes;
 
@@ -697,6 +699,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+        $ordenes->paymentType       = 1;
+        $ordenes->observaciones       = 'Orden de venta de ejemplo';
 
         $array[] = $ordenes;
 
@@ -711,6 +715,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 1;
+        $ordenes->paymentType       = 1;
+        $ordenes->observaciones       = 'Orden de venta de ejemplo';
 
         $array[] = $ordenes;
 
@@ -725,6 +731,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+        $ordenes->paymentType       = 1;
+        $ordenes->observaciones       = 'Orden de venta de ejemplo';
 
         $array[] = $ordenes;
 
