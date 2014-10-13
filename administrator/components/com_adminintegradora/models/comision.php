@@ -25,15 +25,15 @@ class AdminintegradoraModelComision extends JModelItem
 	}
 
 	public function getComision () {
-		$params = $this->app->input->getArray (array ('id' => 'int'));
+		$params = $this->app->input->getArray (array ('comisionId' => 'int'));
 
-		if($params === 0) {
-			$this->comision = getFromTimOne::getComisionById ($params['id']);
-
+		if($params['comisionId'] !== 0) {
+			$this->comision = getFromTimOne::getComisionById ($params['comisionId']);
 			$this->idToNames ();
 		} else {
 			$this->comision = null;
 		}
+
 
 		$comision[] = $this->comision;
 
@@ -59,8 +59,7 @@ class AdminintegradoraModelComision extends JModelItem
 	}
 
 	private function getFrequencyMsg ($frequencyTime) {
-		return JText::sprintf ('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA',
-							   $frequencyTime);
+		return JText::sprintf ('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTime);
 	}
 
 }

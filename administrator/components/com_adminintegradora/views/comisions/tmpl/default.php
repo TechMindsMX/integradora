@@ -5,7 +5,7 @@ JHtml::_ ('bootstrap.tooltip');
 
 $items = $this->items;
 
-$accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&id=');
+$accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comisionId=');
 ?>
 <form action="<?php echo $accion; ?>" method="post"
 	  name="adminForm" id="adminForm">
@@ -60,7 +60,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&id=')
 					</div>
 				</td>
 				<td class="small">
-					<a href="index.php?option=com_adminintegradora&task=comisions.editar&id=<?php echo $value->id; ?>"
+					<a href="index.php?option=com_adminintegradora&task=comisions.editar&comisionId=<?php echo $value->id; ?>"
 					   title="Descripcion">
 						<?php echo $value->description; ?></a>
 				</td>
