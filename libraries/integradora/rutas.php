@@ -1,39 +1,145 @@
 <?php
-defined('JPATH_PLATFORM') or die;
+defined ('JPATH_PLATFORM') or die;
 
-jimport('joomla.factory');
-
+jimport ('joomla.factory');
 
 /**
  * Clase rutas de servicios
  */
-class IntRoute {
 
-	protected $ssl;
+class timoneRoute extends servicesRoute
+{
 
-	protected $schema = MIDDLE;
+	function __construct () {
+		parent::__construct();
 
-	protected $ip = TIMONE;
-	
-	protected $port = PUERTO;
-	
-	protected $urls;
+		$this->setBaseController('timone/services/');
+		$this->setAddress('api-stage.timone.mx');
+	}
+}
 
-	private function getUrl() {
-		
-		$juri = JUri::getInstance();
-		
-		$this->ssl = $juri->getScheme();
+class servicesRoute
+{
+	private $ssl;
 
-		$url = $this->ssl.$this->ip.$this->port.$this->urls;
+	protected $address = 'api.integradora.mx/';
 
-		return $url;
+	protected $port = '';
+
+	private $baseController = '';
+
+	public $baseUrl;
+
+	public $urls;
+
+	public function __construct () {
+
+		$juri = JUri::getInstance ();
+		$this->ssl = ($juri->getScheme() === null) ? 'http' : $juri->getScheme();
+
+		$this->baseUrl = $this->ssl .'://'. $this->address . $this->port . $this->baseController;
 	}
 
-	public function saveComisionServiceUrl () {
-		$this->urls = 'comisions/save';
-
-		return $this->getUrl();
+	/**
+	 * @return string
+	 */
+	public function getBaseUrl () {
+		return $this->baseUrl;
 	}
 
+	public function projectUrls () {
+		$this->urls = new servicesUrls();
+
+		$this->urls->setProject ();
+
+		return $this;
+	}
+
+	public function productUrls (){
+		$this->urls = new servicesUrls();
+
+		$this->urls->setProduct ();
+
+		return $this;
+	}
+
+	public function comisionUrls () {
+		$this->urls = new servicesUrls();
+
+		$this->urls->setComisions ();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $baseController
+	 */
+	public function setBaseController ($baseController) {
+		$this->baseController = $baseController;
+	}
+
+	/**
+	 * @param string $address
+	 */
+	public function setAddress ($address) {
+		$this->address = $address;
+	}
+
+}
+
+class servicesUrls
+{
+
+	public $list;
+	public $create;
+	public $update;
+	public $disable;
+	public $details;
+
+	public function __construct () {
+		$this->list = new urlAndType();
+		$this->create = new urlAndType();
+		$this->details = new urlAndType();
+		$this->update = new urlAndType();
+		$this->disable = new urlAndType();
+
+		$this->list->type = "GET";
+		$this->create->type = 'POST';
+		$this->details->type = 'GET';
+		$this->update->type = 'PUT';
+		$this->disable->type = 'DELETE';
+	}
+
+	public function setProject () {
+		$this->list->url = 'users/{userId}/projects';
+		$this->create->url = 'users/{userId}/projects';
+		$this->details->url = 'users/{userId}/projects/{id}';
+		$this->update->url = 'users/{userId}/projects/{id}';
+		$this->disable->url = 'users/{userId}/projects/{id}';
+	}
+
+	public function setProduct () {
+		$this->list->url = 'users/{userId}/products';
+		$this->create->url = 'users/{userId}/products';
+		$this->details->url = 'users/{userId}/products/{id}';
+		$this->update->url = 'users/{userId}/products/{id}';
+		$this->disable->url = 'users/{userId}/products/{id}';
+	}
+
+	public function setUser () {
+		$this->list->url = 'users/{userId}/user';
+		$this->create->url = 'users/{userId}/user';
+		$this->details->url = 'users/{userId}/user/{id}';
+		$this->update->url = 'users/{userId}/user/{id}';
+		$this->disable->url = 'users/{userId}/user/{id}';
+	}
+
+	public function setComisions () {
+	}
+}
+
+class urlAndType
+{
+	public $url;
+	public $type;
 }
