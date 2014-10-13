@@ -16,7 +16,7 @@ class AdminintegradoraControllerComisions extends JControllerAdmin {
 
 	public function editar(){
 		$app = JFactory::getApplication();
-		$url = 'index.php?option=com_adminintegradora&view=comision&id='.$app->input->get('id', null, 'int');
+		$url = 'index.php?option=com_adminintegradora&view=comision&comisionId='.$app->input->get('comisionId', null, 'int');
 		$app->redirect($url);
 	}
 

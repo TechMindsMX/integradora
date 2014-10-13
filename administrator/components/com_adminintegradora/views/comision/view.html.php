@@ -17,7 +17,6 @@ class AdminintegradoraViewComision extends JViewLegacy {
 //	protected $state;
 
 	function display($tpl = null) {
-
 		$comision = $this->get('Comision');
 		$cats = $this->get('CatalogosComisiones');
 
