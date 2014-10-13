@@ -16,7 +16,7 @@ $accion = 'index.php?option=com_adminintegradora';
 			$type.change($type, checkType);
 			$type.triggerHandler('change');
 
-			jQuery('button#toolbar-apply').click(function() {
+			jQuery('#toolbar-apply').click(function() {
 				var data = jQuery('#comision-form').find('select, input').serialize();
 
 				var parametros = {
@@ -38,6 +38,11 @@ $accion = 'index.php?option=com_adminintegradora';
 					});
 				});
 			});
+
+			jQuery('#toolbar-cancel').click(function(){
+				jQuery('#comision-form').prop('action', 'index.php?option=com_adminintegradora&view=comisions').submit();
+			});
+
 		});
 
 		function checkType() {
@@ -56,7 +61,7 @@ $accion = 'index.php?option=com_adminintegradora';
 
 <div class="btn-toolbar">
 	<button id="toolbar-apply" class="btn btn-small btn-success"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_GUARDAR'); ?></button>
-	<button class="btn btn-small btn-danger"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_CANCEL'); ?></button>
+	<button id="toolbar-cancel" class="btn btn-small btn-danger"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_CANCEL'); ?></button>
 </div>
 
 	<form action="<?php echo $accion; ?>"
