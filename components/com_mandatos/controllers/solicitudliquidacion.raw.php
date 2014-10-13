@@ -17,10 +17,16 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
         $diccionario    = array('integradoId'   => array('tipo'=>'number', 'length' => '1'),
                                 'monto'         => array('tipo'=>'float', 'length' => '15'),
                                 'saldo'         => array('tipo'=>'float', 'length' => '15'));
-
-        var_dump($validacion->procesamiento($data, $diccionario));exit;
-
+        $valida = $validacion->procesamiento($data, $diccionario);
         $document->setMimeEncoding('application/json');
         JResponse::setHeader('Content-Disposition','attachment; filename="result.json"');
+
+        foreach ($valida as $key => $value) {
+            if(!is_bool($value)){
+                echo json_encode($valida);
+                return;
+            }
+        }
+        exit;
     }
 }

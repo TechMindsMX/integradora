@@ -38,7 +38,11 @@ $saldo = $this->saldo;
         });
 
         request.done(function(result){
-            console.log(result);
+            jQuery.each(result, function(k, v){
+                if(v != true){
+                    mensajes(v.msg,'error',k);
+                }
+            });
         });
 
         request.fail(function (jqXHR, textStatus) {
@@ -54,7 +58,7 @@ $saldo = $this->saldo;
     <form id="form_solicitudLiquidacion">
         <div>
             <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $'.number_format($saldo,2); ?></h4>
-            <input type="hidden" value=" <?php echo $saldo; ?>" id="saldoLiquidacion" class="saldoliquidacion" name="saldo" />
+            <input type="hidden" value="<?php echo $saldo; ?>" id="saldoLiquidacion" class="saldoliquidacion" name="saldo" />
         </div>
 
         <div>
