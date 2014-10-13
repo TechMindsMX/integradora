@@ -685,6 +685,11 @@ class getFromTimOne{
         $ordenes->status            = 0;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
+        $ordenes->productos			= array(
+            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+        );
 
         $array[] = $ordenes;
 
@@ -701,6 +706,11 @@ class getFromTimOne{
         $ordenes->status            = 0;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
+        $ordenes->productos			= array(
+            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+        );
 
         $array[] = $ordenes;
 
@@ -717,6 +727,11 @@ class getFromTimOne{
         $ordenes->status            = 1;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
+        $ordenes->productos			= array(
+            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+        );
 
         $array[] = $ordenes;
 
@@ -733,6 +748,11 @@ class getFromTimOne{
         $ordenes->status            = 0;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
+        $ordenes->productos			= array(
+            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+        );
 
         $array[] = $ordenes;
 
@@ -909,6 +929,55 @@ class getFromTimOne{
 		}
 		return $comision;
 	}
+
+    public static function getOperacionesVenta($integradoId){
+
+        $operaciones 					= new stdClass;
+        $operaciones->id                = 1;
+        $operaciones->integradoId       = 1;
+        $operaciones->numOrden          = 1;
+        $operaciones->created           = 1408632474029;
+        $operaciones->totalAmount       = 13000;
+        $operaciones->currency        	= 'MXN';
+        $operaciones->status            = 1;
+        $operaciones->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $operaciones;
+
+        $operaciones 					= new stdClass;
+        $operaciones->id                = 2;
+        $operaciones->integradoId       = 1;
+        $operaciones->numOrden          = 2;
+        $operaciones->created           = 1408632474029;
+        $operaciones->totalAmount       = 10000;
+        $operaciones->currency        	= 'MXN';
+        $operaciones->status            = 1;
+        $operaciones->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $operaciones;
+
+        $operaciones 					= new stdClass;
+        $operaciones->id                = 3;
+        $operaciones->integradoId       = 1;
+        $operaciones->numOrden          = 3;
+        $operaciones->created           = 1408632474029;
+        $operaciones->totalAmount       = 113000;
+        $operaciones->currency        	= 'MXN';
+        $operaciones->paymentType		= 0;
+        $operaciones->status            = 0;
+        $operaciones->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $operaciones;
+
+        foreach ($array as $key => $value) {
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
+        }
+
+        return $respuesta;
+    }
 }
 
 class sendToTimOne {

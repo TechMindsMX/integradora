@@ -185,6 +185,7 @@ class validador{
 
 	protected static function valida_float ($valor) {
 		$regex	= '/^\d*\.{1}\d*?$/';
+        $regex = '/^[0-9]{1,15}.[0-9]{0,2]$/';
 		if(preg_match($regex, $valor) == 1){
 			$respuesta = true;
 		}else{

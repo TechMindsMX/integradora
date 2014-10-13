@@ -36,9 +36,9 @@ class MandatosHelper {
 	
 	public static function getProviderFromID($providerId, $integradoId){
 		$proveedores = array();
-		
+
 		$clientes = getFromTimOne::getClientes($integradoId);
-		
+
 		foreach ($clientes as $key => $value) {
 			if($value->type == 1){
 				$proveedores[$value->id] = $value;
@@ -46,7 +46,7 @@ class MandatosHelper {
 		}
 
 		$proveedor = $proveedores[$providerId];
-		
+
 		return $proveedor;
 	}
 
@@ -81,5 +81,17 @@ class MandatosHelper {
 			}
 			return '<a class="btn btn-default" href="'.$href.'">'.JText::_('LBL_IMPRIMIR').'</a>';
 	}
+
+    public static function getClientsFromID($clientId, $integradoId){
+        $datos = getFromTimOne::getClientes($integradoId);
+
+        foreach ($datos as $key => $value) {
+           if($clientId==$value->id){
+               $cliente = $value;
+           }
+        }
+
+        return $cliente;
+    }
 
 }
