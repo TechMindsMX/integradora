@@ -26,4 +26,5 @@ class MandatosViewOdvpreview extends JViewLegacy {
 
 		parent::display($tpl);
 	}
+
 }

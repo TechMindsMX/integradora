@@ -683,6 +683,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+	    $ordenes->ieps				= .1;
+	    $ordenes->iva				= .16;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
         $ordenes->productos			= array(
@@ -704,6 +706,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+	    $ordenes->ieps				= .1;
+	    $ordenes->iva				= .16;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
         $ordenes->productos			= array(
@@ -725,6 +729,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 1;
+	    $ordenes->ieps				= .1;
+	    $ordenes->iva				= .16;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
         $ordenes->productos			= array(
@@ -746,6 +752,8 @@ class getFromTimOne{
         $ordenes->totalAmount        = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->status            = 0;
+	    $ordenes->ieps				= .1;
+	    $ordenes->iva				= .16;
         $ordenes->paymentType       = 1;
         $ordenes->observaciones       = 'Orden de venta de ejemplo';
         $ordenes->productos			= array(
