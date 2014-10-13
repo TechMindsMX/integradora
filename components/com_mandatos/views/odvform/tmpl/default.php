@@ -254,7 +254,7 @@ echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordeventa', JText::_('COM_MANDATO
                 </select>
             </div>
             <div id="columna2"><input id="cantidad" type="text" name="cantidad" class="cantidad cantidades" ></div>
-            <div id="columna2"><input id="descripcion" type="text" name="descripcion" readonly></div>
+            <div id="columna2"><input id="descripcion" type="text" name="descripcion"></div>
             <div id="columna2"><input id="unidad" type="text" name="unidad" class="cantidades"></div>
             <div id="columna2"><input id="p_unitario" type="text" name="p_unitario" class="p_unit cantidades" ></div>
             <div id="columna2"><input id="iva" type="text" name="iva" value="" class="iva cantidades"></div>
