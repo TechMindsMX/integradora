@@ -76,6 +76,19 @@ class MandatosController extends JControllerLegacy {
 	function simulaenvio(){
 		$this->app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
 	}
+
+	public function envioTimOne($envio)
+	{
+		$request = new sendToTimOne();
+		$serviceUrl = new IntRoute();
+
+		$request->setServiceUrl($serviceUrl->saveComisionServiceUrl());
+		$request->setJsonData($envio);
+
+		$respuesta = $request->to_timone(); // realiza el envio
+
+		return $respuesta;
+	}
 	
 	function searchrfc(){
 		$data 			= $this->input_data->getArray();

@@ -29,7 +29,8 @@ class AdminintegradoraController extends JControllerLegacy {
 							  'frequencyTimes' 	=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'), 'length' => 10)
 		);
 
-		$validaResult = validador::procesamiento($envio, $diccionario);
+		$validator = new validador();
+		$validaResult = $validator->procesamiento($envio, $diccionario);
 
 		if (validador::noErrors($validaResult)) {
 			$request = new sendToTimOne();
