@@ -986,6 +986,11 @@ class getFromTimOne{
 
         return $respuesta;
     }
+
+	public static function getFacturasVenta($integradoId)
+	{
+		return self::getOrdenesVenta($integradoId);
+	}
 }
 
 class sendToTimOne {

@@ -34,6 +34,8 @@ class MandatosViewFacturapreview extends JViewLegacy {
 		// Verifica los permisos de edición y autorización
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
+		$app->enqueueMessage('LBL_FACURA_PAGADA', 'message');
+
 		parent::display($tpl);
 	}
 }
