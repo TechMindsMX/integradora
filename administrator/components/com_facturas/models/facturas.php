@@ -34,6 +34,7 @@ class FacturasModelFacturas extends JModelList {
 
     public function getFacturas(){
         $data = getFromTimOne::getFactura();
+
         return $data;
     }
 
