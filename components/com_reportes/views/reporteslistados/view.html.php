@@ -13,8 +13,6 @@ class ReportesViewReporteslistados extends JViewLegacy
 	// Overwriting JView display method
 	function display($tpl = null)
 	{
-		// Assign data to the view
-		$this->msg = $this->get('Msg');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

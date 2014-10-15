@@ -13,8 +13,12 @@ class ReportesViewReportes extends JViewLegacy
 	// Overwriting JView display method
 	function display($tpl = null)
 	{
-		// Assign data to the view
-		$this->msg = $this->get('Msg');
+        $integrado	 		= new Integrado;
+
+        $data				= JFactory::getApplication()->input->getArray();
+        $this->data 		= $this->get('Solicitud');
+        $this->integradoId	= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
+        $this->catalogos 	= $this->get('catalogos');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

@@ -8,27 +8,24 @@ jimport('joomla.application.component.modelitem');
 
 class ReportesModelReportes extends JModelItem
 {
-	protected $msg;
+    protected $dataModelo;
 
-	public function getMsg()
-	{
-		if (!isset($this->msg))
-		{
-			$jinput = JFactory::getApplication()->input;
-			$id     = $jinput->get('id', 1, 'INT');
+    public function getSolicitud($integradoId = null)
+    {
+        if (!isset($this->dataModelo)) {
+            $this->dataModelo = new Integrado;
+        }
+        var_dump($this->dataModelo);exit;
+        return $this->dataModelo;
+    }
 
-			switch ($id)
-			{
-				case 2:
-					$this->msg = 'Good bye World!';
-					break;
-				default:
-				case 1:
-					$this->msg = 'data transmitido!';
-					break;
-			}
-		}
+    public function getCatalogos() {
+        $catalogos = new Catalogos;
 
-		return $this->msg;
-	}
+        $catalogos->getNacionalidades();
+        $catalogos->getEstados();
+        $catalogos->getBancos();
+
+        return $catalogos;
+    }
 }
