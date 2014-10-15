@@ -21,9 +21,6 @@ foreach($this->facturas as $value) {
 $tot=$data->total+$comision;
 ?>
 
-<script type="text/javascript" src="components/com_facturas/assets/js/jquery.js"></script>
-<script type="text/javascript" src="components/com_facturas/assets/js/jquery.tablesorter.js"></script>
-
 <script language="javascript" type="text/javascript">
     var nextinput       = 0;
     var arrayFact       = <?php echo json_encode($this->facturas)?>;
@@ -80,12 +77,18 @@ $tot=$data->total+$comision;
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
             nextinput++;
+            var fecha           = value.Comprobante.fecha;
+            var folio           = value.Comprobante.serie+value.Comprobante.folio;
+            var emisor          = value.Emisor.nombre;
+            var
+            console.log(value.Emisor);
+
             if (idintegrado == value.IntegradoId) {
                 jQuery('.tbody').append('<tr class="row1">'
                 +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
-                +'<td><span><?php echo $data->fecha[0]; ?></span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="<?php echo $data->fecha; ?>"></td>'
+                +'<td><span><?php echo $data->fecha; ?></span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="<?php echo $data->fecha; ?>"></td>'
                 +'<td><span><?php echo $data->folio; ?></span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="<?php echo $data->fecha; ?>"></td>'
-                +'<td><span><?php echo $data->emisor; ?></span><input id="emisor'+nextinput+'" type="hidden" name="emisor'+nextinput+'" class="emisor" value="<?php echo $data->emisor; ?>"></td>'
+                +'<td><span><?php echo $data->emisor; ?></span><table><tr class="row0"><td>RFC</td><td>2</td><td>3</td></tr></table></td>'
                 +'<td><span><?php echo '$'.number_format($data->iva,2); ?></span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="<?php echo $data->iva; ?>" class="iva"></td>'
                 +'<td><span><?php echo '$'.number_format($data->subtotal,2); ?></span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="<?php echo $data->subtotal; ?>" class="subtotal"></td>'
                 +'<td ><span><?php echo '$'.number_format($data->total,2); ?></span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="<?php echo $data->total; ?>" class="total"></td>'
@@ -97,18 +100,11 @@ $tot=$data->total+$comision;
                  }
 
         });
-        jQuery("#table_list").tablesorter();
     }
 
 
 
 </script>
-<link href="components/com_facturas/assets/styles.css" rel="stylesheet" type="text/css" />
-
-
-
-
-
 <form action="" method="post" name="adminForm" id="adminForm">
     <div  class="integrado-id" id="odv">
         <div class="head2" id="head" >
