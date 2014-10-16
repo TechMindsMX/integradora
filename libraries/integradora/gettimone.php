@@ -945,7 +945,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -958,7 +958,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -971,7 +971,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -984,7 +984,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -997,7 +997,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1011,7 +1011,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1024,7 +1024,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1037,7 +1037,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1050,7 +1050,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1063,7 +1063,7 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
 
@@ -1076,9 +1076,166 @@ class getFromTimOne{
         $flujo->currency = 'MXN';
         $flujo->paymentType = 0;
         $flujo->status = 0;
-        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
         $array[] = $flujo;
+
+        foreach ($array as $key => $value) {
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
+        }
+        return $respuesta;
+    }
+
+    public static function getResultados($integradoId)
+    {
+        $respuesta = null;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1388880000000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1393718400000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1396137600000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1398816000000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1401408000000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1404086400000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1409356800000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1412035200000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1414627200000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1417305600000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
+
+        $resultados = new stdClass;
+        $resultados->id = 1;
+        $resultados->integradoId = 1;
+        $resultados->numresultados = 1;
+        $resultados->proyectId = 1;
+        $resultados->created = 1419897600000;
+        $resultados->currency = 'MXN';
+        $resultados->paymentType = 0;
+        $resultados->status = 0;
+        $resultados->observaciones = 'Una mañana, tras un sueño intranquilo, Gregorio Samsa se despertó convertido en un monstruoso insecto. Estaba echado de espaldas sobre un duro caparazón y, al alzar la cabeza, vio su vientre convexo y';
+
+        $array[] = $resultados;
 
         foreach ($array as $key => $value) {
             if($integradoId == $value->integradoId){
