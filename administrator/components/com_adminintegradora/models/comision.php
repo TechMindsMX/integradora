@@ -18,7 +18,7 @@ class AdminintegradoraModelComision extends JModelItem
 
 	public function getCatalogosComisiones () {
 		$this->catalogos->types = $this->catalogos->getComisionesTypes ();
-		$this->catalogos->status = $this->catalogos->getComisionesStatus ();
+		$this->catalogos->status = $this->catalogos->getBasicStatus();
 		$this->catalogos->frequencyTimes = $this->catalogos->getComisionesFrecuencyTimes();
 
 		return $this->catalogos;
@@ -53,7 +53,7 @@ class AdminintegradoraModelComision extends JModelItem
 	}
 
 	private function getStatusName ($value) {
-		$array = $this->catalogos->getComisionesStatus ();
+		$array = $this->catalogos->getBasicStatus();
 
 		return $array[$value];
 	}

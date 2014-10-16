@@ -44,7 +44,7 @@ class AdminintegradoraModelComisions extends JModelList
 	}
 
 	private function getStatusName ($value) {
-		$array = $this->cat->getComisionesStatus();
+		$array = $this->cat->getBasicStatus();
 
 		return $array[$value];
 	}
