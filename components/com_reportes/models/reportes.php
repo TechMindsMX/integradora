@@ -15,7 +15,7 @@ class ReportesModelReportes extends JModelItem
         if (!isset($this->dataModelo)) {
             $this->dataModelo = new Integrado;
         }
-        var_dump($this->dataModelo);exit;
+
         return $this->dataModelo;
     }
 

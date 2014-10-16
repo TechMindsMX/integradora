@@ -775,6 +775,162 @@ class getFromTimOne{
 
     }
 
+    public static function getBalances($integradoId)
+    {
+        $respuesta = null;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1388880000000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1393718400000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1396137600000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1398816000000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1401408000000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1404086400000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1409356800000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1412035200000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1414627200000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1417305600000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        $balance = new stdClass;
+        $balance->id = 1;
+        $balance->integradoId = 1;
+        $balance->numBalance = 1;
+        $balance->proyectId = 1;
+        $balance->created = 1419897600000;
+        $balance->currency = 'MXN';
+        $balance->paymentType = 0;
+        $balance->status = 0;
+        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $balance;
+
+        foreach ($array as $key => $value) {
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
+        }
+        return $respuesta;
+    }
     public static function getOrdenesRetiro($integradoId) {
         $respuesta = null;
 

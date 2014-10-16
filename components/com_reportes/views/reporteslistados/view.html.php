@@ -14,6 +14,9 @@ class ReportesViewReporteslistados extends JViewLegacy
 	function display($tpl = null)
 	{
 
+	    $this->data     = $this->get('Solicitud');
+        $this->balances = $this->get('Balance');
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
@@ -24,4 +27,5 @@ class ReportesViewReporteslistados extends JViewLegacy
 		// Display the view
 		parent::display($tpl);
 	}
+
 }
