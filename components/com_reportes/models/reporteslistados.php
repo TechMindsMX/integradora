@@ -29,5 +29,15 @@ class ReportesModelReporteslistados extends JModelItem {
         $balance = getFromTimOne::getBalances($this->integradoId);
         return $balance;
     }
+
+    public function getflujo (){
+        $flujo = getFromTimOne::getFlujo($this->integradoId);
+        return $flujo;
+    }
+
+    public function getresultados (){
+        $resultados = getFromTimOne::getResultados($this->integradoId);
+        return $resultados;
+    }
 }
 

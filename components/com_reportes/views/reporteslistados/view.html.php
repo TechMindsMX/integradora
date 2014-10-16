@@ -14,8 +14,11 @@ class ReportesViewReporteslistados extends JViewLegacy
 	function display($tpl = null)
 	{
 
-	    $this->data     = $this->get('Solicitud');
-        $this->balances = $this->get('Balance');
+	    $this->data             = $this->get('Solicitud');
+        $this->balances         = $this->get('Balance');
+        $this->flujo            = $this->get('Flujo');
+        $this->resultados       = $this->get('Resultados');
+
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

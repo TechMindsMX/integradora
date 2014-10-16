@@ -10,7 +10,8 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-
+$attsCal2        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+$attsCal3        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $rfc                = $this->data->integrados[0]->datos_personales->rfc;
 $integradoId        = $this->data->integrados[0]->datos_empresa->razon_social;
 $calle              = $this->data->integrados[0]->datos_empresa->calle;
@@ -29,13 +30,12 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
     }
 */
 
-    function balance() {
-        var up = jQuery('#dup').val();
-        var end = jQuery('#dend').val();
-        var fechas=jQuery('.fecha');
+    function showhide(id) {
 
-
-
+        var up = jQuery('#dup'+id).val();
+        var end = jQuery('#dend'+id).val();
+        var fechas=jQuery('.'+id+'');
+        console.log(fechas);
 
         jQuery.each(fechas, function (key, value) {
             var parent=jQuery(this).parent();
@@ -47,12 +47,7 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
              if((Date.parse(fech)) < (Date.parse(end))){
                  parent.show();
              }
-
             }
-
-
-
-
         });
     }
 </script>
@@ -71,25 +66,25 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                   <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
                   <?php
                   $default = date('Y-m-d');
-                  echo JHTML::_('calendar',$default, 'dup', 'dup', $format = '%Y-%m-%d', $attsCal);
+                  echo JHTML::_('calendar',$default, 'dupfecha', 'dupfecha', $format = '%Y-%m-%d', $attsCal);
                   ?>
               </div>
               <div>
                 <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
                 <?php
                 $default = date('Y-m-d');
-                echo JHTML::_('calendar',$default, 'dend', 'dend', $format = '%Y-%m-%d', $attsCal);
+                echo JHTML::_('calendar',$default, 'dendfecha', 'dendfecha', $format = '%Y-%m-%d', $attsCal);
                 ?>
               </div>
               <div style="margin: auto;">
-                  <button id="buttonsearch" onclick="balance()" class="btn btn-primary span3" type="button">Buscar</button>
+                  <button id="fecha" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
               </div>
             </div>
         </div>
 
 
             <div id="odv" class="table table-bordered" >
-                <div class="head" id="head">
+                <div class="contenidos" id="contenidos">
                     <div id="columna1"><span class="etiqueta">Fecha</span></div>
                     <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
                     <div id="columna1"><span class="etiqueta">Integrado</span></div>
@@ -115,39 +110,112 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                 <?php }?>
             </div>
     </fieldset>
-
-    <div class="form-actions" style="max-width: 30%">
-        <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-        <button type="button" class="btn btn-primary span3" id="seleccion"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-    </div>
     <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'lr-eflujo', JText::_('COM_REPORTES_LR_EFLUO'));
     ?>
     <fieldset>
-        estado de flujo
+        <div>
+            <div class="form-group" style="margin-left: 31px; text-align: 0;">
+                <div style="display: inline-block">
+                    <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
+                    <?php
+                    $default = date('Y-m-d');
+                    echo JHTML::_('calendar',$default, 'dupfecha2', 'dupfecha2', $format = '%Y-%m-%d', $attsCal2);
+                    ?>
+                </div>
+                <div>
+                    <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
+                    <?php
+                    $default = date('Y-m-d');
+                    echo JHTML::_('calendar',$default, 'dendfecha2', 'dendfecha2', $format = '%Y-%m-%d', $attsCal2);
+                    ?>
+                </div>
+                <div style="margin: auto;">
+                    <button id="fecha2" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="odv" class="table table-bordered" >
+            <div class="contenidos" id="contenidos2">
+                <div id="columna1"><span class="etiqueta">Fecha</span></div>
+                <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
+                <div id="columna1"><span class="etiqueta">Integrado</span></div>
+                <div id="columna1"><span class="etiqueta">RFC</span> </div>
+                <div id="columna1"><span class="etiqueta">Direccion</span> </div>
+                <div id="columna1"><span class="etiqueta">Ver Balance</span></div>
+
+            </div>
+            <?php foreach ($this->flujo as $key => $value) {?>
+                <div class="contenidos" id="contenidos2">
+                    <div id="columna1" class="fecha2"><?php echo $value->created; ?></div>
+                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
+                    <div id="columna1"><?php echo $integradoId; ?></div>
+                    <div id="columna1"><?php echo $rfc ?></div>
+                    <div id="columna1"><?php echo $direccion ?></div>
+                    <div id="columna1" style="width: 50px">
+                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
     </fieldset>
-    <div class="form-actions" style="max-width: 30%">
-        <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-        <button type="button" class="btn btn-primary span3" id="seleccion"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-    </div>
     <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'lr-eresul', JText::_('COM_REPORTES_LR_ERESUL'));
     ?>
     <fieldset>
-        estado de resultados
+        <div>
+            <div class="form-group" style="margin-left: 31px; text-align: 0;">
+                <div style="display: inline-block">
+                    <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
+                    <?php
+                    $default = date('Y-m-d');
+                    echo JHTML::_('calendar',$default, 'dupfecha3', 'dupfecha3', $format = '%Y-%m-%d', $attsCal3);
+                    ?>
+                </div>
+                <div>
+                    <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
+                    <?php
+                    $default = date('Y-m-d');
+                    echo JHTML::_('calendar',$default, 'dendfecha3', 'dendfecha3', $format = '%Y-%m-%d', $attsCal3);
+                    ?>
+                </div>
+                <div style="margin: auto;">
+                    <button id="fecha3" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="odv" class="table table-bordered" >
+            <div class="contenidos" id="contenidos3">
+                <div id="columna1"><span class="etiqueta">Fecha</span></div>
+                <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
+                <div id="columna1"><span class="etiqueta">Integrado</span></div>
+                <div id="columna1"><span class="etiqueta">RFC</span> </div>
+                <div id="columna1"><span class="etiqueta">Direccion</span> </div>
+                <div id="columna1"><span class="etiqueta">Ver Balance</span></div>
+
+            </div>
+            <?php foreach ($this->resultados as $key => $value) {?>
+                <div class="contenidos" id="contenidos3">
+                    <div id="columna1" class="fecha3"><?php echo $value->created; ?></div>
+                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
+                    <div id="columna1"><?php echo $integradoId; ?></div>
+                    <div id="columna1"><?php echo $rfc ?></div>
+                    <div id="columna1"><?php echo $direccion ?></div>
+                    <div id="columna1" style="width: 50px">
+                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
 
     </fieldset>
 
-
-    <div class="form-actions" style="max-width: 30%">
-        <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-        <button type="button" class="btn btn-primary span3" id="ordenVenta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-    </div>
     <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.endTabSet');
