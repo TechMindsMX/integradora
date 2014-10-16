@@ -20,7 +20,7 @@ $accion = 'index.php?option=com_adminintegradora';
 				var data = jQuery('#comision-form').find('select, input').serialize();
 
 				var parametros = {
-					'link'  : '<?php echo $accion; ?>&task=savecomision&format=raw',
+					'link'  : '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
 					'datos' : data
 				};
 
@@ -46,7 +46,7 @@ $accion = 'index.php?option=com_adminintegradora';
 		});
 
 		function checkType() {
-			var $freqTime 	= jQuery('#frequency');
+			var $freqTime 	= jQuery('#frequency, .frequency');
 			var $rate		= jQuery('#percentage');
 
 			if (this.value == '1') {
@@ -90,10 +90,10 @@ $accion = 'index.php?option=com_adminintegradora';
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
 				</select>
-			<label class="control-label" for="frequencyTimes">
+			<label class="control-label frequency" for="frequencyTimes">
 				<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME'); ?>
 			</label>
-			<select id="frequencyTimes" name="frequencyTimes">
+			<select class="frequency" id="frequencyTimes" name="frequencyTimes">
 				<?php foreach ($this->cats->frequencyTimes as $key => $value):
 					$selected = ($items->frequencyTime == $value) ? 'selected' : '';
 					?>

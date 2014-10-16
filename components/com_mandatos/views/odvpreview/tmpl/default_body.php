@@ -87,9 +87,18 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->currency; ?>
 		</div>
+		<div class="span2 text-right">
+			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
+		</div>
+		<div class="span4">
+			<?php if (isset($this->odv->cuenta)) { echo $this->odv->cuenta; } ?>
+		</div>
 	</div>
 </div>
+
+<!-- Datos del Proveedor-->
 <div class="clearfix" id="cuerpo">
+	<h4><?php echo JText::_('LBL_HEADER_DATOS_CLIENTE'); ?></h4>
 	<div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
@@ -105,12 +114,6 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->proveedor->rfc; ?>
 		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_BANCOS'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->banco)) { echo $this->odv->banco; } ?>
-		</div>
 	</div>
 	<div>
 		<div class="span2 text-right">
@@ -119,12 +122,6 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->proveedor->contact; ?>
 		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->cuenta)) { echo $this->odv->cuenta; } ?>
-		</div>
 	</div>
 	<div>
 		<div class="span2 text-right">
@@ -132,12 +129,6 @@ $number2word = new AifLibNumber();
 		</div>
 		<div class="span4">
 			<?php echo $this->odv->proveedor->phone; ?>
-		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->clabe)) { echo $this->odv->clabe; } ?>
 		</div>
 	</div>
 	<div class="clearfix">
@@ -219,7 +210,7 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_CON_FACTURA'); ?>
+				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
 			</div>
 			<div class="container text-uppercase control-group">
 				<?php echo JText::_('LBL_AUTORIZO_ODV'); ?>

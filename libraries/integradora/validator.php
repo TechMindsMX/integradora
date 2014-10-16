@@ -49,10 +49,10 @@ class validador{
 	public static function noErrors ($array) {
 		foreach($array as $value){
 			if(is_array($value)) {
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	protected function valida_email ($data) {

@@ -2032,7 +2032,7 @@ class sendToTimOne {
 	public function to_timone() {
 
 //		$credentials = array('username' => '' ,'password' => '');
-		$verbose = fopen('curl.log', 'w');
+		$verbose = fopen('curl.log', 'a+');
 		$ch = curl_init();
 
 		switch($this->getHttpType()) {
@@ -2113,7 +2113,7 @@ class sendToTimOne {
 
 		rewind($verbose);
 		$verboseLog = stream_get_contents($verbose);
-//		echo "Verbose information:\n<pre>", htmlspecialchars($verboseLog), "</pre>\n".curl_errno($ch).curl_error($ch);
+		echo "Verbose information:\n<pre>", htmlspecialchars($verboseLog), "</pre>\n".curl_errno($ch).curl_error($ch);
 
 		$this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);

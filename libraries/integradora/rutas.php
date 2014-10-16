@@ -47,6 +47,14 @@ class servicesRoute
 		return $this->baseUrl;
 	}
 
+	public function userUrls() {
+		$this->urls = new servicesUrls();
+
+		$this->urls->setUser ();
+
+		return $this;
+	}
+
 	public function projectUrls () {
 		$this->urls = new servicesUrls();
 
@@ -84,6 +92,7 @@ class servicesRoute
 	public function setAddress ($address) {
 		$this->address = $address;
 	}
+
 
 }
 
@@ -135,7 +144,13 @@ class servicesUrls
 	}
 
 	public function setComisions () {
+		$this->list->url = 'users/{userId}/user';
+		$this->create->url = 'users/{userId}/user';
+		$this->details->url = 'users/{userId}/user/{id}';
+		$this->update->url = 'users/{userId}/user/{id}';
+		$this->disable->url = 'users/{userId}/user/{id}';
 	}
+
 }
 
 class urlAndType
