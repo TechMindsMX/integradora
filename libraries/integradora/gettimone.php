@@ -931,6 +931,163 @@ class getFromTimOne{
         }
         return $respuesta;
     }
+
+    public static function getFlujo($integradoId)
+    {
+        $respuesta = null;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1388880000000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1393718400000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1396137600000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1398816000000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1401408000000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1404086400000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1409356800000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1412035200000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1414627200000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1417305600000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        $flujo = new stdClass;
+        $flujo->id = 1;
+        $flujo->integradoId = 1;
+        $flujo->numflujo = 1;
+        $flujo->proyectId = 1;
+        $flujo->created = 1419897600000;
+        $flujo->currency = 'MXN';
+        $flujo->paymentType = 0;
+        $flujo->status = 0;
+        $flujo->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+        $array[] = $flujo;
+
+        foreach ($array as $key => $value) {
+            if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }
+        }
+        return $respuesta;
+    }
     public static function getOrdenesRetiro($integradoId) {
         $respuesta = null;
 
