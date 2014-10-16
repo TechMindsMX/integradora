@@ -51,3 +51,9 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 	<?php echo JText::_('COM_MANDATOS_ODV_LIST'); ?>
 	</a>
 </div>
+
+<div class="margen-fila">
+    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=facturalist&integradoId='.$this->integradoId); ?>">
+        <?php echo JText::_('COM_MANDATOS_FACTURA_LIST'); ?>
+    </a>
+</div>
