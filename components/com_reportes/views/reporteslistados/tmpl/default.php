@@ -23,27 +23,37 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
 ?>
 <script>
 
+   /* if((Date.parse(fech1)) > (Date.parse(fech2))){
+        alert(‘La fecha inicial no puede ser mayor que la fecha final’);
+    }
+    }
+*/
+
     function balance() {
         var up = jQuery('#dup').val();
         var end = jQuery('#dend').val();
+        var fechas=jQuery('.fecha');
 
-        var valor = parseInt(jQuery(this).val());
 
-        switch (valor) {
-            case 0:
-                jQuery('.type_0').show();
-                jQuery('.type_1').hide();
-                break;
-            case 1:
-                jQuery('.type_1').show();
-                jQuery('.type_0').hide();
-                break;
-            case 3:
-                jQuery('.type_0').show();
-                jQuery('.type_1').show();
-                break;
 
-        }
+
+        jQuery.each(fechas, function (key, value) {
+            var parent=jQuery(this).parent();
+            var fecha=jQuery(this).html();
+            var elem = fecha.split('-');
+            var fech = elem[2]+'-'+elem[1]+'-'+elem[0];
+            parent.hide();
+            if((Date.parse(fech)) > (Date.parse(up))){
+             if((Date.parse(fech)) < (Date.parse(end))){
+                 parent.show();
+             }
+
+            }
+
+
+
+
+        });
     }
 </script>
 
@@ -55,21 +65,29 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
     ?>
 
     <fieldset>
-        <div class="form-group" id="odv">
-            <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
-            <?php
-            $default = date('Y-m-d');
-            echo JHTML::_('calendar',$default, 'dup', 'dup', $format = '%Y-%m-%d', $attsCal);
-            ?>
-        </div><div id="contenidos" class="form-group">
-            <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
-            <?php
-            $default = date('Y-m-d');
-            echo JHTML::_('calendar',$default, 'dend', 'dend', $format = '%Y-%m-%d', $attsCal);
-            ?>
+        <div>
+            <div class="form-group" style="margin-left: 31px; text-align: 0;">
+              <div style="display: inline-block">
+                  <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
+                  <?php
+                  $default = date('Y-m-d');
+                  echo JHTML::_('calendar',$default, 'dup', 'dup', $format = '%Y-%m-%d', $attsCal);
+                  ?>
+              </div>
+              <div>
+                <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
+                <?php
+                $default = date('Y-m-d');
+                echo JHTML::_('calendar',$default, 'dend', 'dend', $format = '%Y-%m-%d', $attsCal);
+                ?>
+              </div>
+              <div style="margin: auto;">
+                  <button id="buttonsearch" onclick="balance()" class="btn btn-primary span3" type="button">Buscar</button>
+              </div>
+            </div>
         </div>
 
-        <div><button id="buttonsearch" onclick="balance()" class="btn btn-primary span2" type="button">Buscar</button></div>
+
             <div id="odv" class="table table-bordered" >
                 <div class="head" id="head">
                     <div id="columna1"><span class="etiqueta">Fecha</span></div>
@@ -77,16 +95,21 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                     <div id="columna1"><span class="etiqueta">Integrado</span></div>
                     <div id="columna1"><span class="etiqueta">RFC</span> </div>
                     <div id="columna1"><span class="etiqueta">Direccion</span> </div>
+                    <div id="columna1"><span class="etiqueta">Ver Balance</span></div>
 
 
                 </div>
                 <?php foreach ($this->balances as $key => $value) {?>
                 <div class="contenidos" id="contenidos">
-                    <div id="columna1"><?php echo $value->created; ?></div>
-                    <div id="columna1" style=" width: 58%;"><?php echo $value->observaciones ?> </div>
+                    <div id="columna1" class="fecha"><?php echo $value->created; ?></div>
+                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
                     <div id="columna1"><?php echo $integradoId; ?></div>
                     <div id="columna1"><?php echo $rfc ?></div>
                     <div id="columna1"><?php echo $direccion ?></div>
+                    <div id="columna1" style="width: 50px">
+                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
+                    </div>
+
 
                 </div>
                 <?php }?>
