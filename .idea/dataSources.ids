@@ -1,0 +1,1243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - @localhost" uuid="af5b87f1-4889-4b9a-8099-60e73f71be21">
+    <database-info product="MySQL" version="5.5.24-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.31 ( Revision: alexander.soklakov@oracle.com-20140520065950-groqzzbvxprqdmnz )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="integradb"/>
+    <table name="flpmu_assets" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UHJpbWFyeSBLZXk=" autoIncrement="true"/>
+      <column name="parent_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCBwYXJlbnQu"/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCBsZnQu"/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCByZ3Qu"/>
+      <column name="level" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="VGhlIGNhY2hlZCBsZXZlbCBpbiB0aGUgbmVzdGVkIHRyZWUu"/>
+      <column name="name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="VGhlIHVuaXF1ZSBuYW1lIGZvciB0aGUgYXNzZXQuCg=="/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGRlc2NyaXB0aXZlIHRpdGxlIGZvciB0aGUgYXNzZXQu"/>
+      <column name="rules" sqlType="VARCHAR" precision="5120" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBlbmNvZGVkIGFjY2VzcyBjb250cm9sLg=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_asset_name" unique="true" columns="name"/>
+      <index name="idx_lft_rgt" unique="false" columns="lft,rgt"/>
+      <index name="idx_parent_id" unique="false" columns="parent_id"/>
+    </table>
+    <table name="flpmu_associations" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="QSByZWZlcmVuY2UgdG8gdGhlIGFzc29jaWF0ZWQgaXRlbS4="/>
+      <column name="context" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGNvbnRleHQgb2YgdGhlIGFzc29jaWF0ZWQgaXRlbS4="/>
+      <column name="key" sqlType="CHAR" precision="32" scale="0" nullable="false" jdbcType="1" remarks="VGhlIGtleSBmb3IgdGhlIGFzc29jaWF0aW9uIGNvbXB1dGVkIGZyb20gYW4gbWQ1IG9uIGFzc29jaWF0ZWQgaWRzLg=="/>
+      <primary-key name="PRIMARY" columns="context,id"/>
+      <index name="idx_key" unique="false" columns="key"/>
+    </table>
+    <table name="flpmu_banner_clients" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="contact" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="extrainfo" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="own_prefix" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="metakey_prefix" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="purchase_type" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <column name="track_clicks" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <column name="track_impressions" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_metakey_prefix" unique="false" columns="metakey_prefix"/>
+      <index name="idx_own_prefix" unique="false" columns="own_prefix"/>
+    </table>
+    <table name="flpmu_banner_tracks" schema="" catalog="integradb" type="TABLE">
+      <column name="track_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="track_type" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="banner_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="count" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="track_date,track_type,banner_id"/>
+      <index name="idx_banner_id" unique="false" columns="banner_id"/>
+      <index name="idx_track_date" unique="false" columns="track_date"/>
+      <index name="idx_track_type" unique="false" columns="track_type"/>
+    </table>
+    <table name="flpmu_banners" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="cid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="type" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="imptotal" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="impmade" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="clicks" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="clickurl" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="catid" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="description" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="custombannercode" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12"/>
+      <column name="sticky" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="own_prefix" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="metakey_prefix" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="purchase_type" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <column name="track_clicks" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <column name="track_impressions" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="LTE="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="reset" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_banner_catid" unique="false" columns="catid"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_metakey_prefix" unique="false" columns="metakey_prefix"/>
+      <index name="idx_own_prefix" unique="false" columns="own_prefix"/>
+      <index name="idx_state" unique="false" columns="state"/>
+    </table>
+    <table name="flpmu_catalog_estados" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="clave" sqlType="VARCHAR" precision="2" scale="0" nullable="false" jdbcType="12"/>
+      <column name="nombre" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="abrev" sqlType="VARCHAR" precision="16" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_catalog_paises" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="iso" sqlType="CHAR" precision="2" scale="0" nullable="true" jdbcType="1"/>
+      <column name="nombre" sqlType="VARCHAR" precision="80" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_categories" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="asset_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="RksgdG8gdGhlICNfX2Fzc2V0cyB0YWJsZS4="/>
+      <column name="parent_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="level" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="path" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="extension" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="note" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="description" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIG1ldGEgZGVzY3JpcHRpb24gZm9yIHRoZSBwYWdlLg=="/>
+      <column name="metakey" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIG1ldGEga2V5d29yZHMgZm9yIHRoZSBwYWdlLg=="/>
+      <column name="metadata" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBlbmNvZGVkIG1ldGFkYXRhIHByb3BlcnRpZXMu"/>
+      <column name="created_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="modified_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="cat_idx" unique="false" columns="extension,published,access"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_alias" unique="false" columns="alias"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_left_right" unique="false" columns="lft,rgt"/>
+      <index name="idx_path" unique="false" columns="path"/>
+    </table>
+    <table name="flpmu_contact_details" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="con_position" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="address" sqlType="TEXT" precision="65535" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="suburb" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="state" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="country" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="postcode" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="telephone" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="fax" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="misc" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="image" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="email_to" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="default_con" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="catid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="mobile" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="webpage" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="sortname1" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="sortname2" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="sortname3" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadata" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="featured" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="U2V0IGlmIGFydGljbGUgaXMgZmVhdHVyZWQu"/>
+      <column name="xreference" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="QSByZWZlcmVuY2UgdG8gZW5hYmxlIGxpbmthZ2VzIHRvIGV4dGVybmFsIGRhdGEgc2V0cy4="/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_catid" unique="false" columns="catid"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_createdby" unique="false" columns="created_by"/>
+      <index name="idx_featured_catid" unique="false" columns="featured,catid"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_state" unique="false" columns="published"/>
+      <index name="idx_xreference" unique="false" columns="xreference"/>
+    </table>
+    <table name="flpmu_content" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="asset_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="RksgdG8gdGhlICNfX2Fzc2V0cyB0YWJsZS4="/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="introtext" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="fulltext" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="catid" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="images" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="urls" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="attribs" sqlType="VARCHAR" precision="5120" scale="0" nullable="false" jdbcType="12"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metadata" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="featured" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="U2V0IGlmIGFydGljbGUgaXMgZmVhdHVyZWQu"/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" remarks="VGhlIGxhbmd1YWdlIGNvZGUgZm9yIHRoZSBhcnRpY2xlLg=="/>
+      <column name="xreference" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="QSByZWZlcmVuY2UgdG8gZW5hYmxlIGxpbmthZ2VzIHRvIGV4dGVybmFsIGRhdGEgc2V0cy4="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_catid" unique="false" columns="catid"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_createdby" unique="false" columns="created_by"/>
+      <index name="idx_featured_catid" unique="false" columns="featured,catid"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_state" unique="false" columns="state"/>
+      <index name="idx_xreference" unique="false" columns="xreference"/>
+    </table>
+    <table name="flpmu_content_frontpage" schema="" catalog="integradb" type="TABLE">
+      <column name="content_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="content_id"/>
+    </table>
+    <table name="flpmu_content_rating" schema="" catalog="integradb" type="TABLE">
+      <column name="content_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rating_sum" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rating_count" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="lastip" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="content_id"/>
+    </table>
+    <table name="flpmu_content_types" schema="" catalog="integradb" type="TABLE">
+      <column name="type_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="type_title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="type_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="table" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="rules" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="field_mappings" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="router" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="content_history_options" sqlType="VARCHAR" precision="5120" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBzdHJpbmcgZm9yIGNvbV9jb250ZW50aGlzdG9yeSBvcHRpb25z"/>
+      <primary-key name="PRIMARY" columns="type_id"/>
+      <index name="idx_alias" unique="false" columns="type_alias"/>
+    </table>
+    <table name="flpmu_contentitem_tag_map" schema="" catalog="integradb" type="TABLE">
+      <column name="type_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="core_content_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UEsgZnJvbSB0aGUgY29yZSBjb250ZW50IHRhYmxl"/>
+      <column name="content_item_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UEsgZnJvbSB0aGUgY29udGVudCB0eXBlIHRhYmxl"/>
+      <column name="tag_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UEsgZnJvbSB0aGUgdGFnIHRhYmxl"/>
+      <column name="tag_date" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" remarks="RGF0ZSBvZiBtb3N0IHJlY2VudCBzYXZlIGZvciB0aGlzIHRhZy1pdGVt" version="true"/>
+      <column name="type_id" sqlType="MEDIUMINT" precision="7" scale="0" nullable="false" jdbcType="4" remarks="UEsgZnJvbSB0aGUgY29udGVudF90eXBlIHRhYmxl"/>
+      <index name="uc_ItemnameTagid" unique="true" columns="type_id,content_item_id,tag_id"/>
+      <index name="idx_core_content_id" unique="false" columns="core_content_id"/>
+      <index name="idx_date_id" unique="false" columns="tag_date,tag_id"/>
+      <index name="idx_tag" unique="false" columns="tag_id"/>
+      <index name="idx_tag_type" unique="false" columns="tag_id,type_id"/>
+      <index name="idx_type" unique="false" columns="type_id"/>
+    </table>
+    <table name="flpmu_core_log_searches" schema="" catalog="integradb" type="TABLE">
+      <column name="search_term" sqlType="VARCHAR" precision="128" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+    </table>
+    <table name="flpmu_extensions" schema="" catalog="integradb" type="TABLE">
+      <column name="extension_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="type" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="element" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="folder" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="client_id" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="enabled" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="protected" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="manifest_cache" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="custom_data" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="system_data" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="extension_id"/>
+      <index name="element_clientid" unique="false" columns="element,client_id"/>
+      <index name="element_folder_clientid" unique="false" columns="element,folder,client_id"/>
+      <index name="extension" unique="false" columns="type,element,folder,client_id"/>
+    </table>
+    <table name="flpmu_finder_filters" schema="" catalog="integradb" type="TABLE">
+      <column name="filter_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="map_count" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="data" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="params" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="true" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="filter_id"/>
+    </table>
+    <table name="flpmu_finder_links" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="url" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="route" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="indexdate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="md5sum" sqlType="VARCHAR" precision="32" scale="0" nullable="true" jdbcType="12"/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="state" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MQ=="/>
+      <column name="access" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="language" sqlType="VARCHAR" precision="8" scale="0" nullable="false" jdbcType="12"/>
+      <column name="publish_start_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_end_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="start_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="end_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="list_price" sqlType="DOUBLE UNSIGNED" precision="22" scale="0" nullable="false" jdbcType="8" def="MA=="/>
+      <column name="sale_price" sqlType="DOUBLE UNSIGNED" precision="22" scale="0" nullable="false" jdbcType="8" def="MA=="/>
+      <column name="type_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="object" sqlType="MEDIUMBLOB" precision="16777215" scale="0" nullable="false" jdbcType="-4"/>
+      <primary-key name="PRIMARY" columns="link_id"/>
+      <index name="idx_md5" unique="false" columns="md5sum"/>
+      <index name="idx_published_list" unique="false" columns="published,state,access,publish_start_date,publish_end_date,list_price"/>
+      <index name="idx_published_sale" unique="false" columns="published,state,access,publish_start_date,publish_end_date,sale_price"/>
+      <index name="idx_title" unique="false" columns="title"/>
+      <index name="idx_type" unique="false" columns="type_id"/>
+      <index name="idx_url" unique="false" columns="url"/>
+    </table>
+    <table name="flpmu_finder_links_terms0" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms1" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms2" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms3" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms4" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms5" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms6" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms7" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms8" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_terms9" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termsa" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termsb" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termsc" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termsd" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termse" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_links_termsf" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <primary-key name="PRIMARY" columns="link_id,term_id"/>
+      <index name="idx_link_term_weight" unique="false" columns="link_id,term_id,weight"/>
+      <index name="idx_term_weight" unique="false" columns="term_id,weight"/>
+    </table>
+    <table name="flpmu_finder_taxonomy" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="parent_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="state" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="access" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="ordering" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="access" unique="false" columns="access"/>
+      <index name="idx_parent_published" unique="false" columns="parent_id,state,access"/>
+      <index name="ordering" unique="false" columns="ordering"/>
+      <index name="parent_id" unique="false" columns="parent_id"/>
+      <index name="state" unique="false" columns="state"/>
+    </table>
+    <table name="flpmu_finder_taxonomy_map" schema="" catalog="integradb" type="TABLE">
+      <column name="link_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="node_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="link_id,node_id"/>
+      <index name="link_id" unique="false" columns="link_id"/>
+      <index name="node_id" unique="false" columns="node_id"/>
+    </table>
+    <table name="flpmu_finder_terms" schema="" catalog="integradb" type="TABLE">
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="term" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="stem" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="common" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="phrase" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7" def="MA=="/>
+      <column name="soundex" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="links" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="language" sqlType="CHAR" precision="3" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="term_id"/>
+      <index name="idx_term" unique="true" columns="term"/>
+      <index name="idx_soundex_phrase" unique="false" columns="soundex,phrase"/>
+      <index name="idx_stem_phrase" unique="false" columns="stem,phrase"/>
+      <index name="idx_term_phrase" unique="false" columns="term,phrase"/>
+    </table>
+    <table name="flpmu_finder_terms_common" schema="" catalog="integradb" type="TABLE">
+      <column name="term" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="language" sqlType="VARCHAR" precision="3" scale="0" nullable="false" jdbcType="12"/>
+      <index name="idx_lang" unique="false" columns="language"/>
+      <index name="idx_word_lang" unique="false" columns="term,language"/>
+    </table>
+    <table name="flpmu_finder_tokens" schema="" catalog="integradb" type="TABLE">
+      <column name="term" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="stem" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="common" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="phrase" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7" def="MQ=="/>
+      <column name="context" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="Mg=="/>
+      <column name="language" sqlType="CHAR" precision="3" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <index name="idx_context" unique="false" columns="context"/>
+      <index name="idx_word" unique="false" columns="term"/>
+    </table>
+    <table name="flpmu_finder_tokens_aggregate" schema="" catalog="integradb" type="TABLE">
+      <column name="term_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="map_suffix" sqlType="CHAR" precision="1" scale="0" nullable="false" jdbcType="1"/>
+      <column name="term" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="stem" sqlType="VARCHAR" precision="75" scale="0" nullable="false" jdbcType="12"/>
+      <column name="common" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="phrase" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="term_weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <column name="context" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="Mg=="/>
+      <column name="context_weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <column name="total_weight" sqlType="FLOAT UNSIGNED" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <column name="language" sqlType="CHAR" precision="3" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <index name="keyword_id" unique="false" columns="term_id"/>
+      <index name="token" unique="false" columns="term"/>
+    </table>
+    <table name="flpmu_finder_types" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="mime" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="title" unique="true" columns="title"/>
+    </table>
+    <table name="flpmu_integrado" schema="" catalog="integradb" type="TABLE">
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="status" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" def="MA=="/>
+      <column name="pers_juridica" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" def="MA=="/>
+      <primary-key name="PRIMARY" columns="integrado_id"/>
+      <index name="idIntegrados_UNIQUE" unique="true" columns="integrado_id"/>
+    </table>
+    <table name="flpmu_integrado_datos_bancarios" schema="" catalog="integradb" type="TABLE">
+      <column name="datosBan_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="banco_nombre" sqlType="VARCHAR" precision="5" scale="0" nullable="true" jdbcType="12"/>
+      <column name="banco_cuenta" sqlType="VARCHAR" precision="18" scale="0" nullable="true" jdbcType="12"/>
+      <column name="banco_sucursal" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="banco_clabe" sqlType="VARCHAR" precision="18" scale="0" nullable="true" jdbcType="12"/>
+      <column name="banco_file" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="datosBan_id"/>
+    </table>
+    <table name="flpmu_integrado_datos_empresa" schema="" catalog="integradb" type="TABLE">
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="razon_social" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="rfc" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="calle" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="num_exterior" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="num_interior" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cod_postal" sqlType="VARCHAR" precision="5" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_fijo" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_fijo_extension" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_fax" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sitio_web" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="testimonio_1" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="testimonio_2" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="poder" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="reg_propiedad" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="url_rfc" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="flpmu_integrado_datos_personales" schema="" catalog="integradb" type="TABLE">
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="nacionalidad" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="sexo" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="fecha_nacimiento" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="rfc" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="calle" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="num_exterior" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="num_interior" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="cod_postal" sqlType="VARCHAR" precision="5" scale="0" nullable="true" jdbcType="12"/>
+      <column name="curp" sqlType="VARCHAR" precision="18" scale="0" nullable="true" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_fijo" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_fijo_extension" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="tel_movil" sqlType="VARCHAR" precision="13" scale="0" nullable="true" jdbcType="12"/>
+      <column name="nom_comercial" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url_identificacion" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url_rfc" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="url_comprobante_domicilio" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="flpmu_integrado_instrumentos" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="instrum_type" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6"/>
+      <column name="instrum_fecha" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
+      <column name="instrum_notaria" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="instrum_estado" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <column name="instrum_num_instrumento" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="url_instrumento" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="instrum_nom_notario" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="id_UNIQUE" unique="true" columns="id"/>
+    </table>
+    <table name="flpmu_integrado_permisos" schema="" catalog="integradb" type="TABLE">
+      <column name="view_component" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="lvls_to_edit" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="lvls_to_auth" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <index name="view_component_UNIQUE" unique="true" columns="view_component"/>
+    </table>
+    <table name="flpmu_integrado_pers_juridica_catalog" schema="" catalog="integradb" type="TABLE">
+      <column name="pers_juridica_id" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="pers_juridica_name" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="flpmu_integrado_reg_propiedad" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="instrum_fecha" sqlType="DATE" precision="10" scale="0" nullable="false" jdbcType="91"/>
+      <column name="instrum_estado" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="instrum_num_instrumento" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="instrum_url_instrumento" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="id_UNIQUE" unique="true" columns="id"/>
+    </table>
+    <table name="flpmu_integrado_status_catalog" schema="" catalog="integradb" type="TABLE">
+      <column name="status" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="status_name" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="status"/>
+      <exported-key name="fk_status" table="flpmu_integrado_status_log" schema="" catalog="integradb" columns="status_log_status"/>
+    </table>
+    <table name="flpmu_integrado_status_log" schema="" catalog="integradb" type="TABLE">
+      <column name="status_log_integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="status_log_time" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <column name="status_log_status" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <foreign-key name="fk_status" columns="status_log_status" ref-table="flpmu_integrado_status_catalog" ref-schema="" ref-catalog="integradb" ref-columns="status" update-rule="0" delete-rule="0" deferrability="2"/>
+      <index name="fk_status_idx" unique="false" columns="status_log_status"/>
+    </table>
+    <table name="flpmu_integrado_users" schema="" catalog="integradb" type="TABLE">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="integrado_principal" sqlType="BIT" precision="1" scale="0" nullable="true" jdbcType="-7"/>
+      <column name="integrado_permission_level" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+    </table>
+    <table name="flpmu_js_ip_2_country" schema="" catalog="integradb" type="TABLE">
+      <column name="ip_from" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="ip_to" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="short_code" sqlType="VARCHAR" precision="2" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="code" sqlType="VARCHAR" precision="3" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="country" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <index name="idx_from" unique="false" columns="ip_from"/>
+      <index name="idx_to" unique="false" columns="ip_to"/>
+    </table>
+    <table name="flpmu_js_res_country" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="2" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="64" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_js_res_field_geo" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="country" sqlType="CHAR" precision="2" scale="0" nullable="true" jdbcType="1"/>
+      <column name="state" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="city" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <column name="zip" sqlType="VARCHAR" precision="15" scale="0" nullable="true" jdbcType="12"/>
+      <column name="lat" sqlType="FLOAT" precision="18" scale="15" nullable="true" jdbcType="7"/>
+      <column name="lng" sqlType="FLOAT" precision="18" scale="15" nullable="true" jdbcType="7"/>
+      <column name="state_trans" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="city_trans" sqlType="VARCHAR" precision="200" scale="0" nullable="true" jdbcType="12"/>
+      <column name="section_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="field_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="field_key" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="record_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_fid" unique="false" columns="field_id"/>
+      <index name="idx_key" unique="false" columns="field_key"/>
+      <index name="idx_sect" unique="false" columns="section_id"/>
+    </table>
+    <table name="flpmu_js_res_field_stepaccess" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="record_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="field_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ctime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_field" unique="false" columns="field_id"/>
+      <index name="idx_record" unique="false" columns="record_id"/>
+      <index name="idx_user" unique="false" columns="user_id"/>
+    </table>
+    <table name="flpmu_languages" schema="" catalog="integradb" type="TABLE">
+      <column name="lang_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="lang_code" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="title" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="title_native" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="sef" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="image" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="sitename" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="published" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="lang_id"/>
+      <index name="idx_image" unique="true" columns="image"/>
+      <index name="idx_langcode" unique="true" columns="lang_code"/>
+      <index name="idx_sef" unique="true" columns="sef"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_ordering" unique="false" columns="ordering"/>
+    </table>
+    <table name="flpmu_mandatos_clientes" schema="" catalog="integradb" type="TABLE">
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="cliente_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+    </table>
+    <table name="flpmu_mandatos_moneda_catalog" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="nombre_largo" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="abrev" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_mandatos_productos" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="integrado_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="alias" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="concepto" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="unidad" sqlType="SMALLINT" precision="5" scale="0" nullable="false" jdbcType="5" def="MA=="/>
+      <column name="precio" sqlType="FLOAT" precision="12" scale="0" nullable="true" jdbcType="7" def="MA=="/>
+      <column name="iva" sqlType="FLOAT" precision="12" scale="0" nullable="false" jdbcType="7"/>
+      <column name="ieps" sqlType="FLOAT" precision="12" scale="0" nullable="true" jdbcType="7"/>
+      <column name="moneda" sqlType="SMALLINT" precision="5" scale="0" nullable="false" jdbcType="5" def="MA=="/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_mandatos_unidad_catalog" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="nombre" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_menu" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="menutype" sqlType="VARCHAR" precision="24" scale="0" nullable="false" jdbcType="12" remarks="VGhlIHR5cGUgb2YgbWVudSB0aGlzIGl0ZW0gYmVsb25ncyB0by4gRksgdG8gI19fbWVudV90eXBlcy5tZW51dHlwZQ=="/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGRpc3BsYXkgdGl0bGUgb2YgdGhlIG1lbnUgaXRlbS4="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="VGhlIFNFRiBhbGlhcyBvZiB0aGUgbWVudSBpdGVtLg=="/>
+      <column name="note" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="path" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGNvbXB1dGVkIHBhdGggb2YgdGhlIG1lbnUgaXRlbSBiYXNlZCBvbiB0aGUgYWxpYXMgZmllbGQu"/>
+      <column name="link" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGFjdHVhbGx5IGxpbmsgdGhlIG1lbnUgaXRlbSByZWZlcnMgdG8u"/>
+      <column name="type" sqlType="VARCHAR" precision="16" scale="0" nullable="false" jdbcType="12" remarks="VGhlIHR5cGUgb2YgbGluazogQ29tcG9uZW50LCBVUkwsIEFsaWFzLCBTZXBhcmF0b3I="/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="VGhlIHB1Ymxpc2hlZCBzdGF0ZSBvZiB0aGUgbWVudSBsaW5rLg=="/>
+      <column name="parent_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ==" remarks="VGhlIHBhcmVudCBtZW51IGl0ZW0gaW4gdGhlIG1lbnUgdHJlZS4="/>
+      <column name="level" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="VGhlIHJlbGF0aXZlIGxldmVsIGluIHRoZSB0cmVlLg=="/>
+      <column name="component_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="RksgdG8gI19fZXh0ZW5zaW9ucy5pZA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="RksgdG8gI19fdXNlcnMuaWQ="/>
+      <column name="checked_out_time" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn" remarks="VGhlIHRpbWUgdGhlIG1lbnUgaXRlbSB3YXMgY2hlY2tlZCBvdXQu"/>
+      <column name="browserNav" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="VGhlIGNsaWNrIGJlaGF2aW91ciBvZiB0aGUgbGluay4="/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="VGhlIGFjY2VzcyBsZXZlbCByZXF1aXJlZCB0byB2aWV3IHRoZSBtZW51IGl0ZW0u"/>
+      <column name="img" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="VGhlIGltYWdlIG9mIHRoZSBtZW51IGl0ZW0u"/>
+      <column name="template_style_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1" remarks="SlNPTiBlbmNvZGVkIGRhdGEgZm9yIHRoZSBtZW51IGl0ZW0u"/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCBsZnQu"/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCByZ3Qu"/>
+      <column name="home" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="SW5kaWNhdGVzIGlmIHRoaXMgbWVudSBpdGVtIGlzIHRoZSBob21lIG9yIGRlZmF1bHQgcGFnZS4="/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <column name="client_id" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_client_id_parent_id_alias_language" unique="true" columns="client_id,parent_id,alias,language"/>
+      <index name="idx_alias" unique="false" columns="alias"/>
+      <index name="idx_componentid" unique="false" columns="component_id,menutype,published,access"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_left_right" unique="false" columns="lft,rgt"/>
+      <index name="idx_menutype" unique="false" columns="menutype"/>
+      <index name="idx_path" unique="false" columns="path"/>
+    </table>
+    <table name="flpmu_menu_types" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="menutype" sqlType="VARCHAR" precision="24" scale="0" nullable="false" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="48" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_menutype" unique="true" columns="menutype"/>
+    </table>
+    <table name="flpmu_messages" schema="" catalog="integradb" type="TABLE">
+      <column name="message_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id_from" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="user_id_to" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="folder_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="date_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="priority" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="subject" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="message" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="message_id"/>
+      <index name="useridto_state" unique="false" columns="user_id_to,state"/>
+    </table>
+    <table name="flpmu_messages_cfg" schema="" catalog="integradb" type="TABLE">
+      <column name="user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="cfg_name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="cfg_value" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <index name="idx_user_var_name" unique="true" columns="user_id,cfg_name"/>
+    </table>
+    <table name="flpmu_modules" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="asset_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="RksgdG8gdGhlICNfX2Fzc2V0cyB0YWJsZS4="/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="note" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="content" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="position" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="module" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="showtitle" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="client_id" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="newsfeeds" unique="false" columns="module,published"/>
+      <index name="published" unique="false" columns="published,access"/>
+    </table>
+    <table name="flpmu_modules_menu" schema="" catalog="integradb" type="TABLE">
+      <column name="moduleid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="menuid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="moduleid,menuid"/>
+    </table>
+    <table name="flpmu_newsfeeds" schema="" catalog="integradb" type="TABLE">
+      <column name="catid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="link" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="numarticles" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="cache_time" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MzYwMA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rtl" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadata" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="xreference" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="QSByZWZlcmVuY2UgdG8gZW5hYmxlIGxpbmthZ2VzIHRvIGV4dGVybmFsIGRhdGEgc2V0cy4="/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="description" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="images" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_catid" unique="false" columns="catid"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_createdby" unique="false" columns="created_by"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_state" unique="false" columns="published"/>
+      <index name="idx_xreference" unique="false" columns="xreference"/>
+    </table>
+    <table name="flpmu_overrider" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UHJpbWFyeSBLZXk=" autoIncrement="true"/>
+      <column name="constant" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="string" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="file" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="flpmu_plg_system_adminexile" schema="" catalog="integradb" type="TABLE">
+      <column name="ip" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="firstattempt" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <column name="lastattempt" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="attempts" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="penalty" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ip"/>
+    </table>
+    <table name="flpmu_plg_system_adminexile_tmpwhitelist" schema="" catalog="integradb" type="TABLE">
+      <column name="ip" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
+      <column name="expire" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="ip"/>
+    </table>
+    <table name="flpmu_postinstall_messages" schema="" catalog="integradb" type="TABLE">
+      <column name="postinstall_message_id" sqlType="BIGINT UNSIGNED" precision="20" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="extension_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" def="NzAw" remarks="RksgdG8gI19fZXh0ZW5zaW9ucw=="/>
+      <column name="title_key" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="TGFuZyBrZXkgZm9yIHRoZSB0aXRsZQ=="/>
+      <column name="description_key" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="TGFuZyBrZXkgZm9yIGRlc2NyaXB0aW9u"/>
+      <column name="action_key" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="language_extension" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="J2NvbV9wb3N0aW5zdGFsbCc=" remarks="RXh0ZW5zaW9uIGhvbGRpbmcgbGFuZyBrZXlz"/>
+      <column name="language_client_id" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="type" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12" def="J2xpbmsn" remarks="TWVzc2FnZSB0eXBlIC0gbWVzc2FnZSwgbGluaywgYWN0aW9u"/>
+      <column name="action_file" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" def="Jyc=" remarks="UkFEIFVSSSB0byB0aGUgUEhQIGZpbGUgY29udGFpbmluZyBhY3Rpb24gbWV0aG9k"/>
+      <column name="action" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" def="Jyc=" remarks="QWN0aW9uIG1ldGhvZCBuYW1lIG9yIFVSTA=="/>
+      <column name="condition_file" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" remarks="UkFEIFVSSSB0byBmaWxlIGhvbGRpbmcgZGlzcGxheSBjb25kaXRpb24gbWV0aG9k"/>
+      <column name="condition_method" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12" remarks="RGlzcGxheSBjb25kaXRpb24gbWV0aG9kLCBtdXN0IHJldHVybiBib29sZWFu"/>
+      <column name="version_introduced" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="JzMuMi4wJw==" remarks="VmVyc2lvbiB3aGVuIHRoaXMgbWVzc2FnZSB3YXMgaW50cm9kdWNlZA=="/>
+      <column name="enabled" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <primary-key name="PRIMARY" columns="postinstall_message_id"/>
+    </table>
+    <table name="flpmu_redirect_links" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="old_url" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="new_url" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="referer" sqlType="VARCHAR" precision="150" scale="0" nullable="false" jdbcType="12"/>
+      <column name="comment" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="created_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_link_old" unique="true" columns="old_url"/>
+      <index name="idx_link_modifed" unique="false" columns="modified_date"/>
+    </table>
+    <table name="flpmu_schemas" schema="" catalog="integradb" type="TABLE">
+      <column name="extension_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="version_id" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="extension_id,version_id"/>
+    </table>
+    <table name="flpmu_session" schema="" catalog="integradb" type="TABLE">
+      <column name="session_id" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="client_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="guest" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="true" jdbcType="-6" def="MQ=="/>
+      <column name="time" sqlType="VARCHAR" precision="14" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="data" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="userid" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="username" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="session_id"/>
+      <index name="time" unique="false" columns="time"/>
+      <index name="userid" unique="false" columns="userid"/>
+    </table>
+    <table name="flpmu_tags" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="parent_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="level" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="path" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="note" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="description" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="published" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIG1ldGEgZGVzY3JpcHRpb24gZm9yIHRoZSBwYWdlLg=="/>
+      <column name="metakey" sqlType="VARCHAR" precision="1024" scale="0" nullable="false" jdbcType="12" remarks="VGhlIG1ldGEga2V5d29yZHMgZm9yIHRoZSBwYWdlLg=="/>
+      <column name="metadata" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBlbmNvZGVkIG1ldGFkYXRhIHByb3BlcnRpZXMu"/>
+      <column name="created_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="modified_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="images" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="urls" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_alias" unique="false" columns="alias"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_left_right" unique="false" columns="lft,rgt"/>
+      <index name="idx_path" unique="false" columns="path"/>
+      <index name="tag_idx" unique="false" columns="published,access"/>
+    </table>
+    <table name="flpmu_template_styles" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="template" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="client_id" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="home" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" def="JzAn"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_home" unique="false" columns="home"/>
+      <index name="idx_template" unique="false" columns="template"/>
+    </table>
+    <table name="flpmu_ucm_base" schema="" catalog="integradb" type="TABLE">
+      <column name="ucm_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ucm_item_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ucm_type_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ucm_language_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ucm_id"/>
+      <index name="idx_ucm_item_id" unique="false" columns="ucm_item_id"/>
+      <index name="idx_ucm_language_id" unique="false" columns="ucm_language_id"/>
+      <index name="idx_ucm_type_id" unique="false" columns="ucm_type_id"/>
+    </table>
+    <table name="flpmu_ucm_content" schema="" catalog="integradb" type="TABLE">
+      <column name="core_content_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="core_type_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="RksgdG8gdGhlIGNvbnRlbnQgdHlwZXMgdGFibGU="/>
+      <column name="core_title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="core_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="core_body" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="core_checked_out_time" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="core_checked_out_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_access" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_featured" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="core_metadata" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBlbmNvZGVkIG1ldGFkYXRhIHByb3BlcnRpZXMu"/>
+      <column name="core_created_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="core_created_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="core_modified_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TW9zdCByZWNlbnQgdXNlciB0aGF0IG1vZGlmaWVk"/>
+      <column name="core_modified_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="core_language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="core_publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="core_publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="core_content_item_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4" remarks="SUQgZnJvbSB0aGUgaW5kaXZpZHVhbCB0eXBlIHRhYmxl"/>
+      <column name="asset_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4" remarks="RksgdG8gdGhlICNfX2Fzc2V0cyB0YWJsZS4="/>
+      <column name="core_images" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_urls" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_hits" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="core_ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="core_catid" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="core_xreference" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="QSByZWZlcmVuY2UgdG8gZW5hYmxlIGxpbmthZ2VzIHRvIGV4dGVybmFsIGRhdGEgc2V0cy4="/>
+      <column name="core_type_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="core_content_id"/>
+      <index name="idx_access" unique="false" columns="core_access"/>
+      <index name="idx_alias" unique="false" columns="core_alias"/>
+      <index name="idx_content_type" unique="false" columns="core_type_alias"/>
+      <index name="idx_core_checked_out_user_id" unique="false" columns="core_checked_out_user_id"/>
+      <index name="idx_core_created_user_id" unique="false" columns="core_created_user_id"/>
+      <index name="idx_core_modified_user_id" unique="false" columns="core_modified_user_id"/>
+      <index name="idx_core_type_id" unique="false" columns="core_type_id"/>
+      <index name="idx_created_time" unique="false" columns="core_created_time"/>
+      <index name="idx_language" unique="false" columns="core_language"/>
+      <index name="idx_modified_time" unique="false" columns="core_modified_time"/>
+      <index name="idx_title" unique="false" columns="core_title"/>
+      <index name="tag_idx" unique="false" columns="core_state,core_access"/>
+    </table>
+    <table name="flpmu_ucm_history" schema="" catalog="integradb" type="TABLE">
+      <column name="version_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="ucm_item_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ucm_type_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="version_note" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="T3B0aW9uYWwgdmVyc2lvbiBuYW1l"/>
+      <column name="save_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="editor_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="character_count" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TnVtYmVyIG9mIGNoYXJhY3RlcnMgaW4gdGhpcyB2ZXJzaW9uLg=="/>
+      <column name="sha1_hash" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="U0hBMSBoYXNoIG9mIHRoZSB2ZXJzaW9uX2RhdGEgY29sdW1uLg=="/>
+      <column name="version_data" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1" remarks="anNvbi1lbmNvZGVkIHN0cmluZyBvZiB2ZXJzaW9uIGRhdGE="/>
+      <column name="keep_forever" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="MD1hdXRvIGRlbGV0ZTsgMT1rZWVw"/>
+      <primary-key name="PRIMARY" columns="version_id"/>
+      <index name="idx_save_date" unique="false" columns="save_date"/>
+      <index name="idx_ucm_item_id" unique="false" columns="ucm_type_id,ucm_item_id"/>
+    </table>
+    <table name="flpmu_update_sites" schema="" catalog="integradb" type="TABLE">
+      <column name="update_site_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="type" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="location" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="enabled" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="last_check_timestamp" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5" def="MA=="/>
+      <column name="extra_query" sqlType="VARCHAR" precision="1000" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="update_site_id"/>
+    </table>
+    <table name="flpmu_update_sites_extensions" schema="" catalog="integradb" type="TABLE">
+      <column name="update_site_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="extension_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <primary-key name="PRIMARY" columns="update_site_id,extension_id"/>
+    </table>
+    <table name="flpmu_updates" schema="" catalog="integradb" type="TABLE">
+      <column name="update_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="update_site_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="extension_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA=="/>
+      <column name="name" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="description" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="element" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="type" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="folder" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="client_id" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" def="MA=="/>
+      <column name="version" sqlType="VARCHAR" precision="32" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <column name="data" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="detailsurl" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="infourl" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="extra_query" sqlType="VARCHAR" precision="1000" scale="0" nullable="true" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="update_id"/>
+    </table>
+    <table name="flpmu_user_keys" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="series" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="invalid" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="time" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <column name="uastring" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="series" unique="true" columns="series"/>
+      <index name="series_2" unique="true" columns="series"/>
+      <index name="series_3" unique="true" columns="series"/>
+      <index name="user_id" unique="false" columns="user_id"/>
+    </table>
+    <table name="flpmu_user_notes" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="catid" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="subject" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="body" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="modified_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="review_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_category_id" unique="false" columns="catid"/>
+      <index name="idx_user_id" unique="false" columns="user_id"/>
+    </table>
+    <table name="flpmu_user_profiles" schema="" catalog="integradb" type="TABLE">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="profile_key" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="profile_value" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <index name="idx_user_id_profile_key" unique="true" columns="user_id,profile_key"/>
+    </table>
+    <table name="flpmu_user_usergroup_map" schema="" catalog="integradb" type="TABLE">
+      <column name="user_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="Rm9yZWlnbiBLZXkgdG8gI19fdXNlcnMuaWQ="/>
+      <column name="group_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="Rm9yZWlnbiBLZXkgdG8gI19fdXNlcmdyb3Vwcy5pZA=="/>
+      <primary-key name="PRIMARY" columns="user_id,group_id"/>
+    </table>
+    <table name="flpmu_usergroups" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UHJpbWFyeSBLZXk=" autoIncrement="true"/>
+      <column name="parent_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="QWRqYWNlbmN5IExpc3QgUmVmZXJlbmNlIElk"/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCBsZnQu"/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="TmVzdGVkIHNldCByZ3Qu"/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_usergroup_parent_title_lookup" unique="true" columns="parent_id,title"/>
+      <index name="idx_usergroup_adjacency_lookup" unique="false" columns="parent_id"/>
+      <index name="idx_usergroup_nested_set_lookup" unique="false" columns="lft,rgt"/>
+      <index name="idx_usergroup_title_lookup" unique="false" columns="title"/>
+    </table>
+    <table name="flpmu_users" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="username" sqlType="VARCHAR" precision="150" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="password" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="block" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="sendEmail" sqlType="TINYINT" precision="3" scale="0" nullable="true" jdbcType="-6" def="MA=="/>
+      <column name="registerDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="lastvisitDate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="activation" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="lastResetTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn" remarks="RGF0ZSBvZiBsYXN0IHBhc3N3b3JkIHJlc2V0"/>
+      <column name="resetCount" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA==" remarks="Q291bnQgb2YgcGFzc3dvcmQgcmVzZXRzIHNpbmNlIGxhc3RSZXNldFRpbWU="/>
+      <column name="otpKey" sqlType="VARCHAR" precision="1000" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="VHdvIGZhY3RvciBhdXRoZW50aWNhdGlvbiBlbmNyeXB0ZWQga2V5cw=="/>
+      <column name="otep" sqlType="VARCHAR" precision="1000" scale="0" nullable="false" jdbcType="12" def="Jyc=" remarks="T25lIHRpbWUgZW1lcmdlbmN5IHBhc3N3b3Jkcw=="/>
+      <column name="requireReset" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="UmVxdWlyZSB1c2VyIHRvIHJlc2V0IHBhc3N3b3JkIG9uIG5leHQgbG9naW4="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="email" unique="false" columns="email"/>
+      <index name="idx_block" unique="false" columns="block"/>
+      <index name="idx_name" unique="false" columns="name"/>
+      <index name="username" unique="false" columns="username"/>
+    </table>
+    <table name="flpmu_viewlevels" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" remarks="UHJpbWFyeSBLZXk=" autoIncrement="true"/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="rules" sqlType="VARCHAR" precision="5120" scale="0" nullable="false" jdbcType="12" remarks="SlNPTiBlbmNvZGVkIGFjY2VzcyBjb250cm9sLg=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_assetgroup_title_lookup" unique="true" columns="title"/>
+    </table>
+    <table name="flpmu_weblinks" schema="" catalog="integradb" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="catid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="title" sqlType="VARCHAR" precision="250" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="url" sqlType="VARCHAR" precision="250" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="description" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="hits" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="state" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
+      <column name="checked_out" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="checked_out_time" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="ordering" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="access" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="params" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="language" sqlType="CHAR" precision="7" scale="0" nullable="false" jdbcType="1" def="Jyc="/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="created_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_by_alias" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
+      <column name="modified" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="modified_by" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="metakey" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadesc" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="metadata" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="featured" sqlType="TINYINT UNSIGNED" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA==" remarks="U2V0IGlmIGxpbmsgaXMgZmVhdHVyZWQu"/>
+      <column name="xreference" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12" remarks="QSByZWZlcmVuY2UgdG8gZW5hYmxlIGxpbmthZ2VzIHRvIGV4dGVybmFsIGRhdGEgc2V0cy4="/>
+      <column name="publish_up" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="publish_down" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
+      <column name="version" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="images" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="idx_access" unique="false" columns="access"/>
+      <index name="idx_catid" unique="false" columns="catid"/>
+      <index name="idx_checkout" unique="false" columns="checked_out"/>
+      <index name="idx_createdby" unique="false" columns="created_by"/>
+      <index name="idx_featured_catid" unique="false" columns="featured,catid"/>
+      <index name="idx_language" unique="false" columns="language"/>
+      <index name="idx_state" unique="false" columns="state"/>
+      <index name="idx_xreference" unique="false" columns="xreference"/>
+    </table>
+  </data-source>
+</component>

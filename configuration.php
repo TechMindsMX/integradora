@@ -13,8 +13,8 @@ class JConfig {
 	public $debug_lang = '0';
 	public $dbtype = 'mysqli';
 	public $host = 'localhost';
-	public $user = 'intUser33';
-	public $password = 'Pa55w0rd4Db';
+	public $user = 'root';
+	public $password = '';
 	public $db = 'integradb';
 	public $dbprefix = 'flpmu_';
 	public $live_site = '';

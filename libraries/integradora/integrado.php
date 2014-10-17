@@ -37,6 +37,7 @@ class Integrado {
             ->where('intuser.integrado_principal'.' <> 0 ');
         $db->setQuery($query);
         $result=$db->loadObjectList();
+
         return $result;
     }
 	

@@ -24,7 +24,10 @@ $tot=$data->total+$comision;
 <script language="javascript" type="text/javascript">
     var nextinput       = 0;
     var arrayFact       = <?php echo json_encode($this->facturas)?>;
-    var comision        = <?php echo json_encode($comision)?>;
+    var comisio        = <?php echo json_encode($comision)?>;
+    var comision        = parseFloat(comisio).toFixed(2);
+
+
     jQuery('.integrado').on('change', llenatabla);
 
     function comition(id){
@@ -84,41 +87,46 @@ $tot=$data->total+$comision;
             var idintegrado     = jQuery('.integrado').val();
             var num             = value.Impuestos.Traslados.Traslado.importe;
             var iva             = parseFloat(num).toFixed(2);
-            var subtotal        = value.Comprobante.subtotal;
-            var total           = value.Comprobante.total;
+            var sub             = value.Comprobante.subTotal;
+            var subtotal        =parseFloat(sub).toFixed(2);
+            var tot             = value.Comprobante.total;
+            var total           =parseFloat(tot).toFixed(2);
+            var estatus         =value.status;
 
-            if (idintegrado == value.integradoId) {
-                jQuery('.tbody').append('<tr class="row1">'
-                +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
-                +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
-                +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
-                +'<td><span>'+emisor+'</span><table><tr class="row0"><td>RFC</td><td>2</td><td>3</td></tr></table></td>'
-                +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
-                +'<td><span>'+subtotal+'</span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="'+subtotal+'" class="subtotal"></td>'
-                +'<td ><span>'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
-                +'<td><span>'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
-                +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
-                +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
-                +'</tr>');
+            if(estatus== 0){
+                if (idintegrado == value.integradoId) {
+                    jQuery('.tbody').append('<tr class="row1">'
+                    +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
+                    +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
+                    +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
+                    +'<td><span>'+emisor+'</span></td>'
+                    +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
+                    +'<td><span>$'+subtotal+'</span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="'+subtotal+'" class="subtotal"></td>'
+                    +'<td ><span>$'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
+                    +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
+                    +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
+                    +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
+                    +'</tr>');
+                }
             }
 
         });
     }
-
-
 
 </script>
 <form action="" method="post" name="adminForm" id="adminForm">
     <div  class="integrado-id" id="odv">
         <div class="head2" id="head" >
             <div id="columna1" ><span>Seleciona el Integrado:</span>
+
                 <select id='integrado' name="integrado" onchange="llenatabla()" class="integrado">
                     <option value="0"></option>
                     <?php
-                    foreach ($this->usuarios as $value) {
-                        echo '<option value="'.$value['integrado_id'].'">'.$value['name'].'</option>';
+                    foreach ($this->usuarios as $key => $value) {
+                        echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
                     }
                     ?>
+
                 </select>
             </div>
 
