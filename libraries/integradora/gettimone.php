@@ -1881,6 +1881,74 @@ class getFromTimOne{
 
 	}
 
+
+    public static function getTxSTP($userId = null)
+    {
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A554SJHS445AA2D';
+        $txstp->userId = 1;
+        $txstp->date = 1419897600000;
+        $txstp->amount = '34014.100';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A5S1S5200S4AA2D';
+        $txstp->userId = 1;
+        $txstp->date = 1408632474029;
+        $txstp->amount = '1520.2145';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422S5S555220';
+        $txstp->userId = 1;
+        $txstp->date = 1419897603300;
+        $txstp->amount = '34240.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->userId = 1;
+        $txstp->date = 1419897602100;
+        $txstp->amount = '8340.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55421S555S17S74';
+        $txstp->userId = 1;
+        $txstp->date = 1419897600023;
+        $txstp->amount = '1340.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A554222115s11s5s';
+        $txstp->userId = 1;
+        $txstp->date = 1408632474029;
+        $txstp->amount = '34540.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->userId = 1;
+        $txstp->date = 1419897600000;
+        $txstp->amount = '340.10';
+
+        $array[] = $txstp;
+
+        return $array;
+    }
+
     public static function getMedidas(){
         $respuesta['litros'] 			= 'litros';
         $respuesta['Metros'] 			= 'Metros';

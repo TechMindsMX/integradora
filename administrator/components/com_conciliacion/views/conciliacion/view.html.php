@@ -19,9 +19,19 @@ class ConciliacionViewConciliacion extends JViewLegacy {
      * Display the view
      */
     public function display($tpl = null) {
-        
-       $this->assignRef("data", $this->getModel()->getData());
+
+        $this->integrados       = $this->get('UserIntegrado');
+        $this->stp              = $this->get('STP');
+
+        $this->addToolbar();
         parent::display($tpl);
+    }
+
+    protected function addToolbar() {
+        require_once JPATH_COMPONENT . '/helpers/conciliacion.php';
+        JToolBarHelper::title(JText::_('Conciliacion STP'), '');
+
+
     }
 
 }
