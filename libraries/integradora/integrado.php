@@ -26,6 +26,19 @@ class Integrado {
 		
 		unset($this->user->password);
 	}
+
+    function getIntegrados (){
+        $db     =JFactory::getDbo();
+        $query  =$db->getQuery(true);
+        $query
+            ->select('intuser.integrado_id, user.id,user.name' )
+            ->from('#__integrado_users as intuser')
+            ->join('INNER', '#__users as user on  intuser.user_id = user.id')
+            ->where('intuser.integrado_principal'.' <> 0 ');
+        $db->setQuery($query);
+        $result=$db->loadObjectList();
+        return $result;
+    }
 	
 	//retorna todos los integrados (solicitudes) relacionadas al idJoomla
 	function getIntegradosCurrUser()
