@@ -18,8 +18,7 @@ foreach($this->facturas as $value) {
     $data->total = $value->Comprobante->total;
     $data->estatus = $value->status;
 }
-var_dump($this->facturas);exit;
-
+$tot=$data->total+$comision;
 ?>
 
 <script language="javascript" type="text/javascript">
