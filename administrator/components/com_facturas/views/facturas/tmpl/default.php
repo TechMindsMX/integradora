@@ -18,7 +18,8 @@ foreach($this->facturas as $value) {
     $data->total = $value->Comprobante->total;
     $data->estatus = $value->status;
 }
-$tot=$data->total+$comision;
+var_dump($this->facturas);exit;
+
 ?>
 
 <script language="javascript" type="text/javascript">
@@ -42,7 +43,6 @@ $tot=$data->total+$comision;
 
     function llenatabla() {
         var idintegrado = jQuery('.integrado').val();
-
         //Limpiamos el Div
         jQuery('#table_content').html('');
         jQuery('#table_content').html('<table id="table_list" class="adminlist table" cellspacing="0" cellpadding="0" >'
@@ -59,6 +59,7 @@ $tot=$data->total+$comision;
         +'</tfoot>'
         +'</table>');
 
+
         //Encabezados del Div
         jQuery('.thead').append('<tr class="row0" id="head" >'
         +'<th id="columna1" >Estatus</th>'
@@ -73,31 +74,34 @@ $tot=$data->total+$comision;
         +'<th>Detalle</th>'
         +'</tr>');
 
-
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
             nextinput++;
             var fecha           = value.Comprobante.fecha;
+            fecha               = fecha.slice(0,10);
             var folio           = value.Comprobante.serie+value.Comprobante.folio;
+            folio               = folio.replace(" ","");
             var emisor          = value.Emisor.nombre;
-            var
-            console.log(value.Emisor);
+            var idintegrado     = jQuery('.integrado').val();
+            var num             = value.Impuestos.Traslados.Traslado.importe;
+            var iva             = parseFloat(num).toFixed(2);
+            var subtotal        = value.Comprobante.subtotal;
+            var total           = value.Comprobante.total;
 
-            if (idintegrado == value.IntegradoId) {
+            if (idintegrado == value.integradoId) {
                 jQuery('.tbody').append('<tr class="row1">'
                 +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
-                +'<td><span><?php echo $data->fecha; ?></span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="<?php echo $data->fecha; ?>"></td>'
-                +'<td><span><?php echo $data->folio; ?></span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="<?php echo $data->fecha; ?>"></td>'
-                +'<td><span><?php echo $data->emisor; ?></span><table><tr class="row0"><td>RFC</td><td>2</td><td>3</td></tr></table></td>'
-                +'<td><span><?php echo '$'.number_format($data->iva,2); ?></span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="<?php echo $data->iva; ?>" class="iva"></td>'
-                +'<td><span><?php echo '$'.number_format($data->subtotal,2); ?></span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="<?php echo $data->subtotal; ?>" class="subtotal"></td>'
-                +'<td ><span><?php echo '$'.number_format($data->total,2); ?></span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="<?php echo $data->total; ?>" class="total"></td>'
-                +'<td><span><?php echo '$'.number_format($comision,2); ?></span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="<?php echo $comision; ?>" class="total"></td>'
+                +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
+                +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
+                +'<td><span>'+emisor+'</span><table><tr class="row0"><td>RFC</td><td>2</td><td>3</td></tr></table></td>'
+                +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
+                +'<td><span>'+subtotal+'</span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="'+subtotal+'" class="subtotal"></td>'
+                +'<td ><span>'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
+                +'<td><span>'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
                 +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
                 +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
                 +'</tr>');
-
-                 }
+            }
 
         });
     }

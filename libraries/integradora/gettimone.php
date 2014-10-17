@@ -1319,7 +1319,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 1;
-        $factura ->IntegradoId                                          = 1;
+        $factura ->integradoId                                          = 1;
         $factura->status                                                = 1;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1392,7 +1392,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 2;
-        $factura ->IntegradoId                                          = 2;
+        $factura ->integradoId                                          = 2;
         $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1465,7 +1465,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 3;
-        $factura ->IntegradoId                                          = 3;
+        $factura ->integradoId                                          = 3;
         $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1537,7 +1537,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 4;
-        $factura ->IntegradoId                                          = 2;
+        $factura ->integradoId                                          = 2;
         $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1610,7 +1610,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 5;
-        $factura ->IntegradoId                                          = 1;
+        $factura ->integradoId                                          = 1;
         $factura->status                                                = 1;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1682,7 +1682,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 6;
-        $factura ->IntegradoId                                          = 1;
+        $factura ->integradoId                                          = 1;
         $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
@@ -1754,7 +1754,7 @@ class getFromTimOne{
 
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 7;
-        $factura ->IntegradoId                                          = 2;
+        $factura ->integradoId                                          = 2;
         $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";

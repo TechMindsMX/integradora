@@ -32,9 +32,19 @@ class FacturasModelFacturas extends JModelList {
         return $result;
     }
 
+    public function getSolicitud($integradoId = null)
+    {
+        if (!isset($this->dataModelo)) {
+            $this->dataModelo = new Integrado;
+        }
+
+        return $this->dataModelo;
+    }
+
+
+
     public function getFacturas(){
         $data = getFromTimOne::getFactura();
-
         return $data;
     }
 
