@@ -20,16 +20,11 @@ class FacturasModelFacturas extends JModelList {
     }
 
     public function getUserIntegrado(){
-        $db     =JFactory::getDbo();
-        $query  =$db->getQuery(true);
-        $query
-            ->select('intuser.integrado_id, user.id,user.name' )
-            ->from('#__integrado_users as intuser')
-            ->join('INNER', '#__users as user on  intuser.user_id = user.id')
-            ->where('intuser.integrado_principal'.' <> 0 ');
-        $db->setQuery($query);
-        $result=$db->loadAssocList();
-        return $result;
+
+       $factura = new Integrado();
+       $integrados = $factura->getIntegrados();
+
+       return $integrados;
     }
 
     public function getSolicitud($integradoId = null)
