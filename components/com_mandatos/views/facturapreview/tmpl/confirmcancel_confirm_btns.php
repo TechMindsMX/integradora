@@ -13,7 +13,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=facturalist&integrado
 		        <span>
 			        <input type="checkbox" class="" id="authorize"/>
                  </span>
-			<?php echo JText::_('LBL_CONFIRM_AUTH'); ?>
+			<?php echo JText::_('LBL_CONFIRM_FACTURA_CANCEL'); ?>
 		</p>
 		<a id="authorize-btn" class="btn btn-success esconder"
 		   href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
