@@ -30,15 +30,12 @@ class MandatosViewFacturapreview extends JViewLegacy {
 		$this->factura->proyecto    = MandatosHelper::getProyectFromId($this->factura->proyectId, $this->integradoId);
 		$this->factura->proveedor   = MandatosHelper::getClientsFromID($this->factura->clientId, $this->integradoId);
 
+		// Boton de impresion
 		$url = 'index.php?option=com_mandatos&view=facturapreview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
 		$this->printBtn = MandatosHelper::getPrintButton($url);
 
 		// Verifica los permisos de edición y autorización
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
-
-		if ($this->factura->status = 1) {
-			$app->enqueueMessage('LBL_FACURA_PAGADA', 'message');
-		}
 
 		parent::display($tpl);
 	}
