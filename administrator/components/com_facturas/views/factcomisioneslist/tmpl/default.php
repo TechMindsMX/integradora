@@ -3,6 +3,18 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 $facturas = $this->facturas;
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+$vName = 'listadofactcomisiones';
+
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_FACTURAS'),
+    'index.php?option=com_facturas',
+    $vName == 'facturas');
+
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_LISTADO_FACT_COMISIONES'),
+    'index.php?option=com_facturas&view=factcomisioneslist',
+    $vName == 'listadofactcomisiones');
 ?>
 <div class="table-responsive">
     <table id="myTable" class="table table-bordered tablesorter">
