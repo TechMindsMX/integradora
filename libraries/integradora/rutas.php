@@ -136,19 +136,19 @@ class servicesUrls
 	}
 
 	public function setUser () {
-		$this->list->url = 'users/{userId}/user';
-		$this->create->url = 'users/{userId}/user';
-		$this->details->url = 'users/{userId}/user/{id}';
-		$this->update->url = 'users/{userId}/user/{id}';
-		$this->disable->url = 'users/{userId}/user/{id}';
+		$this->list->url = 'users';
+		$this->create->url = 'users/create';
+		$this->details->url = 'users/{id}';
+		$this->update->url = 'users/{id}';
+		$this->disable->url = 'users/{id}';
 	}
 
 	public function setComisions () {
-		$this->list->url = 'users/{userId}/user';
-		$this->create->url = 'users/{userId}/user';
-		$this->details->url = 'users/{userId}/user/{id}';
-		$this->update->url = 'users/{userId}/user/{id}';
-		$this->disable->url = 'users/{userId}/user/{id}';
+		$this->list->url = 'users';
+		$this->create->url = 'users/create';
+		$this->details->url = 'users/{id}';
+		$this->update->url = 'users/{id}';
+		$this->disable->url = 'users/{id}';
 	}
 
 }
