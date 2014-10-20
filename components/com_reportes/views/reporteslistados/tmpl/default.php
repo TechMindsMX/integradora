@@ -76,8 +76,11 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                 echo JHTML::_('calendar',$default, 'dendfecha', 'dendfecha', $format = '%Y-%m-%d', $attsCal);
                 ?>
               </div>
+                <div>
+                    <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte</button>
+                </div>
               <div style="margin: auto;">
-                  <button id="fecha" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
+                  <button id="fecha" onclick="showhide(this.id)" class="btn btn-primary span2" type="button">Buscar</button>
               </div>
             </div>
         </div>
@@ -131,36 +134,17 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                     echo JHTML::_('calendar',$default, 'dendfecha2', 'dendfecha2', $format = '%Y-%m-%d', $attsCal2);
                     ?>
                 </div>
+                <div>
+                    <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte  </button>
+                </div>
                 <div style="margin: auto;">
-                    <button id="fecha2" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
+                    <button id="fecha2" onclick="showhide(this.id)" class="btn btn-primary span2" type="button">Buscar</button>
                 </div>
             </div>
         </div>
 
 
-        <div id="odv" class="table table-bordered" >
-            <div class="contenidos" id="contenidos2">
-                <div id="columna1"><span class="etiqueta">Fecha</span></div>
-                <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
-                <div id="columna1"><span class="etiqueta">Integrado</span></div>
-                <div id="columna1"><span class="etiqueta">RFC</span> </div>
-                <div id="columna1"><span class="etiqueta">Direccion</span> </div>
-                <div id="columna1"><span class="etiqueta">Ver Balance</span></div>
 
-            </div>
-            <?php foreach ($this->flujo as $key => $value) {?>
-                <div class="contenidos" id="contenidos2">
-                    <div id="columna1" class="fecha2"><?php echo $value->created; ?></div>
-                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
-                    <div id="columna1"><?php echo $integradoId; ?></div>
-                    <div id="columna1"><?php echo $rfc ?></div>
-                    <div id="columna1"><?php echo $direccion ?></div>
-                    <div id="columna1" style="width: 50px">
-                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
-                    </div>
-                </div>
-            <?php }?>
-        </div>
     </fieldset>
     <?php
     echo JHtml::_('bootstrap.endTab');
@@ -168,6 +152,7 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
     ?>
     <fieldset>
         <div>
+
             <div class="form-group" style="margin-left: 31px; text-align: 0;">
                 <div style="display: inline-block">
                     <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
@@ -182,36 +167,17 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
                     $default = date('Y-m-d');
                     echo JHTML::_('calendar',$default, 'dendfecha3', 'dendfecha3', $format = '%Y-%m-%d', $attsCal3);
                     ?>
+                </div><div>
+                    <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte</button>
                 </div>
                 <div style="margin: auto;">
-                    <button id="fecha3" onclick="showhide(this.id)" class="btn btn-primary span3" type="button">Buscar</button>
+                    <button id="fecha3" onclick="showhide(this.id)" class="btn btn-primary span2" type="button">Buscar</button>
                 </div>
+
             </div>
+
         </div>
 
-
-        <div id="odv" class="table table-bordered" >
-            <div class="contenidos" id="contenidos3">
-                <div id="columna1"><span class="etiqueta">Fecha</span></div>
-                <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
-                <div id="columna1"><span class="etiqueta">Integrado</span></div>
-                <div id="columna1"><span class="etiqueta">RFC</span> </div>
-                <div id="columna1"><span class="etiqueta">Direccion</span> </div>
-                <div id="columna1"><span class="etiqueta">Ver Balance</span></div>
-
-            </div>
-            <?php foreach ($this->resultados as $key => $value) {?>
-                <div class="contenidos" id="contenidos3">
-                    <div id="columna1" class="fecha3"><?php echo $value->created; ?></div>
-                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
-                    <div id="columna1"><?php echo $integradoId; ?></div>
-                    <div id="columna1"><?php echo $rfc ?></div>
-                    <div id="columna1"><?php echo $direccion ?></div>
-                    <div id="columna1" style="width: 50px">
-                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
-                    </div>
-                </div>
-            <?php }?>
         </div>
 
     </fieldset>
