@@ -54,7 +54,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
     }
 </script>
-<h1><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_TITULO'); ?></h1>
+<h1><?php echo JText::_('COM_MANDATOS_FACTURA_LIST'); ?></h1>
 
 <div>
     <div class="radio">
