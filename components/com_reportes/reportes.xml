@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5.0" method="upgrade">
+
+    <name>Reportes</name>
+    <creationDate></creationDate>
+    <author></author>
+    <authorEmail></authorEmail>
+    <authorUrl></authorUrl>
+    <copyright></copyright>
+    <license></license>
+    <version>1</version>
+    <description>COM_REPORTES_DESCRIPTION</description>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>reportes.php</filename>
+        <filename>controller.php</filename>
+        <folder>views</folder>
+        <folder>models</folder>
+    </files>
+
+</extension>
