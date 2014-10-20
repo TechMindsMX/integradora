@@ -1611,7 +1611,7 @@ class getFromTimOne{
         $factura 				                                        = new stdClass();
         $factura->id                                                    = 5;
         $factura ->IntegradoId                                          = 1;
-        $factura->status                                                = 1;
+        $factura->status                                                = 0;
         $factura->Comprobante->schemaLocation                           = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd";
         $factura->Comprobante->version                                  = "3.2";
         $factura->Comprobante->serie                                    = "110 - ";
@@ -1899,11 +1899,11 @@ class getFromTimOne{
     }
 
 	public static function token(){
-		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
+/*		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
 		if( !$token = file_get_contents($url) ){
 			JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
-		}
-
+		}*/
+$token = 'fghgjsdatr';
 		return $token;
 	}
 

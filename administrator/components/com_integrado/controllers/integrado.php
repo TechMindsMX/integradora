@@ -9,26 +9,26 @@ jimport('integradora.integrado');
  */
 class IntegradoControllerIntegrado extends JControllerForm {
 	
-	public function save()
+	public function save($key = null, $urlVar = null)
 	{
+
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$lang  = JFactory::getLanguage();
 
-		$valores = array(
-					'id' => 'int',
-					'status' => 'int' 
-					);
-		$value = JFactory::getApplication()->input->getArray($valores);
-		
+		$value = JFactory::getApplication()->input->getArray();
+
 		// Create an object for the record we are going to update.
+		$object = new stdClass();
 		$object->integrado_id = $value['id'];
 		$object->status = $value['status'];
+
+		$verified = $this->verified($value);
 
 		$object->datosIntegrado = new IntegradoSimple($object->integrado_id);
 		$valido = $this->cambioStatusValido($object->integrado_id, $object->datosIntegrado->integrados[0]->integrado->status, $object->status);
 		
-		if (!$valido) {
+		if (!$valido || !$verified) {
 			$this->setMessage(JText::_('JERROR_VALIDACION_STATUS'),'error');
 			$this->setRedirect(
 				JRoute::_(
@@ -93,7 +93,27 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		
 		return $catalogos;
 	}
-	
+
+	private function verified($value)
+	{
+		$verificacion = $value;
+		unset($verificacion['id']);
+		unset($verificacion['status']);
+		unset($verificacion['option']);
+		unset($verificacion['task']);
+		unset($verificacion['layout']);
+		count($verificacion);
+		array_pop($verificacion);
+		$verificacionObj = json_encode($verificacion);
+
+		$camposVerify = $this->getModel('Integrado')->getCampos();
+
+		$totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) +  count($camposVerify->LBL_TAB_EMPRESA) +  count($camposVerify->LBL_TAB_BANCO);
+
+		return count($verificacionObj) == $totalCamposVerify;
+
+	}
+
 
 }
 
