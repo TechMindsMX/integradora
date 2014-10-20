@@ -14,9 +14,9 @@ class MandatosHelper {
 	// esta funcion y el objeto que se maneja en las vistas para proyecto y subproyecto deben adaptarse
 	public static function getProyectFromId($proyId, $integradoId){
 		$proyKeyId = array();
-		
+
 		$proyectos = getFromTimOne::getProyects($integradoId);
-		
+
 		// datos del proyecto y subproyecto involucrrado
 		foreach ( $proyectos as $key => $proy) {
 			$proyKeyId[$proy->id] = $proy;
@@ -32,6 +32,8 @@ class MandatosHelper {
 				$subproyecto 	= null;
 			}
 		}
+
+		return $proyecto;
 	}
 	
 	public static function getProviderFromID($providerId, $integradoId){
