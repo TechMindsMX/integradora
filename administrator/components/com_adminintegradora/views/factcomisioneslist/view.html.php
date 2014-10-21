@@ -3,7 +3,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class FacturasViewFactcomisioneslist extends JViewLegacy {
+class AdminintegradoraViewFactcomisioneslist extends JViewLegacy {
 
     public function display($tpl = null) {
         $this->facturas = $this->get('Facturas');
@@ -21,7 +21,6 @@ class FacturasViewFactcomisioneslist extends JViewLegacy {
     }
 
     protected function addToolbar() {
-        require_once JPATH_COMPONENT . '/helpers/facturas.php';
         JToolBarHelper::title(JText::_('Facturas de Comisiones'), '');
 
     }

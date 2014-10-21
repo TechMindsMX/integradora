@@ -2,13 +2,9 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 jimport('integradora.integrado');
-jimport('integradora.validator');
 jimport('integradora.gettimone');
 
-/**
- * Methods supporting a list of Facturas records.
- */
-class FacturasModelFactcomisioneslist extends JModelList {
+class AdminintegradoraModelFactcomisioneslist extends JModelList {
 
     public function __construct($config = array()) {
 
