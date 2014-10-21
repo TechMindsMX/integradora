@@ -1829,7 +1829,36 @@ class getFromTimOne{
 
     }
 
-	public static function getComisiones () {
+    public static function getFactComisiones(){
+        $factComiciones = new stdClass();
+
+        $factComiciones->id             = 1;
+        $factComiciones->receptor       = 1;
+        $factComiciones->emisor         = 'INTEGRADORA DE EMPRENDIMIENTOS CULTURALES SA DE CV';
+        $factComiciones->created        = 1408632474029;
+        $factComiciones->totalAmount    = 100000;
+
+        $array[] = $factComiciones;
+
+        $factComiciones = new stdClass();
+
+        $factComiciones->id             = 34;
+        $factComiciones->receptor       = 2;
+        $factComiciones->emisor         = 'INTEGRADORA DE EMPRENDIMIENTOS CULTURALES SA DE CV';
+        $factComiciones->created        = 1408632474129;
+        $factComiciones->totalAmount    = 500000;
+
+        $array[] = $factComiciones;
+
+        foreach ($array as $key => $value) {
+            self::convierteFechas($value);
+            $respuesta[] = $value;
+        }
+        return $respuesta;
+
+    }
+
+    public static function getComisiones () {
 		$commissions = null;
 
 		$commissions 				    = new comisionItem();
@@ -1967,11 +1996,11 @@ class getFromTimOne{
     }
 
 	public static function token(){
-		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
+/*		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
 		if( !$token = file_get_contents($url) ){
 			JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
-		}
-
+		}*/
+$token = 'fghgjsdatr';
 		return $token;
 	}
 
