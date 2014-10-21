@@ -84,6 +84,7 @@ $number2word = new AifLibNumber();
 	</div>
 </div>
 <div class="clearfix" id="cuerpo">
+	<h4><?php echo JText::_('LBL_HEADER_DATOS_CLIENTE'); ?></h4>
 	<div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
@@ -244,6 +245,4 @@ $number2word = new AifLibNumber();
 	</div>
 </div>
 </div>
-
-
 

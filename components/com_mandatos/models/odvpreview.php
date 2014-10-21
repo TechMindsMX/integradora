@@ -38,7 +38,6 @@ class MandatosModelOdvpreview extends JModelItem {
 
 		$this->getProviderFromID($this->odv->clientId);
 
-
 		return $this->odv;
 	}
 	public function getProyectFromId($proyId){

@@ -1,11 +1,11 @@
 <?php
-defined ('_JEXEC') or die('Restricted Access');
+defined( '_JEXEC' ) or die( 'Restricted Access' );
 
-JHtml::_ ('bootstrap.tooltip');
+JHtml::_( 'bootstrap.tooltip' );
 
 $items = $this->comision[0];
 
-JFactory::getDocument()->addScript(JUri::root().'libraries/integradora/js/tim-validation.js');
+JFactory::getDocument()->addScript( JUri::root() . 'libraries/integradora/js/tim-validation.js' );
 
 $accion = 'index.php?option=com_adminintegradora';
 ?>
@@ -16,12 +16,12 @@ $accion = 'index.php?option=com_adminintegradora';
 			$type.change($type, checkType);
 			$type.triggerHandler('change');
 
-			jQuery('#toolbar-apply').click(function() {
+			jQuery('#toolbar-apply').click(function () {
 				var data = jQuery('#comision-form').find('select, input').serialize();
 
 				var parametros = {
-					'link'  : '<?php echo $accion; ?>&task=savecomision&format=raw',
-					'datos' : data
+					'link': '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
+					'datos': data
 				};
 
 				var request = jQuery.ajax({
@@ -30,8 +30,8 @@ $accion = 'index.php?option=com_adminintegradora';
 					type: 'post'
 				});
 
-				request.done(function(response){
-					jQuery.each( response, function(i, v) {
+				request.done(function (response) {
+					jQuery.each(response, function (i, v) {
 						if (v !== true) {
 							mensajes(v.msg, 'error', i)
 						}
@@ -39,15 +39,15 @@ $accion = 'index.php?option=com_adminintegradora';
 				});
 			});
 
-			jQuery('#toolbar-cancel').click(function(){
+			jQuery('#toolbar-cancel').click(function () {
 				jQuery('#comision-form').prop('action', 'index.php?option=com_adminintegradora&view=comisions').submit();
 			});
 
 		});
 
 		function checkType() {
-			var $freqTime 	= jQuery('#frequency');
-			var $rate		= jQuery('#percentage');
+			var $freqTime = jQuery('#frequency, .frequency');
+			var $rate = jQuery('#percentage');
 
 			if (this.value == '1') {
 				$freqTime.hide();
@@ -59,67 +59,84 @@ $accion = 'index.php?option=com_adminintegradora';
 		}
 	</script>
 
-<div class="btn-toolbar">
-	<button id="toolbar-apply" class="btn btn-small btn-success"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_GUARDAR'); ?></button>
-	<button id="toolbar-cancel" class="btn btn-small btn-danger"><span class="icon-apply icon-white"></span><?php echo JText::_('LBL_CANCEL'); ?></button>
-</div>
+	<div class="btn-toolbar">
+		<button id="toolbar-apply" class="btn btn-small btn-success"><span
+				class="icon-apply icon-white"></span><?php echo JText::_( 'LBL_GUARDAR' ); ?></button>
+		<button id="toolbar-cancel" class="btn btn-small btn-danger"><span
+				class="icon-apply icon-white"></span><?php echo JText::_( 'LBL_CANCEL' ); ?></button>
+	</div>
 
 	<form action="<?php echo $accion; ?>"
-		  method="post" name="adminForm" id="comision-form" class="form-validate">
+	      method="post" name="adminForm" id="comision-form" class="form-validate">
 
-		<div class="form-horizontal">
+		<div class="control-group">
 			<div class="control-group">
 				<label class="control-label" for="description">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_DESCRIPTION'); ?>
+					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_DESCRIPTION' ); ?>
 				</label>
 				<input type="text" name="description" id="description" value="<?php echo @$items->description; ?>"
-					   class="input-xxlarge input-large-text" required="" aria-required="true"
-					   aria-invalid="true" maxlength="255">
+				       class="input-xxlarge input-large-text" required="" aria-required="true"
+				       aria-invalid="true" maxlength="255">
 			</div>
 		</div>
 
-		<div class="control-group span6">
+		<div class="control-group">
 			<div class="control-group">
 				<label class="control-label" for="type">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_TYPE'); ?>
+					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_TYPE' ); ?>
 				</label>
 				<select id="type" name="type">
-					<?php foreach ($this->cats->types as $key => $value):
-						$selected = ($items->type == $key) ? 'selected' : '';
+					<?php foreach ( $this->cats->types as $key => $value ):
+						$selected = ( $items->type == $key ) ? 'selected' : '';
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
 				</select>
-			<label class="control-label" for="frequencyTimes">
-				<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME'); ?>
-			</label>
-			<select id="frequencyTimes" name="frequencyTimes">
-				<?php foreach ($this->cats->frequencyTimes as $key => $value):
-					$selected = ($items->frequencyTime == $value) ? 'selected' : '';
-					?>
-					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
-				<?php endforeach; ?>
-			</select>
-		</div>
-
-			<div class="control-group" id="frequency">
-				<label class="control-label" for="monto">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_MONTO'); ?>
+				<label class="control-label frequency" for="frequencyTimes">
+					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME' ); ?>
 				</label>
-				<input type="text" name="monto" id="monto" value="<?php echo @$items->amount; ?>"
-					   class="" required="" aria-required="true"
-					   aria-invalid="true" maxlength="10">
+				<select class="frequency" id="frequencyTimes" name="frequencyTimes">
+					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
+						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
+						?>
+						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+					<?php endforeach; ?>
+				</select>
 			</div>
-			<div class="control-group" id="percentage">
-				<label class="control-label" for="rate">
-					<?php echo JText::_ ('COM_ADMININTEGRADORA_COMISIONES_RATE'); ?>
-				</label>
-				<input type="text" name="rate" id="rate" value="<?php echo @$items->rate; ?>"
-					   class="" required="required" maxlength="5">
-			</div>
-		</div>
 
-		<?php echo JHtml::_ ('form.token'); ?>
+			<div class="control-group">
+				<div class="control-group" id="frequency">
+					<label class="control-label" for="monto">
+						<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_MONTO' ); ?>
+					</label>
+					<input type="text" name="monto" id="monto" value="<?php echo @$items->amount; ?>"
+					       class="" required="" aria-required="true"
+					       aria-invalid="true" maxlength="10">
+				</div>
+				<div class="control-group" id="percentage">
+					<label class="control-label" for="rate">
+						<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_RATE' ); ?>
+					</label>
+					<input type="text" name="rate" id="rate" value="<?php echo @$items->rate; ?>"
+					       class="" required="required" maxlength="5">
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="status">
+					<?php echo JText::_( 'LBL_BASIC_STATUSES' ); ?>
+				</label>
+				<select id="status" name="status">
+					<?php foreach ( $this->cats->status as $key => $value ):
+						$selected = ( $items->status == $key ) ? 'selected' : '';
+						?>
+						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+
+			<?php echo JHtml::_( 'form.token' ); ?>
 	</form>
 
 <?php

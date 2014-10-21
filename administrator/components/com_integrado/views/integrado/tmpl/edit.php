@@ -5,9 +5,11 @@ JHtml::_('behavior.tooltip');
 jimport('joomla.html.html.bootstrap');
 
 $integ = $this->item->integrados[0];
+
 $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->razon_social : $this->item->usuarios[0]->name;
 
 ?>
+
 <form action="<?php echo JRoute::_('index.php?option=com_integrado&layout=edit&id=' . (int)$this -> item -> id); ?>"
     method="post" name="adminForm" id="adminForm">
     <div class="form-horizontal">
@@ -34,13 +36,16 @@ $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->
                 </div>
             </div>
         </fieldset>
+
+	    <fieldset class="checkboxes">
+		    <div>
 	<?php
 	$jhtml_group = 'slide-detalle-integrado';
 
 		echo JHtml::_('bootstrap.startAccordion', $jhtml_group, array('active' => 'LBL_SLIDE_BASIC'));
-			tabValores($integ->datos_personales, 	'personales', 	$jhtml_group, 'LBL_SLIDE_BASIC');
-			tabValores($integ->datos_empresa, 		'empresa', 		$jhtml_group, 'LBL_TAB_EMPRESA');
-			tabValores($integ->datos_bancarios, 	'bancarios', 	$jhtml_group, 'LBL_TAB_BANCO');
+			tabValores($integ->datos_personales, 	$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_SLIDE_BASIC');
+			tabValores($integ->datos_empresa, 		$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_TAB_EMPRESA');
+			tabValores($integ->datos_bancarios, 	$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_TAB_BANCO');
 		echo JHtml::_('bootstrap.endAccordion');
 	?>
              </div>
@@ -51,66 +56,51 @@ $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->
 </form>
 
 <?php 
-function tabValores($obj, $tab_name, $jhtml_group, $jtext_label)
+function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label)
 {
-	$campos = getCampos($jtext_label);
-	
 	echo JHtml::_('bootstrap.addSlide', $jhtml_group, JText::_($jtext_label), $jtext_label);
 	?>
-     <div>
-        <?php 
+     <div class="clearfix">
+        <?php
         if ($obj) :
-	        foreach ($obj as $label => $field): 
-	        	if (in_array($label, $campos)) : 
+	        ?>
+	        <div class="span5">
+	        <?php
+	        foreach ($obj as $label => $field):
+	        	if (in_array($label, $campos->$jtext_label)) :
+			        $checked = array_key_exists($label, get_object_vars(json_decode($verificacion))) ? 'checked': '';
 	        	?>
 	            <div class="control-group">
-	                <div class="control-label"><?php echo $label; ?></div>
+		            <input name="<?php echo $label; ?>" type="checkbox" class="check" value="verified" <?php echo $checked; ?>>
+	                <div class="control-label" style="text-transform: capitalize; padding-left: 0.5em;"><?php echo JText::_($label); ?></div>
 	                <div class="controls"><?php echo $field; ?></div>
 	            </div>
 	       		<?php 
 	        	endif;
-        	endforeach; 
+        	endforeach;
+			?>
+	        </div>
+	        <div class="span7">
+		        <?php
+		        $attachCampos = 'attach_'.$jtext_label;
+		        $attachments = $campos->$attachCampos;
+		        foreach ($obj as $label => $field) :
+			        if (in_array($label,$attachments)) :
+				        ?>
+				        <div class="control-group">
+					        <a href="<?php echo $field; ?>"><?php echo JText::_($label); ?></a>
+				        </div>
+			        <?php
+			        endif;
+		        endforeach;
+		        ?>
+	        </div>
+	        <?php
     	endif;
         ?>
     </div>
 	<?php
-		echo JHtml::_('bootstrap.endSlide');
+	echo JHtml::_('bootstrap.endSlide');
 }
 
-function getCampos($jtext_label) {
-	$campos = array();
-	switch ($jtext_label) {
-		case 'LBL_SLIDE_BASIC':
-			$campos = array('nacionalidad', 
-							'sexo', 
-							'fecha_nacimiento', 
-							'RFC', 
-							'calle', 
-							'num_exterior', 
-							'num_interior', 
-							'cod_postal'
-							);
-			break;
-		
-		case 'LBL_TAB_EMPRESA':
-			$campos = array('razon_social',
-							'rfc'
-							);
-			break;
-			
-		case 'LBL_TAB_BANCO':
-			$campos = array('nacionalidad', 
-							'sexo', 
-							'fecha_nacimiento', 
-							'RFC', 
-							'calle', 
-							'num_exterior', 
-							'num_interior', 
-							'cod_postal'
-							);
-			break;
-	}
-	
-	return $campos;
-}
 ?>

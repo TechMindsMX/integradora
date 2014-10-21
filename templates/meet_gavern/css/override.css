@@ -100,3 +100,11 @@ input.cantidad, input.iva, input.ieps{
 select.productos{
     width: 80px;
 }
+
+
+@media print {
+    #system-message-container, #gk-print-top, .btn {
+        display: none;
+    }
+
+}

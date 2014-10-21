@@ -69,7 +69,7 @@ class Catalogos {
 		return array('Fija - Recurrente', 'Variable - Por transacción');
 	}
 
-	public function getComisionesStatus () {
+	public function getBasicStatus () {
 		return array('Desabilitada', 'Habilitada');
 	}
 

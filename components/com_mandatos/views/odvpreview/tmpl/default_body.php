@@ -16,18 +16,8 @@ $integrado 	= $this->integCurrent->integrados[0];
 
 $number2word = new AifLibNumber();
 
-       // $isModal = $app->input->get('print') == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
-        // if( $isModal) {
-                // $href = '"#" onclick="window.print(); return false;"';
-        // } else {
-                // $href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-                // $href = "window.open(this.href,'win2','".$href."'); return false;";
-                // $href = '"index.php?option=com_mandatos&view=odvpreview&integradoId='.$params['integradoId'].'&odvnum='.$params['odvnum'].'&tmpl=component&print=1" '.$href;
-        // }
+echo $this->printBtn;
 ?>
-<!--        <a href=--><?php //echo $href; ?><!-- >Click for Printing</a>-->
-
-<?php //var_dump($this->odv); ?>
 
 <div id="odv_preview">
 <div class="clearfix" id="logo">
@@ -87,9 +77,18 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->currency; ?>
 		</div>
+		<div class="span2 text-right">
+			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
+		</div>
+		<div class="span4">
+			<?php if (isset($this->odv->cuenta)) { echo $this->odv->cuenta; } ?>
+		</div>
 	</div>
 </div>
+
+<!-- Datos del Proveedor-->
 <div class="clearfix" id="cuerpo">
+	<h4><?php echo JText::_('LBL_HEADER_DATOS_CLIENTE'); ?></h4>
 	<div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
@@ -105,12 +104,6 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->proveedor->rfc; ?>
 		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_BANCOS'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->banco)) { echo $this->odv->banco; } ?>
-		</div>
 	</div>
 	<div>
 		<div class="span2 text-right">
@@ -119,12 +112,6 @@ $number2word = new AifLibNumber();
 		<div class="span4">
 			<?php echo $this->odv->proveedor->contact; ?>
 		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->cuenta)) { echo $this->odv->cuenta; } ?>
-		</div>
 	</div>
 	<div>
 		<div class="span2 text-right">
@@ -132,12 +119,6 @@ $number2word = new AifLibNumber();
 		</div>
 		<div class="span4">
 			<?php echo $this->odv->proveedor->phone; ?>
-		</div>
-		<div class="span2 text-right">
-			<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
-		</div>
-		<div class="span4">
-			<?php if (isset($this->odv->clabe)) { echo $this->odv->clabe; } ?>
 		</div>
 	</div>
 	<div class="clearfix">
@@ -219,7 +200,7 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_CON_FACTURA'); ?>
+				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
 			</div>
 			<div class="container text-uppercase control-group">
 				<?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
