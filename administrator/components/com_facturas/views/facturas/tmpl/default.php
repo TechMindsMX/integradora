@@ -3,7 +3,17 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+$vName = 'facturas';
 
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_FACTURAS'),
+    'index.php?option=com_facturas',
+    $vName == 'facturas');
+
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_LISTADO_ODD'),
+    'index.php?option=com_facturas&view=oddlist',
+    $vName == 'listadoODD');
 
 foreach($this->comision as $value);
 

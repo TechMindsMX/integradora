@@ -531,7 +531,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getOrdenesDeposito($integradoId){
+    public static function getOrdenesDeposito($integradoId = null){
         $respuesta                  = null;
         $ordenes 					= new stdClass;
         $ordenes->id                = 1;
