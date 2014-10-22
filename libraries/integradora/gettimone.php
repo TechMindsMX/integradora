@@ -675,7 +675,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getOrdenesVenta($integradoId) {
+    public static function getOrdenesVenta($integradoId = null) {
         $respuesta = null;
 
         $ordenes 					= new stdClass;
@@ -774,6 +774,9 @@ class getFromTimOne{
             if($integradoId == $value->integradoId){
                 self::convierteFechas($value);
                 $respuesta[] = $value;
+            } elseif ( $integradoId === null) {
+	            self::convierteFechas($value);
+	            $respuesta[] = $value;
             }
         }
 
@@ -2030,6 +2033,21 @@ $token = 'fghgjsdatr';
 
         return $results;
     }
+
+	/**
+	 * @param $ref
+	 *
+	 * @return object Tx
+	 */
+	public static function getTxSTPbyRef( $ref ) {
+		$txs = self::getTxSTP();
+
+		foreach ( $txs as $tx ) {
+			if ($tx->referencia == $ref) {
+				return $tx;
+			}
+		}
+	}
 
 	public function createNewProject($envio, $integradoId){
 		$jsonData = json_encode($envio);

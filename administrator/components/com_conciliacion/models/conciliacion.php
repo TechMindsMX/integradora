@@ -1,11 +1,11 @@
 <?php
 
-defined('_JEXEC') or die;
+defined( '_JEXEC' ) or die;
 
-jimport('joomla.application.component.modellist');
-jimport('integradora.validator');
-jimport('integradora.integrado');
-jimport('integradora.gettimone');
+jimport( 'joomla.application.component.modellist' );
+jimport( 'integradora.validator' );
+jimport( 'integradora.integrado' );
+jimport( 'integradora.gettimone' );
 
 
 /**
@@ -13,23 +13,24 @@ jimport('integradora.gettimone');
  */
 class ConciliacionModelConciliacion extends JModelList {
 
-    public function getUserIntegrado(){
+	public function getUserIntegrado() {
 
-        $factura = new Integrado();
-        $integrados = $factura->getIntegrados();
+		$factura    = new Integrado();
+		$integrados = $factura->getIntegrados();
 
-        return $integrados;
-    }
+		return $integrados;
+	}
 
-    public function getSTP(){
+	public function getSTP() {
 
-            $stp    = getFromTimOne::getTxSTP();
-            foreach ($stp as $keys => $values) {
+		$stp = getFromTimOne::getTxSTP();
+		foreach ( $stp as $keys => $values ) {
 
-                    $data[] = $values;
+			$data[] = $values;
 
-        }
-       return $data;
-    }
+		}
+
+		return $data;
+	}
 
 }
