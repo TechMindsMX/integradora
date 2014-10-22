@@ -385,7 +385,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getOrdenesCompra($integradoId){
+    public static function getOrdenesCompra($integradoId = null){
         $ordenes 					= new stdClass;
         $ordenes->id				= 1;
         $ordenes->proyecto			= 3;
@@ -523,6 +523,9 @@ class getFromTimOne{
 
         foreach ($array as $key => $value) {
             if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }else{
                 self::convierteFechas($value);
                 $respuesta[] = $value;
             }
@@ -663,9 +666,11 @@ class getFromTimOne{
             if($integradoId == $value->integradoId){
                 self::convierteFechas($value);
                 $respuesta[] = $value;
+            }else{
+                self::convierteFechas($value);
+                $respuesta[] = $value;
             }
         }
-
         return $respuesta;
     }
 
@@ -1245,7 +1250,7 @@ class getFromTimOne{
         }
         return $respuesta;
     }
-    public static function getOrdenesRetiro($integradoId) {
+    public static function getOrdenesRetiro($integradoId = null) {
         $respuesta = null;
 
         $ordenes 					= new stdClass;
@@ -1306,6 +1311,9 @@ class getFromTimOne{
 
         foreach ($array as $key => $value) {
             if($integradoId == $value->integradoId){
+                self::convierteFechas($value);
+                $respuesta[] = $value;
+            }else{
                 self::convierteFechas($value);
                 $respuesta[] = $value;
             }
@@ -1716,7 +1724,7 @@ class getFromTimOne{
         $factura->Emisor->RegimenFiscal->Regimen                        = "Régimen de las Personas Físicas con Actividades Empresariales y Profesionales.";
         $factura->Receptor->rfc                                         = "IEC121203FV8";
         $factura->Receptor->nombre                                      = "INTEGRADORA DE EMPRENDIMIENTOS CULTURALES SA DE CV";
-        $factura->Receptor->Domicilio->calle                            = "TIBURCIO MONTIEL";
+        $factura->receptor->domicilio->calle                            = "TIBURCIO MONTIEL";
         $factura->Receptor->Domicilio->noExterior                       = "80";
         $factura->Receptor->Domicilio->noInterior                       = "INTERIOR B-3";
         $factura->Receptor->Domicilio->colonia                          = "COL. SAN MIGUEL CHAPULTEPEC";
