@@ -137,7 +137,7 @@ class servicesUrls
 
 	public function setUser () {
 		$this->list->url = 'users';
-		$this->create->url = 'users/create';
+		$this->create->url = 'users';
 		$this->details->url = 'users/{id}';
 		$this->update->url = 'users/{id}';
 		$this->disable->url = 'users/{id}';
