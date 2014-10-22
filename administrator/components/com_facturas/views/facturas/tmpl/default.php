@@ -14,6 +14,14 @@ JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_LISTADO_ODD'),
     'index.php?option=com_facturas&view=oddlist',
     $vName == 'listadoODD');
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_LISTADO_ODC'),
+    'index.php?option=com_facturas&view=odclist',
+    $vName == 'listadoODC');
+JSubMenuHelper::addEntry(
+    JText::_('COM_FACTURAS_LISTADO_ODR'),
+    'index.php?option=com_facturas&view=odrlist',
+    $vName == 'listadoODR');
 
 foreach($this->comision as $value);
 
@@ -39,9 +47,10 @@ $tot=$data->total+$comision;
     var comisio        = <?php echo json_encode($comision)?>;
     var comision        = parseFloat(comisio).toFixed(2);
 
-
-    jQuery('.integrado').on('change', llenatabla);
-
+    jQuery(document).ready(function(){
+        llenatabla();
+        jQuery('.integrado').on('change', llenatabla);
+    });
     function comition(id){
         var status = document.getElementById(id).checked;
         var parent= jQuery('#'+id).parent().parent();
@@ -56,37 +65,10 @@ $tot=$data->total+$comision;
 
 
     function llenatabla() {
+
         var idintegrado = jQuery('.integrado').val();
-        //Limpiamos el Div
-        jQuery('#table_content').html('');
-        jQuery('#table_content').html('<table id="table_list" class="adminlist table" cellspacing="0" cellpadding="0" >'
-        +'<thead class="thead"></thead>'
-        +'<tbody class="tbody"></tbody>'
-        +'<tfoot>'
-        +'<tr>'
-        +'<td colspan="10">'
-        +'<div class="pagination pagination-toolbar">'
-        +'<input type="hidden" value="0" name="limitstart">'
-        +'</div>'
-        +'</td>'
-        +'</tr>'
-        +'</tfoot>'
-        +'</table>');
 
-
-        //Encabezados del Div
-        jQuery('.thead').append('<tr class="row0" id="head" >'
-        +'<th id="columna1" >Estatus</th>'
-        +'<th> Fecha</th>'
-        +'<th>Folio</th>'
-        +'<th>Emisor</th>'
-        +'<th>IVA</th>'
-        +'<th>Sub-Total</th>'
-        +'<th>Total Factura</th>'
-        +'<th>Comision</th>'
-        +'<th>Total Fact+Comision</th>'
-        +'<th>Detalle</th>'
-        +'</tr>');
+        jQuery('#tbody').find('tr').remove();
 
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
@@ -107,7 +89,7 @@ $tot=$data->total+$comision;
 
             if(estatus== 0){
                 if (idintegrado == value.integradoId) {
-                    jQuery('.tbody').append('<tr class="row1">'
+                    jQuery('#tbody').append('<tr class="row1">'
                     +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
                     +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
                     +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
@@ -120,6 +102,21 @@ $tot=$data->total+$comision;
                     +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
                     +'</tr>');
                 }
+                if(typeof(idintegrado) == 'undefined' || idintegrado == 0){
+                    jQuery('#tbody').append('<tr class="row1">'
+                        +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
+                        +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
+                        +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
+                        +'<td><span>'+emisor+'</span></td>'
+                        +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
+                        +'<td><span>$'+subtotal+'</span><input id="subtotal'+nextinput+'" type="hidden" style="width: 70px" name="subtotal'+nextinput+'" value="'+subtotal+'" class="subtotal"></td>'
+                        +'<td ><span>$'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
+                        +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
+                        +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
+                        +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
+                        +'</tr>');
+                }
+
             }
 
         });
@@ -131,8 +128,8 @@ $tot=$data->total+$comision;
         <div class="head2" id="head" >
             <div id="columna1" ><span>Seleciona el Integrado:</span>
 
-                <select id='integrado' name="integrado" onchange="llenatabla()" class="integrado">
-                    <option value="0"></option>
+                <select id='integrado' name="integrado" class="integrado">
+                    <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
                     foreach ($this->usuarios as $key => $value) {
                         echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
@@ -146,8 +143,21 @@ $tot=$data->total+$comision;
     </div>
     <div id="table_content">
         <table class="adminlist table" id="table_list" cellspacing="0" cellpadding="0" id="odv">
-        <thead class="thead"></thead>
-        <tbody class="tbody"></tbody>
+        <thead class="thead">
+        <tr class="row0" id="head" >
+            <th id="columna1" >Estatus</th>
+            <th> Fecha</th>
+            <th>Folio</th>
+            <th>Emisor</th>
+            <th>IVA</th>
+            <th>Sub-Total</th>
+            <th>Total Factura</th>
+            <th>Comision</th>
+            <th>Total Fact+Comision</th>
+            <th>Detalle</th>
+        </tr>
+        </thead>
+        <tbody class="tbody" id="tbody"></tbody>
         <tfoot>
         <tr>
             <td colspan="10">

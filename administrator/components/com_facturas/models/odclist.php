@@ -12,7 +12,7 @@ jimport('integradora.classDB');
 /**
  * Methods supporting a list of Facturas records.
  */
-class FacturasModelOddlist extends JModelList {
+class FacturasModelOdclist extends JModelList {
 
     public function __construct($config = array()) {
 
@@ -37,7 +37,7 @@ class FacturasModelOddlist extends JModelList {
     }
 
     public function getOrdenes(){
-        $data = getFromTimOne::getOrdenesDeposito();
+        $data = getFromTimOne::getOrdenesCompra();
         $usuarios = $this->getUserIntegrado();
 
         foreach($data as $value){

@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-$vName = 'listadoODD';
+$vName = 'listadoODC';
 
 JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_FACTURAS'),
@@ -23,7 +23,7 @@ JSubMenuHelper::addEntry(
     'index.php?option=com_facturas&view=odrlist',
     $vName == 'listadoODR');
 
-$odds = $this->ordenes;
+$odcs = $this->ordenes;
 ?>
 <script language="javascript" type="text/javascript">
     function filtrointegrado() {
@@ -71,10 +71,10 @@ $odds = $this->ordenes;
             </thead>
             <tbody class="tbody">
             <?php
-            foreach ($odds as $key => $value) {
+            foreach ($odcs as $key => $value) {
             ?>
                 <tr class="integrado_<?php echo $value->integradoId; ?>">
-                    <td><?php echo $value->numOrden; ?></td>
+                    <td><?php echo $value->id; ?></td>
                     <td><?php echo $value->created; ?></td>
                     <td><?php echo $value->integradoName; ?></td>
                     <td>$<?php echo number_format($value->totalAmount,2); ?></td>
