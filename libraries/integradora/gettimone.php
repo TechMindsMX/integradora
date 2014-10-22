@@ -4,6 +4,7 @@ defined('JPATH_PLATFORM') or die;
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
+jimport('integradora.rutas');
 
 class getFromTimOne{
     public static function getProyects($userId = null){
@@ -2012,19 +2013,41 @@ $token = 'fghgjsdatr';
 		return $token;
 	}
 
-	public static function newintegradoId($envio, $callback){
+	public static function newintegradoId($envio){
 		$jsonData = json_encode($envio);
 
-//		$serviceUrl = MIDDLE.PUERTO.'/tim-integradora/user/save';
-		$serviceUrl = 'http://192.168.0.126:8090/tim-integradora/user/save';
+		$route = new servicesRoute();
+		$route->userUrls()->urls;
 
-        $sendToTimone = new sendToTimOne();
-        $results = $sendToTimone->to_timone($jsonData, $serviceUrl);
+		$serviceUrl = $route->baseUrl.$route->urls->create->url;
 
-		//$results = self::to_timone($jsonData, $serviceUrl);
+		$sendToTimone = new sendToTimOne();
+		$sendToTimone->setHttpType($route->urls->create->type);
+		$sendToTimone->setJsonData($jsonData);
+		$sendToTimone->setServiceUrl($serviceUrl);
+
+        $results = $sendToTimone->to_timone();
 
         return $results;
     }
+
+	public function createNewProject($envio, $integradoId){
+		$jsonData = json_encode($envio);
+
+		$route = new servicesRoute();
+		$route->projectUrls()->urls;
+
+		$serviceUrl = str_replace('{userId}', $integradoId, $route->baseUrl.$route->urls->create->url);
+
+		$sendToTimone = new sendToTimOne();
+		$sendToTimone->setHttpType($route->urls->create->type);
+		$sendToTimone->setJsonData($jsonData);
+		$sendToTimone->setServiceUrl($serviceUrl);
+
+		$result = $sendToTimone->to_timone();
+
+		return $result;
+	}
 
 	public static function getComisionById ($id) {
 		$comision = null;
@@ -2136,6 +2159,7 @@ class sendToTimOne {
 
 	public function to_timone() {
 
+		$verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
 		$verbose = fopen('curl.log', 'w');
 		$ch = curl_init();
@@ -2148,15 +2172,16 @@ class sendToTimOne {
 						CURLOPT_RETURNTRANSFER => true,
 						CURLOPT_SSL_VERIFYPEER => false,
 						CURLOPT_POSTFIELDS     => $this->jsonData,
-						CURLOPT_HEADER         => true,
+						CURLOPT_HEADER         => false,
 		//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
 						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => true,
+						CURLOPT_VERBOSE        => $verboseflag,
 						CURLOPT_STDERR		   => $verbose,
 						CURLOPT_HTTPHEADER	   => array(
+							'Accept: application/json',
 							'Content-Type: application/json',
 							'Content-Length: ' . strlen($this->jsonData)
-						)
+			)
 				);
 				break;
 			case ('PUT'):
@@ -2168,7 +2193,7 @@ class sendToTimOne {
 						CURLOPT_HEADER         => true,
 						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
 						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => true,
+						CURLOPT_VERBOSE        => $verboseflag,
 						CURLOPT_STDERR		   => $verbose,
 						CURLOPT_HTTPHEADER	   => array(
 							'Content-Type: application/json',
@@ -2185,7 +2210,7 @@ class sendToTimOne {
 						CURLOPT_HEADER         => true,
 						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
 						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => true,
+						CURLOPT_VERBOSE        => $verboseflag,
 						CURLOPT_STDERR		   => $verbose,
 						CURLOPT_HTTPHEADER	   => array(
 							'Content-Type: application/json',
@@ -2199,12 +2224,13 @@ class sendToTimOne {
 						CURLOPT_URL            => $this->serviceUrl,
 						CURLOPT_RETURNTRANSFER => true,
 						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_HEADER         => true,
+						CURLOPT_HEADER         => false,
 						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
 						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => true,
+						CURLOPT_VERBOSE        => $verboseflag,
 						CURLOPT_STDERR		   => $verbose,
 						CURLOPT_HTTPHEADER	   => array(
+							'Accept: application/json',
 							'Content-Type: application/json',
 							'Content-Length: ' . strlen($this->jsonData)
 						)
@@ -2214,11 +2240,15 @@ class sendToTimOne {
 
 		curl_setopt_array($ch,$options);
 
-		$this->result->data = curl_exec($ch);
+		if($verboseflag === true) {
+			$headers = curl_getinfo( $ch,
+			                         CURLINFO_HEADER_OUT );
+			$this->result->data = curl_exec($ch);
 
-		rewind($verbose);
-		$verboseLog = stream_get_contents($verbose);
-//		echo "Verbose information:\n<pre>", htmlspecialchars($verboseLog), "</pre>\n".curl_errno($ch).curl_error($ch);
+			rewind( $verbose );
+			$verboseLog = stream_get_contents( $verbose );
+			echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
+		}
 
 		$this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
