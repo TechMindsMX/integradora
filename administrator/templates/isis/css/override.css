@@ -4,3 +4,17 @@
     margin-bottom: 20px;
     text-align: center;
 }
+
+.div-formODC {
+    float: left;
+    width: 30%;
+}
+
+.div-detalleODC {
+    float: left;
+    width: 65%;
+}
+
+.div-detalleProductos {
+    margin-top: 50px;
+}

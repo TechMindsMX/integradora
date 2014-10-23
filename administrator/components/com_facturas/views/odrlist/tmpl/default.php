@@ -23,7 +23,7 @@ JSubMenuHelper::addEntry(
     'index.php?option=com_facturas&view=odrlist',
     $vName == 'listadoODR');
 
-$odcs = $this->ordenes;
+$odrs = $this->ordenes;
 ?>
 <script language="javascript" type="text/javascript">
     function filtrointegrado() {
@@ -71,14 +71,14 @@ $odcs = $this->ordenes;
             </thead>
             <tbody class="tbody">
             <?php
-            foreach ($odcs as $key => $value) {
+            foreach ($odrs as $key => $value) {
             ?>
                 <tr class="integrado_<?php echo $value->integradoId; ?>">
                     <td><?php echo $value->id; ?></td>
                     <td><?php echo $value->created; ?></td>
                     <td><?php echo $value->integradoName; ?></td>
                     <td>$<?php echo number_format($value->totalAmount,2); ?></td>
-                    <td><input type="button" class="btn btn-primary" value="Conciliar"> </td>
+                    <td><a href="index.php?option=com_facturas&view=odrform&odrNum=<?php echo $value->numOrden; ?>" class="btn btn-primary">Conciliar</a> </td>
                 </tr>
             <?php
             }

@@ -74,11 +74,11 @@ $odcs = $this->ordenes;
             foreach ($odcs as $key => $value) {
             ?>
                 <tr class="integrado_<?php echo $value->integradoId; ?>">
-                    <td><?php echo $value->id; ?></td>
+                    <td><?php echo $value->folio; ?></td>
                     <td><?php echo $value->created; ?></td>
                     <td><?php echo $value->integradoName; ?></td>
                     <td>$<?php echo number_format($value->totalAmount,2); ?></td>
-                    <td><input type="button" class="btn btn-primary" value="Conciliar"> </td>
+                    <td><a href="index.php?option=com_facturas&view=odcform&odcNum=<?php echo $value->folio ?>" class="btn btn-primary">Conciliar</a> </td>
                 </tr>
             <?php
             }
