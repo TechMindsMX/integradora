@@ -24,7 +24,7 @@ class FacturasViewOdclist extends JViewLegacy {
 
     protected function addToolbar() {
         require_once JPATH_COMPONENT . '/helpers/facturas.php';
-        JToolBarHelper::title(JText::_('Ordenes de Deposito'), '');
+        JToolBarHelper::title(JText::_('Ordenes de Compra'), '');
 
     }
 

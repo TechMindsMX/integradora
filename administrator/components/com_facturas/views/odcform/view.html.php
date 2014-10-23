@@ -23,7 +23,7 @@ class FacturasViewOdcform extends JViewLegacy {
 
 
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('Conciliación de Orden de Deposito'), '');
+        JToolBarHelper::title(JText::_('Conciliación de Orden de Compra'), '');
 
     }
 
