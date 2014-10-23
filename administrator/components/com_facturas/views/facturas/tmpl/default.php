@@ -99,7 +99,7 @@ $tot=$data->total+$comision;
                     +'<td ><span>$'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
                     +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
                     +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
-                    +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
+                    +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary">Ver</button></td>'
                     +'</tr>');
                 }
                 if(typeof(idintegrado) == 'undefined' || idintegrado == 0){
@@ -113,7 +113,7 @@ $tot=$data->total+$comision;
                         +'<td ><span>$'+total+'</span><input id="total'+nextinput+'" type="hidden" style="width: 70px"    name="total" value="'+total+'" class="total"></td>'
                         +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
                         +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
-                        +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary span3">Ver</button></td>'
+                        +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary ">Ver</button></td>'
                         +'</tr>');
                 }
 
