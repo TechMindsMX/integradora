@@ -50,11 +50,11 @@ class FacturasModelOddform extends JModelList {
                 }
             }
 
-            if($value->numOrden =  $oddNum){
+            if($value->numOrden == $oddNum){
                 $orden = $value;
             }
         }
 
-        return $data;
+        return $orden;
     }
 }

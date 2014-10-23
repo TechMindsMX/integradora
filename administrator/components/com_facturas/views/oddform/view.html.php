@@ -7,7 +7,7 @@ class FacturasViewOddform extends JViewLegacy {
 
     public function display($tpl = null) {
 
-        $this->ordenes = $this->get('Orden');
+        $this->orden = $this->get('Orden');
         $this->usuarios = $this->get('UserIntegrado');
         $this->integradi = $this->get('Solicitud');
 
