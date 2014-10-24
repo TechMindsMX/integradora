@@ -72,6 +72,7 @@ $tot=$data->total+$comision;
 
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
+            console.log(value);
             nextinput++;
             var fecha           = value.Comprobante.fecha;
             fecha               = fecha.slice(0,10);
@@ -100,6 +101,7 @@ $tot=$data->total+$comision;
                     +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
                     +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
                     +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary">Ver</button></td>'
+                        +'<td ><a class="btn btn-primary" href="index.php?option=com_facturas&view=factform&factNum='+value.id+'">Conciliar</a></td>'
                     +'</tr>');
                 }
                 if(typeof(idintegrado) == 'undefined' || idintegrado == 0){
@@ -114,6 +116,7 @@ $tot=$data->total+$comision;
                         +'<td><span>$'+comision+'</span><input id="comision'+nextinput+'" type="hidden" style="width: 70px"    name="comision'+nextinput+'" value="'+comision+'" class="total"></td>'
                         +'<td ><span id="faccomi"></span><input id="fabiccom" type="hidden" style="width: 70px"    name="fabiccom" value="" class="total"></td>'
                         +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary ">Ver</button></td>'
+                        +'<td ><a class="btn btn-primary" href="index.php?option=com_facturas&view=factform&factNum='+value.id+'">Conciliar</a></td>'
                         +'</tr>');
                 }
 
