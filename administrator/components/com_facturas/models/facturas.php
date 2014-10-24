@@ -40,6 +40,15 @@ class FacturasModelFacturas extends JModelList {
 
     public function getFacturas(){
         $data = getFromTimOne::getFactura();
+        foreach($data as $value){
+            $strlimpia = str_replace('T',' ',$value->Comprobante->fecha);
+            $array = explode(' ',$strlimpia);
+            $strFH = strtotime($array[0]);
+            $date   = date('d-m-Y',$strFH);
+            $value->Comprobante->fechaFormateada = $date;
+            $value->Comprobante->fechaNumero = $strFH;
+        }
+
         return $data;
     }
 

@@ -2,8 +2,11 @@
 defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
+JHTML::_('behavior.calendar');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 $vName = 'facturas';
+
+$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_FACTURAS'),
@@ -40,7 +43,7 @@ foreach($this->facturas as $value) {
 }
 $tot=$data->total+$comision;
 ?>
-
+<link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 <script language="javascript" type="text/javascript">
     var nextinput       = 0;
     var arrayFact       = <?php echo json_encode($this->facturas)?>;
@@ -50,7 +53,29 @@ $tot=$data->total+$comision;
     jQuery(document).ready(function(){
         llenatabla();
         jQuery('.integrado').on('change', llenatabla);
+        jQuery('#llenatabla').on('click', llenatabla);
+        jQuery('#filtrofecha').on('click', filtro_fechas);
     });
+
+    function filtro_fechas(){
+        var fechaInicio = new Date(Date.parse(jQuery('#fechaInicio').val()));
+        var fechafin    = new Date(Date.parse(jQuery('#fechaFin').val()));
+
+        fechaInicioTS = fechafin.getTime()/1000;
+        fechaFinTS = fechaInicio.getTime()/1000;
+
+        var filas = jQuery('.row1');
+        jQuery.each(filas, function(key, value){
+            var fila = jQuery(value);
+            var campo = fila.find('input[id*="fecha"]');
+            if( (fechaInicioTS >= campo.val()) && (fechaFinTS <= campo.val()) ){
+                fila.show();
+            }else{
+                fila.hide();
+            }
+        });
+    }
+
     function comition(id){
         var status = document.getElementById(id).checked;
         var parent= jQuery('#'+id).parent().parent();
@@ -63,7 +88,6 @@ $tot=$data->total+$comision;
         }
     }
 
-
     function llenatabla() {
 
         var idintegrado = jQuery('.integrado').val();
@@ -72,10 +96,9 @@ $tot=$data->total+$comision;
 
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
-            console.log(value);
             nextinput++;
-            var fecha           = value.Comprobante.fecha;
-            fecha               = fecha.slice(0,10);
+            var fecha           = value.Comprobante.fechaFormateada;
+            var timestamp       = value.Comprobante.fechaNumero;
             var folio           = value.Comprobante.serie+value.Comprobante.folio;
             folio               = folio.replace(" ","");
             var emisor          = value.Emisor.nombre;
@@ -90,9 +113,9 @@ $tot=$data->total+$comision;
 
             if(estatus== 0){
                 if (idintegrado == value.integradoId) {
-                    jQuery('#tbody').append('<tr class="row1">'
+                    jQuery('#tbody').append('<tr class="row1" id="'+nextinput+'_'+value.integradoId+'">'
                     +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
-                    +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
+                    +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+timestamp+'"></td>'
                     +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
                     +'<td><span>'+emisor+'</span></td>'
                     +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
@@ -105,9 +128,9 @@ $tot=$data->total+$comision;
                     +'</tr>');
                 }
                 if(typeof(idintegrado) == 'undefined' || idintegrado == 0){
-                    jQuery('#tbody').append('<tr class="row1">'
+                    jQuery('#tbody').append('<tr class="row1" id="filaintegrado'+value.integradoId+'">'
                         +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
-                        +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+fecha+'"></td>'
+                        +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+timestamp+'"></td>'
                         +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
                         +'<td><span>'+emisor+'</span></td>'
                         +'<td><span>$'+iva+'</span><input id="iva'+nextinput+'" type="hidden" style="width: 70px" name="iva'+nextinput+'" value="'+iva+'" class="iva"></td>'
@@ -129,8 +152,8 @@ $tot=$data->total+$comision;
 <form action="" method="post" name="adminForm" id="adminForm">
     <div  class="integrado-id" id="odv">
         <div class="head2" id="head" >
-            <div id="columna1" ><span>Seleciona el Integrado:</span>
-
+            <div class="filtros" id="columna1" >
+                <label for="integrado">Seleciona el Integrado:</label>
                 <select id='integrado' name="integrado" class="integrado">
                     <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
@@ -138,10 +161,32 @@ $tot=$data->total+$comision;
                         echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
                     }
                     ?>
-
                 </select>
             </div>
-
+            <div class="filtros">
+                <div class="columna1">
+                    <label for="fechaFin">Fecha Inicio</label>
+                    <?php
+                    $d = new DateTime();
+                    $d->modify('first day of this month');
+                    $default = $d->format('Y-m-d');
+                    echo JHTML::_('calendar',$default,'fechaInicio', 'fechaInicio', $format = '%Y-%m-%d', $attsCal);
+                    ?>
+                </div>
+                <div class="columna1">
+                    <label for="fechaFin">Fecha Fin</label>
+                    <?php
+                    $d = new DateTime();
+                    $d->modify('last day of this month');
+                    $default = $d->format('Y-m-d');
+                    echo JHTML::_('calendar',$default,'fechaFin', 'fechaFin', $format = '%Y-%m-%d', $attsCal);
+                    ?>
+                </div>
+                <div>
+                    <input type="button" class="btn btn-primary" value="Buscar" id="filtrofecha">
+                    <input type="button" class="btn btn-primary" value="Limpiar" id="llenatabla">
+                </div>
+            </div>
         </div>
     </div>
     <div id="table_content">

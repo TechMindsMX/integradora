@@ -43,19 +43,41 @@ $odrs = $this->ordenes;
 <form action="" method="post" name="adminForm" id="adminForm">
     <div  class="integrado-id" id="odv">
         <div class="head2" id="head" >
-            <div id="columna1" ><span>Seleciona el Integrado:</span>
-
+            <div class="filtros" id="columna1" >
+                <label for="integrado">Seleciona el Integrado:</label>
                 <select id='integrado' name="integrado" class="integrado">
-                    <option value="0"></option>
+                    <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
                     foreach ($this->usuarios as $key => $value) {
                         echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
                     }
                     ?>
-
                 </select>
             </div>
-
+            <div class="filtros">
+                <div class="columna1">
+                    <label for="fechaFin">Fecha Inicio</label>
+                    <?php
+                    $d = new DateTime();
+                    $d->modify('first day of this month');
+                    $default = $d->format('Y-m-d');
+                    echo JHTML::_('calendar',$default,'fechaInicio', 'fechaInicio', $format = '%Y-%m-%d', $attsCal);
+                    ?>
+                </div>
+                <div class="columna1">
+                    <label for="fechaFin">Fecha Fin</label>
+                    <?php
+                    $d = new DateTime();
+                    $d->modify('last day of this month');
+                    $default = $d->format('Y-m-d');
+                    echo JHTML::_('calendar',$default,'fechaFin', 'fechaFin', $format = '%Y-%m-%d', $attsCal);
+                    ?>
+                </div>
+                <div>
+                    <input type="button" class="btn btn-primary" value="Buscar" id="filtrofecha">
+                    <input type="button" class="btn btn-primary" value="Limpiar" id="llenatabla">
+                </div>
+            </div>
         </div>
     </div>
     <div id="table_content">
