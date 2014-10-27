@@ -1,15 +1,18 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
-JHtml::_('behavior.tooltip');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::_('behavior.tooltip');
+
+JHtml::_('behavior.calendar');
+$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
 $vName = 'listadoODC';
 
 JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_FACTURAS'),
     'index.php?option=com_facturas',
     $vName == 'facturas');
-
 JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_LISTADO_ODD'),
     'index.php?option=com_facturas&view=oddlist',
@@ -22,8 +25,6 @@ JSubMenuHelper::addEntry(
     JText::_('COM_FACTURAS_LISTADO_ODR'),
     'index.php?option=com_facturas&view=odrlist',
     $vName == 'listadoODR');
-JHTML::_('behavior.calendar');
-$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 $odcs = $this->ordenes;
 ?>
@@ -58,9 +59,13 @@ $odcs = $this->ordenes;
         });
     }
 
+    function limpiaFiltro() {
+        jQuery('.row1').show();
+    }
     jQuery(document).ready(function(){
         jQuery('#integrado').on('change',filtrointegrado);
         jQuery('#filtrofecha').on('click', filtro_fechas);
+        jQuery('#llenatabla').on('click', limpiaFiltro);
     });
 </script>
 <form action="" method="post" name="adminForm" id="adminForm">

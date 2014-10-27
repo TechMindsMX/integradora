@@ -1,8 +1,12 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
-JHtml::_('behavior.tooltip');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::_('behavior.tooltip');
+
+JHtml::_('behavior.calendar');
+$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
 $vName = 'listadoODD';
 
 JSubMenuHelper::addEntry(
@@ -36,8 +40,31 @@ $odds = $this->ordenes;
             jQuery('[class*="integrado_"]').show();
         }
     }
+    function filtro_fechas(){
+        var fechaInicio = new Date(Date.parse(jQuery('#fechaInicio').val()));
+        var fechafin    = new Date(Date.parse(jQuery('#fechaFin').val()));
+
+        fechaInicioTS = fechafin.getTime()/1000;
+        fechaFinTS = fechaInicio.getTime()/1000;
+
+        var filas = jQuery('.row1');
+        jQuery.each(filas, function(key, value){
+            var fila = jQuery(value);
+            var campo = fila.find('input[id*="fecha"]');
+            if( (fechaInicioTS >= campo.val()) && (fechaFinTS <= campo.val()) ){
+                fila.show();
+            }else{
+                fila.hide();
+            }
+        });
+    }
+    function limpiaFiltro() {
+        jQuery('.row1').show();
+    }
     jQuery(document).ready(function(){
         jQuery('#integrado').on('change',filtrointegrado);
+        jQuery('#filtrofecha').on('click', filtro_fechas);
+        jQuery('#llenatabla').on('click', limpiaFiltro);
     });
 </script>
 <form action="" method="post" name="adminForm" id="adminForm">
@@ -67,9 +94,7 @@ $odds = $this->ordenes;
                 <div class="columna1">
                     <label for="fechaFin">Fecha Fin</label>
                     <?php
-                    $d = new DateTime();
-                    $d->modify('last day of this month');
-                    $default = $d->format('Y-m-d');
+                    $default = date('Y-m-d');
                     echo JHTML::_('calendar',$default,'fechaFin', 'fechaFin', $format = '%Y-%m-%d', $attsCal);
                     ?>
                 </div>
@@ -95,9 +120,9 @@ $odds = $this->ordenes;
             <?php
             foreach ($odds as $key => $value) {
             ?>
-                <tr class="integrado_<?php echo $value->integradoId; ?>">
+                <tr class="row1 integrado_<?php echo $value->integradoId; ?>">
                     <td><?php echo $value->numOrden; ?></td>
-                    <td><?php echo $value->created; ?></td>
+                    <td><?php echo $value->created; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->created); ?>" /></td>
                     <td><?php echo $value->integradoName; ?></td>
                     <td>$<?php echo number_format($value->totalAmount,2); ?></td>
                     <td><a href="index.php?option=com_facturas&view=oddform&oddNum=<?php echo $value->numOrden; ?>" class="btn btn-primary">Conciliar</a> </td>
