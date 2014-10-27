@@ -40,6 +40,6 @@ class FacturasControllerFactform extends JControllerAdmin {
             }
         }
 
-        exit;
+
     }
 }

@@ -33,3 +33,10 @@ div#table_content{
     float:left;
     width:100%
 }
+#confirmar{
+    display: none;
+}
+.sure{
+    font-size: 21px;
+    margin-bottom: 15px;
+}

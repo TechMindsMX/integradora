@@ -34,8 +34,16 @@ class validador{
 					}
 
 				}
-			}
-            if (isset($diccionario[$key]['notNull']) && !$respuesta[$key]) {
+
+                if ( isset($diccionario[$key]['notNull']) && !is_array($respuesta) ) {
+                    $respuesta[$key] = self::valida_notNull($value);
+
+                    if (!$respuesta[$key]) {
+                        $respuesta[$key] = self::salir (JText::_('CAMPO_OBLIGATORIO'));
+                    }
+                }
+
+			}elseif ( isset($diccionario[$key]['notNull']) ) {
                 $respuesta[$key] = self::valida_notNull($value);
 
                 if (!$respuesta[$key]) {

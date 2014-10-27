@@ -15,10 +15,13 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         history.back();
     }
     function send() {
+        var divEnviar       = jQuery('#enviar');
+        var divConfirmacion = jQuery('#confirmar');
+
         var paymentDate = jQuery('input[name*="paymentDate"]').val();
         var data = jQuery('#form_admin_odd').serialize();
         if( !(jQuery('#ordenPagada').prop('checked')) ){
-            data += '&ordenPagada=0';
+            data += '&ordenPagada=';
         }
 
         data += '&paymentDay='+paymentDate;
@@ -36,6 +39,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
                     mensajes(v.msg,'error',k);
                 }
             });
+            divEnviar.show();
+            divConfirmacion.hide();
         });
 
         request.fail(function (jqXHR, textStatus) {
@@ -47,7 +52,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         var claveBanco  = jQuery(this).val();
 
         select.find('option').remove();
-        select.append('<option value="0">Seleccione su Opción</option>');
+        select.append('<option value="">Seleccione su Opción</option>');
 
         var request     = jQuery.ajax({
             url: 'index.php?option=com_facturas&task=cuentas&format=raw',
@@ -64,9 +69,24 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             });
         });
     }
+    function confirmar() {
+        var boton           = jQuery(this).prop('id');
+        var divEnviar       = jQuery('#enviar');
+        var divConfirmacion = jQuery('#confirmar');
+
+        if(boton === 'send'){
+            divEnviar.hide();
+            divConfirmacion.show();
+        }else{
+            divEnviar.show();
+            divConfirmacion.hide();
+        }
+    }
     jQuery(document).ready(function(){
         jQuery('#cancel').on('click', cancelar);
-        jQuery('#send').on('click', send);
+        jQuery('#send').on('click', confirmar);
+        jQuery('#confirm').on('click', send);
+        jQuery('#noConfirm').on('click', confirmar);
         jQuery('#banco').on('change', buscaCuentas);
     });
 </script>
@@ -84,7 +104,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 <form id="form_admin_odd" class="form" method="post">
     <div class="form-group marcarOrden">
         <label for="ordenPagada">
-            <h3><?php echo JText::_('COM_FACTURAS_FROM_FACTURA_PAGADA'); ?> *
+            <h3><?php echo JText::_('COM_FACTURAS_FROM_FACTURA_PAGADA'); ?> <span style="color: #FF0000">*</span>
                 <input type="checkbox" id="ordenPagada" name="ordenPagada" value="1" >
             </h3>
         </label>
@@ -96,7 +116,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     <div class="form-group">
         <label for="banco"><?php echo JText::_('COM_FACTURAS_FROM_ODD_BANCO'); ?> <span style="color: #FF0000;">*</span> </label>
         <select name="banco" id="banco">
-            <option value="0">Seleccione su opción</option>
+            <option value="">Seleccione su opción</option>
             <?php
             foreach ($this->numcuentas['select'] as $banco=>$clave){
                 echo '<option value="'.$clave.'">'.$banco.'</option>';
@@ -106,7 +126,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 
         <label for="cuenta"><?php echo JText::_('COM_FACTURAS_FROM_ODD_CUENTAS'); ?> <span style="color: #FF0000;">*</span> </label>
         <select name="cuenta" id="cuenta">
-            <option value="0">Seleccione su opción</option>
+            <option value="">Seleccione su opción</option>
         </select>
     </div>
     <div class="clearfix">&nbsp;</div>
@@ -133,7 +153,14 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
-        <input type="button" class="btn btn-primary" value="Enviar" id="send"/>
+        <div id="enviar">
+            <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
+            <input type="button" class="btn btn-primary" value="Enviar" id="send"/>
+        </div>
+        <div id="confirmar">
+            <div class="sure">¡Esta seguro de realizar la Conciliación!</div>
+            <input type="button" class="btn btn-danger" value="Cancelar" id="noConfirm">
+            <input type="button" class="btn btn-success" value="Confirmar" id="confirm"/>
+        </div>
     </div>
 </form>
