@@ -7,7 +7,8 @@ include_once 'catalogos.php';
 class validador{
     public $dataPost;
 
-    public function procesamiento ($data,$diccionario,$seccion = null) {
+    public function procesamiento ($data,$diccionario) {
+        $respuesta = array();
         $this->dataPost = $data;
 		foreach ($data as $key => $value) {
 
@@ -258,5 +259,3 @@ class validador{
         return $respuesta;
     }
 }
-
-?>
