@@ -71,10 +71,8 @@ class FacturasModelfactform extends JModelList {
             $select[$objeto->nomBanco] = $objeto->banco;
         }
         $respuesta['select'] = $select;
-        $respuesta['cuentas'] = $cuentas;
 
-var_dump($respuesta);
-        exit;
+        return $respuesta;
     }
 
     private function getBancos(){
@@ -82,7 +80,6 @@ var_dump($respuesta);
         $catalogos->getBancos();
 
         return $catalogos->bancos;
-
     }
 
 }

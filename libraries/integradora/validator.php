@@ -33,8 +33,15 @@ class validador{
 					}
 
 				}
-
 			}
+            if (isset($diccionario[$key]['notNull']) && !$respuesta[$key]) {
+                $respuesta[$key] = self::valida_notNull($value);
+
+                if (!$respuesta[$key]) {
+                    $respuesta[$key] = self::salir (JText::_('CAMPO_OBLIGATORIO'));
+                }
+            }
+
 		}
 
 		return $respuesta;
@@ -207,9 +214,9 @@ class validador{
 	}
 
 	protected function valida_alphaNumber ($valor) {
-		$regex = '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . ]+$/';
+		$regex = '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . \- \_]+$/';
 
-		if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $valor) == 1) {
 			$respuesta = true;
 		} else {
 			$respuesta = false;
@@ -217,6 +224,39 @@ class validador{
 
 		return $respuesta;
 	}
+    protected  function valida_date ($valor) {
+        $regex = '/^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/';
+
+        if (preg_match ($regex, $valor) == 1) {
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    protected function valida_referenciaBancaria ($valor) {
+        $regex = '/^[0-9a-zA-Z\-]{21}+$/';
+
+        if (preg_match ($regex, $valor) == 1) {
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    protected function valida_notNull ($valor){
+        if($valor != '' && $valor != 0){
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
 }
 
 ?>

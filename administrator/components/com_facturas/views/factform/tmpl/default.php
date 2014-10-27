@@ -6,6 +6,8 @@ JHTML::_('behavior.calendar');
 
 $factura   = $this->factura;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
 ?>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 <script>
@@ -13,30 +15,59 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         history.back();
     }
     function send() {
+        var paymentDate = jQuery('input[name*="paymentDate"]').val();
         var data = jQuery('#form_admin_odd').serialize();
         if( !(jQuery('#ordenPagada').prop('checked')) ){
             data += '&ordenPagada=0';
         }
 
-        console.log(data);
-//        var request = jQuery.ajax({
-//            url: "index.php?option=com_mandatos&task=odvform.safeform&format=raw",
-//            data: data,
-//            type: 'post',
-//            async: false
-//        });
-//
-//        request.done(function(result){
-//           console.log(result);
-//        });
-//
-//        request.fail(function (jqXHR, textStatus) {
-//            console.log(jqXHR, textStatus);
-//        });
+        data += '&paymentDay='+paymentDate;
+
+        var request = jQuery.ajax({
+            url: 'index.php?option=com_facturas&task=factform.safeForm&format=raw',
+            data: data,
+            type: 'post',
+            async: false
+        });
+
+        request.done(function(result){
+            jQuery.each(result, function(k, v){
+                if(v != true){
+                    mensajes(v.msg,'error',k);
+                }
+            });
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            console.log(jqXHR, textStatus);
+        });
+    }
+    function buscaCuentas() {
+        var select      = jQuery('#cuenta');
+        var claveBanco  = jQuery(this).val();
+
+        select.find('option').remove();
+        select.append('<option value="0">Seleccione su Opción</option>');
+
+        var request     = jQuery.ajax({
+            url: 'index.php?option=com_facturas&task=cuentas&format=raw',
+            data: {'claveBanco': claveBanco},
+            type: 'post',
+            async: false
+        });
+
+        request.done(function(response){
+            $dataSelect = response.data;
+
+            jQuery.each($dataSelect, function(key,value){
+                select.append('<option value="'+value.id+'">'+value.numCuenta+'</option>');
+            });
+        });
     }
     jQuery(document).ready(function(){
         jQuery('#cancel').on('click', cancelar);
-        jQuery('#send').on('click', send)
+        jQuery('#send').on('click', send);
+        jQuery('#banco').on('change', buscaCuentas);
     });
 </script>
 
@@ -53,7 +84,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 <form id="form_admin_odd" class="form" method="post">
     <div class="form-group marcarOrden">
         <label for="ordenPagada">
-            <h3><?php echo JText::_('COM_FACTURAS_FROM_FACTURA_PAGADA'); ?>
+            <h3><?php echo JText::_('COM_FACTURAS_FROM_FACTURA_PAGADA'); ?> *
                 <input type="checkbox" id="ordenPagada" name="ordenPagada" value="1" >
             </h3>
         </label>
@@ -63,21 +94,31 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
     <h2><?php echo JText::_('COM_FACTURAS_FROM_ODD_TRANSACCION'); ?></h2>
 
     <div class="form-group">
-        <label for="banco_cuenta"><?php echo JText::_('COM_FACTURAS_FROM_ODD_BANCO'); ?></label>
-        <select name="banco_cuenta" id="banco_cuenta">
+        <label for="banco"><?php echo JText::_('COM_FACTURAS_FROM_ODD_BANCO'); ?> <span style="color: #FF0000;">*</span> </label>
+        <select name="banco" id="banco">
+            <option value="0">Seleccione su opción</option>
+            <?php
+            foreach ($this->numcuentas['select'] as $banco=>$clave){
+                echo '<option value="'.$clave.'">'.$banco.'</option>';
+            }
+            ?>
+        </select>
+
+        <label for="cuenta"><?php echo JText::_('COM_FACTURAS_FROM_ODD_CUENTAS'); ?> <span style="color: #FF0000;">*</span> </label>
+        <select name="cuenta" id="cuenta">
             <option value="0">Seleccione su opción</option>
         </select>
     </div>
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <label for="reference"><?php echo JText::_('COM_FACTURAS_FROM_ODD_REFERENCIA'); ?></label>
+        <label for="reference"><?php echo JText::_('COM_FACTURAS_FROM_ODD_REFERENCIA'); ?> <span style="color: #FF0000;">*</span> </label>
         <input type="text" maxlength="21" name="reference" id="reference">
     </div>
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <label for="paymentDate"><?php echo JText::_('COM_FACTURAS_FROM_ODD_FECHA_CONCILIACION'); ?></label>
+        <label for="paymentDate"><?php echo JText::_('COM_FACTURAS_FROM_ODD_FECHA_CONCILIACION'); ?> <span style="color: #FF0000;">*</span> </label>
         <?php
         $default = date('Y-m-d');
         echo JHTML::_('calendar',$default,'paymentDate', 'paymentDay', $format = '%Y-%m-%d', $attsCal);
@@ -86,8 +127,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <label for="reference"><?php echo JText::_('COM_FACTURAS_FROM_ODD_MONTO'); ?></label>
-        <input type="text" name="reference" id="reference">
+        <label for="reference"><?php echo JText::_('COM_FACTURAS_FROM_ODD_MONTO'); ?> <span style="color: #FF0000;">*</span> </label>
+        <input type="text" name="amount" id="amount">
     </div>
     <div class="clearfix">&nbsp;</div>
 
