@@ -29,3 +29,7 @@ div.filtros, div.filtros .columna1{
     float: left;
     width: 50%;
 }
+div#table_content{
+    float:left;
+    width:100%
+}

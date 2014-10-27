@@ -393,7 +393,7 @@ class getFromTimOne{
         $ordenes->proveedor			= 2;
         $ordenes->integradoId		= 1;
         $ordenes->folio				= 988976;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1409288400000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
@@ -417,14 +417,14 @@ class getFromTimOne{
         $ordenes->proveedor			= 4;
         $ordenes->integradoId		= 1;
         $ordenes->folio				= 588973;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1409634000000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
             array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
             array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
         );
-        $ordenes->totalAmount   	=    1227.85;
+        $ordenes->totalAmount   	= 1227.85;
         $ordenes->paymentType		= 0;
         $ordenes->status			= 1;
         $ordenes->ieps				= .1;
@@ -440,7 +440,7 @@ class getFromTimOne{
         $ordenes->proveedor			= 2;
         $ordenes->integradoId		= 1;
         $ordenes->folio				= 988975;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1379048400000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
@@ -463,7 +463,7 @@ class getFromTimOne{
         $ordenes->proveedor			= 4;
         $ordenes->integradoId		= 2;
         $ordenes->folio				= 988977;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1407906000000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
@@ -484,7 +484,7 @@ class getFromTimOne{
         $ordenes->proveedor			= 4;
         $ordenes->integradoId		= 2;
         $ordenes->folio				= 988978;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1409288400000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
@@ -505,7 +505,7 @@ class getFromTimOne{
         $ordenes->proveedor			= 4;
         $ordenes->integradoId		= 2;
         $ordenes->folio				= 988979;
-        $ordenes->created			= 1408632474029;
+        $ordenes->created			= 1404882000000;
         $ordenes->payment			= 1410000000000;
         $ordenes->productos			= array(
             array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
@@ -1254,6 +1254,7 @@ class getFromTimOne{
         }
         return $respuesta;
     }
+
     public static function getOrdenesRetiro($integradoId = null) {
         $respuesta = null;
 
@@ -1326,6 +1327,7 @@ class getFromTimOne{
         return $respuesta;
 
     }
+
     public static function getFactura() {
         $factura = null;
 
@@ -2001,6 +2003,7 @@ class getFromTimOne{
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
             if($key == 'created' || $key == 'payment'){
+                $objeto->fechaNumero = $value;
                 $objeto->$key = date('d-m-Y', ($value/1000) );
             }
         }
