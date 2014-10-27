@@ -16,8 +16,4 @@ class FacturasController extends JControllerLegacy {
         parent::display($cachable, $urlparams);
         return $this;
     }
-
-
-
-
 }

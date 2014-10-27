@@ -12,8 +12,31 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
     function cancelar() {
         history.back();
     }
+    function send() {
+        var data = jQuery('#form_admin_odd').serialize();
+        if( !(jQuery('#ordenPagada').prop('checked')) ){
+            data += '&ordenPagada=0';
+        }
+
+        console.log(data);
+//        var request = jQuery.ajax({
+//            url: "index.php?option=com_mandatos&task=odvform.safeform&format=raw",
+//            data: data,
+//            type: 'post',
+//            async: false
+//        });
+//
+//        request.done(function(result){
+//           console.log(result);
+//        });
+//
+//        request.fail(function (jqXHR, textStatus) {
+//            console.log(jqXHR, textStatus);
+//        });
+    }
     jQuery(document).ready(function(){
         jQuery('#cancel').on('click', cancelar);
+        jQuery('#send').on('click', send)
     });
 </script>
 
@@ -27,7 +50,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
 <div class="clearfix">&nbsp;</div>
 
-<form id="form_admin_odd" class="form">
+<form id="form_admin_odd" class="form" method="post">
     <div class="form-group marcarOrden">
         <label for="ordenPagada">
             <h3><?php echo JText::_('COM_FACTURAS_FROM_FACTURA_PAGADA'); ?>

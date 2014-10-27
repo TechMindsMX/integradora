@@ -40,7 +40,7 @@ class Catalogos {
 	public function getBancos(){
 		$catalogo = json_decode(@file_get_contents('http://192.168.0.122:7272/trama-middleware/rest/stp/listBankCodes'));
 		
-		foreach ($catalogo as $key => $value) {
+		foreach ($catalogo as $value) {
 			$objeto = new stdClass;
 			
 			$objeto->banco = $value->name;

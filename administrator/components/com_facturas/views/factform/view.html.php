@@ -9,7 +9,7 @@ class FacturasViewFactform extends JViewLegacy {
 
         $this->factura = $this->get('Factura');
         $this->usuarios = $this->get('UserIntegrado');
-        $this->integradi = $this->get('Solicitud');
+        $this->numcuentas = $this->get('NumCuentas');
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));

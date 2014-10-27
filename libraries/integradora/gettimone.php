@@ -1924,6 +1924,39 @@ class getFromTimOne{
 
 	}
 
+    public static function getNumCuenta () {
+        $respuesta = null;
+
+        $cuentas = new stdClass;
+        $cuentas->id = 1;
+        $cuentas->numCuenta = '00743616552851576216';
+        $cuentas->banco = '40012';
+
+        $respuesta[] = $cuentas;
+
+        $cuentas = new stdClass;
+        $cuentas->id = 2;
+        $cuentas->numCuenta = '00743616552851576054';
+        $cuentas->banco = '40012';
+
+        $respuesta[] = $cuentas;
+
+        $cuentas = new stdClass;
+        $cuentas->id = 3;
+        $cuentas->numCuenta = '00743616552851576069';
+        $cuentas->banco = '40021';
+
+        $respuesta[] = $cuentas;
+
+        $cuentas = new stdClass;
+        $cuentas->id = 4;
+        $cuentas->numCuenta = '00743616552851576691';
+        $cuentas->banco = '40036';
+
+        $respuesta[] = $cuentas;
+
+        return $respuesta;
+    }
 
     public static function getTxSTP($userId = null)
     {

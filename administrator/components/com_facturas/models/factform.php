@@ -57,4 +57,32 @@ class FacturasModelfactform extends JModelList {
 
         return $factura;
     }
+
+    public function getNumCuentas () {
+        $bancos = $this->getBancos();
+        $cuentas = getFromTimOne::getNumCuenta();
+
+        foreach($cuentas as $objeto){
+            foreach($bancos as $objBanco){
+                if($objeto->banco == $objBanco->clave){
+                    $objeto->nomBanco = $objBanco->banco;
+                }
+            }
+            $select[$objeto->nomBanco] = $objeto->banco;
+        }
+        $respuesta['select'] = $select;
+        $respuesta['cuentas'] = $cuentas;
+
+var_dump($respuesta);
+        exit;
+    }
+
+    private function getBancos(){
+        $catalogos = new Catalogos();
+        $catalogos->getBancos();
+
+        return $catalogos->bancos;
+
+    }
+
 }
