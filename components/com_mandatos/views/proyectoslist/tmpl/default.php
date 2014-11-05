@@ -25,11 +25,11 @@ function proyectos ($parent, $proys){
 			echo '<li class="proyectoslist">'.
 				 	'<div class="filas">'.
 				 		'<div class="columnas"><span class="status'.$value->status.'">'.$value->name.'</span></div>'.
-						 '<div class="columnas"><input type="button" '.$disabled.' class="btn btn-primary editar" id="'.$value->id.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
-						 '<div class="columnas"><input type="checkbox" class="deshabilitar" id="'.$value->id.'" '.$checked.' /></div>'.
+						 '<div class="columnas"><input type="button" '.$disabled.' class="btn btn-primary editar" id="'.$value->id_proyecto.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
+						 '<div class="columnas"><input type="checkbox" class="deshabilitar" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
 				 	'</div>';
 				
-				proyectos($value->id, $proys);
+				proyectos($value->id_proyecto, $proys);
 		}else{
 			echo '</li>';
 		}

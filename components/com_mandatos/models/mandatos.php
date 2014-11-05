@@ -14,13 +14,22 @@ class MandatosModelMandatos extends JModelItem {
 	
 	protected $dataModelo;
 	
-	public function getSolicitud($integradoId = null)
-	{
+	public function getIntegrados(){
+        $response = array();
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 		}
-		 
-		return $this->dataModelo;
+
+        foreach ($this->dataModelo->integrados as $value) {
+            if($value->integrado_principal == 1 && $value->integrado_permission_level >= 2){
+                $integrado = new stdClass();
+                $integrado->integradoId = $value->integrado_id;
+                $integrado->name = $value->datos_personales->nom_comercial;
+                $response[] = $integrado;
+            }
+        }
+
+        return $response;
 	}
 	
 	public function getCatalogos() {

@@ -16,7 +16,6 @@ class MandatosModelProyectoslist extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProyectos(){
-		$joomlaId		= JFactory::getUser()->id;
 		$data			= JFactory::getApplication()->input->getArray();
 		$integradoId	= $data['integradoId'];
 		

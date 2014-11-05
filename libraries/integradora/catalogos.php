@@ -39,13 +39,18 @@ class Catalogos {
 	
 	public function getBancos(){
 		$catalogo = json_decode(@file_get_contents('http://192.168.0.122:7272/trama-middleware/rest/stp/listBankCodes'));
-		
-		foreach ($catalogo as $value) {
+
+        foreach ($catalogo as $indice => $objeto) {
+            $catalogo2[$objeto->bankCode] = $objeto->name;
+        }
+        natsort($catalogo2);
+
+        foreach ($catalogo2 as $key=>$value) {
 			$objeto = new stdClass;
 			
-			$objeto->banco = $value->name;
-			$objeto->clave = $value->bankCode;
-			$objeto->claveClabe = substr($value->bankCode, -3);
+			$objeto->banco = $value;
+			$objeto->clave = $key;
+			$objeto->claveClabe = substr($key, -3);
 			
 			$cat[] = $objeto;
 		}

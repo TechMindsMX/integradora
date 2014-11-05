@@ -60,9 +60,10 @@ if(!empty($datos->integrado)){
                     }else{
                         var obj = result;
                     }
-                    console.log(obj);
+
                     if(obj.safeComplete){
-                        alert('Datos Almacenados');
+                        mensajes('Datos Almacenados','msg', 'msgs_plataforma');
+                        jQuery('#tabs-solicitudTabs').find('a[href="#'+obj.nextTab+'"]').trigger('click');
                     }
 
                     jQuery.each(obj, function(k,v){
@@ -162,6 +163,8 @@ if(!empty($datos->integrado)){
 	});
 </script>
 
+<div class="msgs_plataforma" id="msgs_plataforma"></div>
+
 <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
 	<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
 	<input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
@@ -191,19 +194,11 @@ if(!empty($datos->integrado)){
 		echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_BASIC'), 'basic-persona');
 	?>
 	<fieldset>
-		<div class="form-group">
-			<label for="apePat"><?php echo JText::_('APE_PAT'); ?></label>
-			<input name="apePat" type="text" maxlength="50" value="" />
-		</div>
-		<div class="form-group">
-			<label for="apeMat"><?php echo JText::_('APE_MAT'); ?></label>
-			<input name="apeMat" type="text" maxlength="50" />
-		</div>
-		<div class="form-group">
-			<label for="nombre"><?php echo JText::_('LBL_NOMBRE'); ?></label>
-			<input name="nombre" type="text" maxlength="50" value="<?php echo isset($datos->user)?$datos->user->name:''; ?>" />
-		</div>
-		<div class="form-group">
+        <div class="form-group">
+            <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
+            <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
+        </div>
+        <div class="form-group">
 			<label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
 			<select name="dp_nacionalidad" id="dp_nacionalidad">
 				<?php 
@@ -335,10 +330,6 @@ if(!empty($datos->integrado)){
 		<div class="form-group">
 			<label for="email"><?php echo JText::_('LBL_CORREO'); ?></label>
 			<input name="dp_email" id="dp_email" type="email" maxlength="100" />
-		</div>
-		<div class="form-group">
-			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
-			<input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>

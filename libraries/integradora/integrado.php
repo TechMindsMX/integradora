@@ -47,12 +47,12 @@ class Integrado {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
-			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal'))
+			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
 		$result = $db->setQuery($query)->loadObjectList();
-		
-		return $result;
+
+        return $result;
 	}
 	
 	//Retorna todos los usuarios agregados a un Integrado
@@ -170,7 +170,8 @@ class Integrado {
 		return $permisos;
 		
 	}
-	public static function getNationalityNameFromId($id) {
+
+    public static function getNationalityNameFromId($id) {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)

@@ -32,26 +32,26 @@ class MandatosController extends JControllerLegacy {
 		}
 	}
 	
-	function editarproyecto(){
-		$data 				= $this->input_data->getArray();
-		$integradoId		= $data['integradoId'];
-		$proyectos 			= getFromTimOne::getProyects($integradoId);
-		
-		if($this->currUser->guest){
-			$this->app->redirect('index.php/login');
-		}
-
-		foreach ($proyectos as $key => $value) {
-			if($data['proyId'] == $value->id){
-				if($value->parentId == 0){
-					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
-				}else{
-					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
-				}
-			}
-		}
-		exit;
-	}
+//	function editarproyecto(){
+//		$data 				= $this->input_data->getArray();
+//		$integradoId		= $data['integradoId'];
+//		$proyectos 			= getFromTimOne::getProyects($integradoId);
+//
+//		if($this->currUser->guest){
+//			$this->app->redirect('index.php/login');
+//		}
+//
+//		foreach ($proyectos as $key => $value) {
+//			if($data['proyId'] == $value->id){
+//				if($value->parentId == 0){
+//					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+//				}else{
+//					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
+//				}
+//			}
+//		}
+//		exit;
+//	}
 
 	function editarproducto(){
 		$data 			= $this->input_data->getArray();
@@ -148,7 +148,19 @@ class MandatosController extends JControllerLegacy {
 		echo json_encode($respuesta);
 	}
 
-    function saveforms(){
+    function saveProyects(){
+        $campos = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
+
+        $data = $this->input_data->getArray($campos);
+        $save = new sendToTimOne();
+        if(is_null($data['id_proyecto'])){
+            unset($data['id_proyecto']);
+            $save->saveProyect($data);
+        }else{
+            $id_proyecto = $data['id_proyecto'];
+            unset($data['id_proyecto']);
+            $save->updateProject($data,$id_proyecto);
+        }
 
     }
 

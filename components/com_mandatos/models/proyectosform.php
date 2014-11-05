@@ -15,27 +15,13 @@ class MandatosModelProyectosform extends JModelItem {
 	
 	protected $dataModelo;
 	
-	public function getProyectos(){
-		$app			= JFactory::getApplication();
-		$currUser		= JFactory::getUser();
-		$data			= $app->input->getArray();
-		$integradoId	= $data['integradoId'];
-		
-		if($currUser->guest){
-			$app->redirect('index.php/login');
-		}
-		
-		return 'hola';
-	}
-	
 	public function getProyecto(){
 		$app			= JFactory::getApplication();
 		$currUser		= JFactory::getUser();
-		$input 			= JFactory::getApplication()->input;
-		$data			= $input->getArray();
-		$integradoId	= $data['integradoId'];
+        $post           = array('integradoId'=>'INT','id_proyecto'=>'INT');
+        $data   		= $app->input->getArray($post);
 		$integrado		= new Integrado;
-		$isValid		= $integrado->isValidPrincipal($integradoId, $currUser->id);
+		$isValid		= $integrado->isValidPrincipal($data['integradoId'], $currUser->id);
 		
 		if($currUser->guest){
 			$app->redirect('index.php/login');
@@ -43,15 +29,9 @@ class MandatosModelProyectosform extends JModelItem {
 			$app->redirect('index.php', 'necesita ser integrado principal');
 		}
 		
-		$allproyects = getFromTimOne::getProyects($integradoId);
+		$dataProject = getFromTimOne::getProyects(null,$data['id_proyecto']);
 
-		foreach ($allproyects as $key => $value) {
-			if($value->id == $data['proyId']){
-				$this->proyecto = $value; 
-			}
-		}
-
-		return $this->proyecto;
+		return $dataProject[0];
 	}
 }
 

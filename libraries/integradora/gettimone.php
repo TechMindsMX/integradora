@@ -7,89 +7,116 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 
 class getFromTimOne{
-    public static function getProyects($userId = null){
-        $respuesta = array();
+    public static function selectDB($table, $where){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
 
-        $proyectos = new stdClass;
-        $proyectos->id			= 1;
-        $proyectos->integradoId	= 1;
-        $proyectos->parentId 	= 0;
-        $proyectos->status	 	= 0;
-        $proyectos->name 		= 'Proyecto 1';
-        $proyectos->description 	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
-
-        $array[] = $proyectos;
-
-        $proyectos = new stdClass;
-        $proyectos->id			= 2;
-        $proyectos->integradoId	= 1;
-        $proyectos->parentId 	= 0;
-        $proyectos->status	 	= 0;
-        $proyectos->name 		= 'Proyecto 2';
-        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
-
-        $array[] = $proyectos;
-
-        $proyectos = new stdClass;
-        $proyectos->id			= 3;
-        $proyectos->integradoId	= 1;
-        $proyectos->parentId 	= 1;
-        $proyectos->status	 	= 0;
-        $proyectos->name 		= 'Subproyecto 1';
-        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
-
-        $array[] = $proyectos;
-
-        $proyectos = new stdClass;
-        $proyectos->id			= 4;
-        $proyectos->integradoId	= 1;
-        $proyectos->parentId 	= 1;
-        $proyectos->status	 	= 1;
-        $proyectos->name 		= 'Subproyecto 2';
-        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
-
-        $array[] = $proyectos;
-
-        $proyectos = new stdClass;
-        $proyectos->id			= 5;
-        $proyectos->integradoId	= 1;
-        $proyectos->parentId 	= 2;
-        $proyectos->status	 	= 1;
-        $proyectos->name 		= 'Subproyecto 1 del proyecto 2';
-        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
-		I am the League of Shadows.
-		It will be extremely painful... for you
-		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
-		Search him. Then I will kill you.
-		Citizens, take control. Take control of your ...";
-
-        $array[] = $proyectos;
-
-        foreach ($array as $key => $value) {
-            if($userId == $value->integradoId){
-                $respuesta[] = $value;
-            }
+        if(!is_null($where)){
+            $query->select('*')
+                ->from($db->quoteName('#__'.$table))
+                ->where($where);
+        }else{
+            $query->select('*')
+                ->from($db->quoteName('#__'.$table));
         }
+
+        $db->setQuery($query);
+
+        $results = $db->loadObjectList();
+
+        return $results;
+    }
+    public static function getProyects($integradoId = null, $projectId = null){
+        if(is_null($integradoId) && is_null($projectId)){
+            $where = null;
+        }elseif(!is_null($integradoId) && is_null($projectId)){
+            $where = 'integradoId = '.$integradoId;
+        }elseif(!is_null($projectId) && is_null($integradoId)){
+            $where = 'id_proyecto = '.$projectId;
+        }
+        $respuesta = self::selectDB('integrado_proyectos',$where);
+//        $respuesta = array();
+//
+//        $proyectos = new stdClass;
+//        $proyectos->id			= 1;
+//        $proyectos->integradoId	= 1;
+//        $proyectos->parentId 	= 0;
+//        $proyectos->status	 	= 0;
+//        $proyectos->name 		= 'Proyecto 1';
+//        $proyectos->description 	= "It doesn't matter who we are. What matters is our plan.
+//		I am the League of Shadows.
+//		It will be extremely painful... for you
+//		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+//		Search him. Then I will kill you.
+//		Citizens, take control. Take control of your ...";
+//
+//        $array[] = $proyectos;
+//
+//        $proyectos = new stdClass;
+//        $proyectos->id			= 2;
+//        $proyectos->integradoId	= 1;
+//        $proyectos->parentId 	= 0;
+//        $proyectos->status	 	= 0;
+//        $proyectos->name 		= 'Proyecto 2';
+//        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
+//		I am the League of Shadows.
+//		It will be extremely painful... for you
+//		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+//		Search him. Then I will kill you.
+//		Citizens, take control. Take control of your ...";
+//
+//        $array[] = $proyectos;
+//
+//        $proyectos = new stdClass;
+//        $proyectos->id			= 3;
+//        $proyectos->integradoId	= 1;
+//        $proyectos->parentId 	= 1;
+//        $proyectos->status	 	= 0;
+//        $proyectos->name 		= 'Subproyecto 1';
+//        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
+//		I am the League of Shadows.
+//		It will be extremely painful... for you
+//		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+//		Search him. Then I will kill you.
+//		Citizens, take control. Take control of your ...";
+//
+//        $array[] = $proyectos;
+//
+//        $proyectos = new stdClass;
+//        $proyectos->id			= 4;
+//        $proyectos->integradoId	= 1;
+//        $proyectos->parentId 	= 1;
+//        $proyectos->status	 	= 1;
+//        $proyectos->name 		= 'Subproyecto 2';
+//        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
+//		I am the League of Shadows.
+//		It will be extremely painful... for you
+//		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+//		Search him. Then I will kill you.
+//		Citizens, take control. Take control of your ...";
+//
+//        $array[] = $proyectos;
+//
+//        $proyectos = new stdClass;
+//        $proyectos->id			= 5;
+//        $proyectos->integradoId	= 1;
+//        $proyectos->parentId 	= 2;
+//        $proyectos->status	 	= 1;
+//        $proyectos->name 		= 'Subproyecto 1 del proyecto 2';
+//        $proyectos->description	= "It doesn't matter who we are. What matters is our plan.
+//		I am the League of Shadows.
+//		It will be extremely painful... for you
+//		Behind you, stands a symbol of oppression. Blackgate Prison, where a thousand men have languished under the name of this man: Harvey Dent.
+//		Search him. Then I will kill you.
+//		Citizens, take control. Take control of your ...";
+//
+//        $array[] = $proyectos;
+//
+//        foreach ($array as $key => $value) {
+//            if($integradoId == $value->integradoId){
+//                $respuesta[] = $value;
+//            }
+//        }
 
         return $respuesta;
     }
@@ -2053,28 +2080,20 @@ $token = 'fghgjsdatr';
 	}
 
 	public static function newintegradoId($envio){
-		$jsonData = json_encode($envio);
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
 
-		$route = new servicesRoute();
-		$route->userUrls()->urls;
+        $query->insert($db->quoteName('#__integrado'))
+            ->columns($db->quoteName('status').','.$db->quoteName('pers_juridica'))
+            ->values($db->quote(0).','.$db->quote($envio));
 
-		$serviceUrl = $route->baseUrl.$route->urls->create->url;
+        $db->setQuery($query);
+        $db->execute();
+        $newId = $db->insertid();
 
-		$sendToTimone = new sendToTimOne();
-		$sendToTimone->setHttpType($route->urls->create->type);
-		$sendToTimone->setJsonData($jsonData);
-		$sendToTimone->setServiceUrl($serviceUrl);
-
-        $results = $sendToTimone->to_timone();
-
-        return $results;
+        return $newId;
     }
 
-	/**
-	 * @param $ref
-	 *
-	 * @return object Tx
-	 */
 	public static function getTxSTPbyRef( $ref ) {
 		$txs = self::getTxSTP();
 
@@ -2178,10 +2197,53 @@ class sendToTimOne {
 	protected $jsonData;
 
 	function __construct () {
-		$this->serviceUrl = null;
-		$this->jsonData = null;
+        $this->serviceUrl   = null;
+		$this->jsonData     = null;
 		$this->setHttpType('GET');
 	}
+
+    public function saveProyect($data){
+        $db		= JFactory::getDbo();
+        foreach ($data as $key => $value) {
+            $columnas[] = $key;
+            $valores[] = $db->quote($value);
+        }
+
+        $this->insertDB('integrado_proyectos', $columnas, $valores);
+    }
+
+    public function updateProject($data,$id_proyecto){
+        $db		= JFactory::getDbo();
+        foreach ($data as $key => $value) {
+            $columnas[] = $db->quoteName($key).'= '.$db->quote($value);
+        }
+        $condicion = $db->quoteName('id_proyecto').' = '.$id_proyecto;
+
+        $this->updateDB('integrado_proyectos', $columnas, $condicion);
+    }
+
+    public function insertDB($tabla, $columnas, $valores){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+        $query->insert($db->quoteName('#__integrado_proyectos'))
+              ->columns($db->quoteName($columnas))
+              ->values(implode(',',$valores));
+
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    public function updateDB($table, $columnas, $condicion){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+
+        $query->update($db->quoteName('#__'.$table))
+            ->set(implode(',', $columnas))
+            ->where($condicion);
+
+        $db->setQuery($query);
+        $db->execute();
+    }
 
 	/**
 	 * @param mixed $serviceUrl
