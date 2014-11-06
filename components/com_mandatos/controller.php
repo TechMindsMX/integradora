@@ -32,26 +32,33 @@ class MandatosController extends JControllerLegacy {
 		}
 	}
 	
-//	function editarproyecto(){
-//		$data 				= $this->input_data->getArray();
-//		$integradoId		= $data['integradoId'];
-//		$proyectos 			= getFromTimOne::getProyects($integradoId);
-//
-//		if($this->currUser->guest){
-//			$this->app->redirect('index.php/login');
-//		}
-//
-//		foreach ($proyectos as $key => $value) {
-//			if($data['proyId'] == $value->id){
-//				if($value->parentId == 0){
-//					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
-//				}else{
-//					$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&proyId='.$data['proyId'].'&integradoId='.$integradoId));
-//				}
-//			}
-//		}
-//		exit;
-//	}
+	function editarproyecto(){
+        $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
+		$data 			= $this->input_data->getArray($post);
+		$proyectos 		= getFromTimOne::getProyects($data['integradoId']);
+        $count          = 0;
+
+        if($this->currUser->guest){
+			$this->app->redirect('index.php/login');
+		}
+
+		foreach ($proyectos as $key => $value) {
+            if($data['id_proyecto'] == $value->id_proyecto){
+                if($value->parentId == 0){
+                    $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
+                }else{
+                    $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
+                }
+			}else{
+                $count++;
+            }
+		}
+
+        if( $count == count($proyectos) ){
+            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']));
+        }
+		exit;
+	}
 
 	function editarproducto(){
 		$data 			= $this->input_data->getArray();
@@ -153,7 +160,8 @@ class MandatosController extends JControllerLegacy {
 
         $data = $this->input_data->getArray($campos);
         $save = new sendToTimOne();
-        if(is_null($data['id_proyecto'])){
+
+        if( $data['id_proyecto'] == 0 ){
             unset($data['id_proyecto']);
             $save->saveProyect($data);
         }else{
@@ -162,6 +170,7 @@ class MandatosController extends JControllerLegacy {
             $save->updateProject($data,$id_proyecto);
         }
 
+        JFactory::getApplication()->redirect('index.php/component/mandatos/?view=proyectoslist&integradoId='.$data['integradoId']);
     }
 
     function  cargaProducto(){

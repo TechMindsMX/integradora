@@ -68,7 +68,7 @@ if( !is_null($proyectos) ){
 	function editarProy(){
 		var id = jQuery(this).prop('id');
 		
-		window.location = 'index.php?option=com_mandatos&task=editarproyecto&proyId='+id+'&integradoId=<?php echo $this->integradoId; ?>';
+		window.location = 'index.php?option=com_mandatos&task=editarproyecto&id_proyecto='+id+'&integradoId=<?php echo $this->integradoId; ?>';
 	}
 </script>
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TITULO'); ?></h1>

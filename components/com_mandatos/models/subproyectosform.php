@@ -16,10 +16,10 @@ class MandatosModelSubproyectosform extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProyectos(){
-		$joomlaId		= JFactory::getUser()->id;
-		$data			= JFactory::getApplication()->input->getArray();
-		$integradoId	= $data['integradoId'];
-		$allProjects 	= getFromTimOne::getProyects($integradoId);
+		$app       		= JFactory::getApplication();
+        $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
+        $data			= $app->input->getArray($post);
+		$allProjects 	= getFromTimOne::getProyects($data['integradoId']);
 		
 		foreach ($allProjects as $key => $value) {
 			if( $value->parentId == 0){
@@ -31,25 +31,18 @@ class MandatosModelSubproyectosform extends JModelItem {
 	}
 	
 	public function getProyecto(){
-		$app		= JFactory::getApplication();
 		$currUser	= JFactory::getUser();
-		$input 		= JFactory::getApplication()->input;
-		$data		= $input->getArray();
-		$integradoId	= $data['integradoId'];
-		
-		if($currUser->guest){
+        $app       		= JFactory::getApplication();
+        $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
+        $data			= $app->input->getArray($post);
+
+        if($currUser->guest){
 			$app->redirect('index.php/login');
 		}
 		
-		$allproyects = getFromTimOne::getProyects($integradoId);
+		$this->proyecto = getFromTimOne::getProyects(null, $data['id_proyecto']);
 
-		foreach ($allproyects as $key => $value) {
-			if($value->id == $data['proyId']){
-				$this->proyecto = $value; 
-			}
-		}
-
-		return $this->proyecto;
+		return $this->proyecto[0];
 	}
 }
 ?>
