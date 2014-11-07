@@ -7,19 +7,30 @@ jimport('integradora.gettimone');
 class MandatosViewProductosform extends JViewLegacy {
 	
 	function display($tpl = null){
-		$app 				= JFactory::getApplication();
-		$data				= $app->input->getArray();
-		$this->integradoId 	= $data['integradoId'];
+		$post               = array('integradoId' => 'INT', 'id_producto' => 'INT');
+        $app 				= JFactory::getApplication();
+        $data               = $app->input->getArray($post);
+		$integradoId 	    = $data['integradoId'];
+        $this->currencies   = getFromTimOne::getCurrencies();
 
-		if( isset($data['prodId']) ){
+        if( $data['id_producto'] != 0 ){
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_EDITAR';
-			$this->producto = $this->get('producto');
+			$this->producto = $this->get('Producto');
 		}else{
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_AGREGAR';
+            $this->producto 				= new stdClass;
+            $this->producto->id_producto    = null;
+            $this->producto->integradoId	= $data['integradoId'];
+            $this->producto->productName	= '';
+            $this->producto->measure		= '';
+            $this->producto->price		    = '';
+            $this->producto->iva			= '';
+            $this->producto->ieps		    = '';
+            $this->producto->currency	    = 'MXN';
+            $this->producto->status		    = '';
+            $this->producto->description   = '';
 		}
-		
-		$this->token = getFromTimOne::token();
-		
+
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
@@ -29,10 +40,10 @@ class MandatosViewProductosform extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 		
 		// Verifica los permisos de edición y autorización
-		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
 
 		if (!$this->permisos['canEdit']) {
-			$url = 'index.php?option=com_mandatos&view=productoslist&integradoId='.$this->integradoId;
+			$url = 'index.php?option=com_mandatos&view=productoslist&integradoId='.$integradoId;
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
 			$app->redirect(JRoute::_($url), $msg, 'error');
 		}

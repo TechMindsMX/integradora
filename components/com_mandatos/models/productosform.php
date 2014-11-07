@@ -16,37 +16,27 @@ class MandatosModelProductosform extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProducto(){
-		$app			= JFactory::getApplication();
+        $post           = array('integradoId' => 'INT', 'id_producto' => 'INT');
+        $app            = JFactory::getApplication();
+        $data           = $app->input->getArray($post);
 		$currUser		= JFactory::getUser();
-		$input 			= JFactory::getApplication()->input;
-		$data			= $input->getArray();
-		$integrado_id	= $data['integradoId'];
-		
-		if($data['prodId'] == ''){
-			unset($data['prodId']);
-		}
-		
-		if($currUser->guest){
+
+        if($currUser->guest){
 			$app->redirect('index.php/login');
 		}
-		
-		if( isset($data['prodId']) ){
-			$allproducts = getFromTimOne::getProducts($integrado_id['integrado_id']);
-			
-			foreach ($allproducts as $key => $value) {
-				if($value->id == $data['prodId']){
-					$this->producto = $value; 
-				}
-			}
 
-			if($this->producto->status == 1){
+		if( $data['id_producto'] != 0 ){
+			$producto = getFromTimOne::getProducts(null,$data['id_producto']);
+            $producto = $producto[0];
+
+            if($producto->status == 1){
 				$app->redirect('index.php/component/mandatos/?view=productos', 'El producto esta Deshabilitado', 'warning');
 			}
 		}else{
 			$this->producto = null;
 		}
 		
-		return $this->producto;
+		return $producto;
 	}
 }
 

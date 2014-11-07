@@ -26,7 +26,9 @@ class getFromTimOne{
 
         return $results;
     }
+
     public static function getProyects($integradoId = null, $projectId = null){
+        $where = null;
 
         if(is_null($integradoId) && is_null($projectId)){
             $where = null;
@@ -40,8 +42,19 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getProducts($userId = null){
-        $productos 				= new stdClass;
+    public static function getProducts($integradoId = null, $productId = null){
+        $where = null;
+
+        if(is_null($integradoId) && is_null($productId)){
+            $where = null;
+        }elseif(!is_null($integradoId) && is_null($productId)){
+            $where = 'integradoId = '.$integradoId;
+        }elseif(!is_null($productId) && is_null($integradoId)){
+            $where = 'id_producto = '.$productId;
+        }
+        $respuesta = self::selectDB('integrado_products',$where);
+
+        /*$productos 				= new stdClass;
         $productos->id			= 1;
         $productos->integradoId	= 1;
         $productos->productName	= 'Producto A';
@@ -55,17 +68,7 @@ class getFromTimOne{
 
         $array[] = $productos;
 
-        $productos 				= new stdClass;
-        $productos->id			= 2;
-        $productos->integradoId	= 1;
-        $productos->productName	= 'Producto B';
-        $productos->measure		= 'Centimetros';
-        $productos->price		= '$100000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '1';
-        $productos->description = "O Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
 
         $array[] = $productos;
 
@@ -185,7 +188,7 @@ class getFromTimOne{
             if($userId == $value->integradoId){
                 $respuesta[] = $value;
             }
-        }
+        }*/
 
         return $respuesta;
     }
@@ -2106,6 +2109,12 @@ $token = 'fghgjsdatr';
 	{
 		return self::getOrdenesVenta($integradoId);
 	}
+
+    public static function getCurrencies(){
+        $currencies = self::selectDB('catalog_currencies',null);
+
+        return $currencies;
+    }
 }
 
 class sendToTimOne {
@@ -2141,12 +2150,31 @@ class sendToTimOne {
         $this->updateDB('integrado_proyectos', $columnas, $condicion);
     }
 
+    public function saveProduct($data){
+        $db		= JFactory::getDbo();
+        foreach ($data as $key => $value) {
+            $columnas[] = $key;
+            $valores[] = $db->quote($value);
+        }
+        $this->insertDB('integrado_products', $columnas, $valores);
+    }
+
+    public function updateProduct($data, $id_producto){
+        $db		= JFactory::getDbo();
+        foreach ($data as $key => $value) {
+            $columnas[] = $db->quoteName($key).'= '.$db->quote($value);
+        }
+        $condicion = $db->quoteName('id_producto').' = '.$id_producto;
+
+        $this->updateDB('integrado_products', $columnas, $condicion);
+    }
+
     public function insertDB($tabla, $columnas, $valores){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
-        $query->insert($db->quoteName('#__integrado_proyectos'))
-              ->columns($db->quoteName($columnas))
-              ->values(implode(',',$valores));
+        $query->insert($db->quoteName('#__'.$tabla))
+            ->columns($db->quoteName($columnas))
+            ->values(implode(',',$valores));
 
         $db->setQuery($query);
         $db->execute();

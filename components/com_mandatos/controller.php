@@ -43,7 +43,7 @@ class MandatosController extends JControllerLegacy {
 		}
 
 		foreach ($proyectos as $key => $value) {
-            if($data['id_proyecto'] == $value->id_proyecto){
+            if($data['id_producto'] == $value->id_proyecto){
                 if($value->parentId == 0){
                     $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
                 }else{
@@ -61,19 +61,27 @@ class MandatosController extends JControllerLegacy {
 	}
 
 	function editarproducto(){
-		$data 			= $this->input_data->getArray();
-		$integrado_id	= $data['integradoId'];
-		$productos 		= getFromTimOne::getProducts($integrado_id);
+        $post           = array('integradoId'=>'INT', 'id_producto'=>'INT');
+        $data 			= $this->input_data->getArray($post);
+        $productos 		= getFromTimOne::getProducts($data['integradoId']);
+        $count          = 0;
 
-		if($this->currUser->guest){
-			$this->app->redirect('index.php/login');
-		}
-		
-		foreach ($productos as $key => $value) {
-			if( $data['prodId'] == $value->id ){
-				$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productosform&prodId='.$data['prodId'].'&integradoId='.$data['integradoId']));
-			}
-		}
+        if($this->currUser->guest){
+            $this->app->redirect('index.php/login');
+        }
+
+        foreach ($productos as $key => $value) {
+            if($data['id_producto'] == $value->id_producto){
+                $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productosform&id_producto='.$data['id_producto'].'&integradoId='.$data['integradoId']));
+            }else{
+                $count++;
+            }
+        }
+
+        if( $count == count($productos) ){
+            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']));
+        }
+        exit;
 	}
 	
 	function editarclientes(){
@@ -156,21 +164,35 @@ class MandatosController extends JControllerLegacy {
 	}
 
     function saveProyects(){
-        $campos = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
+        $campos      = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
+        $data        = $this->input_data->getArray($campos);
+        $id_proyecto = $data['id_proyecto'];
+        $save        = new sendToTimOne();
 
-        $data = $this->input_data->getArray($campos);
-        $save = new sendToTimOne();
+        unset($data['id_proyecto']);
 
-        if( $data['id_proyecto'] == 0 ){
-            unset($data['id_proyecto']);
+        if( $id_proyecto == 0 ){
             $save->saveProyect($data);
         }else{
-            $id_proyecto = $data['id_proyecto'];
-            unset($data['id_proyecto']);
             $save->updateProject($data,$id_proyecto);
         }
 
         JFactory::getApplication()->redirect('index.php/component/mandatos/?view=proyectoslist&integradoId='.$data['integradoId']);
+    }
+
+    function saveProducts(){
+        $campos      = array('id_producto'=>'INT', 'integradoId'=>'INT','productName'=>'STRING','measure'=>'STRING','price'=>'STRING', 'iva'=>'STRING', 'ieps'=>'STRING', 'currency'=>'STRING', 'status'=>'STRING', 'description'=>'STRING');
+        $data        = $this->input_data->getArray($campos);
+        $id_producto = $data['id_producto'];
+        $save        = new sendToTimOne();
+
+        unset($data['id_producto']);
+        if($id_producto == 0){
+           $save->saveProduct($data);
+        }else{
+           $save->updateProduct($data, $id_producto);
+        }
+        JFactory::getApplication()->redirect('index.php/component/mandatos/?view=productoslist&integradoId='.$data['integradoId']);
     }
 
     function  cargaProducto(){
