@@ -43,7 +43,7 @@ class MandatosController extends JControllerLegacy {
 		}
 
 		foreach ($proyectos as $key => $value) {
-            if($data['id_producto'] == $value->id_proyecto){
+            if($data['id_proyecto'] == $value->id_proyecto){
                 if($value->parentId == 0){
                     $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
                 }else{
@@ -181,7 +181,16 @@ class MandatosController extends JControllerLegacy {
     }
 
     function saveProducts(){
-        $campos      = array('id_producto'=>'INT', 'integradoId'=>'INT','productName'=>'STRING','measure'=>'STRING','price'=>'STRING', 'iva'=>'STRING', 'ieps'=>'STRING', 'currency'=>'STRING', 'status'=>'STRING', 'description'=>'STRING');
+        $campos      = array('id_producto'=>'INT',
+            'integradoId'=>'INT',
+            'productName'=>'STRING',
+            'measure'=>'STRING',
+            'price'=>'STRING',
+            'iva'=>'STRING',
+            'ieps'=>'STRING',
+            'currency'=>'STRING',
+            'status'=>'STRING',
+            'description'=>'STRING');
         $data        = $this->input_data->getArray($campos);
         $id_producto = $data['id_producto'];
         $save        = new sendToTimOne();
@@ -205,5 +214,30 @@ class MandatosController extends JControllerLegacy {
         }
 
         echo json_encode($producto);
+    }
+
+    function searchProducts(){
+        $document = JFactory::getDocument();
+        $document->setMimeEncoding('application/json');
+
+        $respuesta = array();
+        $db     = JFactory::getDbo();
+        $campos = array('integradoId'=>'INT','productName'=>'STRING');
+        $data   = $this->input_data->getArray($campos);
+
+        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$data['integradoId'];
+
+        $producto = getFromTimOne::selectDB('integrado_products',$where);
+
+        if(!empty($producto)) {
+            $respuesta['success'] = true;
+            $respuesta['datos'] = $producto[0];
+        }else{
+            $respuesta['success'] = false;
+            $respuesta['msg'] = 'No existe el producto';
+        }
+
+        echo json_encode($respuesta);
+
     }
 }

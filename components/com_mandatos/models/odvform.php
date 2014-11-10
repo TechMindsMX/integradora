@@ -23,6 +23,7 @@ class MandatosModelOdvform extends JModelItem {
 
     public function getClientes(){
         $clientes = getFromTimOne::getClientes($this->integradoId);
+        $respuesta = array();
 
         foreach($clientes as $key => $value){
             if($value->type === 0){
@@ -38,7 +39,7 @@ class MandatosModelOdvform extends JModelItem {
         $data = array();
 
         foreach($proyectos as $key => $value){
-            if($value->parentId === 0){
+            if($value->parentId == 0){
                 $data['proyectos'][] = $value;
                 $parent = $value->name;
             }else{

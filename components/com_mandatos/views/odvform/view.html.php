@@ -6,8 +6,8 @@ jimport('joomla.application.component.view');
 class MandatosViewOdvform extends JViewLegacy {
 
     function display($tpl = null){
-
-
+        $inputVars 		    = JFactory::getApplication()->input->getArray();
+        $this->integradoId  = $inputVars['integradoId'];
         $this->clientes     = $this->get('clientes');
         $this->proyectos    = $this->get('proyectos');
         $this->estados      = $this->get('estados');

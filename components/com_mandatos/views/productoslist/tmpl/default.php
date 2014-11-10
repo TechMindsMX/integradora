@@ -75,7 +75,7 @@ $productos = $this->data;
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->productName.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->description.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->measure.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->price.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->price,2).'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->iva.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';

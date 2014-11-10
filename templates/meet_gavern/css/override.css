@@ -111,3 +111,13 @@ select.productos{
 
 .divdetalleODC {
 }
+.tt-dropdown-menu{
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    z-index: 1000048;
+    right: auto;
+    display: none;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+}
