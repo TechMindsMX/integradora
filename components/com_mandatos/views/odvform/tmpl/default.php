@@ -64,11 +64,9 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         var ieps        = trproductos.find('.ieps').val();
 
         cantidad        = parseInt(cantidad);
-        precio          = parseInt(precio);
-        iva             = parseInt(iva);
-        ieps            = parseInt(ieps)==0?null:parseInt(ieps);
-
-        console.log(precio, iva, ieps);
+        precio          = parseFloat(precio);
+        iva             = parseFloat(iva);
+        ieps            = parseFloat(ieps)==0?null:parseInt(parseFloat);
 
         if(isNaN(iva)  || isNaN(precio)){
             alert("Seleccione primero el producto");

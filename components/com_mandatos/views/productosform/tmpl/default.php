@@ -84,12 +84,7 @@ $producto 	= $this->producto;
     <div class="row">
         <div class="col-md-6">
             <label for="measure"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MEDIDAS'); ?>: </label>
-            <select name="measure" id="measure">
-                <option><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
-                <option value="Metros" >Metros</option>
-                <option value="Metros Cúbicos" >Metros Cúbicos</option>
-                <option value="Litros" >Litros</option>
-            </select>
+            <input type="text" name="measure" id="measure" value="<?php echo $producto->measure; ?>">
         </div>
         <div class="col-md-6">
             <label for="ieps"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>: </label>
