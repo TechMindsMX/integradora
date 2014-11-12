@@ -13,6 +13,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+
 ?>
 <script>
 	jQuery(document).ready(function(){
