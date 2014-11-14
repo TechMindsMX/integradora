@@ -154,7 +154,7 @@ class validador{
 		return $respuesta;
 	}
 
-	public function valida_banco_clabe ($data) {
+	public function valida_banco_clabe ($data, $codigoBanco = null) {
 		$clabe = $data;
 		$paso3 = 0;
 		$clabeTmp = str_split ($clabe,17);
@@ -162,7 +162,7 @@ class validador{
 		$codigoVerificador = intval ($clabeTmp[1]);
 		$clabesepa = str_split ($clabeTmp[0]);
 		$ponderaciones = array (3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7);
-		$claveBanco = $this->dataPost['db_banco_codigo'];
+		$claveBanco = isset($this->dataPost['db_banco_codigo'])?$this->dataPost['db_banco_codigo']:$codigoBanco;
 		$claveBancoClabe = $clabesepa[0] . $clabesepa[1] . $clabesepa[2];
 
         foreach ($clabesepa as $key => $value) {

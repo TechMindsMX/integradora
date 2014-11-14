@@ -2201,6 +2201,27 @@ class sendToTimOne {
         $db->execute();
     }
 
+    public function deleteDB($table, $condicion){
+        $return = '';
+        try {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            $query->delete($db->quoteName('#__' . $table))
+                ->where($condicion);
+
+            $db->setQuery($query);
+            $db->execute();
+
+            $return = '';
+
+        }catch (Exception $e){
+            $return = $e->getMessage();
+        }
+
+        return $return;
+    }
+
 	/**
 	 * @param mixed $serviceUrl
 	 */

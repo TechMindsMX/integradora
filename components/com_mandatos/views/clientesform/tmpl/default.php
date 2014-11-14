@@ -13,9 +13,16 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
-
+$optionBancos = '';
 ?>
 <script>
+    var catalogoBancos = new Array();
+    <?php
+    foreach ($this->catalogos->bancos as $key => $value){
+        $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
+        echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
+	}
+    ?>
 	jQuery(document).ready(function(){
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		
@@ -44,7 +51,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 		var campoMonto 	= jQuery('#monto');
 		
 		switch( jQuery(this).prop('name') ){
-			case 'typ_tipo_alta':
+			case 'tp_tipo_alta':
 				if( jQuery(this).val() == 0){
 					campo = '#banco';
 					display = 'none';
@@ -72,9 +79,24 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 	}
 	
 	function bajaBanco(campo){
-		var id		= jQuery(campo).prop('id');
-		
-		jQuery('#'+id).remove();
+		var id		 = jQuery(campo).prop('id');
+        var idCliPro = jQuery('#idCliPro').val();
+        var parametros = {
+            'link'  : '?task=deleteBanco&format=raw',
+            'datos' : {
+                'datosBan_id' : id,
+                'integradoId' : idCliPro
+            }
+        };
+        var envioajax = ajax(parametros);
+
+        envioajax.done(function(response){
+            if(response.success) {
+                jQuery('#' + id).remove();
+            }else{
+                alert(response.msg);
+            }
+        });
 	}
 	
 	function busqueda(){
@@ -98,31 +120,38 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 	}
 	
 	function AltaBanco(){
+        var idIntegradoAlta = jQuery('#idCliPro').val();
 		var data = jQuery('#banco').find('select, input').serialize();
-			data +='&integradoId='+integradoId;
+			data +='&integradoId='+idIntegradoAlta;
 			
 		var parametros = {
 			'link'  : '?task=agregarBanco&format=raw',
 			'datos' : data
-			
+
 		};
-		
+
 		var resultado = ajax(parametros);
-		
+
 		resultado.done(function(response){
-			if(typeof(response) != 'object'){
-				var obj = eval('('+response+')');
-			}else{
-				var obj = response;
-			}
-			html = '<tr id="'+obj.idCuenta+'">';
-			html += '<td>'+obj.banco+'</td>';
-			html += '<td>'+obj.cuenta+'</td>';
-			html += '<td>'+obj.sucursal+'</td>';
-			html += '<td>'+obj.clabe+'</td>';
-			html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.idCuenta+'" value="elimina Banco" /></td>';
-			html += '</tr>';
-			jQuery('#banco').find('table tbody').append(html);
+			var obj = response;
+
+            if(obj.success === true) {
+                var fieldset = jQuery('fieldset#datosBancarios');
+                fieldset.find('input').val('');
+                fieldset.find('select').val(0);
+
+                html = '<tr id="' + obj.idCuenta + '">';
+                html += '<td>' + catalogoBancos[obj.banco] + '</td>';
+                html += '<td>' + obj.cuenta + '</td>';
+                html += '<td>' + obj.sucursal + '</td>';
+                html += '<td>' + obj.clabe + '</td>';
+                html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.idCuenta+'" value="elimina Banco" /></td>';
+                html += '</tr>';
+
+                jQuery('#banco').find('table.tableBancos tbody').append(html);
+            }else{
+                alert('no se pudo agregar la cuenta');
+            }
 		});
 		
 	}
@@ -389,7 +418,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 	<fieldset>
 		<div class="form-group">
 			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOMBRE_COMPLETO'); ?></label>
-			<input name="dp_nombre_representante" id="dp_nom_comercial1" type="text" maxlength="100" />
+			<input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
@@ -709,15 +738,14 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 		echo JHtml::_('bootstrap.endTab');
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'banco', JText::_('LBL_TAB_BANCO'));
 	?>
-	<fieldset>
+	<fieldset id="datosBancarios">
         <div class="form-group">
-           	<label for="db_banco_nombre"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
-           	<select name="db_banco_nombre" id="db_banco_nombre">
-           		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+            <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
+           	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
+           	<select name="db_banco_codigo" id="db_banco_codigo">
+           		<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
-				foreach ($this->catalogos->bancos as $key => $value) {
-					echo '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
-				}
+				echo $optionBancos;
 				?>
 			</select>
         </div>
@@ -739,7 +767,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 		</div>
 		
 		<div>
-			<table class="table table-bordered">
+			<table class="table table-bordered tableBancos">
 				<thead>
 					<tr>
 						<th>Banco</th>

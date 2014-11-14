@@ -132,23 +132,72 @@ class MandatosController extends JControllerLegacy {
 	}
 
 	function agregarBanco(){
-        $document = JFactory::getDocument();
-        // Set the MIME type for JSON output.
-        $document->setMimeEncoding('application/json');
-        // Change the suggested filename.
-        JResponse::setHeader('Content-Disposition','attachment; filename="result.json"');
+        $db	        = JFactory::getDbo();
+        $save       = new sendToTimOne();
+        $datosQuery = array('setUpdate'=>array());
+        $post       = array('datosBan_id' => 'INT',
+            'db_banco_codigo' => 'STRING',
+            'db_banco_cuenta' => 'STRING',
+            'db_banco_sucursal' => 'STRING',
+            'db_banco_clabe' => 'STRING',
+            'integradoId' => 'STRING');
+		$data 		= $this->input_data->getArray($post);
+        $table 		= 'integrado_datos_bancarios';
+        $where      = $db->quoteName('integrado_id').' = '.$data['integradoId'].' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $existe     = getFromTimOne::selectDB($table,$where);
 
-		$data 			= $this->input_data->getArray();
-		$validacion 	= validador::valida_banco_clabe($data, 'db_banco_clabe');
-		
-		$respuesta['banco'] 	= $data['db_banco_nombre'];
-  		$respuesta['cuenta'] 	= $data['db_banco_cuenta'];
-  		$respuesta['sucursal'] 	= $data['db_banco_sucursal'];
-  		$respuesta['clabe']	 	= $data['db_banco_clabe'];
-		$respuesta['idCuenta']	= ($data['db_banco_sucursal']*1)+1;
+        $columnas[] = 'integrado_id';
+        $valores[]	= $data['integradoId'];
 
-		echo json_encode($respuesta);
+        $datosQuery['columnas']  = $columnas;
+        $datosQuery['valores']   = $valores;
+
+        $datosQuery = self::limpiarPost($data, 'db_',$datosQuery);
+
+        $validacion = validador::valida_banco_clabe($data['db_banco_clabe'], $data['db_banco_codigo']);
+
+        if(!$validacion){
+            $respuesta['success'] = false;
+        }else {
+            if (empty($existe)) {
+                $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
+                $newId = $db->insertid();
+            } else {
+                $save->updateDB($table, $datosQuery['setUpdate'], $where);
+            }
+
+            $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
+            $respuesta['success'] = true;
+            $respuesta['banco'] = $data['db_banco_codigo'];
+            $respuesta['cuenta'] = $data['db_banco_cuenta'];
+            $respuesta['sucursal'] = $data['db_banco_sucursal'];
+            $respuesta['clabe'] = $data['db_banco_clabe'];
+            $respuesta['idCuenta'] = $idClipro;
+        }
+        $this->document->setMimeEncoding('application/json');
+        echo json_encode($respuesta);
 	}
+
+    function deleteBanco(){
+        $db	        = JFactory::getDbo();
+        $save       = new sendToTimOne();
+        $post       = array('datosBan_id' => 'INT',
+            'integradoId' => 'STRING');
+        $data 		= $this->input_data->getArray($post);
+        $table 		= 'integrado_datos_bancarios';
+        $where      = $db->quoteName('integrado_id').' = '.$data['integradoId'].' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+
+        $respuesta['msg'] = $save->deleteDB($table,$where);
+
+        if($respuesta['msg'] == '') {
+            $respuesta['success'] = true;
+        }else{
+            $respuesta['success'] = false;
+        }
+
+        $this->document->setMimeEncoding('application/json');
+        echo json_encode($respuesta);
+    }
 
     function saveProyects(){
         $campos      = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
@@ -272,7 +321,6 @@ class MandatosController extends JControllerLegacy {
             $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
             $data['idCliPro'] = $idCliPro;
         }
-var_dump($data['tab']);
 
         switch($data['tab']){
             case 'tipoAlta':
@@ -305,6 +353,13 @@ var_dump($data['tab']);
                 if(empty($existe)){
                     self::safeContacto($data, $idCliPro);
                 }
+                break;
+            case 'juridica':
+                $table 		= 'integrado';
+                $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                $existe     = getFromTimOne::selectDB($table, $where);
+
+                $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
                 break;
             case 'empresa';
                 $table = 'integrado_datos_empresa';
