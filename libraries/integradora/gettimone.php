@@ -19,10 +19,13 @@ class getFromTimOne{
             $query->select('*')
                 ->from($db->quoteName('#__'.$table));
         }
-
-        $db->setQuery($query);
-
-        $results = $db->loadObjectList();
+        try {
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+        }catch (Exception $e){
+            var_dump($e);
+            exit;
+        }
 
         return $results;
     }
@@ -2176,8 +2179,14 @@ class sendToTimOne {
             ->columns($db->quoteName($columnas))
             ->values(implode(',',$valores));
 
-        $db->setQuery($query);
-        $db->execute();
+        try{
+            $db->setQuery($query);
+            $db->execute();
+        }catch (Exception $e){
+            var_dump($e->getMessage());
+            exit;
+        }
+
     }
 
     public function updateDB($table, $columnas, $condicion){

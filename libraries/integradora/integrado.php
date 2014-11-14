@@ -207,7 +207,7 @@ class IntegradoSimple extends Integrado {
 	
 	function __construct($integ_id) {
 		$this->user = JFactory::getUser();
-		
+
 		if( is_null($integ_id) ){
 			$integ_id = 0;
 		}
