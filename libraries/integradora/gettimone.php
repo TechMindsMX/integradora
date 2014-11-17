@@ -19,6 +19,7 @@ class getFromTimOne{
             $query->select('*')
                 ->from($db->quoteName('#__'.$table));
         }
+
         try {
             $db->setQuery($query);
             $results = $db->loadObjectList();
@@ -57,285 +58,81 @@ class getFromTimOne{
         }
         $respuesta = self::selectDB('integrado_products',$where);
 
-        /*$productos 				= new stdClass;
-        $productos->id			= 1;
-        $productos->integradoId	= 1;
-        $productos->productName	= 'Producto A';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$10000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '0';
-        $productos->description = "U Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 3;
-        $productos->integradoId	= 1;
-        $productos->productName	= 'Producto C';
-        $productos->measure		= 'Pieza';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '0';
-        $productos->description = "I Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 4;
-        $productos->integradoId	= 1;
-        $productos->productName	= 'Producto D';
-        $productos->measure		= 'Rads';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '1';
-        $productos->description = "E Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 5;
-        $productos->integradoId	= 1;
-        $productos->productName	= 'Producto E';
-        $productos->measure		= 'DB';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '0';
-        $productos->description = "A Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 6;
-        $productos->integradoId	= 2;
-        $productos->productName	= 'Producto F';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '0';
-        $productos->description = "U Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 7;
-        $productos->integradoId	= 2;
-        $productos->productName	= 'Producto G';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '0';
-        $productos->description = "O Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 8;
-        $productos->integradoId	= 2;
-        $productos->productName	= 'Producto H';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '1';
-        $productos->description = "I Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 9;
-        $productos->integradoId	= 2;
-        $productos->productName	= 'Producto I';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '1';
-        $productos->description = "E Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        $productos 				= new stdClass;
-        $productos->id			= 10;
-        $productos->integradoId	= 2;
-        $productos->productName	= 'Producto 2';
-        $productos->measure		= 'Litros';
-        $productos->price		= '$1000';
-        $productos->iva			= '$150';
-        $productos->ieps		= '$100';
-        $productos->currency	= 'MXN';
-        $productos->status		= '1';
-        $productos->description = "A Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        $array[] = $productos;
-
-        foreach ($array as $key => $value) {
-            if($userId == $value->integradoId){
-                $respuesta[] = $value;
-            }
-        }*/
-
         return $respuesta;
     }
 
     public static function getClientes($userId = null){
-        $respuesta = array();
+        $dataGral = '';
+        $contacto = '';
+        $db       = JFactory::getDbo();
+        $query    = $db->getQuery(true);
 
-        $clientes 					= new stdClass;
-        $clientes->id				= 1;
-        $clientes->type				= 0;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'AAML810328EH8';
-        $clientes->tradeName 		= 'Cliente A';
-        $clientes->corporateName	= 'z';
-        $clientes->contact			= 'Contacto A';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 0;
+        $query->select('integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
+            ->from('#__integrado_clientes_proveedor')
+            ->where('integrado_Id = '.$userId);
+        try {
+            $db->setQuery($query);
+            $idsClientes = $db->loadObjectList();
+        }catch (Exception $e){
+            echo $e->getMessage();
+        }
 
-        $array[] = $clientes;
+        foreach ($idsClientes as $value) {
+            $db       = JFactory::getDbo();
+            $querygral    = $db->getQuery(true);
 
-        $clientes 					= new stdClass;
-        $clientes->id				= 2;
-        $clientes->type				= 1;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'BAML810328EH8';
-        $clientes->tradeName 		= 'Proveedor A';
-        $clientes->corporateName	= 'y';
-        $clientes->contact			= 'Contacto B';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 0;
+            $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
+                ->from('#__integrado_datos_personales AS DP')
+                ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE').' ON ('.$db->quoteName('DE.integrado_id').' = '.$db->quoteName('DP.integrado_id').')' )
+                ->where('DE.integrado_id = '.$value->id);
+            try {
+                $db->setQuery($querygral);
+                $general = $db->loadObject();
 
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 3;
-        $clientes->type				= 0;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'CAML810328EH8';
-        $clientes->tradeName 		= 'Cliente B';
-        $clientes->corporateName	= 'x';
-        $clientes->contact			= 'Contacto C';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 0;
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 4;
-        $clientes->type				= 1;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'DAML810328EH8';
-        $clientes->tradeName 		= 'Proveedor B';
-        $clientes->corporateName	= 'w';
-        $clientes->contact			= 'Contacto D';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 0;
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 5;
-        $clientes->type				= 0;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'EAML810328EH8';
-        $clientes->tradeName 		= 'Cliente C';
-        $clientes->corporateName	= 'v';
-        $clientes->contact			= 'Contacto E';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 0;
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 6;
-        $clientes->type				= 1;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'FAML810328EH8';
-        $clientes->tradeName 		= 'Proveedor C';
-        $clientes->corporateName	= 'u';
-        $clientes->contact			= 'Contacto F';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= '0';
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 7;
-        $clientes->type				= 0;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'GAML810328EH8';
-        $clientes->tradeName 		= 'Cliente D';
-        $clientes->corporateName	= 't';
-        $clientes->contact			= 'Contacto G';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= '0';
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 8;
-        $clientes->type				= 1;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'HAML810328EH8';
-        $clientes->tradeName 		= 'Proveedor D';
-        $clientes->corporateName	= 's';
-        $clientes->contact			= 'Contacto H';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= '0';
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 9;
-        $clientes->type				= 0;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'IAML810328EH8';
-        $clientes->tradeName 		= 'Cliente E';
-        $clientes->corporateName	= 'r';
-        $clientes->contact			= 'Contacto I';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 1;
-
-        $array[] = $clientes;
-
-        $clientes 					= new stdClass;
-        $clientes->id				= 10;
-        $clientes->type				= 1;
-        $clientes->integradoId		= 1;
-        $clientes->rfc				= 'JAML810328EH8';
-        $clientes->tradeName 		= 'Proveedor E';
-        $clientes->corporateName	= 'q';
-        $clientes->contact			= 'Contacto J';
-        $clientes->phone			= '5556183180';
-        $clientes->status			= 1;
-
-        $array[] = $clientes;
-
-        foreach ($array as $key => $value) {
-            if($userId == $value->integradoId){
-                $respuesta[] = $value;
+                $value->rfc = $general->rfc;
+                $value->tradeName = $general->tradeName;
+                $value->corporateName  = $general->corporateName;
+                $value->contact = $general->contact;
+            }catch (Exception $e){
+                echo $e->getMessage();
             }
         }
 
-        return $respuesta;
+        foreach ($idsClientes as $value) {
+            $db       = JFactory::getDbo();
+            $queryphone    = $db->getQuery(true);
+
+            $queryphone->select('*')
+            ->from('#__integrado_contacto')
+            ->where('integrado_id = '.$value->id);
+
+            try {
+                $db->setQuery($queryphone);
+                $phone = $db->loadObject();
+                $value->phone = $phone->telefono;
+            }catch (Exception $e){
+                echo $e->getMessage();
+            }
+        }
+
+        foreach ($idsClientes as $value) {
+            $db       = JFactory::getDbo();
+            $querybanco    = $db->getQuery(true);
+
+            $querybanco->select('*')
+                ->from('#__integrado_datos_bancarios')
+                ->where('integrado_id = '.$value->id);
+
+            try {
+                $db->setQuery($querybanco);
+                $banco = $db->loadObjectList();
+                var_dump($banco);
+            }catch (Exception $e){
+                echo $e->getMessage();
+            }
+        }
+
+        return $idsClientes;
     }
 
     public static function getOrdenesCompra($integradoId = null){

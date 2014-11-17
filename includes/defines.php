@@ -23,8 +23,8 @@ define('JPATH_THEMES',        JPATH_BASE . '/templates');
 define('JPATH_CACHE',         JPATH_BASE . '/cache');
 define('JPATH_MANIFESTS',     JPATH_ADMINISTRATOR . '/manifests');
 
-$middle = "192.168.0.122";
-$puertoTimOne =  ":8081";
+$middle = "api.trama.mx";
+$puertoTimOne =  "";
 $controllerTimOne =  "/timone/services/";
 $hostname = $middle.$puertoTimOne.$controllerTimOne;
 
