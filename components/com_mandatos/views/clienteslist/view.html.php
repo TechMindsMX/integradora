@@ -10,7 +10,9 @@ class MandatosViewClienteslist extends JViewLegacy {
 		
 		$this->data = $this->get('clientes');
 		$this->token = getFromTimOne::token();
-		
+		$this->catalogoBancos = $this->get('Catalogos');
+        var_dump($this->catalogoBancos);
+        exit;
         if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
                 return false;

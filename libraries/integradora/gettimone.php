@@ -126,7 +126,7 @@ class getFromTimOne{
             try {
                 $db->setQuery($querybanco);
                 $banco = $db->loadObjectList();
-                var_dump($banco);
+                $value->bancos = $banco;
             }catch (Exception $e){
                 echo $e->getMessage();
             }

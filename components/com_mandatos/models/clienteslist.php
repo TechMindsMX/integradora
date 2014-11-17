@@ -23,5 +23,15 @@ class MandatosModelClienteslist extends JModelItem {
 
 		return $this->dataModelo;
 	}
+
+    public function getCatalogos() {
+        $catalogos = new Catalogos;
+
+        $catalogos->getNacionalidades();
+        $catalogos->getEstados();
+        $catalogos->getBancos();
+
+        return $catalogos;
+    }
 }
 

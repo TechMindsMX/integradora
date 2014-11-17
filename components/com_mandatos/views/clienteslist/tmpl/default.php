@@ -12,7 +12,7 @@ $document	= JFactory::getDocument();
 $clientes	= $this->data;
 $type		= array('Cliente', 'Proveedor');
 $status		= array('Activo', 'Inactivo');
-
+var_dump($clientes[0]->bancos);
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
@@ -170,7 +170,8 @@ function busquedapor(valor, campo){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rz '.$class.'" >'.$value->corporateName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->contact.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->phone.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$status[$value->status].'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$status[$value->status];
+                echo '      <div></div></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
 				echo '  	<a class="btn btn-primary" href="#">';
