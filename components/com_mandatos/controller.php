@@ -118,9 +118,11 @@ class MandatosController extends JControllerLegacy {
 		if(empty($existe)){
 			$existe = getFromTimOne::selectDB('integrado_datos_empresa', $where);
 		}
+
 		if(!empty($existe)){
 			$datos = new IntegradoSimple($existe[0]->integrado_id);
 			$datos->integrados[0]->success = true;
+
 			echo json_encode($datos->integrados[0]);
 		}else{
 			$respuesta['success'] = false;
@@ -168,11 +170,11 @@ class MandatosController extends JControllerLegacy {
 
             $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
             $respuesta['success'] = true;
-            $respuesta['banco'] = $data['db_banco_codigo'];
-            $respuesta['cuenta'] = $data['db_banco_cuenta'];
-            $respuesta['sucursal'] = $data['db_banco_sucursal'];
-            $respuesta['clabe'] = $data['db_banco_clabe'];
-            $respuesta['idCuenta'] = $idClipro;
+            $respuesta['banco_codigo'] = $data['db_banco_codigo'];
+            $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];
+            $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
+            $respuesta['banco_clabe'] = $data['db_banco_clabe'];
+            $respuesta['datosBan_id'] = $idClipro;
         }
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
@@ -258,60 +260,60 @@ class MandatosController extends JControllerLegacy {
         $save       = new sendToTimOne();
         $datosQuery = array();
         $arrayPost  = array(
-            'idCliPro'                  => 'INT',
-            'co_email1'                 => 'STRING',
-            'co_email2'                 => 'STRING',
-            'co_email3'                 => 'STRING',
-            'co_tel_fijo1'              => 'STRING',
-            'co_tel_fijo2'              => 'STRING',
-            'co_tel_fijo3'              => 'STRING',
-            'co_tel_fijo_extension1'    => 'STRING',
-            'co_tel_fijo_extension2'    => 'STRING',
-            'co_tel_fijo_extension3'    => 'STRING',
-            'co_tel_movil1'             => 'STRING',
-            'co_tel_movil2'             => 'STRING',
-            'co_tel_movil3'             => 'STRING',
-            'db_banco_clabe'            => 'STRING',
-            'db_banco_cuenta'           => 'STRING',
-            'db_banco_nombre'           => 'STRING',
-            'db_banco_sucursal'         => 'STRING',
-            'de_calle'                  => 'STRING',
-            'de_cod_postal' => 'STRING',
-            'de_num_exterior' => 'STRING',
-            'de_num_interior' => 'STRING',
-            'de_razon_social' => 'STRING',
-            'de_rfc' => 'STRING',
-            'dp_calle' => 'STRING',
-            'dp_cod_postal' => 'STRING',
-            'dp_curp' => 'STRING',
-            'dp_fecha_nacimiento' => 'STRING',
-            'dp_nacionalidad' => 'STRING',
-            'dp_nom_comercial' => 'STRING',
-            'dp_nombre_representante' => 'STRING',
-            'dp_num_exterior' => 'STRING',
-            'dp_num_interior' => 'STRING',
-            'dp_rfc' => 'STRING',
-            'dp_sexo' => 'STRING',
-            'integradoId' => 'INT',
-            'pj_pers_juridica' => 'STRING',
-            'pn_instrum_estado'         => 'STRING',
-            'pn_instrum_nom_notario' => 'STRING',
-            'pn_instrum_notaria' => 'STRING',
-            'pn_instrum_num_instrumento' => 'STRING',
-            'rp_instrum_estado' => 'STRING',
-            'rp_instrum_num_instrumento' => 'STRING',
-            't1_instrum_estado'         => 'STRING',
-            't1_instrum_nom_notario' => 'STRING',
-            't1_instrum_notaria' => 'STRING',
-            't1_instrum_num_instrumento' => 'STRING',
-            't2_instrum_estado'         => 'STRING',
-            't2_instrum_nom_notario' => 'STRING',
-            't2_instrum_notaria' => 'STRING',
-            't2_instrum_num_instrumento' => 'STRING',
-            'tab' => 'STRING',
-            'tp_tipo_alta' => 'INT',
-            'tp_status' => 'INT',
-            'tp_monto' => 'FLOAT');
+            'idCliPro'                      => 'INT',
+            'integradoId'                   => 'INT',
+            'co_email1'                     => 'STRING',
+            'co_email2'                     => 'STRING',
+            'co_email3'                     => 'STRING',
+            'co_tel_fijo1'                  => 'STRING',
+            'co_tel_fijo2'                  => 'STRING',
+            'co_tel_fijo3'                  => 'STRING',
+            'co_tel_fijo_extension1'        => 'STRING',
+            'co_tel_fijo_extension2'        => 'STRING',
+            'co_tel_fijo_extension3'        => 'STRING',
+            'co_tel_movil1'                 => 'STRING',
+            'co_tel_movil2'                 => 'STRING',
+            'co_tel_movil3'                 => 'STRING',
+            'db_banco_clabe'                => 'STRING',
+            'db_banco_cuenta'               => 'STRING',
+            'db_banco_nombre'               => 'STRING',
+            'db_banco_sucursal'             => 'STRING',
+            'de_calle'                      => 'STRING',
+            'de_cod_postal'                 => 'STRING',
+            'de_num_exterior'               => 'STRING',
+            'de_num_interior'               => 'STRING',
+            'de_razon_social'               => 'STRING',
+            'de_rfc'                        => 'STRING',
+            'dp_calle'                      => 'STRING',
+            'dp_cod_postal'                 => 'STRING',
+            'dp_curp'                       => 'STRING',
+            'dp_fecha_nacimiento'           => 'STRING',
+            'dp_nacionalidad'               => 'STRING',
+            'dp_nom_comercial'              => 'STRING',
+            'dp_nombre_representante'       => 'STRING',
+            'dp_num_exterior'               => 'STRING',
+            'dp_num_interior'               => 'STRING',
+            'dp_rfc'                        => 'STRING',
+            'dp_sexo'                       => 'STRING',
+            'pj_pers_juridica'              => 'STRING',
+            'pn_instrum_estado'             => 'STRING',
+            'pn_instrum_nom_notario'        => 'STRING',
+            'pn_instrum_notaria'            => 'STRING',
+            'pn_instrum_num_instrumento'    => 'STRING',
+            'rp_instrum_estado'             => 'STRING',
+            'rp_instrum_num_instrumento'    => 'STRING',
+            't1_instrum_estado'             => 'STRING',
+            't1_instrum_nom_notario'        => 'STRING',
+            't1_instrum_notaria'            => 'STRING',
+            't1_instrum_num_instrumento'    => 'STRING',
+            't2_instrum_estado'             => 'STRING',
+            't2_instrum_nom_notario'        => 'STRING',
+            't2_instrum_notaria'            => 'STRING',
+            't2_instrum_num_instrumento'    => 'STRING',
+            'tab'                           => 'STRING',
+            'tp_tipo_alta'                  => 'INT',
+            'tp_status'                     => 'INT',
+            'tp_monto'                      => 'FLOAT');
 
         $data       = $this->input_data->getArray($arrayPost);
         $idCliPro   = $data['idCliPro'];
@@ -325,7 +327,7 @@ class MandatosController extends JControllerLegacy {
         switch($data['tab']){
             case 'tipoAlta':
                 $table 		= 'integrado_clientes_proveedor';
-                $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro;
+                $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$data['integradoId'];
                 $existe     = getFromTimOne::selectDB($table,$where);
 
                 $columnas[] = 'integrado_id';
@@ -361,7 +363,7 @@ class MandatosController extends JControllerLegacy {
 
                 $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
                 break;
-            case 'empresa';
+            case 'empresa':
                 $table = 'integrado_datos_empresa';
                 $where = $db->quoteName('integrado_id').' = '.$idCliPro;
                 $existe = getFromTimOne::selectDB($table, $where);
@@ -383,7 +385,10 @@ class MandatosController extends JControllerLegacy {
             $save->updateDB($table,$datosQuery['setUpdate'],$where);
         }
 
-        exit;
+        $response['idCliPro'] = $idCliPro;
+        $response['success'] = true;
+
+        echo json_encode($response);
     }
 
     public static function safeContacto($data, $integradoId){

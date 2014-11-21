@@ -7,6 +7,24 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 
 class getFromTimOne{
+    public function createNewProject($envio, $integradoId){
+        $jsonData = json_encode($envio);
+
+        $route = new servicesRoute();
+        $route->projectUrls()->urls;
+
+        $serviceUrl = str_replace('{userId}', $integradoId, $route->baseUrl.$route->urls->create->url);
+
+        $sendToTimone = new sendToTimOne();
+        $sendToTimone->setHttpType($route->urls->create->type);
+        $sendToTimone->setJsonData($jsonData);
+        $sendToTimone->setServiceUrl($serviceUrl);
+
+        $result = $sendToTimone->to_timone();
+
+        return $result;
+    }
+
     public static function selectDB($table, $where){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
@@ -62,77 +80,114 @@ class getFromTimOne{
     }
 
     public static function getClientes($userId = null){
-        $dataGral = '';
-        $contacto = '';
         $db       = JFactory::getDbo();
         $query    = $db->getQuery(true);
 
-        $query->select('integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
-            ->from('#__integrado_clientes_proveedor')
-            ->where('integrado_Id = '.$userId);
-        try {
-            $db->setQuery($query);
-            $idsClientes = $db->loadObjectList();
-        }catch (Exception $e){
-            echo $e->getMessage();
-        }
-
-        foreach ($idsClientes as $value) {
-            $db       = JFactory::getDbo();
-            $querygral    = $db->getQuery(true);
-
-            $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
-                ->from('#__integrado_datos_personales AS DP')
-                ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE').' ON ('.$db->quoteName('DE.integrado_id').' = '.$db->quoteName('DP.integrado_id').')' )
-                ->where('DE.integrado_id = '.$value->id);
+        if( !is_null($userId) ) {
+            //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
+            $query->select('integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
+                ->from('#__integrado_clientes_proveedor')
+                ->where('integrado_Id = ' . $userId);
             try {
-                $db->setQuery($querygral);
-                $general = $db->loadObject();
+                $db->setQuery($query);
+                $response = $db->loadObjectList();
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
 
-                $value->rfc = $general->rfc;
-                $value->tradeName = $general->tradeName;
-                $value->corporateName  = $general->corporateName;
-                $value->contact = $general->contact;
+            //Obtiene los datos personales y de empresa del cliente/proveedor
+            foreach ($response as $value) {
+                $db = JFactory::getDbo();
+                $querygral = $db->getQuery(true);
+
+                $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
+                    ->from('#__integrado_datos_personales AS DP')
+                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
+                    ->where('DE.integrado_id = ' . $value->id);
+                try {
+                    $db->setQuery($querygral);
+                    $general = $db->loadObject();
+
+                    $value->rfc = $general->rfc;
+                    $value->tradeName = $general->tradeName;
+                    $value->corporateName = $general->corporateName;
+                    $value->contact = $general->contact;
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+
+            //obtiene los datos de contacto para el cliente/proveedor
+            foreach ($response as $value) {
+                $db = JFactory::getDbo();
+                $queryphone = $db->getQuery(true);
+
+                $queryphone->select('*')
+                    ->from('#__integrado_contacto')
+                    ->where('integrado_id = ' . $value->id);
+
+                try {
+                    $db->setQuery($queryphone);
+                    $phone = $db->loadObject();
+                    $value->phone = isset($phone->telefono) ? $phone->telefono : '';
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+
+            //obtengo los datos de cuentas bancarias del cliente;
+            foreach ($response as $value) {
+                $db = JFactory::getDbo();
+                $querybanco = $db->getQuery(true);
+
+                $querybanco->select('*')
+                    ->from('#__integrado_datos_bancarios')
+                    ->where('integrado_id = ' . $value->id);
+
+                try {
+                    $db->setQuery($querybanco);
+                    $banco = $db->loadObjectList();
+                    $value->bancos = $banco;
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+
+            foreach ($response as $key => $value) {
+                foreach ($value->bancos as $indice => $valor) {
+                    $valor->banco_cuenta_xxx = 'XXXXXX' . substr($valor->banco_cuenta, -4, 4);
+                    $valor->banco_clabe_xxx = 'XXXXXXXXXXXXXX' . substr($valor->banco_clabe, -4, 4);
+                }
+            }
+        }else{
+            //Se regresan los datos de los clientes/proveedores dados de alta.
+            $query->select('clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
+                            DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
+                            DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
+                ->from('#__integrado_clientes_proveedor AS clientes')
+                ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
+                ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
+                ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
+
+            try{
+                $db->setQuery($query);
+                $listAllCliPro = $db->loadObjectList();
             }catch (Exception $e){
                 echo $e->getMessage();
             }
-        }
 
-        foreach ($idsClientes as $value) {
-            $db       = JFactory::getDbo();
-            $queryphone    = $db->getQuery(true);
+            foreach ($listAllCliPro as $value) {
+                $where = $db->quoteName('integrado_id').' = '.$value->idCliPro;
+                $contacto   = self::selectDB('integrado_contacto', $where);
+                $banco      = self::selectDB('integrado_datos_bancarios', $where);
 
-            $queryphone->select('*')
-            ->from('#__integrado_contacto')
-            ->where('integrado_id = '.$value->id);
-
-            try {
-                $db->setQuery($queryphone);
-                $phone = $db->loadObject();
-                $value->phone = $phone->telefono;
-            }catch (Exception $e){
-                echo $e->getMessage();
+                $value->datosBanco  = $banco;
+                $value->contacto    = $contacto;
             }
+            $response = $listAllCliPro;
         }
 
-        foreach ($idsClientes as $value) {
-            $db       = JFactory::getDbo();
-            $querybanco    = $db->getQuery(true);
-
-            $querybanco->select('*')
-                ->from('#__integrado_datos_bancarios')
-                ->where('integrado_id = '.$value->id);
-
-            try {
-                $db->setQuery($querybanco);
-                $banco = $db->loadObjectList();
-                $value->bancos = $banco;
-            }catch (Exception $e){
-                echo $e->getMessage();
-            }
-        }
-
-        return $idsClientes;
+        return $response;
     }
 
     public static function getOrdenesCompra($integradoId = null){
@@ -1824,24 +1879,6 @@ $token = 'fghgjsdatr';
 				return $tx;
 			}
 		}
-	}
-
-	public function createNewProject($envio, $integradoId){
-		$jsonData = json_encode($envio);
-
-		$route = new servicesRoute();
-		$route->projectUrls()->urls;
-
-		$serviceUrl = str_replace('{userId}', $integradoId, $route->baseUrl.$route->urls->create->url);
-
-		$sendToTimone = new sendToTimOne();
-		$sendToTimone->setHttpType($route->urls->create->type);
-		$sendToTimone->setJsonData($jsonData);
-		$sendToTimone->setServiceUrl($serviceUrl);
-
-		$result = $sendToTimone->to_timone();
-
-		return $result;
 	}
 
 	public static function getComisionById ($id) {

@@ -8,32 +8,48 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
+$datos = $this->datos;
 $document = JFactory::getDocument();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
+echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 ?>
 <script>
     var catalogoBancos = new Array();
+    var integradoId	= <?php echo $this->integradoId; ?>;
+
     <?php
     foreach ($this->catalogos->bancos as $key => $value){
         $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
         echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
 	}
     ?>
+
 	jQuery(document).ready(function(){
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-		
 		jQuery('#search').on('click', busqueda);
-		jQuery('#agregarBanco').on('click', AltaBanco);
-		jQuery('#altaC_P input:radio').on('click', tipoAlta);
-		jQuery('button').on('click', saveCliente);
-	});
-	
-	var integradoId	= <?php echo $this->integradoId; ?>;
-	
+        jQuery('#agregarBanco').on('click', AltaBanco);
+        jQuery('#altaC_P input:radio').on('click', tipoAlta);
+        jQuery('button').on('click', saveCliente);
+
+        <?php
+        if(!is_null($datos->rfc)){
+            echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
+            echo 'jQuery("#search").trigger("click");'."\n";
+            echo 'jQuery("#tipoAlta'.$datos->type.'").trigger("click");'."\n";
+
+        }
+        if(!empty($datos->bancos)){
+            echo "var objeto = ".json_encode($datos->bancos).';';
+            echo "jQuery.each(objeto, function(key, value){
+                llenatablabancos(value);
+            })";
+        }
+        ?>
+    });
+
 	function ajax(parametros){
 		
 		var request = jQuery.ajax({
@@ -49,8 +65,9 @@ $optionBancos = '';
 		var campo 		= '';
 		var display 	= '';
 		var campoMonto 	= jQuery('#monto');
-		
-		switch( jQuery(this).prop('name') ){
+		var nombreCampo = jQuery(this).prop('name');
+
+		switch( nombreCampo ){
 			case 'tp_tipo_alta':
 				if( jQuery(this).val() == 0){
 					campo = '#banco';
@@ -58,7 +75,7 @@ $optionBancos = '';
 					campoMonto.children().remove();
 				}else{
 					campo = '#banco';
-					campoMonto.html('<label for="typ_monto"><?php echo JText::_('LBL_MONTO'); ?></label><input type="text" name="typ_monto" id="typ_monto" />');
+					campoMonto.html('<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label><input type="text" name="tp_monto" id="tp_monto" />');
 				}
 				break;
 			case 'pj_pers_juridica':
@@ -69,6 +86,8 @@ $optionBancos = '';
 					campo = '#empresa';
 				}
 				break;
+            default :
+                break;
 		}
 		
 		jQuery.each( jQuery('#altaC_P').find('a'), function(key, value){
@@ -118,8 +137,23 @@ $optionBancos = '';
 			}
 		});
 	}
-	
-	function AltaBanco(){
+
+    function llenatablabancos(obj) {
+        var fieldset = jQuery('fieldset#datosBancarios');
+        fieldset.find('input').val('');
+        fieldset.find('select').val(0);
+        html = '<tr id="' + obj.datosBan_id + '">';
+        html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
+        html += '<td>' + obj.banco_cuenta + '</td>';
+        html += '<td>' + obj.banco_sucursal + '</td>';
+        html += '<td>' + obj.banco_clabe + '</td>';
+        html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
+        html += '</tr>';
+
+        jQuery('#banco').find('table.tableBancos tbody').append(html);
+    }
+
+    function AltaBanco(){
         var idIntegradoAlta = jQuery('#idCliPro').val();
 		var data = jQuery('#banco').find('select, input').serialize();
 			data +='&integradoId='+idIntegradoAlta;
@@ -136,19 +170,7 @@ $optionBancos = '';
 			var obj = response;
 
             if(obj.success === true) {
-                var fieldset = jQuery('fieldset#datosBancarios');
-                fieldset.find('input').val('');
-                fieldset.find('select').val(0);
-
-                html = '<tr id="' + obj.idCuenta + '">';
-                html += '<td>' + catalogoBancos[obj.banco] + '</td>';
-                html += '<td>' + obj.cuenta + '</td>';
-                html += '<td>' + obj.sucursal + '</td>';
-                html += '<td>' + obj.clabe + '</td>';
-                html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.idCuenta+'" value="elimina Banco" /></td>';
-                html += '</tr>';
-
-                jQuery('#banco').find('table.tableBancos tbody').append(html);
+                llenatablabancos(obj);
             }else{
                 alert('no se pudo agregar la cuenta');
             }
@@ -177,16 +199,24 @@ $optionBancos = '';
 	}
 	
 	function llenaForm(objeto){
-		if(objeto.integrado != null){
+
+        if(objeto.integrado != null){
+            jQuery('#idCliPro').val(objeto.integrado.integrado_id);
+
 			jQuery.each(objeto.integrado, function(key,value){
-				jQuery('#perFisicaMoral'+value).val(value);
-				jQuery('#perFisicaMoral'+value).trigger('click');
+                if(key == 'pers_juridica') {
+                    jQuery('#perFisicaMoral' + value).prop('checked', true);
+                    jQuery('#perFisicaMoral' + value).trigger('click');
+                }
+
+                jQuery('input[id*="perFisicaMoral"]').prop('disabled', true);
 			});
 		}
 		
 		if(objeto.datos_personales != null){
 			jQuery.each(objeto.datos_personales, function(key,value){
 				jQuery('#dp_'+key).val(value);
+                jQuery('#dp_'+key).prop('disabled',true);
 			});
 			jQuery('#dp_cod_postal').trigger('click');
 		}
@@ -194,15 +224,16 @@ $optionBancos = '';
 		if(objeto.datos_empresa != null){
 			jQuery.each(objeto.datos_empresa, function(key,value){
 				jQuery('#de_'+key).val(value);
+                jQuery('#de_'+key).prop('disabled', true);
 			});
 			jQuery('#de_cod_postal').trigger('click');
 		}
 		
-		if(objeto.datos_bancarios != null){
-			jQuery.each(objeto.datos_bancarios, function(key,value){
-				jQuery('#db_'+key).val(value);
-			});
-		}
+//		if(objeto.datos_bancarios != null){
+//			jQuery.each(objeto.datos_bancarios, function(key,value){
+//				jQuery('#db_'+key).val(value);
+//			});
+//		}
 	}
 
     function saveCliente(){
@@ -220,13 +251,20 @@ $optionBancos = '';
             };
 
             var resultado = ajax(parametros);
+
+            resultado.done(function(response){
+               if(response.success){
+                   jQuery('#idCliPro').val(response.idCliPro);
+               }
+            });
         }
     }
+
 </script>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
-    <input type="hidden" name="idCliPro" value="" id="idCliPro">
+    <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
 	<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-clientes', array('active' => 'buscador'));
@@ -248,7 +286,7 @@ $optionBancos = '';
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE'));
 	?>
 	<fieldset>
-        <input type="hidden" name="tp_status" id="tp_status" value="0">
+        <input type="hidden" name="tp_status" id="tp_status" value="<?php echo $datos->status ?>">
 		<div class="radio">
 			<label><input type="radio" name="tp_tipo_alta" id="tipoAlta0" value="0" ><?php echo JText::_('LBL_CLIENTE'); ?></label>
 		</div>
@@ -256,11 +294,11 @@ $optionBancos = '';
 			<label><input type="radio" name="tp_tipo_alta" id="tipoAlta1" value="1" ><?php echo JText::_('LBL_PROVEEDOR'); ?></label>
 		</div>
 		<div class="radio">
-			<label><input type="radio" name="tp_tipo_alta" id="tipoAlta2" value="2" checked="checked" ><?php echo JText::_('LBL_AMBOS'); ?></label>
+			<label><input type="radio" name="tp_tipo_alta" id="tipoAlta2" value="2" ><?php echo JText::_('LBL_AMBOS'); ?></label>
 		</div>
 		
-		<div id="monto" class="form-inline">
-			<label for="typ_monto"><?php echo JText::_('LBL_MONTO'); ?></label>
+		<div id="monto" class="form-inline" <?php echo $datos->type==0?'style="display:none"':''; ?>>
+			<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label>
 			<input type="text" name="tp_monto" id="tp_monto" />
 		</div>
 	</fieldset>
@@ -275,7 +313,7 @@ $optionBancos = '';
 	?>
 	<fieldset>
 		<div class="radio">
-			<label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" checked="checked" ><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+			<label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" ><?php echo JText::_('LBL_PER_MORAL'); ?></label>
 		</div>
 		<div class="radio">
 			<label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" ><?php echo JText::_('LBL_PER_FISICA'); ?></label>

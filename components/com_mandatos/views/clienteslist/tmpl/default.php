@@ -12,7 +12,6 @@ $document	= JFactory::getDocument();
 $clientes	= $this->data;
 $type		= array('Cliente', 'Proveedor');
 $status		= array('Activo', 'Inactivo');
-var_dump($clientes[0]->bancos);
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
@@ -174,7 +173,7 @@ function busquedapor(valor, campo){
                 echo '      <div></div></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
-				echo '  	<a class="btn btn-primary" href="#">';
+				echo '  	<a class="btn btn-primary" href="index.php/component/mandatos/?view=clientesform&integradoId='.$value->integrado_id.'&idCliPro='.$value->id.'">';
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
 				echo '		</a>';
 				echo '	</td>';

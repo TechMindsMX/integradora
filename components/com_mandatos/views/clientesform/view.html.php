@@ -8,14 +8,28 @@ class MandatosViewClientesform extends JViewLegacy {
 	
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
-		$data				= $app->input->getArray();
+        $post               = array('integradoId'=>'INT', 'idCliPro' => 'INT');
+		$data				= $app->input->getArray($post);
 		$this->integradoId 	= $data['integradoId'];
-		
-		if( isset($data['clientId']) ){
-			$this->titulo = 'COM_MANDATOS_CLIENT_LBL_EDITAR';
+        $this->idCliPro     = $data['idCliPro'];
+
+        if( !is_null($this->idCliPro) ){
+			$this->titulo   = 'COM_MANDATOS_CLIENT_LBL_EDITAR';
+            $this->datos    = $this->get('Cliente');
 		}else{
 			$this->titulo = 'COM_MANDATOS_CLIENT_LBL_AGREGAR';
-		}
+            $datos    = new stdClass();
+            $datos->id             = null;
+            $datos->type           = null;
+            $datos->integrado_id   = null;
+            $datos->status         = null;
+            $datos->rfc            = null;
+            $datos->tradeName      = null;
+            $datos->corporateName  = null;
+            $datos->contact        = null;
+            $datos->phone          = null;
+            $datos->bancos         = null;
+        }
 		
 		$this->catalogos = $this->get('catalogos');
 		
