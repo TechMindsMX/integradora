@@ -13,6 +13,7 @@ class MandatosViewOdvform extends JViewLegacy {
         $this->estados      = $this->get('estados');
         $this->solicitud    = $this->get('datosSolicitud');
         $this->products     = $this->get('productos');
+        $this->cuentas      = $this->get('Cuentas');
 
         if (count($errors = $this->get('Errors'))) {
             JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

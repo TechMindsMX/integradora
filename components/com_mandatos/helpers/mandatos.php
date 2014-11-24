@@ -41,15 +41,15 @@ class MandatosHelper {
 
 		$clientes = getFromTimOne::getClientes($integradoId);
 
-		foreach ($clientes as $key => $value) {
-			if($value->type == 1){
-				$proveedores[$value->id] = $value;
-			}
-		}
+        foreach ($clientes as $key => $value) {
+            if($value->type == 1){
+                $proveedores[$value->id] = $value;
+            }
+        }
+             exit;
+        $proveedor = $proveedores[$providerId];
 
-		$proveedor = $proveedores[$providerId];
-
-		return $proveedor;
+        return $proveedor;
 	}
 
     public static function getOddListado(){

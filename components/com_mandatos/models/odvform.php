@@ -22,16 +22,9 @@ class MandatosModelOdvform extends JModelItem {
     }
 
     public function getClientes(){
-        $clientes = getFromTimOne::getClientes($this->integradoId);
-        $respuesta = array();
+        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
 
-        foreach($clientes as $key => $value){
-            if($value->type === 0){
-                $respuesta[] = $value;
-            }
-        }
-
-        return $respuesta;
+        return $clientes;
     }
 
     public function getProyectos(){
@@ -73,6 +66,16 @@ class MandatosModelOdvform extends JModelItem {
         $allproducts = getFromTimOne::getProducts($this->integradoId);
 
         return $allproducts;
+    }
+
+    public function getCuentas(){
+        $cuentas = getFromTimOne::selectDB('integrado_datos_bancarios', 'integrado_id = '.$this->integradoId);
+
+        foreach ($cuentas as $objeto) {
+            $objeto->banco_cuenta_xxx = 'XXXXXX'.substr($objeto->banco_cuenta,-4,4);
+        }
+
+        return $cuentas;
     }
 }
 

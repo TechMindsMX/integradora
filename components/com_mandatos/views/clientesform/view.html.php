@@ -29,6 +29,8 @@ class MandatosViewClientesform extends JViewLegacy {
             $datos->contact        = null;
             $datos->phone          = null;
             $datos->bancos         = null;
+
+            $this->datos = $datos;
         }
 		
 		$this->catalogos = $this->get('catalogos');

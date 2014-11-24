@@ -19,7 +19,8 @@ class MandatosViewOdvlist extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		foreach ($this->data as $key => $odv) {
-			$odv->proveedor = MandatosHelper::getProviderFromID($odv->clientId, $this->integradoId);
+
+			$odv->proveedor = MandatosHelper::getClientsFromID($odv->clientId, $this->integradoId);
 			
 			$this->data[$key] = $odv;
 		}

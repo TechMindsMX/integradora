@@ -9,90 +9,94 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdvform extends JControllerAdmin {
 
-    function safeform() {
-        $document = JFactory::getDocument();
-        $this->app 	    = JFactory::getApplication();
-        $data           = $this->app->input->getArray();
-        $odv            = array();
-        $validacion     = new validador();
-        $envio['url']   = null;
-        $diccionario    = array('account'       => array('tipo'=>'number', 'length' => ''),
-                                'clientId'      => array('tipo'=>'number', 'length' => ''),
-                                'conditions'    => array('tipo'=>'number', 'length' => ''),
-                                'paymentMethod' => array('tipo'=>'number', 'length' => ''),
-                                'placeIssue'    => array('tipo'=>'number', 'length' => ''),
-                                'projectId'     => array('tipo'=>'number', 'length' => ''),
-                                'projectId2'    => array('tipo'=>'number', 'length' => ''));
+    function safeform(){
+        $post       = array('integradoId'   => 'INT',
+                            'idOdv'         => 'INT',
+                            'projectId'     => 'STRING',
+                            'projectId2'    => 'STRING',
+                            'clientId'      => 'STRING',
+                            'account'       => 'STRING',
+                            'paymentMethod' => 'STRING',
+                            'conditions'    => 'STRING',
+                            'placeIssue'    => 'STRING',
+                            'tab'           => 'STRING',
+                            'descripcion'   => 'ARRAY',
+                            'unidad'        => 'ARRAY',
+                            'producto'      => 'ARRAY',
+                            'cantidad'      => 'ARRAY',
+                            'p_unitario'    => 'ARRAY',
+                            'iva'           => 'ARRAY',
+                            'ieps'          => 'ARRAY');
+        $db	       = JFactory::getDbo();
+        $document   = JFactory::getDocument();
+        $this->app  = JFactory::getApplication();
+        $data       = $this->app->input->getArray($post);
+        $idOdv      = $data['idOdv'];
+        $save       = new sendToTimOne();
 
         $document->setMimeEncoding('application/json');
-        JResponse::setHeader('Content-Disposition','attachment; filename="result.json"');
 
-        foreach($diccionario as $key => $value){
-            $envio[$key] = $data[$key];
+        if($data['tab'] == 'seleccion'){
+            $respuesta['tab'] = 'ordenventa';
+        }
+        unset($data['idOdv']);
+        unset($data['tab']);
+        foreach ($data['producto'] as $indice => $valor) {
+            $productos = new stdClass();
+
+            $productos->name        = $data['producto'][$indice];
+            $productos->descripcion = $data['descripcion'][$indice];
+            $productos->cantidad    = $data['cantidad'][$indice];
+            $productos->unidad      = $data['unidad'][$indice];
+            $productos->p_unitario  = $data['p_unitario'][$indice];
+            $productos->iva         = $data['iva'][$indice];
+            $productos->ieps        = $data['ieps'][$indice];
+
+            $productosArray[]       = $productos;
         }
 
         foreach ($data as $key => $value) {
-            if(!is_bool(strpos($key, 'cantidad'))){
-                $cantidades[] = $value;
-                $diccionario[$key] = array('tipo' => 'number', 'length' => '6');
-            }
-            if(!is_bool(strpos($key, 'productos'))){
-                $productos[] = $value;
-                $diccionario[$key] = array('tipo' => 'number', 'length' => '6');
-            }
-            if(!is_bool(strpos($key, 'descripcion'))){
-                $descriptions[] = $value;
-                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '2500');
-            }
-            if(!is_bool(strpos($key, 'p_unitario'))){
-                $punitario[] = $value;
-                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '50');
-            }
-            if(!is_bool(strpos($key, 'unidad'))){
-                $unidades[] = $value;
-                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
-            }
-            if(!is_bool(strpos($key, 'iva'))){
-                $iva[] = $value;
-                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
-            }
-            if(!is_bool(strpos($key, 'ieps'))){
-                $ieps[] = $value;
-                $diccionario[$key] = array('tipo' => 'alphaNumber', 'length' => '60');
-            }
-
-        }
-
-        $resultValidacion  = $validacion->procesamiento($data, $diccionario);
-
-        foreach($resultValidacion as $value){
-            if(!is_bool($value)){
-                echo json_encode($resultValidacion);
-                return;
+            if( gettype($value) === 'array' ){
+                unset($data[$key]);
             }
         }
 
-        for($i = 0; $i < count($cantidades); $i++){
-            $obj = new stdClass();
+        $data['productos'] = json_encode($productosArray);
 
-            $obj->productos     = $productos[$i];
-            $obj->cantidades    = $cantidades[$i];
-            $obj->descripcion   = $descriptions[$i];
-            $obj->unidades      = $unidades[$i];
-            $obj->pUnitario     = $punitario[$i];
-            $obj->iva           = $iva[$i];
-            $obj->ieps          = $ieps[$i];
-
-            $odv[]= $obj;
+        foreach ($data as $key => $value) {
+            $columnas[] = $key;
+            $valores[]  = $db->quote($value);
+            $update[]   = $db->quoteName($key).' = '.$db->quote($value);
         }
-        if($data['tab'] == 'ordenVenta'){
-            $envio['redirect'] = true;
-            $envio['url'] = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId=1&odvnum=1');
+
+        if($idOdv === 0){
+            $query 	= $db->getQuery(true);
+            $query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
+
+            try {
+                $db->setQuery($query);
+                $results = $db->loadColumn();
+            }catch (Exception $e){
+                var_dump($e->getMessage());
+                exit;
+            }
+            $columnas[] = 'created';
+            $valores[]  = $results[0];
+            $save->insertDB('ordenes_venta', $columnas, $valores);
+
+            $idOdv = $db->insertid();
         }else{
-            $envio['redirect'] = false;
+            $save->updateDB('ordenes_venta',$update,$db->quoteName('idOdv').' = '.$db->quote($idOdv));
         }
-        $envio['odv'] = json_encode($odv);
 
-        echo json_encode($envio);
+        $strIdodv = ''.$idOdv.'';
+        $numOrden = str_pad($strIdodv,6,'0',STR_PAD_LEFT);
+
+
+        $respuesta['success']  = true;
+        $respuesta['idOdv']    = $idOdv;
+        $respuesta['numOrden'] = $numOrden;
+
+        echo json_encode($respuesta);
     }
 }

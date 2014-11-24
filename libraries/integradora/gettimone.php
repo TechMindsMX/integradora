@@ -79,7 +79,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getClientes($userId = null){
+    public static function getClientes($userId = null, $type = 2){
         $db       = JFactory::getDbo();
         $query    = $db->getQuery(true);
 
@@ -107,7 +107,6 @@ class getFromTimOne{
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
-
                     $value->rfc = $general->rfc;
                     $value->tradeName = $general->tradeName;
                     $value->corporateName = $general->corporateName;
@@ -185,6 +184,22 @@ class getFromTimOne{
                 $value->contacto    = $contacto;
             }
             $response = $listAllCliPro;
+        }
+
+        if($type == 0){
+            foreach ($response as $value) {
+                if($value->type == $type){
+                    $clientes[] = $value;
+                }
+            }
+            $response = $clientes;
+        }elseif($type == 1){
+            foreach ($response as $value) {
+                if($value->type == $type){
+                    $proveedores[] = $value;
+                }
+            }
+            $response = $proveedores;
         }
 
         return $response;
@@ -347,7 +362,7 @@ class getFromTimOne{
         $ordenes->numOrden          = 1;
         $ordenes->created           = 1408632474029;
         $ordenes->payment			= 1428632474029;
-        $ordenes->totalAmount        = 10000;
+        $ordenes->totalAmount       = 10000;
         $ordenes->currency        	= 'MXN';
         $ordenes->paymentType		= 0;
         $ordenes->status            = 0;
@@ -479,112 +494,122 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getOrdenesVenta($integradoId = null) {
-        $respuesta = null;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id                = 1;
-        $ordenes->integradoId       = 1;
-        $ordenes->numOrden          = 1;
-        $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 2;
-        $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalAmount        = 10000;
-        $ordenes->currency        	= 'MXN';
-        $ordenes->status            = 0;
-	    $ordenes->ieps				= .1;
-	    $ordenes->iva				= .16;
-        $ordenes->paymentType       = 1;
-        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-
-        $array[] = $ordenes;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id                = 2;
-        $ordenes->integradoId       = 1;
-        $ordenes->numOrden          = 2;
-        $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 4;
-        $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalAmount        = 10000;
-        $ordenes->currency        	= 'MXN';
-        $ordenes->status            = 0;
-	    $ordenes->ieps				= .1;
-	    $ordenes->iva				= .16;
-        $ordenes->paymentType       = 1;
-        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-
-        $array[] = $ordenes;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id                = 3;
-        $ordenes->integradoId       = 1;
-        $ordenes->numOrden          = 3;
-        $ordenes->proyectId         = 1;
-        $ordenes->clientId          = 6;
-        $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalAmount        = 10000;
-        $ordenes->currency        	= 'MXN';
-        $ordenes->status            = 1;
-	    $ordenes->ieps				= .1;
-	    $ordenes->iva				= .16;
-        $ordenes->paymentType       = 1;
-        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-
-        $array[] = $ordenes;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id                = 6;
-        $ordenes->integradoId       = 2;
-        $ordenes->numOrden          = 6;
-        $ordenes->proyectId         = 2;
-        $ordenes->clientId          = 1;
-        $ordenes->created           = 1408632474029;
-        $ordenes->payment			= 1428632474029;
-        $ordenes->totalAmount        = 10000;
-        $ordenes->currency        	= 'MXN';
-        $ordenes->status            = 0;
-	    $ordenes->ieps				= .1;
-	    $ordenes->iva				= .16;
-        $ordenes->paymentType       = 1;
-        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-
-        $array[] = $ordenes;
-
-        foreach ($array as $key => $value) {
-            if($integradoId == $value->integradoId){
-                self::convierteFechas($value);
-                $respuesta[] = $value;
-            } elseif ( $integradoId === null) {
-	            self::convierteFechas($value);
-	            $respuesta[] = $value;
-            }
+    public static function getOrdenesVenta($integradoId = null, $numOrden = null) {
+        if(is_null($numOrden)){
+            $where = 'integradoId = '.$integradoId;
+        }else{
+            $where = 'idOdv = '.$numOrden;
         }
 
-        return $respuesta;
+        $ordenes = self::selectDB('ordenes_venta', $where);
+
+        return $ordenes;
+
+//        $respuesta = null;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->idOdv             = 1;
+//        $ordenes->integradoId       = 1;
+//        $ordenes->numOrden          = 1;
+//        $ordenes->proyectId         = 1;
+//        $ordenes->clientId          = 2;
+//        $ordenes->created           = 1408632474029;
+//        $ordenes->payment			= 1428632474029;
+//        $ordenes->totalAmount        = 10000;
+//        $ordenes->currency        	= 'MXN';
+//        $ordenes->status            = 0;
+//	    $ordenes->ieps				= .1;
+//	    $ordenes->iva				= .16;
+//        $ordenes->paymentType       = 1;
+//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id                = 2;
+//        $ordenes->integradoId       = 1;
+//        $ordenes->numOrden          = 2;
+//        $ordenes->proyectId         = 1;
+//        $ordenes->clientId          = 4;
+//        $ordenes->created           = 1408632474029;
+//        $ordenes->payment			= 1428632474029;
+//        $ordenes->totalAmount        = 10000;
+//        $ordenes->currency        	= 'MXN';
+//        $ordenes->status            = 0;
+//	    $ordenes->ieps				= .1;
+//	    $ordenes->iva				= .16;
+//        $ordenes->paymentType       = 1;
+//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id                = 3;
+//        $ordenes->integradoId       = 1;
+//        $ordenes->numOrden          = 3;
+//        $ordenes->proyectId         = 1;
+//        $ordenes->clientId          = 6;
+//        $ordenes->created           = 1408632474029;
+//        $ordenes->payment			= 1428632474029;
+//        $ordenes->totalAmount        = 10000;
+//        $ordenes->currency        	= 'MXN';
+//        $ordenes->status            = 1;
+//	    $ordenes->ieps				= .1;
+//	    $ordenes->iva				= .16;
+//        $ordenes->paymentType       = 1;
+//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id                = 6;
+//        $ordenes->integradoId       = 2;
+//        $ordenes->numOrden          = 6;
+//        $ordenes->proyectId         = 2;
+//        $ordenes->clientId          = 1;
+//        $ordenes->created           = 1408632474029;
+//        $ordenes->payment			= 1428632474029;
+//        $ordenes->totalAmount        = 10000;
+//        $ordenes->currency        	= 'MXN';
+//        $ordenes->status            = 0;
+//	    $ordenes->ieps				= .1;
+//	    $ordenes->iva				= .16;
+//        $ordenes->paymentType       = 1;
+//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//
+//        $array[] = $ordenes;
+//
+//        foreach ($array as $key => $value) {
+//            if($integradoId == $value->integradoId){
+//                self::convierteFechas($value);
+//                $respuesta[] = $value;
+//            } elseif ( $integradoId === null) {
+//	            self::convierteFechas($value);
+//	            $respuesta[] = $value;
+//            }
+//        }
+//
+//        return $respuesta;
 
     }
 
@@ -1841,7 +1866,7 @@ class getFromTimOne{
         foreach ($objeto as $key => $value) {
             if($key == 'created' || $key == 'payment'){
                 $objeto->fechaNumero = $value;
-                $objeto->$key = date('d-m-Y', ($value/1000) );
+                $objeto->$key = date('d-m-Y', ($value) );
             }
         }
 
@@ -2009,6 +2034,7 @@ class sendToTimOne {
     public function insertDB($tabla, $columnas, $valores){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
+
         $query->insert($db->quoteName('#__'.$tabla))
             ->columns($db->quoteName($columnas))
             ->values(implode(',',$valores));
@@ -2017,7 +2043,7 @@ class sendToTimOne {
             $db->setQuery($query);
             $db->execute();
         }catch (Exception $e){
-            var_dump($e->getMessage());
+            echo $e->getMessage();
             exit;
         }
 

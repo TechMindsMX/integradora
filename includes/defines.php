@@ -28,13 +28,6 @@ $puertoTimOne =  "";
 $controllerTimOne =  "/timone/services/";
 $hostname = $middle.$puertoTimOne.$controllerTimOne;
 
-$connection = @fsockopen($hostname);
-
-if (!is_resource($connection)){
-	$puertoTimOne =  ":7272";	
-	$controllerTimOne =  "/trama-middleware/rest/";
-}
-
 define("MIDDLE", 'http://'.$middle);
 define("PUERTO", $puertoTimOne);
 define("TIMONE", $controllerTimOne);

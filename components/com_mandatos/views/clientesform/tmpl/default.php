@@ -228,12 +228,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			});
 			jQuery('#de_cod_postal').trigger('click');
 		}
-		
-//		if(objeto.datos_bancarios != null){
-//			jQuery.each(objeto.datos_bancarios, function(key,value){
-//				jQuery('#db_'+key).val(value);
-//			});
-//		}
 	}
 
     function saveCliente(){
@@ -297,7 +291,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			<label><input type="radio" name="tp_tipo_alta" id="tipoAlta2" value="2" ><?php echo JText::_('LBL_AMBOS'); ?></label>
 		</div>
 		
-		<div id="monto" class="form-inline" <?php echo $datos->type==0?'style="display:none"':''; ?>>
+		<div id="monto" class="form-inline" >
 			<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label>
 			<input type="text" name="tp_monto" id="tp_monto" />
 		</div>

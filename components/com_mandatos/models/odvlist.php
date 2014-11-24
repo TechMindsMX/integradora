@@ -25,7 +25,31 @@ class MandatosModelOdvlist extends JModelItem {
 	public function getOrdenes($integradoId = null){
         $listado = getFromTimOne::getOrdenesVenta($this->integradoId);
 
+        foreach ($listado as $key => $value) {
+            $strIdodv = ''.$value->idOdv.'';
+            getFromTimOne::convierteFechas($value);
+            $value->productos = json_decode($value->productos);
+
+            $value->totalAmount = $this->getTotalAmount($value->productos);
+            $value->numOrden = str_pad($strIdodv,6,'0',STR_PAD_LEFT);
+        }
+
         return $listado;
+    }
+
+    public function getTotalAmount($productos){
+        $total = 0;
+        $totalAmount = 0;
+
+        foreach ($productos as $producto) {
+            $total = ($producto->cantidad*$producto->p_unitario);
+            $montoIva = $total*($producto->iva/100);
+            $montoIeps = $total*($producto->ieps/100);
+
+            $totalAmount = $total+$montoIva+$montoIeps+$totalAmount;
+        }
+
+        return $totalAmount;
     }
 }
 ?>
