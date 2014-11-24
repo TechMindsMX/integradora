@@ -159,7 +159,7 @@ class Integrado {
 		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
 		if(is_null($perm_level)) {
 			$app = JFactory::getApplication();
-			$app->redirect(JRoute::_('index.php'), JText::_('LBL_SECURITY_PROBLEM'), 'error');
+			$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
 		}
 
 		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );

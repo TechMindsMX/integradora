@@ -1992,6 +1992,43 @@ class sendToTimOne {
 		$this->setHttpType('GET');
 	}
 
+    public function getNextOrderNumber($tipo, $integrado){
+        $db		= JFactory::getDbo();
+
+        switch($tipo){
+            case 'odd':
+                $table = 'ordenes_deposito';
+                break;
+            case 'odv':
+                $table = 'ordenes_venta';
+                break;
+        }
+
+        $where = $db->quoteName('integradoId').' = '.$integrado;
+
+        $query 	= $db->getQuery(true);
+
+            $query->select('max(numOrden) AS lastOrderNum')
+                ->from($db->quoteName('#__'.$table))
+                ->where($where);
+
+        $db->setQuery($query);
+        $resultado = $db->loadObject();
+
+        $respuesta = is_null($resultado->lastOrderNum)?1:$resultado->lastOrderNum+1;
+
+        return $respuesta;
+    }
+
+    public function formatData($arreglo){
+        $db		= JFactory::getDbo();
+        foreach ($arreglo as $key => $value) {
+            $this->columnas[] = $key;
+            $this->valores[] = $db->quote($value);
+            $this->update[] = $db->quoteName($key).' = '.$db->quote($value);
+        }
+    }
+
     public function saveProyect($data){
         $db		= JFactory::getDbo();
         foreach ($data as $key => $value) {
@@ -2031,7 +2068,10 @@ class sendToTimOne {
         $this->updateDB('integrado_products', $columnas, $condicion);
     }
 
-    public function insertDB($tabla, $columnas, $valores){
+    public function insertDB($tabla, $columnas=null, $valores=null){
+        $columnas = is_null($columnas)?$this->columnas:$columnas;
+        $valores = is_null($valores)?$this->valores:$valores;
+
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
@@ -2042,11 +2082,13 @@ class sendToTimOne {
         try{
             $db->setQuery($query);
             $db->execute();
+            $return = true;
         }catch (Exception $e){
             echo $e->getMessage();
-            exit;
+            $return = false;
         }
 
+        return $return;
     }
 
     public function updateDB($table, $columnas, $condicion){

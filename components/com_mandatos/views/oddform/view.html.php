@@ -12,9 +12,14 @@ class MandatosViewOddform extends JViewLegacy {
 		$this->odd		 	= $this->get('orden');
         $this->actionUrl    = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'&confirmacion=1'):'#';
         $this->datos        = $data;
-        if(!empty($_FILES)){
-            $this->file['name'] = $_FILES['proof']['name'];
-            $this->file['ruta'] = manejoImagenes::cargar_imagen('image/jpeg', $this->integradoId, $_FILES['proof'], 'proof');
+
+        if(isset($_FILES['attachment']['size'])){
+            if($_FILES['attachment']['size'] != 0) {
+                $this->file['name'] = $_FILES['attachment']['name'];
+                $this->file['ruta'] = manejoImagenes::cargar_imagen('image/jpeg', $this->integradoId, $_FILES['attachment'], 'odd_attachment');
+            }else{
+                $this->file['name'] = '';
+            }   $this->file['ruta'] = '';
         }
 
 
