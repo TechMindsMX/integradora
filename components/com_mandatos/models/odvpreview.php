@@ -20,23 +20,27 @@ class MandatosModelOdvpreview extends JModelItem {
 
 		foreach ($odvs as $key => $value) {
 			$subTotalOrden = 0;
-			if ($value->id == $this->inputVars['odvnum'] ) {
-				foreach ( $value->productos as $producto ) {
-					$subTotalOrden = $subTotalOrden + $producto['cantidad'] * $producto['pUnitario'];
+			if ($value->idOdv == $this->inputVars['odvnum'] ) {
+                $value->productos = json_decode($value->productos);
+				foreach ($value->productos  as $producto ) {
+					$subTotalOrden = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
 				}
 				$value->totalAmount = $subTotalOrden;
 				$this->odv = $value;
 			}
 		}
+        $this->odv->iva = .16;
+        $this->odv->ieps = 0;
+        $this->odv->observaciones  = '';
 
 		// Verifica si la ODV exite para el integrado o redirecciona
 		if (is_null($this->odv)){
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODV_INVALID'), 'error');
 		}
 
-		$this->getProyectFromId($this->odv->proyectId);
+		$this->getProyectFromId($this->odv->projectId);
 
-		$this->getProviderFromID($this->odv->clientId);
+		$this->getClientFromID($this->odv->clientId);
 
 		return $this->odv;
 	}
@@ -45,9 +49,9 @@ class MandatosModelOdvpreview extends JModelItem {
 
 		$proyectos = getFromTimOne::getProyects($this->inputVars['integradoId']);
 
-		// datos del proyecto y subproyecto involucrrado
+			// datos del proyecto y subproyecto involucrrado
 		foreach ( $proyectos as $key => $proy) {
-			$proyKeyId[$proy->id] = $proy;
+			$proyKeyId[$proy->id_proyecto] = $proy;
 		}
 
 		if(array_key_exists($proyId, $proyKeyId)) {
@@ -62,13 +66,13 @@ class MandatosModelOdvpreview extends JModelItem {
 		}
 	}
 
-	public function getProviderFromID($providerId){
+	public function getClientFromID($providerId){
 		$proveedores = array();
 
 		$clientes = getFromTimOne::getClientes($this->inputVars['integradoId']);
 
 		foreach ($clientes as $key => $value) {
-			if($value->type == 1){
+			if($value->type == 0){
 				$proveedores[$value->id] = $value;
 			}
 		}

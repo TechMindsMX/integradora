@@ -17,12 +17,13 @@ $integrado 	= $this->integCurrent->integrados[0];
 $number2word = new AifLibNumber();
 
 echo $this->printBtn;
+var_dump($this);
 ?>
 
 <div id="odv_preview">
 <div class="clearfix" id="logo">
 	<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-	<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odv->id; ?></h3>
+	<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odv->idOdv; ?></h3>
 </div>
 
 <h1><?php echo JText::_('LBL_ORDEN_DE_VENTA'); ?></h1>
@@ -67,7 +68,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->paymentType; ?>
+			<?php echo $this->odv->paymentMethod; ?>
 		</div>
 	</div>
 	<div>
@@ -75,7 +76,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_MONEDA'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->currency; ?>
+			<?php echo isset($this->odv->currency)?$this->odv->currency:'MXN'; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
@@ -147,14 +148,14 @@ echo $this->printBtn;
 			?>
 			<tr>
 				<td><?php echo $key; ?></td>
-				<td><?php echo $prod['cantidad']; ?></td>
-				<td><?php echo $prod['descripcion']; ?></td>
-				<td><?php echo $prod['unidad']; ?></td>
+				<td><?php echo $prod->cantidad; ?></td>
+				<td><?php echo $prod->descripcion; ?></td>
+				<td><?php echo $prod->unidad; ?></td>
 				<td><div class="text-right">
-						<?php echo number_format($prod['pUnitario'],2); ?>
+						<?php echo number_format($prod->p_unitario,2); ?>
 					</div></td>
 				<td><div class="text-right">
-						<?php echo number_format(floatval($prod['cantidad']) * floatval($prod['pUnitario']),2); ?>
+						<?php echo number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2); ?>
 					</div></td>
 			</tr>
 		<?php
