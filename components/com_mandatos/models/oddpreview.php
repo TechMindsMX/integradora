@@ -22,16 +22,11 @@ class MandatosModelOddpreview extends JModelItem {
 	}
 	
 	public function getOrdenes(){
-
 		if (!isset($odds)) {
-			$odds = getFromTimOne::getOrdenesDeposito($this->inputVars['integradoId']);
+			$odd = getFromTimOne::getOrdenesDeposito($this->inputVars['integradoId'], $this->inputVars['oddnum']);
 		}
 
-		foreach ($odds as $key => $value) {
-			if ($value->idOdd == $this->inputVars['oddnum'] ) {
-				$this->odd = $value;
-			}
-		}
+		$this->odd = $odd;
 
 		// Verifica si la ODD exite para el integrado o redirecciona
 		if (is_null($this->odd)){

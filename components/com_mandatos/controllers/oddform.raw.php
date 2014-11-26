@@ -17,11 +17,7 @@ class MandatosControllerOddform extends JControllerLegacy {
 
         unset($datos->view, $datos->option, $datos->Itemid, $datos->confirmacion);
 
-        $datos->createdDate = time();
-
-        $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
-
-        $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $datos->integradoId);
+        $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $datos->integradoId);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -32,8 +28,14 @@ class MandatosControllerOddform extends JControllerLegacy {
         }
 
         $save->formatData($datos);
-        $salvado = $save->insertDB('ordenes_deposito');
 
+        if($datos->idOdd == '') {
+            $datos->createdDate = time();
+            $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
+            $salvado = $save->insertDB('ordenes_deposito');
+        }else{
+            $salvado = $save->updateDB('ordenes_deposito', null,'idOdd = '.$datos->idOdd);
+        }
         if($salvado) {
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&integradoId=' . $datos->integradoId . '&oddnum=' . $datos->numOrden.'&success=true',
                 'redireccion' => true);

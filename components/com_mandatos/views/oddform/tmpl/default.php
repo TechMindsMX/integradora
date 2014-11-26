@@ -63,29 +63,33 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         }
     </script>
 <?php
+$datos = $this->datos;
 if(!$this->confirmacion){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
     <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="idOdd" id="idOdd" value="<?php echo $datos->idOdd; ?>" />
+        <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
+
         <div class="form-group">
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
-                <option value="0"><?php echo JText::_('LBL_SPEI'); ?></option>
-                <option value="1"><?php echo JText::_('LBL_CHEQUE'); ?></option>
+                <option value="0" <?php echo $datos->paymentMethod==0?'selected':''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
+                <option value="1" <?php echo $datos->paymentMethod==1?'selected':''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_DEPOSIT_DATE'); ?></label>
             <?php
-            $default = date('Y-m-d');
+            $default = $datos->paymentDate!=''?$datos->paymentDate:date('Y-m-d');
             echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
             ?>
         </div>
 
         <div class="form-group">
             <label for="totalAmount"><?php echo JText::_('LBL_AMOUNT_DEPOSITED'); ?></label>
-            <input type="text" name="totalAmount" id="totalAmount" />
+            <input type="text" name="totalAmount" id="totalAmount" value="<?php echo $datos->totalAmount; ?>"/>
         </div>
 
         <div class="form-group">
@@ -102,7 +106,6 @@ if(!$this->confirmacion){
     </form>
 <?php
 }else{
-    $datos = $this->datos;
     $archivo = $this->file;
     $datos['attachment'] = $archivo['ruta'];
     $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
@@ -142,6 +145,7 @@ if(!$this->confirmacion){
 
     <div class="form-group">
         <form id="oddform" method="post" action="index.php?option=com_mandatos&view=oddform&integradoId=<?php echo $this->integradoId; ?>&task=oddform.saveODD">
+
             <input type="hidden" value='<?php echo json_encode($datos); ?>' name="datos" />
             <input type="button" class="btn btn-primary" id="envio" value="<?php echo JText::_('LBL_ENVIAR'); ?>">
             <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />

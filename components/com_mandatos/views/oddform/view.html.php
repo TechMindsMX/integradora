@@ -28,7 +28,19 @@ class MandatosViewOddform extends JViewLegacy {
             $this->datos        = $data;
         }else{
             $this->confirmacion = false;
-            $this->datos        = null;
+            if( isset($data['oddnum']) ) {
+                $this->datos = $this->odd;
+            }else{
+                $datos = new stdClass();
+
+                $datos->idOdd = '';
+                $datos->paymentDate = '';
+                $datos->totalAmount = '';
+                $datos->paymentMethod = '';
+                $datos->attachment = '';
+
+                $this->datos = $datos;
+            }
         }
 
         if (count($errors = $this->get('Errors'))) {

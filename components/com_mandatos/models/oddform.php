@@ -12,23 +12,11 @@ class MandatosModelOddform extends JModelItem {
     protected $dataModelo;
 
     public function getOrden($integradoId = null){
-        $integrado 	    = new Integrado;
-        $currUser	    = Jfactory::getUser();
         $data 		    = JFactory::getApplication()->input->getArray();
         $integradoId    = $data['integradoId'];
         $oddNum         = isset($data['oddnum'])?$data['oddnum']:null;
-        $datos          = null;
-        $listado        = getFromTimOne::getOrdenesCompra($integradoId);
+        $listado        = getFromTimOne::getOrdenesDeposito($integradoId, $oddNum);
 
-        if(!is_null($oddNum)){
-            foreach($listado as $key => $value){
-                if($oddNum == $value->id){
-                    $datos = $value;
-                }
-            }
-        }
-
-
-        return $datos;
+        return $listado;
     }
 }

@@ -2,6 +2,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
+jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
@@ -12,6 +13,8 @@ $app 		= JFactory::getApplication();
 $params 	= $app->input->getArray();
 
 $integrado 	= $this->integCurrent->integrados[0];
+
+$number2string = new AifLibNumber();
 
        // $isModal = $app->input->get('print') == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
         // if( $isModal) {
@@ -114,7 +117,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 			<tbody>
 				<tr>
 					<td><?php echo '$ '.number_format($this->odd->totalAmount,2). ' ' . $this->odd->currency; ?></td>
-					<td><?php echo '$ '.number_format($this->odd->totalAmount,2). ' ' . $this->odd->currency; ?></td>
+					<td><?php echo $number2string->toCurrency('$ '.number_format($this->odd->totalAmount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>
@@ -122,9 +125,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 			<div>
 				<?php echo JText::_('LBL_OBSERVACIONES'); ?>
 			</div>
-			<div>
-				<?php echo '';//$this->odd->observaciones; ?>
-			</div>
+
 		</div>
 		<div id="footer">
 			<div class="container">

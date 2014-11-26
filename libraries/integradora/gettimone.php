@@ -360,153 +360,28 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getOrdenesDeposito($integradoId = null){
-        $listado = self::selectDB('ordenes_deposito', 'integradoId = '.$integradoId);
+    public static function getOrdenesDeposito($integradoId = null, $oddnum = null){
+        if( !is_null($integradoId) && is_null($oddnum) ){
+            $where = 'integradoId = '.$integradoId;
+        }elseif( is_null($integradoId) && !is_null($oddnum) ){
+            $where = 'integradoId = '.$integradoId.' AND $idOdd = '.$oddnum;
+        }elseif( is_null($integradoId) && is_null($oddnum) ){
+            $where = null;
+        }elseif( !is_null($integradoId) && !is_null($oddnum) ){
+            $where = 'integradoId = '.$integradoId.' AND idOdd = '.$oddnum;
+        }
 
-        foreach ($listado as $orden) {
-            self::convierteFechas($orden);
+        $listado = self::selectDB('ordenes_deposito', $where);
+
+        if(count($listado) == 1){
+            self::convierteFechas($listado);
+        }else {
+            foreach ($listado as $orden) {
+                self::convierteFechas($orden);
+            }
         }
 
         return $listado;
-
-
-//        $respuesta                  = null;
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 1;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 1;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount       = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 2;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 2;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 1;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 3;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 3;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 4;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 4;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 5;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 5;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 6;
-//        $ordenes->integradoId       = 2;
-//        $ordenes->numOrden          = 6;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 7;
-//        $ordenes->integradoId       = 2;
-//        $ordenes->numOrden          = 7;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 8;
-//        $ordenes->integradoId       = 2;
-//        $ordenes->numOrden          = 8;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 9;
-//        $ordenes->integradoId       = 2;
-//        $ordenes->numOrden          = 9;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->paymentType		= 0;
-//        $ordenes->status            = 0;
-//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-//
-//        $array[] = $ordenes;
-//
-//        foreach ($array as $key => $value) {
-//            if($integradoId == $value->integradoId){
-//                self::convierteFechas($value);
-//                $respuesta[] = $value;
-//            }else{
-//                self::convierteFechas($value);
-//                $respuesta[] = $value;
-//            }
-//        }
-//        return $respuesta;
     }
 
     public static function getOrdenesVenta($integradoId = null, $numOrden = null) {
@@ -1938,7 +1813,7 @@ class sendToTimOne {
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
-            $this->update[] = $db->quoteName($key).' = '.$db->quote($value);
+            $this->condicion[] = $db->quoteName($key).' = '.$db->quote($value);
         }
     }
 
@@ -2004,7 +1879,9 @@ class sendToTimOne {
         return $return;
     }
 
-    public function updateDB($table, $columnas, $condicion){
+    public function updateDB($table, $columnas=null, $condicion=null){
+        $columnas = is_null($columnas)?$this->condicion:$columnas;
+
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
@@ -2012,8 +1889,16 @@ class sendToTimOne {
             ->set(implode(',', $columnas))
             ->where($condicion);
 
-        $db->setQuery($query);
-        $db->execute();
+        try {
+            $db->setQuery($query);
+            $db->execute();
+            $return = true;
+        }catch (Exception $e){
+            echo $e->getMessage();
+            $return = false;
+        }
+
+        return $return;
     }
 
     public function deleteDB($table, $condicion){
