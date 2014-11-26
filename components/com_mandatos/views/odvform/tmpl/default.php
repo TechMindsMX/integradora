@@ -58,10 +58,10 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         var montoIva    = 0;
         var montoIeps   = 0;
 
-        cantidad        = isNaN(cantidad)?0:parseInt(cantidad);
-        precio          = isNaN(precio)?0:parseFloat(precio);
-        iva             = isNaN(iva)?0:parseFloat(iva);
-        ieps            = isNaN(ieps)?0:parseFloat(ieps);
+        cantidad        = isNaN(parseFloat(cantidad))?0:parseFloat(cantidad);
+        precio          = isNaN(parseFloat(precio))?0:parseFloat(precio);
+        iva             = isNaN(parseFloat(iva))?0:parseFloat(iva);
+        ieps            = isNaN(parseFloat(ieps))?0:parseFloat(ieps);
 
         console.log(cantidad, precio,iva,ieps);
 
@@ -75,17 +75,12 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     }
 
     function addrow(){
-        var typeaHead = jQuery('.typeahead');
-
         nextinput++;
         jQuery("#contenidos" ).attr('id','content'+nextinput+'');
 
         jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
         jQuery("#content"+nextinput+"").attr('id','contenidos');
-        jQuery("#content"+nextinput+"").find("input:text").val(0);
-        jQuery("#content"+nextinput+"").find('input:text.productos').val("");
-        jQuery("#content"+nextinput+"").find('input:text[id*="descripcion"]').val("");
-        jQuery("#content"+nextinput+"").find('input:text[id*="unidad"]').val("");
+        jQuery("#content"+nextinput+"").find("input:text").val("");
         jQuery("#content"+nextinput+"").find("#subtotal").html("");
         jQuery("#content"+nextinput+"").find("#total").html("");
 
@@ -102,8 +97,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             jQuery(v).prop('id', nameCampoI+nextinput);
         });
 
-        typeaHead.trigger('added');
-        typeaHead.typeahead(typeaheadSettings);
+        jQuery('.typeahead').trigger('added');
+        jQuery('.typeahead').typeahead(typeaheadSettings);
         jQuery('.productos').on('focusout', llenatabla);
         jQuery('.cantidad').on('change', sum);
         jQuery('.iva').on('change',sum);
@@ -197,7 +192,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 </script>
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
-    <h3>Número de Orden de Venta: <span id="numOrden"></span></h3>
+    <h1>Generación de Orden de Venta</h1>
+    <h3>Número de Orden: <span id="numOrden"></span></h3>
 
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
     <input type="hidden" name="idOdv" id="idOdv" value="" />
