@@ -17,7 +17,6 @@ $integrado 	= $this->integCurrent->integrados[0];
 $number2word = new AifLibNumber();
 
 echo $this->printBtn;
-var_dump($this);
 ?>
 
 <div id="odv_preview">
@@ -162,22 +161,30 @@ var_dump($this);
 		endforeach;
 		?>
 		<tr>
-			<td colspan="4" rowspan="3">
-				<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odv->totalAmount + ($this->odv->totalAmount * $this->odv->iva), 2)); ?></span>
+			<td colspan="4" rowspan="4">
+				<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odv->totalAmount, 2)); ?></span>
 			</td>
 			<td class="span2">
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->totalAmount,2); ?>
+					<?php echo number_format($this->odv->subTotalAmount,2); ?>
 				</div></td>
 		</tr>
 		<tr>
 			<td class="span2">
-				<?php echo ($this->odv->iva * 100).'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
+				<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->totalAmount * $this->odv->iva, 2); ?>
+					<?php echo number_format($this->odv->iva, 2); ?>
+				</div></td>
+		</tr>
+		<tr>
+			<td class="span2">
+				<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>
+			</td>
+			<td><div class="text-right">
+					<?php echo number_format($this->odv->ieps, 2); ?>
 				</div></td>
 		</tr>
 		<tr>
@@ -185,19 +192,11 @@ var_dump($this);
 				<?php echo JText::_('LBL_TOTAL'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->totalAmount + ($this->odv->totalAmount * $this->odv->iva), 2); ?>
+					<?php echo number_format($this->odv->totalAmount, 2); ?>
 				</div></td>
 		</tr>
 		</tbody>
 	</table>
-	<div class="control-group" id="tabla-bottom">
-		<div>
-			<?php echo JText::_('LBL_OBSERVACIONES'); ?>
-		</div>
-		<div>
-			<?php echo $this->odv->observaciones; ?>
-		</div>
-	</div>
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">

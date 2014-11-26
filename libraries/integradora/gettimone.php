@@ -40,7 +40,11 @@ class getFromTimOne{
 
         try {
             $db->setQuery($query);
-            $results = $db->loadObjectList();
+	        if ($db->getNumRows($db->query()) == 1) {
+		        $results = $db->loadObject();
+	        } else {
+		        $results = $db->loadObjectList();
+	        }
         }catch (Exception $e){
             var_dump($e);
             exit;

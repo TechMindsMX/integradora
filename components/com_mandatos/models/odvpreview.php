@@ -14,24 +14,26 @@ class MandatosModelOdvpreview extends JModelItem {
 
 	public function getOrdenes(){
 
-		if (!isset($odvs)) {
-			$odvs = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId']);
+		if (!isset($odv)) {
+			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['odvnum']);
 		}
 
-		foreach ($odvs as $key => $value) {
-			$subTotalOrden = 0;
-			if ($value->idOdv == $this->inputVars['odvnum'] ) {
-                $value->productos = json_decode($value->productos);
-				foreach ($value->productos  as $producto ) {
-					$subTotalOrden = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
-				}
-				$value->totalAmount = $subTotalOrden;
-				$this->odv = $value;
-			}
+		$subTotalOrden = 0;
+		$subTotalIva = 0;
+		$subTotalIeps = 0;
+
+		$odv->productos = json_decode($odv->productos);
+		foreach ($odv->productos  as $producto ) {
+			$subTotalOrden = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
+			$subTotalIva = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+			$subTotalIeps = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
 		}
-        $this->odv->iva = .16;
-        $this->odv->ieps = 0;
-        $this->odv->observaciones  = '';
+		$odv->subTotalAmount = $subTotalOrden;
+		$odv->totalAmount = $subTotalOrden + $subTotalIva + $subTotalIeps;
+		$this->odv = $odv;
+
+		$this->odv->iva = $subTotalIva;
+        $this->odv->ieps = $subTotalIeps;
 
 		// Verifica si la ODV exite para el integrado o redirecciona
 		if (is_null($this->odv)){
