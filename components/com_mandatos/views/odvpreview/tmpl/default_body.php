@@ -147,14 +147,24 @@ echo $this->printBtn;
 			?>
 			<tr>
 				<td><?php echo $key; ?></td>
-				<td><?php echo $prod->cantidad; ?></td>
-				<td><?php echo $prod->descripcion; ?></td>
-				<td><?php echo $prod->unidad; ?></td>
+				<td><?php if ( ! empty( $prod->cantidad ) ) {
+						echo $prod->cantidad;
+					} ?></td>
+				<td><?php if ( ! empty( $prod->descripcion ) ) {
+						echo $prod->descripcion;
+					} ?></td>
+				<td><?php if ( ! empty( $prod ) ) {
+						echo $prod->unidad;
+					} ?></td>
 				<td><div class="text-right">
-						<?php echo number_format($prod->p_unitario,2); ?>
+						<?php if ( ! empty( $prod->p_unitario ) ) {
+							echo number_format($prod->p_unitario,2);
+						} ?>
 					</div></td>
 				<td><div class="text-right">
-						<?php echo number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2); ?>
+						<?php if ( ! empty( $prod->cantidad ) ) {
+							echo number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2);
+						} ?>
 					</div></td>
 			</tr>
 		<?php
