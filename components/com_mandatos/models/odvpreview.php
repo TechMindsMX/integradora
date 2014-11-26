@@ -5,8 +5,7 @@ class MandatosModelOdvpreview extends JModelItem {
 
 	public $odv;
 
-	public function __construct()
-	{
+	public function __construct(){
 		$this->inputVars 		 = JFactory::getApplication()->input->getArray();
 
 		parent::__construct();
@@ -18,35 +17,36 @@ class MandatosModelOdvpreview extends JModelItem {
 			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['odvnum']);
 		}
 
-		$subTotalOrden = 0;
-		$subTotalIva = 0;
-		$subTotalIeps = 0;
-
+		$subTotalOrden  = 0;
+		$subTotalIva    = 0;
+		$subTotalIeps   = 0;
 		$odv->productos = json_decode($odv->productos);
-		foreach ($odv->productos  as $producto ) {
-			$subTotalOrden = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
-			$subTotalIva = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
-			$subTotalIeps = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
-		}
-		$odv->subTotalAmount = $subTotalOrden;
-		$odv->totalAmount = $subTotalOrden + $subTotalIva + $subTotalIeps;
-		$this->odv = $odv;
 
-		$this->odv->iva = $subTotalIva;
-        $this->odv->ieps = $subTotalIeps;
+		foreach ($odv->productos  as $producto ) {
+			$subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
+			$subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+			$subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
+		}
+
+		$odv->subTotalAmount = $subTotalOrden;
+		$odv->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
+		$this->odv           = $odv;
+		$this->odv->iva      = $subTotalIva;
+        $this->odv->ieps     = $subTotalIeps;
 
 		// Verifica si la ODV exite para el integrado o redirecciona
 		if (is_null($this->odv)){
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODV_INVALID'), 'error');
 		}
 
+        $odv->account = getFromTimOne::selectDB('integrado_datos_bancarios', 'datosBan_id = '.$odv->account);
 		$this->getProyectFromId($this->odv->projectId);
-
 		$this->getClientFromID($this->odv->clientId);
 
 		return $this->odv;
 	}
-	public function getProyectFromId($proyId){
+
+    public function getProyectFromId($proyId){
 		$proyKeyId = array();
 
 		$proyectos = getFromTimOne::getProyects($this->inputVars['integradoId']);

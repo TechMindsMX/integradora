@@ -9,14 +9,17 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+$orden = $this->orden;
+$productosOrden = json_decode($orden->productos);
 ?>
+<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+
 <script>
     var productsTypeahead   = new Array();
     <?php
-    foreach ($this->products as $key => $value) {
-        echo 'productsTypeahead['.$key.'] = "'.$value->productName.'";'."\n";
-    }
+        foreach ($this->products as $key => $value) {
+            echo 'productsTypeahead['.$key.'] = "'.$value->productName.'";'."\n";
+        }
     ?>
     var subprojects     = <?php echo json_encode($this->proyectos['subproyectos']);?>;
     var global_var      = 0;
@@ -45,6 +48,16 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         jQuery.each(arrayProd, function (key, value) {
             jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
         });
+
+        <?php
+       if($orden->projectId != ''){
+       ?>
+        jQuery('#project').trigger('change');
+        jQuery('.cantidad').trigger('change');
+        jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
+        <?php
+        }
+        ?>
     });
 
     function sum(){
@@ -63,8 +76,6 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         iva             = isNaN(parseFloat(iva))?0:parseFloat(iva);
         ieps            = isNaN(parseFloat(ieps))?0:parseFloat(ieps);
 
-        console.log(cantidad, precio,iva,ieps);
-
         subtotal = precio*cantidad;
         montoIeps = subtotal*(ieps/100);
         montoIva = subtotal*(iva/100);
@@ -75,6 +86,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     }
 
     function addrow(){
+
         nextinput++;
         jQuery("#contenidos" ).attr('id','content'+nextinput+'');
 
@@ -193,10 +205,10 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
     <h1>Generación de Orden de Venta</h1>
-    <h3>Número de Orden: <span id="numOrden"></span></h3>
+    <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOdv; ?></span></h3>
 
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
-    <input type="hidden" name="idOdv" id="idOdv" value="" />
+    <input type="hidden" name="idOdv" id="idOdv" value="<?php echo $orden->idOdv ?>" />
     <?php
     echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
     echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
@@ -207,7 +219,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             <option value="0">Proyecto</option>
             <?php
             foreach ($this->proyectos['proyectos'] as $key => $value) {
-                echo '<option value="'.$value->id_proyecto.'">'.$value->name.'</option>';
+                $selected = $value->id_proyecto==$orden->projectId?'selected':'';
+                echo '<option value="'.$value->id_proyecto.'" '.$selected.'>'.$value->name.'</option>';
             }
             ?>
         </select>
@@ -220,7 +233,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             <option value="0">Cliente</option>
             <?php
             foreach ($this->clientes as $key => $value) {
-                echo '<option value="'.$value->id.'">'.$value->tradeName.'</option>';
+                $selectedCli = ($value->id==$orden->clientId)?'selected':'';
+                echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$value->tradeName.'</option>';
             }
             ?>
         </select>
@@ -237,34 +251,42 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     ?>
 
     <fieldset>
+        <?php
+        ?>
         <select name="account">
             <option value="0">Cuenta</option>
             <?php
-            foreach ($this->cuentas as $datosCuenta) {
-                echo '<option value="'.$datosCuenta->datosBan_id.'">'.$datosCuenta->banco_cuenta_xxx.'</option>';
+            if(count($this->cuentas) == 1){
+                echo '<option value="' . $this->cuentas->datosBan_id . '" selected>' . $this->cuentas->banco_cuenta_xxx . '</option>';
+            }else {
+                foreach ($this->cuentas as $datosCuenta) {
+                    $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
+                    echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
+                }
             }
             ?>
         </select>
 
         <select name="paymentMethod">
-            <option value="0">Método de pago</option>
-            <option value="1">Cheque</option>
-            <option value="2">Transferencia</option>
-            <option value="3">Efectivo</option>
-            <option value="4">No Definido</option>
+            <option value="0" <?php echo $orden->paymentMethod==0?'selected':''; ?>>Método de pago</option>
+            <option value="1" <?php echo $orden->paymentMethod==1?'selected':''; ?>>Cheque</option>
+            <option value="2" <?php echo $orden->paymentMethod==2?'selected':''; ?>>Transferencia</option>
+            <option value="3" <?php echo $orden->paymentMethod==3?'selected':''; ?>>Efectivo</option>
+            <option value="4" <?php echo $orden->paymentMethod==4?'selected':''; ?>>No Definido</option>
         </select>
 
         <select name="conditions">
-            <option value="0">Condiciones</option>
-            <option value="1">Contado</option>
-            <option value="2">Parcialidades</option>
+            <option value="0" <?php echo $orden->conditions==0?'selected':''; ?>>Condiciones</option>
+            <option value="1" <?php echo $orden->conditions==1?'selected':''; ?>>Contado</option>
+            <option value="2" <?php echo $orden->conditions==2?'selected':''; ?>>Parcialidades</option>
         </select>
 
         <select name="placeIssue">
             <option value="0">Lugar de Expedición</option>
             <?php
             foreach ($this->estados as $key => $value) {
-                echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
+                $selectedPlace = $value->id==$orden->placeIssue?'selected':'';
+                echo '<option value="'.$value->id.'" '.$selectedPlace.'>'.$value->nombre.'</option>';
             }
             ?>
         </select>
@@ -278,10 +300,73 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
                 <div id="columna1" ><?php echo JText::_('LBL_UNIDAD'); ?></div>
                 <div id="columna1" ><?php echo JText::_('LBL_P_UNITARIO'); ?></div>
                 <div id="columna1" ><?php echo JText::_('LBL_SUBTOTAL'); ?></div>
-                <div id="columna1"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></div>
+                <div id="columna1" ><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></div>
                 <div id="columna1" ><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?></div>
                 <div id="columna1" ><?php echo JText::_('LBL_TOTAL'); ?></div>
             </div>
+            <?php
+            foreach ($productosOrden as $key => $value) {
+                ?>
+                <div class="contenidos" id="content<?php echo $key+1000; ?>">
+                    <div id="columna2">
+                        <input type="text" name="producto[]"
+                               id="producto[]<?php echo $key+1000; ?>"
+                               placeholder="Ingrese el nombre del producto"
+                               class="typeahead productos"
+                               data-items="3"
+                               value="<?php echo $value->name; ?>">
+                    </div>
+                    <div id="columna2">
+                        <input id="cantidad[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="cantidad[]"
+                               class="cantidad cantidades"
+                               value="<?php echo $value->cantidad; ?>">
+                    </div>
+                    <div id="columna2">
+                        <input id="descripcion[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="descripcion[]"
+                               value="<?php echo $value->descripcion; ?>">
+                    </div>
+                    <div id="columna2">
+                        <input id="unidad[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="unidad[]"
+                               class="cantidades"
+                               value="<?php echo $value->unidad; ?>">
+                    </div>
+                    <div id="columna2">
+                        <input id="p_unitario[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="p_unitario[]"
+                               class="p_unit cantidades"
+                               value="<?php echo $value->p_unitario; ?>">
+                    </div>
+                    <div id="columna2">
+                        <div id="subtotal"></div>
+                    </div>
+                    <div id="columna2">
+                        <input id="iva[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="iva[]"
+                               class="iva cantidades"
+                               value="<?php echo $value->iva; ?>">
+                    </div>
+                    <div id="columna2">
+                        <input id="ieps[]<?php echo $key+1000; ?>"
+                               type="text"
+                               name="ieps[]"
+                               class="ieps cantidades"
+                               value="<?php echo $value->ieps; ?>">
+                    </div>
+                    <div id="columna2">
+                        <div id="total"></div>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
             <div class="contenidos" id="contenidos">
                 <div id="columna2">
                     <input type="text" name="producto[]" id="field" placeholder="Ingrese el nombre del producto" class="typeahead productos" data-items="3">

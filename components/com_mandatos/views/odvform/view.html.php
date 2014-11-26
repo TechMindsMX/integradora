@@ -15,6 +15,12 @@ class MandatosViewOdvform extends JViewLegacy {
         $this->products     = $this->get('productos');
         $this->cuentas      = $this->get('Cuentas');
 
+        if(isset($inputVars['odvnum'])){
+            $this->orden = $this->get('Orden');
+        }else{
+            $this->orden = new stdClass();
+        }
+
         if (count($errors = $this->get('Errors'))) {
             JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
             return false;

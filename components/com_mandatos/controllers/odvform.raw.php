@@ -11,22 +11,22 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
     function safeform(){
         $post       = array('integradoId'   => 'INT',
-                            'idOdv'         => 'INT',
-                            'projectId'     => 'STRING',
-                            'projectId2'    => 'STRING',
-                            'clientId'      => 'STRING',
-                            'account'       => 'STRING',
-                            'paymentMethod' => 'STRING',
-                            'conditions'    => 'STRING',
-                            'placeIssue'    => 'STRING',
-                            'tab'           => 'STRING',
-                            'descripcion'   => 'ARRAY',
-                            'unidad'        => 'ARRAY',
-                            'producto'      => 'ARRAY',
-                            'cantidad'      => 'ARRAY',
-                            'p_unitario'    => 'ARRAY',
-                            'iva'           => 'ARRAY',
-                            'ieps'          => 'ARRAY');
+            'idOdv'         => 'INT',
+            'projectId'     => 'STRING',
+            'projectId2'    => 'STRING',
+            'clientId'      => 'STRING',
+            'account'       => 'STRING',
+            'paymentMethod' => 'STRING',
+            'conditions'    => 'STRING',
+            'placeIssue'    => 'STRING',
+            'tab'           => 'STRING',
+            'descripcion'   => 'ARRAY',
+            'unidad'        => 'ARRAY',
+            'producto'      => 'ARRAY',
+            'cantidad'      => 'ARRAY',
+            'p_unitario'    => 'ARRAY',
+            'iva'           => 'ARRAY',
+            'ieps'          => 'ARRAY');
         $db	       = JFactory::getDbo();
         $document   = JFactory::getDocument();
         $this->app  = JFactory::getApplication();
@@ -42,17 +42,19 @@ class MandatosControllerOdvform extends JControllerAdmin {
         unset($data['idOdv']);
         unset($data['tab']);
         foreach ($data['producto'] as $indice => $valor) {
-            $productos = new stdClass();
+            if($data['producto'][$indice] != '') {
+                $productos = new stdClass();
 
-            $productos->name        = $data['producto'][$indice];
-            $productos->descripcion = $data['descripcion'][$indice];
-            $productos->cantidad    = $data['cantidad'][$indice];
-            $productos->unidad      = $data['unidad'][$indice];
-            $productos->p_unitario  = $data['p_unitario'][$indice];
-            $productos->iva         = $data['iva'][$indice];
-            $productos->ieps        = $data['ieps'][$indice];
+                $productos->name        = $data['producto'][$indice];
+                $productos->descripcion = $data['descripcion'][$indice];
+                $productos->cantidad    = $data['cantidad'][$indice];
+                $productos->unidad      = $data['unidad'][$indice];
+                $productos->p_unitario  = $data['p_unitario'][$indice];
+                $productos->iva         = $data['iva'][$indice];
+                $productos->ieps        = $data['ieps'][$indice];
 
-            $productosArray[]       = $productos;
+                $productosArray[]       = $productos;
+            }
         }
 
         foreach ($data as $key => $value) {
@@ -95,7 +97,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $respuesta['success']  = true;
         $respuesta['idOdv']    = $idOdv;
-        $respuesta['numOrden'] = $numOrden;
+        $respuesta['numOrden'] = $idOdv;
 
         echo json_encode($respuesta);
     }
