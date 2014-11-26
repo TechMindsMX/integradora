@@ -40,11 +40,11 @@ class getFromTimOne{
 
         try {
             $db->setQuery($query);
-	        if ($db->getNumRows($db->query()) == 1) {
-		        $results = $db->loadObject();
-	        } else {
-		        $results = $db->loadObjectList();
-	        }
+            if ($db->getNumRows($db->query()) == 1) {
+                $results = $db->loadObject();
+            } else {
+                $results = $db->loadObjectList();
+            }
         }catch (Exception $e){
             var_dump($e);
             exit;
@@ -63,6 +63,7 @@ class getFromTimOne{
         }elseif(!is_null($projectId) && is_null($integradoId)){
             $where = 'id_proyecto = '.$projectId;
         }
+
         $respuesta = self::selectDB('integrado_proyectos',$where);
 
         return $respuesta;
@@ -517,114 +518,15 @@ class getFromTimOne{
 
         $ordenes = self::selectDB('ordenes_venta', $where);
 
+        if(count($ordenes) == 1) {
+            self::convierteFechas($ordenes);
+        }else{
+            foreach ($ordenes as $value) {
+                self::convierteFechas($value);
+            }
+        }
+
         return $ordenes;
-
-//        $respuesta = null;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->idOdv             = 1;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 1;
-//        $ordenes->proyectId         = 1;
-//        $ordenes->clientId          = 2;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->status            = 0;
-//	    $ordenes->ieps				= .1;
-//	    $ordenes->iva				= .16;
-//        $ordenes->paymentType       = 1;
-//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-//        $ordenes->productos			= array(
-//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-//        );
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 2;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 2;
-//        $ordenes->proyectId         = 1;
-//        $ordenes->clientId          = 4;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->status            = 0;
-//	    $ordenes->ieps				= .1;
-//	    $ordenes->iva				= .16;
-//        $ordenes->paymentType       = 1;
-//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-//        $ordenes->productos			= array(
-//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-//        );
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 3;
-//        $ordenes->integradoId       = 1;
-//        $ordenes->numOrden          = 3;
-//        $ordenes->proyectId         = 1;
-//        $ordenes->clientId          = 6;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->status            = 1;
-//	    $ordenes->ieps				= .1;
-//	    $ordenes->iva				= .16;
-//        $ordenes->paymentType       = 1;
-//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-//        $ordenes->productos			= array(
-//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-//        );
-//
-//        $array[] = $ordenes;
-//
-//        $ordenes 					= new stdClass;
-//        $ordenes->id                = 6;
-//        $ordenes->integradoId       = 2;
-//        $ordenes->numOrden          = 6;
-//        $ordenes->proyectId         = 2;
-//        $ordenes->clientId          = 1;
-//        $ordenes->created           = 1408632474029;
-//        $ordenes->payment			= 1428632474029;
-//        $ordenes->totalAmount        = 10000;
-//        $ordenes->currency        	= 'MXN';
-//        $ordenes->status            = 0;
-//	    $ordenes->ieps				= .1;
-//	    $ordenes->iva				= .16;
-//        $ordenes->paymentType       = 1;
-//        $ordenes->observaciones       = 'Orden de venta de ejemplo';
-//        $ordenes->productos			= array(
-//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-//        );
-//
-//        $array[] = $ordenes;
-//
-//        foreach ($array as $key => $value) {
-//            if($integradoId == $value->integradoId){
-//                self::convierteFechas($value);
-//                $respuesta[] = $value;
-//            } elseif ( $integradoId === null) {
-//	            self::convierteFechas($value);
-//	            $respuesta[] = $value;
-//            }
-//        }
-//
-//        return $respuesta;
-
     }
 
     public static function getBalances($integradoId)
@@ -1716,40 +1618,40 @@ class getFromTimOne{
     }
 
     public static function getComisiones () {
-		$commissions = null;
+        $commissions = null;
 
-		$commissions 				    = new comisionItem();
-		$commissions->id                = 1;
-		$commissions->description		= 'Cobro por retiro';
-		$commissions->type           	= 1;
-		$commissions->frequencyTime		= 15;
-		$commissions->status			= 1;
-		$commissions->amount			= null;
-		$commissions->rate				= 0.25;
+        $commissions 				    = new comisionItem();
+        $commissions->id                = 1;
+        $commissions->description		= 'Cobro por retiro';
+        $commissions->type           	= 1;
+        $commissions->frequencyTime		= 15;
+        $commissions->status			= 1;
+        $commissions->amount			= null;
+        $commissions->rate				= 0.25;
 
-		$array[] = $commissions;
+        $array[] = $commissions;
 
-		$commissions 				    = new comisionItem;
-		$commissions->id                = 2;
-		$commissions->description		= 'Cobro por compra';
-		$commissions->type           	= 1;
-		$commissions->frequencyTime		= 90;
-		$commissions->status			= 1;
-		$commissions->amount			= null;
-		$commissions->rate				= 0.25;
+        $commissions 				    = new comisionItem;
+        $commissions->id                = 2;
+        $commissions->description		= 'Cobro por compra';
+        $commissions->type           	= 1;
+        $commissions->frequencyTime		= 90;
+        $commissions->status			= 1;
+        $commissions->amount			= null;
+        $commissions->rate				= 0.25;
 
-		$array[] = $commissions;
+        $array[] = $commissions;
 
-		$commissions 				    = new comisionItem;
-		$commissions->id                = 2;
-		$commissions->description		= 'Contabilidad';
-		$commissions->type           	= 0;
-		$commissions->frequencyTime		= null;
-		$commissions->status			= 1;
-		$commissions->amount			= 1000;
-		$commissions->rate				= null;
+        $commissions 				    = new comisionItem;
+        $commissions->id                = 2;
+        $commissions->description		= 'Contabilidad';
+        $commissions->type           	= 0;
+        $commissions->frequencyTime		= null;
+        $commissions->status			= 1;
+        $commissions->amount			= 1000;
+        $commissions->rate				= null;
 
-		$array[] = $commissions;
+        $array[] = $commissions;
 
         $commissions 				    = new comisionItem;
         $commissions->id                = 2;
@@ -1763,9 +1665,9 @@ class getFromTimOne{
         $array[] = $commissions;
 
 
-		return $array;
+        return $array;
 
-	}
+    }
 
     public static function getNumCuenta () {
         $respuesta = null;
@@ -1878,7 +1780,7 @@ class getFromTimOne{
 
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
-            if($key == 'createdDate' || $key == 'paymentDate'){
+            if($key == 'createdDate' || $key == 'paymentDate' || $key == 'created' || $key == 'payment'){
                 $propiedad = $key.'numero';
                 $objeto->$propiedad = $value;
                 $objeto->$key = date('d-m-Y', ($value) );
@@ -1887,16 +1789,12 @@ class getFromTimOne{
 
     }
 
-	public static function token(){
-/*		$url = MIDDLE.PUERTO.TIMONE.'security/getKey';
-		if( !$token = file_get_contents($url) ){
-			JFactory::getApplication()->redirect('index.php', 'No se pudo conectar con TIMONE', 'error');
-		}*/
-$token = 'fghgjsdatr';
-		return $token;
-	}
+    public static function token(){
+        $token = 'fghgjsdatr';
+        return $token;
+    }
 
-	public static function newintegradoId($envio){
+    public static function newintegradoId($envio){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
@@ -1911,27 +1809,27 @@ $token = 'fghgjsdatr';
         return $newId;
     }
 
-	public static function getTxSTPbyRef( $ref ) {
-		$txs = self::getTxSTP();
+    public static function getTxSTPbyRef( $ref ) {
+        $txs = self::getTxSTP();
 
-		foreach ( $txs as $tx ) {
-			if ($tx->referencia == $ref) {
-				return $tx;
-			}
-		}
-	}
+        foreach ( $txs as $tx ) {
+            if ($tx->referencia == $ref) {
+                return $tx;
+            }
+        }
+    }
 
-	public static function getComisionById ($id) {
-		$comision = null;
-		$comisiones = self::getComisiones();
+    public static function getComisionById ($id) {
+        $comision = null;
+        $comisiones = self::getComisiones();
 
-		foreach ($comisiones as $value) {
-			if($value->id == $id) {
-				$comision = $value;
-			}
-		}
-		return $comision;
-	}
+        foreach ($comisiones as $value) {
+            if($value->id == $id) {
+                $comision = $value;
+            }
+        }
+        return $comision;
+    }
 
     public static function getOperacionesVenta($integradoId){
 
@@ -1982,10 +1880,10 @@ $token = 'fghgjsdatr';
         return $respuesta;
     }
 
-	public static function getFacturasVenta($integradoId)
-	{
-		return self::getOrdenesVenta($integradoId);
-	}
+    public static function getFacturasVenta($integradoId)
+    {
+        return self::getOrdenesVenta($integradoId);
+    }
 
     public static function getCurrencies(){
         $currencies = self::selectDB('catalog_currencies',null);
@@ -1996,16 +1894,16 @@ $token = 'fghgjsdatr';
 
 class sendToTimOne {
 
-	public $result;
-	protected $httpType;
-	protected $serviceUrl;
-	protected $jsonData;
+    public $result;
+    protected $httpType;
+    protected $serviceUrl;
+    protected $jsonData;
 
-	function __construct () {
+    function __construct () {
         $this->serviceUrl   = null;
-		$this->jsonData     = null;
-		$this->setHttpType('GET');
-	}
+        $this->jsonData     = null;
+        $this->setHttpType('GET');
+    }
 
     public function getNextOrderNumber($tipo, $integrado){
         $db		= JFactory::getDbo();
@@ -2023,9 +1921,9 @@ class sendToTimOne {
 
         $query 	= $db->getQuery(true);
 
-            $query->select('max(numOrden) AS lastOrderNum')
-                ->from($db->quoteName('#__'.$table))
-                ->where($where);
+        $query->select('max(numOrden) AS lastOrderNum')
+            ->from($db->quoteName('#__'.$table))
+            ->where($where);
 
         $db->setQuery($query);
         $resultado = $db->loadObject();
@@ -2139,171 +2037,171 @@ class sendToTimOne {
         return $return;
     }
 
-	/**
-	 * @param mixed $serviceUrl
-	 */
-	public function setServiceUrl ($serviceUrl) {
-		$this->serviceUrl = $serviceUrl;
-	}
+    /**
+     * @param mixed $serviceUrl
+     */
+    public function setServiceUrl ($serviceUrl) {
+        $this->serviceUrl = $serviceUrl;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getServiceUrl () {
-		return $this->serviceUrl;
-	}
+    /**
+     * @return mixed
+     */
+    public function getServiceUrl () {
+        return $this->serviceUrl;
+    }
 
-	/**
-	 * @param mixed $jsonData
-	 */
-	public function setJsonData ($jsonData) {
-		$this->jsonData = $jsonData;
-	}
+    /**
+     * @param mixed $jsonData
+     */
+    public function setJsonData ($jsonData) {
+        $this->jsonData = $jsonData;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getJsonData () {
-		return $this->jsonData;
-	}
+    /**
+     * @return mixed
+     */
+    public function getJsonData () {
+        return $this->jsonData;
+    }
 
-	public function to_timone() {
+    public function to_timone() {
 
-		$verboseflag = true;
+        $verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
-		$verbose = fopen('curl.log', 'w');
-		$ch = curl_init();
+        $verbose = fopen('curl.log', 'w');
+        $ch = curl_init();
 
-		switch($this->getHttpType()) {
-			case ('POST'):
-				$options = array(
-						CURLOPT_POST 			=> true,
-						CURLOPT_URL            => $this->serviceUrl,
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_POSTFIELDS     => $this->jsonData,
-						CURLOPT_HEADER         => false,
-		//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => $verboseflag,
-						CURLOPT_STDERR		   => $verbose,
-						CURLOPT_HTTPHEADER	   => array(
-							'Accept: application/json',
-							'Content-Type: application/json',
-							'Content-Length: ' . strlen($this->jsonData)
-			)
-				);
-				break;
-			case ('PUT'):
-				$options = array(
-						CURLOPT_PUT 			=> true,
-						CURLOPT_URL            => $this->serviceUrl,
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_HEADER         => true,
-						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => $verboseflag,
-						CURLOPT_STDERR		   => $verbose,
-						CURLOPT_HTTPHEADER	   => array(
-							'Content-Type: application/json',
-							'Content-Length: ' . strlen($this->jsonData)
-						)
-				);
-				break;
-			case 'DELETE':
-				$options = array(
-						CURLOPT_CUSTOMREQUEST => "DELETE",
-						CURLOPT_URL            => $this->serviceUrl,
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_HEADER         => true,
-						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => $verboseflag,
-						CURLOPT_STDERR		   => $verbose,
-						CURLOPT_HTTPHEADER	   => array(
-							'Content-Type: application/json',
-							'Content-Length: ' . strlen($this->jsonData)
-						)
-				);
-				break;
-			default:
-				$options = array(
-						CURLOPT_HTTPGET			=> true,
-						CURLOPT_URL            => $this->serviceUrl,
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_SSL_VERIFYPEER => false,
-						CURLOPT_HEADER         => false,
-						//			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-						CURLOPT_FOLLOWLOCATION => false,
-						CURLOPT_VERBOSE        => $verboseflag,
-						CURLOPT_STDERR		   => $verbose,
-						CURLOPT_HTTPHEADER	   => array(
-							'Accept: application/json',
-							'Content-Type: application/json',
-							'Content-Length: ' . strlen($this->jsonData)
-						)
-				);
-				break;
-		}
+        switch($this->getHttpType()) {
+            case ('POST'):
+                $options = array(
+                    CURLOPT_POST 			=> true,
+                    CURLOPT_URL            => $this->serviceUrl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_POSTFIELDS     => $this->jsonData,
+                    CURLOPT_HEADER         => false,
+                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_VERBOSE        => $verboseflag,
+                    CURLOPT_STDERR		   => $verbose,
+                    CURLOPT_HTTPHEADER	   => array(
+                        'Accept: application/json',
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($this->jsonData)
+                    )
+                );
+                break;
+            case ('PUT'):
+                $options = array(
+                    CURLOPT_PUT 			=> true,
+                    CURLOPT_URL            => $this->serviceUrl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_HEADER         => true,
+                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_VERBOSE        => $verboseflag,
+                    CURLOPT_STDERR		   => $verbose,
+                    CURLOPT_HTTPHEADER	   => array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($this->jsonData)
+                    )
+                );
+                break;
+            case 'DELETE':
+                $options = array(
+                    CURLOPT_CUSTOMREQUEST => "DELETE",
+                    CURLOPT_URL            => $this->serviceUrl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_HEADER         => true,
+                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_VERBOSE        => $verboseflag,
+                    CURLOPT_STDERR		   => $verbose,
+                    CURLOPT_HTTPHEADER	   => array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($this->jsonData)
+                    )
+                );
+                break;
+            default:
+                $options = array(
+                    CURLOPT_HTTPGET			=> true,
+                    CURLOPT_URL            => $this->serviceUrl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_HEADER         => false,
+                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_VERBOSE        => $verboseflag,
+                    CURLOPT_STDERR		   => $verbose,
+                    CURLOPT_HTTPHEADER	   => array(
+                        'Accept: application/json',
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($this->jsonData)
+                    )
+                );
+                break;
+        }
 
-		curl_setopt_array($ch,$options);
+        curl_setopt_array($ch,$options);
 
-		if($verboseflag === true) {
-			$headers = curl_getinfo( $ch,
-			                         CURLINFO_HEADER_OUT );
-			$this->result->data = curl_exec($ch);
+        if($verboseflag === true) {
+            $headers = curl_getinfo( $ch,
+                CURLINFO_HEADER_OUT );
+            $this->result->data = curl_exec($ch);
 
-			rewind( $verbose );
-			$verboseLog = stream_get_contents( $verbose );
-			echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
-		}
+            rewind( $verbose );
+            $verboseLog = stream_get_contents( $verbose );
+            echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
+        }
 
-		$this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
+        $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-		switch ($this->result->code) {
-			case 200:
-				$this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
-				break;
-			case 401:
-				$this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
-				break;
-			default:
-				$this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
-				break;
-		}
+        switch ($this->result->code) {
+            case 200:
+                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
+                break;
+            case 401:
+                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
+                break;
+            default:
+                $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
+                break;
+        }
 
-		return $this->result;
-	}
+        return $this->result;
+    }
 
-	public function setHttpType ($type) {
-		if(in_array($type, array('PUT', 'POST', 'GET', 'PATCH', 'DELETE'))) {
-			$this->httpType = $type;
-		} else {
-			return false;
-		}
-	}
+    public function setHttpType ($type) {
+        if(in_array($type, array('PUT', 'POST', 'GET', 'PATCH', 'DELETE'))) {
+            $this->httpType = $type;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getHttpType () {
-		return strtoupper($this->httpType);
-	}
+    /**
+     * @return mixed
+     */
+    public function getHttpType () {
+        return strtoupper($this->httpType);
+    }
 
 }
 
 class comisionItem{
-	public $id;
-	public $description;
-	public $type;
-	public $frequencyTime;
-	public $status;
-	public $typeName;
-	public $statusName;
-	public $frequencyMsg;
-	public $amount;
-	public $rate;
+    public $id;
+    public $description;
+    public $type;
+    public $frequencyTime;
+    public $status;
+    public $typeName;
+    public $statusName;
+    public $frequencyMsg;
+    public $amount;
+    public $rate;
 }
