@@ -36,9 +36,11 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         jQuery('.typeahead').typeahead(typeaheadSettings); /* init first input */
 
         jQuery('#project').on('change', llenasubproject);
-        jQuery('.productos').on('focusout', llenatabla);
+        jQuery('.productos').on('change', llenatabla);
         jQuery('#button').on('click', addrow);
         jQuery('.cantidad').on('change', sum);
+        jQuery('.iva').on('change',sum);
+        jQuery('.ieps').on('change',sum);
         jQuery('button').on('click', envio);
         jQuery.each(arrayProd, function (key, value) {
             jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
@@ -46,43 +48,38 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     });
 
     function sum(){
-        var cantidad    = jQuery(this).val();
-        var trproductos = jQuery(this).parent().parent();
+        var columna    = jQuery(this).parent().parent();
+        var cantidad    = columna.find('.cantidad').val();
+        var precio      = columna.find('.p_unit').val();
+        var iva         = columna.find('.iva').val();
+        var ieps        = columna.find('.ieps').val();
         var subtotal    = 0;
         var total       = 0;
         var montoIva    = 0;
         var montoIeps   = 0;
 
-        var precio      = trproductos.find('.p_unit').val();
-        var iva         = trproductos.find('.iva').val();
-        var ieps        = trproductos.find('.ieps').val();
+        cantidad        = isNaN(parseFloat(cantidad))?0:parseFloat(cantidad);
+        precio          = isNaN(parseFloat(precio))?0:parseFloat(precio);
+        iva             = isNaN(parseFloat(iva))?0:parseFloat(iva);
+        ieps            = isNaN(parseFloat(ieps))?0:parseFloat(ieps);
 
-        cantidad        = parseInt(cantidad);
-        precio          = parseFloat(precio);
-        iva             = parseFloat(iva);
-        ieps            = parseFloat(ieps)==0?null:parseInt(parseFloat);
+        console.log(cantidad, precio,iva,ieps);
 
-        if(isNaN(iva)  || isNaN(precio)){
-            alert("Seleccione primero el producto");
-        }else{
-            subtotal = precio*cantidad;
-            montoIeps = subtotal*(ieps/100);
-            montoIva = subtotal*(iva/100);
-            total = subtotal+montoIeps+montoIva;
+        subtotal = precio*cantidad;
+        montoIeps = subtotal*(ieps/100);
+        montoIva = subtotal*(iva/100);
+        total = subtotal+montoIeps+montoIva;
 
-            trproductos.find('#subtotal').html('$'+subtotal);
-            trproductos.find('#total').html('$'+total);
-        }
+        columna.find('#subtotal').html('$'+subtotal);
+        columna.find('#total').html('$'+total);
     }
 
     function addrow(){
         nextinput++;
-
         jQuery("#contenidos" ).attr('id','content'+nextinput+'');
+
         jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
         jQuery("#content"+nextinput+"").attr('id','contenidos');
-
-
         jQuery("#content"+nextinput+"").find("input:text").val("");
         jQuery("#content"+nextinput+"").find("#subtotal").html("");
         jQuery("#content"+nextinput+"").find("#total").html("");
@@ -93,12 +90,10 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         var nameCampoS = select.prop('name');
         var nameCampoI = '';
 
-        //select.prop('name',nameCampoS+nextinput);
         select.prop('id',nameCampoS+nextinput);
 
         jQuery.each(inputs, function(k,v){
             nameCampoI = jQuery(v).prop('name');
-            //jQuery(v).prop('name', nameCampoI+nextinput);
             jQuery(v).prop('id', nameCampoI+nextinput);
         });
 
@@ -106,6 +101,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         jQuery('.typeahead').typeahead(typeaheadSettings);
         jQuery('.productos').on('focusout', llenatabla);
         jQuery('.cantidad').on('change', sum);
+        jQuery('.iva').on('change',sum);
+        jQuery('.ieps').on('change',sum);
     }
 
     function llenasubproject() {
@@ -152,8 +149,6 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
                 campoP_unit.val(datos.price);
                 campoIva.val(datos.iva);
                 campoIeps.val(datos.ieps);
-            }else{
-                alert(response.msg)
             }
         });
     }
@@ -197,7 +192,8 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 </script>
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
-    <h3>Número de Orden: <span id="numOrden">000000</span></h3>
+    <h1>Generación de Orden de Venta</h1>
+    <h3>Número de Orden: <span id="numOrden"></span></h3>
 
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
     <input type="hidden" name="idOdv" id="idOdv" value="" />
@@ -290,13 +286,13 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
                 <div id="columna2">
                     <input type="text" name="producto[]" id="field" placeholder="Ingrese el nombre del producto" class="typeahead productos" data-items="3">
                 </div>
-                <div id="columna2"><input id="cantidad" type="text" name="cantidad[]" class="cantidad cantidades" ></div>
+                <div id="columna2"><input id="cantidad" type="text" name="cantidad[]" value="0" class="cantidad cantidades" ></div>
                 <div id="columna2"><input id="descripcion" type="text" name="descripcion[]"></div>
                 <div id="columna2"><input id="unidad" type="text" name="unidad[]" class="cantidades"></div>
-                <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" class="p_unit cantidades" ></div>
+                <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" value="0" class="p_unit cantidades" ></div>
                 <div id="columna2"><div id="subtotal"></div></div>
-                <div id="columna2"><input id="iva" type="text" name="iva[]" value="" class="iva cantidades"></div>
-                <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="" class="ieps cantidades"></div>
+                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>
+                <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="0" class="ieps cantidades"></div>
                 <div id="columna2"><div id="total"></div> </div>
             </div>
         </div>

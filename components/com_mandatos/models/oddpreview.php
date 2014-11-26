@@ -26,13 +26,13 @@ class MandatosModelOddpreview extends JModelItem {
 		if (!isset($odds)) {
 			$odds = getFromTimOne::getOrdenesDeposito($this->inputVars['integradoId']);
 		}
-		
+
 		foreach ($odds as $key => $value) {
-			if ($value->id == $this->inputVars['oddnum'] ) {
+			if ($value->idOdd == $this->inputVars['oddnum'] ) {
 				$this->odd = $value;
 			}
 		}
-		
+
 		// Verifica si la ODD exite para el integrado o redirecciona
 		if (is_null($this->odd)){
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODD_INVALID'), 'error');

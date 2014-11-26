@@ -84,7 +84,7 @@ $producto 	= $this->producto;
     <div class="row">
         <div class="col-md-6">
             <label for="measure"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MEDIDAS'); ?>: </label>
-            <input type="text" name="measure" id="measure" value="<?php echo $producto->measure; ?>">
+            <input type="text" class="alto form-control" name="measure" id="measure" value="<?php echo $producto->measure; ?>">
         </div>
         <div class="col-md-6">
             <label for="ieps"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>: </label>
