@@ -38,15 +38,10 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 
 		if (validador::noErrors($validaResult)) {
 			$request = new sendToTimOne();
-			$serviceUrl = new servicesRoute();
 
-			$request->setServiceUrl($serviceUrl->comisionUrls());
-			$request->setJsonData(json_encode($envio));
-			$request->setHttpType('POST');
+			$result = $request->saveComision($envio);
 
-			$request->to_timone(); // realiza el envio
-
-			$this->toList();
+			echo $result;
 		} else {
 			$document = JFactory::getDocument();
 			$document->setMimeEncoding('application/json');

@@ -2076,6 +2076,18 @@ class sendToTimOne {
         return strtoupper($this->httpType);
     }
 
+	public function saveComision($data){
+		$db		= JFactory::getDbo();
+		foreach ($data as $key => $value) {
+			$columnas[] = $key;
+			$valores[] = $db->quote($value);
+		}
+		$result = $this->insertDB('mandatos_comisiones', $columnas, $valores);
+
+		return $result;
+	}
+
+
 }
 
 class comisionItem{

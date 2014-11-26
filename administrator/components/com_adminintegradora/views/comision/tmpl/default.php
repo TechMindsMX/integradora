@@ -34,6 +34,8 @@ $accion = 'index.php?option=com_adminintegradora';
 					jQuery.each(response, function (i, v) {
 						if (v !== true) {
 							mensajes(v.msg, 'error', i)
+						} else if (v === true) {
+							window.location = 'index.php?option=com_adminintegradora&view=comisions';
 						}
 					});
 				});
