@@ -17,7 +17,6 @@ $integrado 	= $this->integCurrent->integrados[0];
 $number2word = new AifLibNumber();
 
 echo $this->printBtn;
-var_dump($this);
 ?>
 
 <div id="odv_preview">

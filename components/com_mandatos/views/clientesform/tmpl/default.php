@@ -247,14 +247,21 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
             var resultado = ajax(parametros);
 
             resultado.done(function(response){
+                console.log(response);
                if(response.success){
+                   var spanMsg = jQuery('#msg')
                    jQuery('#idCliPro').val(response.idCliPro);
+                   jQuery('a[href*="'+response.nextTab+'"]').trigger('click');
+                   spanMsg.text('Datos Almacenados');
+                   spanMsg.fadeIn();
+                   spanMsg.fadeOut(8000);
                }
             });
         }
     }
 
 </script>
+<span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >

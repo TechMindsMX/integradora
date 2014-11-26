@@ -244,6 +244,7 @@ class MandatosController extends JControllerLegacy {
     }
 
     function  cargaProducto(){
+        $this->document->setMimeEncoding('application/json');
         $data = $this->input_data->getArray();
         $productos = getFromTimOne::getProducts($data['integradoId']);
         foreach ($productos as $key => $val) {
@@ -315,6 +316,7 @@ class MandatosController extends JControllerLegacy {
             'tp_status'                     => 'INT',
             'tp_monto'                      => 'FLOAT');
 
+        $tab        = 'tipo_alta';
         $data       = $this->input_data->getArray($arrayPost);
         $idCliPro   = $data['idCliPro'];
         $datosQuery['setUpdate'] = array();
@@ -339,6 +341,15 @@ class MandatosController extends JControllerLegacy {
                 $datosQuery['valores']   = $valores;
 
                 $datosQuery = self::limpiarPost($data, 'tp_',$datosQuery);
+                $tab = 'juridica';
+                break;
+            case 'juridica':
+                $table 		= 'integrado';
+                $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                $existe     = getFromTimOne::selectDB($table, $where);
+
+                $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
+                $tab = 'basic-details';
                 break;
             case 'personales':
                 $table 		= 'integrado_datos_personales';
@@ -355,13 +366,11 @@ class MandatosController extends JControllerLegacy {
                 if(empty($existe)){
                     self::safeContacto($data, $idCliPro);
                 }
-                break;
-            case 'juridica':
-                $table 		= 'integrado';
-                $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
-                $existe     = getFromTimOne::selectDB($table, $where);
-
-                $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
+                if($data['pj_pers_juridica'] == 2 ){
+                    $tab = 'files';
+                }elseif($data['pj_pers_juridica'] == 1){
+                    $tab = 'empresa';
+                }
                 break;
             case 'empresa':
                 $table = 'integrado_datos_empresa';
@@ -376,6 +385,11 @@ class MandatosController extends JControllerLegacy {
                 $datosQuery['valores']  = $valores;
 
                 $datosQuery = self::limpiarPost($data,'de_',$datosQuery);
+                if($data['tp_tipo_alta'] == 1 || $data['tp_tipo_alta'] == 2) {
+                    $tab = 'banco';
+                }else {
+                    $tab = 'files';
+                }
                 break;
         }
 
@@ -387,7 +401,9 @@ class MandatosController extends JControllerLegacy {
 
         $response['idCliPro'] = $idCliPro;
         $response['success'] = true;
+        $response['nextTab'] = $tab;
 
+        $this->document->setMimeEncoding('application/json');
         echo json_encode($response);
     }
 

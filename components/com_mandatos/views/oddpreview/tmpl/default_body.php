@@ -27,7 +27,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 <div id="odd_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odd->id; ?></h3>
+		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odd->idOdd; ?></h3>
 	</div>	
 	
 	<h1><?php echo JText::_('LBL_ORDEN_DE_DEPOSITO'); ?></h1>
@@ -44,7 +44,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odd->created; ?>
+				<?php echo $this->odd->createdDate; ?>
 			</div>
 		</div>
 		<div>
@@ -52,13 +52,13 @@ $integrado 	= $this->integCurrent->integrados[0];
 				<?php echo JText::_('LBL_MONEDA'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odd->currency; ?>
+				<?php echo $this->odd->currency = isset($this->odd->currency)?$this->odd->currency:'MXN'; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odd->payment)) {echo $this->odd->payment;} ?>
+				<?php if (isset($this->odd->paymentDate)) {echo $this->odd->paymentDate;} ?>
 			</div>
 		</div>
 		<div>
@@ -72,7 +72,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odd->paymentType; ?>
+				<?php echo $this->odd->paymentMethod; ?>
 			</div>
 		</div>
 		<div>
@@ -123,7 +123,7 @@ $integrado 	= $this->integCurrent->integrados[0];
 				<?php echo JText::_('LBL_OBSERVACIONES'); ?>
 			</div>
 			<div>
-				<?php echo $this->odd->observaciones; ?>
+				<?php echo '';//$this->odd->observaciones; ?>
 			</div>
 		</div>
 		<div id="footer">

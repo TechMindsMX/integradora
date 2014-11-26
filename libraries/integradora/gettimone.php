@@ -116,6 +116,7 @@ class getFromTimOne{
                 }
             }
 
+
             //obtiene los datos de contacto para el cliente/proveedor
             foreach ($response as $value) {
                 $db = JFactory::getDbo();
