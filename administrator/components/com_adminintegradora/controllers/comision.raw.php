@@ -40,7 +40,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 							  'monto' 			=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_MONTO'), 'length' => 10),
 							  'rate' 			=> array ('tipo' => 'float', 'label' => JText::_ ('ERROR_COMISION_RATE'), 'length' => 2),
 							  'frequencyTimes' 	=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'), 'length' => 10),
-							  'trigger'	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1),
+							  'trigger'	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1, 'notNull'),
 							  'status' 	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1)
 		);
 

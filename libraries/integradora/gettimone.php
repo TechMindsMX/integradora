@@ -1713,6 +1713,14 @@ class getFromTimOne{
 
 		return $comisiones;
 	}
+
+	public static function getTriggersComisiones() {
+		$triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
+
+		return $triggers;
+	}
+
+
 }
 
 class sendToTimOne {

@@ -128,10 +128,23 @@ $accion = 'index.php?option=com_adminintegradora';
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="status">
+				<label class="control-label" for="trigger">
+					<?php echo JText::_( 'LBL_BASIC_TRIGGER' ); ?>
+				</label>
+				<select id="trigger" name="trigger">
+					<?php foreach ( $this->cats->triggers as $key => $value ):
+						$selected = ( $items->triggers == $key ) ? 'selected' : '';
+						?>
+						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="statusSelect">
 					<?php echo JText::_( 'LBL_BASIC_STATUSES' ); ?>
 				</label>
-				<select id="status" name="status">
+				<select id="statusSelect" name="status">
 					<?php foreach ( $this->cats->status as $key => $value ):
 						$selected = ( $items->status == $key ) ? 'selected' : '';
 						?>

@@ -13,6 +13,8 @@ class AdminintegradoraModelComision extends JModelItem
 		$this->app = JFactory::getApplication ();
 		$this->catalogos = new Catalogos();
 
+		$this->catalogos->triggers = $this->getCatalogoTriggers();
+
 		parent::__construct ($config);
 	}
 
@@ -33,7 +35,6 @@ class AdminintegradoraModelComision extends JModelItem
 		} else {
 			$this->comision = null;
 		}
-
 
 		$comision[] = $this->comision;
 
@@ -60,6 +61,10 @@ class AdminintegradoraModelComision extends JModelItem
 
 	private function getFrequencyMsg ($frequencyTimes) {
 		return JText::sprintf ('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTimes);
+	}
+
+	private function getCatalogoTriggers( ){
+		return getFromTimOne::getTriggersComisiones();
 	}
 
 }
