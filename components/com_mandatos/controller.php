@@ -120,7 +120,7 @@ class MandatosController extends JControllerLegacy {
 		}
 
 		if(!empty($existe)){
-			$datos = new IntegradoSimple($existe[0]->integrado_id);
+			$datos = new IntegradoSimple($existe->integrado_id);
 			$datos->integrados[0]->success = true;
 
 			echo json_encode($datos->integrados[0]);
@@ -320,6 +320,10 @@ class MandatosController extends JControllerLegacy {
         $data       = $this->input_data->getArray($arrayPost);
         $idCliPro   = $data['idCliPro'];
         $datosQuery['setUpdate'] = array();
+
+	    // verificación que no sea el mismo integrado
+	    $currentIntegrado = new IntegradoSimple($data['integradoId']);
+	    var_dump($data['de_rfc'], $data['integradoId'], $currentIntegrado);exit;
 
         if($idCliPro == 0){
             $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);

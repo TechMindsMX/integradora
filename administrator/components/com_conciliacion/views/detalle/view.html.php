@@ -29,6 +29,7 @@ class ConciliacionViewDetalle extends JViewLegacy {
 		$this->odc  = $this->get( 'odcs' );
 		$this->odd  = $this->get( 'odds' );
 		$this->odr  = $this->get( 'odrs' );
+		$this->integrados  = $this->get( 'integrados' );
 
 		$this->addToolbar();
 		parent::display( $tpl );

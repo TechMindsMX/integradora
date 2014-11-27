@@ -106,5 +106,10 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		return $str;
 	}
 
+	private function toList ($msg = null, $msgType = 'message') {
+		$url = 'index.php?option=com_adminintegradora&view=comisions';
+		JFactory::getApplication ()->redirect ($url, $msg, $msgType);
+
+	}
 
 }

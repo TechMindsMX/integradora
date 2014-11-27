@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 JHTML::_('behavior.calendar');
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
 $vName = 'facturas';
 
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
@@ -57,24 +57,6 @@ $tot=$data->total+$comision;
         jQuery('#filtrofecha').on('click', filtro_fechas);
     });
 
-    function filtro_fechas(){
-        var fechaInicio = new Date(Date.parse(jQuery('#fechaInicio').val()));
-        var fechafin    = new Date(Date.parse(jQuery('#fechaFin').val()));
-
-        fechaInicioTS = fechafin.getTime()/1000;
-        fechaFinTS = fechaInicio.getTime()/1000;
-
-        var filas = jQuery('.row1');
-        jQuery.each(filas, function(key, value){
-            var fila = jQuery(value);
-            var campo = fila.find('input[id*="fecha"]');
-            if( (fechaInicioTS >= campo.val()) && (fechaFinTS <= campo.val()) ){
-                fila.show();
-            }else{
-                fila.hide();
-            }
-        });
-    }
 
     function comition(id){
         var status = document.getElementById(id).checked;
@@ -97,22 +79,24 @@ $tot=$data->total+$comision;
         //Se repite en base a las facturas encontratas en TIMONE
         jQuery.each(arrayFact, function (key, value) {
             nextinput++;
-            var fecha           = value.Comprobante.fechaFormateada;
-            var timestamp       = value.Comprobante.fechaNumero;
             var folio           = value.Comprobante.serie+value.Comprobante.folio;
-            folio               = folio.replace(" ","");
-            var emisor          = value.Emisor.nombre;
-            var idintegrado     = jQuery('.integrado').val();
-            var num             = value.Impuestos.Traslados.Traslado.importe;
-            var iva             = parseFloat(num).toFixed(2);
-            var sub             = value.Comprobante.subTotal;
-            var subtotal        =parseFloat(sub).toFixed(2);
-            var tot             = value.Comprobante.total;
-            var total           =parseFloat(tot).toFixed(2);
-            var estatus         =value.status;
+        	var num             = value.Impuestos.Traslados.Traslado.importe;
+        	var sub             = value.Comprobante.subTotal;
+        	var tot             = value.Comprobante.total;
 
-            if(estatus== 0){
-                if (idintegrado == value.integradoId) {
+            var obj = {fecha           : value.Comprobante.fechaFormateada,
+       					timestamp       : value.Comprobante.fechaNumero,
+		            	folio           : folio.replace(" ",""),
+		            	emisor          : value.Emisor.nombre,
+		            	idintegrado     : jQuery('.integrado').val(),
+		            	iva             : parseFloat(num).toFixed(2),
+		            	subtotal        : parseFloat(sub).toFixed(2),
+		            	total           : parseFloat(tot).toFixed(2),
+		            	estatus         : value.status
+            		}
+
+            if(obj.estatus== 0){
+                if (obj.idintegrado == value.integradoId) {
                     jQuery('#tbody').append('<tr class="row1" id="'+nextinput+'_'+value.integradoId+'">'
                     +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
                     +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+timestamp+'"></td>'
@@ -127,8 +111,17 @@ $tot=$data->total+$comision;
                         +'<td ><a class="btn btn-primary" href="index.php?option=com_facturas&view=factform&factNum='+value.id+'">Conciliar</a></td>'
                     +'</tr>');
                 }
-                if(typeof(idintegrado) == 'undefined' || idintegrado == 0){
-                    jQuery('#tbody').append('<tr class="row1" id="filaintegrado'+value.integradoId+'">'
+                if(typeof(obj.idintegrado) == 'undefined' || obj.idintegrado == 0){
+                    pintaCamposTable(obj, nextinput);
+                }
+
+            }
+
+        });
+    }
+    
+    function pintaCamposTable(obj) {
+    	jQuery('#tbody').append('<tr class="row1" id="filaintegrado'+value.integradoId+'">'
                         +'<td><input  id="facturar'+nextinput+'" type="checkbox"  onchange="comition(this.id, this.checked);" name="facturar'+nextinput+'" class="facturar" value=""></td>'
                         +'<td><span>'+fecha+'</span><input id="fecha'+nextinput+'" type="hidden" style="width: 70px" name="fecha'+nextinput+'"   value="'+timestamp+'"></td>'
                         +'<td><span>'+folio+'</span><input id="folio'+nextinput+'" type="hidden" style="width: 75%" name="folio'+nextinput+'" value="'+folio+'"></td>'
@@ -141,11 +134,6 @@ $tot=$data->total+$comision;
                         +'<td ><button type="button" id="detalle_factura" name="button" class="btn btn-primary ">Ver</button></td>'
                         +'<td ><a class="btn btn-primary" href="index.php?option=com_facturas&view=factform&factNum='+value.id+'">Conciliar</a></td>'
                         +'</tr>');
-                }
-
-            }
-
-        });
     }
 
 </script>

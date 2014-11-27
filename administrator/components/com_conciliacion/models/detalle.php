@@ -7,6 +7,7 @@
  */
 
 jimport('integradora.gettimone');
+jimport('integradora.integrado');
 
 class ConciliacionModelDetalle extends JModelLegacy {
 
@@ -30,5 +31,8 @@ class ConciliacionModelDetalle extends JModelLegacy {
 	}
 	public function getODRs() {
 		return getFromTimOne::getOrdenesRetiro(null);
+	}
+	public function getIntegrados(){
+		return Integrado::getIntegrados(null);
 	}
 }
