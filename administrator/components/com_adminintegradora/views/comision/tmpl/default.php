@@ -100,6 +100,7 @@ $accion = 'index.php?option=com_adminintegradora';
 				<label class="control-label frequency" for="frequencyTimes">
 					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME' ); ?>
 				</label>
+				<?php var_dump($this->cats);?>
 				<select class="frequency" id="frequencyTimes" name="frequencyTimes">
 					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
 						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
@@ -133,7 +134,7 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select id="trigger" name="trigger">
 					<?php foreach ( $this->cats->triggers as $key => $value ):
-						$selected = ( $items->triggers == $key ) ? 'selected' : '';
+						$selected = ( $items->trigger == $key ) ? 'selected' : '';
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
