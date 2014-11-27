@@ -7,8 +7,9 @@ $items = $this->items;
 
 // Mensaje de guardado
 $sesion = JFactory::getSession();
-$msg = $sesion->get('mensaje', null, 'myNameSpace');
+$msg = $sesion->get('mensaje', null, 'myMessages');
 JFactory::getApplication()->enqueueMessage($msg);
+$sesion->clear('mensaje','myMessages');
 
 $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comisionId=');
 ?>

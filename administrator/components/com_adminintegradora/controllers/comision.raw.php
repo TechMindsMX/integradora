@@ -84,7 +84,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 			}
 
 			$sesion = JFactory::getSession();
-			$sesion->set('mensaje', 'GUARDADO CORRECTO', 'myNameSpace');
+			$sesion->set('mensaje', 'GUARDADO CORRECTO', 'myMessages');
 
 			echo json_encode(array('redirect' => $result));
 		} else {

@@ -114,7 +114,7 @@ $accion = 'index.php?option=com_adminintegradora';
 					<label class="control-label" for="monto">
 						<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_MONTO' ); ?>
 					</label>
-					<input type="text" name="monto" id="monto" value="<?php echo @$items->amount; ?>"
+					<input type="text" name="monto" id="monto" value="<?php echo @$items->monto; ?>"
 					       class="" required="" aria-required="true"
 					       aria-invalid="true" maxlength="10">
 				</div>
