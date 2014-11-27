@@ -1738,6 +1738,9 @@ class sendToTimOne {
             case 'odv':
                 $table = 'ordenes_venta';
                 break;
+            case 'odc':
+                $table = 'ordenes_compra';
+                break;
         }
 
         $where = $db->quoteName('integradoId').' = '.$integrado;
