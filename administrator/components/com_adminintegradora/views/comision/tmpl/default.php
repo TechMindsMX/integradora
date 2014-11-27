@@ -100,7 +100,6 @@ $accion = 'index.php?option=com_adminintegradora';
 				<label class="control-label frequency" for="frequencyTimes">
 					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_FREQUECY_TIME' ); ?>
 				</label>
-				<?php var_dump($this->cats);?>
 				<select class="frequency" id="frequencyTimes" name="frequencyTimes">
 					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
 						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
