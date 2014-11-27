@@ -21,7 +21,7 @@ class AdminintegradoraModelComision extends JModelItem
 	public function getCatalogosComisiones () {
 		$this->catalogos->types = $this->catalogos->getComisionesTypes ();
 		$this->catalogos->status = $this->catalogos->getBasicStatus();
-		$this->catalogos->frequencyTimess = $this->catalogos->getComisionesFrecuencyTimes();
+		$this->catalogos->frequencyTimes = $this->catalogos->getComisionesFrecuencyTimes();
 
 		return $this->catalogos;
 	}

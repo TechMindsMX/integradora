@@ -104,7 +104,7 @@ $accion = 'index.php?option=com_adminintegradora';
 					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
 						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
 						?>
-						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+						<option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
@@ -114,7 +114,7 @@ $accion = 'index.php?option=com_adminintegradora';
 					<label class="control-label" for="monto">
 						<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_MONTO' ); ?>
 					</label>
-					<input type="text" name="monto" id="monto" value="<?php echo @$items->amount; ?>"
+					<input type="text" name="monto" id="monto" value="<?php echo @$items->monto; ?>"
 					       class="" required="" aria-required="true"
 					       aria-invalid="true" maxlength="10">
 				</div>
@@ -133,7 +133,7 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select id="trigger" name="trigger">
 					<?php foreach ( $this->cats->triggers as $key => $value ):
-						$selected = ( $items->triggers == $key ) ? 'selected' : '';
+						$selected = ( $items->trigger == $key ) ? 'selected' : '';
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>

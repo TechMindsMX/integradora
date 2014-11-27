@@ -34,15 +34,35 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		                                                                   'trigger' => 'string',
 		                                                                   'status'  => 'string'
 		                                                             ));
+		switch ($this->envio['type']){
+			case '0':
+				// Limpieza de valores que no aplican al type
+				$this->envio['rate'] = 0;
 
-		$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum', 'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'), 'length' => 255),
-							  'type' 			=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_TYPE'), 'length' => 10),
-							  'monto' 			=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_MONTO'), 'length' => 10),
-							  'rate' 			=> array ('tipo' => 'float', 'label' => JText::_ ('ERROR_COMISION_RATE'), 'length' => 2),
-							  'frequencyTimes' 	=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'), 'length' => 10),
-							  'trigger'	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1, 'notNull'),
-							  'status' 	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1)
-		);
+				$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum',  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255),
+				                      'type' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
+				                      'monto' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10,     'notNull' => true),
+				                      'rate' 			=> array ('tipo' => 'float',    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 2),
+				                      'frequencyTimes' 	=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
+				                      'trigger'	        => array ('tipo' => 'string',   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
+				                      'status' 	        => array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
+				);
+				break;
+			case '1':
+				// Limpieza de valores que no aplican al type
+				$this->envio['monto'] = 0;
+				$this->envio['frequencyTimes'] = 0;
+
+				$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum',  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255),
+				                      'type' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
+				                      'monto' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10),
+				                      'rate' 			=> array ('tipo' => 'float',    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 2,      'notNull' => true),
+				                      'frequencyTimes' 	=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
+				                      'trigger'	        => array ('tipo' => 'string',   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
+				                      'status' 	        => array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
+				);
+				break;
+		}
 
 		$validator = new validador();
 		$validaResult = $validator->procesamiento($this->envio, $diccionario);
@@ -64,7 +84,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 			}
 
 			$sesion = JFactory::getSession();
-			$sesion->set('mensaje', 'GUARDADO CORRECTO', 'myNameSpace');
+			$sesion->set('mensaje', 'GUARDADO CORRECTO', 'myMessages');
 
 			echo json_encode(array('redirect' => $result));
 		} else {

@@ -7,8 +7,9 @@ $items = $this->items;
 
 // Mensaje de guardado
 $sesion = JFactory::getSession();
-$msg = $sesion->get('mensaje', null, 'myNameSpace');
+$msg = $sesion->get('mensaje', null, 'myMessages');
 JFactory::getApplication()->enqueueMessage($msg);
+$sesion->clear('mensaje','myMessages');
 
 $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comisionId=');
 ?>
@@ -72,7 +73,15 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comis
 				<td class="small hidden-phone">
 					<?php echo $value->typeName.' '.$value->frequencyMsg; ?>
 				</td>
-				<td class="nowrap small hidden-phone">
+				<?php
+				if ($value->status == 0) {
+					$statusColor = 'red';
+				} else {
+					$statusColor = 'green';
+				}
+
+				?>
+				<td class="nowrap small hidden-phone" style="color: <?php echo $statusColor;?>">
 					<?php echo $value->statusName; ?>
 				</td>
 			</tr>
