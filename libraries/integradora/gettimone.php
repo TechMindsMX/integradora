@@ -1813,7 +1813,7 @@ class sendToTimOne {
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
-            $this->condicion[] = $db->quoteName($key).' = '.$db->quote($value);
+            $this->set[] = $db->quoteName($key).' = '.$db->quote($value);
         }
     }
 
@@ -1879,14 +1879,14 @@ class sendToTimOne {
         return $return;
     }
 
-    public function updateDB($table, $columnas=null, $condicion=null){
-        $columnas = is_null($columnas)?$this->condicion:$columnas;
+    public function updateDB($table, $set=null, $condicion=null){
+        $set = is_null($set)?$this->set:$set;
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
         $query->update($db->quoteName('#__'.$table))
-            ->set(implode(',', $columnas))
+            ->set(implode(',', $set))
             ->where($condicion);
 
         try {
@@ -2075,17 +2075,6 @@ class sendToTimOne {
     public function getHttpType () {
         return strtoupper($this->httpType);
     }
-
-	public function saveComision($data){
-		$db		= JFactory::getDbo();
-		foreach ($data as $key => $value) {
-			$columnas[] = $key;
-			$valores[] = $db->quote($value);
-		}
-		$result = $this->insertDB('mandatos_comisiones', $columnas, $valores);
-
-		return $result;
-	}
 
 
 }
