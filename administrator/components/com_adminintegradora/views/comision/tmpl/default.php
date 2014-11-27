@@ -129,7 +129,7 @@ $accion = 'index.php?option=com_adminintegradora';
 
 			<div class="control-group">
 				<label class="control-label" for="trigger">
-					<?php echo JText::_( 'LBL_BASIC_TRIGGER' ); ?>
+					<?php echo JText::_( 'COM_ADMININTEGRADORA_COMISIONES_TRIGGERS' ); ?>
 				</label>
 				<select id="trigger" name="trigger">
 					<?php foreach ( $this->cats->triggers as $key => $value ):
