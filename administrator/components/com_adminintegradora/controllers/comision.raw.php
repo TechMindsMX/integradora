@@ -94,7 +94,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 
 	private function getAllComisions() {
 		$request = new getFromTimOne();
-		$comisiones = $request->getAllComisions();
+		$comisiones = $request->getComisiones();
 
 		return $comisiones;
 	}

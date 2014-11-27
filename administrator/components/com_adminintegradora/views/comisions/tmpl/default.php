@@ -5,9 +5,10 @@ JHtml::_ ('bootstrap.tooltip');
 
 $items = $this->items;
 
+// Mensaje de guardado
 $sesion = JFactory::getSession();
 $msg = $sesion->get('mensaje', null, 'myNameSpace');
-var_dump($msg);
+JFactory::getApplication()->enqueueMessage($msg);
 
 $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comisionId=');
 ?>

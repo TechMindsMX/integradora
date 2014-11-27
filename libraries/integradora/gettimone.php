@@ -1492,58 +1492,6 @@ class getFromTimOne{
 
     }
 
-    public static function getComisiones () {
-        $commissions = null;
-
-        $commissions 				    = new comisionItem();
-        $commissions->id                = 1;
-        $commissions->description		= 'Cobro por retiro';
-        $commissions->type           	= 1;
-        $commissions->frequencyTime		= 15;
-        $commissions->status			= 1;
-        $commissions->amount			= null;
-        $commissions->rate				= 0.25;
-
-        $array[] = $commissions;
-
-        $commissions 				    = new comisionItem;
-        $commissions->id                = 2;
-        $commissions->description		= 'Cobro por compra';
-        $commissions->type           	= 1;
-        $commissions->frequencyTime		= 90;
-        $commissions->status			= 1;
-        $commissions->amount			= null;
-        $commissions->rate				= 0.25;
-
-        $array[] = $commissions;
-
-        $commissions 				    = new comisionItem;
-        $commissions->id                = 2;
-        $commissions->description		= 'Contabilidad';
-        $commissions->type           	= 0;
-        $commissions->frequencyTime		= null;
-        $commissions->status			= 1;
-        $commissions->amount			= 1000;
-        $commissions->rate				= null;
-
-        $array[] = $commissions;
-
-        $commissions 				    = new comisionItem;
-        $commissions->id                = 2;
-        $commissions->description		= 'Factura';
-        $commissions->type           	= 0;
-        $commissions->frequencyTime		= null;
-        $commissions->status			= 1;
-        $commissions->amount			= 1000;
-        $commissions->rate				= null;
-
-        $array[] = $commissions;
-
-
-        return $array;
-
-    }
-
     public static function getNumCuenta () {
         $respuesta = null;
 
@@ -1694,18 +1642,6 @@ class getFromTimOne{
         }
     }
 
-    public static function getComisionById ($id) {
-        $comision = null;
-        $comisiones = self::getComisiones();
-
-        foreach ($comisiones as $value) {
-            if($value->id == $id) {
-                $comision = $value;
-            }
-        }
-        return $comision;
-    }
-
     public static function getOperacionesVenta($integradoId){
 
         $operaciones 					= new stdClass;
@@ -1766,9 +1702,14 @@ class getFromTimOne{
         return $currencies;
     }
 
-	public function getAllComisions() {
+	public static function getComisiones($id = null) {
 		$request = new getFromTimOne();
-		$comisiones = $request->selectDB('mandatos_comisiones', null);
+
+		$where = null;
+		if(!is_null($id)) {
+			$where = 'id = '.$id;
+		}
+		$comisiones = $request->selectDB('mandatos_comisiones', $where);
 
 		return $comisiones;
 	}

@@ -19,7 +19,7 @@ class AdminintegradoraModelComision extends JModelItem
 	public function getCatalogosComisiones () {
 		$this->catalogos->types = $this->catalogos->getComisionesTypes ();
 		$this->catalogos->status = $this->catalogos->getBasicStatus();
-		$this->catalogos->frequencyTimes = $this->catalogos->getComisionesFrecuencyTimes();
+		$this->catalogos->frequencyTimess = $this->catalogos->getComisionesFrecuencyTimes();
 
 		return $this->catalogos;
 	}
@@ -28,7 +28,7 @@ class AdminintegradoraModelComision extends JModelItem
 		$params = $this->app->input->getArray (array ('comisionId' => 'int'));
 
 		if($params['comisionId'] !== 0) {
-			$this->comision = getFromTimOne::getComisionById ($params['comisionId']);
+			$this->comision = getFromTimOne::getComisiones($params['comisionId']);
 			$this->idToNames ();
 		} else {
 			$this->comision = null;
@@ -43,7 +43,7 @@ class AdminintegradoraModelComision extends JModelItem
 	private function idToNames () {
 		$this->comision->typeName = $this->getTypeName ($this->comision->type);
 		$this->comision->statusName = $this->getStatusName ($this->comision->status);
-		$this->comision->frequencyMsg = $this->getFrequencyMsg ($this->comision->frequencyTime);
+		$this->comision->frequencyMsg = $this->getFrequencyMsg ($this->comision->frequencyTimes);
 	}
 
 	private function getTypeName ($value) {
@@ -58,8 +58,8 @@ class AdminintegradoraModelComision extends JModelItem
 		return $array[$value];
 	}
 
-	private function getFrequencyMsg ($frequencyTime) {
-		return JText::sprintf ('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTime);
+	private function getFrequencyMsg ($frequencyTimes) {
+		return JText::sprintf ('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTimes);
 	}
 
 }

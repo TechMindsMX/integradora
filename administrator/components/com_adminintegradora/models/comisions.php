@@ -29,7 +29,7 @@ class AdminintegradoraModelComisions extends JModelList
 		foreach ($this->items as $key => $value) {
 			$value->typeName = $this->getTypeName($value->type);
 			$value->statusName = $this->getStatusName($value->status);
-			$value->frequencyMsg = $this->getFrequencyMsg($value->frequencyTime);
+			$value->frequencyMsg = $this->getFrequencyMsg($value->frequencyTimes);
 
 			$this->items[$key] = $value;
 		}
@@ -49,8 +49,8 @@ class AdminintegradoraModelComisions extends JModelList
 		return $array[$value];
 	}
 
-	private function getFrequencyMsg ($frequencyTime) {
-		return JText::sprintf('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTime);
+	private function getFrequencyMsg ($frequencyTimes) {
+		return JText::sprintf('COM_ADMININTEGRADORA_COMISIONES_FRECUENCIA', $frequencyTimes);
 	}
 
 }
