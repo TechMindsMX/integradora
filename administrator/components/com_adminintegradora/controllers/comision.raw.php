@@ -38,7 +38,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum', 'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'), 'length' => 255),
 							  'type' 			=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_TYPE'), 'length' => 10),
 							  'monto' 			=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_MONTO'), 'length' => 10),
-							  'rate' 			=> array ('tipo' => 'float', 'label' => JText::_ ('ERROR_COMISION_RATE'), 'length' => 10),
+							  'rate' 			=> array ('tipo' => 'float', 'label' => JText::_ ('ERROR_COMISION_RATE'), 'length' => 2),
 							  'frequencyTimes' 	=> array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'), 'length' => 10),
 							  'trigger'	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1),
 							  'status' 	        => array ('tipo' => 'number', 'label' => JText::_ ('ERROR_COMISION_STATUS'), 'length' => 1)
@@ -47,6 +47,9 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		$validator = new validador();
 		$validaResult = $validator->procesamiento($this->envio, $diccionario);
 
+		$document = JFactory::getDocument();
+		$document->setMimeEncoding('application/json');
+
 		if (validador::noErrors($validaResult)) {
 
 			$request = new sendToTimOne();
@@ -54,25 +57,20 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 
 			$existe = $this->checkExisting();
 
-			var_dump($existe);
 			if (!$existe->verificacion) {
 				$result = $request->insertDB('mandatos_comisiones');
 			} else {
 				$result = $request->updateDB('mandatos_comisiones', null, 'id = '.$existe->idExistente );
 			}
 
-			echo json_encode($result);
+			$sesion = JFactory::getSession();
+			$sesion->set('mensaje', 'GUARDADO CORRECTO', 'myNameSpace');
+
+			echo json_encode(array('redirect' => $result));
 		} else {
-			$document = JFactory::getDocument();
-			$document->setMimeEncoding('application/json');
+			$validaResult['redirect'] = false;
 			echo json_encode($validaResult);
 		}
-
-	}
-
-	private function toList ($msg = null, $msgType = 'message') {
-		$url = 'index.php?option=com_adminintegradora&view=comisions';
-		JFactory::getApplication ()->redirect ($url, $msg, $msgType);
 
 	}
 
@@ -96,7 +94,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 
 	private function getAllComisions() {
 		$request = new getFromTimOne();
-		$comisiones = $request->selectDB('mandatos_comisiones', null);
+		$comisiones = $request->getAllComisions();
 
 		return $comisiones;
 	}

@@ -23,7 +23,7 @@ class validador{
 					}
 				}
 
-				if (isset($diccionario[$key]['tipo'])) {
+				if (isset($diccionario[$key]['tipo']) && $respuesta[$key] === true) {
 					$method = 'valida_' . $diccionario[$key]['tipo'];
 
 					if (method_exists ('validador',$method) && ($value != '')) {

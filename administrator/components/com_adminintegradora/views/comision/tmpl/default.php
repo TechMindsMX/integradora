@@ -31,13 +31,16 @@ $accion = 'index.php?option=com_adminintegradora';
 				});
 
 				request.done(function (response) {
-					jQuery.each(response, function (i, v) {
-						if (v !== true) {
-							mensajes(v.msg, 'error', i)
-						} else if (v === true) {
-							window.location = 'index.php?option=com_adminintegradora&view=comisions';
-						}
-					});
+					console.log(response);
+					if (response.redirect === true) {
+						window.location = 'index.php?option=com_adminintegradora&view=comisions';
+					} else {
+						jQuery.each(response, function (i, v) {
+							if (v !== true) {
+								mensajes(v.msg, 'error', i)
+							}
+						});
+					}
 				});
 			});
 

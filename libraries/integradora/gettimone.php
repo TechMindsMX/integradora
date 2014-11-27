@@ -1765,6 +1765,13 @@ class getFromTimOne{
 
         return $currencies;
     }
+
+	public function getAllComisions() {
+		$request = new getFromTimOne();
+		$comisiones = $request->selectDB('mandatos_comisiones', null);
+
+		return $comisiones;
+	}
 }
 
 class sendToTimOne {
