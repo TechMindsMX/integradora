@@ -16,8 +16,6 @@ class MandatosModelOdclist extends JModelItem {
 	public function getOrdenes($integradoId = null){
 		$data 		 = JFactory::getApplication()->input->getArray();
 		$integradoId = $data['integradoId'];
-		$integrado 	 = new Integrado;
-		$currUser	 = Jfactory::getUser();
 
 		$listado = getFromTimOne::getOrdenesCompra($integradoId);
 

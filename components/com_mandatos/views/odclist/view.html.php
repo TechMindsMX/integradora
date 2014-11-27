@@ -22,10 +22,8 @@ class MandatosViewOdclist extends JViewLegacy {
 
 		foreach ($this->data as $key => $odc) {
 			$odc->proveedor = MandatosHelper::getProviderFromID($odc->proveedor, $this->integradoId);
-
 			$this->data[$key] = $odc;
 		}
-
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 		
 		parent::display($tpl);

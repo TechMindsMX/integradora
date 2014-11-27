@@ -82,6 +82,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
                 var_dump($e->getMessage());
                 exit;
             }
+            $save->getNextOrderNumber('odv', $data['integradoId']);
             $columnas[] = 'created';
             $valores[]  = $results[0];
             $save->insertDB('ordenes_venta', $columnas, $valores);

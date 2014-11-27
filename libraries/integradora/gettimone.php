@@ -211,153 +211,174 @@ class getFromTimOne{
         return $response;
     }
 
-    public static function getOrdenesCompra($integradoId = null){
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 1;
-        $ordenes->proyecto			= 3;
-        $ordenes->proveedor			= 2;
-        $ordenes->integradoId		= 1;
-        $ordenes->folio				= 988976;
-        $ordenes->created			= 1409288400000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	= 384.35;
-        $ordenes->paymentType		= 0;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->status			= 0;
-        $ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
+    public static function getOrdenesCompra($integradoId = null, $odcnum = null){
+        if( !is_null($integradoId) && is_null($odcnum) ){
+            $where = 'integradoId = '.$integradoId;
+        }elseif( is_null($integradoId) && !is_null($odcnum) ){
+            $where = 'integradoId = '.$integradoId.' AND numOrden = '.$odcnum;
+        }elseif( is_null($integradoId) && is_null($odcnum) ){
+            $where = null;
+        }elseif( !is_null($integradoId) && !is_null($odcnum) ){
+            $where = 'integradoId = '.$integradoId.' AND numOrden = '.$odcnum;
+        }
 
-        $array[] = $ordenes;
+        $listado = self::selectDB('ordenes_compra', $where);
 
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 2;
-        $ordenes->proyecto			= 3;
-        $ordenes->proveedor			= 4;
-        $ordenes->integradoId		= 1;
-        $ordenes->folio				= 588973;
-        $ordenes->created			= 1409634000000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	= 1227.85;
-        $ordenes->paymentType		= 0;
-        $ordenes->status			= 1;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
-
-        $array[] = $ordenes;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 3;
-        $ordenes->proyecto			= 3;
-        $ordenes->proveedor			= 2;
-        $ordenes->integradoId		= 1;
-        $ordenes->folio				= 988975;
-        $ordenes->created			= 1379048400000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	=    384.35;
-        $ordenes->paymentType		= 0;
-        $ordenes->status			= 0;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
-
-        $array[] = $ordenes;
-
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 4;
-        $ordenes->proyecto			= 1;
-        $ordenes->proveedor			= 4;
-        $ordenes->integradoId		= 2;
-        $ordenes->folio				= 988977;
-        $ordenes->created			= 1407906000000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	=    384.35;
-        $ordenes->paymentType		= 0;
-        $ordenes->status			= 0;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
-
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 4;
-        $ordenes->proyecto			= 1;
-        $ordenes->proveedor			= 4;
-        $ordenes->integradoId		= 2;
-        $ordenes->folio				= 988978;
-        $ordenes->created			= 1409288400000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	=    1384.35;
-        $ordenes->paymentType		= 0;
-        $ordenes->status			= 0;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
-
-        $ordenes 					= new stdClass;
-        $ordenes->id				= 4;
-        $ordenes->proyecto			= 1;
-        $ordenes->proveedor			= 4;
-        $ordenes->integradoId		= 2;
-        $ordenes->folio				= 988979;
-        $ordenes->created			= 1404882000000;
-        $ordenes->payment			= 1410000000000;
-        $ordenes->productos			= array(
-            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
-            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
-            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
-        );
-        $ordenes->totalAmount   	=    4500.00;
-        $ordenes->paymentType		= 0;
-        $ordenes->status			= 1;
-        $ordenes->ieps				= .1;
-        $ordenes->iva				= .16;
-        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-        $ordenes->currency			= 'MXN';
-
-        $array[] = $ordenes;
-
-        foreach ($array as $key => $value) {
-            if($integradoId == $value->integradoId){
-                self::convierteFechas($value);
-                $respuesta[] = $value;
-            }else{
-                self::convierteFechas($value);
-                $respuesta[] = $value;
+        if(count($listado) == 1){
+            self::convierteFechas($listado);
+        }else {
+            foreach ($listado as $orden) {
+                self::convierteFechas($orden);
             }
         }
 
-        return $respuesta;
+        return $listado;
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 1;
+//        $ordenes->proyecto			= 3;
+//        $ordenes->proveedor			= 2;
+//        $ordenes->integradoId		= 1;
+//        $ordenes->folio				= 988976;
+//        $ordenes->created			= 1409288400000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	= 384.35;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->status			= 0;
+//        $ordenes->descripcion		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 2;
+//        $ordenes->proyecto			= 3;
+//        $ordenes->proveedor			= 4;
+//        $ordenes->integradoId		= 1;
+//        $ordenes->folio				= 588973;
+//        $ordenes->created			= 1409634000000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 10, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	= 1227.85;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->status			= 1;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 3;
+//        $ordenes->proyecto			= 3;
+//        $ordenes->proveedor			= 2;
+//        $ordenes->integradoId		= 1;
+//        $ordenes->folio				= 988975;
+//        $ordenes->created			= 1379048400000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	=    384.35;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->status			= 0;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $array[] = $ordenes;
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 4;
+//        $ordenes->proyecto			= 1;
+//        $ordenes->proveedor			= 4;
+//        $ordenes->integradoId		= 2;
+//        $ordenes->folio				= 988977;
+//        $ordenes->created			= 1407906000000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	=    384.35;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->status			= 0;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 4;
+//        $ordenes->proyecto			= 1;
+//        $ordenes->proveedor			= 4;
+//        $ordenes->integradoId		= 2;
+//        $ordenes->folio				= 988978;
+//        $ordenes->created			= 1409288400000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	=    1384.35;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->status			= 0;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $ordenes 					= new stdClass;
+//        $ordenes->id				= 4;
+//        $ordenes->proyecto			= 1;
+//        $ordenes->proveedor			= 4;
+//        $ordenes->integradoId		= 2;
+//        $ordenes->folio				= 988979;
+//        $ordenes->created			= 1404882000000;
+//        $ordenes->payment			= 1410000000000;
+//        $ordenes->productos			= array(
+//            array('cantidad' => 1, 'descripcion' => 'Producto 1', 'unidad' => 'Kg', 'pUnitario' => 12.35),
+//            array('cantidad' => 3, 'descripcion' => 'Producto 2', 'unidad' => 'm2', 'pUnitario' => 120.5),
+//            array('cantidad' => 6, 'descripcion' => 'Producto 3', 'unidad' => 'Unidad', 'pUnitario' => 1.75)
+//        );
+//        $ordenes->totalAmount   	=    4500.00;
+//        $ordenes->paymentType		= 0;
+//        $ordenes->status			= 1;
+//        $ordenes->ieps				= .1;
+//        $ordenes->iva				= .16;
+//        $ordenes->observaciones		= 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+//        $ordenes->currency			= 'MXN';
+//
+//        $array[] = $ordenes;
+//
+//        foreach ($array as $key => $value) {
+//            if($integradoId == $value->integradoId){
+//                self::convierteFechas($value);
+//                $respuesta[] = $value;
+//            }else{
+//                self::convierteFechas($value);
+//                $respuesta[] = $value;
+//            }
+//        }
+//
+//        return $respuesta;
     }
 
     public static function getOrdenesDeposito($integradoId = null, $oddnum = null){

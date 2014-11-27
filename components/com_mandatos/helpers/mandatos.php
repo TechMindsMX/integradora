@@ -37,19 +37,9 @@ class MandatosHelper {
 	}
 	
 	public static function getProviderFromID($providerId, $integradoId){
-		$proveedores = array();
+        $proveedores = getFromTimOne::getClientes($integradoId, 1);
 
-		$clientes = getFromTimOne::getClientes($integradoId);
-
-        foreach ($clientes as $key => $value) {
-            if($value->type == 1){
-                $proveedores[$value->id] = $value;
-            }
-        }
-             exit;
-        $proveedor = $proveedores[$providerId];
-
-        return $proveedor;
+        return $proveedores;
 	}
 
     public static function getOddListado(){

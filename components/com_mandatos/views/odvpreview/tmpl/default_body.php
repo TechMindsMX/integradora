@@ -156,12 +156,12 @@ echo $this->printBtn;
 				<td><?php if ( ! empty( $prod ) ) {
 						echo $prod->unidad;
 					} ?></td>
-				<td><div class="text-right">
+				<td><div class="text-right">$
 						<?php if ( ! empty( $prod->p_unitario ) ) {
 							echo number_format($prod->p_unitario,2);
 						} ?>
 					</div></td>
-				<td><div class="text-right">
+				<td><div class="text-right">$
 						<?php if ( ! empty( $prod->cantidad ) ) {
 							echo number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2);
 						} ?>
@@ -178,7 +178,7 @@ echo $this->printBtn;
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->subTotalAmount,2); ?>
+                    $<?php echo number_format($this->odv->subTotalAmount,2); ?>
 				</div></td>
 		</tr>
 		<tr>
@@ -186,7 +186,7 @@ echo $this->printBtn;
 				<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->iva, 2); ?>
+                    $<?php echo number_format($this->odv->iva, 2); ?>
 				</div></td>
 		</tr>
 		<tr>
@@ -194,7 +194,7 @@ echo $this->printBtn;
 				<?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->ieps, 2); ?>
+                    $<?php echo number_format($this->odv->ieps, 2); ?>
 				</div></td>
 		</tr>
 		<tr>
@@ -202,7 +202,7 @@ echo $this->printBtn;
 				<?php echo JText::_('LBL_TOTAL'); ?>
 			</td>
 			<td><div class="text-right">
-					<?php echo number_format($this->odv->totalAmount, 2); ?>
+					$<?php echo number_format($this->odv->totalAmount, 2); ?>
 				</div></td>
 		</tr>
 		</tbody>

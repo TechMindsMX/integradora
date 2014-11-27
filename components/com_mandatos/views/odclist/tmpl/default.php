@@ -30,7 +30,7 @@ jQuery(document).ready(function(){
 	jQuery('.status1 input:button').prop('disabled', true);
 	
 	jQuery("#myTable").tablesorter({
-		sortList: [[0,0]], 
+		sortList: [[0,0]],
 		headers: { 
 			1:{ sorter: false },
 			2:{ sorter: false },
@@ -115,7 +115,7 @@ function filtro(){
 				echo '<tr class="type_'.$value->status.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->folio.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->proveedor->tradeName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->proveedor[0]->tradeName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
