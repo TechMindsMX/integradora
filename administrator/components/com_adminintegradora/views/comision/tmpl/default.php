@@ -104,7 +104,7 @@ $accion = 'index.php?option=com_adminintegradora';
 					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
 						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
 						?>
-						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+						<option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
