@@ -59,9 +59,14 @@ class xml2Array {
         foreach($conceptos['children'] as $key => $value){
             $datosXML->conceptos[$key]   = $value['attrs'];
         }
+        settype($impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'], 'float');
         $datosXML->impuestos->totalTrasladados  = $impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
+        settype($impuestos['children'][0]['children'][0]['attrs']['TASA'], 'integer');
         $datosXML->impuestos->iva->tasa         = $impuestos['children'][0]['children'][0]['attrs']['TASA'];
+        settype($impuestos['children'][0]['children'][0]['attrs']['IMPORTE'], 'float');
         $datosXML->impuestos->iva->importe      = $impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
+        $datosXML->impuestos->ieps->tasa        = 0;
+        $datosXML->impuestos->ieps->importe     = 0;
         $datosXML->comprobante                  = $comprobante;
         $datosXML->emisor                       = $emisor;
         $datosXML->receptor                     = $receptor;
@@ -70,4 +75,3 @@ class xml2Array {
         return $datosXML;
     }
 }
-?>

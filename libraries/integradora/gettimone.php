@@ -56,14 +56,13 @@ class getFromTimOne{
     public static function getProyects($integradoId = null, $projectId = null){
         $where = null;
 
-        if(is_null($integradoId) && is_null($projectId)){
-            $where = null;
+        if(!is_null($integradoId) && !is_null($projectId)){
+            $where = 'id_proyecto = '.$projectId;
         }elseif(!is_null($integradoId) && is_null($projectId)){
             $where = 'integradoId = '.$integradoId;
         }elseif(!is_null($projectId) && is_null($integradoId)){
             $where = 'id_proyecto = '.$projectId;
         }
-
         $respuesta = self::selectDB('integrado_proyectos',$where);
 
         return $respuesta;

@@ -11,7 +11,6 @@ class MandatosViewOdcpreview extends JViewLegacy {
 		$this->integradoId 	= $data['integradoId'];
 
 		$this->odc		 	= $this->get('ordenes');
-
 		$this->integCurrent = $this->get('integrado');
 		
         if (count($errors = $this->get('Errors'))) {

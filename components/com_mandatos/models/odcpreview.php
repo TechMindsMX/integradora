@@ -24,14 +24,9 @@ class MandatosModelOdcpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odcs)) {
-			$odcs = getFromTimOne::getOrdenesCompra($this->inputVars['integradoId']);
+			$this->odc = getFromTimOne::getOrdenesCompra($this->inputVars['integradoId'], $this->inputVars['odcnum']);
 		}
-		
-		foreach ($odcs as $key => $value) {
-			if ($value->id == $this->inputVars['odcnum'] ) {
-				$this->odc = $value;
-			}
-		}
+
 		// Verifica si la ODC exite para el integrado o redirecciona
 		if (is_null($this->odc)){
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODC_INVALID'), 'error');
@@ -40,30 +35,15 @@ class MandatosModelOdcpreview extends JModelItem {
 		$this->getProyectFromId($this->odc->proyecto);
 		
 		$this->getProviderFromID($this->odc->proveedor);
-		
+        exit;
+
 		return $this->odc;
 	}
 	
 	public function getProyectFromId($proyId){
-		$proyKeyId = array();
-		
-		$proyectos = getFromTimOne::getProyects($this->inputVars['integradoId']);
-		
-		// datos del proyecto y subproyecto involucrrado
-		foreach ( $proyectos as $key => $proy) {
-			$proyKeyId[$proy->id] = $proy;
-		}
-			
-		if(array_key_exists($proyId, $proyKeyId)) {
-			$this->odc->proyecto = $proyKeyId[$proyId];
-			
-			if($this->odc->proyecto->parentId > 0) {
-				$this->odc->sub_proyecto	= $this->odc->proyecto;
-				$this->odc->proyecto		= $proyKeyId[$this->odc->proyecto->parentId];
-			} else {
-				$this->odc->subproyecto 	= null;
-			}
-		}
+		$proyecto = getFromTimOne::getProyects($this->inputVars['integradoId'], $proyId);
+
+        var_dump($proyecto);
 	}
 	
 	public function getProviderFromID($providerId){
@@ -83,5 +63,30 @@ class MandatosModelOdcpreview extends JModelItem {
 	public function getIntegrado()	{
 		return new IntegradoSimple($this->inputVars['integradoId']);
 	}
+
+    public function getdataFactura($objeto){
+        $urlXML = $objeto->urlXML;
+
+        $xmlFileData  = file_get_contents($urlXML);
+        $manejadorXML = new xml2Array();
+        $datos 		  = $manejadorXML->manejaXML($xmlFileData);
+
+        $objeto->impuestos = $datos->impuestos->totalTrasladados;
+
+        //tomo los productos de la factura
+        foreach ($datos->conceptos as $value) {
+            $objeto->productos[] = $value;
+        }
+
+        foreach ($datos->impuestos as $key => $value) {
+            if($key == 'iva'){
+                $objeto->iva = $value;
+            }elseif($key == 'ieps'){
+                $objeto->ieps = $value;
+            }
+        }
+
+        return $datos;
+    }
 }
 
