@@ -11,10 +11,11 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
     function safeform(){
         $post       = array('integradoId'   => 'INT',
-            'idOdv'         => 'INT',
+            'id'         => 'INT',
             'projectId'     => 'STRING',
             'projectId2'    => 'STRING',
             'clientId'      => 'STRING',
+            'numOrden'      => 'INT',
             'account'       => 'STRING',
             'paymentMethod' => 'STRING',
             'conditions'    => 'STRING',
@@ -31,8 +32,9 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $document   = JFactory::getDocument();
         $this->app  = JFactory::getApplication();
         $data       = $this->app->input->getArray($post);
-        $idOdv      = $data['idOdv'];
+        $id      = $data['id'];
         $save       = new sendToTimOne();
+        $tab = $data['tab'];
 
         $document->setMimeEncoding('application/json');
 
@@ -71,7 +73,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
             $update[]   = $db->quoteName($key).' = '.$db->quote($value);
         }
 
-        if($idOdv === 0){
+        if($id === 0){
             $query 	= $db->getQuery(true);
             $query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
 
@@ -82,23 +84,30 @@ class MandatosControllerOdvform extends JControllerAdmin {
                 var_dump($e->getMessage());
                 exit;
             }
-            $save->getNextOrderNumber('odv', $data['integradoId']);
+            $numOrden = $save->getNextOrderNumber('odv', $data['integradoId']);
+
+            $columnas[] = 'numOrden';
+            $valores[]  = $numOrden;
+
             $columnas[] = 'created';
             $valores[]  = $results[0];
             $save->insertDB('ordenes_venta', $columnas, $valores);
 
-            $idOdv = $db->insertid();
+            $id = $db->insertid();
         }else{
-            $save->updateDB('ordenes_venta',$update,$db->quoteName('idOdv').' = '.$db->quote($idOdv));
+            $save->updateDB('ordenes_venta',$update,$db->quoteName('id').' = '.$db->quote($id));
+            $numOrden = $data['numOrden'];
         }
 
-        $strIdodv = ''.$idOdv.'';
-        $numOrden = str_pad($strIdodv,6,'0',STR_PAD_LEFT);
-
+        $url = null;
+        if($tab = 'ordenVenta'){
+            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&odvnum=1&layout=confirmOdv';
+        }
 
         $respuesta['success']  = true;
-        $respuesta['idOdv']    = $idOdv;
-        $respuesta['numOrden'] = $idOdv;
+        $respuesta['id']    = $id;
+        $respuesta['numOrden'] = $numOrden;
+        $respuesta['redirect'] = $url;
 
         echo json_encode($respuesta);
     }

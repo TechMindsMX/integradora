@@ -10,6 +10,7 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
+
 $productosOrden = json_decode($orden->productos);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
@@ -175,9 +176,12 @@ $productosOrden = json_decode($orden->productos);
 
         request.done(function(result){
             if(result.success){
-                jQuery('#idOdv').val(result.idOdv);
+                jQuery('#id').val(result.id);
                 jQuery('#numOrden').html(result.numOrden);
                 jQuery('a[href="#'+result.tab+'"]').trigger('click');
+                if(result.redirect != null){
+                    window.location = result.redirect;
+                }
             }
         });
 
@@ -205,10 +209,11 @@ $productosOrden = json_decode($orden->productos);
 
 <form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
     <h1>Generación de Orden de Venta</h1>
-    <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOdv; ?></span></h3>
+    <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
 
+    <input type="hidden" name="numOrden" value="<?php echo $orden->numOrden; ?>">
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
-    <input type="hidden" name="idOdv" id="idOdv" value="<?php echo $orden->idOdv ?>" />
+    <input type="hidden" name="id" id="id" value="<?php echo $orden->id ?>" />
     <?php
     echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
     echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
@@ -305,66 +310,68 @@ $productosOrden = json_decode($orden->productos);
                 <div id="columna1" ><?php echo JText::_('LBL_TOTAL'); ?></div>
             </div>
             <?php
-            foreach ($productosOrden as $key => $value) {
-                ?>
-                <div class="contenidos" id="content<?php echo $key+1000; ?>">
-                    <div id="columna2">
-                        <input type="text" name="producto[]"
-                               id="producto[]<?php echo $key+1000; ?>"
-                               placeholder="Ingrese el nombre del producto"
-                               class="typeahead productos"
-                               data-items="3"
-                               value="<?php echo $value->name; ?>">
+            if(is_array($productosOrden)) {
+                foreach ($productosOrden as $key => $value) {
+                    ?>
+                    <div class="contenidos" id="content<?php echo $key + 1000; ?>">
+                        <div id="columna2">
+                            <input type="text" name="producto[]"
+                                   id="producto[]<?php echo $key + 1000; ?>"
+                                   placeholder="Ingrese el nombre del producto"
+                                   class="typeahead productos"
+                                   data-items="3"
+                                   value="<?php echo $value->name; ?>">
+                        </div>
+                        <div id="columna2">
+                            <input id="cantidad[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="cantidad[]"
+                                   class="cantidad cantidades"
+                                   value="<?php echo $value->cantidad; ?>">
+                        </div>
+                        <div id="columna2">
+                            <input id="descripcion[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="descripcion[]"
+                                   value="<?php echo $value->descripcion; ?>">
+                        </div>
+                        <div id="columna2">
+                            <input id="unidad[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="unidad[]"
+                                   class="cantidades"
+                                   value="<?php echo $value->unidad; ?>">
+                        </div>
+                        <div id="columna2">
+                            <input id="p_unitario[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="p_unitario[]"
+                                   class="p_unit cantidades"
+                                   value="<?php echo $value->p_unitario; ?>">
+                        </div>
+                        <div id="columna2">
+                            <div id="subtotal"></div>
+                        </div>
+                        <div id="columna2">
+                            <input id="iva[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="iva[]"
+                                   class="iva cantidades"
+                                   value="<?php echo $value->iva; ?>">
+                        </div>
+                        <div id="columna2">
+                            <input id="ieps[]<?php echo $key + 1000; ?>"
+                                   type="text"
+                                   name="ieps[]"
+                                   class="ieps cantidades"
+                                   value="<?php echo $value->ieps; ?>">
+                        </div>
+                        <div id="columna2">
+                            <div id="total"></div>
+                        </div>
                     </div>
-                    <div id="columna2">
-                        <input id="cantidad[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="cantidad[]"
-                               class="cantidad cantidades"
-                               value="<?php echo $value->cantidad; ?>">
-                    </div>
-                    <div id="columna2">
-                        <input id="descripcion[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="descripcion[]"
-                               value="<?php echo $value->descripcion; ?>">
-                    </div>
-                    <div id="columna2">
-                        <input id="unidad[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="unidad[]"
-                               class="cantidades"
-                               value="<?php echo $value->unidad; ?>">
-                    </div>
-                    <div id="columna2">
-                        <input id="p_unitario[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="p_unitario[]"
-                               class="p_unit cantidades"
-                               value="<?php echo $value->p_unitario; ?>">
-                    </div>
-                    <div id="columna2">
-                        <div id="subtotal"></div>
-                    </div>
-                    <div id="columna2">
-                        <input id="iva[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="iva[]"
-                               class="iva cantidades"
-                               value="<?php echo $value->iva; ?>">
-                    </div>
-                    <div id="columna2">
-                        <input id="ieps[]<?php echo $key+1000; ?>"
-                               type="text"
-                               name="ieps[]"
-                               class="ieps cantidades"
-                               value="<?php echo $value->ieps; ?>">
-                    </div>
-                    <div id="columna2">
-                        <div id="total"></div>
-                    </div>
-                </div>
-            <?php
+                <?php
+                }
             }
             ?>
             <div class="contenidos" id="contenidos">

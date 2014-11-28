@@ -29,12 +29,12 @@ class MandatosControllerOddform extends JControllerLegacy {
 
         $save->formatData($datos);
 
-        if($datos->idOdd == '') {
+        if($datos->id == '') {
             $datos->createdDate = time();
             $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
             $salvado = $save->insertDB('ordenes_deposito');
         }else{
-            $salvado = $save->updateDB('ordenes_deposito', null,'idOdd = '.$datos->idOdd);
+            $salvado = $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
         }
         if($salvado) {
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&integradoId=' . $datos->integradoId . '&oddnum=' . $datos->numOrden.'&success=true',

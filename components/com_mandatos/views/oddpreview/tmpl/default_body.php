@@ -30,7 +30,7 @@ $number2string = new AifLibNumber();
 <div id="odd_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odd->idOdd; ?></h3>
+		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odd->id; ?></h3>
 	</div>	
 	
 	<h1><?php echo JText::_('LBL_ORDEN_DE_DEPOSITO'); ?></h1>

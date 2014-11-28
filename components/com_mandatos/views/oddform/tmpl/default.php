@@ -68,7 +68,7 @@ if(!$this->confirmacion){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
     <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="idOdd" id="idOdd" value="<?php echo $datos->idOdd; ?>" />
+        <input type="hidden" name="id" id="id" value="<?php echo $datos->id; ?>" />
         <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
 
         <div class="form-group">

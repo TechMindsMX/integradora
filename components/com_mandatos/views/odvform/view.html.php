@@ -18,7 +18,26 @@ class MandatosViewOdvform extends JViewLegacy {
         if(isset($inputVars['odvnum'])){
             $this->orden = $this->get('Orden');
         }else{
-            $this->orden = new stdClass();
+            $orden = new stdClass();
+
+            $orden->id            = '';
+            $orden->integradoId   = $this->integradoId;
+            $orden->numOrden      = '';
+            $orden->projectId     = '';
+            $orden->projectId2    = '';
+            $orden->clientId      = '';
+            $orden->account       = '';
+            $orden->paymentMethod = '';
+            $orden->conditions    = '';
+            $orden->placeIssue    = '';
+            $orden->productos     = '';
+            $orden->created       = '';
+            $orden->payment       = '';
+            $orden->status        = '';
+            $orden->creatednumero = '';
+            $orden->paymentnumero = '';
+
+            $this->orden = $orden;
         }
 
         if (count($errors = $this->get('Errors'))) {

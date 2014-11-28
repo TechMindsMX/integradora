@@ -42,11 +42,10 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
 
-        if( is_null($datos['numOrden']) ) {
+        if( $datos['numOrden'] == 0 ) {
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odc', $datos['integradoId']);
             $save->formatData($datos);
-
             $salvado = $save->insertDB('ordenes_compra');
         }else{
             $save->formatData($datos);

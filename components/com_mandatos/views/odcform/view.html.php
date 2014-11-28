@@ -43,7 +43,7 @@ class MandatosViewOdcform extends JViewLegacy {
                 $ordenes->proyecto		= '';
                 $ordenes->proveedor		= '';
                 $ordenes->integradoId	= '';
-                $ordenes->numOrden		= '';
+                $ordenes->numOrden		= '0';
                 $ordenes->paymentDate	= '';
                 $ordenes->paymentMethod	= '';
                 $ordenes->observaciones	= '';

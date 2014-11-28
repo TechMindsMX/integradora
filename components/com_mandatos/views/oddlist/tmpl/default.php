@@ -87,15 +87,15 @@ function filtro(){
         <?php
         if( !is_null($ordenes) ){
             foreach ($ordenes as $key => $value) {
-                $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->idOdd);
+                $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
                 if ($value->status == 0 && $this->permisos['canAuth']){
-                    $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->idOdd.'&task=authorize');
-                    $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->idOdd.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&oddnum='.$value->idOdd.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&oddnum='.$value->id.'&task=authorize');
+                    $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&oddnum='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
                     $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&oddnum='.$value->idOdd.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&oddnum='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
 				} elseif ($value->status == 1) {
 					$auth_button = JText::_('LBL_AUTHORIZED');
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
