@@ -213,7 +213,7 @@ class getFromTimOne{
 	public static function getOrdenes($integradoId = null, $idOrden = null, $table){
 		$where = null;
 		if(isset($idOrden)){
-			$where = 'idOdv = '.$idOrden;
+			$where = 'id = '.$idOrden;
 		}elseif(isset($integradoId)){
 			$where = 'integradoId = '.$integradoId;
 		}
