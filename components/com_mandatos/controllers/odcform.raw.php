@@ -54,7 +54,10 @@ class MandatosControllerOdcform extends JControllerLegacy {
         }
 
         if($salvado) {
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&integradoId=' . $datos['integradoId'] . '&oddnum=' . $datos['numOrden'].'&success=true',
+            $sesion = JFactory::getSession();
+            $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
+
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&integradoId=' . $datos['integradoId'] . '&odcnum=' . $datos['numOrden'].'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);

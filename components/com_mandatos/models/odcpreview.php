@@ -6,6 +6,7 @@ jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
 jimport('integradora.rutas');
 jimport('integradora.catalogos');
+jimport('integradora.xmlparser');
 
 /**
  * Modelo de datos para Listado de los clientes dados de alta para un integrado
@@ -35,58 +36,69 @@ class MandatosModelOdcpreview extends JModelItem {
 		$this->getProyectFromId($this->odc->proyecto);
 		
 		$this->getProviderFromID($this->odc->proveedor);
-        exit;
+
+        $this->getdataFactura($this->odc);
 
 		return $this->odc;
 	}
 	
 	public function getProyectFromId($proyId){
-		$proyecto = getFromTimOne::getProyects($this->inputVars['integradoId'], $proyId);
+		$proyKeyId = array();
 
-        var_dump($proyecto);
-	}
-	
-	public function getProviderFromID($providerId){
-		$proveedores = array();
-		
-		$clientes = getFromTimOne::getClientes($this->inputVars['integradoId']);
-		
-		foreach ($clientes as $key => $value) {
-			if($value->type == 1){
-				$proveedores[$value->id] = $value;
+		$proyectos = getFromTimOne::getProyects($this->inputVars['integradoId']);
+
+		// datos del proyecto y subproyecto involucrrado
+		foreach ( $proyectos as $key => $proy) {
+			$proyKeyId[$proy->id_proyecto] = $proy;
+		}
+
+		if(array_key_exists($proyId, $proyKeyId)) {
+			$this->odc->proyecto = $proyKeyId[$proyId];
+
+			if($this->odc->proyecto->parentId > 0) {
+				$this->odc->sub_proyecto	= $this->odc->proyecto;
+				$this->odc->proyecto		= $proyKeyId[$this->odc->proyecto->parentId];
+			} else {
+				$this->odc->subproyecto 	= null;
 			}
 		}
-		
-		$this->odc->proveedor = $proveedores[$providerId];
+	}
+
+	public function getProviderFromID($providerId){
+		$proveedores = getFromTimOne::getClientes($this->inputVars['integradoId'], 1);
+
+        foreach ($proveedores as $value) {
+            if($providerId == $value->id){
+                $this->odc->proveedor = $value;
+            }
+        }
 	}
 	
 	public function getIntegrado()	{
 		return new IntegradoSimple($this->inputVars['integradoId']);
 	}
 
-    public function getdataFactura($objeto){
-        $urlXML = $objeto->urlXML;
+    public function getdataFactura($orden){
+        $urlXML = $orden->urlXML;
 
         $xmlFileData  = file_get_contents($urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
 
-        $objeto->impuestos = $datos->impuestos->totalTrasladados;
+        $orden->impuestos = $datos->impuestos->totalTrasladados;
 
         //tomo los productos de la factura
         foreach ($datos->conceptos as $value) {
-            $objeto->productos[] = $value;
+            $orden->productos[] = $value;
         }
 
         foreach ($datos->impuestos as $key => $value) {
             if($key == 'iva'){
-                $objeto->iva = $value;
+                $orden->iva = $value;
             }elseif($key == 'ieps'){
-                $objeto->ieps = $value;
+                $orden->ieps = $value;
             }
         }
-
-        return $datos;
     }
 }
 

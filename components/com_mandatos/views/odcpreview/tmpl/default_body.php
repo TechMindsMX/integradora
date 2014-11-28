@@ -6,19 +6,20 @@ jimport('joomla.html.html.bootstrap');
 jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
-
 $document	 = JFactory::getDocument();
 $app 		 = JFactory::getApplication();
+$sesion      = JFactory::getSession();
 $number2word = new AifLibNumber;
-// Datos
-$params 	 = $app->input->getArray();
-
+$orden       = $this->odc;
+$msg         = $sesion->get('msg',null,'odcCorrecta');
+$sesion->clear('msg','odcCorrecta');
+$app->enqueueMessage($msg,'MESSAGE');
 ?>
 
 <div id="odc_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odc->id; ?></h3>
+		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $orden->numOrden; ?></h3>
 	</div>	
 	
 	<h1><?php echo JText::_('LBL_ORDEN_DE_COMPRA'); ?></h1>
@@ -35,7 +36,7 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->created; ?>
+				<?php echo $orden->createdDate; ?>
 			</div>
 		</div>
 		<div>
@@ -43,13 +44,13 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_PROY'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->proyecto->name; ?>
+				<?php echo $orden->proyecto->name; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->payment; ?>
+				<?php echo $orden->paymentDate; ?>
 			</div>
 		</div>
 		<div>
@@ -57,13 +58,13 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_SUBPROY'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->sub_proyecto->name)) { echo $this->odc->sub_proyecto->name; } ?>
+				<?php if (isset($orden->sub_proyecto->name)) { echo $orden->sub_proyecto->name; } ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->paymentType; ?>
+				<?php echo $orden->paymentMethod; ?>
 			</div>
 		</div>
 		<div>
@@ -71,7 +72,7 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_MONEDA'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->currency; ?>
+				<?php echo isset($orden->currency)?$orden->currency:'MXN'; ?>
 			</div>
 		</div>
 	</div>
@@ -81,7 +82,7 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 			</div>
 			<div class="span10">
-				<?php echo $this->odc->proveedor->tradeName; ?>
+				<?php echo $orden->proveedor->tradeName; ?>
 			</div>
 		</div>
 		<div>
@@ -89,13 +90,13 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_RFC'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->proveedor->rfc; ?>
+				<?php echo $orden->proveedor->rfc; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_BANCOS'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->banco)) { echo $this->odc->banco; } ?>
+				<?php if (isset($orden->banco)) { echo $orden->banco; } ?>
 			</div>
 		</div>
 		<div>
@@ -103,13 +104,13 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->proveedor->contact; ?>
+				<?php echo $orden->proveedor->contact; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->cuenta)) { echo $this->odc->cuenta; } ?>
+				<?php if (isset($orden->cuenta)) { echo $orden->cuenta; } ?>
 			</div>
 		</div>
 		<div>
@@ -117,13 +118,13 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odc->proveedor->phone; ?>
+				<?php echo $orden->proveedor->phone; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odc->clabe)) { echo $this->odc->clabe; } ?>
+				<?php if (isset($orden->clabe)) { echo $orden->clabe; } ?>
 			</div>
 		</div>
 		<div class="clearfix">
@@ -148,18 +149,18 @@ $params 	 = $app->input->getArray();
 			</thead>
 			<tbody>
 				<?php
-					foreach ($this->odc->productos as $key => $prod) : 
+					foreach ($orden->productos as $key => $prod) : 
 				?>
 						<tr>
-							<td><?php echo $key; ?></td>
-							<td><?php echo $prod['cantidad']; ?></td>
-							<td><?php echo $prod['descripcion']; ?></td>
-							<td><?php echo $prod['unidad']; ?></td>
+							<td><?php echo $key+1; ?></td>
+							<td><?php echo $prod['CANTIDAD']; ?></td>
+							<td><?php echo $prod['DESCRIPCION']; ?></td>
+							<td><?php echo $prod['UNIDAD']; ?></td>
 							<td><div class="text-right">
-								<?php echo number_format($prod['pUnitario'],2); ?>
+                                    $<?php echo number_format($prod['VALORUNITARIO'],2); ?>
 							</div></td>
 							<td><div class="text-right">
-								<?php echo number_format(floatval($prod['cantidad']) * floatval($prod['pUnitario']),2); ?>
+                                    $<?php echo number_format($prod['IMPORTE'],2); ?>
 							</div></td>
 						</tr>
 				<?php
@@ -167,21 +168,21 @@ $params 	 = $app->input->getArray();
 				?>
 				<tr>
 					<td colspan="4" rowspan="3">
-						<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odc->totalAmount + ($this->odc->totalAmount * $this->odc->iva), 2)); ?></span>
+						<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($orden->totalAmount,2)); ?></span>
 					</td>
 					<td class="span2">
 						<?php echo JText::_('LBL_SUBTOTAL'); ?>
 					</td>
 					<td><div class="text-right">
-						<?php echo number_format($this->odc->totalAmount,2); ?>
+                            $<?php $subtotal = $orden->totalAmount-$orden->impuestos; echo number_format($subtotal, 2); ?>
 					</div></td>
 				</tr>
 				<tr>
 					<td class="span2">
-						<?php echo ($this->odc->iva * 100).'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
+						<?php echo $orden->iva->tasa.'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 					</td>
 					<td><div class="text-right">
-						<?php echo number_format($this->odc->totalAmount * $this->odc->iva, 2); ?>
+                            $<?php echo number_format($orden->impuestos, 2); ?>
 					</div></td>
 				</tr>
 				<tr>
@@ -189,7 +190,7 @@ $params 	 = $app->input->getArray();
 						<?php echo JText::_('LBL_TOTAL'); ?>
 					</td>
 					<td><div class="text-right">
-						<?php echo number_format($this->odc->totalAmount + ($this->odc->totalAmount * $this->odc->iva), 2); ?>
+						$<?php echo number_format($orden->totalAmount, 2); ?>
 					</div></td>
 				</tr>
 			</tbody>
@@ -199,7 +200,7 @@ $params 	 = $app->input->getArray();
 				<?php echo JText::_('LBL_OBSERVACIONES'); ?>
 			</div>
 			<div>
-				<?php echo $this->odc->observaciones; ?>
+				<?php echo $orden->observaciones; ?>
 			</div>
 		</div>
 		<div id="footer">

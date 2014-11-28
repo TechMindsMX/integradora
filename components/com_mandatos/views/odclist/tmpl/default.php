@@ -10,7 +10,6 @@ JHTML::_('behavior.calendar');
 
 $document	= JFactory::getDocument();
 $ordenes	= $this->data;
-var_dump($ordenes);
 $type		= array('Cliente', 'Proveedor');
 $status		= array('Activo', 'Inactivo');
 
