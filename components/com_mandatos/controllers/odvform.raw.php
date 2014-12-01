@@ -43,11 +43,6 @@ class MandatosControllerOdvform extends JControllerAdmin {
         }
         unset($data['idOdv']);
         unset($data['tab']);
-
-        if($data['numOrden'] == 0){
-            unset($data['numOrden']);
-        }
-
         if($tab != 'seleccion') {
             foreach ($data['producto'] as $indice => $valor) {
                 if ($data['producto'][$indice] != '') {
@@ -64,9 +59,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
                     $productosArray[] = $productos;
                 }
             }
-        }else{
-            $productosArray = array();
-        }
+        }else
 
         foreach ($data as $key => $value) {
             if( gettype($value) === 'array' ){
@@ -100,7 +93,6 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
             $columnas[] = 'created';
             $valores[]  = $results[0];
-
             $save->insertDB('ordenes_venta', $columnas, $valores);
 
             $id = $db->insertid();
@@ -110,8 +102,8 @@ class MandatosControllerOdvform extends JControllerAdmin {
         }
 
         $url = null;
-        if($tab == 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOdv='.$id.'&layout=confirmOdv';
+        if($tab = 'ordenVenta'){
+            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&odvnum=1&layout=confirmOdv';
         }
 
         $respuesta['success']  = true;

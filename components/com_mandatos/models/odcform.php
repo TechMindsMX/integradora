@@ -15,16 +15,16 @@ class MandatosModelOdcform extends JModelItem {
     protected $dataModelo;
 
     public function __construct(){
-        $post              = array('integradoId' => 'INT', 'numOrden' => 'INT');
+        $post              = array('integradoId' => 'INT', 'idOrden' => 'INT');
         $this->inputVars   = JFactory::getApplication()->input->getArray($post);
         $this->integradoId = $this->inputVars['integradoId'];
-        $this->numOrden    = $this->inputVars['numOrden'];
+        $this->id          = $this->inputVars['idOrden'];
         parent::__construct();
     }
 
     public function getOrden(){
         if (!isset($this->dataModelo)) {
-            $this->dataModelo = getFromTimOne::getOrdenesCompra($this->integradoId, $this->numOrden);
+            $this->dataModelo = getFromTimOne::getOrdenesCompra($this->integradoId, $this->id);
         }
 
         $dataxml = $this->getdata2xml($this->dataModelo->urlXML);

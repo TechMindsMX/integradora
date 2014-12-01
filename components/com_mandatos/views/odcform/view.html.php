@@ -6,8 +6,9 @@ jimport('joomla.application.component.view');
 class MandatosViewOdcform extends JViewLegacy {
 
     function display($tpl = null){
-        $app	= JFactory::getApplication();
-        $post   = array(
+        $app	            = JFactory::getApplication();
+        $post               = array(
+            'idOrden'       => 'INT',
             'integradoId'   => 'INT',
             'confirmacion'  => 'INT',
             'numOrden'      => 'INT',
@@ -18,7 +19,8 @@ class MandatosViewOdcform extends JViewLegacy {
             'observaciones' => 'STRING'
         );
         $data	            = $app->input->getArray($post);
-        $this->integradoId	= $data['integradoId'];
+        $integradoId        = JFactory::getSession()->get('integradoId', null,'integrado');
+        $this->integradoId	= isset($integradoId)?$integradoId:$data['integradoId'];
         $this->proyectos 	= $this->get('proyectos');
         $this->proveedores	= $this->get('providers');
 
@@ -31,15 +33,17 @@ class MandatosViewOdcform extends JViewLegacy {
                 $sesion->set('datos',$objeto, 'misdatos');
                 $sesion->set('msg','Falta el Archivo XML', 'misdatos');
 
-                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&integradoId='.$data['integradoId'].'&numOrden='.$data['numOrden']);
+                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&integradoId='.$data['integradoId'].'&id='.$data['id']);
             }else {
                 $this->dataXML = $this->get('data2xml');
             }
         }else {
-            if (!is_null($data['numOrden']) && $data['numOrden'] != 0) {
+            if (!is_null($data['idOrden']) && $data['idOrden'] != 0) {
                 $this->orden = $this->get('Orden');
             } else {
                 $ordenes 				= new stdClass;
+
+                $ordenes->id            = '0';
                 $ordenes->proyecto		= '';
                 $ordenes->proveedor		= '';
                 $ordenes->integradoId	= '';

@@ -10,15 +10,16 @@ class MandatosControllerOdcform extends JControllerLegacy {
     public function __construct(){
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
-        $post = array('integradoId'   => 'STRING',
-            'numOrden'      => 'STRING',
-            'proyecto'      => 'STRING',
-            'proveedor'     => 'STRING',
-            'paymentDate'   => 'STRING',
-            'paymentMethod' => 'STRING',
-            'totalAmount'   => 'STRING',
-            'urlXML'        => 'STRING',
-            'observaciones' => 'STRING');
+        $post = array('idOrden'  => 'INT',
+                'integradoId'    => 'INT',
+                'numOrden'       => 'INT',
+                'proyecto'       => 'STRING',
+                'proveedor'      => 'STRING',
+                'paymentDate'    => 'STRING',
+                'paymentMethod'  => 'STRING',
+                'totalAmount'    => 'STRING',
+                'urlXML'         => 'STRING',
+                'observaciones'  => 'STRING');
 
         $this->parametros   = $this->inputVars->getArray($post);
 
@@ -26,9 +27,12 @@ class MandatosControllerOdcform extends JControllerLegacy {
     }
 
     function saveODC() {
+        $db = JFactory::getDbo();
+
         $datos = $this->parametros;
         $save  = new sendToTimOne();
         $date  = new DateTime($datos['paymentDate']);
+        $id    = $datos['idOrden'];
 
         $datos['paymentDate'] = $date->getTimestamp();
 
@@ -42,11 +46,15 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
 
-        if( $datos['numOrden'] == 0 ) {
+        if( $id === 0 ) {
+            unset($datos['idOrden']);
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odc', $datos['integradoId']);
+
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
+
+            $id = $db->insertid();
         }else{
             $save->formatData($datos);
             $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$datos['numOrden']);
@@ -56,14 +64,18 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $sesion = JFactory::getSession();
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
 
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&integradoId=' . $datos['integradoId'] . '&odcnum=' . $datos['numOrden'].'&success=true',
-                'redireccion' => true);
+            $respuesta = array(
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&integradoId=' . $datos['integradoId'] . '&idOrden=' . $id .'&success=true',
+                'redireccion' => true
+            );
         }else{
             $respuesta = array('redireccion' => false);
         }
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
+        $respuesta['idOrden']= $id;
+
         echo json_encode($respuesta);
     }
 

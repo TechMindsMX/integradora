@@ -95,9 +95,10 @@ if(!isset($this->datos['confirmacion'])){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
-<form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&integradoId=1&confirmacion=1') ?>" role="form" enctype="multipart/form-data">
+    <form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&integradoId=1&confirmacion=1') ?>" role="form" enctype="multipart/form-data">
         <input type="hidden" name="integradoId" id="integradiId" value="<?php echo $this->integradoId; ?>" />
-        <input type="hidden" name="numOrden" id="num Orden" value="<?php echo $datos->numOrden; ?>" />
+        <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
+        <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $datos->id; ?>" />
 
         <div class="form-group">
             <label for="proveedor"><?php echo JText::_('LBL_PROVEEDOR') ?></label>
@@ -296,7 +297,8 @@ if(!isset($this->datos['confirmacion'])){
 
     <form id="generaODC" action="#" method="post">
         <input type="hidden" name="integradoId"   value="<?php echo $datos['integradoId']; ?>" />
-        <input type="hidden" name="numOrden"        value="<?php echo $datos['numOrden'] ?>" />
+        <input type="hidden" name="idOrden"       value="<?php echo $datos['idOrden']; ?>" />
+        <input type="hidden" name="numOrden"      value="<?php echo $datos['numOrden'] ?>" />
         <input type="hidden" name="proyecto"      value="<?php echo $datos['proyecto']; ?>" />
         <input type="hidden" name="proveedor"     value="<?php echo $datos['proveedor']; ?>" />
         <input type="hidden" name="paymentDate"   value="<?php echo $datos['paymentDate']; ?>" />
