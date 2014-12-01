@@ -10,6 +10,9 @@ $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
+$default    = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
+$amount     = isset($this->odr->amount) ? $this->odr->amount : '';
+
 ?>
 	<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 	<script>
@@ -102,28 +105,37 @@ if(!$this->confirmacion){
 </div>
 
 <form id="generaODR" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
-    <input type="hidden" id="balance" value="<?php echo $this->integrado->balance; ?>">
+	<div class="form-group">
+		<label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
+		<?php
+		echo JHTML::_('calendar',$default,'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
+		?>
+	</div>
+	<input type="hidden" id="balance" value="<?php echo $this->integrado->balance; ?>">
+
     <input type="hidden" id="integradoId" name="integradoId" value="<?php echo $this->integradoId; ?>">
 
     <div class="form-group">
         <label for="paymentMethod"><?php echo JText::_('LBL_FORMA_PAGO'); ?></label>
         <select id="paymentMethod" name="paymentMethod">
-            <option value="0"><?php echo JText::_('LBL_SPEI'); ?></option>
-            <option value="1"><?php echo JText::_('LBL_CHEQUE'); ?></option>
+	        <?php
+	        switch ($this->odr->paymentMethod) {
+		        case 0:
+					$select0 = 'selected';
+			        break;
+		        case 1:
+			        $select1 = 'selected';
+			        break;
+	        }
+	        ?>
+            <option value="0" <?php echo $select0; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
+            <option value="1" <?php echo $select1; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
         </select>
     </div>
 
 	<div class="form-group">
-		<label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
-		<?php
-		$default = date('Y-m-d');
-		echo JHTML::_('calendar',$default,'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
-		?>
-	</div>
-
-	<div class="form-group">
         <label for="amount"><?php echo JText::_('LBL_AMOUNT_REQUESTED'); ?></label>
-        <input type="text" name="amount" id="amount" /> <span id="errormsg" style="display: none;"></span>
+        <input type="text" name="amount" id="amount" value="<?php echo $amount; ?>" /> <span id="errormsg" style="display: none;"></span>
     </div>
 
     <div class="clearfix">&nbsp;</div>

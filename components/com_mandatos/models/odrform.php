@@ -15,23 +15,38 @@ class MandatosModelOdrform extends JModelItem {
     protected $dataOrden;
 
     function __construct(){
+	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+
         $this->data 		= JFactory::getApplication()->input->getArray();
-        $this->integradoId  = $this->data['integradoId'];
+        $this->integradoId  = isset($integradoId) ? $integradoId : $this->data['integradoId'];
+	    $this->idOrden      = isset($this->data['odrnum']) ? $this->data['odrnum'] : null;
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
 
         parent::__construct();
     }
 
-    public function getOrdenes($integradoId = null){
-        $dataOrden = getFromTimOne::getOrdenesRetiro($this->integradoId);
+    public function getOrdenes(){
+        $this->dataOrden = getFromTimOne::getOrdenesRetiro($this->integradoId, $this->idOrden);
 
-	    return $dataOrden;
+	    if(isset($this->idOrden)){
+		    $this->verifyStatusEditable();
+	    }
+
+	    return $this->dataOrden;
     }
 
 	public function getBalance( ){
 		$balance = 150;
 		return $balance;
+	}
+
+	private function verifyStatusEditable() {
+		if($this->dataOrden->status > 0){
+			$url = 'index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId;
+			$msg = 'ORDEN_CON_ESTATUS_NO_EDITABLE';
+			JFactory::getApplication()->redirect($url, $msg, 'error');
+		}
 	}
 }
 ?>

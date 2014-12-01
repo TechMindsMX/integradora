@@ -131,7 +131,7 @@ $number2word = new AifLibNumber();
 		</div>
 	</div>
 	<div class="clearfix" id="cuerpo">
-		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_RETIRAR'); ?></h3>
+		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_RETIRAR'); ?></h3>Creo q
 		<table class="table table-bordered">
 			<thead>
 				<tr>
