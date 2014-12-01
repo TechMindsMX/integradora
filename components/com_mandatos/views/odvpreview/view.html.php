@@ -20,7 +20,7 @@ class MandatosViewOdvpreview extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=' . $this->integradoId . '&idOdv=' . $data['idOdv'];
+		$url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=' . $this->integradoId . '&irOrden=' . $data['idOrden'];
 		$this->printBtn = MandatosHelper::getPrintButton($url);
 
 		// Verifica los permisos de edición y autorización

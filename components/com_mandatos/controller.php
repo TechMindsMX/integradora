@@ -498,7 +498,7 @@ class MandatosController extends JControllerLegacy {
 
         if(!empty($producto)) {
             $respuesta['success'] = true;
-            $respuesta['datos'] = $producto;
+            $respuesta['datos'] = $producto[0];
         }else{
             $respuesta['success'] = false;
             $respuesta['msg'] = 'No existe el producto';

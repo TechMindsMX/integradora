@@ -215,7 +215,7 @@ $productosOrden = json_decode($orden->productos);
 
     <input type="hidden" name="numOrden" value="<?php echo $orden->numOrden; ?>">
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
-    <input type="hidden" name="id" id="id" value="<?php echo $orden->id ?>" />
+    <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id ?>" />
     <?php
     echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
     echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
@@ -263,13 +263,9 @@ $productosOrden = json_decode($orden->productos);
         <select name="account">
             <option value="0">Cuenta</option>
             <?php
-            if(count($this->cuentas) == 1){
-                echo '<option value="' . $this->cuentas->datosBan_id . '" selected>' . $this->cuentas->banco_cuenta_xxx . '</option>';
-            }else {
-                foreach ($this->cuentas as $datosCuenta) {
-                    $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
-                    echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
-                }
+            foreach ($this->cuentas as $datosCuenta) {
+                $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
+                echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
             }
             ?>
         </select>
