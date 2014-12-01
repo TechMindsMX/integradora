@@ -14,7 +14,7 @@ jimport('integradora.gettimone');
 class MandatosControllerOdvpreview extends JControllerLegacy {
 
 	function authorize() {
-        $post               = array('integradoId' => 'INT', 'idOdv' => 'INT');
+        $post               = array('integradoId' => 'INT', 'idOrden' => 'INT');
 		$this->app 			= JFactory::getApplication();
 		$this->parametros	= $this->app->input->getArray($post);
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
@@ -28,13 +28,11 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             $this->parametros['userId']   = (INT)$user->id;
             $this->parametros['authDate'] = time();
-            $this->parametros['idOrden']  = $this->parametros['idOdv'];
-            unset($this->parametros['idOdv']);
             unset($this->parametros['integradoId']);
 
             $save->formatData($this->parametros);
 
-            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden']);
+            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odv_auth');
 
             $check = getFromTimOne::checkUserAuth($auths);
 

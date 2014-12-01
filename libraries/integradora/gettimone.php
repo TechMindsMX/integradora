@@ -7,8 +7,10 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 
 class getFromTimOne{
-    public static function getOrdenAuths($idOrden){
-        $authorizations = self::selectDB('auth_odv','idOrden = '.$idOrden);
+    public static function getOrdenAuths($idOrden, $tipo){
+        $tabla = sendToTimOne::getTableByType($tipo);
+
+        $authorizations = self::selectDB($tabla,'idOrden = '.$idOrden);
 
         if (isset($authorizations)) {
             foreach($authorizations as $key => $value){
@@ -243,21 +245,50 @@ class getFromTimOne{
 
         $ordenes = self::selectDB($table, $where);
 
-        if (empty($ordenes)) {
+        if (!empty($ordenes)) {
             foreach ($ordenes as $orden) {
                 self::convierteFechas($orden);
             }
         }
-
         return $ordenes;
     }
 
 	public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
-		return self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
-	}
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
+        foreach ($orden as $value) {
+            $value->id = (INT)$value->id;
+            $value->proyecto = (INT)$value->proyecto;
+            $value->proveedor = (INT)$value->proveedor;
+            $value->integradoId = (INT)$value->integradoId;
+            $value->numOrden = (INT)$value->numOrden;
+            $value->createdDate = (STRING)$value->createdDate;
+            $value->paymentDate = (STRING)$value->paymentDate;
+            $value->paymentMethod = (INT)$value->paymentMethod;
+            $value->totalAmount = (FLOAT)$value->totalAmount;
+            $value->urlXML = (STRING)$value->urlXML;
+            $value->observaciones = (STRING)$value->observaciones;
+            $value->status = (INT)$value->status;
+        }
+
+        return $orden;
+    }
 
 	public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
-		return self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
+		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
+
+        foreach ($orden as $value) {
+            $value->id = (INT)$value->id;
+            $value->integradoId = (INT)$value->integradoId;
+            $value->numOrden = (INT)$value->numOrden;
+            $value->createdDate = (STRING)$value->createdDate;
+            $value->paymentDate = (STRING)$value->paymentDate;
+            $value->totalAmount = (FLOAT)$value->totalAmount;
+            $value->paymentMethod = (INT)$value->paymentMethod;
+            $value->attachment = (STRING)$value->attachment;
+            $value->status = (INT)$value->status;
+        }
+
+        return $orden;
     }
 
 	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
@@ -286,7 +317,20 @@ class getFromTimOne{
     }
 
 	public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
-		return self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
+
+        foreach ($orden as $value) {
+            $value->id = (INT)$value->id;
+            $value->integradoId = (INT)$value->integradoId;
+            $value->numOrden = (INT)$value->numOrden;
+            $value->createdDate = (STRING)$value->createdDate;
+            $value->paymentDate = (STRING)$value->paymentDate;
+            $value->paymentMethod = (INT)$value->paymentMethod;
+            $value->amount = (FLOAT)$value->amount;
+            $value->status = (INT)$value->status;
+        }
+
+        return $orden;
 	}
 
 	public static function getBalances($integradoId)
@@ -1415,9 +1459,7 @@ class getFromTimOne{
 
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
-
             if( is_numeric(strpos(strtolower($key),'date')) ){
-                $objeto->$propiedad = $value;
                 $objeto->$key = date('d-m-Y', ($value) );
             }
         }
@@ -1548,9 +1590,8 @@ class sendToTimOne {
         $this->setHttpType('GET');
     }
 
-    public function getNextOrderNumber($tipo, $integrado){
-        $db		= JFactory::getDbo();
-
+    public static function getTableByType($tipo)
+    {
         switch($tipo){
             case 'odd':
                 $table = 'ordenes_deposito';
@@ -1564,7 +1605,27 @@ class sendToTimOne {
             case 'odr':
                 $table = 'ordenes_retiro';
                 break;
+            case 'odd_auth':
+                $table = 'auth_odd';
+                break;
+            case 'odv_auth':
+                $table = 'auth_odv';
+                break;
+            case 'odc_auth':
+                $table = 'auth_odc';
+                break;
+            case 'odr_auth':
+                $table = 'auth_odr';
+                break;
         }
+
+        return $table;
+    }
+
+    public function getNextOrderNumber($tipo, $integrado){
+        $db		= JFactory::getDbo();
+
+        $table = self::getTableByType($tipo);
 
         $where = $db->quoteName('integradoId').' = '.$integrado;
 

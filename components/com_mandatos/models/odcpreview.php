@@ -25,10 +25,12 @@ class MandatosModelOdcpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odcs)) {
-			$this->odc = getFromTimOne::getOrdenesCompra($this->inputVars['integradoId'], $this->inputVars['odcnum']);
-		}
+			$odc = getFromTimOne::getOrdenesCompra($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+        }
 
-		// Verifica si la ODC exite para el integrado o redirecciona
+        $this->odc = $odc[0];
+
+        // Verifica si la ODC exite para el integrado o redirecciona
 		if (is_null($this->odc)){
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODC_INVALID'), 'error');
 		}
