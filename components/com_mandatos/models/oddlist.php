@@ -23,14 +23,7 @@ class MandatosModelOddlist extends JModelItem {
     }
 	
 	public function getOrdenes($integradoId = null){
-        $respuesta = array();
-        $listado = getFromTimOne::getOrdenesDeposito($this->integradoId);
-
-        if( count($listado) == 1 ){
-            $respuesta[] = $listado;
-        }else{
-            $respuesta = $listado;
-        }
+        $respuesta = getFromTimOne::getOrdenesDeposito($this->integradoId);
 
         return $respuesta;
     }

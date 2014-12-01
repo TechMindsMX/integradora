@@ -27,17 +27,20 @@ class MandatosControllerOddform extends JControllerLegacy {
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
 
-        $save->formatData($datos);
+	    if($datos->id == '') {
+		    $datos->createdDate = time();
+		    $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
+		    unset($datos->id);
 
-        if($datos->id == '') {
-            $datos->createdDate = time();
-            $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
-            $salvado = $save->insertDB('ordenes_deposito');
-        }else{
-            $salvado = $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
+		    $save->formatData($datos);
+		    $salvado = $save->insertDB('ordenes_deposito', null, null, true);
+	    }else{
+		    $save->formatData($datos);
+		    $salvado = $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
         }
+
         if($salvado) {
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&integradoId=' . $datos->integradoId . '&oddnum=' . $datos->numOrden.'&success=true',
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&integradoId=' . $datos->integradoId . '&idOrden=' . $salvado.'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);

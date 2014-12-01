@@ -8,9 +8,10 @@ class MandatosViewOddform extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
-		$this->integradoId 	= $data['integradoId'];
+		$integradoId        = JFactory::getSession()->get('integradoId', null, 'integrado');
+		$this->integradoId 	= isset($integradoId) ? $integradoId : $data['integradoId'];
 		$this->odd		 	= $this->get('orden');
-        $this->actionUrl    = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'&confirmacion=1'):'#';
+        $this->actionUrl    = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'&confirmacion=1') : '#';
         $this->datos        = $data;
 
         if(isset($_FILES['attachment']['size'])){
@@ -28,12 +29,13 @@ class MandatosViewOddform extends JViewLegacy {
             $this->datos        = $data;
         }else{
             $this->confirmacion = false;
-            if( isset($data['oddnum']) ) {
-                $this->datos = $this->odd;
+            if( isset($data['idOrden']) ) {
+                $this->datos = $this->odd[0];
             }else{
                 $datos = new stdClass();
 
-                $datos->idOdd = '';
+                $datos->id = '';
+                $datos->numOrden = '';
                 $datos->paymentDate = '';
                 $datos->totalAmount = '';
                 $datos->paymentMethod = '';

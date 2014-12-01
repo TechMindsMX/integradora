@@ -82,7 +82,7 @@ if(!$this->confirmacion){
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_DEPOSIT_DATE'); ?></label>
             <?php
-            $default = $datos->paymentDate!=''?$datos->paymentDate:date('Y-m-d');
+            $default = $datos->paymentDate!='' ? $datos->paymentDate : date('Y-m-d');
             echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
             ?>
         </div>
@@ -107,7 +107,7 @@ if(!$this->confirmacion){
 <?php
 }else{
     $archivo = $this->file;
-    $datos['attachment'] = $archivo['ruta'];
+    $datos['attachment'] = $archivo['name'];
     $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
     ?>
 
