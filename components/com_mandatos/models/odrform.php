@@ -19,7 +19,7 @@ class MandatosModelOdrform extends JModelItem {
 
         $this->data 		= JFactory::getApplication()->input->getArray();
         $this->integradoId  = isset($integradoId) ? $integradoId : $this->data['integradoId'];
-	    $this->idOrden      = isset($this->data['odrnum']) ? $this->data['odrnum'] : null;
+	    $this->idOrden      = isset($this->data['idOrden']) ? $this->data['idOrden'] : null;
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
 

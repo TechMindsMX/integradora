@@ -22,7 +22,7 @@ $number2word = new AifLibNumber();
         // } else {
                 // $href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
                 // $href = "window.open(this.href,'win2','".$href."'); return false;";
-                // $href = '"index.php?option=com_mandatos&view=odrpreview&integradoId='.$params['integradoId'].'&odrnum='.$params['odrnum'].'&tmpl=component&print=1" '.$href;
+                // $href = '"index.php?option=com_mandatos&view=odrpreview&integradoId='.$params['integradoId'].'&idOrden='.$params['odrnum'].'&tmpl=component&print=1" '.$href;
         // }
 ?>
 <!--        <a href=--><?php //echo $href; ?><!-- >Click for Printing</a>-->
@@ -31,7 +31,7 @@ $number2word = new AifLibNumber();
 <div id="odr_preview">
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
-		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odr->id; ?></h3>
+		<h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $this->odr->numOrden; ?></h3>
 	</div>	
 	
 	<h1><?php echo JText::_('LBL_ORDEN_DE_RETIRO'); ?></h1>

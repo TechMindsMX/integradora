@@ -53,7 +53,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $sesion = JFactory::getSession();
             $sesion->set('msg','Datos Almacenados', 'odrCorrecta');
 
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&integradoId=' . $datos['integradoId'] . '&odrnum=' . $salvado.'&success=true',
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&integradoId=' . $datos['integradoId'] . '&idOrden=' . $salvado.'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);

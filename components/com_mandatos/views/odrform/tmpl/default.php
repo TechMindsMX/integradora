@@ -119,6 +119,8 @@ if(!$this->confirmacion){
         <label for="paymentMethod"><?php echo JText::_('LBL_FORMA_PAGO'); ?></label>
         <select id="paymentMethod" name="paymentMethod">
 	        <?php
+	        $select0 = '';
+	        $select1 = '';
 	        switch ($this->odr->paymentMethod) {
 		        case 0:
 					$select0 = 'selected';
