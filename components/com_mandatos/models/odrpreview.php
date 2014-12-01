@@ -29,6 +29,9 @@ class MandatosModelOdrpreview extends JModelItem {
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODR_INVALID'), 'error');
 		}
 
+		// simulado
+		$this->odr->currency = 'MXN';
+
 		return $this->odr;
 	}
 

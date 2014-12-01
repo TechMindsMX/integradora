@@ -1519,6 +1519,9 @@ class sendToTimOne {
             case 'odc':
                 $table = 'ordenes_compra';
                 break;
+            case 'odr':
+                $table = 'ordenes_retiro';
+                break;
         }
 
         $where = $db->quoteName('integradoId').' = '.$integrado;
@@ -1585,7 +1588,7 @@ class sendToTimOne {
         $this->updateDB('integrado_products', $columnas, $condicion);
     }
 
-    public function insertDB($tabla, $columnas=null, $valores=null){
+    public function insertDB($tabla, $columnas=null, $valores=null, $last_inserted_id = null){
         $columnas = is_null($columnas)?$this->columnas:$columnas;
         $valores = is_null($valores)?$this->valores:$valores;
 
@@ -1604,6 +1607,10 @@ class sendToTimOne {
             echo $e->getMessage();
             $return = false;
         }
+
+	    if($last_inserted_id){
+		    $return= $db->insertid();
+	    }
 
         return $return;
     }

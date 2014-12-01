@@ -48,7 +48,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odr->created; ?>
+				<?php echo $this->odr->createdDate; ?>
 			</div>
 		</div>
 		<div>
@@ -62,7 +62,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odr->payment)) {echo $this->odr->payment;} ?>
+				<?php if (isset($this->odr->paymentDate)) {echo $this->odr->paymentDate;} ?>
 			</div>
 		</div>
 		<div>
@@ -76,7 +76,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odr->paymentType; ?>
+				<?php echo $this->odr->paymentMethod; ?>
 			</div>
 		</div>
 		<div>
@@ -141,19 +141,11 @@ $number2word = new AifLibNumber();
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odr->totalAmount,2). ' ' . $this->odr->currency; ?></td>
-					<td><?php echo $number2word->toCurrency('$'.number_format($this->odr->totalAmount,2)); ?></td>
+					<td><?php echo '$ '.number_format($this->odr->amount,2). ' ' . $this->odr->currency; ?></td>
+					<td><?php echo $number2word->toCurrency('$'.number_format($this->odr->amount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>
-		<div class="control-group" id="tabla-bottom">
-			<div>
-				<?php echo JText::_('LBL_OBSERVACIONES'); ?>
-			</div>
-			<div>
-				<?php echo $this->odr->observaciones; ?>
-			</div>
-		</div>
 		<div id="footer">
 			<div class="container">
 				<div class="control-group">
