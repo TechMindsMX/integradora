@@ -60,8 +60,6 @@ if( !is_null($proyectos) ){
 			}else{
 				boton.parent().parent().find('.editar').prop('disabled', true);
 			}
-		}else{
-			console.log('no hago nada');
 		}
 	}
 	
@@ -70,6 +68,12 @@ if( !is_null($proyectos) ){
 		
 		window.location = 'index.php?option=com_mandatos&task=editarproyecto&id_proyecto='+id+'&integradoId=<?php echo $this->integradoId; ?>';
 	}
+
+    function deshabilitaAjax(){
+        var request = jQuery.ajax({
+            url:'index.php'
+        });
+    }
 </script>
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TITULO'); ?></h1>
 

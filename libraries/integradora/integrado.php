@@ -148,7 +148,7 @@ class Integrado {
 				$lvls['lvls_to_auth'] = json_decode($value->lvls_to_auth);
 			}
 		}
-		
+
 		// busca el usuario en este integrado
 		$query = $db->getQuery(true)
 			->select('*')
@@ -163,10 +163,10 @@ class Integrado {
 		}
 
 		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
-		
+
 		// verifica si puede editar
 		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_auth']);
-		
+
 		return $permisos;
 		
 	}

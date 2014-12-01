@@ -21,7 +21,7 @@ class MandatosModelMandatos extends JModelItem {
 		}
 
         foreach ($this->dataModelo->integrados as $value) {
-            if($value->integrado_principal == 1 && $value->integrado_permission_level >= 2){
+            if($value->integrado_principal == 1 || $value->integrado_permission_level >= 2){
                 $integrado = new stdClass();
                 $integrado->integradoId = $value->integrado_id;
                 $integrado->name = $value->datos_personales->nom_comercial;

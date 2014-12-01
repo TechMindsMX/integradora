@@ -81,7 +81,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->odv->account)) { echo $this->odv->account->banco_cuenta; } ?>
+			<?php if (isset($this->odv->account->banco_cuenta)) { echo $this->odv->account->banco_cuenta; } ?>
 		</div>
 	</div>
 </div>

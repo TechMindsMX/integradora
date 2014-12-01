@@ -7,6 +7,33 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 
 class getFromTimOne{
+    public static function getOrdenAuths($idOrden){
+        $authorizations = self::selectDB('auth_odv','idOrden = '.$idOrden);
+
+        if (isset($authorizations)) {
+            foreach($authorizations as $key => $value){
+                $value->idOrden  = (INT)$value->idOrden;
+                $value->userId   = (INT)$value->userId;
+                $value->authDate = (STRING)$value->authDate;
+            }
+        }
+
+        return $authorizations;
+    }
+
+    public static function checkUserAuth($auths){
+        $userId = JFactory::getUser()->id;
+        $userAsAuth = false;
+
+        foreach ($auths as $auth) {
+            if($auth->userId === (INT)$userId) {
+                $userAsAuth = true;
+            }
+        }
+
+        return $userAsAuth;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -40,11 +67,7 @@ class getFromTimOne{
 
         try {
             $db->setQuery($query);
-            if ($db->getNumRows($db->query()) == 1) {
-                $results = $db->loadObject();
-            } else {
-                $results = $db->loadObjectList();
-            }
+            $results = $db->loadObjectList();
         }catch (Exception $e){
             var_dump($e);
             exit;
@@ -220,9 +243,7 @@ class getFromTimOne{
 
         $ordenes = self::selectDB($table, $where);
 
-        if(count($ordenes) == 1){
-            self::convierteFechas($ordenes);
-        }else {
+        if (empty($ordenes)) {
             foreach ($ordenes as $orden) {
                 self::convierteFechas($orden);
             }
@@ -240,7 +261,28 @@ class getFromTimOne{
     }
 
 	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
-		return self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
+
+        //Cambio el tipo de dato para las validaciones con (===)
+        foreach ($orden as $key => $value) {
+            $value->id             = (INT)$value->id;
+            $value->integradoId    = (INT)$value->integradoId;
+            $value->numOrden       = (INT)$value->numOrden;
+            $value->projectId      = (INT)$value->projectId;
+            $value->projectId2     = (INT)$value->projectId2;
+            $value->clientId       = (INT)$value->clientId;
+            $value->account        = (INT)$value->account;
+            $value->paymentMethod  = (INT)$value->paymentMethod;
+            $value->conditions     = (INT)$value->conditions;
+            $value->placeIssue     = (INT)$value->placeIssue;
+            $value->productos      = (STRING)$value->productos;
+            $value->created        = (STRING)$value->created;
+            $value->payment        = (STRING)$value->payment;
+            $value->status         = (INT)$value->status;
+
+        }
+
+        return $orden;
     }
 
 	public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
@@ -1373,8 +1415,8 @@ class getFromTimOne{
 
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
-            if($key == 'createdDate' || $key == 'paymentDate' || $key == 'created' || $key == 'payment'){
-                $propiedad = $key.'numero';
+
+            if( is_numeric(strpos(strtolower($key),'date')) ){
                 $objeto->$propiedad = $value;
                 $objeto->$key = date('d-m-Y', ($value) );
             }
@@ -1810,6 +1852,10 @@ class sendToTimOne {
      */
     public function getHttpType () {
         return strtoupper($this->httpType);
+    }
+
+    public function changeStatus()
+    {
     }
 
 
