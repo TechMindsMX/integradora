@@ -98,16 +98,16 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach ($ordenes as $key => $value) {
-                $url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
+                $url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&idOdv='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
                 if ($value->status == 0 && $this->permisos['canAuth']){
                     $url_auth = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&odvnum='.$value->id);
                     $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=odvform&integradoId='.$this->integradoId.'&odvnum='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=odvform&integradoId='.$this->integradoId.'&idOdv='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
                     $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=odvform&integradoId='.$this->integradoId.'&odvnum='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=odvform&integradoId='.$this->integradoId.'&idOdv='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status == 1) {
                     $auth_button = JText::_('LBL_AUTHORIZED');
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
@@ -118,7 +118,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 $class = $value->status == 0?'':'status1';
 
                 echo '<tr class="type_'.$value->status.'">';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.' '.$value->numOrden.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.@$value->proveedor->tradeName.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';

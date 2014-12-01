@@ -26,11 +26,8 @@ class MandatosModelOdvlist extends JModelItem {
         $listado = getFromTimOne::getOrdenesVenta($this->integradoId);
 
         foreach ($listado as $key => $value) {
-            $strIdodv = ''.$value->id.'';
             $value->productos = json_decode($value->productos);
-
             $value->totalAmount = $this->getTotalAmount($value->productos);
-            $value->numOrden = str_pad($strIdodv,6,'0',STR_PAD_LEFT);
         }
 
         return $listado;

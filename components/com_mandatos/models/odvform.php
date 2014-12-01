@@ -20,7 +20,7 @@ class MandatosModelOdvform extends JModelItem {
     public function getOrden(){
         $inputVars = JFactory::getApplication()->input->getArray();
 
-        $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['odvnum']);
+        $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['idOdv']);
 
         return $orden;
     }
@@ -43,6 +43,7 @@ class MandatosModelOdvform extends JModelItem {
                 $data['subproyectos'][$value->parentId][]= $value;
             }
         }
+
         return $data;
     }
 
@@ -71,19 +72,20 @@ class MandatosModelOdvform extends JModelItem {
 
         $allproducts = getFromTimOne::getProducts($this->integradoId);
 
-
         if(count($allproducts) == 1){
             $datos->id_producto = $allproducts->id_producto;
             $datos->productName = $allproducts->productName;
             $respuesta[] = $datos;
         }else{
             foreach ($allproducts as $key => $value) {
+                $datos = new stdClass();
                 $datos->id_producto = $value->id_producto;
                 $datos->productName = $value->productName;
                 $respuesta[] = $datos;
             }
 
         }
+
         return $respuesta;
     }
 

@@ -14,7 +14,7 @@ class MandatosModelOdvpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odv)) {
-			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['odvnum']);
+			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['idOdv']);
 		}
 
 		$subTotalOrden  = 0;

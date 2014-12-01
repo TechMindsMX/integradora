@@ -9,9 +9,7 @@ class MandatosViewOdvpreview extends JViewLegacy {
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
 		$this->integradoId 	= $data['integradoId'];
-
 		$this->odv		 	= $this->get('ordenes');
-
 		$this->integCurrent = $this->get('integrado');
 
         if (count($errors = $this->get('Errors'))) {
@@ -22,7 +20,7 @@ class MandatosViewOdvpreview extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=' . $this->integradoId . '&odvnum=' . $data['odvnum'];
+		$url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=' . $this->integradoId . '&idOdv=' . $data['idOdv'];
 		$this->printBtn = MandatosHelper::getPrintButton($url);
 
 		// Verifica los permisos de edición y autorización

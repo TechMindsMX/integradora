@@ -178,7 +178,9 @@ $productosOrden = json_decode($orden->productos);
             if(result.success){
                 jQuery('#id').val(result.id);
                 jQuery('#numOrden').html(result.numOrden);
+                jQuery('input[name="numOrden"]').val(result.numOrden);
                 jQuery('a[href="#'+result.tab+'"]').trigger('click');
+
                 if(result.redirect != null){
                     window.location = result.redirect;
                 }

@@ -520,4 +520,13 @@ class MandatosController extends JControllerLegacy {
 
         return $respuesta;
     }
+
+    public function cancelOdv(){
+        $data  = $this->input_data->getArray();
+        $idOdv = $data['idOdv'];
+        $delete = new sendToTimOne();
+
+        $delete->deleteDB('ordenes_venta','id = '.$idOdv);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$data['integradoId']);
+    }
 }

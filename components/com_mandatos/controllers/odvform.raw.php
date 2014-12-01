@@ -43,20 +43,29 @@ class MandatosControllerOdvform extends JControllerAdmin {
         }
         unset($data['idOdv']);
         unset($data['tab']);
-        foreach ($data['producto'] as $indice => $valor) {
-            if($data['producto'][$indice] != '') {
-                $productos = new stdClass();
 
-                $productos->name        = $data['producto'][$indice];
-                $productos->descripcion = $data['descripcion'][$indice];
-                $productos->cantidad    = $data['cantidad'][$indice];
-                $productos->unidad      = $data['unidad'][$indice];
-                $productos->p_unitario  = $data['p_unitario'][$indice];
-                $productos->iva         = $data['iva'][$indice];
-                $productos->ieps        = $data['ieps'][$indice];
+        if($data['numOrden'] == 0){
+            unset($data['numOrden']);
+        }
 
-                $productosArray[]       = $productos;
+        if($tab != 'seleccion') {
+            foreach ($data['producto'] as $indice => $valor) {
+                if ($data['producto'][$indice] != '') {
+                    $productos = new stdClass();
+
+                    $productos->name = $data['producto'][$indice];
+                    $productos->descripcion = $data['descripcion'][$indice];
+                    $productos->cantidad = $data['cantidad'][$indice];
+                    $productos->unidad = $data['unidad'][$indice];
+                    $productos->p_unitario = $data['p_unitario'][$indice];
+                    $productos->iva = $data['iva'][$indice];
+                    $productos->ieps = $data['ieps'][$indice];
+
+                    $productosArray[] = $productos;
+                }
             }
+        }else{
+            $productosArray = array();
         }
 
         foreach ($data as $key => $value) {
@@ -91,6 +100,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
             $columnas[] = 'created';
             $valores[]  = $results[0];
+
             $save->insertDB('ordenes_venta', $columnas, $valores);
 
             $id = $db->insertid();
@@ -100,8 +110,8 @@ class MandatosControllerOdvform extends JControllerAdmin {
         }
 
         $url = null;
-        if($tab = 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&odvnum=1&layout=confirmOdv';
+        if($tab == 'ordenVenta'){
+            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOdv='.$id.'&layout=confirmOdv';
         }
 
         $respuesta['success']  = true;

@@ -1642,12 +1642,12 @@ class sendToTimOne {
             $db->setQuery($query);
             $db->execute();
 
-            $return = '';
+            $return = true;
 
         }catch (Exception $e){
             $return = $e->getMessage();
-        }
 
+        }
         return $return;
     }
 
