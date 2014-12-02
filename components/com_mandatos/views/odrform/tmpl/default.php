@@ -99,7 +99,7 @@ if(!$this->confirmacion){
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></h1>
 <div style="margin-bottom: 10px;">
 	<h4>
-		<span class="label-default"><?php echo JText::_('COM_MANDATOS_ORDEN_RETIRO_BALANCE'); ?></span>
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
 		<span>$<?php echo number_format($this->integrado->balance); ?></span>
 	</h4>
 </div>

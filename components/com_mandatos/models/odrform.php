@@ -33,7 +33,7 @@ class MandatosModelOdrform extends JModelItem {
 		    $this->verifyStatusEditable();
 	    }
 
-	    return $this->dataOrden;
+	    return $this->dataOrden[0];
     }
 
 	public function getBalance( ){
@@ -42,7 +42,7 @@ class MandatosModelOdrform extends JModelItem {
 	}
 
 	private function verifyStatusEditable() {
-		if($this->dataOrden->status > 0){
+		if($this->dataOrden[0]->status > 0){
 			$url = 'index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId;
 			$msg = 'ORDEN_CON_ESTATUS_NO_EDITABLE';
 			JFactory::getApplication()->redirect($url, $msg, 'error');

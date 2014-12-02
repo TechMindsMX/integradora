@@ -72,18 +72,11 @@ class MandatosModelOdvform extends JModelItem {
 
         $allproducts = getFromTimOne::getProducts($this->integradoId);
 
-        if(count($allproducts) == 1){
-            $datos->id_producto = $allproducts->id_producto;
-            $datos->productName = $allproducts->productName;
+        foreach ($allproducts as $key => $value) {
+            $datos = new stdClass();
+            $datos->id_producto = $value->id_producto;
+            $datos->productName = $value->productName;
             $respuesta[] = $datos;
-        }else{
-            foreach ($allproducts as $key => $value) {
-                $datos = new stdClass();
-                $datos->id_producto = $value->id_producto;
-                $datos->productName = $value->productName;
-                $respuesta[] = $datos;
-            }
-
         }
 
         return $respuesta;

@@ -18,7 +18,7 @@ $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
 if(is_null($ordenes) || empty($ordenes)){
-	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_CLIENTS'), 'Message');
+	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
 }
 ?>
 <script>

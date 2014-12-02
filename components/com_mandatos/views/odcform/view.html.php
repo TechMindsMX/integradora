@@ -30,10 +30,11 @@ class MandatosViewOdcform extends JViewLegacy {
             if($_FILES['factura']['size'] === 0){
                 $sesion = JFactory::getSession();
                 $objeto = (object)$data;
+	            $objeto->id = $objeto->idOrden;
                 $sesion->set('datos',$objeto, 'misdatos');
                 $sesion->set('msg','Falta el Archivo XML', 'misdatos');
 
-                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&integradoId='.$data['integradoId'].'&id='.$data['id']);
+                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&integradoId='.$data['integradoId'].'&idOrden='.$data['idOrden']);
             }else {
                 $this->dataXML = $this->get('data2xml');
             }

@@ -47,21 +47,31 @@ class MandatosControllerOdvform extends JControllerAdmin {
         unset($data['idOrden']);
 
         if($tab != 'seleccion') {
-            foreach ($data['producto'] as $indice => $valor) {
-                if ($data['producto'][$indice] != '') {
-                    $productos = new stdClass();
+	        if ( ! empty( $data['producto'][0] ) ) {
+		        foreach ($data['producto'] as $indice => $valor) {
+			        if ($data['producto'][$indice] != '') {
+				        $productos = new stdClass();
 
-                    $productos->name = $data['producto'][$indice];
-                    $productos->descripcion = $data['descripcion'][$indice];
-                    $productos->cantidad = $data['cantidad'][$indice];
-                    $productos->unidad = $data['unidad'][$indice];
-                    $productos->p_unitario = $data['p_unitario'][$indice];
-                    $productos->iva = $data['iva'][$indice];
-                    $productos->ieps = $data['ieps'][$indice];
+				        $productos->name = $data['producto'][$indice];
+				        $productos->descripcion = $data['descripcion'][$indice];
+				        $productos->cantidad = $data['cantidad'][$indice];
+				        $productos->unidad = $data['unidad'][$indice];
+				        $productos->p_unitario = $data['p_unitario'][$indice];
+				        $productos->iva = $data['iva'][$indice];
+				        $productos->ieps = $data['ieps'][$indice];
 
-                    $productosArray[] = $productos;
-                }
-            }
+				        $productosArray[] = $productos;
+			        }
+		        }
+	        } else {
+		        $respuesta['success']  = false;
+		        $respuesta['id']       = $id;
+		        $respuesta['numOrden'] = $numOrden;
+		        $respuesta['redirect'] = null;
+
+		        echo json_encode($respuesta);
+		        exit;
+	        }
         }else{
             $productosArray = array();
         }

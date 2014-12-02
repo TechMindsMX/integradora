@@ -6,6 +6,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId='
 
 <legend class="container botones clearfix form-actions">
 	<?php
+	echo JText::_('LBL_CONFIRM_ORDEN');
 	if ($this->permisos['canAuth'] && $this->odv->status === 0):
         $aceptUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId=' . $this->integradoId);
 		?>
