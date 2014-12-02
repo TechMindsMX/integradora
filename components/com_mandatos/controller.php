@@ -528,4 +528,43 @@ class MandatosController extends JControllerLegacy {
         $delete->deleteDB('ordenes_venta','id = '.$idOdv);
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$data['integradoId']);
     }
+
+    public function disable(){
+        $post = array('type' => 'STRING',
+            'id' => 'STRING',
+            'accion' => 'STRING');
+        $data = $this->input_data;
+        $data = $data->getArray($post);
+        $save = new sendToTimOne();
+
+        switch($data['type']){
+            case 'proyecto':
+                $table = 'integrado_proyectos';
+                $where = 'id_proyecto = '.$data['id'];
+                break;
+            case 'producto':
+                $table = 'integrado_products';
+                $where = 'id_producto = '.$data['id'];
+                break;
+            case 'cliente';
+                $table = 'integrado_clientes_proveedor';
+                $where = 'id = '.$data['id'];
+                break;
+        }
+
+        if($data['accion']  == 'enabled'){
+            $set = array('status = 0');
+        }elseif($data['accion']  == 'disabled'){
+            $set = array('status = 1');
+        }
+
+        $respuesta = $save->updateDB($table, $set, $where);
+
+        $response['success'] = $respuesta;
+        $response['accion'] = $data['accion'];
+
+        $this->document->setMimeEncoding('application/json');
+        echo json_encode($response);
+    }
+
 }
