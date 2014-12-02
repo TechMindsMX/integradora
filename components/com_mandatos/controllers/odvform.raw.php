@@ -111,7 +111,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $url = null;
         if($tab == 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOrden=1&layout=confirmOdv';
+            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOrden='.$id.'&layout=confirmOdv';
         }
 
         $respuesta['success']  = true;
