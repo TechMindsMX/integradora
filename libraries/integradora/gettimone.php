@@ -1707,7 +1707,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo $e->getMessage();
+            echo '<pre>'.$e->getMessage().'</pre>';
             $return = false;
         }
 
@@ -1733,7 +1733,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo $e->getMessage();
+	        echo '<pre>'.$e->getMessage().'</pre>';
             $return = false;
         }
 
