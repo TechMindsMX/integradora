@@ -22,7 +22,7 @@ class MandatosModelOdvform extends JModelItem {
 
         $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['idOrden']);
 
-        return $orden;
+        return $orden[0];
     }
 
     public function getClientes(){

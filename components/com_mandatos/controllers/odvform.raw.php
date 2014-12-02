@@ -28,14 +28,14 @@ class MandatosControllerOdvform extends JControllerAdmin {
             'p_unitario'    => 'ARRAY',
             'iva'           => 'ARRAY',
             'ieps'          => 'ARRAY');
-        $db	       = JFactory::getDbo();
+        $db	        = JFactory::getDbo();
         $document   = JFactory::getDocument();
         $this->app  = JFactory::getApplication();
         $data       = $this->app->input->getArray($post);
-        $id      = $data['idOrden'];
+        $id         = $data['idOrden'];
         $save       = new sendToTimOne();
-        $tab = $data['tab'];
-        $numOrden  = $data['numOrden'];
+        $tab        = $data['tab'];
+        $numOrden   = $data['numOrden'];
 
         $document->setMimeEncoding('application/json');
 
@@ -111,11 +111,11 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $url = null;
         if($tab == 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&odvnum=1&layout=confirmOdv';
+            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOrden='.$id.'&layout=confirmOdv';
         }
 
         $respuesta['success']  = true;
-        $respuesta['id']    = $id;
+        $respuesta['id']       = $id;
         $respuesta['numOrden'] = $numOrden;
         $respuesta['redirect'] = $url;
 

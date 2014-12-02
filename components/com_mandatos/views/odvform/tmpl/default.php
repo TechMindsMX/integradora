@@ -10,8 +10,8 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
-
 $productosOrden = json_decode($orden->productos);
+
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -176,7 +176,7 @@ $productosOrden = json_decode($orden->productos);
 
         request.done(function(result){
             if(result.success){
-                jQuery('#id').val(result.id);
+                jQuery('#idOrden').val(result.id);
                 jQuery('#numOrden').html(result.numOrden);
                 jQuery('input[name="numOrden"]').val(result.numOrden);
                 jQuery('a[href="#'+result.tab+'"]').trigger('click');
