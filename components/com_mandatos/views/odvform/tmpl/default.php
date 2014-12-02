@@ -11,6 +11,7 @@ JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
+
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
