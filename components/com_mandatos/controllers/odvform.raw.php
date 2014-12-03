@@ -109,7 +109,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
             $columnas[] = 'numOrden';
             $valores[]  = $numOrden;
 
-            $columnas[] = 'created';
+            $columnas[] = 'createdDate';
             $valores[]  = $results[0];
 
             $save->insertDB('ordenes_venta', $columnas, $valores);

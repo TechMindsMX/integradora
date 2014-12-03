@@ -331,8 +331,8 @@ class getFromTimOne{
             $value->conditions     = (INT)$value->conditions;
             $value->placeIssue     = (INT)$value->placeIssue;
             $value->productos      = (STRING)$value->productos;
-            $value->created        = (STRING)$value->created;
-            $value->payment        = (STRING)$value->payment;
+            $value->createdDate    = (STRING)$value->createdDate;
+            $value->paymentDate    = (STRING)$value->paymentDate;
             $value->status         = (INT)$value->status;
 
         }
@@ -1616,34 +1616,34 @@ class sendToTimOne {
 
     public static function getTableByType($tipo)
     {
-        switch($tipo){
+	    switch($tipo){
             case 'odd':
-                $table = 'ordenes_deposito';
-                break;
-            case 'odv':
-                $table = 'ordenes_venta';
-                break;
-            case 'odc':
-                $table = 'ordenes_compra';
-                break;
-            case 'odr':
-                $table = 'ordenes_retiro';
-                break;
-            case 'odd_auth':
-                $table = 'auth_odd';
-                break;
-            case 'odv_auth':
-                $table = 'auth_odv';
-                break;
-            case 'odc_auth':
-                $table = 'auth_odc';
-                break;
-            case 'odr_auth':
-                $table = 'auth_odr';
-                break;
+	            $table = 'ordenes_deposito';
+	            break;
+	        case 'odv':
+	            $table = 'ordenes_venta';
+	            break;
+	        case 'odc':
+	            $table = 'ordenes_compra';
+	            break;
+	        case 'odr':
+	            $table = 'ordenes_retiro';
+	            break;
+	        case 'odd_auth':
+	            $table = 'auth_odd';
+	            break;
+	        case 'odv_auth':
+	            $table = 'auth_odv';
+	            break;
+	        case 'odc_auth':
+	            $table = 'auth_odc';
+	            break;
+	        case 'odr_auth':
+	            $table = 'auth_odr';
+	            break;
         }
 
-        return $table;
+	    return $table;
     }
 
     public function getNextOrderNumber($tipo, $integrado){
@@ -1669,6 +1669,10 @@ class sendToTimOne {
 
     public function formatData($arreglo){
         $db		= JFactory::getDbo();
+
+	    $this->columnas = null;
+	    $this->valores = null;
+	    $this->set = null;
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
@@ -1932,16 +1936,63 @@ class sendToTimOne {
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getHttpType () {
         return strtoupper($this->httpType);
     }
 
-    public function changeStatus()
+    public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
+	    $return = false;
+
+	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+	    $integrado = new IntegradoSimple($integradoId);
+
+	    $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+	    $order = $order[0];
+
+	    //simulado
+	    $integrado->cantidadAuthNecesarias = 1;
+
+	    $tableAuth = $orderType.'_auth';
+	    $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
+
+	    $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+	    $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+
+	    if ($order->canChangeStatus) {
+		    $this->formatData(array('status' => $orderNewStatus ));
+		    $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
+
+		    $this->formatData(array('idOrden'=> $order->id,
+		                            'userId' => JFactory::getUser()->id,
+		                            'changeDate'=> time(),
+		                            'pastStatus' => $order->status ,
+		                            'newStatus'=> $orderNewStatus,
+			                        'result' => $return
+		                      ));
+		    $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+	    }
+
+	    return $return;
     }
+
+	private function validStatusChange($order,$orderNewStatus) {
+		$return = false;
+
+		switch ((INT)$order->status) {
+			case 0:
+				$return = $orderNewStatus == 1 && $order->hasAllAuths;
+				break;
+			case 1:
+				$return = $orderNewStatus == 2 && $order->hasAllAuths;
+				break;
+			case 2:
+				$return = $orderNewStatus == 3 && $order->hasAllAuths;
+				break;
+		}
+
+		return $return;
+	}
 
 
 }

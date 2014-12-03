@@ -39,7 +39,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->created; ?>
+			<?php echo $this->odv->createdDate; ?>
 		</div>
 	</div>
 	<div>
@@ -53,7 +53,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->payment; ?>
+			<?php echo $this->odv->paymentDate; ?>
 		</div>
 	</div>
 	<div>

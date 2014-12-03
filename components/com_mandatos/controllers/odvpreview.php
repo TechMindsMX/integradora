@@ -44,7 +44,11 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             if($resultado) {
                 // autorización guardada
-                $save->changeStatus();
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '1');
+	            if ($statusChange){
+		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+	            }
+
                 $this->app->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
