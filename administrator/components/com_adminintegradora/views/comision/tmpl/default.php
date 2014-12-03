@@ -3,11 +3,12 @@ defined( '_JEXEC' ) or die( 'Restricted Access' );
 
 JHtml::_( 'bootstrap.tooltip' );
 
-$items = $this->comision[0];
+$items = $this->comision;
 
 JFactory::getDocument()->addScript( JUri::root() . 'libraries/integradora/js/tim-validation.js' );
 
 $accion = 'index.php?option=com_adminintegradora';
+//var_dump($items, $this->cats);
 ?>
 	<script type="text/javascript">
 
@@ -31,7 +32,6 @@ $accion = 'index.php?option=com_adminintegradora';
 				});
 
 				request.done(function (response) {
-					console.log(response);
 					if (response.redirect === true) {
 						window.location = 'index.php?option=com_adminintegradora&view=comisions';
 					} else {
@@ -54,13 +54,31 @@ $accion = 'index.php?option=com_adminintegradora';
 			var $freqTime = jQuery('#frequency, .frequency');
 			var $rate = jQuery('#percentage');
 
+			function optionsTrigger(myObj) {
+				var $triggers = jQuery('#trigger');
+				$triggers.empty();
+
+				jQuery.each(myObj, function(index, value){
+					$triggers.append(jQuery("<option>",{
+						value: index,
+						text: value
+					}));
+				});
+			}
+
 			if (this.value == '1') {
 				$freqTime.hide();
 				$rate.show('300');
+
+				optionsTrigger({"oddpagada":"Orden de Depósito pagada","odvpagada":"Orden de Venta pagada"});
 			} else if (this.value == '0') {
 				$rate.hide();
 				$freqTime.show('300');
+
+				optionsTrigger({"fecha":"Según recurrencia"});
 			}
+
+
 		}
 	</script>
 
@@ -92,7 +110,11 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select id="type" name="type">
 					<?php foreach ( $this->cats->types as $key => $value ):
-						$selected = ( $items->type == $key ) ? 'selected' : '';
+						if ( isset( $items->type ) ) {
+							$selected = ( $items->type == $key ) ? 'selected' : '';
+						} else {
+							$selected = '';
+						}
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
@@ -102,7 +124,11 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select class="frequency" id="frequencyTimes" name="frequencyTimes">
 					<?php foreach ( $this->cats->frequencyTimes as $key => $value ):
-						$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
+						if ( isset( $items->frequencyTime ) ) {
+							$selected = ( $items->frequencyTime == $value ) ? 'selected' : '';
+						} else {
+							$selected = '';
+						}
 						?>
 						<option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
@@ -133,7 +159,11 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select id="trigger" name="trigger">
 					<?php foreach ( $this->cats->triggers as $key => $value ):
-						$selected = ( $items->trigger == $key ) ? 'selected' : '';
+						if ( isset( $items->trigger ) ) {
+							$selected = ( $items->trigger == $key ) ? 'selected' : '';
+						} else {
+							$selected = '';
+						}
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
@@ -146,7 +176,11 @@ $accion = 'index.php?option=com_adminintegradora';
 				</label>
 				<select id="statusSelect" name="status">
 					<?php foreach ( $this->cats->status as $key => $value ):
-						$selected = ( $items->status == $key ) ? 'selected' : '';
+						if ( isset( $items ) ) {
+							$selected = ( $items->status == $key ) ? 'selected' : '';
+						} else {
+							$selected = '';
+						}
 						?>
 						<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
 					<?php endforeach; ?>
