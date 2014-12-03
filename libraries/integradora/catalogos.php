@@ -56,6 +56,8 @@ class Catalogos {
 		}
 
 		$this->bancos = $cat;
+
+        return $cat;
 	}
 	
 	public function getStatusSolicitud()

@@ -6,6 +6,8 @@ jimport( 'joomla.application.component.view' );
 class ConciliacionbancoViewDetalle extends JViewLegacy {
 	public function display( $tpl = null ) {
         $this->integrados = $this->get('integrados');
+        $this->bancos     = $this->get('catalogoBancos');
+
 		$this->addToolbar();
 		parent::display( $tpl );
 	}
