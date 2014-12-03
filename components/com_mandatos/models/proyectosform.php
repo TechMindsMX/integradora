@@ -30,7 +30,7 @@ class MandatosModelProyectosform extends JModelItem {
 		}
 		
 		$dataProject = getFromTimOne::getProyects(null,$data['id_proyecto']);
-        $dataProject = $dataProject;
+        $dataProject = $dataProject[0];
 
         if($data['integradoId'] != $dataProject->integradoId){
             $app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']));

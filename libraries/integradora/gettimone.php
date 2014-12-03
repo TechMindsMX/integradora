@@ -36,6 +36,24 @@ class getFromTimOne{
         return $userAsAuth;
     }
 
+    public static function getintegradosIds(){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+
+        $query->select('*')
+            ->from($db->quoteName('#__'.$table));
+
+        try {
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+        }catch (Exception $e){
+            $results = $e;
+            exit;
+        }
+
+        return $results;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -235,13 +253,13 @@ class getFromTimOne{
         return $response;
     }
 
-	public static function getOrdenes($integradoId = null, $idOrden = null, $table){
-		$where = null;
-		if(isset($idOrden)){
-			$where = 'id = '.$idOrden;
-		}elseif(isset($integradoId)){
-			$where = 'integradoId = '.$integradoId;
-		}
+    public static function getOrdenes($integradoId = null, $idOrden = null, $table){
+        $where = null;
+        if(isset($idOrden)){
+            $where = 'id = '.$idOrden;
+        }elseif(isset($integradoId)){
+            $where = 'integradoId = '.$integradoId;
+        }
 
         $ordenes = self::selectDB($table, $where);
 
@@ -253,7 +271,7 @@ class getFromTimOne{
         return $ordenes;
     }
 
-	public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
+    public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
         foreach ($orden as $value) {
             $value->id = (INT)$value->id;
@@ -273,8 +291,8 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
-		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
+    public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
 
         foreach ($orden as $value) {
             $value->id = (INT)$value->id;
@@ -291,7 +309,7 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
+    public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
 
         //Cambio el tipo de dato para las validaciones con (===)
@@ -316,7 +334,7 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
+    public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
 
         foreach ($orden as $value) {
@@ -331,9 +349,9 @@ class getFromTimOne{
         }
 
         return $orden;
-	}
+    }
 
-	public static function getBalances($integradoId)
+    public static function getBalances($integradoId)
     {
         $respuesta = null;
 
@@ -490,7 +508,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-	public static function getFlujo($integradoId)
+    public static function getFlujo($integradoId)
     {
         $respuesta = null;
 
@@ -647,7 +665,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-	public static function getResultados($integradoId)
+    public static function getResultados($integradoId)
     {
         $respuesta = null;
 
@@ -1556,23 +1574,23 @@ class getFromTimOne{
         return $currencies;
     }
 
-	public static function getComisiones($id = null) {
-		$request = new getFromTimOne();
+    public static function getComisiones($id = null) {
+        $request = new getFromTimOne();
 
-		$where = null;
-		if(!is_null($id)) {
-			$where = 'id = '.$id;
-		}
-		$comisiones = $request->selectDB('mandatos_comisiones', $where);
+        $where = null;
+        if(!is_null($id)) {
+            $where = 'id = '.$id;
+        }
+        $comisiones = $request->selectDB('mandatos_comisiones', $where);
 
-		return $comisiones;
-	}
+        return $comisiones;
+    }
 
-	public static function getTriggersComisiones() {
-		$triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
+    public static function getTriggersComisiones() {
+        $triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
 
-		return $triggers;
-	}
+        return $triggers;
+    }
 
 
 }
@@ -1711,9 +1729,9 @@ class sendToTimOne {
             $return = false;
         }
 
-	    if($last_inserted_id){
-		    $return= $db->insertid();
-	    }
+        if($last_inserted_id){
+            $return= $db->insertid();
+        }
 
         return $return;
     }
@@ -1733,7 +1751,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-	        echo '<pre>'.$e->getMessage().'</pre>';
+            echo '<pre>'.$e->getMessage().'</pre>';
             $return = false;
         }
 

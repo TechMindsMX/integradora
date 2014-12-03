@@ -10,56 +10,56 @@ jimport('integradora.classDB');
 
 
 class MandatosController extends JControllerLegacy {
-	
-	public function __construct(){
-		parent::__construct();
-		$integrado	 		= new Integrado;
-		$this->app			= JFactory::getApplication();
+
+    public function __construct(){
+        parent::__construct();
+        $integrado	 		= new Integrado;
+        $this->app			= JFactory::getApplication();
         $this->document     = JFactory::getDocument();
         $this->currUser	 	= JFactory::getUser();
-		$this->input_data	= $this->app->input;
-		$data		 		= $this->input_data->getArray();
-		$integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
+        $this->input_data	= $this->app->input;
+        $data		 		= $this->input_data->getArray();
+        $integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
 
         // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
-        
-		if($this->currUser->guest){
-			$this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
-		}
-		if(is_null($integradoId)){
-			$this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
-		}
-	}
-	
-	function editarproyecto(){
+
+        if($this->currUser->guest){
+            $this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+        }
+        if(is_null($integradoId)){
+            $this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
+        }
+    }
+
+    function editarproyecto(){
         $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
-		$data 			= $this->input_data->getArray($post);
-		$proyectos 		= getFromTimOne::getProyects($data['integradoId']);
+        $data 			= $this->input_data->getArray($post);
+        $proyectos 		= getFromTimOne::getProyects($data['integradoId']);
         $count          = 0;
 
         if($this->currUser->guest){
-			$this->app->redirect('index.php/login');
-		}
+            $this->app->redirect('index.php/login');
+        }
 
-		foreach ($proyectos as $key => $value) {
+        foreach ($proyectos as $key => $value) {
             if($data['id_proyecto'] == $value->id_proyecto){
                 if($value->parentId == 0){
-                    $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
+                    $this->app->redirect('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']);
                 }else{
-                    $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=subproyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']));
+                    $this->app->redirect('index.php?option=com_mandatos&view=subproyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']);
                 }
-			}else{
+            }else{
                 $count++;
             }
-		}
+        }
 
         if( $count == count($proyectos) ){
-            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']));
+            $this->app->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
         }
-		exit;
-	}
+        exit;
+    }
 
-	function editarproducto(){
+    function editarproducto(){
         $post           = array('integradoId'=>'INT', 'id_producto'=>'INT');
         $data 			= $this->input_data->getArray($post);
         $productos 		= getFromTimOne::getProducts($data['integradoId']);
@@ -81,59 +81,59 @@ class MandatosController extends JControllerLegacy {
             $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']));
         }
         exit;
-	}
-	
-	function editarclientes(){
-		$this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
-	}
+    }
 
-	function simulaenvio(){
-		$this->app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
-	}
+    function editarclientes(){
+        $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
+    }
 
-	function searchrfc(){
-		$data 	     = $this->input_data->getArray();
-		$db		     = JFactory::getDbo();
-		$where	     = $db->quoteName('rfc').' = '.$db->quote($data['rfc']);
-		$respuesta   = '';
-		$rfcPersonas = validador::valida_rfc($data['rfc']);
-		$rfcEmpresa	 = validador::valida_rfc($data['rfc']);
+    function simulaenvio(){
+        $this->app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
+    }
+
+    function searchrfc(){
+        $data 	     = $this->input_data->getArray();
+        $db		     = JFactory::getDbo();
+        $where	     = $db->quoteName('rfc').' = '.$db->quote($data['rfc']);
+        $respuesta   = '';
+        $rfcPersonas = validador::valida_rfc($data['rfc']);
+        $rfcEmpresa	 = validador::valida_rfc($data['rfc']);
 
         $this->document->setMimeEncoding('application/json');
 
-		if($rfcEmpresa){
-			$tipo_rfc = 1;
-		}elseif($rfcPersonas){
-			$tipo_rfc = 2;
-		}else{
-			$respuesta['success'] = false;
-			$respuesta['msg'] = JText::_('MSG_RFC_INVALID');
-			
-			echo json_encode($respuesta);
-			exit;
-		}
-		
-		$existe = getFromTimOne::selectDB('integrado_datos_personales', $where);
+        if($rfcEmpresa){
+            $tipo_rfc = 1;
+        }elseif($rfcPersonas){
+            $tipo_rfc = 2;
+        }else{
+            $respuesta['success'] = false;
+            $respuesta['msg'] = JText::_('MSG_RFC_INVALID');
 
-		if(empty($existe)){
-			$existe = getFromTimOne::selectDB('integrado_datos_empresa', $where);
-		}
+            echo json_encode($respuesta);
+            exit;
+        }
 
-		if(!empty($existe)){
-			$datos = new IntegradoSimple($existe->integrado_id);
-			$datos->integrados[0]->success = true;
+        $existe = getFromTimOne::selectDB('integrado_datos_personales', $where);
 
-			echo json_encode($datos->integrados[0]);
-		}else{
-			$respuesta['success'] = false;
-			$respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
-			$respuesta['pj_pers_juridica'] = $tipo_rfc;
-			
-			echo json_encode($respuesta);
-		}
-	}
+        if(empty($existe)){
+            $existe = getFromTimOne::selectDB('integrado_datos_empresa', $where);
+        }
 
-	function agregarBanco(){
+        if(!empty($existe)){
+            $datos = new IntegradoSimple($existe->integrado_id);
+            $datos->integrados[0]->success = true;
+
+            echo json_encode($datos->integrados[0]);
+        }else{
+            $respuesta['success'] = false;
+            $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
+            $respuesta['pj_pers_juridica'] = $tipo_rfc;
+
+            echo json_encode($respuesta);
+        }
+    }
+
+    function agregarBanco(){
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
         $datosQuery = array('setUpdate'=>array());
@@ -143,7 +143,7 @@ class MandatosController extends JControllerLegacy {
             'db_banco_sucursal' => 'STRING',
             'db_banco_clabe' => 'STRING',
             'integradoId' => 'STRING');
-		$data 		= $this->input_data->getArray($post);
+        $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
         $where      = $db->quoteName('integrado_id').' = '.$data['integradoId'].' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
         $existe     = getFromTimOne::selectDB($table,$where);
@@ -178,7 +178,7 @@ class MandatosController extends JControllerLegacy {
         }
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
-	}
+    }
 
     function deleteBanco(){
         $db	        = JFactory::getDbo();
@@ -236,9 +236,9 @@ class MandatosController extends JControllerLegacy {
         unset($data['id_producto']);
 
         if($id_producto == 0){
-           $save->saveProduct($data);
+            $save->saveProduct($data);
         }else{
-           $save->updateProduct($data, $id_producto);
+            $save->updateProduct($data, $id_producto);
         }
         JFactory::getApplication()->redirect('index.php/component/mandatos/?view=productoslist&integradoId='.$data['integradoId']);
     }
@@ -248,9 +248,9 @@ class MandatosController extends JControllerLegacy {
         $data = $this->input_data->getArray();
         $productos = getFromTimOne::getProducts($data['integradoId']);
         foreach ($productos as $key => $val) {
-                if($data['id'] == $val->id){
-                    $producto = $val;
-                }
+            if($data['id'] == $val->id){
+                $producto = $val;
+            }
         }
 
         echo json_encode($producto);
@@ -321,8 +321,8 @@ class MandatosController extends JControllerLegacy {
         $idCliPro   = $data['idCliPro'];
         $datosQuery['setUpdate'] = array();
 
-	    // verificación que no sea el mismo integrado
-	    $currentIntegrado = new IntegradoSimple($data['integradoId']);
+        // verificación que no sea el mismo integrado
+        $currentIntegrado = new IntegradoSimple($data['integradoId']);
 
         if($idCliPro == 0){
             $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
