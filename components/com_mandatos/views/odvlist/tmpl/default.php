@@ -18,7 +18,7 @@ $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
 if(is_null($ordenes) || empty($ordenes)){
-    JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_CLIENTS'), 'Message');
+    JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
 }
 ?>
 <script>
@@ -65,11 +65,6 @@ if(is_null($ordenes) || empty($ordenes)){
     <div class="col-md-4">
         <?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId); ?>
         <a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORV_LBL_AGREGAR'); ?></a>
-    </div>
-
-    <div class="col-md-4">
-        <?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion&integradoId='.$this->integradoId); ?>
-        <a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" /><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></a>
     </div>
 
     <div class="col-md-4">

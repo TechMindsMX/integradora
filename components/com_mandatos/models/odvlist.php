@@ -11,7 +11,6 @@ jimport('integradora.catalogos');
  * Modelo de datos para Listado de las Ordenes de Deposito para un integrado
  */
 class MandatosModelOdvlist extends JModelItem {
-	protected $dataModelo;
 
     function __construct(){
         $this->data 		= JFactory::getApplication()->input->getArray();
@@ -34,7 +33,6 @@ class MandatosModelOdvlist extends JModelItem {
     }
 
     public function getTotalAmount($productos){
-        $total = 0;
         $totalAmount = 0;
 
         foreach ($productos as $producto) {
