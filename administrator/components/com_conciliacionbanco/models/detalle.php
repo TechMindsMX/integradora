@@ -8,12 +8,24 @@
 
 jimport('integradora.gettimone');
 jimport('integradora.integrado');
+jimport('integradora.catalogos');
 
 class ConciliacionBancoModelDetalle extends JModelLegacy {
     public function getIntegrados(){
+        $integradosArray = getFromTimOne::getintegrados();
 
-        $integrados = getFromTimOne::getintegradosIds();
+        return $integradosArray;
+    }
 
-        var_dump($integrados);
+    public function getcatalogoBancos(){
+        $catalogos = new Catalogos();
+
+        $bancos = $catalogos->getBancos();
+
+        foreach ($bancos as $objBanco) {
+            $bancoArray[$objBanco->claveClabe] = $objBanco->banco;
+        }
+
+        return $bancoArray;
     }
 }

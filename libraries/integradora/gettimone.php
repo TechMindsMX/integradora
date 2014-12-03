@@ -36,12 +36,13 @@ class getFromTimOne{
         return $userAsAuth;
     }
 
-    public static function getintegradosIds(){
+    public static function getintegrados(){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
         $query->select('*')
-            ->from($db->quoteName('#__'.$table));
+            ->from($db->quoteName('#__integrado_users'))
+            ->where($db->quoteName('integrado_principal').' = 1');
 
         try {
             $db->setQuery($query);
@@ -51,7 +52,12 @@ class getFromTimOne{
             exit;
         }
 
-        return $results;
+        foreach ($results as $value) {
+            $integrado = new IntegradoSimple($value->integrado_id);
+            $integradosArray[] = $integrado->integrados[0];
+        }
+
+        return $integradosArray;
     }
 
     public function createNewProject($envio, $integradoId){

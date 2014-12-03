@@ -9,8 +9,7 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $datos = @$this->data->integrados;
-//$postUrl = $datos->action->post;
-
+$user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
@@ -199,6 +198,10 @@ if(!empty($datos->integrado)){
             <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
         </div>
         <div class="form-group">
+            <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE'); ?></label>
+            <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" value="<?php echo $user->name ?>" />
+        </div>
+        <div class="form-group">
 			<label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
 			<select name="dp_nacionalidad" id="dp_nacionalidad">
 				<?php 
@@ -225,7 +228,7 @@ if(!empty($datos->integrado)){
 		</div>
 		<div class="form-group">
 			<label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
-			<input name="dp_rfc" id="dp_rfc" type="text" maxlength="18" />
+			<input name="dp_rfc" id="dp_rfc" type="text" maxlength="13" />
 		</div>
 	</fieldset>	
 	<?php
@@ -358,7 +361,7 @@ if(!empty($datos->integrado)){
 		</div>
 		<div class="form-group">
 			<label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
-			<input name="de_rfc" id="de_rfc" type="text" maxlength="18" />
+			<input name="de_rfc" id="de_rfc" type="text" maxlength="12" />
 		</div>
 	</fieldset>
 	<?php
@@ -602,7 +605,7 @@ if(!empty($datos->integrado)){
         <div class="form-group">
            	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
            	<select name="db_banco_codigo" id="db_banco_codigo">
-           		<option><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+           		<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
 				foreach ($this->catalogos->bancos as $key => $value) {
 					echo '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
