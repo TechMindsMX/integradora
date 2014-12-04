@@ -8,7 +8,6 @@ jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.classDB');
-
 /**
  * Methods supporting a list of Facturas records.
  */
@@ -55,11 +54,5 @@ class FacturasModelFacturas extends JModelList {
     public  function getComision(){
         $data = getFromTimOne::getComisiones();
         return $data;
-    }
-
-    public function getIntegrados(){
-        $integrados = getFromTimOne::getintegrados();
-
-        return $integrados;
     }
 }

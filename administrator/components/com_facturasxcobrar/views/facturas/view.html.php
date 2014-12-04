@@ -3,14 +3,13 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class FacturasViewFacturas extends JViewLegacy {
+class FacturasxcobrarViewFacturas extends JViewLegacy {
 
     public function display($tpl = null) {
 
         $this->facturas = $this->get('Facturas');
         $this->usuarios = $this->get('UserIntegrado');
         $this->integradi = $this->get('Solicitud');
-        $this->integrados = $this->get('integrados');
 
         $this->comision = $this->get('Comision');
 
@@ -23,10 +22,8 @@ class FacturasViewFacturas extends JViewLegacy {
         parent::display($tpl);
     }
 
-
-
     protected function addToolbar() {
-        require_once JPATH_COMPONENT . '/helpers/facturas.php';
+        require_once JPATH_COMPONENT . '/helpers/facturasxcobrar.php';
         JToolBarHelper::title(JText::_('Facturas'), '');
 
     }

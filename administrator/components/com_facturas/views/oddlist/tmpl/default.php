@@ -122,7 +122,7 @@ $odds = $this->ordenes;
             ?>
                 <tr class="row1 integrado_<?php echo $value->integradoId; ?>">
                     <td><?php echo $value->numOrden; ?></td>
-                    <td><?php echo $value->created; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->created); ?>" /></td>
+                    <td><?php echo $value->createdDate; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->createdDate); ?>" /></td>
                     <td><?php echo $value->integradoName; ?></td>
                     <td>$<?php echo number_format($value->totalAmount,2); ?></td>
                     <td><a href="index.php?option=com_facturas&view=oddform&oddNum=<?php echo $value->numOrden; ?>" class="btn btn-primary">Conciliar</a> </td>
