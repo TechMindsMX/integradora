@@ -5,6 +5,7 @@ jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
 jimport('integradora.rutas');
+jimport('integradora.xmlparser');
 
 class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
@@ -60,7 +61,32 @@ class getFromTimOne{
         return $integradosArray;
     }
 
-    public function createNewProject($envio, $integradoId){
+	public static function getDataFactura($orden) {
+		$urlXML = $orden->urlXML;
+
+		$xmlFileData  = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$urlXML);
+		$manejadorXML = new xml2Array();
+		$datos 		  = $manejadorXML->manejaXML($xmlFileData);
+
+		$orden->impuestos = $datos->impuestos->totalTrasladados;
+
+		//tomo los productos de la factura
+		foreach ($datos->conceptos as $value) {
+			$orden->productos[] = $value;
+		}
+
+		foreach ($datos->impuestos as $key => $value) {
+			if($key == 'iva'){
+				$orden->iva = $value;
+			}elseif($key == 'ieps'){
+				$orden->ieps = $value;
+			}
+		}
+
+		return $orden;
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -78,7 +104,7 @@ class getFromTimOne{
         return $result;
     }
 
-    public static function selectDB($table, $where){
+    public static function selectDB($table, $where = null, $keyAssoc = '', $class = 'stdClass'){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
@@ -93,7 +119,7 @@ class getFromTimOne{
 
         try {
             $db->setQuery($query);
-            $results = $db->loadObjectList();
+            $results = $db->loadObjectList($keyAssoc, $class);
         }catch (Exception $e){
             var_dump($e);
             exit;
@@ -1610,6 +1636,19 @@ class getFromTimOne{
         return $triggers;
     }
 }
+class comisionEvent {
+	public $id;
+	public $type;
+	public $trigger;
+	public $eventFullName;
+
+	public function getAll() {
+		$result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
+
+		return $result;
+	}
+}
+
 
 class sendToTimOne {
 
@@ -2009,15 +2048,4 @@ class sendToTimOne {
 
 }
 
-class comisionItem{
-    public $id;
-    public $description;
-    public $type;
-    public $frequencyTime;
-    public $status;
-    public $typeName;
-    public $statusName;
-    public $frequencyMsg;
-    public $amount;
-    public $rate;
-}
+

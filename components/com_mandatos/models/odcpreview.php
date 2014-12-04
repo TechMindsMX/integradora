@@ -6,7 +6,6 @@ jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
 jimport('integradora.rutas');
 jimport('integradora.catalogos');
-jimport('integradora.xmlparser');
 
 /**
  * Modelo de datos para Listado de los clientes dados de alta para un integrado
@@ -39,7 +38,7 @@ class MandatosModelOdcpreview extends JModelItem {
 		
 		$this->getProviderFromID($this->odc->proveedor);
 
-        $this->getdataFactura($this->odc);
+        $this->getDataFactura($this->odc);
 
 		return $this->odc;
 	}
@@ -80,27 +79,12 @@ class MandatosModelOdcpreview extends JModelItem {
 		return new IntegradoSimple($this->inputVars['integradoId']);
 	}
 
-    public function getdataFactura($orden){
-        $urlXML = $orden->urlXML;
+    public function getDataFactura($orden){
 
-        $xmlFileData  = file_get_contents($urlXML);
-        $manejadorXML = new xml2Array();
-        $datos 		  = $manejadorXML->manejaXML($xmlFileData);
+		$result = getFromTimOne::getDataFactura($orden);
 
-        $orden->impuestos = $datos->impuestos->totalTrasladados;
+	    $orden = $result;
 
-        //tomo los productos de la factura
-        foreach ($datos->conceptos as $value) {
-            $orden->productos[] = $value;
-        }
-
-        foreach ($datos->impuestos as $key => $value) {
-            if($key == 'iva'){
-                $orden->iva = $value;
-            }elseif($key == 'ieps'){
-                $orden->ieps = $value;
-            }
-        }
     }
 }
 
