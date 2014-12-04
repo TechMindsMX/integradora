@@ -1615,7 +1615,7 @@ class getFromTimOne{
         return $comisiones;
     }
 
-	private static function getComisionesOfIntegrado($integradoId) {
+	public static function getComisionesOfIntegrado($integradoId) {
 		$request = new getFromTimOne();
 
 		$where = null;
@@ -1645,27 +1645,22 @@ class getFromTimOne{
 		return $triggers;
     }
 
-	public static function calculaComision( $orden, $tipoOrden ) {
+	public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
 
 		switch ($tipoOrden) {
 			case 'FACTURA':
 				$triggerSearch = 'factpagada';
 				break;
 			case 'ODC':
-				$triggerSearch = '';
+				$triggerSearch = 'odcpagada';
 				break;
 			case 'ODD':
-				$triggerSearch = '';
+				$triggerSearch = 'oddpagada';
 				break;
 			case 'ODR':
-				$triggerSearch = '';
+				$triggerSearch = 'odrpagada';
 				break;
 		}
-
-		$sesion = JFactory::getSession();
-		$integradoId = $sesion->get('integradoId', 1, 'integrado'); // simulado el default
-
-		$comisiones = self::getComisionesOfIntegrado($integradoId);
 
 		if ( ! empty( $comisiones ) && isset($triggerSearch) ) {
 			foreach ( $comisiones as $key => $com ) {
@@ -1675,7 +1670,7 @@ class getFromTimOne{
 			}
 		}
 
-		$montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
+		$montoComision = isset($comision) ? $orden->comprobante['TOTAL'] * ($comision->rate / 100) : null;
 
 		return $montoComision;
 	}
