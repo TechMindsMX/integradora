@@ -1680,14 +1680,16 @@ class sendToTimOne {
         }
     }
 
-    public function saveProyect($data){
+    public function saveProject($data){
         $db		= JFactory::getDbo();
         foreach ($data as $key => $value) {
             $columnas[] = $key;
             $valores[] = $db->quote($value);
         }
 
-        $this->insertDB('integrado_proyectos', $columnas, $valores);
+        $projectId = $this->insertDB('integrado_proyectos', $columnas, $valores, true);
+
+	    return $projectId;
     }
 
     public function updateProject($data,$id_proyecto){

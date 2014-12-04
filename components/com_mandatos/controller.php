@@ -210,7 +210,7 @@ class MandatosController extends JControllerLegacy {
         unset($data['id_proyecto']);
 
         if( $id_proyecto == 0 ){
-            $save->saveProyect($data);
+            $save->saveProject($data);
         }else{
             $save->updateProject($data,$id_proyecto);
         }
