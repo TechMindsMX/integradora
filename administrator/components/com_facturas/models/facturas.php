@@ -15,10 +15,10 @@ class FacturasModelFacturas extends JModelList {
 
     public function getUserIntegrado(){
 
-       $factura = new Integrado();
-       $integrados = $factura->getIntegrados();
+        $factura = new Integrado();
+        $integrados = $factura->getIntegrados();
 
-       return $integrados;
+        return $integrados;
     }
 
     public function getSolicitud($integradoId = null)
@@ -35,11 +35,11 @@ class FacturasModelFacturas extends JModelList {
         $dataFacturas = array();
 
         foreach ($data as $factura) {
-            $this->getdataFactura($factura);
+            $factura->factura = getFromTimOne::getDataFactura($factura);
             $fechaHr                 = explode('T',$factura->factura->comprobante['FECHA']);
-            $fechaHr[0]              = str_replace('-','/',$fechaHr[0]);
-            $fechaNumero             = strtotime($fechaHr[0]);
-            $fecha                   = date('d-m-Y',$fechaNumero);
+            $fechaHr[0]             = str_replace('-','/',$fechaHr[0]);
+            $fechaNumero = strtotime($fechaHr[0]);
+            $fecha = date('d-m-Y',$fechaNumero);
 
             $respuesta               = new stdClass();
             $nombreEmisor            = $factura->factura->emisor['attrs']['NOMBRE'];
@@ -48,7 +48,7 @@ class FacturasModelFacturas extends JModelList {
             $respuesta->integradoId  = (INT) $factura->integradoId;
             $respuesta->status       = (INT) $factura->status;
             $respuesta->fecha        = $fecha;
-            $respuesta->fechaNum     =  $fechaNumero;
+            $respuesta->fechaNum     =
             $respuesta->folio        = (INT) $factura->factura->comprobante['FOLIO'];
             $respuesta->emisor       = $nombreEmisor;
             $respuesta->iva          = $iva;

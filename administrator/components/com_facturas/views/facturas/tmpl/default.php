@@ -89,49 +89,41 @@ $comision = $this->comision;
         </div>
     </div>
     <div id="table_content">
-        <table class="adminlist table" id="table_list" cellspacing="0" cellpadding="0" id="odv">
-        <thead class="thead">
-        <tr class="row0" id="head" >
-            <th id="columna1" >Estatus</th>
-            <th> Fecha</th>
-            <th>Folio</th>
-            <th>Emisor</th>
-            <th>IVA</th>
-            <th>Sub-Total</th>
-            <th>Total Factura</th>
-            <th>Comision</th>
-            <th>Total Fact+Comision</th>
-            <th>Detalle</th>
-        </tr>
-        </thead>
-        <tbody class="tbody" id="tbody">
-        <?php foreach ($this->facturas as $value) {?>
-            <tr id="integrado_<?php echo $value->integradoId; ?>" class="row integrado_<?php echo $value->integradoId; ?>">
-                <td><?php echo $value->status; ?></td>
-                <td>
-                    <?php echo $value->fecha; ?>
-                    <input type="hidden" class="fechaNumero" value="<?php echo $value->fechaNum; ?>" />
-                </td>
-                <td><?php echo $value->folio; ?></td>
-                <td><?php echo $value->emisor; ?></td>
-                <td>$<?php echo number_format($value->iva,2); ?></td>
-                <td>$<?php echo number_format($value->subtotal,2); ?></td>
-                <td>$<?php echo number_format($value->total,2); ?></td>
-                <td>$<?php echo number_format($comision,2); ?></td>
-                <td>$<?php echo number_format($value->total+$comision,2); ?></td>
-                <td></td>
+        <table class="adminlist table" id="table_list" cellspacing="0" cellpadding="0">
+            <thead class="thead">
+            <tr class="row0" id="head" >
+                <th></th>
+                <th >Estatus</th>
+                <th> Fecha</th>
+                <th>Folio</th>
+                <th>Emisor</th>
+                <th>IVA</th>
+                <th>Sub-Total</th>
+                <th>Total Factura</th>
+                <th>Comision</th>
+                <th>Total Fact+Comision</th>
+                <th>Detalle</th>
             </tr>
-        <?php } ?>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="10">
-                <div class="pagination pagination-toolbar">
-                    <input type="hidden" value="0" name="limitstart">
-                </div>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody class="tbody" id="tbody">
+            <?php foreach ($this->facturas as $value) {?>
+                <tr id="integrado_<?php echo $value->integradoId; ?>" class="row integrado_<?php echo $value->integradoId; ?>">
+                    <td><?php echo $value->status; ?></td>
+                    <td>
+                        <?php echo $value->fecha; ?>
+                        <input type="hidden" class="fechaNumero" value="<?php echo $value->fechaNum; ?>" />
+                    </td>
+                    <td><?php echo $value->folio; ?></td>
+                    <td><?php echo $value->emisor; ?></td>
+                    <td>$<?php echo number_format($value->iva,2); ?></td>
+                    <td>$<?php echo number_format($value->subtotal,2); ?></td>
+                    <td>$<?php echo number_format($value->total,2); ?></td>
+                    <td>$<?php echo number_format($comision,2); ?></td>
+                    <td>$<?php echo number_format($value->total+$comision,2); ?></td>
+                    <td>&nbsp;</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
     </div>
 </form>

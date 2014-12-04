@@ -9,7 +9,6 @@ $integrados = $this->integrados;
 $bancos = $this->bancos;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-var_dump($data);
 ?>
     <script>
         var integradosArray   = new Array();

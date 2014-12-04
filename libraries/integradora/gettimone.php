@@ -61,32 +61,17 @@ class getFromTimOne{
         return $integradosArray;
     }
 
-	public static function getDataFactura($orden) {
-		$urlXML = $orden->urlXML;
+    public static function getDataFactura($orden) {
+        $urlXML = $orden->urlXML;
 
-		$xmlFileData  = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$urlXML);
-		$manejadorXML = new xml2Array();
-		$datos 		  = $manejadorXML->manejaXML($xmlFileData);
+        $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
+        $manejadorXML = new xml2Array();
+        $datos 		  = $manejadorXML->manejaXML($xmlFileData);
 
-		$orden->impuestos = $datos->impuestos->totalTrasladados;
+        return $datos;
+    }
 
-		//tomo los productos de la factura
-		foreach ($datos->conceptos as $value) {
-			$orden->productos[] = $value;
-		}
-
-		foreach ($datos->impuestos as $key => $value) {
-			if($key == 'iva'){
-				$orden->iva = $value;
-			}elseif($key == 'ieps'){
-				$orden->ieps = $value;
-			}
-		}
-
-		return $orden;
-	}
-
-	public function createNewProject($envio, $integradoId){
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -1370,15 +1355,15 @@ class getFromTimOne{
     }
 
     public static function getFacturasComision($integradoId=null, $idFactura=null){
-            $where = null;
-            if(!is_null($idFactura)){
-                $where = 'id = '.$idFactura;
-            }elseif(!is_null($integradoId)){
-                $where = 'integradoId = '.$integradoId;
-            }
-            $facturas = self::selectDB('facturas_comisiones', $where);
+        $where = null;
+        if(!is_null($idFactura)){
+            $where = 'id = '.$idFactura;
+        }elseif(!is_null($integradoId)){
+            $where = 'integradoId = '.$integradoId;
+        }
+        $facturas = self::selectDB('facturas_comisiones', $where);
 
-            return $facturas;
+        return $facturas;
     }
 
     public static function getFactComisiones(){
@@ -1637,16 +1622,16 @@ class getFromTimOne{
     }
 }
 class comisionEvent {
-	public $id;
-	public $type;
-	public $trigger;
-	public $eventFullName;
+    public $id;
+    public $type;
+    public $trigger;
+    public $eventFullName;
 
-	public function getAll() {
-		$result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
+    public function getAll() {
+        $result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
 
-		return $result;
-	}
+        return $result;
+    }
 }
 
 
@@ -1665,34 +1650,34 @@ class sendToTimOne {
 
     public static function getTableByType($tipo)
     {
-	    switch($tipo){
+        switch($tipo){
             case 'odd':
-	            $table = 'ordenes_deposito';
-	            break;
-	        case 'odv':
-	            $table = 'ordenes_venta';
-	            break;
-	        case 'odc':
-	            $table = 'ordenes_compra';
-	            break;
-	        case 'odr':
-	            $table = 'ordenes_retiro';
-	            break;
-	        case 'odd_auth':
-	            $table = 'auth_odd';
-	            break;
-	        case 'odv_auth':
-	            $table = 'auth_odv';
-	            break;
-	        case 'odc_auth':
-	            $table = 'auth_odc';
-	            break;
-	        case 'odr_auth':
-	            $table = 'auth_odr';
-	            break;
+                $table = 'ordenes_deposito';
+                break;
+            case 'odv':
+                $table = 'ordenes_venta';
+                break;
+            case 'odc':
+                $table = 'ordenes_compra';
+                break;
+            case 'odr':
+                $table = 'ordenes_retiro';
+                break;
+            case 'odd_auth':
+                $table = 'auth_odd';
+                break;
+            case 'odv_auth':
+                $table = 'auth_odv';
+                break;
+            case 'odc_auth':
+                $table = 'auth_odc';
+                break;
+            case 'odr_auth':
+                $table = 'auth_odr';
+                break;
         }
 
-	    return $table;
+        return $table;
     }
 
     public function getNextOrderNumber($tipo, $integrado){
@@ -1719,9 +1704,9 @@ class sendToTimOne {
     public function formatData($arreglo){
         $db		= JFactory::getDbo();
 
-	    $this->columnas = null;
-	    $this->valores = null;
-	    $this->set = null;
+        $this->columnas = null;
+        $this->valores = null;
+        $this->set = null;
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
@@ -1738,7 +1723,7 @@ class sendToTimOne {
 
         $projectId = $this->insertDB('integrado_proyectos', $columnas, $valores, true);
 
-	    return $projectId;
+        return $projectId;
     }
 
     public function updateProject($data,$id_proyecto){
@@ -1993,57 +1978,57 @@ class sendToTimOne {
 
     public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
-	    $return = false;
+        $return = false;
 
-	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
-	    $integrado = new IntegradoSimple($integradoId);
+        $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+        $integrado = new IntegradoSimple($integradoId);
 
-	    $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
-	    $order = $order[0];
+        $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+        $order = $order[0];
 
-	    //simulado
-	    $integrado->cantidadAuthNecesarias = 1;
+        //simulado
+        $integrado->cantidadAuthNecesarias = 1;
 
-	    $tableAuth = $orderType.'_auth';
-	    $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
+        $tableAuth = $orderType.'_auth';
+        $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
-	    $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
-	    $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+        $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+        $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-	    if ($order->canChangeStatus) {
-		    $this->formatData(array('status' => $orderNewStatus ));
-		    $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
+        if ($order->canChangeStatus) {
+            $this->formatData(array('status' => $orderNewStatus ));
+            $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
 
-		    $this->formatData(array('idOrden'=> $order->id,
-		                            'userId' => JFactory::getUser()->id,
-		                            'changeDate'=> time(),
-		                            'pastStatus' => $order->status ,
-		                            'newStatus'=> $orderNewStatus,
-			                        'result' => $return
-		                      ));
-		    $bitacora = $this->insertDB('bitacora_status_'.$orderType);
-	    }
+            $this->formatData(array('idOrden'=> $order->id,
+                'userId' => JFactory::getUser()->id,
+                'changeDate'=> time(),
+                'pastStatus' => $order->status ,
+                'newStatus'=> $orderNewStatus,
+                'result' => $return
+            ));
+            $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+        }
 
-	    return $return;
+        return $return;
     }
 
-	private function validStatusChange($order,$orderNewStatus) {
-		$return = false;
+    private function validStatusChange($order,$orderNewStatus) {
+        $return = false;
 
-		switch ((INT)$order->status) {
-			case 0:
-				$return = $orderNewStatus == 1 && $order->hasAllAuths;
-				break;
-			case 1:
-				$return = $orderNewStatus == 2 && $order->hasAllAuths;
-				break;
-			case 2:
-				$return = $orderNewStatus == 3 && $order->hasAllAuths;
-				break;
-		}
+        switch ((INT)$order->status) {
+            case 0:
+                $return = $orderNewStatus == 1 && $order->hasAllAuths;
+                break;
+            case 1:
+                $return = $orderNewStatus == 2 && $order->hasAllAuths;
+                break;
+            case 2:
+                $return = $orderNewStatus == 3 && $order->hasAllAuths;
+                break;
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
 
 }
