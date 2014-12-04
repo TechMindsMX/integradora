@@ -44,7 +44,11 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
             if($resultado) {
                 // autorización guardada
-                $save->changeOrderStatus();
+	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', '1');
+	            if ($statusChange){
+		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+	            }
+
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');

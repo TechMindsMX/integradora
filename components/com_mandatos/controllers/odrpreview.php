@@ -43,8 +43,12 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $resultado = $save->insertDB('auth_odr');
 
             if($resultado) {
-                // autorización guardada
-                $save->changeOrderStatus();
+	            // autorización guardada
+	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '1');
+	            if ($statusChange){
+		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+	            }
+
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');

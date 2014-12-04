@@ -43,8 +43,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
             $resultado = $save->insertDB('auth_odc');
 
             if($resultado) {
-                // autorización guardada
-                $save->changeOrderStatus();
+	            // autorización guardada
+	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '1');
+	            if ($statusChange){
+		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+	            }
+
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
