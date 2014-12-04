@@ -1366,7 +1366,7 @@ class getFromTimOne{
         return $facturas;
     }
 
-    public static function getFactComisiones(){
+	public static function getFactComisiones(){
         $factComiciones = new stdClass();
 
         $factComiciones->id             = 1;
@@ -1615,23 +1615,71 @@ class getFromTimOne{
         return $comisiones;
     }
 
-    public static function getTriggersComisiones() {
+	private static function getComisionesOfIntegrado($integradoId) {
+		$request = new getFromTimOne();
+
+		$where = null;
+		if(!is_null($integradoId)) {
+			$where = 'integradoId = '.$integradoId;
+		}
+		$comisionesInteg = $request->selectDB('integrado_comisiones', $where);
+
+		foreach ( $comisionesInteg as $valor ) {
+			$result = $request->getComisiones($valor->comisionId);
+			$comisiones[] = $result[0];
+		}
+
+		return $comisiones;
+	}
+
+	public static function getTriggersComisiones() {
         $triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
+		$eve = new comisionEvent();
+		$tmp = $eve->getAll();
 
-        return $triggers;
+		foreach ( $tmp as $value ) {
+			$trigg[$value->trigger] = $value->eventFullName;
+		}
+		$triggers = $trigg;
+
+		return $triggers;
     }
-}
-class comisionEvent {
-    public $id;
-    public $type;
-    public $trigger;
-    public $eventFullName;
 
-    public function getAll() {
-        $result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
+	public static function calculaComision( $orden, $tipoOrden ) {
 
-        return $result;
-    }
+		switch ($tipoOrden) {
+			case 'FACTURA':
+				$triggerSearch = 'factpagada';
+				break;
+			case 'ODC':
+				$triggerSearch = '';
+				break;
+			case 'ODD':
+				$triggerSearch = '';
+				break;
+			case 'ODR':
+				$triggerSearch = '';
+				break;
+		}
+
+		$sesion = JFactory::getSession();
+		$integradoId = $sesion->get('integradoId', 1, 'integrado'); // simulado el default
+
+		$comisiones = self::getComisionesOfIntegrado($integradoId);
+
+		if ( ! empty( $comisiones ) && isset($triggerSearch) ) {
+			foreach ( $comisiones as $key => $com ) {
+				if($com->trigger == $triggerSearch) {
+					$comision = $com;
+				}
+			}
+		}
+
+		$montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
+
+		return $montoComision;
+	}
+
 }
 
 
@@ -1650,34 +1698,34 @@ class sendToTimOne {
 
     public static function getTableByType($tipo)
     {
-        switch($tipo){
+	    switch($tipo){
             case 'odd':
-                $table = 'ordenes_deposito';
-                break;
-            case 'odv':
-                $table = 'ordenes_venta';
-                break;
-            case 'odc':
-                $table = 'ordenes_compra';
-                break;
-            case 'odr':
-                $table = 'ordenes_retiro';
-                break;
-            case 'odd_auth':
-                $table = 'auth_odd';
-                break;
-            case 'odv_auth':
-                $table = 'auth_odv';
-                break;
-            case 'odc_auth':
-                $table = 'auth_odc';
-                break;
-            case 'odr_auth':
-                $table = 'auth_odr';
-                break;
+	            $table = 'ordenes_deposito';
+	            break;
+	        case 'odv':
+	            $table = 'ordenes_venta';
+	            break;
+	        case 'odc':
+	            $table = 'ordenes_compra';
+	            break;
+	        case 'odr':
+	            $table = 'ordenes_retiro';
+	            break;
+	        case 'odd_auth':
+	            $table = 'auth_odd';
+	            break;
+	        case 'odv_auth':
+	            $table = 'auth_odv';
+	            break;
+	        case 'odc_auth':
+	            $table = 'auth_odc';
+	            break;
+	        case 'odr_auth':
+	            $table = 'auth_odr';
+	            break;
         }
 
-        return $table;
+	    return $table;
     }
 
     public function getNextOrderNumber($tipo, $integrado){
@@ -1704,9 +1752,9 @@ class sendToTimOne {
     public function formatData($arreglo){
         $db		= JFactory::getDbo();
 
-        $this->columnas = null;
-        $this->valores = null;
-        $this->set = null;
+	    $this->columnas = null;
+	    $this->valores = null;
+	    $this->set = null;
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
@@ -1723,7 +1771,7 @@ class sendToTimOne {
 
         $projectId = $this->insertDB('integrado_proyectos', $columnas, $valores, true);
 
-        return $projectId;
+	    return $projectId;
     }
 
     public function updateProject($data,$id_proyecto){
@@ -1978,59 +2026,72 @@ class sendToTimOne {
 
     public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
-        $return = false;
+	    $return = false;
 
-        $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
-        $integrado = new IntegradoSimple($integradoId);
+	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+	    $integrado = new IntegradoSimple($integradoId);
 
-        $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
-        $order = $order[0];
+	    $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+	    $order = $order[0];
 
-        //simulado
-        $integrado->cantidadAuthNecesarias = 1;
+	    //simulado
+	    $integrado->cantidadAuthNecesarias = 1;
 
-        $tableAuth = $orderType.'_auth';
-        $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
+	    $tableAuth = $orderType.'_auth';
+	    $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
-        $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
-        $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+	    $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+	    $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-        if ($order->canChangeStatus) {
-            $this->formatData(array('status' => $orderNewStatus ));
-            $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
+	    if ($order->canChangeStatus) {
+		    $this->formatData(array('status' => $orderNewStatus ));
+		    $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
 
-            $this->formatData(array('idOrden'=> $order->id,
-                'userId' => JFactory::getUser()->id,
-                'changeDate'=> time(),
-                'pastStatus' => $order->status ,
-                'newStatus'=> $orderNewStatus,
-                'result' => $return
-            ));
-            $bitacora = $this->insertDB('bitacora_status_'.$orderType);
-        }
+		    $this->formatData(array('idOrden'=> $order->id,
+		                            'userId' => JFactory::getUser()->id,
+		                            'changeDate'=> time(),
+		                            'pastStatus' => $order->status ,
+		                            'newStatus'=> $orderNewStatus,
+			                        'result' => $return
+		                      ));
+		    $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+	    }
 
-        return $return;
+	    return $return;
     }
 
-    private function validStatusChange($order,$orderNewStatus) {
-        $return = false;
+	private function validStatusChange($order,$orderNewStatus) {
+		$return = false;
 
-        switch ((INT)$order->status) {
-            case 0:
-                $return = $orderNewStatus == 1 && $order->hasAllAuths;
-                break;
-            case 1:
-                $return = $orderNewStatus == 2 && $order->hasAllAuths;
-                break;
-            case 2:
-                $return = $orderNewStatus == 3 && $order->hasAllAuths;
-                break;
-        }
+		switch ((INT)$order->status) {
+			case 0:
+				$return = $orderNewStatus == 1 && $order->hasAllAuths;
+				break;
+			case 1:
+				$return = $orderNewStatus == 2 && $order->hasAllAuths;
+				break;
+			case 2:
+				$return = $orderNewStatus == 3 && $order->hasAllAuths;
+				break;
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 
 
+}
+
+class comisionEvent {
+	public $id;
+	public $type;
+	public $trigger;
+	public $eventFullName;
+
+	public function getAll() {
+		$result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
+
+		return $result;
+	}
 }
 
 

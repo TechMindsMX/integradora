@@ -5,10 +5,15 @@ JHtml::_( 'bootstrap.tooltip' );
 
 $items = $this->comision;
 
+// triggers recurrent
+$triggersRecurrent['fecha'] = array_pop($this->cats->triggers);
+
+// triggers por Tx
+$triggersByTx = $this->cats->triggers;
+
 JFactory::getDocument()->addScript( JUri::root() . 'libraries/integradora/js/tim-validation.js' );
 
 $accion = 'index.php?option=com_adminintegradora';
-//var_dump($items, $this->cats);
 ?>
 	<script type="text/javascript">
 
@@ -66,16 +71,16 @@ $accion = 'index.php?option=com_adminintegradora';
 				});
 			}
 
-			if (this.value == '1') {
+			if (this.value == '1') { // por Tx
 				$freqTime.hide();
 				$rate.show('300');
 
-				optionsTrigger({"oddpagada":"Orden de Depósito pagada","odvpagada":"Orden de Venta pagada"});
-			} else if (this.value == '0') {
+				optionsTrigger(<?php echo json_encode($triggersByTx); ?>);
+			} else if (this.value == '0') { // recurrente
 				$rate.hide();
 				$freqTime.show('300');
 
-				optionsTrigger({"fecha":"Según recurrencia"});
+				optionsTrigger(<?php echo json_encode($triggersRecurrent); ?>);
 			}
 
 
