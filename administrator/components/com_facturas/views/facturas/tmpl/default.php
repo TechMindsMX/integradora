@@ -9,7 +9,7 @@ $vName = 'facturas';
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 JSubMenuHelper::addEntry(
-    JText::_('COM_FACTURAS_FACTURAS'),
+    JText::_('COM_FACTURAS_LISTADO_FACT_COMISIONES'),
     'index.php?option=com_facturas',
     $vName == 'facturas');
 
@@ -26,26 +26,26 @@ JSubMenuHelper::addEntry(
     'index.php?option=com_facturas&view=odrlist',
     $vName == 'listadoODR');
 
-foreach($this->comision as $value) {
-    if ($value->description == 'Factura') {
-        $comision = $value->monto;
-    }
-}
-foreach($this->facturas as $value) {
-    $data = new stdClass();
-
-    $data->fecha        = $value->Comprobante->fechaFormateada;
-    $data->folio        = $value->Comprobante->serie . $value->Comprobante->folio;
-    $data->emisor       = $value->Emisor->nombre;
-    $data->iva          = $value->Impuestos->totalImpuestosTrasladados;
-    $data->subtotal     = $value->Comprobante->subTotal;
-    $data->total        = $value->Comprobante->total;
-    $data->status      = $value->status;
-    $data->factComision = $data->total+$comision;
-
-    $dataFacturas[]     = $data;
-}
+$comision = $this->comision;
 ?>
+
+<script>
+    function filtroIntegrado() {
+        var idIntegrado = jQuery(this).val();
+
+        if(idIntegrado == 0){
+            jQuery('tr[id*="integrado"]').show();
+        }else{
+            console.log('.integrado_'+idIntegrado);
+            jQuery('tr[id*="integrado"]').hide();
+            jQuery('.integrado_'+idIntegrado).show();
+        }
+    }
+
+    jQuery(document).ready(function(){
+        jQuery('#integrado').on('change', filtroIntegrado);
+    });
+</script>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 
 <form action="" method="post" name="adminForm" id="adminForm">
@@ -105,17 +105,20 @@ foreach($this->facturas as $value) {
         </tr>
         </thead>
         <tbody class="tbody" id="tbody">
-        <?php foreach ($dataFacturas as $value) {?>
-            <tr>
+        <?php foreach ($this->facturas as $value) {?>
+            <tr id="integrado_<?php echo $value->integradoId; ?>" class="row integrado_<?php echo $value->integradoId; ?>">
                 <td><?php echo $value->status; ?></td>
-                <td><?php echo $value->fecha; ?></td>
+                <td>
+                    <?php echo $value->fecha; ?>
+                    <input type="hidden" class="fechaNumero" value="<?php echo $value->fechaNum; ?>" />
+                </td>
                 <td><?php echo $value->folio; ?></td>
                 <td><?php echo $value->emisor; ?></td>
                 <td>$<?php echo number_format($value->iva,2); ?></td>
                 <td>$<?php echo number_format($value->subtotal,2); ?></td>
                 <td>$<?php echo number_format($value->total,2); ?></td>
                 <td>$<?php echo number_format($comision,2); ?></td>
-                <td>$<?php echo number_format($value->factComision,2); ?></td>
+                <td>$<?php echo number_format($value->total+$comision,2); ?></td>
                 <td></td>
             </tr>
         <?php } ?>

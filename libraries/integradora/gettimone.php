@@ -1343,6 +1343,18 @@ class getFromTimOne{
 
     }
 
+    public static function getFacturasComision($integradoId=null, $idFactura=null){
+            $where = null;
+            if(!is_null($idFactura)){
+                $where = 'id = '.$idFactura;
+            }elseif(!is_null($integradoId)){
+                $where = 'integradoId = '.$integradoId;
+            }
+            $facturas = self::selectDB('facturas_comisiones', $where);
+
+            return $facturas;
+    }
+
     public static function getFactComisiones(){
         $factComiciones = new stdClass();
 
@@ -1597,8 +1609,6 @@ class getFromTimOne{
 
         return $triggers;
     }
-
-
 }
 
 class sendToTimOne {
