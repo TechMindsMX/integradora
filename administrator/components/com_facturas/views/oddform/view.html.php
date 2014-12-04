@@ -10,6 +10,7 @@ class FacturasViewOddform extends JViewLegacy {
         $this->orden = $this->get('Orden');
         $this->usuarios = $this->get('UserIntegrado');
         $this->integradi = $this->get('Solicitud');
+        $this->integrados = $this->get('Integrados');
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));

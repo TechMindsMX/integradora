@@ -75,8 +75,8 @@ $odds = $this->ordenes;
                 <select id='integrado' name="integrado" class="integrado">
                     <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
-                    foreach ($this->usuarios as $key => $value) {
-                        echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
+                    foreach ($this->integrados as $key => $value) {
+                        echo '<option value="'.$value->integrado->integrado_id.'">'.$value->datos_personales->nom_comercial.'</option>';
                     }
                     ?>
                 </select>

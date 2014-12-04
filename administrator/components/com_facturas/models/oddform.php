@@ -16,7 +16,7 @@ class FacturasModelOddform extends JModelList {
 
     public function __construct($config = array()) {
         $get = JFactory::getApplication()->input;
-        $params = array('oddNum'=>'ALNUM');
+        $params = array('idOrden'=>'INT');
         $this->data = $get->getArray($params);
         parent::__construct($config);
     }
@@ -38,23 +38,30 @@ class FacturasModelOddform extends JModelList {
     }
 
     public function getOrden(){
-        $oddNum = $this->data['oddNum'];
+        $idOrden = $this->data['idOrden'];
 
-        $data = getFromTimOne::getOrdenesDeposito();
-        $usuarios = $this->getUserIntegrado();
+        $data = getFromTimOne::getOrdenesDeposito(null,$idOrden);
 
         foreach($data as $value){
-            foreach($usuarios as $usuario){
-                if($usuario->integrado_id == $value->integradoId){
-                    $value->integradoName = $usuario->name;
-                }
-            }
+            $value->integradoName = $this->getIntegradoName($value->integradoId);
+        }
+        return $data[0];
+    }
 
-            if($value->numOrden == $oddNum){
-                $orden = $value;
+    public function getIntegrados(){
+        $integrados = getFromTimOne::getintegrados();
+
+        return $integrados;
+    }
+
+    public function getIntegradoName($integardoId){
+        $integrados = $this->getIntegrados();
+
+        foreach ($integrados as $value) {
+            if($value->integrado->integrado_id == $integardoId){
+                $return = $value->datos_personales->nom_comercial;
             }
         }
-
-        return $orden;
+        return $return;
     }
 }

@@ -48,7 +48,7 @@ $comision = $this->comision;
 </script>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 
-<form action="" method="post" name="adminForm" id="adminForm">
+<form action="" method="post" name="adminForm" id="adminForm" autocomplete="off">
     <div  class="integrado-id" id="odv">
         <div class="head2" id="head" >
             <div class="filtros" id="columna1" >
@@ -93,10 +93,11 @@ $comision = $this->comision;
             <thead class="thead">
             <tr class="row0" id="head" >
                 <th></th>
-                <th >Estatus</th>
-                <th> Fecha</th>
+                <th>Estatus</th>
+                <th>Integrado</th>
+                <th>Fecha</th>
                 <th>Folio</th>
-                <th>Emisor</th>
+                <th>Receptor</th>
                 <th>IVA</th>
                 <th>Sub-Total</th>
                 <th>Total Factura</th>
@@ -109,6 +110,7 @@ $comision = $this->comision;
             <?php foreach ($this->facturas as $value) {?>
                 <tr id="integrado_<?php echo $value->integradoId; ?>" class="row integrado_<?php echo $value->integradoId; ?>">
                     <td><?php echo $value->status; ?></td>
+                    <td><?php echo $value->integradoName; ?></td>
                     <td>
                         <?php echo $value->fecha; ?>
                         <input type="hidden" class="fechaNumero" value="<?php echo $value->fechaNum; ?>" />

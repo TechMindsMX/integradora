@@ -41,20 +41,22 @@ class FacturasModelFacturas extends JModelList {
             $fechaNumero = strtotime($fechaHr[0]);
             $fecha = date('d-m-Y',$fechaNumero);
 
-            $respuesta               = new stdClass();
-            $nombreEmisor            = $factura->factura->emisor['attrs']['NOMBRE'];
-            $iva                     = $factura->factura->impuestos->iva->importe;
-            $respuesta->id           = (INT) $factura->id;
-            $respuesta->integradoId  = (INT) $factura->integradoId;
-            $respuesta->status       = (INT) $factura->status;
-            $respuesta->fecha        = $fecha;
-            $respuesta->fechaNum     =
-            $respuesta->folio        = (INT) $factura->factura->comprobante['FOLIO'];
-            $respuesta->emisor       = $nombreEmisor;
-            $respuesta->iva          = $iva;
-            $respuesta->subtotal     = (FLOAT) $factura->factura->comprobante['SUBTOTAL'];
-            $respuesta->total        = (FLOAT) $factura->factura->comprobante['TOTAL'];
-            $dataFacturas[]          = $respuesta;
+            $integradoName            = $this->getIntegradoName($factura->integradoId);
+            $respuesta                = new stdClass();
+            $nombreEmisor             = $factura->factura->receptor['attrs']['NOMBRE'];
+            $iva                      = $factura->factura->impuestos->iva->importe;
+            $respuesta->id            = (INT) $factura->id;
+            $respuesta->integradoId   = (INT) $factura->integradoId;
+            $respuesta->integradoName = $integradoName;
+            $respuesta->status        = (INT) $factura->status;
+            $respuesta->fecha         = $fecha;
+            $respuesta->fechaNum      =
+            $respuesta->folio         = (INT) $factura->factura->comprobante['FOLIO'];
+            $respuesta->emisor        = $nombreEmisor;
+            $respuesta->iva           = $iva;
+            $respuesta->subtotal      = (FLOAT) $factura->factura->comprobante['SUBTOTAL'];
+            $respuesta->total         = (FLOAT) $factura->factura->comprobante['TOTAL'];
+            $dataFacturas[]           = $respuesta;
         }
 
         return $dataFacturas;
@@ -84,5 +86,16 @@ class FacturasModelFacturas extends JModelList {
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
 
         $factura->factura = $datos;
+    }
+
+    public function getIntegradoName($integardoId){
+        $integrados = $this->getIntegrados();
+
+        foreach ($integrados as $value) {
+            if($value->integrado->integrado_id == $integardoId){
+                $return = $value->datos_personales->nom_comercial;
+            }
+        }
+        return $return;
     }
 }
