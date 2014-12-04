@@ -25,6 +25,7 @@ class Integrado {
 		$this->nombres = $this->separaNombre($this->user->name);
 		
 		unset($this->user->password);
+
 	}
 
     function getIntegrados (){

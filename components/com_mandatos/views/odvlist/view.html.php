@@ -3,7 +3,14 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.view');
 
+/**
+ * @property int integradoId
+ * @property mixed permisos
+ * @property mixed data
+ * @property mixed token
+ */
 class MandatosViewOdvlist extends JViewLegacy {
+
 	function display($tpl = null){
 		$data 				= JFactory::getApplication()->input->getArray();
 		$this->integradoId	= $data['integradoId'];

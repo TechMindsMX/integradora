@@ -18,7 +18,7 @@ $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
 if(is_null($ordenes) || empty($ordenes)){
-    JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_CLIENTS'), 'Message');
+    JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
 }
 ?>
 <script>
@@ -68,11 +68,6 @@ if(is_null($ordenes) || empty($ordenes)){
     </div>
 
     <div class="col-md-4">
-        <?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion&integradoId='.$this->integradoId); ?>
-        <a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" /><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></a>
-    </div>
-
-    <div class="col-md-4">
         <div><?php echo JText::_('COM_MANDATOS_ORDENES_FILTRO'); ?>:</div>
         <div class="radio">
             <label for="filtro"><input type="radio" name="filtro" class="filtro" value="0"><?php echo JText::_('LBL_STATUS_PENDING_AUTH'); ?></label>
@@ -119,7 +114,7 @@ if(is_null($ordenes) || empty($ordenes)){
 
                 echo '<tr class="type_'.$value->status.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.' '.$value->numOrden.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->created.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.@$value->proveedor->tradeName.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';

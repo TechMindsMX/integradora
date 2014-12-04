@@ -20,9 +20,9 @@ class MandatosModelOdvform extends JModelItem {
     public function getOrden(){
         $inputVars = JFactory::getApplication()->input->getArray();
 
-        $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['idOdv']);
+        $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['idOrden']);
 
-        return $orden;
+        return $orden[0];
     }
 
     public function getClientes(){
@@ -72,18 +72,11 @@ class MandatosModelOdvform extends JModelItem {
 
         $allproducts = getFromTimOne::getProducts($this->integradoId);
 
-        if(count($allproducts) == 1){
-            $datos->id_producto = $allproducts->id_producto;
-            $datos->productName = $allproducts->productName;
+        foreach ($allproducts as $key => $value) {
+            $datos = new stdClass();
+            $datos->id_producto = $value->id_producto;
+            $datos->productName = $value->productName;
             $respuesta[] = $datos;
-        }else{
-            foreach ($allproducts as $key => $value) {
-                $datos = new stdClass();
-                $datos->id_producto = $value->id_producto;
-                $datos->productName = $value->productName;
-                $respuesta[] = $datos;
-            }
-
         }
 
         return $respuesta;
@@ -91,13 +84,8 @@ class MandatosModelOdvform extends JModelItem {
 
     public function getCuentas(){
         $cuentas = getFromTimOne::selectDB('integrado_datos_bancarios', 'integrado_id = '.$this->integradoId);
-
-        if(count($cuentas) == 1){
-            $cuentas->banco_cuenta_xxx = 'XXXXXX'.substr($cuentas->banco_cuenta,-4,4);
-        }else {
-            foreach ($cuentas as $objeto) {
-                $objeto->banco_cuenta_xxx = 'XXXXXX' . substr($objeto->banco_cuenta, -4, 4);
-            }
+        foreach ($cuentas as $objeto) {
+            $objeto->banco_cuenta_xxx = 'XXXXXX' . substr($objeto->banco_cuenta, -4, 4);
         }
 
         return $cuentas;

@@ -10,6 +10,7 @@ class FacturasViewFacturas extends JViewLegacy {
         $this->facturas = $this->get('Facturas');
         $this->usuarios = $this->get('UserIntegrado');
         $this->integradi = $this->get('Solicitud');
+        $this->integrados = $this->get('integrados');
 
         $this->comision = $this->get('Comision');
 

@@ -36,6 +36,30 @@ class getFromTimOne{
         return $userAsAuth;
     }
 
+    public static function getintegrados(){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+
+        $query->select('*')
+            ->from($db->quoteName('#__integrado_users'))
+            ->where($db->quoteName('integrado_principal').' = 1');
+
+        try {
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+        }catch (Exception $e){
+            $results = $e;
+            exit;
+        }
+
+        foreach ($results as $value) {
+            $integrado = new IntegradoSimple($value->integrado_id);
+            $integradosArray[] = $integrado->integrados[0];
+        }
+
+        return $integradosArray;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -235,13 +259,13 @@ class getFromTimOne{
         return $response;
     }
 
-	public static function getOrdenes($integradoId = null, $idOrden = null, $table){
-		$where = null;
-		if(isset($idOrden)){
-			$where = 'id = '.$idOrden;
-		}elseif(isset($integradoId)){
-			$where = 'integradoId = '.$integradoId;
-		}
+    public static function getOrdenes($integradoId = null, $idOrden = null, $table){
+        $where = null;
+        if(isset($idOrden)){
+            $where = 'id = '.$idOrden;
+        }elseif(isset($integradoId)){
+            $where = 'integradoId = '.$integradoId;
+        }
 
         $ordenes = self::selectDB($table, $where);
 
@@ -253,7 +277,7 @@ class getFromTimOne{
         return $ordenes;
     }
 
-	public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
+    public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
         foreach ($orden as $value) {
             $value->id = (INT)$value->id;
@@ -273,8 +297,8 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
-		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
+    public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
 
         foreach ($orden as $value) {
             $value->id = (INT)$value->id;
@@ -291,7 +315,7 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
+    public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
 
         //Cambio el tipo de dato para las validaciones con (===)
@@ -307,8 +331,8 @@ class getFromTimOne{
             $value->conditions     = (INT)$value->conditions;
             $value->placeIssue     = (INT)$value->placeIssue;
             $value->productos      = (STRING)$value->productos;
-            $value->created        = (STRING)$value->created;
-            $value->payment        = (STRING)$value->payment;
+            $value->createdDate    = (STRING)$value->createdDate;
+            $value->paymentDate    = (STRING)$value->paymentDate;
             $value->status         = (INT)$value->status;
 
         }
@@ -316,7 +340,7 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
+    public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
 
         foreach ($orden as $value) {
@@ -331,9 +355,9 @@ class getFromTimOne{
         }
 
         return $orden;
-	}
+    }
 
-	public static function getBalances($integradoId)
+    public static function getBalances($integradoId)
     {
         $respuesta = null;
 
@@ -490,7 +514,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-	public static function getFlujo($integradoId)
+    public static function getFlujo($integradoId)
     {
         $respuesta = null;
 
@@ -647,7 +671,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-	public static function getResultados($integradoId)
+    public static function getResultados($integradoId)
     {
         $respuesta = null;
 
@@ -1556,23 +1580,23 @@ class getFromTimOne{
         return $currencies;
     }
 
-	public static function getComisiones($id = null) {
-		$request = new getFromTimOne();
+    public static function getComisiones($id = null) {
+        $request = new getFromTimOne();
 
-		$where = null;
-		if(!is_null($id)) {
-			$where = 'id = '.$id;
-		}
-		$comisiones = $request->selectDB('mandatos_comisiones', $where);
+        $where = null;
+        if(!is_null($id)) {
+            $where = 'id = '.$id;
+        }
+        $comisiones = $request->selectDB('mandatos_comisiones', $where);
 
-		return $comisiones;
-	}
+        return $comisiones;
+    }
 
-	public static function getTriggersComisiones() {
-		$triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
+    public static function getTriggersComisiones() {
+        $triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
 
-		return $triggers;
-	}
+        return $triggers;
+    }
 
 
 }
@@ -1592,34 +1616,34 @@ class sendToTimOne {
 
     public static function getTableByType($tipo)
     {
-        switch($tipo){
+	    switch($tipo){
             case 'odd':
-                $table = 'ordenes_deposito';
-                break;
-            case 'odv':
-                $table = 'ordenes_venta';
-                break;
-            case 'odc':
-                $table = 'ordenes_compra';
-                break;
-            case 'odr':
-                $table = 'ordenes_retiro';
-                break;
-            case 'odd_auth':
-                $table = 'auth_odd';
-                break;
-            case 'odv_auth':
-                $table = 'auth_odv';
-                break;
-            case 'odc_auth':
-                $table = 'auth_odc';
-                break;
-            case 'odr_auth':
-                $table = 'auth_odr';
-                break;
+	            $table = 'ordenes_deposito';
+	            break;
+	        case 'odv':
+	            $table = 'ordenes_venta';
+	            break;
+	        case 'odc':
+	            $table = 'ordenes_compra';
+	            break;
+	        case 'odr':
+	            $table = 'ordenes_retiro';
+	            break;
+	        case 'odd_auth':
+	            $table = 'auth_odd';
+	            break;
+	        case 'odv_auth':
+	            $table = 'auth_odv';
+	            break;
+	        case 'odc_auth':
+	            $table = 'auth_odc';
+	            break;
+	        case 'odr_auth':
+	            $table = 'auth_odr';
+	            break;
         }
 
-        return $table;
+	    return $table;
     }
 
     public function getNextOrderNumber($tipo, $integrado){
@@ -1645,6 +1669,10 @@ class sendToTimOne {
 
     public function formatData($arreglo){
         $db		= JFactory::getDbo();
+
+	    $this->columnas = null;
+	    $this->valores = null;
+	    $this->set = null;
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
@@ -1707,13 +1735,13 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo $e->getMessage();
+            echo '<pre>'.$e->getMessage().'</pre>';
             $return = false;
         }
 
-	    if($last_inserted_id){
-		    $return= $db->insertid();
-	    }
+        if($last_inserted_id){
+            $return= $db->insertid();
+        }
 
         return $return;
     }
@@ -1733,7 +1761,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo $e->getMessage();
+            echo '<pre>'.$e->getMessage().'</pre>';
             $return = false;
         }
 
@@ -1908,16 +1936,63 @@ class sendToTimOne {
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getHttpType () {
         return strtoupper($this->httpType);
     }
 
-    public function changeStatus()
+    public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
+	    $return = false;
+
+	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+	    $integrado = new IntegradoSimple($integradoId);
+
+	    $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+	    $order = $order[0];
+
+	    //simulado
+	    $integrado->cantidadAuthNecesarias = 1;
+
+	    $tableAuth = $orderType.'_auth';
+	    $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
+
+	    $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+	    $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+
+	    if ($order->canChangeStatus) {
+		    $this->formatData(array('status' => $orderNewStatus ));
+		    $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
+
+		    $this->formatData(array('idOrden'=> $order->id,
+		                            'userId' => JFactory::getUser()->id,
+		                            'changeDate'=> time(),
+		                            'pastStatus' => $order->status ,
+		                            'newStatus'=> $orderNewStatus,
+			                        'result' => $return
+		                      ));
+		    $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+	    }
+
+	    return $return;
     }
+
+	private function validStatusChange($order,$orderNewStatus) {
+		$return = false;
+
+		switch ((INT)$order->status) {
+			case 0:
+				$return = $orderNewStatus == 1 && $order->hasAllAuths;
+				break;
+			case 1:
+				$return = $orderNewStatus == 2 && $order->hasAllAuths;
+				break;
+			case 2:
+				$return = $orderNewStatus == 3 && $order->hasAllAuths;
+				break;
+		}
+
+		return $return;
+	}
 
 
 }

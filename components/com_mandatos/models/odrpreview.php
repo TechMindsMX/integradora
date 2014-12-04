@@ -14,15 +14,8 @@ class MandatosModelOdrpreview extends JModelItem {
 
 	public function getOrdenes(){
 
-		if (!isset($odrs)) {
-			$odrs = getFromTimOne::getOrdenesRetiro($this->inputVars['integradoId']);
-		}
-
-		foreach ($odrs as $key => $value) {
-			if ($value->id == $this->inputVars['odrnum'] ) {
-				$this->odr = $value;
-			}
-		}
+		$odr = getFromTimOne::getOrdenesRetiro($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+		$this->odr = $odr[0];
 
 		// Verifica si la ODR exite para el integrado o redirecciona
 		if (is_null($this->odr)){

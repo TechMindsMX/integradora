@@ -10,8 +10,8 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
-
 $productosOrden = json_decode($orden->productos);
+
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -42,9 +42,7 @@ $productosOrden = json_decode($orden->productos);
         jQuery('#project').on('change', llenasubproject);
         jQuery('.productos').on('change', llenatabla);
         jQuery('#button').on('click', addrow);
-        jQuery('.cantidad').on('change', sum);
-        jQuery('.iva').on('change',sum);
-        jQuery('.ieps').on('change',sum);
+        jQuery(document).on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
         jQuery('button').on('click', envio);
         jQuery.each(arrayProd, function (key, value) {
             jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
@@ -176,7 +174,7 @@ $productosOrden = json_decode($orden->productos);
 
         request.done(function(result){
             if(result.success){
-                jQuery('#id').val(result.id);
+                jQuery('#idOrden').val(result.id);
                 jQuery('#numOrden').html(result.numOrden);
                 jQuery('input[name="numOrden"]').val(result.numOrden);
                 jQuery('a[href="#'+result.tab+'"]').trigger('click');
@@ -184,6 +182,8 @@ $productosOrden = json_decode($orden->productos);
                 if(result.redirect != null){
                     window.location = result.redirect;
                 }
+            } else if (!result.success) {
+	            jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>')
             }
         });
 
@@ -194,7 +194,7 @@ $productosOrden = json_decode($orden->productos);
 
     function envio() {
         var boton = jQuery(this).prop('id');
-        var data = jQuery('#altaC_P').serialize();
+        var data = jQuery('#altaODV').serialize();
 
         switch (boton){
             case 'seleccion':
@@ -209,13 +209,13 @@ $productosOrden = json_decode($orden->productos);
     }
 </script>
 
-<form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
+<form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data" >
     <h1>Generación de Orden de Venta</h1>
     <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
 
     <input type="hidden" name="numOrden" value="<?php echo $orden->numOrden; ?>">
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
-    <input type="hidden" name="id" id="id" value="<?php echo $orden->id ?>" />
+    <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id ?>" />
     <?php
     echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
     echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
@@ -263,13 +263,9 @@ $productosOrden = json_decode($orden->productos);
         <select name="account">
             <option value="0">Cuenta</option>
             <?php
-            if(count($this->cuentas) == 1){
-                echo '<option value="' . $this->cuentas->datosBan_id . '" selected>' . $this->cuentas->banco_cuenta_xxx . '</option>';
-            }else {
-                foreach ($this->cuentas as $datosCuenta) {
-                    $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
-                    echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
-                }
+            foreach ($this->cuentas as $datosCuenta) {
+                $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
+                echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
             }
             ?>
         </select>

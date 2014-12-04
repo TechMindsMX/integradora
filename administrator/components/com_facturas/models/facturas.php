@@ -56,4 +56,10 @@ class FacturasModelFacturas extends JModelList {
         $data = getFromTimOne::getComisiones();
         return $data;
     }
+
+    public function getIntegrados(){
+        $integrados = getFromTimOne::getintegrados();
+
+        return $integrados;
+    }
 }
