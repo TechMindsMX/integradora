@@ -51,9 +51,11 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
         );
         $data = JFactory::getApplication()->input->getArray($post);
         $save = new sendToTimOne();
+        $changeDateType = new DateTime($data['date']);
+
+        $data['date'] = $changeDateType->getTimestamp();
 
         $save->formatData($data);
-        var_dump($data,$save);
 
         if(is_null($data['id'])){
             $resultado = $save->insertDB('conciliacion_banco_integrado');

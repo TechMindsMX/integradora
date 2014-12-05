@@ -89,7 +89,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
                 <?php echo JText::_('COM_CONCILIACIONBANCO_LEYEDA'); ?>
             </span>
             </label>
-            <input type="text" id="integradoName" class="typeahead"/>
+            <input type="text" id="integradoName" class="typeahead" autocomplete="off"/>
             <input type="hidden" name="integradoId" id="integradoId" value="0"/>
         </div>
 

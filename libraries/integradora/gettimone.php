@@ -71,6 +71,28 @@ class getFromTimOne{
         return $datos;
     }
 
+    public static function getTxIntegrado($integradoId = null, $idTX = null){
+        $where = null;
+        if(!is_null($idTX)){
+            $where = 'id = '.$idTX;
+        }elseif(!is_null($integradoId)){
+            $where = 'integradoId = '.$integradoId;
+        }
+
+        $txs = self::selectDB('conciliacion_banco_integrado',$where,'','getFromTimOne');
+
+        foreach ($txs as $value) {
+            $value->id              = (int) $value->id;
+            $value->cuenta          = (int) $value->cuenta;
+            $value->date            = (int) $value->date;
+            $value->amount          = (float) $value->amount;
+            $value->integradoId     = (int) $value->integradoId;
+            $value->fechaTimestamp  = $value->date;
+            self::convierteFechas($value);
+        }
+        return $txs;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 

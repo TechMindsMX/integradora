@@ -2,16 +2,8 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 jimport('integradora.integrado');
-jimport('integradora.catalogos');
-jimport('integradora.validator');
-jimport('integradora.integrado');
-jimport('integradora.imagenes');
 jimport('integradora.gettimone');
-jimport('integradora.classDB');
 
-/**
- * Methods supporting a list of Facturas records.
- */
 class FacturasModelOddform extends JModelList {
 
     public function __construct($config = array()) {
@@ -63,5 +55,18 @@ class FacturasModelOddform extends JModelList {
             }
         }
         return $return;
+    }
+
+    public function getTransacciones($integradoId=null){
+        $transacciones = getFromTimOne::getTxIntegrado();
+        $orden = $this->getOrden();
+
+        foreach ($transacciones as $tx) {
+            if($tx->integradoId === $orden->integradoId ){
+                $respuesta[] = $tx;
+            }
+        }
+
+        return $respuesta;
     }
 }
