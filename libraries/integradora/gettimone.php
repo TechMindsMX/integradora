@@ -71,13 +71,21 @@ class getFromTimOne{
         return $datos;
     }
 
-    public static function getTxIntegradoSinMandato($integradoId = null, $idTX = null){
+    public static function getTxIntegradoSinMandato($integradoId, $idTX = null)
+    {
         $where = null;
-        if(!is_null($idTX)){
-            $where = 'id = '.$idTX;
-        }elseif(!is_null($integradoId)){
-            $where = 'integradoId = '.$integradoId;
+        if (!is_null($idTX)) {
+            $where = 'id = ' . $idTX;
+        } elseif (!is_null($integradoId)) {
+            $where = 'integradoId = ' . $integradoId;
         }
+
+        $txs = self::getTxConciliaciones($where);
+
+        return $txs;
+    }
+
+    public static function getTxConciliaciones($where){
 
         $txs = self::selectDB('conciliacion_banco_integrado',$where,'','getFromTimOne');
 
