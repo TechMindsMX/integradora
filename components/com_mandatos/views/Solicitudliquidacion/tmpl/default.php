@@ -55,40 +55,50 @@ $saldo = $this->saldo;
     });
 </script>
 <h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></h1>
-    <form id="form_solicitudLiquidacion">
-        <div>
-            <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $'.number_format($saldo,2); ?></h4>
-            <input type="hidden" value="<?php echo $saldo; ?>" id="saldoLiquidacion" class="saldoliquidacion" name="saldo" />
-        </div>
+<form id="form_solicitudLiquidacion">
+    <div>
+        <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $'.number_format($saldo->subtotalTotalOperaciones,2); ?></h4>
+        <h4><?php echo JText::_('COM_MANDATOS_SALDO_IMPUESTOS').': $'.number_format($saldo->totalImpuestos,2); ?></h4>
+        <input type="hidden" value="<?php echo $saldo->subtotalTotalOperaciones; ?>" id="saldoLiquidacion" class="saldoliquidacion" name="saldo" />
+    </div>
 
-        <div>
-            <label for="monto"><?php echo JText::_('COM_MANDATOS_LBL_MONTO_SL'); ?></label>
-            <input type="text" name="monto" id="monto" />
-        </div>
+    <div>
+        <label for="monto"><?php echo JText::_('COM_MANDATOS_LBL_MONTO_SL'); ?></label>
+        <input type="text" name="monto" id="monto" />
+    </div>
 
-        <div class="form-actions" style="max-width: 30%">
-            <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-            <button type="button" class="btn btn-primary span3" id="liquidar"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-            <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-        </div>
-    </form>
+    <div class="form-actions" style="max-width: 30%">
+        <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
+        <button type="button" class="btn btn-primary span3" id="liquidar"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+    </div>
+</form>
 
 <h3><?php echo JText::_('COM_MANDATOS_SL_OPERACION_LIQUIDAR');?></h3>
-<div class="table">
-    <div class="row">
-        <div class="col-md-4">numero de orden</div>
-        <div class="col-md-4">Beneficiario</div>
-        <div class="col-md-4">monto</div>
-    </div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>Número de Orden</th>
+        <th>Beneficiario</th>
+        <th>Subtotal</th>
+        <th>Impuestos</th>
+        <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
     <?php
     foreach ($operaciones as $key => $value) {
-    ?>
-        <div class="row">
-            <div class="col-md-4"><?php echo $value->numOrden; ?></div>
-            <div class="col-md-4"><?php echo $value->beneficiary->tradeName; ?></div>
-            <div class="col-md-4">$<?php echo number_format($value->totalAmount,2); ?></div>
-        </div>
+        ?>
+        <tr class="row">
+            <td><?php echo $value->numOrden; ?></td>
+            <td><?php echo $value->beneficiary->corporateName; ?></td>
+            <td>$<?php echo number_format($value->subTotalAmount,2); ?></td>
+            <td>$<?php echo number_format(($value->iva+$value->ieps),2); ?></td>
+            <td>$<?php echo number_format($value->totalAmount,2); ?></td>
+        </tr>
     <?php
     }
     ?>
-</div>
+    </tbody>
+</table>

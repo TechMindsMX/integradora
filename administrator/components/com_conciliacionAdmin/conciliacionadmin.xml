@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade">
+    <name>com_conciliacionAdmin</name>
+    <creationDate>2014-12-05</creationDate>
+    <copyright>Copyright (C) 2014. Todos los derechos reservados.</copyright>
+    <license>Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt</license>
+    <author>Luis Enrique Magaña Manzano</author>
+    <authorEmail>lutek.valhalla@gmail.com</authorEmail>
+    <authorUrl>http://</authorUrl>
+    <version>1.0.0</version>
+    <description>Conciliacion de Transacciones y Mandatos</description>
+
+    <administration>
+        <menu img="components/com_facturas/assets/images/s_com_facturas.png" >COM_CONCILIACIONADMIN</menu>
+        <files folder="administrator">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>index.html</filename>
+            <filename>conciliacionadmin.php</filename>
+            <folder>controllers</folder>
+            <folder>assets</folder>
+            <folder>helpers</folder>
+            <folder>models</folder>
+            <folder>views</folder>
+            <folder>language</folder>
+        </files>
+        <languages folder="administrator">
+			<language tag="en-GB">language/en-GB/en-GB.com_conciliacionadmin.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_conciliacionadmin.sys.ini</language>
+        </languages>
+    </administration>
+    <plugins>
+        <plugin group="search" plugin="conciliacionadmin"/>
+    </plugins>
+</extension>

@@ -71,7 +71,7 @@ class getFromTimOne{
         return $datos;
     }
 
-    public static function getTxIntegrado($integradoId = null, $idTX = null){
+    public static function getTxIntegradoSinMandato($integradoId = null, $idTX = null){
         $where = null;
         if(!is_null($idTX)){
             $where = 'id = '.$idTX;
@@ -371,6 +371,54 @@ class getFromTimOne{
         }
 
         return $orden;
+    }
+
+    public static function getOperacionesPorLiquidar($integradoId){
+        $allOrdenes    = self::getOrdenesVenta($integradoId);
+        $subTotalOrden = (FLOAT) 0;
+        $subTotalIva   = (FLOAT) 0;
+        $subTotalIeps  = (FLOAT) 0;
+        $odvs = array();
+
+        //Temporal en lo que se crean las facturas.
+        foreach ($allOrdenes as $orden) {
+            if($orden->status === 4){
+                $orden->productos = json_decode($orden->productos);
+
+                foreach ($orden->productos  as $producto ) {
+                    $subTotalOrden  = (FLOAT)$subTotalOrden + $producto->cantidad * $producto->p_unitario;
+                    $subTotalIva    = (FLOAT)$subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+                    $subTotalIeps   = (FLOAT)$subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
+                }
+                $total                 = $subTotalOrden + $subTotalIva + $subTotalIeps;
+                $orden->subTotalAmount = $subTotalOrden;
+                $orden->totalAmount    = $total;
+                $orden->iva            = $subTotalIva;
+                $orden->ieps           = $subTotalIeps;
+
+                $odvs[] = $orden;
+
+                $subTotalOrden = 0;
+                $subTotalIva = 0;
+                $subTotalIeps = 0;
+            }
+        }
+
+        return $odvs;
+    }
+
+    public static function getSaldoOperacionesPorLiquidar($integardoId){
+        $allOdv = self::getOperacionesPorLiquidar($integardoId);
+        $montoOperaciones   = new stdClass();
+
+        $montoOperaciones->subtotalTotalOperaciones = 0;
+        $montoOperaciones->totalImpuestos = 0;
+        foreach ($allOdv as $orden) {
+            $montoOperaciones->subtotalTotalOperaciones = $montoOperaciones->subtotalTotalOperaciones + $orden->subTotalAmount;
+            $montoOperaciones->totalImpuestos = $montoOperaciones->totalImpuestos + $orden->iva + $orden->ieps;
+        }
+
+        return $montoOperaciones;
     }
 
     public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
