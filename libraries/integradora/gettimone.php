@@ -915,7 +915,10 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getFactura() {
+    public static function getFactura($integradoId) {
+
+
+
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);

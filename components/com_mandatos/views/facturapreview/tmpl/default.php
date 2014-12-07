@@ -14,4 +14,5 @@ $params 	= $app->input->getArray();
 
 $integrado 	= $this->integCurrent->integrados[0];
 
+
 echo $this->loadTemplate('body');

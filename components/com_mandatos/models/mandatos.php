@@ -31,15 +31,5 @@ class MandatosModelMandatos extends JModelItem {
 
         return $response;
 	}
-	
-	public function getCatalogos() {
-		$catalogos = new Catalogos;
-		
-		$catalogos->getNacionalidades();
-		$catalogos->getEstados();
-		$catalogos->getBancos();
-		
-		return $catalogos;
-	}
 }
 

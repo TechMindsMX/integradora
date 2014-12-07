@@ -14,10 +14,13 @@ class MandatosModelFacturalist extends JModelItem {
 	protected $dataModelo;
 
 	public function getFacturas($integradoId = null){
+
 		$data 		 = JFactory::getApplication()->input->getArray();
+
 		$integradoId = $data['integradoId'];
 
 		$listado = getFromTimOne::getFacturasVenta($integradoId);
+
         $clientes = getFromTimOne::getClientes($integradoId);
 
         foreach ($listado as $k => $v) {
