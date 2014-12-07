@@ -47,7 +47,9 @@ class xml2Array {
     }
 
     function manejaXML($xmlFileData){
+
         $xml                = $this->parse($xmlFileData);
+
         $datosXML           = new stdClass();
         $comprobante        = $xml[0]['attrs'];
         $emisor             = $xml[0]['children'][0];
