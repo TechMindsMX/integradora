@@ -457,7 +457,7 @@ class getFromTimOne{
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
             $value->status          = (INT)$value->status;
-            $value->amount          = (FLOAT)$value->amount;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
         }

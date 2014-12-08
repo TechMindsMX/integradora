@@ -54,7 +54,6 @@ foreach ($this->txs as $txs) {
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODD_INTEGRADO').':</h3> '.$orden->integradoName; ?></div>
     </div>
-
     <div class="clearfix">&nbsp;</div>
 
     <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_conciliacionadmin&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">

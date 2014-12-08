@@ -10,8 +10,6 @@ class conciliacionadminViewOddlist extends JViewLegacy {
 
         $this->sidebar = JHtmlSidebar::render();
         $this->ordenes = $this->get('Ordenes');
-        $this->usuarios = $this->get('UserIntegrado');
-        $this->integradi = $this->get('Solicitud');
         $this->integrados = $this->get('integrados');
 
 
