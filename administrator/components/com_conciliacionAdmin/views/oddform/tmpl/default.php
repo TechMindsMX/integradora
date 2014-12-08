@@ -18,7 +18,7 @@ foreach ($this->txs as $txs) {
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 <script>
     function cancelar() {
-        window.location = 'index.php?option=com_facturas&view=oddlist';
+        window.location = 'index.php?option=com_conciliacionadmin&view=oddlist';
     }
 
     function cargaData() {
@@ -28,7 +28,6 @@ foreach ($this->txs as $txs) {
         if(idTx != 0) {
             jQuery.each(txs, function (k, v) {
                 if (v.id == idTx) {
-                    console.log(v);
                     jQuery('#cuenta').val(v.cuenta);
                     jQuery('#referencia').val(v.referencia);
                     jQuery('#date').val(v.dateJavascript);
@@ -45,7 +44,7 @@ foreach ($this->txs as $txs) {
 
     jQuery(document).ready(function(){
         jQuery('#cancel').on('click', cancelar);
-        jQuery('#tx').on('change',cargaData);
+        jQuery('#idTx').on('change',cargaData);
     });
 </script>
 <?php if( is_null($data->confirmacion) ){?>
@@ -58,7 +57,7 @@ foreach ($this->txs as $txs) {
 
     <div class="clearfix">&nbsp;</div>
 
-    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_facturas&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
+    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_conciliacionadmin&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
         <div class="form-group">
             <label for="ordenPagada">
                 <?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
@@ -70,8 +69,8 @@ foreach ($this->txs as $txs) {
         <h2><?php echo JText::_('COM_FACTURAS_FROM_ODD_TRANSACCION'); ?></h2>
 
         <div class="form-group">
-            <label for="tx"><?php echo JText::_('COM_FACTURAS_FROM_ODD_TXS'); ?></label>
-            <select name="tx" id="tx">
+            <label for="idTx"><?php echo JText::_('COM_FACTURAS_FROM_ODD_TXS'); ?></label>
+            <select name="idTx" id="idTx">
                 <option value="0">Seleccione su opción</option>
                 <?php echo $option; ?>
                 </select>
@@ -115,8 +114,10 @@ foreach ($this->txs as $txs) {
         </div>
     </form>
 <?php }else{ ?>
-    <form id="confirmacion" method="post" action="index.php?option=com_facturas&view=oddform&task=oddform.save">
+    <form id="confirmacion" method="post" action="index.php?option=com_conciliacionadmin&view=oddlist&task=conciliar">
+        <input type="hidden" name="type" id="type" value="odd" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id; ?>" />
+        <input type="hidden" name="idTx" id="idTx" value="<?php echo $data->idTx; ?>" />
         <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $orden->integradoId; ?>" />
         <input type="hidden" name="ordenPagada" id="ordenPagada" value="<?php echo $data->ordenPagada; ?>" />
         <input type="hidden" name="cuenta" id="cuenta" value="<?php echo $data->cuenta; ?>" />

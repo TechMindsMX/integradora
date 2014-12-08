@@ -88,11 +88,11 @@ class getFromTimOne{
         $txs = self::selectDB('conciliacion_banco_integrado',$where,'','getFromTimOne');
 
         foreach ($txs as $value) {
-            $value->id              = (int) $value->id;
-            $value->cuenta          = (int) $value->cuenta;
-            $value->date            = (int) $value->date;
-            $value->amount          = (float) $value->amount;
-            $value->integradoId     = (int) $value->integradoId;
+            $value->id              = (INT) $value->id;
+            $value->cuenta          = (INT) $value->cuenta;
+            $value->date            = (INT) $value->date;
+            $value->amount          = (FLOAT) $value->amount;
+            $value->integradoId     = (INT) $value->integradoId;
             $value->fechaTimestamp  = $value->date;
             self::convierteFechas($value);
         }
@@ -298,6 +298,26 @@ class getFromTimOne{
         return $response;
     }
 
+    public static function getRemainderOrder($idOrden, $tipoOrden, $montoTx){
+        switch($tipoOrden){
+            case 'odd':
+                $orden = self::getOrdenesDeposito(null,$idOrden);
+                break;
+            case 'odc':
+                $orden = self::getOrdenesCompra(null,$idOrden);
+                break;
+            case 'odr':
+                $orden = self::getOrdenesRetiro(null,$idOrden);
+                break;
+            case 'odv':
+                $orden = self::getOrdenesVenta(null,$idOrden);
+                break;
+        }
+        $remainder = (FLOAT) $orden[0]->totalAmount-$montoTx;
+
+        return $remainder;
+    }
+
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
         $where = null;
         if(isset($idOrden)){
@@ -318,19 +338,20 @@ class getFromTimOne{
 
     public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
+
         foreach ($orden as $value) {
-            $value->id = (INT)$value->id;
-            $value->proyecto = (INT)$value->proyecto;
-            $value->proveedor = (INT)$value->proveedor;
-            $value->integradoId = (INT)$value->integradoId;
-            $value->numOrden = (INT)$value->numOrden;
-            $value->createdDate = (STRING)$value->createdDate;
-            $value->paymentDate = (STRING)$value->paymentDate;
-            $value->paymentMethod = (INT)$value->paymentMethod;
-            $value->totalAmount = (FLOAT)$value->totalAmount;
-            $value->urlXML = (STRING)$value->urlXML;
-            $value->observaciones = (STRING)$value->observaciones;
-            $value->status = (INT)$value->status;
+            $value->id              = (INT)$value->id;
+            $value->proyecto        = (INT)$value->proyecto;
+            $value->proveedor       = (INT)$value->proveedor;
+            $value->integradoId     = (INT)$value->integradoId;
+            $value->numOrden        = (INT)$value->numOrden;
+            $value->paymentMethod   = (INT)$value->paymentMethod;
+            $value->status          = (INT)$value->status;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
+            $value->createdDate     = (STRING)$value->createdDate;
+            $value->paymentDate     = (STRING)$value->paymentDate;
+            $value->urlXML          = (STRING)$value->urlXML;
+            $value->observaciones   = (STRING)$value->observaciones;
         }
 
         return $orden;
@@ -340,15 +361,15 @@ class getFromTimOne{
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
 
         foreach ($orden as $value) {
-            $value->id = (INT)$value->id;
-            $value->integradoId = (INT)$value->integradoId;
-            $value->numOrden = (INT)$value->numOrden;
-            $value->createdDate = (STRING)$value->createdDate;
-            $value->paymentDate = (STRING)$value->paymentDate;
-            $value->totalAmount = (FLOAT)$value->totalAmount;
-            $value->paymentMethod = (INT)$value->paymentMethod;
-            $value->attachment = (STRING)$value->attachment;
-            $value->status = (INT)$value->status;
+            $value->id              = (INT)$value->id;
+            $value->integradoId     = (INT)$value->integradoId;
+            $value->numOrden        = (INT)$value->numOrden;
+            $value->status          = (INT)$value->status;
+            $value->paymentMethod   = (INT)$value->paymentMethod;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
+            $value->attachment      = (STRING)$value->attachment;
+            $value->createdDate     = (STRING)$value->createdDate;
+            $value->paymentDate     = (STRING)$value->paymentDate;
         }
 
         return $orden;
@@ -369,10 +390,10 @@ class getFromTimOne{
             $value->paymentMethod  = (INT)$value->paymentMethod;
             $value->conditions     = (INT)$value->conditions;
             $value->placeIssue     = (INT)$value->placeIssue;
+            $value->status         = (INT)$value->status;
             $value->productos      = (STRING)$value->productos;
             $value->createdDate    = (STRING)$value->createdDate;
             $value->paymentDate    = (STRING)$value->paymentDate;
-            $value->status         = (INT)$value->status;
 
         }
 
@@ -431,14 +452,14 @@ class getFromTimOne{
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
 
         foreach ($orden as $value) {
-            $value->id = (INT)$value->id;
-            $value->integradoId = (INT)$value->integradoId;
-            $value->numOrden = (INT)$value->numOrden;
-            $value->createdDate = (STRING)$value->createdDate;
-            $value->paymentDate = (STRING)$value->paymentDate;
-            $value->paymentMethod = (INT)$value->paymentMethod;
-            $value->amount = (FLOAT)$value->amount;
-            $value->status = (INT)$value->status;
+            $value->id              = (INT)$value->id;
+            $value->integradoId     = (INT)$value->integradoId;
+            $value->numOrden        = (INT)$value->numOrden;
+            $value->paymentMethod   = (INT)$value->paymentMethod;
+            $value->status          = (INT)$value->status;
+            $value->amount          = (FLOAT)$value->amount;
+            $value->createdDate     = (STRING)$value->createdDate;
+            $value->paymentDate     = (STRING)$value->paymentDate;
         }
 
         return $orden;
@@ -1395,7 +1416,7 @@ class sendToTimOne {
             $return = false;
         }
 
-        if($last_inserted_id){
+        if( ($last_inserted_id) && ($return)){
             $return= $db->insertid();
         }
 

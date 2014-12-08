@@ -7,6 +7,7 @@ class conciliacionadminViewOddform extends JViewLegacy {
 
     public function display($tpl = null) {
         $post = array(
+            'idTx' => 'INT',
             'ordenPagada' => 'INT',
             'cuenta' => 'INT',
             'referencia' => 'STRING',
@@ -33,11 +34,8 @@ class conciliacionadminViewOddform extends JViewLegacy {
         parent::display($tpl);
     }
 
-
-
     protected function addToolbar() {
         JToolBarHelper::title(JText::_('Conciliación de Orden de Deposito'), '');
-
     }
 
 }
