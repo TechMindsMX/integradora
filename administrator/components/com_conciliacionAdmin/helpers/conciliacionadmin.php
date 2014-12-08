@@ -4,17 +4,16 @@ defined('_JEXEC') or die;
 class conciliacionadminHelper {
     public static function addSubmenu($vName = '') {
         JHtmlSidebar::addEntry(
-            JText::_('COM_FACTURAS_LISTADO_ODD'),
-            'index.php?option=com_conciliacionadmin&view=oddlist',
-            $vName == 'listadoODD'
-        );
-
-        JHtmlSidebar::addEntry(
             JText::_('COM_FACTURAS_LISTADO_ODV'),
             'index.php?option=com_conciliacionadmin&view=facturas',
             $vName == 'facturas'
         );
 
+        JHtmlSidebar::addEntry(
+            JText::_('COM_FACTURAS_LISTADO_ODD'),
+            'index.php?option=com_conciliacionadmin&view=oddlist',
+            $vName == 'listadoODD'
+        );
 
         JHtmlSidebar::addEntry(
             JText::_('COM_FACTURAS_LISTADO_ODC'),

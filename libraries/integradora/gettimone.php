@@ -1687,6 +1687,10 @@ class sendToTimOne {
 		return $return;
 	}
 
+    public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
+        //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
+    }
+
 
 }
 
