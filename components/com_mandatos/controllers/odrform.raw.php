@@ -13,7 +13,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $post = array('integradoId'   => 'STRING',
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
-            'amount'        => 'STRING'
+            'totalAmount'        => 'STRING'
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
@@ -68,7 +68,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	    $respuesta = $this->validaSaldo();
 
-	    if(!$respuesta['amount']) {
+	    if(!$respuesta['totalAmount']) {
 		    $respuesta = $this->validaDatos();
 	    }
 
@@ -86,9 +86,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
 	}
 
 	private function validaSaldo() {
-		$respuesta = array('amount' => true);
-		if($this->parametros['amount'] > $this->getBalance()) {
-			$respuesta = array('amount' => array('success' => false, 'msg' => 'SALDO INSUFICIENTE'));
+		$respuesta = array('totalAmount' => true);
+		if($this->parametros['totalAmount'] > $this->getBalance()) {
+			$respuesta = array('totalAmount' => array('success' => false, 'msg' => 'SALDO INSUFICIENTE'));
 		}
 		return $respuesta;
 	}

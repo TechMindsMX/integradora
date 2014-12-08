@@ -35,9 +35,6 @@ class conciliacionadminModelFacturas extends JModelList {
         $dataFacturas = array();
 
         foreach ($data as $factura) {
-            $factura->url_xml = $factura->urlXML;
-            unset($factura->urlXML);
-
             $factura->factura = getFromTimOne::getDataFactura($factura);
             $fechaHr          = explode('T',$factura->factura->comprobante['FECHA']);
             $fechaHr[0]       = str_replace('-','/',$fechaHr[0]);

@@ -1291,7 +1291,6 @@ class getFromTimOne{
 
 }
 
-
 class sendToTimOne {
 
     public $result;
@@ -1410,6 +1409,10 @@ class sendToTimOne {
         $condicion = $db->quoteName('id_producto').' = '.$id_producto;
 
         $this->updateDB('integrado_products', $columnas, $condicion);
+    }
+
+    public function sendDataTIMONE(){
+        
     }
 
     public function insertDB($tabla, $columnas=null, $valores=null, $last_inserted_id = null){
@@ -1691,6 +1694,8 @@ class sendToTimOne {
         //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
     }
 
+    public function generarFactturaComisiones($dataFactura){
+    }
 
 }
 
