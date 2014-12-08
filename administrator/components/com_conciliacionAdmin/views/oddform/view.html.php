@@ -7,6 +7,7 @@ class conciliacionadminViewOddform extends JViewLegacy {
 
     public function display($tpl = null) {
         $post = array(
+            'idTx' => 'INT',
             'ordenPagada' => 'INT',
             'cuenta' => 'INT',
             'referencia' => 'STRING',
