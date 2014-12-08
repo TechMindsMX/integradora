@@ -7,7 +7,7 @@
     <license>GNU General Public License</license>
     <authorEmail>adminexile@richeyweb.com</authorEmail>
     <authorUrl>http://www.richeyweb.com</authorUrl>
-    <version>2.3.4</version>
+    <version>2.3.5</version>
     <description>PLG_SYS_ADMINEXILE_XML_DESC</description>
     <install>
         <sql>
@@ -43,14 +43,30 @@
         <fields name="params" addfieldpath="plugins/system/adminexile/fields">
             <fieldset name="basic">
                 <field type="spacer" label="PLG_SYS_ADMINEXILE_BACKEND_LABEL" />
-                <field name="url" type="spacer" label="PLG_SYS_ADMINEXILE_BACKEND_URL_LABEL" />
-                <field name="key" type="text" default="adminexile" label="PLG_SYS_ADMINEXILE_KEY_LABEL" description="PLG_SYS_ADMINEXILE_KEY_DESC" class="inputbox validate-notnumeric"/>
-                <field name="twofactor" type="radio" class="radio btn-group" default="0" label="PLG_SYS_ADMINEXILE_KEYPAIR_LABEL" description="PLG_SYS_ADMINEXILE_KEYPAIR_DESC">
+                <field name="url" type="spacer" 
+                       label="PLG_SYS_ADMINEXILE_BACKEND_URL_LABEL" 
+                />
+                <field name="key" type="text" default="adminexile" 
+                       label="PLG_SYS_ADMINEXILE_KEY_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_KEY_DESC" 
+                       class="inputbox validate-notnumeric"
+                />
+                <field name="twofactor" type="radio" class="radio btn-group" 
+                       default="0" label="PLG_SYS_ADMINEXILE_KEYPAIR_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_KEYPAIR_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="keyvalue" type="text" default="ROCKS" label="PLG_SYS_ADMINEXILE_KEYVALUE_LABEL" description="PLG_SYS_ADMINEXILE_KEYVALUE_DESC" class="inputbox" />
-                <field name="tmpwhitelist" type="radio" class="radio btn-group" default="0" label="PLG_SYS_ADMINEXILE_TMPWHITELIST_LABEL" description="PLG_SYS_ADMINEXILE_TMPWHITELIST_DESC">
+                <field name="keyvalue" type="text" default="ROCKS" 
+                       label="PLG_SYS_ADMINEXILE_KEYVALUE_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_KEYVALUE_DESC" 
+                       class="inputbox" 
+                />
+                <field name="tmpwhitelist" type="radio" class="radio btn-group" 
+                       default="0" label="PLG_SYS_ADMINEXILE_TMPWHITELIST_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_TMPWHITELIST_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
@@ -98,34 +114,71 @@
                        description="PLG_SYS_ADMINEXILE_BLACKLIST_DESC" 
                 />
                 <field type="spacer" hr="true" />
-                <field class="ipsecurity radio btn-group" type="radio" name="blemail" default="1" label="PLG_SYS_ADMINEXILE_EMAIL_LABEL" description="PLG_SYS_ADMINEXILE_EMAIL_DESC">
+                <field class="ipsecurity radio btn-group" type="radio" 
+                       name="blemail" default="0" 
+                       label="PLG_SYS_ADMINEXILE_EMAIL_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAIL_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>                    
                 </field>
-                <field class="ipsecurity radio btn-group" type="radio" name="blemailonce" default="1" label="PLG_SYS_ADMINEXILE_EMAILONCE_LABEL" description="PLG_SYS_ADMINEXILE_EMAILONCE_DESC">
+                <field class="ipsecurity radio btn-group" type="radio" 
+                       name="blemailonce" default="1" 
+                       label="PLG_SYS_ADMINEXILE_EMAILONCE_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAILONCE_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>                    
                 </field>
-                <field name="blemailuser" type="user" class="blemail ipsecurity" default="" label="PLG_SYS_ADMINEXILE_EMAILUSER_LABEL" description="PLG_SYS_ADMINEXILE_EMAILUSER_DESC" />
+                <field name="blemailuser" type="user" class="blemail ipsecurity" 
+                       default="" label="PLG_SYS_ADMINEXILE_EMAILUSER_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAILUSER_DESC" 
+                />
             </fieldset>
             <fieldset name="bruteforce">
                 <field type="spacer" label="PLG_SYS_ADMINEXILE_BRUTEFORCE_SPACER" />
-                <field name="bruteforce" type="radio" class="radio btn-group" default="0" label="PLG_SYS_ADMINEXILE_BRUTEFORCE_LABEL" description="PLG_SYS_ADMINEXILE_BRUTEFORCE_DESC">
+                <field name="bruteforce" type="radio" class="radio btn-group" 
+                       default="0" label="PLG_SYS_ADMINEXILE_BRUTEFORCE_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_BRUTEFORCE_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="bfmax" type="text" class="validate-numeric bruteforce" default="3" label="PLG_SYS_ADMINEXILE_BFMAX_LABEL" description="PLG_SYS_ADMINEXILE_BFMAX_DESC" />
-                <field name="bfpenalty" type="text" class="validate-numeric bruteforce" default="5" label="PLG_SYS_ADMINEXILE_BFPENALTY_LABEL" description="PLG_SYS_ADMINEXILE_BFPENALTY_DESC" />
-                <field name="bfpenaltymultiplier" type="text" class="validate-numeric bruteforce" default="1" label="PLG_SYS_ADMINEXILE_BFPENALTYMULTIPLIER_LABEL" description="PLG_SYS_ADMINEXILE_BFPENALTYMULTIPLIER_DESC" />
-                <field name="bfemail" type="radio" class="radio btn-group bruteforce" default="1" label="PLG_SYS_ADMINEXILE_EMAIL_LABEL" description="PLG_SYS_ADMINEXILE_EMAIL_DESC">
+                <field name="bfmax" type="text" 
+                       class="validate-numeric bruteforce" 
+                       default="5" label="PLG_SYS_ADMINEXILE_BFMAX_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_BFMAX_DESC" 
+                />
+                <field name="bfpenalty" type="text" 
+                       class="validate-numeric bruteforce" 
+                       default="5" label="PLG_SYS_ADMINEXILE_BFPENALTY_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_BFPENALTY_DESC" 
+                />
+                <field name="bfpenaltymultiplier" type="text" 
+                       class="validate-numeric bruteforce" default="1" 
+                       label="PLG_SYS_ADMINEXILE_BFPENALTYMULTIPLIER_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_BFPENALTYMULTIPLIER_DESC" 
+                />
+                <field name="bfemail" type="radio" 
+                       class="radio btn-group bruteforce" 
+                       default="0" label="PLG_SYS_ADMINEXILE_EMAIL_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAIL_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="bfemailonce" type="radio" class="radio btn-group bruteforce" default="1" label="PLG_SYS_ADMINEXILE_EMAILONCE_LABEL" description="PLG_SYS_ADMINEXILE_EMAILONCE_DESC">
+                <field name="bfemailonce" type="radio" 
+                       class="radio btn-group bruteforce" default="1" 
+                       label="PLG_SYS_ADMINEXILE_EMAILONCE_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAILONCE_DESC"
+                >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="bfemailuser" type="user" class="bfemail bruteforce" default="" label="PLG_SYS_ADMINEXILE_EMAILUSER_LABEL" description="PLG_SYS_ADMINEXILE_EMAILUSER_DESC" />
+                <field name="bfemailuser" type="user" class="bfemail bruteforce" 
+                       default="" label="PLG_SYS_ADMINEXILE_EMAILUSER_LABEL" 
+                       description="PLG_SYS_ADMINEXILE_EMAILUSER_DESC" 
+                />
                 <field type="blocklist" />
             </fieldset>
         </fields>

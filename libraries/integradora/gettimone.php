@@ -62,7 +62,7 @@ class getFromTimOne{
     }
 
     public static function getDataFactura($orden) {
-        $urlXML = $orden->url_xml;
+        $urlXML = $orden->urlXML;
         $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
@@ -936,7 +936,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getFactura() {
+    public static function getFacturasPorCobrar() {
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
@@ -946,6 +946,22 @@ class getFromTimOne{
             ->from($db->quoteName('#__ordenes_venta', 'a'))
             ->join('INNER', $db->quoteName('#__facturasxcobrar', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.id_odv') . ')')
             ->where($db->quoteName('a.status') . ' =28');
+        $db->setQuery($query);
+        $results= $db->loadObjectList();
+
+        return $results;
+    }
+
+    public static function getFacturasNoPagadasByIntegrado($integradoId) {
+
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+
+        $query
+            ->select('*')
+            ->from($db->quoteName('#__ordenes_venta', 'a'))
+            ->join('INNER', $db->quoteName('#__facturasxcobrar', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.id_odv') . ')')
+            ->where($db->quoteName('a.status') . ' <= 28 AND '. $db->quoteName('a.integradoId') .' = '. $db->quote($integradoId));
         $db->setQuery($query);
         $results= $db->loadObjectList();
 

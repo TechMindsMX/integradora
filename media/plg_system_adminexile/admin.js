@@ -97,7 +97,8 @@ var AdminExile = new Class({
                 e.preventDefault();
                 uri = new URI(window.location);
                 uri.set('query',undefined);
-                data = JSON.decode(this.getProperty('data-block'));
+//                data = JSON.decode(this.getProperty('data-block'));
+                data = JSON.parse(this.getProperty('data-block'));
                 data['adminexile_removeblock']='true';
                 var removeRequest = new Request.JSON({
                     url:uri.toString(),
@@ -113,9 +114,9 @@ var AdminExile = new Class({
         // setup IP inputs
         $$('.ipsecurity.list').each(function(el){            
             if(!/[\[\]]/.test(el.value)) self.upgradeIPInput(el); // upgrade ip inputs
-            $$('button.'+el.id)[0].addEvent('click',function(){
+            $$('button.'+el.id)[0].addEvent('click',function(e){
+                e.preventDefault();
                 self.promptIP(el);
-                return false;
             });
             self.initIP(el);
         });
@@ -133,7 +134,8 @@ var AdminExile = new Class({
                 if(pre.length) {
                     self.removeIP(el,pre,false);
                 }
-                var iplist = JSON.decode(el.value);
+//                var iplist = JSON.decode(el.value);
+                var iplist = JSON.parse(el.value);
                 if(!iplist.contains(response)) {
                     self.addIP(el,response,false);
                 } else {
@@ -143,6 +145,7 @@ var AdminExile = new Class({
                 alert(Joomla.JText._('PLG_SYS_ADMINEXILE_POPUP_INVALID_ADDRESS'));
             }
         }
+        return false;
     },
     initIP:function(el) {
         var self = this;
@@ -156,7 +159,8 @@ var AdminExile = new Class({
             var lastattempt = new Element('th',{html:Joomla.JText._('PLG_SYS_ADMINEXILE_TH_LASTATTEMPT')}).inject(tr,'bottom');
             var options = new Element('th',{html:Joomla.JText._('PLG_SYS_ADMINEXILE_TH_OPTIONS')}).inject(tr,'bottom');
         }
-        var ipvalues = JSON.decode(el.value);
+//        var ipvalues = JSON.decode(el.value);
+        var ipvalues = JSON.parse(el.value);
         ipvalues = ipvalues.sort();
         ipvalues.each(function(ip){
             self.addIP(el,ip,true);
@@ -168,17 +172,22 @@ var AdminExile = new Class({
         if(confdelete)
             var conf = confirm('Are you sure?');
         if(!confdelete || conf) {
-            var iplist = JSON.decode(el.value);
+//            var iplist = JSON.decode(el.value);
+            var iplist = JSON.parse(el.value);
             delete iplist[iplist.indexOf(ip)];
-            el.value = JSON.encode(iplist.clean());
+            iplist = iplist.filter(Boolean);
+//            el.value = JSON.encode(iplist);
+            el.value = JSON.stringify(iplist);
             self.initIP(el);
         }
+        return false;
     },
+// future use - when com_ajax becomes available for 2.5 in the JED this will be completed
     updateAttempts:function(attempts){
         var self = this;
         Object.each(attempts,function(o,i){
             window.attempts = document.id(self.ipID(i,'attempts'));
-            console.log(typeof window.attempts);
+//            console.log(typeof window.attempts);
 //            var attempts = document.id(self.ipID(i,'attempts'));
 //            console.log(attempts);
 //            attempts.empty();
@@ -193,10 +202,12 @@ var AdminExile = new Class({
     addIP:function(el,ip,init) {
         var self = this;
         if(!init) {
-            iplist = JSON.decode(el.value);
+//            iplist = JSON.decode(el.value);
+            iplist = JSON.parse(el.value);
             iplist.push(ip);
             iplist = iplist.sort();
-            el.value = JSON.encode(iplist);
+//            el.value = JSON.encode(iplist);
+            el.value = JSON.stringify(iplist);
             self.initIP(el);
         } else {
             var table = $$('table.'+el.id)[0];
@@ -206,7 +217,8 @@ var AdminExile = new Class({
             var editip = new Element('button',{
                 html:Joomla.JText._('PLG_SYS_ADMINEXILE_BUTTON_EDIT_IP'),
                 events:{
-                    click:function(){
+                    click:function(e){
+                        e.preventDefault();
                         self.promptIP(el,ip);
                         return false;
                     }
@@ -215,7 +227,8 @@ var AdminExile = new Class({
             var deleteip = new Element('button',{
                 html:Joomla.JText._('PLG_SYS_ADMINEXILE_BUTTON_DELETE_IP'),
                 events:{
-                    click:function(){
+                    click:function(e){
+                        e.preventDefault();
                         self.removeIP(el,ip);
                         return false;
                     }
@@ -241,7 +254,8 @@ var AdminExile = new Class({
                                 e.preventDefault();
                                 uri = new URI(window.location);
                                 uri.set('query',undefined);
-                                data = JSON.decode(this.getProperty('data-block'));
+//                                data = JSON.decode(this.getProperty('data-block'));
+                                data = JSON.parse(this.getProperty('data-block'));
                                 data['adminexile_removeblock']='true';
                                 var parentattemptstd = document.id(self.ipID(this.getProperty('data-parent'),'attempts'));
                                 var parentcount = parseInt(parentattemptstd.get('html'));
@@ -259,7 +273,7 @@ var AdminExile = new Class({
                                     }
                                 }).get(data);
                             });
-//                            '<button class="btn btn-mini removeblock hasTip" data-block="'.htmlentities(json_encode(array('ip'=>$match->ip,'firstattempt'=>$match->firstattempt))).'" data-toggle="tooltip" title="'.JText::_('JACTION_DELETE').'"><i class="icon-trash"></i>'.$deletetext.'</button>';
+// '<button class="btn btn-mini removeblock hasTip" data-block="'.htmlentities(json_encode(array('ip'=>$match->ip,'firstattempt'=>$match->firstattempt))).'" data-toggle="tooltip" title="'.JText::_('JACTION_DELETE').'"><i class="icon-trash"></i>'.$deletetext.'</button>';
                         });
                     } else {
                         lastattempt.appendText(window.plg_sys_adminexile_blacklist[ip].lastattempt);
@@ -270,7 +284,8 @@ var AdminExile = new Class({
                             lastattempttd = document.id(self.ipID(ip,'lastattempt'));
                             uri = new URI(window.location);
                             uri.set('query',undefined);
-                            data = JSON.decode(this.getProperty('data-block'));
+//                            data = JSON.decode(this.getProperty('data-block'));
+                            data = JSON.parse(this.getProperty('data-block'));
                             data['adminexile_removeblock']='true';
                             var removeRequest = new Request.JSON({
                                 url:uri.toString(),
@@ -288,12 +303,14 @@ var AdminExile = new Class({
                 }
             }
         }
+        return false;
     },
     clearButton:function(ip,parent,firstattempt,attempts){
         var button = new Element('button',{
             'data-parent':parent?parent:null,
             'data-attempts':attempts,
-            'data-block':JSON.encode({ip:ip,firstattempt:firstattempt}),
+//            'data-block':JSON.encode({ip:ip,firstattempt:firstattempt}),
+            'data-block':JSON.stringify({ip:ip,firstattempt:firstattempt}),
             'data-toggle':'tooltip',
             'title':Joomla.JText._('JACTION_DELETE')
         });
@@ -374,18 +391,20 @@ var AdminExile = new Class({
     },
     frontendRestrictParams:function(){
         var self = this;
+        var el = document.id('jformparamsrestrictgroup')?document.id('jformparamsrestrictgroup'):document.id('jform_params_restrictgroup');
         if(document.id('jform_params_frontrestrict1').checked) {
-            document.id('jformparamsrestrictgroup').getParent(self.options.parentelement).show();
-        } else {
-            document.id('jformparamsrestrictgroup').getParent(self.options.parentelement).hide();            
+            el.getParent(self.options.parentelement).show();
+        } else {            
+            el.getParent(self.options.parentelement).hide();   
         }
     },
     mailLinkParams:function(){
         var self = this;
+        var el = document.id('jformparamsmaillinkgroup')?document.id('jformparamsmaillinkgroup'):document.id('jform_params_maillinkgroup');
         if(document.id('jform_params_maillink1').checked) {
-            document.id('jformparamsmaillinkgroup').getParent(self.options.parentelement).show();
+            el.getParent(self.options.parentelement).show();
         } else {
-            document.id('jformparamsmaillinkgroup').getParent(self.options.parentelement).hide();            
+            el.getParent(self.options.parentelement).hide();            
         }
     },
     ipSecurityParams:function(){
@@ -418,11 +437,9 @@ var AdminExile = new Class({
         var addresses = el.value.match(/[^\r\n]+/g);
         addresses.each(function(a,i){addresses[i]=a.trim();});
         addresses = addresses.sort();
-        el.value=JSON.encode(addresses);
+//        el.value=JSON.encode(addresses);
+        el.value=JSON.stringify(addresses);
     }
-});
-window.addEvent('domready',function(){
-    var ae = new AdminExile(window.plg_sys_adminexile_config);
 });
 function version_compare (v1, v2, operator) {
   // From: http://phpjs.org/functions
@@ -538,3 +555,15 @@ function version_compare (v1, v2, operator) {
     return null;
   }
 }
+if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    document._oldGetElementById = document.getElementById;
+    document.getElementById = function(id) {
+        if(id === undefined || id === null || id === '') {
+            return undefined;
+        }
+        return document._oldGetElementById(id);
+    };
+}
+window.addEvent('domready',function(){
+    var ae = new AdminExile(window.plg_sys_adminexile_config);
+});

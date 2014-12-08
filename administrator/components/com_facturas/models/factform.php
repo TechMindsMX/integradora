@@ -40,7 +40,7 @@ class FacturasModelfactform extends JModelList {
     public function getFactura(){
         $factNum = $this->data['factNum'];
 
-        $data = getFromTimOne::getFactura();
+        $data = getFromTimOne::getFacturasPorCobrar();
         $usuarios = $this->getUserIntegrado();
 
         foreach($data as $value){
