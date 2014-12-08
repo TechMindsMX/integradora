@@ -62,7 +62,7 @@ class getFromTimOne{
     }
 
     public static function getDataFactura($orden) {
-        $urlXML = $orden->url_xml;
+        $urlXML = $orden->urlXML;
         $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
@@ -1670,6 +1670,10 @@ class sendToTimOne {
 
 		return $return;
 	}
+
+    public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
+        //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
+    }
 
 
 }
