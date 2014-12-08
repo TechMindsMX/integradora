@@ -14,7 +14,7 @@ $btn_nuevo = '<a class="btn btn-primary" href="index.php?option=com_mandatos&int
 <h1><?php echo JText::_('COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE'); ?></h1>
 
 <div class="table-responsive">
-	<div class="form-group">
+	<div class="control-group">
 		<?php echo $btn_nuevo; ?>
 	</div>
 	<table id="myTable" class="table table-bordered tablesorter">
@@ -32,7 +32,7 @@ $btn_nuevo = '<a class="btn btn-primary" href="index.php?option=com_mandatos&int
 		<?php
 		if( !is_null($this->txs) ){
 			foreach ($this->txs as $key => $value) {
-				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandato&layout=confirml&txnum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
+				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandatoform&txnum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 
 				echo '<tr class="row_'.$value->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->referencia.'</td>';
