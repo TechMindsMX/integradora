@@ -12,50 +12,57 @@ jimport('integradora.classDB');
 /**
  * Methods supporting a list of Facturas records.
  */
-class conciliacionadminModelOdcform extends JModelList {
+class conciliacionadminModelOdcform extends JModelList
+{
 
-    public function __construct($config = array()) {
+    public function __construct($config = array())
+    {
         $get = JFactory::getApplication()->input;
-        $params = array('odcNum'=>'ALNUM');
+        $params = array('idOrden' => 'INT');
         $this->data = $get->getArray($params);
         parent::__construct($config);
     }
 
-    public function getUserIntegrado(){
-       $factura = new Integrado();
-       $integrados = $factura->getIntegrados();
-
-       return $integrados;
-    }
-
-    public function getSolicitud()
-    {
-        if (!isset($this->dataModelo)) {
-            $this->dataModelo = new Integrado;
-        }
-
-        return $this->dataModelo;
-    }
-
     public function getOrden(){
-        $odcNum = $this->data['odcNum'];
+        $odcNum = $this->data['idOrden'];
 
-        $data = getFromTimOne::getOrdenesCompra();
-        $usuarios = $this->getUserIntegrado();
-
-        foreach($data as $value){
-            foreach($usuarios as $usuario){
-                if($usuario->integrado_id == $value->integradoId){
-                    $value->integradoName = $usuario->name;
-                }
-            }
-
-            if($value->folio == $odcNum){
-                $orden = $value;
-            }
-        }
-        $data = $orden;
+        $data = getFromTimOne::getOrdenesCompra(null, $odcNum);
+        $data = $data[0];
+        $data->url_xml = $data->urlXML;
+        unset ($data->urlXML);
+        $data->factura = getFromTimOne::getDataFactura($data);
+        $data->integradoName = $this->getIntegradoName($data->integradoId);
 
         return $data;
+    }
+
+    public function getIntegrados(){
+        $integrados = getFromTimOne::getintegrados();
+
+        return $integrados;
+    }
+
+    public function getIntegradoName($integardoId){
+        $integrados = $this->getIntegrados();
+
+        foreach ($integrados as $value) {
+            if($value->integrado->integrado_id == $integardoId){
+                $return = $value->datos_personales->nom_comercial;
+            }
+        }
+        return $return;
+    }
+
+    public function getTransacciones(){
+        $orden = $this->getOrden();
+        $txs = getFromTimOne::getTxIntegradoSinMandato($orden->integradoId);
+
+        foreach ($txs as $value) {
+            if(is_null($value->conciliacionMandato)){
+                $respuesta[] = $value;
+            }
+        }
+
+        return $respuesta;
     }
 }

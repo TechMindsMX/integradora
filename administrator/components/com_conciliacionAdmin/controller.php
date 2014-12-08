@@ -55,23 +55,31 @@ class conciliacionAdminController extends JControllerLegacy {
         );
         $data = (object) JFactory::getApplication()->input->getArray($post);
 
+        $changeDateType = new DateTime($data->date);
+        $fecha = $changeDateType->getTimestamp();
+
+        $datosTx = array(
+            'cuenta'              =>$data->cuenta,
+            'referencia'          =>$data->referencia,
+            'date'                =>$fecha,
+            'amount'              =>$data->amount,
+            'integradoId'         =>$data->integradoId,
+            'conciliacionMandato' => 1
+        );
+
         if($data->idTx == 0){
-            $changeDateType = new DateTime($data->date);
-            $fecha = $changeDateType->getTimestamp();
-
-            $datos = array(
-                'cuenta'      =>$data->cuenta,
-                'referencia'  =>$data->referencia,
-                'date'        =>$fecha,
-                'amount'      =>$data->amount,
-                'integradoId' =>$data->integradoId
-            );
-
-            $save->formatData($datos);
+            $save->formatData($datosTx);
             $resultado = $save->insertDB('conciliacion_banco_integrado',null,null,true);
 
             if($resultado !== false){
                 $data->idTx = $resultado;
+            }
+        }else{
+            $save->formatData($datosTx);
+            $resultado = $save->updateDB('conciliacion_banco_integrado',null,'id ='.$data->idTx);
+
+            if(!$resultado){
+                JFactory::getApplication()->enqueueMessage('Error al intetar Almacenar los Datos', 'error');
             }
         }
 
@@ -90,7 +98,7 @@ class conciliacionAdminController extends JControllerLegacy {
         $resultado = $save->insertDB('tx_orden');
 
         if($resultado){
-            JFactory::getApplication()->redirect('index.php?option=com_conciliacionadmin&view=oddlist');
+            JFactory::getApplication()->redirect('index.php?option=com_conciliacionadmin&view='.$data->type.'list');
         }else{
             JFactory::getApplication()->enqueueMessage(JText::_('com_comciliacionadmin_error_save'),'error');
         }

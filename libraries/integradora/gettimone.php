@@ -88,11 +88,11 @@ class getFromTimOne{
         $txs = self::selectDB('conciliacion_banco_integrado',$where,'','getFromTimOne');
 
         foreach ($txs as $value) {
-            $value->id              = (int) $value->id;
-            $value->cuenta          = (int) $value->cuenta;
-            $value->date            = (int) $value->date;
-            $value->amount          = (float) $value->amount;
-            $value->integradoId     = (int) $value->integradoId;
+            $value->id              = (INT) $value->id;
+            $value->cuenta          = (INT) $value->cuenta;
+            $value->date            = (INT) $value->date;
+            $value->amount          = (FLOAT) $value->amount;
+            $value->integradoId     = (INT) $value->integradoId;
             $value->fechaTimestamp  = $value->date;
             self::convierteFechas($value);
         }
