@@ -23,7 +23,8 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		// get the model
 		if( !is_null($data['txnum']) ){
 			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_TITLE';
-			$this->data = $this->get('txsinmandato');
+			$model = $this->getModel();
+			$this->data = $model->getItem($data['txnum']);
 
 		}
 
