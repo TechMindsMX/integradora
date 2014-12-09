@@ -7,9 +7,7 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-$btn_nuevo_odc = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odcform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODC_DESCRIPTION').'</a>';
 $btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODV_DESCRIPTION').'</a>';
-$btn_nuevo_odr = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odrform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODR_DESCRIPTION').'</a>';
 $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODD_DESCRIPTION').'</a>';
 
 ?>
@@ -61,13 +59,7 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 		<?php echo JText::_('COM_MANDATOS_TX_SIN_MANDATO_LIST_LEGEND');?>
 	</p>
 	<span>
-		<?php echo $btn_nuevo_odc; ?>
-	</span>
-	<span>
 		<?php echo $btn_nuevo_odv; ?>
-	</span>
-	<span>
-		<?php echo $btn_nuevo_odr; ?>
 	</span>
 	<span>
 		<?php echo $btn_nuevo_odd; ?>
