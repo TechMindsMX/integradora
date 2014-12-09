@@ -69,7 +69,7 @@ class getFromTimOne{
         return $datos;
     }
 
-    public static function getTxIntegradoSinMandato($integradoId, $idTX = null)
+    public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
     {
         $where = null;
         if (!is_null($idTX)) {
