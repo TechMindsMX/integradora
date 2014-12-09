@@ -47,6 +47,10 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         });
     </script>
 <?php if(is_null($data->confirmacion)) { ?>
+
+	<div class="form-group">
+		<p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
+	</div>
     <form id="conciliacionbanco" action="index.php?option=com_conciliacionbanco&view=detalle&confirmacion=1" method="post">
         <input type="hidden" name="id" id="id" value="<?php $data->id; ?>" />
 

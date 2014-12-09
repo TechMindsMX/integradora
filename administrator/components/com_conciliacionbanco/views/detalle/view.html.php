@@ -25,7 +25,8 @@ class ConciliacionbancoViewDetalle extends JViewLegacy {
 
 	protected function addToolbar() {
 		require_once JPATH_COMPONENT . '/helpers/conciliacionbanco.php';
-		JToolBarHelper::title( JText::_( 'COM_CONCILIACION_BANCO_DETAIL_TITTLE' ));
+		$title = JText::_('COM_CONCICLIACIONBANCO_BTN_DETALLE').' - '. JText::_( 'COM_CONCILIACION_BANCO_DETAIL_TITTLE' );
+		JToolBarHelper::title( $title );
 	}
 
 }
