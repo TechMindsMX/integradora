@@ -62,14 +62,14 @@ class getFromTimOne{
     }
 
     public static function getDataFactura($orden) {
-        $urlXML = $orden->url_xml;
+        $urlXML = $orden->urlXML;
         $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
         return $datos;
     }
 
-    public static function getTxIntegradoSinMandato($integradoId, $idTX = null)
+    public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
     {
         $where = null;
         if (!is_null($idTX)) {
@@ -457,7 +457,7 @@ class getFromTimOne{
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
             $value->status          = (INT)$value->status;
-            $value->amount          = (FLOAT)$value->amount;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
         }
@@ -936,7 +936,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getFactura() {
+    public static function getFacturasPorCobrar() {
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
@@ -946,6 +946,22 @@ class getFromTimOne{
             ->from($db->quoteName('#__ordenes_venta', 'a'))
             ->join('INNER', $db->quoteName('#__facturasxcobrar', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.id_odv') . ')')
             ->where($db->quoteName('a.status') . ' =28');
+        $db->setQuery($query);
+        $results= $db->loadObjectList();
+
+        return $results;
+    }
+
+    public static function getFacturasNoPagadasByIntegrado($integradoId) {
+
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
+
+        $query
+            ->select('*')
+            ->from($db->quoteName('#__ordenes_venta', 'a'))
+            ->join('INNER', $db->quoteName('#__facturasxcobrar', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.id_odv') . ')')
+            ->where($db->quoteName('a.status') . ' <= 28 AND '. $db->quoteName('a.integradoId') .' = '. $db->quote($integradoId));
         $db->setQuery($query);
         $results= $db->loadObjectList();
 
@@ -1275,7 +1291,6 @@ class getFromTimOne{
 
 }
 
-
 class sendToTimOne {
 
     public $result;
@@ -1394,6 +1409,10 @@ class sendToTimOne {
         $condicion = $db->quoteName('id_producto').' = '.$id_producto;
 
         $this->updateDB('integrado_products', $columnas, $condicion);
+    }
+
+    public function sendDataTIMONE(){
+        
     }
 
     public function insertDB($tabla, $columnas=null, $valores=null, $last_inserted_id = null){
@@ -1671,6 +1690,12 @@ class sendToTimOne {
 		return $return;
 	}
 
+    public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
+        //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
+    }
+
+    public function generarFactturaComisiones($dataFactura){
+    }
 
 }
 

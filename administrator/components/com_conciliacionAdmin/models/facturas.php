@@ -36,10 +36,10 @@ class conciliacionadminModelFacturas extends JModelList {
 
         foreach ($data as $factura) {
             $factura->factura = getFromTimOne::getDataFactura($factura);
-            $fechaHr                 = explode('T',$factura->factura->comprobante['FECHA']);
-            $fechaHr[0]             = str_replace('-','/',$fechaHr[0]);
-            $fechaNumero = strtotime($fechaHr[0]);
-            $fecha = date('d-m-Y',$fechaNumero);
+            $fechaHr          = explode('T',$factura->factura->comprobante['FECHA']);
+            $fechaHr[0]       = str_replace('-','/',$fechaHr[0]);
+            $fechaNumero      = strtotime($fechaHr[0]);
+            $fecha            = date('d-m-Y',$fechaNumero);
 
             $integradoName            = $this->getIntegradoName($factura->integradoId);
             $respuesta                = new stdClass();

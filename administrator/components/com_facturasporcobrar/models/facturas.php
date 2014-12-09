@@ -46,7 +46,7 @@ class FacturasporcobrarModelFacturas extends JModelList {
     }
 
     public function getFacturas(){
-        $data = getFromTimOne::getFactura();
+        $data = getFromTimOne::getFacturasPorCobrar();
 
         $dataFacturas = array();
 

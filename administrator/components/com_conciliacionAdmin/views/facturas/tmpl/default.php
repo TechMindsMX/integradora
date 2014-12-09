@@ -84,9 +84,7 @@ $comision = $this->comision;
                 <th>IVA</th>
                 <th>Sub-Total</th>
                 <th>Total Factura</th>
-                <th>Comision</th>
-                <th>Total Fact+Comision</th>
-                <th>Detalle</th>
+                <th></th>
             </tr>
             </thead>
             <tbody class="tbody" id="tbody">
@@ -103,8 +101,6 @@ $comision = $this->comision;
                     <td>$<?php echo number_format($value->iva,2); ?></td>
                     <td>$<?php echo number_format($value->subtotal,2); ?></td>
                     <td>$<?php echo number_format($value->total,2); ?></td>
-                    <td>$<?php echo number_format($comision,2); ?></td>
-                    <td>$<?php echo number_format($value->total+$comision,2); ?></td>
                     <td>&nbsp;</td>
                 </tr>
             <?php } ?>

@@ -141,8 +141,8 @@ $number2word = new AifLibNumber();
 			</thead>
 			<tbody>
 				<tr>
-					<td><?php echo '$ '.number_format($this->odr->amount,2). ' ' . $this->odr->currency; ?></td>
-					<td><?php echo $number2word->toCurrency('$'.number_format($this->odr->amount,2)); ?></td>
+					<td><?php echo '$ '.number_format($this->odr->totalAmount,2). ' ' . $this->odr->currency; ?></td>
+					<td><?php echo $number2word->toCurrency('$'.number_format($this->odr->totalAmount,2)); ?></td>
 				</tr>
 			</tbody>
 		</table>

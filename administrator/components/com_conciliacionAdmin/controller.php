@@ -84,6 +84,9 @@ class conciliacionAdminController extends JControllerLegacy {
         }
 
         $remainder = getFromTimOne::getRemainderOrder($data->idOrden, $data->type, $data->amount);
+        if($remainder == 0){
+            $data->ordenPagada = 1;
+        }
 
         $datosConciliacion = array(
             'idTx'      => $data->idTx,

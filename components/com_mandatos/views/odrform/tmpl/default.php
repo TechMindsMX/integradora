@@ -137,7 +137,7 @@ if(!$this->confirmacion){
 
 	<div class="form-group">
         <label for="amount"><?php echo JText::_('LBL_AMOUNT_REQUESTED'); ?></label>
-        <input type="text" name="amount" id="amount" value="<?php echo $amount; ?>" /> <span id="errormsg" style="display: none;"></span>
+        <input type="text" name="totalAmount" id="totalAmount" value="<?php echo $amount; ?>" /> <span id="errormsg" style="display: none;"></span>
     </div>
 
     <div class="clearfix">&nbsp;</div>
@@ -163,7 +163,7 @@ if(!$this->confirmacion){
 	<div class="form-group">
 		<span class="label-default"><?php echo JText::_('LBL_AMOUNT_REQUESTED'); ?>: </span>
     <span>
-        $<?php echo number_format($datos['amount'],2 ); ?>
+        $<?php echo number_format($datos['totalAmount'],2 ); ?>
     </span>
 	</div>
 	<div class="clearfix">&nbsp;</div>
@@ -173,7 +173,7 @@ if(!$this->confirmacion){
 			<input type="hidden" value="<?php echo $datos['integradoId']; ?>" name="integradoId" />
 			<input type="hidden" value="<?php echo $datos['paymentMethod']; ?>" name="paymentMethod" />
 			<input type="hidden" value="<?php echo $datos['paymentDate']; ?>" name="paymentDate" />
-			<input type="hidden" value="<?php echo $datos['amount']; ?>" name="amount" />
+			<input type="hidden" value="<?php echo $datos['totalAmount']; ?>" name="amount" />
 <!--			<input type="hidden" value="--><?php //echo $datos['id']; ?><!--" name="id" />-->
 			<?php echo JHtml::_( 'form.token' ); ?>
 

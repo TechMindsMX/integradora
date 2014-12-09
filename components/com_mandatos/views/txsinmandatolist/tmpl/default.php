@@ -7,16 +7,14 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-$btn_nuevo = '<a class="btn btn-primary" href="index.php?option=com_mandatos&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').'</a>';
+$btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODV_DESCRIPTION').'</a>';
+$btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODD_DESCRIPTION').'</a>';
 
 ?>
 
 <h1><?php echo JText::_('COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE'); ?></h1>
 
 <div class="table-responsive">
-	<div class="form-group">
-		<?php echo $btn_nuevo; ?>
-	</div>
 	<table id="myTable" class="table table-bordered tablesorter">
 
 		<thead>
@@ -32,7 +30,7 @@ $btn_nuevo = '<a class="btn btn-primary" href="index.php?option=com_mandatos&int
 		<?php
 		if( !is_null($this->txs) ){
 			foreach ($this->txs as $key => $value) {
-				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandato&layout=confirml&txnum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
+				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandatoform&txnum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 
 				echo '<tr class="row_'.$value->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->referencia.'</td>';
@@ -54,4 +52,16 @@ $btn_nuevo = '<a class="btn btn-primary" href="index.php?option=com_mandatos&int
 	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
 	<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 	</a>
+</div>
+
+<div class="control-group form-actions">
+	<p>
+		<?php echo JText::_('COM_MANDATOS_TX_SIN_MANDATO_LIST_LEGEND');?>
+	</p>
+	<span>
+		<?php echo $btn_nuevo_odv; ?>
+	</span>
+	<span>
+		<?php echo $btn_nuevo_odd; ?>
+	</span>
 </div>
