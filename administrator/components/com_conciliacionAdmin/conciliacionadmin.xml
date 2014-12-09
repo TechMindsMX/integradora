@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
-    <name>com_conciliacionAdmin</name>
+    <name>Conciliacion Admin</name>
     <creationDate>2014-12-05</creationDate>
     <copyright>Copyright (C) 2014. Todos los derechos reservados.</copyright>
     <license>Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt</license>

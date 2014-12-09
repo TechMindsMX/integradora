@@ -18,7 +18,7 @@ class conciliacionAdminController extends JControllerLegacy {
 
     public function display($cachable = false, $urlparams = false) {
         require_once JPATH_COMPONENT . '/helpers/conciliacionadmin.php';
-        $view = JFactory::getApplication()->input->getCmd('view', 'facturas');
+        $view = JFactory::getApplication()->input->getCmd('view', 'odclist');
         JFactory::getApplication()->input->set('view', $view);
         parent::display($cachable, $urlparams);
         return $this;

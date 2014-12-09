@@ -59,8 +59,13 @@ class conciliacionadminModelOddform extends JModelList {
 
     public function getTransacciones($integradoId=null){
         $orden = $this->getOrden();
-        $respuesta = getFromTimOne::getTxIntegradoSinMandato($orden->integradoId);
+        $respuesta = getFromTimOne::getTxIntegradoSinMandato();
+        foreach ($respuesta as $tx) {
+            if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) && $tx->conciliacionMandato == 0 ) {
+                $return[] = $tx;
+            }
+        }
 
-        return $respuesta;
+        return $return;
     }
 }

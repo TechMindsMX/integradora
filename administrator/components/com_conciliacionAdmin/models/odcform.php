@@ -28,8 +28,6 @@ class conciliacionadminModelOdcform extends JModelList
 
         $data = getFromTimOne::getOrdenesCompra(null, $odcNum);
         $data = $data[0];
-        $data->url_xml = $data->urlXML;
-        unset ($data->urlXML);
         $data->factura = getFromTimOne::getDataFactura($data);
         $data->integradoName = $this->getIntegradoName($data->integradoId);
 
@@ -55,14 +53,13 @@ class conciliacionadminModelOdcform extends JModelList
 
     public function getTransacciones(){
         $orden = $this->getOrden();
-        $txs = getFromTimOne::getTxIntegradoSinMandato($orden->integradoId);
-
-        foreach ($txs as $value) {
-            if(is_null($value->conciliacionMandato)){
-                $respuesta[] = $value;
+        $respuesta = getFromTimOne::getTxIntegradoSinMandato();
+        foreach ($respuesta as $tx) {
+            if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) && $tx->conciliacionMandato == 0 ) {
+                $return[] = $tx;
             }
         }
 
-        return $respuesta;
+        return $return;
     }
 }
