@@ -122,7 +122,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
 			
 		var envio = {
-			'link'			:'?task=searchrfc&format=raw',
+			'link'			:'index.php?option=com_mandatos&view=clientesform&task=searchrfc&format=raw',
 			'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
 		};
 		
@@ -159,7 +159,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			data +='&integradoId='+idIntegradoAlta;
 			
 		var parametros = {
-			'link'  : '?task=agregarBanco&format=raw',
+			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBanco&format=raw',
 			'datos' : data
 
 		};
@@ -216,7 +216,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		if(objeto.datos_personales != null){
 			jQuery.each(objeto.datos_personales, function(key,value){
 				jQuery('#dp_'+key).val(value);
-                jQuery('#dp_'+key).prop('disabled',true);
+                jQuery('#dp_'+key).prop('readOnly',true);
 			});
 			jQuery('#dp_cod_postal').trigger('click');
 		}
@@ -224,7 +224,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		if(objeto.datos_empresa != null){
 			jQuery.each(objeto.datos_empresa, function(key,value){
 				jQuery('#de_'+key).val(value);
-                jQuery('#de_'+key).prop('disabled', true);
+                jQuery('#de_'+key).prop('readOnly', true);
 			});
 			jQuery('#de_cod_postal').trigger('click');
 		}
@@ -240,7 +240,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
             campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
 
             var parametros = {
-                'link'  : '?task=saveCliPro&format=raw',
+                'link'  : 'index.php?option=com_mandatos&view=clientesform&task=saveCliPro&format=raw',
                 'datos' : campos
             };
 
