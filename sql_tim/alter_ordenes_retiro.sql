@@ -1,1 +1,0 @@
-ALTER TABLE  `flpmu_ordenes_retiro` CHANGE  `amount`  `totalAmount` FLOAT NOT NULL
