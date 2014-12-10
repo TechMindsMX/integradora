@@ -92,18 +92,19 @@ class MandatosController extends JControllerLegacy {
     }
 
     function searchrfc(){
+        $this->document->setMimeEncoding('application/json');
         $data 	     = $this->input_data->getArray();
         $db		     = JFactory::getDbo();
         $where	     = $db->quoteName('rfc').' = '.$db->quote($data['rfc']);
         $respuesta   = '';
-        $rfcPersonas = validador::valida_rfc($data['rfc']);
-        $rfcEmpresa	 = validador::valida_rfc($data['rfc']);
+        $regexPM = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+        $regexPF = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+        $rfcPersonas = preg_match ($regexPM, $data['rfc'], $coicidencias);
+        $rfcEmpresa	 = preg_match ($regexPF, $data['rfc'], $coicidencias);
 
-        $this->document->setMimeEncoding('application/json');
-
-        if($rfcEmpresa){
+        if($rfcEmpresa == 1){
             $tipo_rfc = 1;
-        }elseif($rfcPersonas){
+        }elseif($rfcPersonas == 1){
             $tipo_rfc = 2;
         }else{
             $respuesta['success'] = false;
@@ -120,7 +121,7 @@ class MandatosController extends JControllerLegacy {
         }
 
         if(!empty($existe)){
-            $datos = new IntegradoSimple($existe->integrado_id);
+            $datos = new IntegradoSimple($existe[0]->integrado_id);
             $datos->integrados[0]->success = true;
 
             echo json_encode($datos->integrados[0]);
@@ -137,7 +138,8 @@ class MandatosController extends JControllerLegacy {
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
         $datosQuery = array('setUpdate'=>array());
-        $post       = array('datosBan_id' => 'INT',
+        $post       = array(
+            'datosBan_id' => 'INT',
             'db_banco_codigo' => 'STRING',
             'db_banco_cuenta' => 'STRING',
             'db_banco_sucursal' => 'STRING',
