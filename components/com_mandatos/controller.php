@@ -87,10 +87,6 @@ class MandatosController extends JControllerLegacy {
         $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
     }
 
-    function simulaenvio(){
-        $this->app->redirect(JRoute::_('index.php?option=com_mandatos'), 'Datos recibidos');
-    }
-
     function searchrfc(){
         $this->document->setMimeEncoding('application/json');
         $data 	     = $this->input_data->getArray();
@@ -569,4 +565,17 @@ class MandatosController extends JControllerLegacy {
         echo json_encode($response);
     }
 
+    public function tabla(){
+        $this->document->setMimeEncoding('application/json');
+        $input  = $this->input;
+        $post   = array(
+            'vencimiemto' => 'FLOAT',
+            'tipoPlazo'   => 'FLOAT',
+            'capital'     => 'FLOAT',
+            'interes'     => 'FLOAT'
+        );
+        $data   = $input->getArray($post);
+
+        var_dump($data);exit;
+    }
 }

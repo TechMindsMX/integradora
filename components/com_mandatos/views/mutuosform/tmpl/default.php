@@ -29,8 +29,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         var integradoId =  jQuery('#integradoIdE').val();
 
         var envio = {
-            'link'			:'index.php?option=com_mandatos&view=mutuosform&task=searchrfc&format=raw',
-            'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
+            'link'	:'index.php?option=com_mandatos&view=mutuosform&task=searchrfc&format=raw',
+            'datos'	:{'rfc': rfcBusqueda, 'integradoId':integradoId}
         };
 
         var resultado = ajax(envio);
@@ -53,8 +53,28 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         });
     }
 
+    function getTable() {
+        var vencimiento = jQuery('#expirationDate').val();
+        var tipoPlazo   = jQuery('#payments').val();
+        var capital     = jQuery('#totalAmount').val();
+        var interes     = jQuery('#interes').val();
+
+        var parametros = {
+            'link'  : 'index.php?option=com_mandatos&view=mutuosform&task=tabla&format=raw',
+            'datos' : {
+                'vencimiemto' : vencimiento,
+                'tipoPlazo'   : tipoPlazo,
+                'capital'     : capital,
+                'interes'     : interes
+            }
+        };
+        var request = ajax(parametros);
+
+    }
+
     jQuery(document).ready(function(){
         jQuery('#rfc').on('change',searchrfc);
+        jQuery('#amortizacion').on('click',getTable);
     });
 </script>
 
@@ -82,7 +102,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
     <div class="form-group">
         <label for="payments"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_PAYMENTS'); ?> <span style="font-size: 10px;">Máximo 2/mes</span></label>
-        <select>
+        <select name="payments" id="payments">
             <option value="2">Quincenal</option>
             <option value="3">Mensual</option>
             <option value="4">Bimestral</option>
@@ -103,6 +123,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
     </div>
 
     <div class="form-group">
+        <input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" />
         <input type="button" class="btn btn-primary" id="confirmarodc" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
         <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
     </div>
