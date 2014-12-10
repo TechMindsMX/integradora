@@ -24,7 +24,9 @@ class MandatosModelMandatos extends JModelItem {
             if($value->integrado_principal == 1 || $value->integrado_permission_level >= 2){
                 $integrado = new stdClass();
                 $integrado->integradoId = $value->integrado_id;
-                $integrado->name = $value->datos_personales->nom_comercial;
+
+	            $integ = new IntegradoSimple($integrado->integradoId);
+	            $integrado->name = $integ->getDisplayName();
                 $response[] = $integrado;
             }
         }

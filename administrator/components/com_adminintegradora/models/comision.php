@@ -31,7 +31,7 @@ class AdminintegradoraModelComision extends JModelItem
 
 		if($params['comisionId'] !== 0) {
 			$comision = getFromTimOne::getComisiones($params['comisionId']);
-			$this->comision =$comision[0];
+			$this->comision = $comision[0];
 			$this->idToNames ();
 		} else {
 			$this->comision = null;

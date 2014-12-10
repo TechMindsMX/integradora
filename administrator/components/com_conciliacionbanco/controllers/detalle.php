@@ -58,9 +58,9 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
         $save->formatData($data);
 
         if(is_null($data['id'])){
-            $resultado = $save->insertDB('conciliacion_banco_integrado');
+            $resultado = $save->insertDB('txs_banco_integrado');
         }else{
-            $resultado = $save->updateDB('conciliacion_banco_integrado',null,'id = '.$data['id']);
+            $resultado = $save->updateDB('txs_banco_integrado',null,'id = '.$data['id']);
         }
 
         if($resultado){
