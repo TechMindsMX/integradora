@@ -217,6 +217,12 @@ class IntegradoSimple extends Integrado {
 		
 		parent::getSolicitud($integ_id, 0);
 	}
+
+	public function getDisplayName() {
+		$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
+
+		return $name;
+	}
 }
 
 class Autoriza {

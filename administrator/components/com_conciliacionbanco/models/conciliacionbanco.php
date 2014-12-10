@@ -23,7 +23,7 @@ class ConciliacionbancoModelConciliacionbanco extends JModelList {
 
 	public function getSTP() {
 
-		$stp = getFromTimOne::getTxSTP();
+		$stp = getFromTimOne::getTxSinMandato();
 		foreach ( $stp as $keys => $values ) {
 
 			$data[] = $values;

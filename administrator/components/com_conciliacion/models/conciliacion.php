@@ -13,21 +13,14 @@ jimport( 'integradora.gettimone' );
  */
 class ConciliacionModelConciliacion extends JModelList {
 
-	public function getUserIntegrado() {
+	public function getStpTxSinMandato() {
 
-		$factura    = new Integrado();
-		$integrados = $factura->getIntegrados();
-
-		return $integrados;
-	}
-
-	public function getSTP() {
-
-		$stp = getFromTimOne::getTxSTP();
+		$stp = getFromTimOne::getTxSinMandato();
 		foreach ( $stp as $keys => $values ) {
 
+			$integ = new IntegradoSimple($values->integradoId);
+			$values->integradoName = $integ->getDisplayName();
 			$data[] = $values;
-
 		}
 
 		return $data;

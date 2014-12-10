@@ -1,7 +1,5 @@
 --liquibase formatted sql
 
-/* ejemplo de cambio
-
 --changeset ricardolyon:1
 create table person (
   id int not null primary key,
@@ -10,6 +8,8 @@ create table person (
   state varchar(2)
 );
 
-fin ejemplo	*/
+--rollback drop table person
 
+--changeset ricardolyon:2
+drop table person;
 

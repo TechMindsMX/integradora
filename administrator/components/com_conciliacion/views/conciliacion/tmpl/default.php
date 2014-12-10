@@ -8,10 +8,10 @@ defined('_JEXEC') or die;
     <table class="adminlist table">
         <thead>
         <tr>
-            <th>Referencia</th>
-            <th>Usuario</th>
-            <th>Cantidad</th>
-            <th>Fecha y Hora</th>
+            <th><?php echo JText::_('COM_FACTURAS_FROM_ODD_REFERENCIA'); ?></th>
+            <th><?php echo JText::_('LBL_INTEGRADO'); ?></th>
+            <th><?php echo JText::_('LBL_CANTIDAD'); ?></th>
+            <th><?php echo JText::_('LBL_FECHA'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -19,8 +19,7 @@ defined('_JEXEC') or die;
 
         <tr class="row0">
             <td><a title="Ver detalle de Referencia" ><?php echo $value->referencia; ?></a></td>
-            <td>
-                <?php echo $value->userId; ?>			</td>
+            <td><?php echo $value->integradoName; ?></td>
             <td><?php echo '$'.number_format($value->amount, 2); ?></td>
             <td><?php echo date("d/m/Y",$value->date); ?></td>
         </tr>
