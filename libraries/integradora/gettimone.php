@@ -1049,8 +1049,6 @@ class getFromTimOne{
 	    foreach ( $txs as $transaction ) {
 		    $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
 	    }
-	    var_dump( $txs );
-	    exit;
 
     }
 	private static function getTxDataByTxId($txId) {
