@@ -13,7 +13,7 @@ class ConciliacionModelDetalle extends JModelLegacy {
 
 	public function getTxSTPById() {
 
-		$ref = JFactory::getApplication()->input->get('refnum', null, 'string');
+		$ref = JFactory::getApplication()->input->get('txId', null, 'int');
 
 		$tx = getFromTimOne::getTxSTPbyRef($ref);
 

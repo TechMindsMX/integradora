@@ -20,8 +20,7 @@ class ConciliacionModelConciliacion extends JModelList {
 
 		if ( ! empty( $stp ) ) {
 			foreach ( $stp as $keys => $values ) {
-
-				$integ = new IntegradoSimple($values->integradoId);
+				$integ = new IntegradoSimple($values->idIntegrado);
 				$values->integradoName = $integ->getDisplayName();
 				$data[] = $values;
 			}

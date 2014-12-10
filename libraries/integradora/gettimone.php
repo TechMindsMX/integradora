@@ -279,14 +279,14 @@ class getFromTimOne{
             $response = $listAllCliPro;
         }
 
-        if($type == 0){
+        if($type == 0 && !empty($response)){
             foreach ($response as $value) {
                 if($value->type == $type){
                     $clientes[] = $value;
                 }
             }
             $response = $clientes;
-        }elseif($type == 1){
+        }elseif($type == 1 && !empty($response)){
             foreach ($response as $value) {
                 if($value->type == $type){
                     $proveedores[] = $value;
@@ -395,12 +395,79 @@ class getFromTimOne{
             $value->createdDate    = (STRING)$value->createdDate;
             $value->paymentDate    = (STRING)$value->paymentDate;
 
+	        $subTotalOrden        = 0;
+	        $subTotalIva          = 0;
+	        $subTotalIeps         = 0;
+
+	        $value->productosData = json_decode($value->productos);
+
+	        foreach ($value->productosData  as $producto ) {
+		        $subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
+		        $subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+		        $subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
+	        }
+
+	        $value->subTotalAmount = $subTotalOrden;
+	        $value->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
+	        $value->iva      = $subTotalIva;
+	        $value->ieps     = $subTotalIeps;
+
+	        $value = self::getProyectFromId($value);
+	        $value = self::getClientFromID($value);
         }
 
         return $orden;
     }
 
-    public static function getOperacionesPorLiquidar($integradoId){
+	public static function getProyectFromId($orden){
+		$proyKeyId = array();
+
+		$proyectos = self::getProyects($orden->integradoId);
+
+		// datos del proyecto y subproyecto involucrrado
+		foreach ( $proyectos as $key => $proy) {
+			$proyKeyId[$proy->id_proyecto] = $proy;
+		}
+
+		if(array_key_exists($orden->id, $proyKeyId)) {
+			$orden->proyecto = $proyKeyId[$orden->id];
+
+			if($orden->proyecto->parentId > 0) {
+				$orden->sub_proyecto	= $orden->proyecto;
+				$orden->proyecto		= $proyKeyId[$orden->proyecto->parentId];
+			} else {
+				$orden->subproyecto 	= null;
+			}
+		}
+
+		$integ = new IntegradoSimple($orden->integradoId);
+		$orden->integradoName = $integ->getDisplayName();
+
+		return $orden;
+	}
+
+	public static function getOrderStatusName($order){
+
+	}
+
+	public static function getClientFromID($orden){
+		$proveedores = array();
+
+		$clientes = self::getClientes($orden->integradoId);
+
+		foreach ($clientes as $key => $value) {
+			if($value->type == 0){
+				$proveedores[$value->id] = $value;
+			}
+		}
+
+		$orden->proveedor = $proveedores[$orden->clientId];
+
+		return $orden;
+	}
+
+
+	public static function getOperacionesPorLiquidar($integradoId){
         $allOrdenes    = self::getOrdenesVenta($integradoId);
         $subTotalOrden = (FLOAT) 0;
         $subTotalIva   = (FLOAT) 0;
@@ -1050,7 +1117,9 @@ class getFromTimOne{
 		    $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
 	    }
 
+	    return $txs;
     }
+
 	private static function getTxDataByTxId($txId) {
 
 		$txstp = new stdClass;
@@ -1115,7 +1184,7 @@ class getFromTimOne{
 
 	    $array[] = $txstp;
 
-
+		$txId = (int)$txId;
 
 	    return $array[$txId];
     }
@@ -1161,7 +1230,7 @@ class getFromTimOne{
         $txs = self::getTxSinMandato();
 
         foreach ( $txs as $tx ) {
-            if ($tx->referencia == $ref) {
+            if ($tx->data->referencia == $ref) {
                 return $tx;
             }
         }

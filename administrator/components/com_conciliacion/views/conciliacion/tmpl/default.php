@@ -1,6 +1,9 @@
 <?php
 // no direct access
 defined('_JEXEC') or die;
+
+var_dump($this->stp);
+$base_url = 'index.php?option=com_conciliacion&view=detalle&txId=';
 ?>
 
 <form id="adminForm" name="adminForm" method="post" action="/Integradora/administrator/index.php?option=com_comciliacion">
@@ -12,17 +15,19 @@ defined('_JEXEC') or die;
             <th><?php echo JText::_('LBL_INTEGRADO'); ?></th>
             <th><?php echo JText::_('LBL_CANTIDAD'); ?></th>
             <th><?php echo JText::_('LBL_FECHA'); ?></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <?php if ( ! empty( $this->stp ) ) {
-	        foreach ($this->stp as $key => $value) { ?>
-
+	        foreach ($this->stp as $key => $value) {
+		        ?>
 	        <tr class="row0">
-	            <td><a title="Ver detalle de Referencia" ><?php echo $value->referencia; ?></a></td>
+	            <td><a title="Ver detalle de Referencia" ><?php echo $value->data->referencia; ?></a></td>
 	            <td><?php echo $value->integradoName; ?></td>
-	            <td><?php echo '$'.number_format($value->amount, 2); ?></td>
-	            <td><?php echo date("d/m/Y",$value->date); ?></td>
+	            <td><?php echo '$'.number_format($value->data->amount, 2); ?></td>
+	            <td><?php echo date("d/m/Y",$value->data->date); ?></td>
+	            <td><?php echo '<a class="btn btn-success" href="'.$base_url.$value->idTx.'">'.JText::_('LBL_ASOCIAR_MANDATO').'</a>'; ?></td>
 	        </tr>
 	        <?php }
         } else {

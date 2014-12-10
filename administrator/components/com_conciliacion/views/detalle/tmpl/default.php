@@ -3,13 +3,13 @@
 defined( '_JEXEC' ) or die;
 
 ?>
-
+<script type="text/javascript" src="<?php echo JUri::root().'libraries/integradora/js/tim-filtros.js'; ?>"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function ($) {
-		var odv = <?php echo $this->odv; ?>;
-		var odc = <?php echo $this->odc; ?>;
-		var odd = <?php echo $this->odd; ?>;
-		var odr = <?php echo $this->odr; ?>;
+		var odv = <?php echo json_encode($this->odv); ?>;
+		var odc = <?php echo json_encode($this->odc); ?>;
+		var odd = <?php echo json_encode($this->odd); ?>;
+		var odr = <?php echo json_encode($this->odr); ?>;
 
 		var $integ = $('#integrado').change(function() {
 			filtro_fechas($integ);
@@ -81,14 +81,14 @@ function pintaTabla($tabla, $params) {
 	}
 }
 
-foreach ( $this->odc as $odc ) {
+foreach ( $this->odv as $odv ) {
 	$html[] = '<div class="row1 clearfix">';
 	$html[] = '<div class="span1">'.$odv->id.'</div>';
 	$html[] = '<div class="span1">'.$odv->status.'</div>';
-	$html[] = '<div class="span2">'.$odv->integradoId.'</div>';
-	$html[] = '<div class="span2">'.$odv->clientId.'</div>';
-	$html[] = '<div class="span2">'.$odv->created.'</div>';
-	$html[] = '<div class="span2">'.$odv->payment.'</div>';
+	$html[] = '<div class="span2">'.$odv->integradoName.'</div>';
+	$html[] = '<div class="span2">'.$odv->proveedor->corporateName.'</div>';
+	$html[] = '<div class="span2">'.$odv->createdDate.'</div>';
+	$html[] = '<div class="span2">'.$odv->paymentDate.'</div>';
 	$html[] = '<div class="span2">'.$odv->totalAmount.'</div>';
 	$html[] = '</div>';
 }
@@ -96,4 +96,4 @@ echo implode('',$html);
 
 
 
-var_dump($this->integrados);
+var_dump($this->odv);
