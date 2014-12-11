@@ -84,7 +84,7 @@ function pintaTabla($tabla, $params) {
 foreach ( $this->odv as $odv ) {
 	$html[] = '<div class="row1 clearfix">';
 	$html[] = '<div class="span1">'.$odv->id.'</div>';
-	$html[] = '<div class="span1">'.$odv->status.'</div>';
+	$html[] = '<div class="span1">'.$odv->statusName.'</div>';
 	$html[] = '<div class="span2">'.$odv->integradoName.'</div>';
 	$html[] = '<div class="span2">'.$odv->proveedor->corporateName.'</div>';
 	$html[] = '<div class="span2">'.$odv->createdDate.'</div>';
