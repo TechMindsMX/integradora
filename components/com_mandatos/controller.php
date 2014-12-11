@@ -574,8 +574,10 @@ class MandatosController extends JControllerLegacy {
             'capital'     => 'FLOAT',
             'interes'     => 'FLOAT'
         );
-        $data   = $input->getArray($post);
+        $data   = (object) $input->getArray($post);
 
-        var_dump($data);exit;
+        getFromTimOne::getTabla($data);
+
+        exit;
     }
 }

@@ -12,4 +12,4 @@ $app 		= JFactory::getApplication();
 // Datos
 $params 	= $app->input->getArray();
 
-echo $this->loadTemplate('body');
+echo $this->loadTemplate('preview');
