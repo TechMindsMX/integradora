@@ -20,7 +20,7 @@ $datos = $this->data;
         var form = jQuery('#confirmForm');
         form.prop('action', 'index.php?option=com_mandatos&view=mutuospreview');
 
-        //form.submit();
+        form.submit();
     }
 
     jQuery(document).ready(function(){

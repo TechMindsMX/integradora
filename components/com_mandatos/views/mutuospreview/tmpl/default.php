@@ -9,8 +9,5 @@ JHtml::_('behavior.keepalive');
 $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 
-// Datos
-$params 	= $app->input->getArray();
-
 echo $this->loadTemplate('body');
-//echo $this->loadTemplate('preview_btns');
+echo $this->loadTemplate('preview_btns');

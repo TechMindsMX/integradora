@@ -25,8 +25,6 @@ class MandatosViewMutuosform extends JViewLegacy {
         $this->idMutuo      = $this->data->idMutuo;
         $this->tipoPago     = $this->get('TipoPago');
 
-        var_dump($this->data);
-
 		$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
 
 		// Check for errors.

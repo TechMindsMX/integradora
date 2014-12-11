@@ -69,7 +69,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         var parametros = {
             'link'  : 'index.php?option=com_mandatos&view=mutuosform&task=tabla&format=raw',
             'datos' : {
-                'vencimiemto' : vencimiento,
+                'tiempoplazo' : vencimiento,
                 'tipoPlazo'   : tipoPlazo,
                 'capital'     : capital,
                 'interes'     : interes

@@ -569,14 +569,14 @@ class MandatosController extends JControllerLegacy {
         $this->document->setMimeEncoding('application/json');
         $input  = $this->input;
         $post   = array(
-            'vencimiemto' => 'FLOAT',
+            'tiempoplazo' => 'FLOAT',
             'tipoPlazo'   => 'FLOAT',
             'capital'     => 'FLOAT',
             'interes'     => 'FLOAT'
         );
         $data   = (object) $input->getArray($post);
 
-        getFromTimOne::getTabla($data);
+        $tabla = getFromTimOne::getTabla($data);
 
         exit;
     }
