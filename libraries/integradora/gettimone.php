@@ -1280,13 +1280,13 @@ class getFromTimOne{
     }
 
     public static function getTxSTPbyRef( $id ) {
-        $txs = self::getTxSinMandato();
+	    $txs = getFromTimOne::selectDB( 'txs_timone_mandato', 'id = '.(int)$id );
 
-        foreach ( $txs as $tx ) {
-            if ($tx->id == $id) {
-                return $tx;
-            }
-        }
+	    foreach ( $txs as $transaction ) {
+		    $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
+	    }
+
+	    return $txs[0];
     }
 
     public static function getOperacionesVenta($integradoId){
@@ -1416,7 +1416,8 @@ class getFromTimOne{
 			}
 		}
 
-		$montoComision = isset($comision) ? $orden->comprobante['TOTAL'] * ($comision->rate / 100) : null;
+		// TODO: verificar $orden->totalAmount con el comprobante del xml
+		$montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
 
 		return $montoComision;
 	}
@@ -1820,6 +1821,33 @@ class sendToTimOne {
 		}
 
 		return $return;
+	}
+
+	public static function referenciaTxMandato($txObject, $idOrden, $orderType) {
+		switch ($orderType){
+			case 'odc':
+				$orders = getFromTimOne::getOrdenesCompra(null, $idOrden);
+				break;
+			case 'odv':
+				$orders = getFromTimOne::getOrdenesVenta(null, $idOrden);
+				break;
+			case 'odd':
+				$orders = getFromTimOne::getOrdenesDeposito(null, $idOrden);
+				break;
+		}
+		$orders = $orders[0];
+
+		$save = new sendToTimOne();
+
+		$tx['idOrden'] = $orders->id;
+		$tx['tipoOrden'] = $orderType;
+
+		$save->formatData($tx);
+		$save->updateDB('txs_timone_mandato',null, 'id = '.$txObject->id);
+
+		$returnObj = getFromTimOne::getTxSTPbyRef($txObject->id);
+
+		return $returnObj;
 	}
 
     public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
