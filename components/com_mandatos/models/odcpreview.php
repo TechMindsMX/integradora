@@ -81,22 +81,7 @@ class MandatosModelOdcpreview extends JModelItem {
 
     public function getDataFactura($orden){
 
-        $result = getFromTimOne::getDataFactura($orden);
-
-        $orden->impuestos = $result->impuestos->totalTrasladados;
-
-        //tomo los productos de la factura
-        foreach ($result->conceptos as $value) {
-            $orden->productos[] = $value;
-        }
-
-        foreach ($result->impuestos as $key => $value) {
-            if($key == 'iva'){
-                $orden->iva = $value;
-            }elseif($key == 'ieps'){
-                $orden->ieps = $value;
-            }
-        }
+        getFromTimOne::getDataFactura($orden);
 
     }
 }
