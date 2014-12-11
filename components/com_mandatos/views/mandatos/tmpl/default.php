@@ -43,6 +43,9 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 			case 'list_fv':
 				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=facturalist'); ?>';
 				break;
+			case 'list_mutos':
+				action = 'index.php?option=com_mandatos&view=mutuosform&integradoId=1';
+				break;
 			case 'go_liquidacion':
 				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ?>';
 				break;
@@ -106,6 +109,9 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 		</div>
 		<div class="margen-fila">
 			<input type="button" class="btn btn-primary" id="list_fv"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_FACTURA_LIST'); ?>" />
+		</div>
+		<div class="margen-fila">
+			<input type="button" class="btn btn-primary" id="list_mutos"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_MUTUOS'); ?>" />
 		</div>
 	</div>
 </div>

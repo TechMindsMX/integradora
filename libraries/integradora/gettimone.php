@@ -99,7 +99,12 @@ class getFromTimOne{
         return $txs;
     }
 
-	public function createNewProject($envio, $integradoId){
+    public static function getTabla($data){
+        $tabla = $data;
+        return $tabla;
+    }
+
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
