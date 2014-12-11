@@ -12,7 +12,5 @@ $app 		= JFactory::getApplication();
 // Datos
 $params 	= $app->input->getArray();
 
-$integrado 	= $this->integCurrent->integrados[0];
-
 echo $this->loadTemplate('body');
-echo $this->loadTemplate('preview_btns');
+//echo $this->loadTemplate('preview_btns');

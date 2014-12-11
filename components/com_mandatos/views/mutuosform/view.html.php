@@ -15,20 +15,10 @@ class MandatosViewMutuosform extends JViewLegacy {
 
         if( !is_null($this->idMutuo) ){
 			$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
-            $this->datos    = $this->get('Cliente');
+            $this->datos    = $this->get('Mutuo');
 		}else{
 			$this->titulo = 'COM_MANDATOS_MUTUO_LBL_AGREGAR';
             $datos                 = new stdClass();
-            $datos->id             = null;
-            $datos->type           = null;
-            $datos->integrado_id   = null;
-            $datos->status         = null;
-            $datos->rfc            = null;
-            $datos->tradeName      = null;
-            $datos->corporateName  = null;
-            $datos->contact        = null;
-            $datos->phone          = null;
-            $datos->bancos         = null;
 
             $this->datos = $datos;
         }

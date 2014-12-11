@@ -121,3 +121,22 @@ select.productos{
     width: 100%;
     background-color: rgb(255, 255, 255);
 }
+
+.contenedor_mutuo{
+    margin: 0 auto;
+    text-align: justify;
+}
+.cabeceras_mutuo{
+    text-align: center;
+}
+
+.table-mutuo {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+.expiration{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bolder;
+}
