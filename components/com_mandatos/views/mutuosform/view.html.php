@@ -8,21 +8,27 @@ class MandatosViewMutuosform extends JViewLegacy {
 	
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
-        $post               = array('integradoId'=>'INT', 'idMutuo' => 'INT');
-		$data				= $app->input->getArray($post);
-		$this->integradoId 	= $data['integradoId'];
-        $this->idMutuo     = $data['idMutuo'];
+        $post               = array(
+            'integradoId'    => 'INT',
+            'idMutuo'        => 'INT',
+            'integradoIdR'   => 'INT',
+            'beneficiario'   => 'STRING',
+            'rfc'            => 'STRING',
+            'layout'         => 'STRING',
+            'expirationDate' => 'FLOAT',
+            'payments'       => 'FLOAT',
+            'totalAmount'    => 'FLOAT',
+            'interes'        => 'FLOAT'
+        );
+		$this->data			= (object) $app->input->getArray($post);
+		$this->integradoId 	= $this->data->integradoId;
+        $this->idMutuo      = $this->data->idMutuo;
+        $this->tipoPago     = $this->get('TipoPago');
 
-        if( !is_null($this->idMutuo) ){
-			$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
-            $this->datos    = $this->get('Mutuo');
-		}else{
-			$this->titulo = 'COM_MANDATOS_MUTUO_LBL_AGREGAR';
-            $datos                 = new stdClass();
+        var_dump($this->data);
 
-            $this->datos = $datos;
-        }
-		
+		$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
+
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
