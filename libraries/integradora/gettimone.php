@@ -414,10 +414,23 @@ class getFromTimOne{
 
 	        $value = self::getProyectFromId($value);
 	        $value = self::getClientFromID($value);
+	        $value->statusName = self::getOrderStatusName($value);
         }
 
         return $orden;
     }
+
+	public static function getOrderStatusName($order){
+		$where = null;
+
+		if(isset($order->id)) {
+			$where = 'id = '.$order->id;
+		}
+
+		$result = self::selectDB('catalog_order_status', $where);
+
+		return $result[0];
+	}
 
 	public static function getProyectFromId($orden){
 		$proyKeyId = array();
@@ -444,10 +457,6 @@ class getFromTimOne{
 		$orden->integradoName = $integ->getDisplayName();
 
 		return $orden;
-	}
-
-	public static function getOrderStatusName($order){
-
 	}
 
 	public static function getClientFromID($orden){
