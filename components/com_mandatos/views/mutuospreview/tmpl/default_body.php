@@ -8,9 +8,11 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
+$datos = $this->datos;
+
 $contenido = JText::_('CONTENIDO_MUTUO');
 
-$contenido = str_replace('$emisor', '<strong style="color: #000000">(CCRC) EJE 7 VIALIDAD ARTISTAS SE DE CV</strong>',$contenido);
+$contenido = str_replace('$emisor', '<strong style="color: #000000">'.$datos->integradoId.'</strong>',$contenido);
 $contenido = str_replace('$receptor', '<strong style="color: #000000">INTEGRADORA DE EMPRENDIMIENTOS CULTURALES, SA DE CV</strong>',$contenido);
 $contenido = str_replace('$totalAmount', '<strong style="color: #000000">$'.number_format(20000.89,2).'</strong>',$contenido);
 $contenido = str_replace('$expirationDate', '<strong style="color: #000000">28-03-2014</strong>',$contenido);
