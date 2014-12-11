@@ -66,7 +66,23 @@ class getFromTimOne{
         $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
-        return $datos;
+
+	    $orden->impuestos = $datos->impuestos->totalTrasladados;
+
+	    //tomo los productos de la factura
+	    foreach ($datos->conceptos as $value) {
+		    $orden->productos[] = $value;
+	    }
+
+	    foreach ($datos->impuestos as $key => $value) {
+		    if($key == 'iva'){
+			    $orden->iva = $value;
+		    }elseif($key == 'ieps'){
+			    $orden->ieps = $value;
+		    }
+	    }
+
+	    return $orden;
     }
 
     public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
@@ -199,10 +215,10 @@ class getFromTimOne{
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
-                    $value->rfc = $general->rfc;
-                    $value->tradeName = $general->tradeName;
-                    $value->corporateName = $general->corporateName;
-                    $value->contact = $general->contact;
+	                $value->rfc = @$general->rfc;
+	                $value->tradeName = @$general->tradeName;
+	                $value->corporateName = @$general->corporateName;
+	                $value->contact = @$general->contact;
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }
@@ -279,6 +295,7 @@ class getFromTimOne{
             $response = $listAllCliPro;
         }
 
+//	    var_dump($response, $type);exit;
         if($type == 0 && !empty($response)){
             foreach ($response as $value) {
                 if($value->type == $type){
@@ -336,28 +353,7 @@ class getFromTimOne{
         return $ordenes;
     }
 
-    public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
-        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
-
-        foreach ($orden as $value) {
-            $value->id              = (INT)$value->id;
-            $value->proyecto        = (INT)$value->proyecto;
-            $value->proveedor       = (INT)$value->proveedor;
-            $value->integradoId     = (INT)$value->integradoId;
-            $value->numOrden        = (INT)$value->numOrden;
-            $value->paymentMethod   = (INT)$value->paymentMethod;
-            $value->status          = (INT)$value->status;
-            $value->totalAmount     = (FLOAT)$value->totalAmount;
-            $value->createdDate     = (STRING)$value->createdDate;
-            $value->paymentDate     = (STRING)$value->paymentDate;
-            $value->urlXML          = (STRING)$value->urlXML;
-            $value->observaciones   = (STRING)$value->observaciones;
-        }
-
-        return $orden;
-    }
-
-    public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
+	public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
 
         foreach ($orden as $value) {
@@ -370,12 +366,42 @@ class getFromTimOne{
             $value->attachment      = (STRING)$value->attachment;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
+
+	        $value->status = self::getOrderStatusName($value);
+	        $value->paymentMethod   = self::getPaymentMethodName($value);
         }
 
         return $orden;
     }
 
-    public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
+	public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
+		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
+
+		foreach ($orden as $value) {
+			$value->id              = (INT)$value->id;
+			$value->proyecto        = (INT)$value->proyecto;
+			$value->clientId        = (INT)$value->proveedor;
+			$value->proveedor       = (INT)$value->proveedor;
+			$value->integradoId     = (INT)$value->integradoId;
+			$value->numOrden        = (INT)$value->numOrden;
+			$value->paymentMethod   = (INT)$value->paymentMethod;
+			$value->status          = (INT)$value->status;
+			$value->totalAmount     = (FLOAT)$value->totalAmount;
+			$value->createdDate     = (STRING)$value->createdDate;
+			$value->paymentDate     = (STRING)$value->paymentDate;
+			$value->urlXML          = (STRING)$value->urlXML;
+			$value->observaciones   = (STRING)$value->observaciones;
+
+			$value = self::getProyectFromId($value);
+			$value = self::getClientFromID($value);
+			$value->status = self::getOrderStatusName($value);
+		}
+
+
+		return $orden;
+	}
+
+	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
 
         //Cambio el tipo de dato para las validaciones con (===)
@@ -414,7 +440,7 @@ class getFromTimOne{
 
 	        $value = self::getProyectFromId($value);
 	        $value = self::getClientFromID($value);
-	        $value->statusName = self::getOrderStatusName($value);
+	        $value->status = self::getOrderStatusName($value);
         }
 
         return $orden;
@@ -430,6 +456,16 @@ class getFromTimOne{
 		$result = self::selectDB('catalog_order_status', $where);
 
 		return $result[0];
+	}
+
+	public static function getPaymentMethodName($orden){
+		$payMethod = new stdClass();
+		$names = array('SPEI', 'Cheque');
+
+		$payMethod->id = $orden->paymentMethod;
+		$payMethod->name = $names[$payMethod->id];
+
+		return $payMethod;
 	}
 
 	public static function getProyectFromId($orden){
@@ -465,8 +501,10 @@ class getFromTimOne{
 		$clientes = self::getClientes($orden->integradoId);
 
 		foreach ($clientes as $key => $value) {
-			if($value->type == 0){
-				$proveedores[$value->id] = $value;
+			if ( $value->type == 0 ) {
+				$proveedores[ $value->id ] = $value;
+			} elseif ( $value->type == 1 ) {
+				$proveedores[ $value->id ] = $value;
 			}
 		}
 
@@ -1209,7 +1247,8 @@ class getFromTimOne{
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
             if( is_numeric(strpos(strtolower($key),'date')) ){
-                $objeto->$key = date('d-m-Y', ($value) );
+	            $objeto->$key = date('d-m-Y', ($value) );
+	            $objeto->timestamps->$key = $value;
             }
         }
 
