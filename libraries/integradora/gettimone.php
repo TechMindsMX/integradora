@@ -1279,11 +1279,11 @@ class getFromTimOne{
         return $newId;
     }
 
-    public static function getTxSTPbyRef( $ref ) {
+    public static function getTxSTPbyRef( $id ) {
         $txs = self::getTxSinMandato();
 
         foreach ( $txs as $tx ) {
-            if ($tx->data->referencia == $ref) {
+            if ($tx->id == $id) {
                 return $tx;
             }
         }
