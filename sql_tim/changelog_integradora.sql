@@ -21,3 +21,8 @@ INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'C
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
 CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
 CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
+
+--changeset lutek:3
+ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
+CHANGE COLUMN `cuenta` `idCuenta` INT(11) NULL DEFAULT NULL ,
+ADD COLUMN `cuotaOcapital` INT(11) NULL AFTER `interes`;

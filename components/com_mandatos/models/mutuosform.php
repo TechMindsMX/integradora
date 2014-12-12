@@ -17,4 +17,14 @@ class MandatosModelMutuosform extends JModelItem {
 
         return $tipo;
     }
+
+    public function getCatalogos() {
+        $catalogos = new Catalogos;
+
+        $catalogos->getNacionalidades();
+        $catalogos->getEstados();
+        $catalogos->getBancos();
+
+        return $catalogos;
+    }
 }

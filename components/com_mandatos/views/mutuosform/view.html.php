@@ -9,17 +9,22 @@ class MandatosViewMutuosform extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
         $post               = array(
-            'integradoId'    => 'INT',
-            'idMutuo'        => 'INT',
-            'integradoIdR'   => 'INT',
-            'beneficiario'   => 'STRING',
-            'rfc'            => 'STRING',
-            'layout'         => 'STRING',
-            'expirationDate' => 'FLOAT',
-            'payments'       => 'FLOAT',
-            'totalAmount'    => 'FLOAT',
-            'interes'        => 'FLOAT'
+            'integradoId'       => 'INT',
+            'idMutuo'           => 'INT',
+            'integradoIdR'      => 'INT',
+            'beneficiario'      => 'STRING',
+            'rfc'               => 'STRING',
+            'layout'            => 'STRING',
+            'paymentPeriod'     => 'INT',
+            'quantityPayments'  => 'FLOAT',
+            'totalAmount'       => 'FLOAT',
+            'interes'           => 'FLOAT',
+            'banco_codigo'      => 'STRING',
+            'banco_cuenta'      => 'STRING',
+            'banco_sucursal'    => 'STRING',
+            'banco_clabe'       => 'STRING'
         );
+        $this->catalogos    = $this->get('catalogos');
 		$this->data			= (object) $app->input->getArray($post);
 		$this->integradoId 	= $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
@@ -32,7 +37,7 @@ class MandatosViewMutuosform extends JViewLegacy {
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 			return false;
         }
-		
+
 		$this->loadHelper('Mandatos');
 
 		// Verifica los permisos de edición y autorización

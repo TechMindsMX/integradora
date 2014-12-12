@@ -24,7 +24,11 @@ class MandatosModelMutuospreview extends JModelItem {
             'expirationDate' => 'FLOAT',
             'payments'       => 'FLOAT',
             'totalAmount'    => 'FLOAT',
-            'interes'        => 'FLOAT'
+            'interes'        => 'FLOAT',
+            'banco_codigo'      => 'STRING',
+            'banco_cuenta'      => 'STRING',
+            'banco_sucursal'    => 'STRING',
+            'banco_clabe'       => 'STRING'
         );
         $this->inputVars 		 = JFactory::getApplication()->input->getArray($post);
 
