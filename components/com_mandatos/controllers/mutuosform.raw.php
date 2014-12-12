@@ -68,7 +68,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         }
         $dataMutuo = array(
             'integradoIdE'      => $datos->integradoId,
-            'integradoIdR'      => $datos->integradoIdR,
+            'integradoIdR'      => $id,
             'idCuenta'          => $datos->idCuenta,
             'paymentPeriod'     => $datos->paymentPeriod,
             'quantityPayments'  => $datos->quantityPayments,
