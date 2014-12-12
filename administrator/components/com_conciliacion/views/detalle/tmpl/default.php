@@ -92,7 +92,7 @@ defined( '_JEXEC' ) or die;
 
 <div id="tablas_datos">
 <?php
-$url_asociar = 'index.php?option=com_conciliacion&view=detalle&layout=confirm&orderId=';
+$url_asociar = 'index.php?option=com_conciliacion&view=detalle&layout=confirm&txId='.$this->item->id.'&orderId=';
 
 $html[] = '<div class="table table-striped" id="table_odv"><h3>'.JText::_('LBL_ODVS').'</h3>';
 foreach ( $this->odv as $orden) {

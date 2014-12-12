@@ -2,7 +2,6 @@
 // no direct access
 defined('_JEXEC') or die;
 
-var_dump($this->stp);
 $base_url = 'index.php?option=com_conciliacion&view=detalle&txId=';
 ?>
 
