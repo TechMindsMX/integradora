@@ -2,14 +2,14 @@
 defined('_JEXEC') or die('Restricted access');
 ?>
 
-        <div class="container botones">
+        <div class="container botones" style="margin-top: 60px;">
         <?php
-        if($this->permisos['canAuth'] && $this->odd->status === 0 ):
-            $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&integradoId='.$this->integradoId.'&idOrden='.$this->odd->id);
+        if($this->permisos['canAuth'] ):
+            $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&integradoId='.$this->integradoId);
         ?>
             <a class="btn btn-success" href="<?php echo $authorizeURL ?>"><?php echo JText::_('LBL_AUTORIZE'); ?></a>
         <?php
         endif;
         ?>
-            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=oddlist&integradoId='.$this->integradoId); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+            <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
