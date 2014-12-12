@@ -17,3 +17,7 @@ INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (21, 'L
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (34, 'Devuelta');
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
 
+--changeset lutek:2
+ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
+CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
+CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
