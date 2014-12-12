@@ -13,12 +13,31 @@ jimport('integradora.catalogos');
 class MandatosModelMutuospreview extends JModelItem {
 
 
-	public function __construct()
-	{
-		$this->inputVars 		 = JFactory::getApplication()->input->getArray();
+	public function __construct(){
+        $post               = array(
+            'integradoId'    => 'INT',
+            'idMutuo'        => 'INT',
+            'integradoIdR'   => 'INT',
+            'beneficiario'   => 'STRING',
+            'rfc'            => 'STRING',
+            'layout'         => 'STRING',
+            'expirationDate' => 'FLOAT',
+            'payments'       => 'FLOAT',
+            'totalAmount'    => 'FLOAT',
+            'interes'        => 'FLOAT'
+        );
+        $this->inputVars 		 = JFactory::getApplication()->input->getArray($post);
+
 		
 		parent::__construct();
 	}
-	
+
+    public function getDataPost(){
+        return $this->inputVars;
+    }
+
+    public function getDataIntegrados(){
+
+	}
 }
 

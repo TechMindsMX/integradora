@@ -22,8 +22,6 @@ class Integrado {
 			$this->getSolicitud($id, $key);
 		}
 		
-		$this->nombres = $this->separaNombre($this->user->name);
-		
 		unset($this->user->password);
 
 	}
@@ -80,9 +78,6 @@ class Integrado {
 		}
 
 		return $result;
-	}
-	
-	function separaNombre($value){
 	}
 	
 	function getSolicitud($integ_id = null, $key){

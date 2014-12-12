@@ -6,20 +6,7 @@ jimport('joomla.application.component.view');
 class MandatosViewMutuospreview extends JViewLegacy {
 	
 	function display($tpl = null){
-		$app 				= JFactory::getApplication();
-        $post               = array(
-            'integradoId'    => 'INT',
-            'idMutuo'        => 'INT',
-            'integradoIdR'   => 'INT',
-            'beneficiario'   => 'STRING',
-            'rfc'            => 'STRING',
-            'layout'         => 'STRING',
-            'expirationDate' => 'FLOAT',
-            'payments'       => 'FLOAT',
-            'totalAmount'    => 'FLOAT',
-            'interes'        => 'FLOAT'
-        );
-        $this->data			= (object) $app->input->getArray($post);
+        $this->data         = (object) $this->get('DataPost');
         $this->integradoId 	= $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
         $this->tipoPago     = $this->get('TipoPago');
