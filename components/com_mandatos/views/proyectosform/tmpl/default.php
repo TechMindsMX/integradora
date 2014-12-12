@@ -27,7 +27,7 @@ $proyecto = $this->proyecto;
         //confirmacion.show();
     }
 </script>
-<form id="form_alta" method="post" action="<?php echo JRoute::_('http://localhost/integradora/index.php?option=com_mandatos&task=saveProyects'); ?>">
+<form id="form_alta" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&task=saveProyects'); ?>">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 
     <input type="hidden" name="confirm" value="1" />

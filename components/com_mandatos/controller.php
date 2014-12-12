@@ -213,7 +213,7 @@ class MandatosController extends JControllerLegacy {
             $save->updateProject($data,$id_proyecto);
         }
 
-        JFactory::getApplication()->redirect('index.php/component/mandatos/?view=proyectoslist&integradoId='.$data['integradoId']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
     }
 
     function saveProducts(){
@@ -238,7 +238,7 @@ class MandatosController extends JControllerLegacy {
         }else{
             $save->updateProduct($data, $id_producto);
         }
-        JFactory::getApplication()->redirect('index.php/component/mandatos/?view=productoslist&integradoId='.$data['integradoId']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']);
     }
 
     function  cargaProducto(){

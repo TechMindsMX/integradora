@@ -20,7 +20,7 @@ $contenido = str_replace('$expirationDate', '<strong style="color: #000000">28-0
 
 <div class="row1 clearfix">
     <div class="span3">
-        <img src="http://localhost/integradora/images/logo_iecce.png" alt="Integradora - ">
+        <img src="integradora/images/logo_iecce.png" alt="Integradora - ">
     </div>
     <div class="span7" style="text-align: right; font-size: 18px; padding-top: 30px; font-weight: bolder;">
         No. Orden 1
