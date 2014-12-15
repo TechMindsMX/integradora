@@ -1,4 +1,4 @@
---liquibase formatted sql
+﻿--liquibase formatted sql
 
 --changeset ricardolyon:1
 CREATE TABLE `flpmu_catalog_order_status` (
@@ -26,3 +26,7 @@ CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
 CHANGE COLUMN `cuenta` `idCuenta` INT(11) NULL DEFAULT NULL ,
 ADD COLUMN `cuotaOcapital` INT(11) NULL AFTER `interes`;
+
+--changeset nestor:4
+ALTER TABLE integradb.flpmu_catalog_order_status ADD codigo int NOT NULL;
+ALTER TABLE integradb.flpmu_catalog_order_status ADD CONSTRAINT unique_codigo UNIQUE (codigo);
