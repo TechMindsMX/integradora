@@ -475,15 +475,17 @@ class getFromTimOne{
 	public static function getAllOrders( $intergradoId = null ) {
 		$orders = new stdClass();
 		$orders->odd = self::getOrdenesDeposito($intergradoId);
+		$orders->odv = self::getOrdenesVenta($intergradoId);
 		$orders->odr = self::getOrdenesRetiro($intergradoId);
 		$orders->odc = self::getOrdenesCompra($intergradoId);
-		$orders->odv = self::getOrdenesVenta($intergradoId);
 
 		return $orders;
 	}
 
 	public static function getUnpaidOrders( $intergradoId = null ){
-		$orders = self::getAllOrders($intergradoId);
+		$orders = new stdClass();
+		$orders->odd = self::getOrdenesDeposito($intergradoId);
+		$orders->odv = self::getOrdenesVenta($intergradoId);
 
 		if ( ! empty( $orders ) ) {
 			foreach ( $orders as $key => $values ) {

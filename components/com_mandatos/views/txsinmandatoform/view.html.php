@@ -8,6 +8,7 @@ jimport('integradora.gettimone');
  * @property array permisos
  * @property array data
  * @property string titulo
+ * @property mixed orders
  */
 class MandatosViewTxsinmandatoform extends JViewLegacy {
 	
@@ -22,10 +23,10 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 
 		// get the model
 		if( !is_null($data['txnum']) ){
-			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_TITLE';
 			$model = $this->getModel();
-			$this->data = $model->getItem($data['txnum']);
-
+			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_FORM_TITLE';
+			$this->data     = $model->getItem($data['txnum']);
+			$this->orders   = $model->getOrders($integradoId);
 		}
 
 		// Check for errors.

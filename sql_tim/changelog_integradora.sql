@@ -26,7 +26,13 @@ CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
 CHANGE COLUMN `cuenta` `idCuenta` INT(11) NULL DEFAULT NULL ,
 ADD COLUMN `cuotaOcapital` INT(11) NULL AFTER `interes`;
+--rollback ALTER TABLE integradb.flpmu_mandatos_mutuos CHANGE COLUMN `idCuenta` `cuenta` INT(11) NULL DEFAULT NULL;
+--rollback ALTER TABLE integradb.flpmu_mandatos_mutuos DROP cuotaOcapital;
 
---changeset nestor:4
-ALTER TABLE integradb.flpmu_catalog_order_status ADD codigo int NOT NULL;
-ALTER TABLE integradb.flpmu_catalog_order_status ADD CONSTRAINT unique_codigo UNIQUE (codigo);
+--changeset ricardolyon:4
+ALTER TABLE integradb.flpmu_txs_timone_mandato CHANGE idTx idTx VARCHAR(255);
+ALTER TABLE integradb.flpmu_txs_timone_mandato ADD CONSTRAINT unique_idTx UNIQUE (idTx);
+ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `statusName` `name` VARCHAR(45) NOT NULL ,ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
+--rollback ALTER TABLE integradb.flpmu_txs_timone_mandato CHANGE idTx idTx INT(11);
+--rollback ALTER TABLE integradb.flpmu_txs_timone_mandato DROP INDEX unique_idTx;
+--rollback ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
