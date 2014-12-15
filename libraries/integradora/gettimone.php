@@ -116,19 +116,34 @@ class getFromTimOne{
         }
         return $txs;
     }
+    public static function getEstatus(){
+        $db		= JFactory::getDbo();
+        $query 	= $db->getQuery(true);
 
+        $query->select('statusName, codigo')
+            ->from($db->quoteName('#__catalog_order_status'));
+
+        try {
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+        }catch (Exception $e){
+            $results = $e;
+            exit;
+        }
+        return $results;
+    }
     public static function getTabla($data){
 
         /*
          * object(stdClass)#354 (4) {
          *  ["tiempoplazo"]=>
-         *  float(12)
+         *  float()
          *  ["tipoPlazo"]=>
-         *  float(2)
+         *  float()
          *  ["capital"]=>
-         *  float(20000)
+         *  float()
          *  ["interes"]=>
-         *  float(3)
+         *  float()
          * }
          * */
 
