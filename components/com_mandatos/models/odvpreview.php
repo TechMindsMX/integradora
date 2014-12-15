@@ -1,6 +1,8 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
+
+
 class MandatosModelOdvpreview extends JModelItem {
 
 	public $odv;
@@ -15,10 +17,8 @@ class MandatosModelOdvpreview extends JModelItem {
 
 		if (!isset($odv)) {
 			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+			$this->odv = $odv[0];
 		}
-
-		$this->getProyectFromId($this->odv->projectId);
-		$this->getClientFromID($this->odv->clientId);
 
 		// Verifica si la ODV exite para el integrado o redirecciona
 		if (is_null($this->odv)){

@@ -67,7 +67,7 @@ echo $this->printBtn;
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->paymentMethod; ?>
+			<?php echo $this->odv->paymentMethod->name; ?>
 		</div>
 	</div>
 	<div>
@@ -143,7 +143,7 @@ echo $this->printBtn;
 		</thead>
 		<tbody>
 		<?php
-		foreach ($this->odv->productos as $key => $prod) :
+		foreach (json_decode($this->odv->productos)as $key => $prod) :
 			?>
 			<tr>
 				<td><?php echo $key; ?></td>

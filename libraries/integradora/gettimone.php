@@ -521,6 +521,7 @@ class getFromTimOne{
         foreach ($orden as $value) {
             $value->id              = (INT)$value->id;
             $value->integradoId     = (INT)$value->integradoId;
+	        $value->orderType       = 'odd';
             $value->numOrden        = (INT)$value->numOrden;
             $value->status          = (INT)$value->status;
             $value->paymentMethod   = (INT)$value->paymentMethod;
@@ -531,6 +532,9 @@ class getFromTimOne{
 
 	        $value->status = self::getOrderStatusName($value->status);
 	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
+
+	        // TODO: Cambiar por metodo que busca los pagos asociados a la orden
+	        $value->partialPaymentsTotal = 350.21;
         }
 
         return $orden;
@@ -542,6 +546,7 @@ class getFromTimOne{
 		foreach ($orden as $value) {
 			$value->id              = (INT)$value->id;
 			$value->integradoId     = (INT)$value->integradoId;
+			$value->orderType       = 'odr';
 			$value->numOrden        = (INT)$value->numOrden;
 			$value->paymentMethod   = (INT)$value->paymentMethod;
 			$value->status          = (INT)$value->status;
@@ -558,6 +563,7 @@ class getFromTimOne{
 
 		foreach ($orden as $value) {
 			$value->id              = (INT)$value->id;
+			$value->orderType       = 'odc';
 			$value->proyecto        = (INT)$value->proyecto;
 			$value->clientId        = (INT)$value->proveedor;
 			$value->proveedor       = (INT)$value->proveedor;
@@ -587,6 +593,7 @@ class getFromTimOne{
         foreach ($orden as $key => $value) {
             $value->id             = (INT)$value->id;
             $value->integradoId    = (INT)$value->integradoId;
+	        $value->orderType      = 'odv';
             $value->numOrden       = (INT)$value->numOrden;
             $value->projectId      = (INT)$value->projectId;
             $value->projectId2     = (INT)$value->projectId2;
@@ -620,6 +627,9 @@ class getFromTimOne{
 	        $value = self::getProyectFromId($value);
 	        $value = self::getClientFromID($value);
 	        $value->status = self::getOrderStatusName($value->status);
+
+	        // TODO: Cambiar por metodo que busca los pagos asociados a la orden
+	        $value->partialPaymentsTotal = 350.21;
         }
 
         return $orden;
@@ -638,6 +648,7 @@ class getFromTimOne{
 			if(array_key_exists($statusId, $result)) {
 				$result = $result[$statusId];
 			} else {
+				$result = new stdClass();
 				$result->id = $statusId;
 				$result->name = 'Estatus inválido';
 			}

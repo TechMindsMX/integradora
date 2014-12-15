@@ -271,11 +271,11 @@ $productosOrden = json_decode($orden->productos);
         </select>
 
         <select name="paymentMethod">
-            <option value="0" <?php echo $orden->paymentMethod==0?'selected':''; ?>>Método de pago</option>
-            <option value="1" <?php echo $orden->paymentMethod==1?'selected':''; ?>>Cheque</option>
-            <option value="2" <?php echo $orden->paymentMethod==2?'selected':''; ?>>Transferencia</option>
-            <option value="3" <?php echo $orden->paymentMethod==3?'selected':''; ?>>Efectivo</option>
-            <option value="4" <?php echo $orden->paymentMethod==4?'selected':''; ?>>No Definido</option>
+            <option value="0" <?php echo $orden->paymentMethod->id==0?'selected':''; ?>>Método de pago</option>
+            <option value="1" <?php echo $orden->paymentMethod->id==1?'selected':''; ?>>Cheque</option>
+            <option value="2" <?php echo $orden->paymentMethod->id==2?'selected':''; ?>>Transferencia</option>
+            <option value="3" <?php echo $orden->paymentMethod->id==3?'selected':''; ?>>Efectivo</option>
+            <option value="4" <?php echo $orden->paymentMethod->id==4?'selected':''; ?>>No Definido</option>
         </select>
 
         <select name="conditions">

@@ -20,29 +20,16 @@ $selected 	= '';
 		<h3><?php echo $this->integrado->displayName; ?></h3>
 	</div>
 
-<div style="background-color: #eeeeee; padding: 2em;">
-	<h3><?php echo JText::_('COM_MANDATOS_LIST_TX_DATA'); ?></h3>
-	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_REF') ?></label>
-		<span id="name"><?php echo $tx->referencia; ?></span>
-	</div>
-	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_DATE') ?></label>
-		<span id="name"><?php echo $tx->date; ?></span>
-	</div>
-	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT') ?></label>
-		<span id="name"><?php echo number_format($tx->amount,2); ?></span>
-	</div>
-</div>
+<?php echo $this->loadTemplate('tx_head'); ?>
 
-	<h3><?php echo JText::_('COM_MANDATOS_ORDERS'); ?></h3>
+
+<h3><?php echo JText::_('COM_MANDATOS_ORDERS'); ?></h3>
 
 	<?php
 
-	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx->id, $this->data[0]->integradoId);
+	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx, $this->data[0]->integradoId);
 
-	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx->id, $this->data[0]->integradoId);
+	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx, $this->data[0]->integradoId);
 
 ?>
 
@@ -52,7 +39,7 @@ $selected 	= '';
 
 
 <?php
-function showTableOrders($orderArray, $tableTitle, $txId, $integId){
+function showTableOrders($orderArray, $tableTitle, $tx, $integId){
 	?>
 	<h4><?php echo JText::_($tableTitle); ?></h4>
 	<div class="table-responsive">
@@ -66,7 +53,7 @@ function showTableOrders($orderArray, $tableTitle, $txId, $integId){
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
-				<th><span class="etiqueta"><?php echo JText::_(''); ?> </span> </th>
+				<th style="width: 20%;"><span class="etiqueta"><?php echo JText::_(''); ?> </span> </th>
 				<th>&nbsp;</th>
 			</tr>
 			</thead>
@@ -74,8 +61,13 @@ function showTableOrders($orderArray, $tableTitle, $txId, $integId){
 			<?php
 			if( !is_null($orderArray) ){
 				foreach ($orderArray as $key => $value) {
-					$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$txId.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&integradoId='.$integId);
-					$btn_asoociar = '<a class="btn btn-success" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR');
+
+					$btn_asoociar = JText::_('COM_MANDATOS_ORDERS_MONTO_SUPERIOR_A_TX');
+
+					if($tx->amount > ($value->totalAmount - $value->partialPaymentsTotal)) {
+						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType.'&integradoId='.$integId);
+						$btn_asoociar = '<a class="btn btn-success" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR');
+					}
 
 					echo '<tr class="row_'.$value->id.'">';
 					echo '	<td>'.$value->createdDate.'</td>';
@@ -96,6 +88,3 @@ function showTableOrders($orderArray, $tableTitle, $txId, $integId){
 	</div>
 <?php
 }
-
-
-var_dump($this);

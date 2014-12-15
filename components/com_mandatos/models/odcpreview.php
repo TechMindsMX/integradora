@@ -34,7 +34,7 @@ class MandatosModelOdcpreview extends JModelItem {
             JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODC_INVALID'), 'error');
         }
 
-        $this->getProyectFromId($this->odc->proyecto);
+        $this->getProyectFromId($this->odc->proyecto->id_proyecto);
 
         $this->getProviderFromID($this->odc->proveedor);
 
@@ -77,7 +77,7 @@ class MandatosModelOdcpreview extends JModelItem {
 
     public function getIntegrado()	{
         return new IntegradoSimple($this->inputVars['integradoId']);
-    }
+	    }
 
     public function getDataFactura($orden){
 
