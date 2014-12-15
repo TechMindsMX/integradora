@@ -13,65 +13,78 @@ $odds       = $this->orders->odd;
 $odvs       = $this->orders->odv;
 $selected 	= '';
 ?>
-<script>
-	jQuery(document).ready(function(){
-		jQuery('#cancel').on('click', cancelfunction);
-	});
-	
-	function cancelfunction(){
-		window.history.back();
-	}
-</script>
-<form id="form_alta" method="post" action="index.php/component/mandatos/?view=txsinmandatosform">
-	<input type="hidden" name="idtx" value="<?php echo @$tx->id; ?>" />
-	<input type="hidden" name="status" value="<?php echo @$tx->status; ?>" />
 
-	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
-
+	<h2 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h2>
 	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_REFERENCIA') ?></label>
-		<span id="name" value="<?php echo $tx->referencia; ?>" />
-	</div>
-	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_DATE') ?></label>
-		<span id="name" value="<?php echo $tx->date; ?>" />
-	</div>
-	<div class="form-group">
-		<label for="name"><?php echo JText::_('COM_MANDATOS_AMOUNT') ?></label>
-		<span id="name" value="<?php echo number_format($tx->amount,2); ?>" />
+		<label for="name"><?php echo JText::_('LBL_SOCIO_INTEG') ?></label>
+		<h3><?php echo $this->integrado->displayName; ?></h3>
 	</div>
 
+<div style="background-color: #eeeeee; padding: 2em;">
+	<h3><?php echo JText::_('COM_MANDATOS_LIST_TX_DATA'); ?></h3>
+	<div class="form-group">
+		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_REF') ?></label>
+		<span id="name"><?php echo $tx->referencia; ?></span>
+	</div>
+	<div class="form-group">
+		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_DATE') ?></label>
+		<span id="name"><?php echo $tx->date; ?></span>
+	</div>
+	<div class="form-group">
+		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT') ?></label>
+		<span id="name"><?php echo number_format($tx->amount,2); ?></span>
+	</div>
+</div>
 
 	<h3><?php echo JText::_('COM_MANDATOS_ORDERS'); ?></h3>
-	<h4><?php echo JText::_('LBL_ODVS'); ?></h4>
+
+	<?php
+
+	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx->id, $this->data[0]->integradoId);
+
+	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx->id, $this->data[0]->integradoId);
+
+?>
+
+	<div class="form-actions">
+        <a class="btn btn-danger span3" id="cancel" href="index.php?option=com_mandatos&view=txsinmandatolist"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+	</div>
+
+
+<?php
+function showTableOrders($orderArray, $tableTitle, $txId, $integId){
+	?>
+	<h4><?php echo JText::_($tableTitle); ?></h4>
 	<div class="table-responsive">
-		<table id="myTable" class="table table-bordered tablesorter">
+		<table id="myTable" class="table table-bordered tablesorter tableOrders">
 
 			<thead>
 			<tr>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_ORDER_'); ?></span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_ORDER_'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_ORDER_'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_ORDER_'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_ORDER_'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?></span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('LBL_PAYMENT_DATE'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_(''); ?> </span> </th>
+				<th>&nbsp;</th>
 			</tr>
 			</thead>
 			<tbody>
 			<?php
-			if( !is_null($odvs) ){
-				foreach ($odvs as $key => $value) {
-					$btn_asoociar = JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR');
+			if( !is_null($orderArray) ){
+				foreach ($orderArray as $key => $value) {
+					$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$txId.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&integradoId='.$integId);
+					$btn_asoociar = '<a class="btn btn-success" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR');
 
-					var_dump($value);exit;
 					echo '<tr class="row_'.$value->id.'">';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->numOrden.'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->createdDate.'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->paymentDate.'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->totalAmount,2).'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->paymentMethod->name.'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->status->name.'</td>';
-					echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$btn_asoociar.'</td>';
+					echo '	<td>'.$value->createdDate.'</td>';
+					echo '	<td>'.$value->paymentDate.'</td>';
+					echo '	<td>$'.number_format($value->totalAmount,2).'</td>';
+					echo '	<td class="margen-fila" >'.$value->numOrden.'</td>';
+					echo '	<td>'.$value->paymentMethod->name.'</td>';
+					echo '	<td>'.$value->status->name.'</td>';
+					echo '	<td>'.$btn_asoociar.'</td>';
 					echo '</tr>';
 				}
 			}else{
@@ -81,18 +94,8 @@ $selected 	= '';
 			</tbody>
 		</table>
 	</div>
-
-
-
-	<div class="form-actions">
-		<button type="submit" class="btn btn-primary span3" id="send"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
-	</div>
-
-    <div class="form-actions">
-        <button type="button" class="btn btn-primary span3" id="empty"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-    </div>
-</form>
-
 <?php
-var_dump($tx, $this->orders);
+}
+
+
+var_dump($this);

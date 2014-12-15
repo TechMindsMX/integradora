@@ -21,6 +21,9 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		$integradoId        = $sesion->get('integradoId', null, 'integrado');
 		$integradoId	    = isset($integradoId) ? $integradoId : $data['integradoId'];
 
+		$integ = new IntegradoSimple($integradoId);
+		$this->integrado->displayName = $integ->getDisplayName();
+
 		// get the model
 		if( !is_null($data['txnum']) ){
 			$model = $this->getModel();

@@ -116,22 +116,7 @@ class getFromTimOne{
         }
         return $txs;
     }
-    public static function getEstatus(){
-        $db		= JFactory::getDbo();
-        $query 	= $db->getQuery(true);
 
-        $query->select('statusName, codigo')
-            ->from($db->quoteName('#__catalog_order_status'));
-
-        try {
-            $db->setQuery($query);
-            $results = $db->loadObjectList();
-        }catch (Exception $e){
-            $results = $e;
-            exit;
-        }
-        return $results;
-    }
     public static function getTabla($data){
 
         /*
@@ -544,8 +529,8 @@ class getFromTimOne{
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
 
-	        $value->status = self::getOrderStatusName($value);
-	        $value->paymentMethod   = self::getPaymentMethodName($value);
+	        $value->status = self::getOrderStatusName($value->status);
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
         }
 
         return $orden;
@@ -588,7 +573,7 @@ class getFromTimOne{
 
 			$value = self::getProyectFromId($value);
 			$value = self::getClientFromID($value);
-			$value->status = self::getOrderStatusName($value);
+			$value->status = self::getOrderStatusName($value->status);
 		}
 
 
@@ -607,7 +592,7 @@ class getFromTimOne{
             $value->projectId2     = (INT)$value->projectId2;
             $value->clientId       = (INT)$value->clientId;
             $value->account        = (INT)$value->account;
-            $value->paymentMethod  = (INT)$value->paymentMethod;
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->conditions     = (INT)$value->conditions;
             $value->placeIssue     = (INT)$value->placeIssue;
             $value->status         = (INT)$value->status;
@@ -634,30 +619,39 @@ class getFromTimOne{
 
 	        $value = self::getProyectFromId($value);
 	        $value = self::getClientFromID($value);
-	        $value->status = self::getOrderStatusName($value);
+	        $value->status = self::getOrderStatusName($value->status);
         }
 
         return $orden;
     }
 
-	public static function getOrderStatusName($order){
-		$where = null;
-
-		if(isset($order->id)) {
-			$where = 'id = '.$order->id;
-		}
-
-		$result = self::selectDB('catalog_order_status', $where);
-
-		return $result[0];
+	public static function getOrderStatusCatalog( ){
+		return self::selectDB('catalog_order_status', null, 'id');
 	}
 
-	public static function getPaymentMethodName($orden){
-		$payMethod = new stdClass();
-		$names = array('SPEI', 'Cheque');
+	public static function getOrderStatusName($statusId){
+		$where = null;
 
-		$payMethod->id = $orden->paymentMethod;
-		$payMethod->name = $names[$payMethod->id];
+		$result = self::getOrderStatusCatalog();
+
+		if(isset($statusId)) {
+			if(array_key_exists($statusId, $result)) {
+				$result = $result[$statusId];
+			} else {
+				$result->id = $statusId;
+				$result->name = 'Estatus inválido';
+			}
+		}
+
+		return $result;
+	}
+
+	public static function getPaymentMethodName($paymentMethodId){
+		$payMethod = new stdClass();
+		$names = array('SPEI','Cheque','Pago en taquilla');
+
+		$payMethod->id = $paymentMethodId;
+		$payMethod->name = $names[$paymentMethodId];
 
 		return $payMethod;
 	}

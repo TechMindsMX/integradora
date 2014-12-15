@@ -99,7 +99,7 @@ foreach ( $this->odv as $orden) {
 	$btn_asociar = '<a class="btn btn-success" href="'.$url_asociar.$orden->id.'&orderType=odv">'.JText::_('LBL_ASOCIAR').'</a>';
 	$html[] = '<div class="row1 clearfix">';
 	$html[] = '<div class="span1">'.$orden->id.'</div>';
-	$html[] = '<div class="span1">'.$orden->status->statusName.'</div>';
+	$html[] = '<div class="span1">'.$orden->status->name.'</div>';
 	$html[] = '<div class="span2">'.$orden->integradoName.'</div>';
 	$html[] = '<div class="span2">'.$orden->proveedor->corporateName.'</div>';
 	$html[] = '<div class="span2">'.$orden->createdDate.'<input type="hidden" id="filtro_fecha" value="'.$orden->timestamps->createdDate.'"></div>';
@@ -115,7 +115,7 @@ foreach ( $this->odc as $orden) {
 	$btn_asociar = '<a class="btn btn-success" href="'.$url_asociar.$orden->id.'&orderType=odc">'.JText::_('LBL_ASOCIAR').'</a>';
 	$html[] = '<div class="row1 clearfix">';
 	$html[] = '<div class="span1">'.$orden->id.'</div>';
-	$html[] = '<div class="span1">'.$orden->status->statusName.'</div>';
+	$html[] = '<div class="span1">'.$orden->status->name.'</div>';
 	$html[] = '<div class="span2">'.$orden->integradoName.'</div>';
 	$html[] = '<div class="span2">'.$orden->proveedor->corporateName.'</div>';
 	$html[] = '<div class="span2">'.$orden->createdDate.'<input type="hidden" id="filtro_fecha" value="'.$orden->timestamps->createdDate.'"></div>';
@@ -131,7 +131,7 @@ foreach ( $this->odd as $orden ) {
 	$btn_asociar = '<a class="btn btn-success" href="'.$url_asociar.$orden->id.'&orderType=odd">'.JText::_('LBL_ASOCIAR').'</a>';
 	$html[] = '<div class="row1 clearfix">';
 	$html[] = '<div class="span1">'.$orden->id.'</div>';
-	$html[] = '<div class="span1">'.$orden->status->statusName.'</div>';
+	$html[] = '<div class="span1">'.$orden->status->name.'</div>';
 	$html[] = '<div class="span2"></div>';
 	$html[] = '<div class="span2"></div>';
 	$html[] = '<div class="span2">'.$orden->createdDate.'<input type="hidden" id="filtro_fecha" value="'.$orden->timestamps->createdDate.'"></div>';
