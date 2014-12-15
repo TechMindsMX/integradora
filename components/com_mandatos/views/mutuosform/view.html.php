@@ -12,17 +12,18 @@ class MandatosViewMutuosform extends JViewLegacy {
             'integradoId'       => 'INT',
             'idMutuo'           => 'INT',
             'integradoIdR'      => 'INT',
-            'beneficiario'      => 'STRING',
-            'rfc'               => 'STRING',
-            'layout'            => 'STRING',
             'paymentPeriod'     => 'INT',
             'quantityPayments'  => 'FLOAT',
             'totalAmount'       => 'FLOAT',
             'interes'           => 'FLOAT',
+            'beneficiario'      => 'STRING',
+            'rfc'               => 'STRING',
+            'layout'            => 'STRING',
             'banco_codigo'      => 'STRING',
             'banco_cuenta'      => 'STRING',
             'banco_sucursal'    => 'STRING',
-            'banco_clabe'       => 'STRING'
+            'banco_clabe'       => 'STRING',
+            'jsonTablas'        => 'STRING'
         );
         $this->catalogos    = $this->get('catalogos');
 		$this->data			= (object) $app->input->getArray($post);

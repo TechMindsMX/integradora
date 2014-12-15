@@ -10,11 +10,14 @@ JHTML::_('behavior.calendar');
 $datos = $this->data;
 $bancos = $this->catalogos->bancos;
 $bankName = '';
+
 foreach ($bancos as $value) {
     if($value->claveClabe == $datos->banco_codigo){
         $bankName = $value->banco;
     }
 }
+
+var_dump($datos);
 ?>
 <script>
     function ajax(parametros){

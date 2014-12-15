@@ -184,71 +184,71 @@ class getFromTimOne{
                 break;
         }
 
-        $temp           = $tabla->intereses_con_iva/100;
-        $temp           = $temp/$data->tiempoplazo;
-        $temp           = $temp+1;
-        $temp           = pow($temp, $data->tiempoplazo);
-        $temp           = $temp-1;
-        $temp           = $temp*$data->tiempoplazo;
-        $tabla->tasa_periodo           = $tabla->intereses_con_iva;
-        $tabla->tasa_efectiva_periodo    = number_format($temp*100, 2,'.', ',');
-        $tabla->capital_fija       = $data->capital/$data->tiempoplazo;
-        $final=$tabla->capital;
-        $capital=round($tabla->capital_fija);
-        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
-            $inicial              = $final;
-            $intiva               = $inicial*($tabla->intereses_con_iva/100);
+        $temp           = (float) $tabla->intereses_con_iva/100;
+        $temp           = (float) $temp/$data->tiempoplazo;
+        $temp           = (float) $temp+1;
+        $temp           = (float) pow($temp, $data->tiempoplazo);
+        $temp           = (float) $temp-1;
+        $temp           = (float) $temp*$data->tiempoplazo;
 
-            $intereses            = $intiva/1.16;
-            $iva                  = $intereses*0.16;
-            $cuota                = $tabla->capital_fija+$intiva;
-            $final                = $inicial-$tabla->capital_fija;
+        $tabla->tasa_periodo           = (float) $tabla->intereses_con_iva;
+        $tabla->tasa_efectiva_periodo  = (float) $temp*100;
+        $tabla->capital_fija           = (float) $data->capital/$data->tiempoplazo;
+        $final                         = (float) $tabla->capital;
+        $capital                       = (float) round($tabla->capital_fija);
+
+        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+            $inicial              = (float)$final;
+            $intiva               = (float)$inicial*($tabla->intereses_con_iva/100);
+
+            $intereses            = (float)$intiva/1.16;
+            $iva                  = (float)$intereses*0.16;
+            $cuota                = (float)$tabla->capital_fija+$intiva;
+            $final                = (float)$inicial-$tabla->capital_fija;
 
             $tabla->amortizacion_capital_fijo[]= array(
-                'periodo'       => $i,
-                'inicial'       => $inicial,
-                'cuota'         => $cuota,
-                'intiva'        => $intiva,
-                'intereses'     => $intereses,
-                'iva'           => $iva,
-                'acapital'      => round($tabla->capital_fija),
-                'final'         => $final
+                'periodo'       => (float) $i,
+                'inicial'       => (float) $inicial,
+                'cuota'         => (float) $cuota,
+                'intiva'        => (float) $intiva,
+                'intereses'     => (float) $intereses,
+                'iva'           => (float) $iva,
+                'acapital'      => (float) round($tabla->capital_fija),
+                'final'         => (float) $final
             );
         }
 
-        $temp                           = 1+($tabla->intereses_con_iva/100);
-        $temp                           = pow($temp ,$data->tiempoplazo);
-        $number1                        = $temp*($tabla->intereses_con_iva/100);
-        $number2                        = $temp-1;
-        $tabla->factor                  = number_format($number1/$number2, 8);
-        $tabla->cuota_Fija              = $tabla->factor*$tabla->capital;
-        $saldo_final                    = $tabla->capital;
+        $temp                           = (float) 1+($tabla->intereses_con_iva/100);
+        $temp                           = (float) pow($temp ,$data->tiempoplazo);
+        $number1                        = (float) $temp*($tabla->intereses_con_iva/100);
+        $number2                        = (float) $temp-1;
+        $tabla->factor                  = (float) $number1/$number2;
+        $tabla->cuota_Fija              = (float) $tabla->factor*$tabla->capital;
+        $saldo_final                    = (float) $tabla->capital;
+
         for($i = 1; $i <= $data->tiempoplazo; $i++ ){
-            $saldo_inicial        = round($saldo_final);
-            $intiva               = $saldo_inicial*($tabla->intereses_con_iva/100);
-            $intereses            = $intiva/1.16;
-            $iva                  = $intereses*0.16;
-            $saldo_final          = $saldo_inicial-($tabla->cuota_Fija-$intiva);
-            $tabla->amortizacion_cuota_fija[]= array(
-                'periodo'       => $i,
-                'inicial'       => $saldo_inicial,
-                'cuota'         => number_format($tabla->cuota_Fija, 2),
-                'intiva'        => number_format($intiva, 0),
-                'intereses'     => $intereses,
-                'iva'           => number_format($iva, 0),
-                'acapital'      => number_format($tabla->cuota_Fija-$intiva, 0),
-                'final'         => number_format($saldo_final,0)
+            $saldo_inicial                    = (float)round($saldo_final);
+            $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
+            $intereses                        = (float)$intiva/1.16;
+            $iva                              = (float)$intereses*0.16;
+            $saldo_final                      = (float)$saldo_inicial-($tabla->cuota_Fija-$intiva);
+            $tabla->amortizacion_cuota_fija[] = array(
+                'periodo'       => (float)$i,
+                'inicial'       => (float)$saldo_inicial,
+                'cuota'         => (float)$tabla->cuota_Fija,
+                'intiva'        => (float)$intiva,
+                'intereses'     => (float)$intereses,
+                'iva'           => (float)$iva,
+                'acapital'      => (float)$tabla->cuota_Fija-$intiva,
+                'final'         => (float)$saldo_final
             );
 
 
         }
 
+        $tabla->intereses_con_iva = (float) $tabla->intereses_con_iva;
+        $tabla->tasa_periodo      = (float) $tabla->tasa_periodo;
 
-
-        $tabla->intereses_con_iva       = number_format($tabla->intereses_con_iva, 2);
-        $tabla->tasa_periodo       = number_format($tabla->tasa_periodo, 2);
-        var_dump($tabla);
-        $tabla = $data;
         return $tabla;
     }
 

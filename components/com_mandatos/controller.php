@@ -577,7 +577,7 @@ class MandatosController extends JControllerLegacy {
         $data   = (object) $input->getArray($post);
 
         $tabla = getFromTimOne::getTabla($data);
+        echo json_encode($tabla);
 
-        exit;
     }
 }
