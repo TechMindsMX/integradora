@@ -199,8 +199,6 @@ class getFromTimOne{
                 'acapital'      => round($tabla->capital_fija),
                 'final'         => $final
             );
-
-
         }
 
         $temp                           = 1+($tabla->intereses_con_iva/100);
