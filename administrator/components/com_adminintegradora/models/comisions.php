@@ -28,7 +28,7 @@ class AdminintegradoraModelComisions extends JModelList
 	private function idToNames () {
 		foreach ($this->items as $key => $value) {
 			$value->typeName = $this->getTypeName($value->type);
-			$value->statusName = $this->getStatusName($value->status);
+			$value->name = $this->getStatusName($value->status);
 			$value->frequencyMsg = $this->getFrequencyMsg($value->frequencyTimes, $value->type);
 
 			$this->items[$key] = $value;

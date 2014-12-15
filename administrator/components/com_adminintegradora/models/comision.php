@@ -42,7 +42,7 @@ class AdminintegradoraModelComision extends JModelItem
 
 	private function idToNames () {
 		$this->comision->typeName = $this->getTypeName ($this->comision->type);
-		$this->comision->statusName = $this->getStatusName ($this->comision->status);
+		$this->comision->name = $this->getStatusName ($this->comision->status);
 		$this->comision->frequencyMsg = $this->getFrequencyMsg ($this->comision->frequencyTimes);
 	}
 

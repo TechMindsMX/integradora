@@ -82,7 +82,7 @@ $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comis
 
 				?>
 				<td class="nowrap small hidden-phone" style="color: <?php echo $statusColor;?>">
-					<?php echo $value->statusName; ?>
+					<?php echo $value->name; ?>
 				</td>
 			</tr>
 
