@@ -133,78 +133,108 @@ class getFromTimOne{
          * */
 
         $tabla= new stdClass();
-        $tabla->coniva      = $data->interes*1.16;
-        $tabla->saldo       = $data->capital;
+        $tabla->intereses_con_iva      = $data->interes*1.16;
+        $tabla->capital       = $data->capital;
+        $tabla->tipoPeriodos  = $data->tiempoplazo;
         switch($data->tipoPlazo){
             case 1:
-                $tabla->tperiodo    = 'Diaria';
-                $tabla->periodos    = '365';
+                $tabla->tperiodo        = 'Diaria';
+                $tabla->periodos_year   = '365';
                 break;
             case 2:
-                $tabla->tperiodo    = 'Quincenal';
-                $tabla->periodos    = '104';
+                $tabla->tperiodo         = 'Quincenal';
+                $tabla->periodos_year    = '104';
                 break;
             case 3:
-                $tabla->tperiodo    = 'Mensual';
-                $tabla->periodos    = '12';
+                $tabla->tperiodo         = 'Mensual';
+                $tabla->periodos_year    = '12';
                 break;
             case 4:
-                $tabla->tperiodo    = 'Bimestral';
-                $tabla->periodos    = '6';
+                $tabla->tperiodo         = 'Bimestral';
+                $tabla->periodos_year    = '6';
                 break;
             case 5:
-                $tabla->tperiodo    = 'Trimestral';
-                $tabla->periodos    = '4';
+                $tabla->tperiodo         = 'Trimestral';
+                $tabla->periodos_year    = '4';
                 break;
             case 6:
-                $tabla->tperiodo    = 'Semestral';
-                $tabla->periodos    = '2';
+                $tabla->tperiodo         = 'Semestral';
+                $tabla->periodos_year    = '2';
                 break;
             case 7:
-                $tabla->tperiodo    = 'Anual';
-                $tabla->periodos    = '1';
+                $tabla->tperiodo         = 'Anual';
+                $tabla->periodos_year    = '1';
                 break;
             default:
                 break;
         }
 
-        $temp           = $tabla->coniva/100;
+        $temp           = $tabla->intereses_con_iva/100;
         $temp           = $temp/$data->tiempoplazo;
         $temp           = $temp+1;
         $temp           = pow($temp, $data->tiempoplazo);
         $temp           = $temp-1;
         $temp           = $temp*$data->tiempoplazo;
-
-        $tabla->tepp    = number_format($temp*100, 2,'.', ',');
-        $tabla->ccf     = number_format($data->capital/$data->tiempoplazo, 2 );
-        $final=$tabla->saldo;
-        $capital=round($tabla->ccf);
+        $tabla->tasa_periodo           = $tabla->intereses_con_iva;
+        $tabla->tasa_efectiva_periodo    = number_format($temp*100, 2,'.', ',');
+        $tabla->capital_fija       = $data->capital/$data->tiempoplazo;
+        $final=$tabla->capital;
+        $capital=round($tabla->capital_fija);
         for($i = 1; $i <= $data->tiempoplazo; $i++ ){
             $inicial              = $final;
-            $intiva               = $inicial*($tabla->coniva/100);
+            $intiva               = $inicial*($tabla->intereses_con_iva/100);
 
             $intereses            = $intiva/1.16;
             $iva                  = $intereses*0.16;
-            $cuota                = $intiva+$tabla->ccf;
-            $final                = $inicial-$tabla->ccf;
+            $cuota                = $tabla->capital_fija+$intiva;
+            $final                = $inicial-$tabla->capital_fija;
 
-            $tabla->amortizacion[]= array(
+            $tabla->amortizacion_capital_fijo[]= array(
                 'periodo'       => $i,
                 'inicial'       => $inicial,
                 'cuota'         => $cuota,
                 'intiva'        => $intiva,
                 'intereses'     => $intereses,
                 'iva'           => $iva,
-                'acapital'      => round($tabla->ccf),
+                'acapital'      => round($tabla->capital_fija),
                 'final'         => $final
             );
 
 
         }
-        $return = new stdClass();
-        $return->cf     = $tabla;
-        $return->cu     = '';
-        var_dump($return);
+
+        $temp                           = 1+($tabla->intereses_con_iva/100);
+        $temp                           = pow($temp ,$data->tiempoplazo);
+        $number1                        = $temp*($tabla->intereses_con_iva/100);
+        $number2                        = $temp-1;
+        $tabla->factor                  = number_format($number1/$number2, 8);
+        $tabla->cuota_Fija              = $tabla->factor*$tabla->capital;
+        $saldo_final                    = $tabla->capital;
+        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+            $saldo_inicial        = round($saldo_final);
+            $intiva               = $saldo_inicial*($tabla->intereses_con_iva/100);
+            $intereses            = $intiva/1.16;
+            $iva                  = $intereses*0.16;
+            $saldo_final          = $saldo_inicial-($tabla->cuota_Fija-$intiva);
+            $tabla->amortizacion_cuota_fija[]= array(
+                'periodo'       => $i,
+                'inicial'       => $saldo_inicial,
+                'cuota'         => number_format($tabla->cuota_Fija, 2),
+                'intiva'        => number_format($intiva, 0),
+                'intereses'     => $intereses,
+                'iva'           => number_format($iva, 0),
+                'acapital'      => number_format($tabla->cuota_Fija-$intiva, 0),
+                'final'         => number_format($saldo_final,0)
+            );
+
+
+        }
+
+
+
+        $tabla->intereses_con_iva       = number_format($tabla->intereses_con_iva, 2);
+        $tabla->tasa_periodo       = number_format($tabla->tasa_periodo, 2);
+        var_dump($tabla);
         $tabla = $data;
         return $tabla;
     }
