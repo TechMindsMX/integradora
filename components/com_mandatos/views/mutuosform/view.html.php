@@ -27,12 +27,13 @@ class MandatosViewMutuosform extends JViewLegacy {
         );
         $this->catalogos    = $this->get('catalogos');
 		$this->data			= (object) $app->input->getArray($post);
+
         if($this->data->layout === 'confirmMutuo'){
             $this->data->jsonTabla = MandatosModelMutuosform::getTablaAmortizacion($this->data);
         }
 		$this->integradoId 	= $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
-        $this->tipoPago     = $this->get('TipoPago');
+        $this->tipoPago     = $this->get('TiposPago');
 
 		$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
 

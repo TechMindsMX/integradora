@@ -42,6 +42,7 @@ class MandatosModelMutuosform extends JModelItem {
                 $respuesta->tasa_efectiva_periodo      = $tablas->tasa_efectiva_periodo;
                 $respuesta->capital_fija               = $tablas->capital_fija;
                 $respuesta->amortizacion_capital_fijo  = $tablas->amortizacion_capital_fijo;
+
             }elseif($data->cuotaOcapital === 1){
                 $respuesta->intereses_con_iva          = $tablas->intereses_con_iva;
                 $respuesta->capital                    = $tablas->capital;
