@@ -775,6 +775,21 @@ class getFromTimOne{
         $balance->paymentType = 0;
         $balance->status = 0;
         $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+	    $balance->data->pasivo->cuentasPorPagar = 150; // suma historica de CxP
+	    $balance->data->pasivo->ivaVentas = 144;
+	    $balance->data->pasivo->total = 144;
+	    $balance->data->pasivo->capital->ejecicioAnterior = 100;
+	    $balance->data->pasivo->capital->totalEdoResultados = 500;
+	    $balance->data->pasivo->capital->total = 600;
+	    $balance->data->pasivo->depositos->ejeciciosAnteriores = 600;
+	    $balance->data->pasivo->depositos->total = 600;
+	    $balance->data->pasivo->retiros->ejeciciosAnteriores = 600;
+	    $balance->data->pasivo->retiros->total = 600;
+	    $balance->data->activo->bancos = 946;
+	    $balance->data->activo->cuentasPorCobrar = 300;
+	    $balance->data->activo->ivaVentas = 48;
+	    $balance->data->activo->total = 1294.00;
+
 
         $array[] = $balance;
 
