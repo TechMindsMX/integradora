@@ -639,6 +639,9 @@ class getFromTimOne{
 		return self::selectDB('catalog_order_status', null, 'id');
 	}
 
+    public static function getParametrosMutuo( ){
+        return self::selectDB('mandatos_mutuos', null, 'id');
+    }
 	public static function getOrderStatusName($statusId){
 		$where = null;
 
