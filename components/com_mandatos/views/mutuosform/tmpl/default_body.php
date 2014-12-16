@@ -93,6 +93,7 @@ $optionBancos = '';
         var request = ajax(parametros);
 
         request.done(function(response){
+            var button            = jQuery('#amortizacion');
             var tableCapitalFijo  = '';
             var tableCuotaFija    = '';
             var totalInteresCAF   = 0;
@@ -144,8 +145,10 @@ $optionBancos = '';
             jQuery('.tablaAmortizacionCUF').html(tableCuotaFija);
 
             jQuery('#tables').show();
-            var algo = JSON.encode(response);
-            jQuery('#jsonTablas').val(algo);
+            button.val('<?php echo jText::_('LBL_ENVIAR'); ?>');
+            button.prop('class', 'btn btn-primary');
+            button.prop('id', 'confirmarodc');
+            button.prop('type', 'submit');
 
         });
 
@@ -159,7 +162,7 @@ $optionBancos = '';
         <input type="hidden" name="idMutuo" id="idMutuo" value="<?php $datos->idMutuo; ?>" />
         <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->integradoId; ?>" />
         <input type="hidden" name="integradoIdR" id="integradoIdR" value="<?php $datos->integradoIdR; ?>" />
-        <input type="hidden" name="jsonTablas" id="jsonTablas" value="">
+        <input type="hidden" name="jsonTabla" id="jsonTabla" />
 
         <div class="form-group">
             <label for="rfc"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_RFC'); ?></label>
@@ -225,14 +228,16 @@ $optionBancos = '';
         </div>
 
         <div class="form-group">
+            <!--input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" /-->
             <input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" />
-            <input type="submit" class="btn btn-primary" id="confirmarodc" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
             <a href="index.php?option=com_mandatos" class="btn btn-danger" > <?php echo jText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>
+
+    <h4>Seleccione la opcion de pago: </h4>
     <div style="display: none" id="tables">
         <div class="span6">
-            <h2>Capital Fijo</h2>
+            <h2>Capital Fijo <input type="radio" value="0" checked name="cuotaOcapital" /> </h2>
             <div>
                 <div class="span4">Capital: <span id="tablaCapitalCAF"></span></div>
                 <div class="span4">Total Interes: <span id="totalInteresCAF"></span></div>
@@ -258,7 +263,7 @@ $optionBancos = '';
             </table>
         </div>
         <div class="span6">
-            <h2>Cuota Fija</h2>
+            <h2>Cuota Fija <input type="radio" value="1" name="cuotaOcapital" /></h2>
             <div>
                 <div class="span4">Capital: <span id="tablaCapitalCUF"></span></div>
                 <div class="span4">Total Interes: <span id="totalInteresCUF"></span></div>

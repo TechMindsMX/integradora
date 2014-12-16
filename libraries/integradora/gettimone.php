@@ -237,7 +237,33 @@ class getFromTimOne{
         return $tabla;
     }
 
-	public function createNewProject($envio, $integradoId){
+    public static function getMutuos($integradoId=null, $idMutuo=null){
+        $where = null;
+        if(is_null($integradoId)){
+            $where = 'id = '.$idMutuo;
+        }elseif(is_null($idMutuo)){
+            $where = 'integradoId = '.$integradoId;
+        }
+        $mutuos = self::selectDB('mandatos_mutuos',$where,'');
+
+        return $mutuos;
+    }
+
+    public static function getTiposPago()
+    {
+        $tipo = array(
+            2 => 'Quincenal',
+            3 => 'Mensual',
+            4 => 'Bimestral',
+            5 => 'Trimestral',
+            6 => 'Semestral',
+            7 => 'Anual'
+        );
+
+        return $tipo;
+    }
+
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -337,10 +363,10 @@ class getFromTimOne{
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
-	                $value->rfc = @$general->rfc;
-	                $value->tradeName = @$general->tradeName;
-	                $value->corporateName = @$general->corporateName;
-	                $value->contact = @$general->contact;
+                    $value->rfc = @$general->rfc;
+                    $value->tradeName = @$general->tradeName;
+                    $value->corporateName = @$general->corporateName;
+                    $value->contact = @$general->contact;
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }
@@ -457,45 +483,45 @@ class getFromTimOne{
         return $remainder;
     }
 
-	public static function getAllOrders( $intergradoId = null ) {
-		$orders = new stdClass();
-		$orders->odd = self::getOrdenesDeposito($intergradoId);
-		$orders->odv = self::getOrdenesVenta($intergradoId);
-		$orders->odr = self::getOrdenesRetiro($intergradoId);
-		$orders->odc = self::getOrdenesCompra($intergradoId);
+    public static function getAllOrders( $intergradoId = null ) {
+        $orders = new stdClass();
+        $orders->odd = self::getOrdenesDeposito($intergradoId);
+        $orders->odv = self::getOrdenesVenta($intergradoId);
+        $orders->odr = self::getOrdenesRetiro($intergradoId);
+        $orders->odc = self::getOrdenesCompra($intergradoId);
 
-		return $orders;
-	}
+        return $orders;
+    }
 
-	public static function getUnpaidOrders( $intergradoId = null ){
-		$orders = new stdClass();
-		$orders->odd = self::getOrdenesDeposito($intergradoId);
-		$orders->odv = self::getOrdenesVenta($intergradoId);
+    public static function getUnpaidOrders( $intergradoId = null ){
+        $orders = new stdClass();
+        $orders->odd = self::getOrdenesDeposito($intergradoId);
+        $orders->odv = self::getOrdenesVenta($intergradoId);
 
-		if ( ! empty( $orders ) ) {
-			foreach ( $orders as $key => $values ) {
-				$orders->$key = self::filterOrdersByStatus($values, array(1,3,5,8));
-			}
-		}
+        if ( ! empty( $orders ) ) {
+            foreach ( $orders as $key => $values ) {
+                $orders->$key = self::filterOrdersByStatus($values, array(1,3,5,8));
+            }
+        }
 
-		return $orders;
-	}
+        return $orders;
+    }
 
-	/**
-	 * @param $orders array
-	 * @param $statusId array
-	 */
-	private static function filterOrdersByStatus( $orders, $statusId ){
-		$resultados = array();
+    /**
+     * @param $orders array
+     * @param $statusId array
+     */
+    private static function filterOrdersByStatus( $orders, $statusId ){
+        $resultados = array();
 
-		foreach ( $orders as $key => $value ) {
-			if (in_array($value->status->id, $statusId)) {
-				$resultados[] = $value;
-			}
-		}
+        foreach ( $orders as $key => $value ) {
+            if (in_array($value->status->id, $statusId)) {
+                $resultados[] = $value;
+            }
+        }
 
-		return $resultados;
-	}
+        return $resultados;
+    }
 
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
         $where = null;
@@ -540,8 +566,8 @@ class getFromTimOne{
         return $orden;
     }
 
-	public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
-		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
+    public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
 
 		foreach ($orden as $value) {
 			$value->id              = (INT)$value->id;

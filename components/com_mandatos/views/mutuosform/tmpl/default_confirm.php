@@ -16,8 +16,6 @@ foreach ($bancos as $value) {
         $bankName = $value->banco;
     }
 }
-
-var_dump($datos);
 ?>
 <script>
     function ajax(parametros){
@@ -46,6 +44,9 @@ var_dump($datos);
 
         request.done(function(result){
             console.log(result);
+            if(result.success && result.redirect){
+                window.location = result.urlRedirect
+            }
         });
     }
 
@@ -121,6 +122,8 @@ var_dump($datos);
     <input type="hidden" id="quantityPayments" name="quantityPayments" value="<?php echo $datos->quantityPayments; ?>" />
     <input type="hidden" id="totalAmount"      name="totalAmount"      value="<?php echo $datos->totalAmount; ?>" />
     <input type="hidden" id="interes"          name="interes"          value="<?php echo $datos->interes; ?>" />
+    <input type="hidden" id="jsonTabla"        name="jsonTabla"        value='<?php echo $datos->jsonTabla; ?>' />
+    <input type="hidden" id="cuotaOcapital"    name="cuotaOcapital"    value='<?php echo $datos->cuotaOcapital; ?>' />
 
     <input type="hidden" id="banco_codigo"     name="banco_codigo"     value="<?php echo $datos->banco_codigo; ?>" />
     <input type="hidden" id="banco_cuenta"     name="banco_cuenta"     value="<?php echo $datos->banco_cuenta; ?>" />

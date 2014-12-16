@@ -7,9 +7,9 @@ class MandatosViewMutuospreview extends JViewLegacy {
 	
 	function display($tpl = null){
         $this->data         = (object) $this->get('DataPost');
-        $this->integradoId 	= $this->data->integradoId;
+        $this->mutuo        = $this->get('Mutuo');
+        $this->integradoId  = $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
-        $this->tipoPago     = $this->get('TipoPago');
 
         if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

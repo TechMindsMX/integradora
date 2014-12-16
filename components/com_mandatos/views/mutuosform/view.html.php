@@ -13,6 +13,7 @@ class MandatosViewMutuosform extends JViewLegacy {
             'idMutuo'           => 'INT',
             'integradoIdR'      => 'INT',
             'paymentPeriod'     => 'INT',
+            'cuotaOcapital'     => 'INT',
             'quantityPayments'  => 'FLOAT',
             'totalAmount'       => 'FLOAT',
             'interes'           => 'FLOAT',
@@ -22,11 +23,13 @@ class MandatosViewMutuosform extends JViewLegacy {
             'banco_codigo'      => 'STRING',
             'banco_cuenta'      => 'STRING',
             'banco_sucursal'    => 'STRING',
-            'banco_clabe'       => 'STRING',
-            'jsonTablas'        => 'STRING'
+            'banco_clabe'       => 'STRING'
         );
         $this->catalogos    = $this->get('catalogos');
 		$this->data			= (object) $app->input->getArray($post);
+        if($this->data->layout === 'confirmMutuo'){
+            $this->data->jsonTabla = MandatosModelMutuosform::getTablaAmortizacion($this->data);
+        }
 		$this->integradoId 	= $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
         $this->tipoPago     = $this->get('TipoPago');
