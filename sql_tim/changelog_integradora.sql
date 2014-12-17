@@ -36,3 +36,21 @@ ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `statusName` 
 --rollback ALTER TABLE integradb.flpmu_txs_timone_mandato CHANGE idTx idTx INT(11);
 --rollback ALTER TABLE integradb.flpmu_txs_timone_mandato DROP INDEX unique_idTx;
 --rollback ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
+
+--changeset lutek:5
+CREATE TABLE `integradb`.`flpmu_catalog_tipoperiodos` (
+  `IdTipo` INT(11) NULL,
+  `nombre` VARCHAR(45) NULL,
+  `periodosAnio` INT(11) NULL);
+
+ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` ADD COLUMN `status` INT(11) NULL AFTER `cuotaOcapital`;
+
+
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Quincenal',104);
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Mensual',12);
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Bimestral',6);
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Trimestral',4);
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Semestral',2);
+INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Anual',1);
+--rollback DROP TABLE `integradb`.`flpmu_catalog_tipoperiodos`;
+--rollback ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` DROP `status`;

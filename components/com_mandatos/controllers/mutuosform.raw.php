@@ -44,7 +44,6 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 
         if($datos->integradoIdR == 0){
             $id = getFromTimOne::newintegradoId(0);
-
             $data_integrado = array(
                 'nombre_representante' => $datos->beneficiario,
                 'rfc'                  => $datos->rfc,

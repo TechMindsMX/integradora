@@ -43,8 +43,9 @@ foreach ($bancos as $value) {
         var request     = ajax(parametros);
 
         request.done(function(result){
+            console.log(result);
             if(result.success && result.redirect){
-               window.location = result.urlRedirect
+                window.location = result.urlRedirect
             }
         });
     }
@@ -116,7 +117,7 @@ foreach ($bancos as $value) {
     <input type="hidden" id="integradoId"      name="integradoId"      value="<?php echo $datos->integradoId; ?>" />
     <input type="hidden" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->integradoIdR; ?>" />
     <input type="hidden" id="rfc"              name="rfc"              value="<?php echo $datos->rfc; ?>" />
-    <input type="hidden" id="beneficiario"     name="beneficiario"     value="<?php echo $datos->beneficiario; ?>" />
+    <input type="hidden" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->beneficiario; ?>" />
     <input type="hidden" id="paymentPeriod"    name="paymentPeriod"    value="<?php echo $datos->paymentPeriod; ?>" />
     <input type="hidden" id="quantityPayments" name="quantityPayments" value="<?php echo $datos->quantityPayments; ?>" />
     <input type="hidden" id="totalAmount"      name="totalAmount"      value="<?php echo $datos->totalAmount; ?>" />

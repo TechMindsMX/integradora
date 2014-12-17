@@ -242,7 +242,7 @@ class getFromTimOne{
         if(is_null($integradoId)){
             $where = 'id = '.$idMutuo;
         }elseif(is_null($idMutuo)){
-            $where = 'integradoId = '.$integradoId;
+            $where = 'integradoIdE = '.$integradoId;
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 

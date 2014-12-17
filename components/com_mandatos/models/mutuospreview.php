@@ -31,26 +31,35 @@ class MandatosModelMutuospreview extends JModelItem {
     public function getMutuo(){
         $data = getFromTimOne::getMutuos(null,$this->inputVars['idMutuo']);
         $tipos = getFromTimOne::getTiposPago();
+        $integradoAcredor = new stdClass();
+        $integradoDeudor  = new stdClass();
+
 
         $data = $data[0];
-
         $integradoEmisor   = new IntegradoSimple($data->integradoIdE);
         $integradoReceptor = new IntegradoSimple($data->integradoIdR);
 
         if(is_null($integradoEmisor->integrados[0]->datos_empresa)){
-            $nombreEmisor = $integradoEmisor->integrados[0]->datos_personales->nom_comercial;
+            $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_personales->nom_comercial;
         }else{
-            $nombreEmisor = $integradoEmisor->integrados[0]->datos_empresa->razon_social;
+            $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_empresa->razon_social;
         }
 
         if(is_null($integradoReceptor->integrados[0]->datos_empresa)){
-            $nombreReceptor = $integradoReceptor->integrados[0]->datos_personales->nom_comercial;
+            if(is_null($integradoReceptor->integrados[0]->datos_personales->nom_comercial)){
+                $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nombre_representante;
+            }else {
+                $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nom_comercial;
+            }
         }else{
-            $nombreReceptor = $integradoReceptor->integrados[0]->datos_empresa->razon_social;
+            $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_empresa->razon_social;
         }
 
-        $data->integradoEmisor   = $nombreEmisor;
-        $data->integradoReceptor = $nombreReceptor;
+        $integradoAcredor->datosBancarios = $integradoEmisor->integrados[0]->datos_bancarios;
+        $integradoDeudor->datosBancarios  = $integradoReceptor->integrados[0]->datos_bancarios;
+
+        $data->integradoAcredor   = $integradoAcredor;
+        $data->integradoDeudor    = $integradoDeudor;
 
         $data->paymentPeriod = $tipos[$data->paymentPeriod];
 
