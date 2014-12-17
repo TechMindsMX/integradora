@@ -7,10 +7,12 @@ jimport('integradora.gettimone');
 class MandatosViewMutuoslist extends JViewLegacy {
 	
 	function display($tpl = null){
-        $app                = JFactory::getApplication();
-        $this->catalogos    = $this->get('catalogos');
-        $this->mutuos       = $this->get('MutuosODP');
-        $this->data         = $this->get('Post');
+        $app                  = JFactory::getApplication();
+        $this->catalogos      = $this->get('catalogos');
+        $this->mutuosAcreedor = $this->get('MutuosAcreedor');
+        $this->mutuosDeudor   = $this->get('MutuosDeudor');
+
+        $this->data           = $this->get('Post');
 
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){

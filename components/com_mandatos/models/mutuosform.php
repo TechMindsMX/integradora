@@ -6,7 +6,9 @@ jimport('integradora.gettimone');
 
 class MandatosModelMutuosform extends JModelItem {
     public function getTiposPago(){
-        $tipos = getFromTimOne::getTiposPago();
+        $catalogos = new Catalogos();
+
+        $tipos = $catalogos->getTiposPeriodos();
 
         return $tipos;
     }
@@ -57,5 +59,30 @@ class MandatosModelMutuosform extends JModelItem {
             }
 
         return json_encode($respuesta);
+    }
+
+    public static function getMutuo($idMutuo){
+        $mutuo = getFromTimOne::getMutuos(null, $idMutuo);
+        $mutuo = $mutuo[0];
+
+        $integradoDeudor  = new IntegradoSimple($mutuo->integradoIdR);
+        $integradoDeudor = $integradoDeudor->integrados[0];
+
+        if( is_null($integradoDeudor->datos_empresa) ){
+            $datosPersonales = $integradoDeudor->datos_personales;
+            $nombre = is_null($datosPersonales->nom_comercial)?$datosPersonales->nombre_representante:$datosPersonales->nom_comercial;
+        }else{
+            $datosEmpresa = $integradoDeudor->datos_empresa;
+            $nombre = $datosEmpresa->razon_social;
+        }
+        $mutuo->rfc = $integradoDeudor->datos_personales->rfc;
+        $mutuo->beneficiario = $nombre;
+
+        $mutuo->banco_codigo   = $integradoDeudor->datos_bancarios->banco_codigo;
+        $mutuo->banco_cuenta   = $integradoDeudor->datos_bancarios->banco_cuenta;
+        $mutuo->banco_sucursal = $integradoDeudor->datos_bancarios->banco_sucursal;
+        $mutuo->banco_clabe    = $integradoDeudor->datos_bancarios->banco_clabe;
+
+        return $mutuo;
     }
 }

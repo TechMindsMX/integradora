@@ -12,6 +12,7 @@ $datos        = $this->data;
 $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
+var_dump($datos);
 ?>
 
 <script>
@@ -30,7 +31,7 @@ $optionBancos = '';
         jQuery('#rfc').on('change',searchrfc);
         jQuery('#amortizacion').on('click',getTable);
 
-        <?php echo !is_null($datos->rfc)?"jQuery('#rfc').trigger('change');":""; ?>
+        <?php echo (!is_null($datos->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
     });
 
     function ajax(parametros){
@@ -159,9 +160,9 @@ $optionBancos = '';
 <div class="clearfix">&nbsp;</div>
 <form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirmMutuo" role="form" enctype="multipart/form-data">
     <div>
-        <input type="hidden" name="idMutuo" id="idMutuo" value="<?php $datos->idMutuo; ?>" />
+        <input type="hidden" name="id" id="id" value="<?php echo $datos->id; ?>" />
         <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->integradoId; ?>" />
-        <input type="hidden" name="integradoIdR" id="integradoIdR" value="<?php $datos->integradoIdR; ?>" />
+        <input type="hidden" name="integradoIdR" id="integradoIdR" value="<?php echo $datos->integradoIdR; ?>" />
         <input type="hidden" name="jsonTabla" id="jsonTabla" />
 
         <div class="form-group">
@@ -171,7 +172,7 @@ $optionBancos = '';
 
         <div class="form-group">
             <label for="beneficiario"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_BENEFICIARIO') ?></label>
-            <input type="text" name="beneficiario" id="beneficiario" value="<?php echo $datos->beneficiario; ?>" />
+            <input type="text" name="beneficiario" id="beneficiario" value="<?php echo isset($datos->beneficiario)?$datos->beneficiario:''; ?>" />
         </div>
 
         <div class="form-group">
@@ -180,7 +181,7 @@ $optionBancos = '';
                 <?php foreach ($this->tipoPago as $key => $val) {
                     $selected = $key==$datos->paymentPeriod?'selected="selected"':'';
                     ?>
-                    <option value="<?php echo $key; ?>" <?php echo $selected;?> ><?php echo $val; ?></option>
+                    <option value="<?php echo $key; ?>" <?php echo $selected;?> ><?php echo $val->nombre; ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -200,7 +201,7 @@ $optionBancos = '';
             <input type="text" name="interes" id="interes" value="<?php echo $datos->interes; ?>" />
         </div>
 
-        <div id="dataBanco" style="display: none">
+        <div id="dataBanco" style="display: <?php echo isset($datos->banco_codigo)?'show':'none'; ?>">
             <span style="font-size: 12px;">Es necesario llenar los datos bancarios.</span>
             <div class="form-group">
                 <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
@@ -244,7 +245,7 @@ $optionBancos = '';
                 <div class="span4">Total Iva: <span id="totalIVACAF"></span></div>
 
             </div>
-            <table class="table-bordered" style="100%; text-align: center;">
+            <table class="table table-bordered" style="100%; text-align: center;">
                 <thead>
                 <tr class="row">
                     <th>Periodo</th>
@@ -270,7 +271,7 @@ $optionBancos = '';
                 <div class="span4">Total Iva: <span id="totalIVACUF"></span></div>
 
             </div>
-            <table class="table-bordered" style="width: 100%; text-align: center;">
+            <table class="table table-bordered" style="width: 100%; text-align: center;">
                 <thead>
                 <tr class="row">
                     <th>Periodo</th>

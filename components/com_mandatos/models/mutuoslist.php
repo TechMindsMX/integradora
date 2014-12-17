@@ -32,13 +32,17 @@ class MandatosModelMutuoslist extends JModelItem {
         return $catalogos;
     }
 
-    public function getMutuosODP(){
-        $integradoId   = $this->data->integradoId;
-        $mutuos        = getFromTimOne::getMutuos($integradoId);
-        $tiposPeriodos =  getFromTimOne::getTiposPago();
+    public static function formatData($AllData){
+        $mutuos        = $AllData;
+        $tiposPeriodos =  new Catalogos();
+        $tipos = $tiposPeriodos->getTiposPeriodos();
+
         foreach ($mutuos as $key => $value) {
 
-            $value->tipoPeriodo = $tiposPeriodos[$value->paymentPeriod];
+            $tipo = $tipos[$value->paymentPeriod];
+            $value->tipoPeriodo = $tipo->nombre;
+            $value->duracion    = $value->quantityPayments/$tipo->periodosAnio;
+
             $integradoAcredor   = new stdClass();
             $integradoDeudor    = new stdClass();
 
@@ -66,6 +70,35 @@ class MandatosModelMutuoslist extends JModelItem {
             $integradoDeudor->banco  = $inDeudor->datos_bancarios;
             $value->integradoDeudor  = $integradoDeudor;
         }
+
+
+        return $mutuos;
+    }
+
+    public function getMutuosAcreedor(){
+        $test = getFromTimOne::getParametrosMutuo();
+
+        foreach ($test as $value) {
+            if($this->data->integradoId == $value->integradoIdE){
+                $mutuosAcredor[] = $value;
+            }
+        }
+        $mutuosAcredor = self::formatData($mutuosAcredor);
+        $mutuos = $mutuosAcredor;
+
+        return $mutuos;
+    }
+
+    public function getMutuosdeudor(){
+        $test = getFromTimOne::getParametrosMutuo();
+
+        foreach ($test as $value) {
+            if($this->data->integradoId == $value->integradoIdR){
+                $mutuosDeudor[] = $value;
+            }
+        }
+        $mutuosDeudor = self::formatData($mutuosDeudor);
+        $mutuos = $mutuosDeudor;
 
         return $mutuos;
     }

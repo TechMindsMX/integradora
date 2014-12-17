@@ -84,5 +84,16 @@ class Catalogos {
 		return array(7,15,30,60,90,120,180,360);
 	}
 
+    public function getTiposPeriodos(){
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName('#__catalog_tipoperiodos'));
+
+        $tipos = $db->setQuery($query)->loadObjectList('IdTipo');
+
+        return $tipos;
+    }
 }
 	

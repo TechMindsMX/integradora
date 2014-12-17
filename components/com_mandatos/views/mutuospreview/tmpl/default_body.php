@@ -87,7 +87,7 @@ if($params->cuotaOcapital == 0){
             <?php echo $titulo; ?>
         </div>
         <?php echo $encabezado; ?>
-        <table class="table-bordered" style="width: 100%; text-align: center;">
+        <table class="table table-bordered" style="width: 100%; text-align: center;">
             <thead>
             <tr class="row">
                 <th>Periodo</th>

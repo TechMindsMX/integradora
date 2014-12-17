@@ -13,7 +13,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $this->inputVars    = $this->app->input;
         $post               = array(
             'integradoId'       => 'INT',
-            'idMutuo'           => 'INT',
+            'id'                => 'INT',
             'integradoIdR'      => 'INT',
             'paymentPeriod'     => 'INT',
             'idCuenta'          => 'INT',
@@ -77,11 +77,17 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             'jsonTabla'         => $datos->jsonTabla,
             'totalAmount'       => $datos->totalAmount,
             'interes'           => $datos->interes,
-            'cuotaOcapital'     => $datos->cuotaOcapital
+            'cuotaOcapital'     => $datos->cuotaOcapital,
+            'status'            => 0
         );
 
         $save->formatData($dataMutuo);
-        $id_mutuo = $save->insertDB('mandatos_mutuos', null, null,true);
+        if($datos->id == 0) {
+            $id_mutuo = $save->insertDB('mandatos_mutuos', null, null, true);
+        }else{
+            $id_mutuo = $datos->id;
+            $update = $save->updateDB('mandatos_mutuos', null,'id = '.$datos->id);
+        }
 
         if($id_mutuo !== false){
             $respuesta['success'] = true;

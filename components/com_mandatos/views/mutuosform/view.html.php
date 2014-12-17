@@ -9,8 +9,8 @@ class MandatosViewMutuosform extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
         $post               = array(
+            'id'                => 'INT',
             'integradoId'       => 'INT',
-            'idMutuo'           => 'INT',
             'integradoIdR'      => 'INT',
             'paymentPeriod'     => 'INT',
             'cuotaOcapital'     => 'INT',
@@ -25,17 +25,21 @@ class MandatosViewMutuosform extends JViewLegacy {
             'banco_sucursal'    => 'STRING',
             'banco_clabe'       => 'STRING'
         );
-        $this->catalogos    = $this->get('catalogos');
 		$this->data			= (object) $app->input->getArray($post);
 
         if($this->data->layout === 'confirmMutuo'){
             $this->data->jsonTabla = MandatosModelMutuosform::getTablaAmortizacion($this->data);
         }
-		$this->integradoId 	= $this->data->integradoId;
-        $this->idMutuo      = $this->data->idMutuo;
-        $this->tipoPago     = $this->get('TiposPago');
 
-		$this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
+		$this->integradoId 	= $this->data->integradoId;
+        $this->idMutuo      = $this->data->id;
+        $this->tipoPago     = $this->get('TiposPago');
+        $this->catalogos    = $this->get('catalogos');
+
+        if( ($this->idMutuo != 0) and ($this->data->layout != 'confirmMutuo') ){
+            $this->data = MandatosModelMutuosform::getMutuo($this->idMutuo);
+        }
+        $this->titulo   = 'COM_MANDATOS_MUTUO_LBL_EDITAR';
 
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){
