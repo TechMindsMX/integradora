@@ -17,20 +17,29 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 ?>
 <script>
     jQuery(document).ready(function(){
-        jQuery("#myTable").tablesorter({
+        jQuery("#tabla").tablesorter({
             sortList: [[0,0]],
             headers: {
                 0:{ sorter: false },
                 1:{ sorter: false },
                 2:{ sorter: false },
                 3:{ sorter: false },
-                4:{ sorter: true },
                 5:{ sorter: false },
                 6:{ sorter: false },
                 7:{ sorter: false }
             }
         });
 
+//        jQuery("#deudor").tablesorter({
+//            sortList: [[0,0]],
+//            headers: {
+//                0:{ sorter: false },
+//                1:{ sorter: false },
+//                2:{ sorter: false },
+//                4:{ sorter: false },
+//                5:{ sorter: false }
+//            }
+//        });
     });
 </script>
 <div>
@@ -41,7 +50,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 </div>
 
 <h3>Mutuos como Acreedor</h3>
-<table id="myTable" class="table table-bordered tablesorter" style="width: 100%; text-align: center;">
+<table id="tabla" class="table table-bordered tablesorter" style="width: 100%; text-align: center;">
     <thead>
     <tr class="row">
         <th>Deudor</th>
@@ -80,7 +89,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 <div class="clearfix">&nbsp;</div>
 
 <h3>Mutuos como Deudor</h3>
-<table id="nada" class="table table-bordered" style="width: 100%; text-align: center;">
+<table id="deudor" class="table table-bordered" style="width: 100%; text-align: center;">
     <thead>
     <tr class="row">
         <th>Acreedor</th>
@@ -114,3 +123,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
     </tbody>
 </table>
+<div class="clearfix">&nbsp;</div>
+
+<div>
+    <a class="btn btn-primary" href="index.php?option=com_mandatos">Mandatos</a>
+</div>

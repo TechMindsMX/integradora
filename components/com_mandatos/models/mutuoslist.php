@@ -32,6 +32,36 @@ class MandatosModelMutuoslist extends JModelItem {
         return $catalogos;
     }
 
+    public function getMutuosAcreedor(){
+        $allMutuos = getFromTimOne::getParametrosMutuo();
+        $mutuosAcredor = array();
+
+        foreach ($allMutuos as $value) {
+            if($this->data->integradoId == $value->integradoIdE){
+                $mutuosAcredor[] = $value;
+            }
+        }
+        $mutuosAcredor = self::formatData($mutuosAcredor);
+        $mutuos = $mutuosAcredor;
+
+        return $mutuos;
+    }
+
+    public function getMutuosdeudor(){
+        $allMutuos = getFromTimOne::getParametrosMutuo();
+        $mutuosDeudor = array();
+
+        foreach ($allMutuos as $value) {
+            if($this->data->integradoId == $value->integradoIdR){
+                $mutuosDeudor[] = $value;
+            }
+        }
+        $mutuosDeudor = self::formatData($mutuosDeudor);
+        $mutuos = $mutuosDeudor;
+
+        return $mutuos;
+    }
+
     public static function formatData($AllData){
         $mutuos        = $AllData;
         $tiposPeriodos =  new Catalogos();
@@ -70,37 +100,6 @@ class MandatosModelMutuoslist extends JModelItem {
             $integradoDeudor->banco  = $inDeudor->datos_bancarios;
             $value->integradoDeudor  = $integradoDeudor;
         }
-
-
-        return $mutuos;
-    }
-
-    public function getMutuosAcreedor(){
-        $test = getFromTimOne::getParametrosMutuo();
-        $mutuosAcredor = array();
-
-        foreach ($test as $value) {
-            if($this->data->integradoId == $value->integradoIdE){
-                $mutuosAcredor[] = $value;
-            }
-        }
-        $mutuosAcredor = self::formatData($mutuosAcredor);
-        $mutuos = $mutuosAcredor;
-
-        return $mutuos;
-    }
-
-    public function getMutuosdeudor(){
-        $test = getFromTimOne::getParametrosMutuo();
-        $mutuosDeudor = array();
-
-        foreach ($test as $value) {
-            if($this->data->integradoId == $value->integradoIdR){
-                $mutuosDeudor[] = $value;
-            }
-        }
-        $mutuosDeudor = self::formatData($mutuosDeudor);
-        $mutuos = $mutuosDeudor;
 
         return $mutuos;
     }

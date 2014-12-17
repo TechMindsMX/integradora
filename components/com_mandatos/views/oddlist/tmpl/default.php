@@ -17,11 +17,16 @@ $ordenes = $this->data;
 if(is_null($ordenes) || empty($ordenes)){
     JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
 }
+
+foreach ($ordenes as $k => $v) {
+    var_dump($v);
+}
 ?>
+
 <script>
     jQuery(document).ready(function(){
 
-		jQuery('.filtro').on('click', filtro);
+        jQuery('.filtro').on('click', filtro);
 
         jQuery("#myTable").tablesorter({
             sortList: [[0,0]],
@@ -33,25 +38,25 @@ if(is_null($ordenes) || empty($ordenes)){
             }
         });
     });
-    
-function filtro(){
-	var valor	= parseInt( jQuery(this).val() );
 
-	switch(valor){
-		case 0:
-			jQuery('.type_0').show();
-			jQuery('.type_1').hide();
-			break;
-		case 1:
-			jQuery('.type_1').show();
-			jQuery('.type_0').hide();
-			break;
-		case 3:
-			jQuery('.type_0').show();
-			jQuery('.type_1').show();
-			break;
-	}
-}
+    function filtro(){
+        var valor	= parseInt( jQuery(this).val() );
+
+        switch(valor){
+            case 0:
+                jQuery('.type_0').show();
+                jQuery('.type_1').hide();
+                break;
+            case 1:
+                jQuery('.type_1').show();
+                jQuery('.type_0').hide();
+                break;
+            case 3:
+                jQuery('.type_0').show();
+                jQuery('.type_1').show();
+                break;
+        }
+    }
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_TITULO'); ?></h1>
 
@@ -59,7 +64,7 @@ function filtro(){
     <div class="col-md-4">
         <?php $newOddUrl = jRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId); ?>
         <a class="btn btn-primary" href="<?php echo $newOddUrl; ?>" />
-            <?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_AGREGAR'); ?>
+        <?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_AGREGAR'); ?>
         </a>
     </div>
 
@@ -86,32 +91,32 @@ function filtro(){
         <tbody>
         <?php
         if( !is_null($ordenes) ){
-            foreach ($ordenes as $key => $value) {
-                $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId='.$this->integradoId.'&idOrden='.$value->id);
-                $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
-                if ($value->status == 0 && $this->permisos['canAuth']){
-                    $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&integradoId='.$this->integradoId.'&idOrden='.$value->id);
-                    $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
-                } elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
-                    $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-                    $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
-				} elseif ($value->status == 1) {
-					$auth_button = JText::_('LBL_AUTHORIZED');
-					$edit_button = JText::_('LBL_NOT_EDITABLE');
-				} else {
-					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-					$edit_button = JText::_('LBL_NOT_EDITABLE');
-                }
-                $class = $value->status == 0?'':'status1';
+            foreach ($ordenes as $value) {
+                    $url_preview = JRoute::_('index.php?option=com_mandatos&view=oddpreview&integradoId=' . $this->integradoId . '&idOrden=' . $value->id);
+                    $preview_button = '<a href="' . $url_preview . '"><i class="icon-search"></i></a>';
+                    if (($value->status->id == 0) && $this->permisos['canAuth']) {
+                        $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&integradoId=' . $this->integradoId . '&idOrden=' . $value->id);
+                        $auth_button = '<a class="btn btn-primary" id=baja_"' . $value->id . '" name="baja" href="' . $url_auth . '">' . JText::_("LBL_AUTORIZE") . '</a>';
+                        $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId=' . $this->integradoId . '&idOrden=' . $value->id . '">' . JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO') . '</a>';
+                    } elseif ($value->status == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']) {
+                        $auth_button = JText::_("LBL_CANT_AUTHORIZE");
+                        $edit_button = '<a class="btn btn-primary" href="index.php/component/mandatos/?view=oddform&integradoId=' . $this->integradoId . '&idOrden=' . $value->id . '">' . JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO') . '</a>';
+                    } elseif ($value->status == 1) {
+                        $auth_button = JText::_('LBL_AUTHORIZED');
+                        $edit_button = JText::_('LBL_NOT_EDITABLE');
+                    } else {
+                        $auth_button = JText::_("LBL_CANT_AUTHORIZE");
+                        $edit_button = JText::_('LBL_NOT_EDITABLE');
+                    }
+                    $class = $value->status->id == 0 ? '' : 'status1';
 
-                echo '<tr class="type_'.$value->status.'">';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.''.$value->numOrden.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->createdDate.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
-                echo '</tr>';
+                    echo '<tr class="type_' . $value->status->id . '">';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $preview_button . '' . $value->numOrden . '</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->createdDate . '</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >$' . number_format($value->totalAmount, 2) . '</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $auth_button . '</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $edit_button . '</td>';
+                    echo '</tr>';
             }
         }else{
             JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_PRODUCTS'));
