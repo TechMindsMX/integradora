@@ -443,7 +443,6 @@ class getFromTimOne{
             $response = $listAllCliPro;
         }
 
-//	    var_dump($response, $type);exit;
         if($type == 0 && !empty($response)){
             foreach ($response as $value) {
                 if($value->type == $type){
@@ -1319,6 +1318,33 @@ class getFromTimOne{
 		return $montoComision;
 	}
 
+	public function getUnpaidOrderStatusCatalog() {
+		$statuses = self::getOrderStatusCatalog();
+
+		try {
+			if(!array_key_exists(13, $statuses)) {
+				throw new Exception('Código 2001');
+			}
+		}
+		catch (Exception $e) {
+			JFactory::getApplication()->redirect('index.php','Error: '.$e->getMessage());
+		}
+
+		foreach ( $statuses as $status ) {
+			if($status->name === 'Pagada' ) {
+				$pagadaStatusId = $status->id;
+			}
+		}
+
+		foreach ( $statuses as $id => $status ) {
+			if ($status->id < $pagadaStatusId) {
+				$results[] = $status->id;
+			}
+		}
+
+		return $results;
+	}
+
 }
 
 class sendToTimOne {
@@ -1789,13 +1815,18 @@ class ReportBalance extends getFromTimOne {
 	protected $request;
 
 	/**
-	 * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null, startdate => $startdate, endDate => $endDate)
+	 * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null)
 	 */
 	function __construct( $params ) {
+		list( $fechaInicio, $fechaFin ) = $this->getDatesIniciofin();
+
 		$this->request->integradoId = $params['integradoId'];
-		$this->request->balanceId   = isset($params['balanceId']) ? $params['balanceId'] : null;
-		$this->request->startDate   = isset($params['startDate']) ? $params['startDate'] : null;
-		$this->request->endDate   = isset($params['endDate']) ? $params['endDate'] : null;
+
+		$condicion = $params['balanceId'] != 0;
+		$this->request->balanceId   = $condicion ? $params['balanceId'] : null;
+		$this->request->startDate   = $condicion ? null : $fechaInicio;
+		$this->request->endDate     = $condicion ? null : $fechaFin;
+
 	}
 
 	public function getBalances( ) {
@@ -1803,7 +1834,7 @@ class ReportBalance extends getFromTimOne {
 
 		// TODO sustituir mock
 		for ( $i = 1; $i <= 10; $i ++ ) {
-			$b = new ReportBalance($this->request->integradoId, $this->request->balanceId);
+			$b = new ReportBalance( array('integradoId' => $this->request->integradoId, 'balanceId' => $this->request->balanceId) );
 			$b->id                                  = $i;
 			$b->integradoId                         = $i;
 
@@ -1822,8 +1853,6 @@ class ReportBalance extends getFromTimOne {
 			}
 		}
 
-//		var_dump($respuesta);
-		exit;
 		return $respuesta;
 	}
 
@@ -1846,11 +1875,20 @@ class ReportBalance extends getFromTimOne {
 		return $cxp;
 	}
 
-	private function getIvaVentasPeriodo( $start, $end ) {
+	private function getIvaVentasPeriodo( ) {
+		$ivas = array();
 		$invoices   = getFromTimOne::getFacturasVenta($this->request->integradoId);
-		$orders     = getFromTimOne::getOrdenesVenta($this->request->integradoId);
 
-		var_dump($invoices, $orders);
+		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
+		foreach ( $invoices as $fact ) {
+			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+			$testDates = ($fact->timestamps->createdDate >= $this->request->startDate->timestamp && $fact->timestamps->createdDate <= $this->request->endDate->timestamp);
+			if ( $testStatus && $testDates) {
+				$ivas[] = $fact->iva;
+			}
+		}
+
+		return array_sum($ivas);
 	}
 
 	/**
@@ -1864,9 +1902,9 @@ class ReportBalance extends getFromTimOne {
 		$b->paymentType                     = 0;
 		$b->status                          = 0;
 		$b->observaciones                   = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		$b->pasivo->cuentasPorPagar         = $this->getCxP();; // suma historica de CxP
-		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo($this->request->startDate, $this->request->endDate);
-		$b->pasivo->total                   = 144*$this->integradoId;
+		$b->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
+		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo();
+		$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
 		$b->capital->ejecicioAnterior       = 100;
 		$b->capital->totalEdoResultados     = 500;
 		$b->capital->total                  = 600;
@@ -1874,6 +1912,20 @@ class ReportBalance extends getFromTimOne {
 		$b->depositos->total                = 600*$this->integradoId;
 		$b->retiros->ejeciciosAnteriores    = 600;
 		$b->retiros->total                  = 600;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getDatesIniciofin() {
+		$timeZone    = new DateTimeZone( 'America/Mexico_City' );
+		$fechaInicio = new DateTime( 'first day of January', $timeZone );
+		$fechaFin    = new DateTime( 'first day of this month', $timeZone );
+		$fechaFin->setTime( 0, 0, 0 );
+		$fechaInicio->timestamp = $fechaInicio->getTimestamp();
+		$fechaFin->timestamp    = $fechaFin->getTimestamp();
+
+		return array ( $fechaInicio, $fechaFin );
 	}
 
 	public static function getFlujo( $integradoId ) {
