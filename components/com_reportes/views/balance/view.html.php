@@ -7,14 +7,14 @@ jimport('joomla.application.component.view');
 
 /**
  * HTML View class for the Reportes Component
- * @property mixed balance
+ * @property mixed report
  */
 class ReportesViewBalance extends JViewLegacy
 {
 	// Overwriting JView display method
 	function display($tpl = null)
 	{
-        $this->balance  = $this->get('balance');
+        $this->report  = $this->get('balance');
 
 
 		// Check for errors.

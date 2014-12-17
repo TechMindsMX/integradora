@@ -200,7 +200,9 @@ class Integrado {
 }
 
 class IntegradoSimple extends Integrado {
-	
+
+	public $cantidadAuthNecesarias;
+
 	function __construct($integ_id) {
 		$this->user = JFactory::getUser();
 
