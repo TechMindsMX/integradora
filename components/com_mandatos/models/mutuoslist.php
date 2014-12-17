@@ -77,6 +77,7 @@ class MandatosModelMutuoslist extends JModelItem {
 
     public function getMutuosAcreedor(){
         $test = getFromTimOne::getParametrosMutuo();
+        $mutuosAcredor = array();
 
         foreach ($test as $value) {
             if($this->data->integradoId == $value->integradoIdE){
@@ -91,6 +92,7 @@ class MandatosModelMutuoslist extends JModelItem {
 
     public function getMutuosdeudor(){
         $test = getFromTimOne::getParametrosMutuo();
+        $mutuosDeudor = array();
 
         foreach ($test as $value) {
             if($this->data->integradoId == $value->integradoIdR){

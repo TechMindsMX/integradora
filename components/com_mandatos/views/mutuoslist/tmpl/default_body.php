@@ -46,7 +46,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     <tr class="row">
         <th>Deudor</th>
         <th>Monto</th>
-        <th>Tipo de pagos</th>
+        <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
         <th></th>
@@ -58,9 +58,9 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         $url = 'index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
         if($value->status == 1){
             $edit = '<a class="btn btn-primary disabled" href="#">Editar</a>';
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id.'">Generar ODP</a></td>';
+            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Generar ODP</a></td>';
         }else{
-            $edit = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id.'">Editar</a>';
+            $edit = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Editar</a>';
             $odp = '<td><a class="btn btn-primary disabled" href="#">Generar ODP</a></td>';
         }
     ?>
@@ -85,7 +85,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     <tr class="row">
         <th>Acreedor</th>
         <th>Monto</th>
-        <th>Tipo de pagos</th>
+        <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
         <th></th>

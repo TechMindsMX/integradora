@@ -92,7 +92,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         if($id_mutuo !== false){
             $respuesta['success'] = true;
             $respuesta['redirect'] = true;
-            $respuesta['urlRedirect'] = 'index.php?option=com_mandatos&view=mutuospreview&integradoId=1&idMutuo='.$id_mutuo;
+            $respuesta['urlRedirect'] = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$datos->integradoId.'&idMutuo='.$id_mutuo;
         }
 
         echo json_encode($respuesta);

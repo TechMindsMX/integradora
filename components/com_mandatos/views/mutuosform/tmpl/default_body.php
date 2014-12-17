@@ -12,7 +12,6 @@ $datos        = $this->data;
 $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
-var_dump($datos);
 ?>
 
 <script>
@@ -201,7 +200,7 @@ var_dump($datos);
             <input type="text" name="interes" id="interes" value="<?php echo $datos->interes; ?>" />
         </div>
 
-        <div id="dataBanco" style="display: <?php echo isset($datos->banco_codigo)?'show':'none'; ?>">
+        <div id="dataBanco" style="display: <?php echo !is_null($datos->banco_codigo)?'show':'none'; ?>">
             <span style="font-size: 12px;">Es necesario llenar los datos bancarios.</span>
             <div class="form-group">
                 <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
@@ -231,7 +230,7 @@ var_dump($datos);
         <div class="form-group">
             <!--input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" /-->
             <input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" />
-            <a href="index.php?option=com_mandatos" class="btn btn-danger" > <?php echo jText::_('LBL_CANCELAR'); ?></a>
+            <a href="index.php?option=com_mandatos&view=mutuoslist&integradoId" class="btn btn-danger" > <?php echo jText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>
 

@@ -78,10 +78,10 @@ class MandatosModelMutuosform extends JModelItem {
         $mutuo->rfc = $integradoDeudor->datos_personales->rfc;
         $mutuo->beneficiario = $nombre;
 
-        $mutuo->banco_codigo   = $integradoDeudor->datos_bancarios->banco_codigo;
-        $mutuo->banco_cuenta   = $integradoDeudor->datos_bancarios->banco_cuenta;
-        $mutuo->banco_sucursal = $integradoDeudor->datos_bancarios->banco_sucursal;
-        $mutuo->banco_clabe    = $integradoDeudor->datos_bancarios->banco_clabe;
+        $mutuo->banco_codigo   = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_codigo  :null;
+        $mutuo->banco_cuenta   = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_cuenta  :null;
+        $mutuo->banco_sucursal = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_sucursal:null;
+        $mutuo->banco_clabe    = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_clabe   :null;
 
         return $mutuo;
     }
