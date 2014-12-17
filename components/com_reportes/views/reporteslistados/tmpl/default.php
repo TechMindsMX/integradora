@@ -13,13 +13,14 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
 $attsCal2        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $attsCal3        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $rfc                = $this->data->integrados[0]->datos_personales->rfc;
-$integradoId        = $this->data->integrados[0]->datos_empresa->razon_social;
+$integradoName      = $this->data->integrados[0]->datos_empresa->razon_social;
 $calle              = $this->data->integrados[0]->datos_empresa->calle;
 $no_ext             = $this->data->integrados[0]->datos_empresa->num_exterior;
 $no_int             = $this->data->integrados[0]->datos_empresa->num_interior;
 $cp                 = $this->data->integrados[0]->datos_empresa->cod_postal;
 $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior '.' C.P. '.$cp;
 
+$formToken  = JSession::getFormToken(true).'=1';
 
 ?>
 <script>
@@ -97,15 +98,17 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
 
 
                 </div>
-                <?php foreach ($this->balances as $key => $value) {?>
+                <?php foreach ($this->balances as $key => $value) {
+	                $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
+	                ?>
                 <div class="contenidos" id="contenidos">
-                    <div id="columna1" class="fecha"><?php echo $value->created; ?></div>
+                    <div id="columna1" class="fecha"><?php echo $value->createdDate; ?></div>
                     <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
-                    <div id="columna1"><?php echo $integradoId; ?></div>
+                    <div id="columna1"><?php echo $integradoName; ?></div>
                     <div id="columna1"><?php echo $rfc ?></div>
                     <div id="columna1"><?php echo $direccion ?></div>
                     <div id="columna1" style="width: 50px">
-                        <button type="button" class="btn btn-primary" id="clear_form"><?php echo JText::_('LBL_DBALANCE'); ?></button>
+                        <a class="btn btn-primary" id="clear_form" href="<?php echo $balanceUrl; ?>"><?php echo JText::_('LBL_DBALANCE'); ?></a>
                     </div>
 
 

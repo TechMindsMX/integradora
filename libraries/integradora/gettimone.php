@@ -790,321 +790,7 @@ class getFromTimOne{
         return $montoOperaciones;
     }
 
-    public static function getBalances($integradoId)
-    {
-        $respuesta = null;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1388880000000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1393718400000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1396137600000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1398816000000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1401408000000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1404086400000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1409356800000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1412035200000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1414627200000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1417305600000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        $balance = new stdClass;
-        $balance->id = 1;
-        $balance->integradoId = 1;
-        $balance->numBalance = 1;
-        $balance->proyectId = 1;
-        $balance->created = 1419897600000;
-        $balance->currency = 'MXN';
-        $balance->paymentType = 0;
-        $balance->status = 0;
-        $balance->observaciones = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-
-        $array[] = $balance;
-
-        foreach ($array as $key => $value) {
-            if($integradoId == $value->integradoId){
-                self::convierteFechas($value);
-                $respuesta[] = $value;
-            }
-        }
-        return $respuesta;
-    }
-
-    public static function getFlujo($integradoId)
-    {
-        $respuesta = null;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1388880000000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1393718400000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1396137600000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1398816000000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1401408000000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1404086400000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1409356800000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1412035200000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1414627200000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1417305600000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        $flujo = new stdClass;
-        $flujo->id = 1;
-        $flujo->integradoId = 1;
-        $flujo->numflujo = 1;
-        $flujo->proyectId = 1;
-        $flujo->created = 1419897600000;
-        $flujo->currency = 'MXN';
-        $flujo->paymentType = 0;
-        $flujo->status = 0;
-        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
-
-        $array[] = $flujo;
-
-        foreach ($array as $key => $value) {
-            if($integradoId == $value->integradoId){
-                self::convierteFechas($value);
-                $respuesta[] = $value;
-            }
-        }
-        return $respuesta;
-    }
-
-    public static function getResultados($integradoId)
+	public static function getResultados($integradoId)
     {
         $respuesta = null;
 
@@ -2080,6 +1766,271 @@ class comisionEvent {
 		$result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
 
 		return $result;
+	}
+}
+
+/**
+ * Class ReportBalance
+ */
+class ReportBalance extends getFromTimOne {
+	public $integradoId;
+	public $retiros;
+	public $depositos;
+	public $capital;
+	public $pasivo;
+	public $observaciones;
+	public $status;
+	public $paymentType;
+	public $currency;
+	public $createdDate;
+	public $proyectId;
+	public $numBalance;
+	public $id;
+	protected $request;
+
+	/**
+	 * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null, startdate => $startdate, endDate => $endDate)
+	 */
+	function __construct( $params ) {
+		$this->request->integradoId = $params['integradoId'];
+		$this->request->balanceId   = isset($params['balanceId']) ? $params['balanceId'] : null;
+		$this->request->startDate   = isset($params['startDate']) ? $params['startDate'] : null;
+		$this->request->endDate   = isset($params['endDate']) ? $params['endDate'] : null;
+	}
+
+	public function getBalances( ) {
+		$respuesta = null;
+
+		// TODO sustituir mock
+		for ( $i = 1; $i <= 10; $i ++ ) {
+			$b = new ReportBalance($this->request->integradoId, $this->request->balanceId);
+			$b->id                                  = $i;
+			$b->integradoId                         = $i;
+
+			$array[] = $b;
+		}
+
+		foreach ( $array as $key => $value ) {
+			if ( $this->request->integradoId == $value->integradoId && $this->request->balanceId == null ) {
+				$this->mockData( $value );
+				getFromTimOne::convierteFechas( $value );
+				$respuesta[] = $value;
+			} elseif ( $this->request->integradoId == $value->integradoId && $this->request->balanceId == $value->id ) {
+				$this->mockData( $value );
+				getFromTimOne::convierteFechas( $value );
+				$respuesta[] = $value;
+			}
+		}
+
+//		var_dump($respuesta);
+		exit;
+		return $respuesta;
+	}
+
+	private function getCxP() {
+		$orders = getFromTimOne::getUnpaidOrders($this->request->integradoId);
+
+		$neto = 0;
+		$iva = 0;
+		$total = 0;
+		foreach ( $orders->odv as $odv ) {
+			$neto = $neto + $odv->subTotalAmount;
+			$iva = $iva + $odv->iva;
+			$total = $total + $odv->totalAmount;
+		}
+		$cxp = new stdClass();
+		$cxp->neto = $neto;
+		$cxp->iva = $iva;
+		$cxp->total = $total;
+
+		return $cxp;
+	}
+
+	private function getIvaVentasPeriodo( $start, $end ) {
+		$invoices   = getFromTimOne::getFacturasVenta($this->request->integradoId);
+		$orders     = getFromTimOne::getOrdenesVenta($this->request->integradoId);
+
+		var_dump($invoices, $orders);
+	}
+
+	/**
+	 * @param $b
+	 */
+	public function mockData( $b ) {
+		$b->numBalance                      = 1;
+		$b->proyectId                       = 1;
+		$b->createdDate                     = 1388880000000;
+		$b->currency                        = 'MXN';
+		$b->paymentType                     = 0;
+		$b->status                          = 0;
+		$b->observaciones                   = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$b->pasivo->cuentasPorPagar         = $this->getCxP();; // suma historica de CxP
+		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo($this->request->startDate, $this->request->endDate);
+		$b->pasivo->total                   = 144*$this->integradoId;
+		$b->capital->ejecicioAnterior       = 100;
+		$b->capital->totalEdoResultados     = 500;
+		$b->capital->total                  = 600;
+		$b->depositos->ejeciciosAnteriores  = 600;
+		$b->depositos->total                = 600*$this->integradoId;
+		$b->retiros->ejeciciosAnteriores    = 600;
+		$b->retiros->total                  = 600;
+	}
+
+	public static function getFlujo( $integradoId ) {
+		$respuesta = null;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1388880000000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1393718400000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1396137600000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1398816000000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1401408000000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1404086400000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1409356800000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1412035200000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1414627200000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1417305600000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		$flujo                = new stdClass;
+		$flujo->id            = 1;
+		$flujo->integradoId   = 1;
+		$flujo->numflujo      = 1;
+		$flujo->proyectId     = 1;
+		$flujo->created       = 1419897600000;
+		$flujo->currency      = 'MXN';
+		$flujo->paymentType   = 0;
+		$flujo->status        = 0;
+		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+
+		$array[] = $flujo;
+
+		foreach ( $array as $key => $value ) {
+			if ( $integradoId == $value->integradoId ) {
+				getFromTimOne::convierteFechas( $value );
+				$respuesta[] = $value;
+			}
+		}
+
+		return $respuesta;
 	}
 }
 

@@ -1,10 +1,12 @@
 <?php
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
 
 jimport('integradora.integrado');
 jimport('integradora.catalogos');
+jimport('integradora.gettimone');
 
 /**
  * Modelo de datos para Listados de Reportes
@@ -26,12 +28,13 @@ class ReportesModelReporteslistados extends JModelItem {
     }
 
     public function getBalance (){
-        $balance = getFromTimOne::getBalances($this->integradoId);
+	    $r = new ReportBalance(array('integradoId' => $this->integradoId));
+        $balance = $r->getBalances( );
         return $balance;
     }
 
     public function getflujo (){
-        $flujo = getFromTimOne::getFlujo($this->integradoId);
+        $flujo = ReportBalance::getFlujo( $this->integradoId );
         return $flujo;
     }
 
