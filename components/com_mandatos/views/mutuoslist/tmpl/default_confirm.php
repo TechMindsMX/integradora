@@ -43,8 +43,9 @@ foreach ($bancos as $value) {
         var request     = ajax(parametros);
 
         request.done(function(result){
+            console.log(result);
             if(result.success && result.redirect){
-               window.location = result.urlRedirect
+                window.location = result.urlRedirect
             }
         });
     }
@@ -76,7 +77,7 @@ foreach ($bancos as $value) {
 
 <div>
     <?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_PAYMENTPERIOD'); ?>: </div>
-<div><strong><?php echo $this->tipoPago[$datos->paymentPeriod]->nombre; ?></strong></div>
+<div><strong><?php echo $this->tipoPago[$datos->paymentPeriod]; ?></strong></div>
 <div class="clearfix">&nbsp;</div>
 
 <div>
@@ -112,22 +113,22 @@ foreach ($bancos as $value) {
 <?php } ?>
 
 <form id="confirmForm" method="post" action="">
-    <?php var_dump($datos); ?>
-    <input type="text" id="id"               name="id"               value="<?php echo $datos->id; ?>" />
-    <input type="text" id="integradoId"      name="integradoId"      value="<?php echo $datos->integradoId; ?>" />
-    <input type="text" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->integradoIdR; ?>" />
-    <input type="text" id="rfc"              name="rfc"              value="<?php echo $datos->rfc; ?>" />
-    <input type="text" id="beneficiario"     name="beneficiario"     value="<?php echo $datos->beneficiario; ?>" />
-    <input type="text" id="paymentPeriod"    name="paymentPeriod"    value="<?php echo $datos->paymentPeriod; ?>" />
-    <input type="text" id="quantityPayments" name="quantityPayments" value="<?php echo $datos->quantityPayments; ?>" />
-    <input type="text" id="totalAmount"      name="totalAmount"      value="<?php echo $datos->totalAmount; ?>" />
-    <input type="text" id="interes"          name="interes"          value="<?php echo $datos->interes; ?>" />
-    <input type="text" id="jsonTabla"        name="jsonTabla"        value='<?php echo $datos->jsonTabla; ?>' />
-    <input type="text" id="cuotaOcapital"    name="cuotaOcapital"    value='<?php echo $datos->cuotaOcapital; ?>' />
-    <input type="text" id="banco_codigo"     name="banco_codigo"     value="<?php echo $datos->banco_codigo; ?>" />
-    <input type="text" id="banco_cuenta"     name="banco_cuenta"     value="<?php echo $datos->banco_cuenta; ?>" />
-    <input type="text" id="banco_sucursal"   name="banco_sucursal"   value="<?php echo $datos->banco_sucursal; ?>" />
-    <input type="text" id="banco_clabe"      name="banco_clabe"      value="<?php echo $datos->banco_clabe; ?>" />
+    <input type="hidden" id="idMutuo"          name="idMutuo"          value="<?php echo $datos->idMutuo; ?>" />
+    <input type="hidden" id="integradoId"      name="integradoId"      value="<?php echo $datos->integradoId; ?>" />
+    <input type="hidden" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->integradoIdR; ?>" />
+    <input type="hidden" id="rfc"              name="rfc"              value="<?php echo $datos->rfc; ?>" />
+    <input type="hidden" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->beneficiario; ?>" />
+    <input type="hidden" id="paymentPeriod"    name="paymentPeriod"    value="<?php echo $datos->paymentPeriod; ?>" />
+    <input type="hidden" id="quantityPayments" name="quantityPayments" value="<?php echo $datos->quantityPayments; ?>" />
+    <input type="hidden" id="totalAmount"      name="totalAmount"      value="<?php echo $datos->totalAmount; ?>" />
+    <input type="hidden" id="interes"          name="interes"          value="<?php echo $datos->interes; ?>" />
+    <input type="hidden" id="jsonTabla"        name="jsonTabla"        value='<?php echo $datos->jsonTabla; ?>' />
+    <input type="hidden" id="cuotaOcapital"    name="cuotaOcapital"    value='<?php echo $datos->cuotaOcapital; ?>' />
+
+    <input type="hidden" id="banco_codigo"     name="banco_codigo"     value="<?php echo $datos->banco_codigo; ?>" />
+    <input type="hidden" id="banco_cuenta"     name="banco_cuenta"     value="<?php echo $datos->banco_cuenta; ?>" />
+    <input type="hidden" id="banco_sucursal"   name="banco_sucursal"   value="<?php echo $datos->banco_sucursal; ?>" />
+    <input type="hidden" id="banco_clabe"      name="banco_clabe"      value="<?php echo $datos->banco_clabe; ?>" />
 
 
     <div class="row">

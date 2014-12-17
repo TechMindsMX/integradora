@@ -44,7 +44,7 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=facturalist'); ?>';
 				break;
 			case 'list_mutos':
-				action = 'index.php?option=com_mandatos&view=mutuosform&integradoId=1';
+				action = 'index.php?option=com_mandatos&view=mutuoslist';
 				break;
 			case 'go_liquidacion':
 				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ?>';
