@@ -42,9 +42,7 @@ CREATE TABLE `integradb`.`flpmu_catalog_tipoperiodos` (
   `IdTipo` INT(11) NULL,
   `nombre` VARCHAR(45) NULL,
   `periodosAnio` INT(11) NULL);
-
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` ADD COLUMN `status` INT(11) NULL AFTER `cuotaOcapital`;
-
 
 INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Quincenal',104);
 INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(3,'Mensual',12);
@@ -54,3 +52,11 @@ INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodo
 INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(7,'Anual',1);
 --rollback DROP TABLE `integradb`.`flpmu_catalog_tipoperiodos`;
 --rollback ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` DROP `status`;
+
+--changeset lutek:6
+CREATE TABLE `integradb`.`flpmu_integrado_timone` (
+  `integradoId` INT NOT NULL,
+  `timOneId` INT NULL,
+  `account` BIGINT NULL,
+  PRIMARY KEY (`integradoId`));
+--rollback DROP TABLE `integradb`.`flpmu_integrado_timone`;
