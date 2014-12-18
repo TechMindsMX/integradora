@@ -129,7 +129,7 @@ select.productos{
     margin: 0 auto;
     text-align: justify;
 }
-.cabeceras_mutuo{
+.cabeceras_mutuo, .t-center{
     text-align: center;
 }
 
@@ -145,4 +145,7 @@ select.productos{
 }
 .num {
     text-align: right;
+}
+.row-separator {
+    padding: 1em 0;
 }

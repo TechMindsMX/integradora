@@ -1907,13 +1907,13 @@ class ReportBalance extends getFromTimOne {
 		$b->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
 		$b->activo->cuentasPorCobrar        = $this->getCxC()->neto;
 		$b->activo->ivaCompras              = $this->getIvaComprasPeriodo();
-		$b->activo->total                   = $b->activo->cuentasPorCobrar + $b->activo->ivaVentas + $b->activo->bancoSaldoEndDate;
-		$b->capital->ejecicioAnterior       = 100;
-		$b->capital->totalEdoResultados     = 500;
-		$b->depositos->ejecicioAnterior     = 1600;
-		$b->depositos->actual               = 600*$this->integradoId;
-		$b->retiros->ejecicioAnterior       = 200;
-		$b->retiros->actual                 = 600;
+		$b->activo->total                   = $b->activo->cuentasPorCobrar + $b->activo->ivaCompras + $b->activo->bancoSaldoEndDate;
+		$b->capital->ejecicioAnterior       = 0;
+		$b->capital->totalEdoResultados     = 750;
+		$b->depositos->ejecicioAnterior     = 0;
+		$b->depositos->actual               = 600;
+		$b->retiros->ejecicioAnterior       = 0;
+		$b->retiros->actual                 = 350;
 
 		$b->capital->total                  = ($b->capital->ejecicioAnterior + $b->capital->totalEdoResultados + $b->depositos->ejecicioAnterior + $b->depositos->actual) - ($b->retiros->ejecicioAnterior + $b->retiros->actual);
 	}

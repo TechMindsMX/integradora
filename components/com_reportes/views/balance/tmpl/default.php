@@ -12,9 +12,9 @@ $integ = $this->integrado;
 <div class="">
 	<div class="header">
 		<div class="span6">
-			<h2>
+			<h3>
 				<?php echo JText::_('INTEGRADORA_NAME'); ?>
-			</h2>
+			</h3>
 			<p>
 				<?php echo JText::_('INTEGRADORA_ADDRESS'); ?>
 			</p>
@@ -24,9 +24,9 @@ $integ = $this->integrado;
 		</div>
 
 		<div class="span6">
-			<h2>
+			<h3>
 				<?php echo $integ->displayName; ?>
-			</h2>
+			</h3>
 			<p>
 				<?php echo $integ->address; ?>
 			</p>
@@ -37,15 +37,13 @@ $integ = $this->integrado;
 	</div>
 </div>
 
-<div class="">
-	<h1 class="">
-		<?php echo JText::_('LBL_BALANCE'); ?>
-	</h1>
-</div>
+<br class="row-separator">
+
+<h1 class="t-center"><?php echo JText::_('LBL_BALANCE'); ?></h1>
 
 <div id="report resumen content">
 	<div class="span6">
-		<div class=""><?php echo JText::_('LBL_PERIOD'); ?></div>
+		<h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
 		<div class="row-fluid">
 			<div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
 			<div class="span6"><?php echo $report->period->startDate; ?></div>
@@ -89,8 +87,9 @@ $integ = $this->integrado;
 		</div>
 	</div>
 </div>
-<div class="clearfix"></div>
-<div class="" id="reporrt detalle content">
+
+<h3 class="t-center"><?php echo JText::_('LBL_DETAIL_OPERATIONS'); ?></h3>
+<div class="" id="report detalle content">
 	<div class="span6" id="col-izquierda">
 		<h2 class=""><?php echo JText::_('LBL_ACTIVOS'); ?></h2>
 		<div class="row-fluid">
@@ -117,15 +116,16 @@ $integ = $this->integrado;
 			<div class="span6 num"><?php echo number_format($report->pasivo->cuentasPorPagar,2); ?></div>
 		</div>
 		<div class="row-fluid">
-			<div class="span6 "><?php echo JText::_('LBL_IVA_PERIODO_ACTUAL'); ?></div>
-			<div class="span6 num"><?php echo number_format($report->pasivo->cuentasPorPagar,2); ?></div>
+			<div class="span6 "><?php echo JText::_('LBL_IVA_CXP'); ?></div>
+			<div class="span6 num"><?php echo number_format($report->pasivo->ivaVentas,2); ?></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_TOTAL'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->pasivo->total,2); ?></div>
 		</div>
-		<div class="row-separator">
-		</div>
+
+		<br class="row-separator clearfix">
+
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_CAPITAL_ANTERIOR'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->capital->ejecicioAnterior,2); ?></div>
@@ -134,8 +134,9 @@ $integ = $this->integrado;
 			<div class="span6 "><?php echo JText::_('LBL_CAPITAL'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->capital->totalEdoResultados,2); ?></div>
 		</div>
-		<div class="row-separator">
-		</div>
+
+		<br class="row-separator clearfix">
+
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_DEPOSITOS_ANTERIOR'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->depositos->ejecicioAnterior,2); ?></div>
@@ -152,8 +153,9 @@ $integ = $this->integrado;
 			<div class="span6 "><?php echo JText::_('LBL_RETIROS'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->retiros->actual,2); ?></div>
 		</div>
-		<div class="row-separator">
-		</div>
+
+		<br class="row-separator clearfix">
+
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_TOTAL'); ?></div>
 			<div class="span6 num"><?php echo number_format($report->capital->total,2); ?></div>
