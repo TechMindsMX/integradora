@@ -28,8 +28,6 @@ class ReportesViewBalance extends JViewLegacy
 
 		$this->integrado->address = $this->addressFromatted($integId);
 
-
-
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

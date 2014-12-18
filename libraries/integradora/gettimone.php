@@ -1907,14 +1907,15 @@ class ReportBalance extends getFromTimOne {
 		$b->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
 		$b->activo->cuentasPorCobrar        = $this->getCxC()->neto;
 		$b->activo->ivaCompras              = $this->getIvaComprasPeriodo();
-		$b->activo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
+		$b->activo->total                   = $b->activo->cuentasPorCobrar + $b->activo->ivaVentas + $b->activo->bancoSaldoEndDate;
 		$b->capital->ejecicioAnterior       = 100;
 		$b->capital->totalEdoResultados     = 500;
-		$b->capital->total                  = 600;
-		$b->depositos->ejeciciosAnteriores  = 600;
-		$b->depositos->total                = 600*$this->integradoId;
-		$b->retiros->ejeciciosAnteriores    = 600;
-		$b->retiros->total                  = 600;
+		$b->depositos->ejecicioAnterior     = 1600;
+		$b->depositos->actual               = 600*$this->integradoId;
+		$b->retiros->ejecicioAnterior       = 200;
+		$b->retiros->actual                 = 600;
+
+		$b->capital->total                  = ($b->capital->ejecicioAnterior + $b->capital->totalEdoResultados + $b->depositos->ejecicioAnterior + $b->depositos->actual) - ($b->retiros->ejecicioAnterior + $b->retiros->actual);
 	}
 
 	private function getIvaVentasPeriodo( ) {
@@ -2156,9 +2157,9 @@ class ReportBalance extends getFromTimOne {
 			$b->capital->ejecicioAnterior       = 100;
 			$b->capital->totalEdoResultados     = 500;
 			$b->capital->total                  = 600;
-			$b->depositos->ejeciciosAnteriores  = 600;
+			$b->depositos->ejecicioAnterior  = 600;
 			$b->depositos->total                = 600*$this->integradoId;
-			$b->retiros->ejeciciosAnteriores    = 600;
+			$b->retiros->ejecicioAnterior    = 600;
 			$b->retiros->total                  = 600;
 
 			if ( $this->request->integradoId == $b->integradoId ) {
