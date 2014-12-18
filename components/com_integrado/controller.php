@@ -206,7 +206,7 @@ class IntegradoController extends JControllerLegacy {
         $input = JFactory:: getApplication()->input;
         $cp = $input->getArray(array('cp'=>'STRING'));
 
-        $url = "http://sepomex.trama.mx/sepomexes/".$cp['cp'];
+        $url = SEPOMEX_SERVICE.$cp['cp'];
 
         echo file_get_contents($url);
     }
