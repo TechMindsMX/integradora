@@ -51,9 +51,9 @@ class ReportesViewBalance extends JViewLegacy
 		$integrado = $integrado->integrados[0];
 
 		$postalData = json_decode(file_get_contents(SEPOMEX_SERVICE.$integrado->datos_empresa->cod_postal));
-		$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[0].
+		$coloniaId     = 0; // TODO: quitar mock al traer campo de db
+		$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
 		$address = $integrado->datos_empresa->calle.' '.$integrado->datos_empresa->num_exterior.' No. Int'.$integrado->datos_empresa->num_interior.', ';
-		var_dump($address, $postalData);exit;
 
 		return $address;
 	}

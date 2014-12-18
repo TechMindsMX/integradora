@@ -37,9 +37,70 @@ $integ = $this->integrado;
 	</div>
 </div>
 
+<div class="">
+	<h1 class="">
+		<?php echo JText::_('LBL_BALANCE'); ?>
+	</h1>
+</div>
 
+<div id="report resumen content">
+	<div class="span6">
+		<div class=""><?php echo JText::_('LBL_PERIOD'); ?></div>
+		<div class="row-fluid">
+			<div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
+			<div class="span6"><?php echo $report->period->startDate; ?></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
+			<div class="span6"><?php echo $report->period->endDate; ?></div>
+		</div>
+	</div>
+	<div class="span6">
+		<h3><?php echo JText::_('LBL_RESUNE_OPERATIONS'); ?></h3>
+		<div class="row-fluid">
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_('LBL_ACTIVOS'); ?></div>
+					<div class="span6 num"><?php echo number_format($report->activo->total,2) ;?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_(''); ?></div>
+					<div class="span6"><?php echo '' ?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_('LBL_TOTAL'); ?></div>
+					<div class="span6 num"><?php echo number_format($report->activo->total,2) ;?></div>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_('LBL_PASIVOS'); ?></div>
+					<div class="span6 num"><?php echo number_format($report->pasivo->total,2) ;?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_('LBL_CAPITAL'); ?></div>
+					<div class="span6 num"><?php echo number_format($report->capital->total,2) ;?></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span6"><?php echo JText::_('LBL_TOTAL'); ?></div>
+					<div class="span6 num"><?php echo number_format($report->pasivo->total + $report->capital->total,2) ;?></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div class="" id="reporrt detalle content">
+	<div class="span6">
+		<h2 class=""><?php echo JText::_('LBL_ACTIVOS'); ?></h2>
+		<div class="span6 num"></div>
+		<div class="span6 num"><?php echo number_format($report->activo->total,2); ?></div>
+	</div>
+	<div class="span6">
+		<h2 class=""><?php echo JText::_('LBL_PASIVOS'); ?></h2>
+		<div class="span6 num"></div>
+		<div class="span6 num"></div>
+	</div>
+</div>
 
-<?php
-var_dump($this->integrado);
-?>
-
+<?php var_dump($this->report); ?>

@@ -143,3 +143,6 @@ select.productos{
     font-size: 14px;
     font-weight: bolder;
 }
+.num {
+    text-align: right;
+}

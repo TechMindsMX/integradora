@@ -28,7 +28,7 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 	public function getOrders() {
 		$integradoId = $this->getIntegradoId();
 
-		$this->orders = getFromTimOne::getUnpaidOrders($integradoId);
+		$this->orders = getFromTimOne::getOrdersCxP($integradoId);
 
 		if(isset($this->vars['numOrden']) && isset($this->vars['orderType']) && JSession::checkToken( 'get' )) {
 			$this->orders = $this->getOrderByIdAndType($this->orders, $this->vars['numOrden'], $this->vars['orderType']);

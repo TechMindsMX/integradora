@@ -498,10 +498,24 @@ class getFromTimOne{
         return $orders;
     }
 
-    public static function getUnpaidOrders( $intergradoId = null ){
+    public static function getOrdersCxP( $intergradoId = null ){
         $orders = new stdClass();
-        $orders->odd = self::getOrdenesDeposito($intergradoId);
-        $orders->odv = self::getOrdenesVenta($intergradoId);
+	    $orders->odr = self::getOrdenesRetiro($intergradoId);
+	    $orders->odc = self::getOrdenesCompra($intergradoId);
+
+        if ( ! empty( $orders ) ) {
+            foreach ( $orders as $key => $values ) {
+                $orders->$key = self::filterOrdersByStatus($values, array(1,3,5,8));
+            }
+        }
+
+        return $orders;
+    }
+
+    public static function getOrdersCxC( $intergradoId = null ){
+        $orders = new stdClass();
+	    $orders->odd = self::getOrdenesDeposito($intergradoId);
+	    $orders->odv = self::getOrdenesVenta($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -611,6 +625,15 @@ class getFromTimOne{
 			$value = self::getProyectFromId($value);
 			$value = self::getClientFromID($value);
 			$value->status = self::getOrderStatusName($value->status);
+
+			$xmlFileData            = file_get_contents($value->urlXML);
+			$data 			        = new xml2Array();
+			$value->factura         = $data->manejaXML($xmlFileData);
+
+			$value->subTotalAmount  = $value->factura->comprobante['SUBTOTAL'];
+			$value->totalAmount     = $value->factura->comprobante['TOTAL'];
+			$value->iva             = $value->factura->impuestos->iva->importe;
+			$value->ieps            = $value->factura->impuestos->ieps->importe;
 		}
 
 
@@ -1818,24 +1841,28 @@ class ReportBalance extends getFromTimOne {
 	public $proyectId;
 	public $numBalance;
 	public $id;
+	public $period;
 	protected $request;
 
 	/**
 	 * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null)
 	 */
 	function __construct( $params ) {
-		list( $fechaInicio, $fechaFin ) = $this->getDatesIniciofin();
+		list( $fechaInicio, $fechaFin ) = $this->setNewDatesIniciofin();
 
 		$this->request->integradoId = $params['integradoId'];
 
-		$condicion = $params['balanceId'] != 0;
-		$this->request->balanceId   = $condicion ? $params['balanceId'] : null;
-		$this->request->startDate   = $condicion ? null : $fechaInicio;
-		$this->request->endDate     = $condicion ? null : $fechaFin;
+		if ( isset( $params['balanceId'] ) ) {
+			if ( $params['balanceId'] != 0 ) {
+				$this->request->balanceId   = $params['balanceId'];
+				$this->request->startDate   = $fechaInicio;
+				$this->request->endDate     = $fechaFin;
+			}
+		}
 
 	}
 
-	public function getBalances( ) {
+	public function generateBalance( ) {
 		$respuesta = null;
 
 		// TODO sustituir mock
@@ -1855,46 +1882,12 @@ class ReportBalance extends getFromTimOne {
 			} elseif ( $this->request->integradoId == $value->integradoId && $this->request->balanceId == $value->id ) {
 				$this->mockData( $value );
 				getFromTimOne::convierteFechas( $value );
+				$this->setDatesForDisplay($value);
 				$respuesta[] = $value;
 			}
 		}
 
 		return $respuesta;
-	}
-
-	private function getCxP() {
-		$orders = getFromTimOne::getUnpaidOrders($this->request->integradoId);
-
-		$neto = 0;
-		$iva = 0;
-		$total = 0;
-		foreach ( $orders->odv as $odv ) {
-			$neto = $neto + $odv->subTotalAmount;
-			$iva = $iva + $odv->iva;
-			$total = $total + $odv->totalAmount;
-		}
-		$cxp = new stdClass();
-		$cxp->neto = $neto;
-		$cxp->iva = $iva;
-		$cxp->total = $total;
-
-		return $cxp;
-	}
-
-	private function getIvaVentasPeriodo( ) {
-		$ivas = array();
-		$invoices   = getFromTimOne::getFacturasVenta($this->request->integradoId);
-
-		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
-		foreach ( $invoices as $fact ) {
-			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
-			$testDates = ($fact->timestamps->createdDate >= $this->request->startDate->timestamp && $fact->timestamps->createdDate <= $this->request->endDate->timestamp);
-			if ( $testStatus && $testDates) {
-				$ivas[] = $fact->iva;
-			}
-		}
-
-		return array_sum($ivas);
 	}
 
 	/**
@@ -1911,6 +1904,10 @@ class ReportBalance extends getFromTimOne {
 		$b->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
 		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo();
 		$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
+		$b->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
+		$b->activo->cuentasPorCobrar        = $this->getCxC()->neto;
+		$b->activo->ivaCompras              = $this->getIvaComprasPeriodo();
+		$b->activo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
 		$b->capital->ejecicioAnterior       = 100;
 		$b->capital->totalEdoResultados     = 500;
 		$b->capital->total                  = 600;
@@ -1920,10 +1917,60 @@ class ReportBalance extends getFromTimOne {
 		$b->retiros->total                  = 600;
 	}
 
+	private function getIvaVentasPeriodo( ) {
+		$ivas = array();
+		$invoices   = getFromTimOne::getFacturasVenta($this->request->integradoId);
+
+		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
+		foreach ( $invoices as $fact ) {
+			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+
+			$testDates = ($fact->timestamps->createdDate >= $this->request->startDate->timestamp && $fact->timestamps->createdDate <= $this->request->endDate->timestamp);
+			if ( $testStatus && $testDates) {
+				$ivas[] = $fact->iva;
+			}
+		}
+
+		return array_sum($ivas);
+	}
+
+	private function getIvaComprasPeriodo() {
+		$ivas = array();
+		$invoices   = getFromTimOne::getOrdenesVenta($this->request->integradoId);
+
+		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
+		foreach ( $invoices as $fact ) {
+			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+
+			$testDates = ($fact->timestamps->createdDate >= $this->request->startDate->timestamp && $fact->timestamps->createdDate <= $this->request->endDate->timestamp);
+			if ( $testStatus && $testDates) {
+				$ivas[] = $fact->iva;
+			}
+		}
+
+		return array_sum($ivas);
+	}
+
+	private function getCxP() {
+		$orders = getFromTimOne::getOrdersCxP($this->request->integradoId);
+
+		$respuesta = $this->sumOrders($orders->odc);
+
+		return $respuesta;
+	}
+
+	private function getCxC() {
+		$orders = getFromTimOne::getOrdersCxC($this->request->integradoId);
+
+		$respuesta = $this->sumOrders($orders->odv);
+
+		return $respuesta;
+	}
+
 	/**
 	 * @return array
 	 */
-	protected function getDatesIniciofin() {
+	protected function setNewDatesIniciofin() {
 		$timeZone    = new DateTimeZone( 'America/Mexico_City' );
 		$fechaInicio = new DateTime( 'first day of January', $timeZone );
 		$fechaFin    = new DateTime( 'first day of this month', $timeZone );
@@ -2089,6 +2136,64 @@ class ReportBalance extends getFromTimOne {
 		}
 
 		return $respuesta;
+	}
+
+	public function getBalances() {
+		for ( $i = 1; $i <= 10; $i ++ ) {
+			$b = new ReportBalance( array('integradoId' => $i, 'balanceId' => $i) );
+			$b->id                              = $i;
+			$b->integradoId                     = $i;
+			$b->numBalance                      = 1;
+			$b->proyectId                       = 1;
+			$b->createdDate                     = 1388880000000;
+			$b->currency                        = 'MXN';
+			$b->paymentType                     = 0;
+			$b->status                          = 0;
+			$b->observaciones                   = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+			$b->pasivo->cuentasPorPagar         = 800; // suma historica de CxP
+			$b->pasivo->ivaVentas               = 300;
+			$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
+			$b->capital->ejecicioAnterior       = 100;
+			$b->capital->totalEdoResultados     = 500;
+			$b->capital->total                  = 600;
+			$b->depositos->ejeciciosAnteriores  = 600;
+			$b->depositos->total                = 600*$this->integradoId;
+			$b->retiros->ejeciciosAnteriores    = 600;
+			$b->retiros->total                  = 600;
+
+			if ( $this->request->integradoId == $b->integradoId ) {
+				$array[] = $b;
+			}
+		}
+
+		return $array;
+	}
+
+	private function setDatesForDisplay( $value ) {
+		$value->period->startDate   = date('d-m-Y',$value->request->startDate->timestamp);
+		$value->period->endDate     = date('d-m-Y',$value->request->endDate->timestamp);
+	}
+
+	private function getBancoSaldoEndDate() {
+		// TODO: Operar el saldo con las Tx para sacar el saldo a cirre de periodo del balance
+		return (float)946;
+	}
+
+	private function sumOrders( $orders ) {
+		$neto = 0;
+		$iva = 0;
+		$total = 0;
+		foreach ( $orders as $order ) {
+			$neto = $neto + $order->subTotalAmount;
+			$iva = $iva + $order->iva;
+			$total = $total + $order->totalAmount;
+		}
+		$obj = new stdClass();
+		$obj->neto = $neto;
+		$obj->iva = $iva;
+		$obj->total = $total;
+
+		return $obj;
 	}
 }
 
