@@ -35,7 +35,7 @@ class ReportesModelBalance extends JModelItem {
 		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR'), 'error');
 
 		$r = new ReportBalance( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
-		$report = $r->getBalances();
+		$report = $r->generateBalance();
 
 		if (is_null($report) ) {
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');

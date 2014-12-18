@@ -39,7 +39,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$model          = $this->getModel('txsinmandatoform');
 		$this->tx       = $model->getItem($this->vars['idTx']);
 
-		$unpaidOrders = getFromTimOne::getUnpaidOrders($this->integradoId);
+		$unpaidOrders = getFromTimOne::getOrdersCxP($this->integradoId);
 
 		if(isset($this->vars['numOrden']) && isset($this->vars['orderType'])) {
 			$this->order = $model->getOrderByIdAndType($unpaidOrders, $this->vars['numOrden'], $this->vars['orderType']);
