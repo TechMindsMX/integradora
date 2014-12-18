@@ -107,16 +107,14 @@ class MandatosModelMutuoslist extends JModelItem {
     public function getServicio(){
         $app  = JFactory::getApplication()->input->getArray();
         $save = new sendToTimOne();
-        $post = json_decode('{"idTx":1,"date":1418860800,"totalAmount":1500000,"timOneId":1}');
+        $post = json_decode('{"idTx":1,"date":1418860800,"totalAmount":15000,"timOneId":1}');
         $data_integrado = getFromTimOne::getIntegradoId($post->timOneId);
         $data_integrado = $data_integrado[0];
-        $odds = getFromTimOne::getOrdenesDeposito($data_integrado->integrado_id);
-
+        $odds = getFromTimOne::getOrdenesDeposito($data_integrado->integradoId);
         getFromTimOne::convierteFechas($post);
 
         foreach ($odds as $value) {
-            if( ($post->timestamps->date === $value->timestamps->paymentDate) && ($post->totalAmount = $value->totalAmount) ){
-                echo 'guardar';
+            if( ($post->timestamps->date === $value->timestamps->paymentDate) && ($post->totalAmount == $value->totalAmount) ){
                 $dataTXMandato = array(
                     'idTx'        => $post->idTx,
                     'idOrden'     => $value->id,
@@ -132,6 +130,10 @@ class MandatosModelMutuoslist extends JModelItem {
                 if($salvado){
                     $cabioStatus = $save->changeOrderStatus($value->id,'odd',1);
                 }
+
+                echo 'saved';
+            }else{
+                echo ' no salvo ';
             }
         }
     }

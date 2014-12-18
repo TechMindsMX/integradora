@@ -264,9 +264,9 @@ class getFromTimOne{
     }
 
     public static function getIntegradoId($timOneId){
-        $data = self::selectDB('integrado_users','timOneId = '.$timOneId);
+        $data = self::selectDB('integrado_timOne','timOneId = '.$timOneId);
 
-
+        return $data;
     }
 
     public function createNewProject($envio, $integradoId){
@@ -1155,7 +1155,7 @@ class getFromTimOne{
         foreach ($objeto as $key => $value) {
             if( is_numeric(strpos(strtolower($key),'date')) ){
 	            $objeto->$key = date('d-m-Y', ($value) );
-	            $objeto->timestamps->$key = $value;
+	            $objeto->timestamps->$key = (INT)$value;
             }
         }
 

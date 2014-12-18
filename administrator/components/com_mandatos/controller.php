@@ -6,7 +6,7 @@ jimport('joomla.application.component.component.controller');
 /**
  * 
  */
-class IntegradoController extends JControllerLegacy {
+class MandatosController extends JControllerLegacy {
 	
 	function display($cacheable = false, $urlparams = false) {
 		
