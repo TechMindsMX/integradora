@@ -690,7 +690,16 @@ class getFromTimOne{
     }
 
 	public static function getOrderStatusCatalog( ){
-		return self::selectDB('catalog_order_status', null, 'id');
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('catalog_order_status')
+			->order('id');
+		$db->setQuery($query);
+
+		$result = $db->loadObjectList('id');
+
+		return $result;
 	}
 
     public static function getParametrosMutuo( ){
@@ -1869,7 +1878,7 @@ class ReportBalance extends getFromTimOne {
 		for ( $i = 1; $i <= 10; $i ++ ) {
 			$b = new ReportBalance( array('integradoId' => $this->request->integradoId, 'balanceId' => $this->request->balanceId) );
 			$b->id                                  = $i;
-			$b->integradoId                         = $i;
+			$b->integradoId                         = round($i/2);
 
 			$array[] = $b;
 		}
@@ -1894,13 +1903,8 @@ class ReportBalance extends getFromTimOne {
 	 * @param $b
 	 */
 	public function mockData( $b ) {
-		$b->numBalance                      = 1;
-		$b->proyectId                       = 1;
-		$b->createdDate                     = 1388880000000;
-		$b->currency                        = 'MXN';
-		$b->paymentType                     = 0;
-		$b->status                          = 0;
-		$b->observaciones                   = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+		$b->createdDate                     = time();
+		$b->year                            = 2013;
 		$b->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
 		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo();
 		$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
@@ -2139,18 +2143,19 @@ class ReportBalance extends getFromTimOne {
 		return $respuesta;
 	}
 
-	public function getBalances() {
+	public function getBalances( ) {
+
+		if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
+			$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
+		}
+
+		var_dump($data);exit;
+
 		for ( $i = 1; $i <= 10; $i ++ ) {
 			$b = new ReportBalance( array('integradoId' => $i, 'balanceId' => $i) );
 			$b->id                              = $i;
 			$b->integradoId                     = $i;
-			$b->numBalance                      = 1;
-			$b->proyectId                       = 1;
-			$b->createdDate                     = 1388880000000;
-			$b->currency                        = 'MXN';
-			$b->paymentType                     = 0;
-			$b->status                          = 0;
-			$b->observaciones                   = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+			$b->year                            = 2013;
 			$b->pasivo->cuentasPorPagar         = 800; // suma historica de CxP
 			$b->pasivo->ivaVentas               = 300;
 			$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
@@ -2161,6 +2166,22 @@ class ReportBalance extends getFromTimOne {
 			$b->depositos->total                = 600*$this->integradoId;
 			$b->retiros->ejecicioAnterior    = 600;
 			$b->retiros->total                  = 600;
+
+$b->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
+$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo();
+$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
+$b->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
+$b->activo->cuentasPorCobrar        = $this->getCxC()->neto;
+$b->activo->ivaCompras              = $this->getIvaComprasPeriodo();
+$b->activo->total                   = $b->activo->cuentasPorCobrar + $b->activo->ivaCompras + $b->activo->bancoSaldoEndDate;
+$b->capital->ejecicioAnterior       = 0;
+$b->capital->totalEdoResultados     = 750;
+$b->depositos->ejecicioAnterior     = 0;
+$b->depositos->actual               = 600;
+$b->retiros->ejecicioAnterior       = 0;
+$b->retiros->actual                 = 350;
+
+$b->capital->total                  = ($b->capital->ejecicioAnterior + $b->capital->totalEdoResultados + $b->depositos->ejecicioAnterior + $b->depositos->actual) - ($b->retiros->ejecicioAnterior + $b->retiros->actual);
 
 			if ( $this->request->integradoId == $b->integradoId ) {
 				$array[] = $b;
@@ -2308,3 +2329,4 @@ class UUID
 // Pseudo-random UUID
 
 // $v4uuid = UUID::v4();
+$b->createdDate                     = 1388880000000;
