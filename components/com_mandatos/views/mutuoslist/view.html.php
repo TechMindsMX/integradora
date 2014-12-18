@@ -19,6 +19,10 @@ class MandatosViewMutuoslist extends JViewLegacy {
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 			return false;
         }
+        if($this->data->layout == 'confirmMutuo'){
+            $this->get('servicio');
+            exit;
+        }
 
 		$this->loadHelper('Mandatos');
 

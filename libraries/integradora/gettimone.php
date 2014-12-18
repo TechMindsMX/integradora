@@ -263,6 +263,12 @@ class getFromTimOne{
         return $tipo;
     }
 
+    public static function getIntegradoId($timOneId){
+        $data = self::selectDB('integrado_users','timOneId = '.$timOneId);
+
+
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 

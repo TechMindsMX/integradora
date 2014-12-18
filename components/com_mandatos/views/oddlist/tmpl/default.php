@@ -17,10 +17,6 @@ $ordenes = $this->data;
 if(is_null($ordenes) || empty($ordenes)){
     JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
 }
-
-foreach ($ordenes as $k => $v) {
-    var_dump($v);
-}
 ?>
 
 <script>

@@ -7,7 +7,7 @@ jimport('integradora.gettimone');
 class MandatosModelMutuoslist extends JModelItem {
     public function __construct(){
         $app 				= JFactory::getApplication();
-        $post               = array('integradoId' => 'INT');
+        $post               = array('integradoId' => 'INT', 'layout' => 'string');
         $this->catalogos    = $this->get('catalogos');
         $this->data			= (object) $app->input->getArray($post);
 
@@ -102,5 +102,37 @@ class MandatosModelMutuoslist extends JModelItem {
         }
 
         return $mutuos;
+    }
+
+    public function getServicio(){
+        $app  = JFactory::getApplication()->input->getArray();
+        $save = new sendToTimOne();
+        $post = json_decode('{"idTx":1,"date":1418860800,"totalAmount":1500000,"timOneId":1}');
+        $data_integrado = getFromTimOne::getIntegradoId($post->timOneId);
+        $data_integrado = $data_integrado[0];
+        $odds = getFromTimOne::getOrdenesDeposito($data_integrado->integrado_id);
+
+        getFromTimOne::convierteFechas($post);
+
+        foreach ($odds as $value) {
+            if( ($post->timestamps->date === $value->timestamps->paymentDate) && ($post->totalAmount = $value->totalAmount) ){
+                echo 'guardar';
+                $dataTXMandato = array(
+                    'idTx'        => $post->idTx,
+                    'idOrden'     => $value->id,
+                    'idIntegrado' => $value->integradoId,
+                    'date'        => time(),
+                    'tipoOrden'   => 'odd',
+                    'idComision'  => 1
+                );
+                $save->formatData($dataTXMandato);
+
+                $salvado = $save->insertDB('txs_timone_mandato');
+
+                if($salvado){
+                    $cabioStatus = $save->changeOrderStatus($value->id,'odd',1);
+                }
+            }
+        }
     }
 }
