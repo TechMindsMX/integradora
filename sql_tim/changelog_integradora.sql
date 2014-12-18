@@ -60,3 +60,17 @@ CREATE TABLE `integradb`.`flpmu_integrado_timone` (
   `account` BIGINT NULL,
   PRIMARY KEY (`integradoId`));
 --rollback DROP TABLE `integradb`.`flpmu_integrado_timone`;
+
+--changeset ricardolyon:7
+CREATE TABLE `integradb`.`flpmu_reportes_balance` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `integradoId` VARCHAR(45) NOT NULL,
+  `year` INT(4) NOT NULL,
+  `pasivo` FLOAT NOT NULL,
+  `pasivo_iva` FLOAT NOT NULL,
+  `activo_banco` FLOAT NOT NULL,
+  `depositos` FLOAT NOT NULL,
+  `retiros` FLOAT NOT NULL,
+  `createdDate` BIGINT NOT NULL,
+  PRIMARY KEY (`id`));
+--rollback DROP TABLE `integradb`.`flpmu_reportes_balance`;
