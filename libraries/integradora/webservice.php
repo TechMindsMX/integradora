@@ -36,7 +36,7 @@ function processData($json){
             );
             $save->formatData($dataTXMandato);
 
-            $salvado = true;//$save->insertDB('txs_timone_mandato');
+            $salvado = $save->insertDB('txs_timone_mandato');
 
             if($salvado){
                 //$cambioStatus = $save->changeOrderStatus($value->id,'odd',1);
