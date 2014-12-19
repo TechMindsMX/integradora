@@ -27,10 +27,10 @@ class ReportesModelReporteslistados extends JModelItem {
         parent::__construct();
     }
 
-    public function getBalance (){
-	    $r = new ReportBalance(array('integradoId' => $this->integradoId));
-        $balance = $r->getBalances( );
-        return $balance;
+    public function getBalanceList (){
+        $list = ReportBalance::getIntegradoExistingBalanceList( $this->integradoId );
+
+	    return $list;
     }
 
     public function getflujo (){

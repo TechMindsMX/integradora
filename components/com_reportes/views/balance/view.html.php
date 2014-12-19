@@ -13,14 +13,38 @@ jimport('integradora.integrado');
  */
 class ReportesViewBalance extends JViewLegacy
 {
+	function __construct() {
+		$this->input = JFactory::getApplication()->input;
+
+		parent::__construct();
+	}
+
 	// Overwriting JView display method
 	function display($tpl = null)
 	{
 		$sesion = JFactory::getSession();
 		$sesIntegId = $sesion->get('integradoId');
-		$integId = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
 
-        $this->report  = $this->get('balance');
+		$vars = $this->input->getArray(array('id' => 'INT', 'integradoId' => 'INT'));
+		$integId = isset($sesIntegId) ? $sesIntegId : $vars['integradoId'];
+
+		$model = $this->getModel();
+
+		if ( $vars['id'] != 0 ) {
+			// busca el modelo de un reporte existente
+			$this->report = $model->getBalance($vars);
+		} else {
+			// genera el modelo de un reporte nuevo
+			$this->report = $model->generateBalance($vars);
+		}
+
+		if (is_null($this->report) ) {
+			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
+		}
+
+
+		// verifica el token
+		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
 		$integrado = new IntegradoSimple($integId);
 		$this->integrado = $integrado->integrados[0];
@@ -55,5 +79,12 @@ class ReportesViewBalance extends JViewLegacy
 
 		return $address;
 	}
+	/**
+	 * @return mixed
+	 */
+	private function getCancelUrl() {
+		return 'index.php?option=com_reportes&view=reporteslistados&integradoId='.$this->input->get('integradoId', null, 'INT');
+	}
+
 
 }

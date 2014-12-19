@@ -12,35 +12,21 @@ jimport('integradora.gettimone');
 class ReportesModelBalance extends JModelItem {
 
 	protected $cancelUrl;
-	protected $input;
 
-	function __construct() {
-		$this->input = JFactory::getApplication()->input;
-
-		parent::__construct();
-	}
-
-	/**
-	 * @return mixed
-	 */
-	private function getCancelUrl() {
-		return 'index.php?option=com_reportes&view=reporteslistados&integradoId='.$this->input->get('integradoId', null, 'INT');
-	}
-
-	public function getBalance() {
-		$vars = $this->input->getArray(array('id' => 'INT', 'integradoId' => 'INT'));
-		$sesion = JFactory::getSession();
-
-		// verifica el token
-		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR'), 'error');
+	public function getBalance($vars) {
 
 		$r = new ReportBalance( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
-		$report = $r->generateBalance();
+		$r->getExistingBalance();
+		$report = $r;
 
-		if (is_null($report) ) {
-			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
-		}
+		return $report;
+	}
 
-		return $report[0];
+	public function generateBalance($vars) {
+		$r = new ReportBalance( array('balanceId'=>null, 'integradoId' => $vars['integradoId']) );
+		$r->generateBalance();
+		$report = $r;
+
+		return $report;
 	}
 }

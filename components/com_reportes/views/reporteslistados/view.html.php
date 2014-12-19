@@ -15,7 +15,7 @@ class ReportesViewReporteslistados extends JViewLegacy
 	{
 
 	    $this->data             = $this->get('Solicitud');
-        $this->balances         = $this->get('Balance');
+        $this->balances         = $this->get('BalanceList');
         $this->flujo            = $this->get('Flujo');
         $this->resultados       = $this->get('Resultados');
 
