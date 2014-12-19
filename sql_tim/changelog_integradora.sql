@@ -18,12 +18,12 @@ INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (34, 'D
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
 
 --changeset lutek:2
-ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
+ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
 CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
 CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
 
 --changeset lutek:3
-ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` 
+ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
 CHANGE COLUMN `cuenta` `idCuenta` INT(11) NULL DEFAULT NULL ,
 ADD COLUMN `cuotaOcapital` INT(11) NULL AFTER `interes`;
 --rollback ALTER TABLE integradb.flpmu_mandatos_mutuos CHANGE COLUMN `idCuenta` `cuenta` INT(11) NULL DEFAULT NULL;
@@ -74,3 +74,23 @@ CREATE TABLE `integradb`.`flpmu_reportes_balance` (
   `createdDate` BIGINT NOT NULL,
   PRIMARY KEY (`id`));
 --rollback DROP TABLE `integradb`.`flpmu_reportes_balance`;
+
+--changeset nestor:8
+DROP TABLE IF EXISTS `flpmu_ordenes_prestamo`;
+CREATE TABLE IF NOT EXISTS `flpmu_ordenes_prestamo` (
+`id` int(11) NOT NULL,
+  `fecha_elaboracion` BIGINT NOT NULL,
+  `fecha_deposito` BIGINT NOT NULL,
+  `tasa` FLOAT NOT NULL,
+  `tipo_movimiento` VARCHAR(45) NULL,
+  `acreedor` VARCHAR(45) NULL,
+  `a_rfc` VARCHAR(45) NULL,
+  `deudor` VARCHAR(45) NULL,
+  `d_rfc` VARCHAR(45) NULL,
+  `capital` FLOAT NOT NULL,
+  `intereses` FLOAT NOT NULL,
+  `iva_intereses` FLOAT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+ALTER TABLE `flpmu_ordenes_prestamo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--rollback DROP TABLE `flpmu_ordenes_prestamo`;
