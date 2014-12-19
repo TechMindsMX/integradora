@@ -269,7 +269,29 @@ class getFromTimOne{
         return $data;
     }
 
-    public function createNewProject($envio, $integradoId){
+	public static function filterByDate( $orders, $timestampStart = null, $timestampEnd = null) {
+		$filteredOrders = array();
+
+		$timestampEnd = isset($timestampEnd) ? $timestampEnd : time();
+
+		if ( isset( $timestampStart ) ) {
+			foreach ( $orders as $key => $val ) {
+				if ($val->timestamps->paymentDate > $timestampStart && $val->timestamps->paymentDate < $timestampEnd) {
+					$filteredOrders[] = $val;
+				}
+			}
+		} else {
+			foreach ( $orders as $key => $val ) {
+				if ( $val->timestamps->paymentDate < $timestampEnd ) {
+					$filteredOrders[] = $val;
+				}
+			}
+		}
+
+		return $filteredOrders;
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -628,7 +650,7 @@ class getFromTimOne{
 			$data 			        = new xml2Array();
 			$value->factura         = $data->manejaXML($xmlFileData);
 
-			$value->subTotalAmount  = $value->factura->comprobante['SUBTOTAL'];
+			$value->subTotalAmount  = (float)$value->factura->comprobante['SUBTOTAL'];
 			$value->totalAmount     = $value->factura->comprobante['TOTAL'];
 			$value->iva             = $value->factura->impuestos->iva->importe;
 			$value->ieps            = $value->factura->impuestos->ieps->importe;
@@ -671,7 +693,7 @@ class getFromTimOne{
 		        $subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
 	        }
 
-	        $value->subTotalAmount = $subTotalOrden;
+	        $value->subTotalAmount = (float)$subTotalOrden;
 	        $value->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
 	        $value->iva      = $subTotalIva;
 	        $value->ieps     = $subTotalIeps;
@@ -1842,6 +1864,8 @@ class ReportBalance extends getFromTimOne {
 	public $numBalance;
 	public $id;
 	public $period;
+	public $year;
+	public $activo;
 	protected $request;
 
 	/**
@@ -1862,9 +1886,9 @@ class ReportBalance extends getFromTimOne {
 	public function generateBalance( ) {
 		$respuesta = null;
 
-		$this->mockData( $this );
+		$this->createData();
 		getFromTimOne::convierteFechas( $this );
-		$this->setDatesForDisplay( $this );
+		$this->setDatesForDisplay();
 
 	}
 
@@ -1879,34 +1903,36 @@ class ReportBalance extends getFromTimOne {
 	}
 
 	/**
-	 * @param $b
+	 * @internal param $b
 	 */
-	public function mockData( $b ) {
-		$b->createdDate                     = time();
-		$b->year                            = 2013;
-		$b->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
-		$b->pasivo->ivaVentas               = $this->getIvaVentasPeriodo();
-		$b->pasivo->total                   = $b->pasivo->cuentasPorPagar + $b->pasivo->ivaVentas;
-		$b->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
-		$b->activo->cuentasPorCobrar        = $this->getCxC()->neto;
-		$b->activo->ivaCompras              = $this->getIvaComprasPeriodo();
-		$b->activo->total                   = $b->activo->cuentasPorCobrar + $b->activo->ivaCompras + $b->activo->bancoSaldoEndDate;
-		$b->capital->ejecicioAnterior       = 0;
-		$b->capital->totalEdoResultados     = 750;
-		$b->depositos->ejecicioAnterior     = 0;
-		$b->depositos->actual               = 600;
-		$b->retiros->ejecicioAnterior       = 0;
-		$b->retiros->actual                 = 350;
+	public function createData() {
+		$this->createdDate                     = time();
+		$this->year                            = 2013;
+		$this->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
+		$this->pasivo->ivaVentas               = $this->getCxP()->iva;
+		$this->pasivo->total                   = $this->pasivo->cuentasPorPagar + $this->pasivo->ivaVentas;
+		$this->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
+		$this->activo->cuentasPorCobrar        = $this->getCxC()->neto;
+		$this->activo->ivaCompras              = $this->getCxC()->iva;
+		$this->activo->total                   = $this->activo->cuentasPorCobrar + $this->activo->ivaCompras + $this->activo->bancoSaldoEndDate;
+		$this->capital->ejecicioAnterior       = 0;
+		$this->capital->totalEdoResultados     = 750;
+		$this->depositos->ejecicioAnterior     = 0;
+		$this->depositos->actual               = 600;
+		$this->retiros->ejecicioAnterior       = 0;
+		$this->retiros->actual                 = 350;
 
-		$b->capital->total                  = ($b->capital->ejecicioAnterior + $b->capital->totalEdoResultados + $b->depositos->ejecicioAnterior + $b->depositos->actual) - ($b->retiros->ejecicioAnterior + $b->retiros->actual);
+		$this->capital->total                  = ($this->capital->ejecicioAnterior + $this->capital->totalEdoResultados + $this->depositos->ejecicioAnterior + $this->depositos->actual) - ($this->retiros->ejecicioAnterior + $this->retiros->actual);
 	}
 
 	private function getIvaVentasPeriodo( ) {
 		$ivas = array();
-		$invoices   = getFromTimOne::getFacturasVenta($this->request->integradoId);
+		$invoices   = getFromTimOne::getOrdersCxC($this->request->integradoId);
+
+		$filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
 		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
-		foreach ( $invoices as $fact ) {
+		foreach ( $filteredOrders as $fact ) {
 			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
 
 			$testDates = ($fact->timestamps->createdDate >= $this->period->startDate->timestamp && $fact->timestamps->createdDate <= $this->period->endDate->timestamp);
@@ -1920,33 +1946,56 @@ class ReportBalance extends getFromTimOne {
 
 	private function getIvaComprasPeriodo() {
 		$ivas = array();
-		$invoices   = getFromTimOne::getOrdenesVenta($this->request->integradoId);
+		$invoices   = getFromTimOne::getOrdersCxP($this->request->integradoId);
 
-		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
-		foreach ( $invoices as $fact ) {
-			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+		$filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
-			$testDates = ($fact->timestamps->createdDate >= $this->period->startDate->timestamp && $fact->timestamps->createdDate <= $this->period->endDate->timestamp);
-			if ( $testStatus && $testDates) {
-				$ivas[] = $fact->iva;
-			}
+		if ( ! empty( $filteredOrders ) ) {
+			$respuesta = $this->sumOrders($filteredOrders);
 		}
+//		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
+//		foreach ( $filteredOrders as $fact ) {
+//			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+//
+//			$testDates = ($fact->timestamps->createdDate >= $this->period->startDate->timestamp && $fact->timestamps->createdDate <= $this->period->endDate->timestamp);
+//			if ( $testStatus && $testDates) {
+//				$ivas[] = $fact->iva;
+//			}
+//		}
 
 		return array_sum($ivas);
 	}
 
 	private function getCxP() {
+		$respuesta = new stdClass();
+		$respuesta->neto = 0;
+		$respuesta->iva = 0;
+		$respuesta->total = 0;
+
 		$orders = getFromTimOne::getOrdersCxP($this->request->integradoId);
 
-		$respuesta = $this->sumOrders($orders->odc);
+		$filteredOrders = getFromTimOne::filterByDate($orders->odc, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+
+		if ( ! empty( $filteredOrders ) ) {
+			$respuesta = $this->sumOrders($filteredOrders);
+		}
 
 		return $respuesta;
 	}
 
 	private function getCxC() {
+		$respuesta = new stdClass();
+		$respuesta->neto = 0;
+		$respuesta->iva = 0;
+		$respuesta->total = 0;
+
 		$orders = getFromTimOne::getOrdersCxC($this->request->integradoId);
 
-		$respuesta = $this->sumOrders($orders->odv);
+		$filteredOrders = getFromTimOne::filterByDate($orders->odv, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+
+		if ( ! empty( $filteredOrders ) ) {
+			$respuesta = $this->sumOrders($filteredOrders);
+		}
 
 		return $respuesta;
 	}
@@ -2131,9 +2180,9 @@ class ReportBalance extends getFromTimOne {
 		return $respuesta;
 	}
 
-	private function setDatesForDisplay( $value ) {
-		$value->period->startDate   = date('d-m-Y', $this->period->startDate->timestamp);
-		$value->period->endDate     = date('d-m-Y', $this->period->endDate->timestamp);
+	private function setDatesForDisplay() {
+		$this->period->startDate   = date('d-m-Y', $this->period->startDate->timestamp);
+		$this->period->endDate     = date('d-m-Y', $this->period->endDate->timestamp);
 	}
 
 	private function getBancoSaldoEndDate() {
@@ -2275,4 +2324,3 @@ class UUID
 // Pseudo-random UUID
 
 // $v4uuid = UUID::v4();
-$b->createdDate                     = 1388880000000;
