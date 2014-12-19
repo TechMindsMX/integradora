@@ -88,8 +88,8 @@ function deliver_response($format, $api_response){
 }
 $json                       = $_GET['tx'];
 $json                       = json_decode($json);
-$formato                    = isset($_GET['formatoResponse']) ? $_GET['formatoResponse'] : 'json';
-$getMethod                  = isset($_GET['metodo']) ? $_GET['formato'] : 'hello';
+$formato                    = 'json';
+$getMethod                  = 'hello';
 $HTTPS_required             = false;
 $authentication_required    = false;
 $api_response_code          = array(

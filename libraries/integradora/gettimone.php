@@ -693,7 +693,7 @@ class getFromTimOne{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
-			->from('catalog_order_status')
+			->from('#__catalog_order_status')
 			->order('id');
 		$db->setQuery($query);
 
