@@ -90,7 +90,6 @@ $formToken  = JSession::getFormToken(true).'=1';
             <div id="odv" class="table table-bordered" >
                 <div class="contenidos" id="contenidos">
                     <div id="columna1"><span class="etiqueta">Fecha</span></div>
-                    <div id="columna1"><span class="etiqueta">Descripcion</span> </div>
                     <div id="columna1"><span class="etiqueta">Integrado</span></div>
                     <div id="columna1"><span class="etiqueta">RFC</span> </div>
                     <div id="columna1"><span class="etiqueta">Direccion</span> </div>
@@ -102,8 +101,7 @@ $formToken  = JSession::getFormToken(true).'=1';
 	                $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
 	                ?>
                 <div class="contenidos" id="contenidos">
-                    <div id="columna1" class="fecha"><?php echo $value->createdDate; ?></div>
-                    <div id="columna1" style=" width: 50%;"><?php echo $value->observaciones ?> </div>
+                    <div id="columna1" class="fecha"><?php echo $value->year; ?></div>
                     <div id="columna1"><?php echo $integradoName; ?></div>
                     <div id="columna1"><?php echo $rfc ?></div>
                     <div id="columna1"><?php echo $direccion ?></div>

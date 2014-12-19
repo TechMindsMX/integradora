@@ -16,16 +16,17 @@ class ReportesModelBalance extends JModelItem {
 	public function getBalance($vars) {
 
 		$r = new ReportBalance( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
-		$report = $r->getExistingBalance();
+		$r->getExistingBalance();
+		$report = $r;
 
-		return $report[0];
+		return $report;
 	}
 
 	public function generateBalance($vars) {
-
 		$r = new ReportBalance( array('balanceId'=>null, 'integradoId' => $vars['integradoId']) );
-		$report = $r->generateBalance();
+		$r->generateBalance();
+		$report = $r;
 
-		return $report[0];
+		return $report;
 	}
 }

@@ -30,7 +30,7 @@ class ReportesViewBalance extends JViewLegacy
 
 		$model = $this->getModel();
 
-		if ( isset( $vars['id'] ) ) {
+		if ( $vars['id'] != 0 ) {
 			// busca el modelo de un reporte existente
 			$this->report = $model->getBalance($vars);
 		} else {
@@ -44,9 +44,7 @@ class ReportesViewBalance extends JViewLegacy
 
 
 		// verifica el token
-		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR'), 'error');
-
-		var_dump($this->report);exit;
+		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
 		$integrado = new IntegradoSimple($integId);
 		$this->integrado = $integrado->integrados[0];

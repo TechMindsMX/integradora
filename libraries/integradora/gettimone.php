@@ -1869,29 +1869,20 @@ class ReportBalance extends getFromTimOne {
 	public function generateBalance( ) {
 		$respuesta = null;
 
-		// TODO sustituir mock
-		for ( $i = 1; $i <= 10; $i ++ ) {
-			$b = new ReportBalance( array('integradoId' => $this->request->integradoId, 'balanceId' => $this->request->balanceId) );
-			$b->id                                  = $i;
-			$b->integradoId                         = round($i/2);
+		$this->mockData( $this );
+		getFromTimOne::convierteFechas( $this );
+		$this->setDatesForDisplay( $this );
 
-			$array[] = $b;
+	}
+
+	public function getExistingBalance() {
+
+		if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
+			$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
+			list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin($data[0]->year);
 		}
 
-		foreach ( $array as $key => $value ) {
-			if ( $this->request->integradoId == $value->integradoId && $this->request->balanceId == null ) {
-				$this->mockData( $value );
-				getFromTimOne::convierteFechas( $value );
-				$respuesta[] = $value;
-			} elseif ( $this->request->integradoId == $value->integradoId && $this->request->balanceId == $value->id ) {
-				$this->mockData( $value );
-				getFromTimOne::convierteFechas( $value );
-				$this->setDatesForDisplay($value);
-				$respuesta[] = $value;
-			}
-		}
-
-		return $respuesta;
+		$this->generateBalance();
 	}
 
 	/**
@@ -1968,15 +1959,17 @@ class ReportBalance extends getFromTimOne {
 	}
 
 	/**
+	 * @param null $year
+	 *
 	 * @return array
 	 */
-	public function setDatesInicioFin( $year  ) {
+	public function setDatesInicioFin( $year = null ) {
 		$inicio = 'first day of January';
 		$final = 'first day of this month';
 		if (isset($year)) {
-			$inicio = 'first day of '.$year;
+			$inicio = 'first day of January '.$year;
 			$nextYear = (int)$year+1;
-			$final = 'first day of '.$nextYear;
+			$final = 'first day of January '.$nextYear;
 		}
 		$timeZone    = new DateTimeZone( 'America/Mexico_City' );
 		$fechaInicio = new DateTime( $inicio, $timeZone );
@@ -2145,19 +2138,6 @@ class ReportBalance extends getFromTimOne {
 		return $respuesta;
 	}
 
-	public function getExistingBalance( ) {
-
-		if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
-			$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
-		}
-
-		var_dump($data);
-		$this->setPeriod();
-		$this->generateBalance();
-
-		return $array;
-	}
-
 	private function setDatesForDisplay( $value ) {
 		$value->period->startDate   = date('d-m-Y', $this->period->startDate->timestamp);
 		$value->period->endDate     = date('d-m-Y', $this->period->endDate->timestamp);
@@ -2183,6 +2163,12 @@ class ReportBalance extends getFromTimOne {
 		$obj->total = $total;
 
 		return $obj;
+	}
+
+	public static function getIntegradoExistingBalanceList($integradoId) {
+		$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
+
+		return $data;
 	}
 }
 
