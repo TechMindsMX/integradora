@@ -321,7 +321,7 @@ class getFromTimOne{
         }elseif(!is_null($projectId) && is_null($integradoId)){
             $where = 'id_proyecto = '.$projectId;
         }
-        $respuesta = self::selectDB('integrado_proyectos',$where);
+        $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
 
         return $respuesta;
     }
@@ -734,27 +734,20 @@ class getFromTimOne{
 	}
 
 	public static function getProyectFromId($orden){
-		$proyKeyId = array();
-
 		$proyectos = self::getProyects($orden->integradoId);
 
-		// datos del proyecto y subproyecto involucrrado
-		foreach ( $proyectos as $key => $proy) {
-			$proyKeyId[$proy->id_proyecto] = $proy;
-		}
+        if(array_key_exists($orden->proyecto, $proyectos)) {
+            $orden->proyecto = $proyectos[$orden->proyecto];
 
-		if(array_key_exists($orden->id, $proyKeyId)) {
-			$orden->proyecto = $proyKeyId[$orden->id];
+            if($orden->proyecto->parentId > 0) {
+                $orden->sub_proyecto	= $orden->proyecto;
+                $orden->proyecto		= $proyectos[$orden->proyecto->parentId];
+            } else {
+                $orden->subproyecto 	= null;
+            }
+        }
 
-			if($orden->proyecto->parentId > 0) {
-				$orden->sub_proyecto	= $orden->proyecto;
-				$orden->proyecto		= $proyKeyId[$orden->proyecto->parentId];
-			} else {
-				$orden->subproyecto 	= null;
-			}
-		}
-
-		$integ = new IntegradoSimple($orden->integradoId);
+        $integ = new IntegradoSimple($orden->integradoId);
 		$orden->integradoName = $integ->getDisplayName();
 
 		return $orden;

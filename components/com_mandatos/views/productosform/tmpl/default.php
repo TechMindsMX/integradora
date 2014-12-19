@@ -25,7 +25,7 @@ $producto 	= $this->producto;
 
 <h1><?php echo ucwords(JText::_($this->titulo)); ?></h1>
 
-<form class="form-inline" role="form" method="post" action="index.php/component/mandatos/?task=saveProducts">
+<form class="form-inline" role="form" method="post" action="index.php?option=com_mandatos&task=saveProducts">
     <input type="hidden" id="integradoId" name="integradoId" value="<?php echo $producto->integradoId; ?>">
     <input type="hidden" id="id_producto" name="id_producto" value="<?php echo $producto->id_producto; ?>">
     <input type="hidden" id="status" name="status" value="<?php echo $producto->status; ?>">

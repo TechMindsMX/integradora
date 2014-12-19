@@ -34,55 +34,18 @@ class MandatosModelOdcpreview extends JModelItem {
             JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODC_INVALID'), 'error');
         }
 
-        $this->getProyectFromId($this->odc->proyecto->id_proyecto);
-
-        $this->getProviderFromID($this->odc->proveedor);
-
         $this->getDataFactura($this->odc);
 
         return $this->odc;
     }
 
-    public function getProyectFromId($proyId){
-        $proyKeyId = array();
-
-        $proyectos = getFromTimOne::getProyects($this->inputVars['integradoId']);
-
-        // datos del proyecto y subproyecto involucrrado
-        foreach ( $proyectos as $key => $proy) {
-            $proyKeyId[$proy->id_proyecto] = $proy;
-        }
-
-        if(array_key_exists($proyId, $proyKeyId)) {
-            $this->odc->proyecto = $proyKeyId[$proyId];
-
-            if($this->odc->proyecto->parentId > 0) {
-                $this->odc->sub_proyecto	= $this->odc->proyecto;
-                $this->odc->proyecto		= $proyKeyId[$this->odc->proyecto->parentId];
-            } else {
-                $this->odc->subproyecto 	= null;
-            }
-        }
-    }
-
-    public function getProviderFromID($providerId){
-        $proveedores = getFromTimOne::getClientes($this->inputVars['integradoId'], 1);
-
-        foreach ($proveedores as $value) {
-            if($providerId == $value->id){
-                $this->odc->proveedor = $value;
-            }
-        }
-    }
 
     public function getIntegrado()	{
         return new IntegradoSimple($this->inputVars['integradoId']);
 	    }
 
     public function getDataFactura($orden){
-
         getFromTimOne::getDataFactura($orden);
-
     }
 }
 
