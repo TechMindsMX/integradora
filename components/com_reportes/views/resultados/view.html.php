@@ -15,10 +15,16 @@ class ReportesViewResultados extends JViewLegacy
 {
 	// Overwriting JView display method
 	function display($tpl = null){
-		$sesion = JFactory::getSession();
-		$sesIntegId = $sesion->get('integradoId');
-		$integId = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
-
+		$sesion                       = JFactory::getSession();
+		$sesIntegId                   = $sesion->get('integradoId');
+		$integId                      = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
+        $integrado                    = new IntegradoSimple($integId);
+        $this->integrado              = $integrado->integrados[0];
+        $this->integrado->displayName = $integrado->getDisplayName();
+        $this->reporte                = $this->get('Reporte');
+        $this->ingresos               = $this->get('DetalleIngresos');
+        $this->egresos                = $this->get('DetalleEgresos');
+        $this->integrado->address     = $this->addressFromatted($integId);
 
 		if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
@@ -41,7 +47,7 @@ class ReportesViewResultados extends JViewLegacy
 		$postalData = json_decode(file_get_contents(SEPOMEX_SERVICE.$integrado->datos_empresa->cod_postal));
 		$coloniaId     = 0; // TODO: quitar mock al traer campo de db
 		$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
-		$address = $integrado->datos_empresa->calle.' '.$integrado->datos_empresa->num_exterior.' No. Int'.$integrado->datos_empresa->num_interior.', ';
+		$address = $integrado->datos_empresa->calle.' '.$integrado->datos_empresa->num_exterior.' No. Int: '.$integrado->datos_empresa->num_interior.', ';
 
 		return $address;
 	}
