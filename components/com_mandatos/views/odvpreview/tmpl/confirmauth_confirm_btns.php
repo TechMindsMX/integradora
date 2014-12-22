@@ -6,7 +6,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId='
 
 <legend class="container botones clearfix form-actions">
 	<?php
-	if ($this->permisos['canAuth'] && $this->odv->status === 0):
+	if ($this->permisos['canAuth'] && $this->odv->status->id === 0):
 		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odvpreview&task=odvpreview.authorize&integradoId=' . $this->integradoId . '&idOrden=' . $this->odv->id);
 		?>
 		<p class="text-warning">

@@ -11,7 +11,6 @@ $app 		 = JFactory::getApplication();
 $sesion      = JFactory::getSession();
 $number2word = new AifLibNumber;
 $orden       = $this->odc;
-var_dump($orden->proyecto);
 $msg         = $sesion->get('msg',null,'odcCorrecta');
 $sesion->clear('msg','odcCorrecta');
 $app->enqueueMessage($msg,'MESSAGE');

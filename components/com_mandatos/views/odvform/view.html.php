@@ -27,7 +27,7 @@ class MandatosViewOdvform extends JViewLegacy {
             $orden->projectId2    = '';
             $orden->clientId      = '';
             $orden->account       = '';
-            $orden->paymentMethod = '';
+            $orden->paymentMethod->id = 0;
             $orden->conditions    = '';
             $orden->placeIssue    = '';
             $orden->productos     = '';

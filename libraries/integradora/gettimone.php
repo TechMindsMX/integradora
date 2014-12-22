@@ -669,8 +669,7 @@ class getFromTimOne{
             $value->integradoId    = (INT)$value->integradoId;
 	        $value->orderType      = 'odv';
             $value->numOrden       = (INT)$value->numOrden;
-            $value->projectId      = (INT)$value->projectId;
-            $value->projectId2     = (INT)$value->projectId2;
+            $value->proyecto       = (INT)$value->projectId2==0?$value->projectId:$value->projectId2;
             $value->clientId       = (INT)$value->clientId;
             $value->account        = (INT)$value->account;
 	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
@@ -745,7 +744,7 @@ class getFromTimOne{
 
 	public static function getPaymentMethodName($paymentMethodId){
 		$payMethod = new stdClass();
-		$names = array('SPEI','Cheque','Pago en taquilla');
+		$names = array('SPEI','Cheque','Pago en taquilla','algo','otro');
 
 		$payMethod->id = $paymentMethodId;
 		$payMethod->name = $names[$paymentMethodId];

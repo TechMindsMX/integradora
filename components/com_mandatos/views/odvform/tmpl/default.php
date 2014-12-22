@@ -11,7 +11,7 @@ JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
-
+var_dump($orden);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -264,7 +264,7 @@ $productosOrden = json_decode($orden->productos);
             <option value="0">Cuenta</option>
             <?php
             foreach ($this->cuentas as $datosCuenta) {
-                $selectedCuentas = ($datosCuenta->datosBan_id==$orden->account)?'selected':'';
+                $selectedCuentas = ( $datosCuenta->datosBan_id == $orden->account) ? 'selected' : '';
                 echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
             }
             ?>
