@@ -1489,6 +1489,34 @@ class sendToTimOne {
 	    return $projectId;
     }
 
+    public function saveODP($data){
+        $data = new stdClass();
+        $data->fecha_elaboracion=time();
+        $data->fecha_deposito=time();
+        $data->tasa=3;
+        $data->tipo_movimiento='prestamo';
+        $data->acreedor='1';
+        $data->a_rfc='AUEN120101GA1';
+        $data->deudor='2';
+        $data->d_rfc='BAEM120101FE3';
+        $data->capital=1230;
+        $data->intereses=123;
+        $data->iva_intereses=23;
+        echo '<pre>';
+        var_dump($data);
+
+        $db		= JFactory::getDbo();
+
+        foreach ($data as $key => $value) {
+            $columnas[] = $key;
+            $valores[] = $db->quote($value);
+        }
+
+        $odpId = $this->insertDB('ordenes_prestamo', $columnas, $valores, true);
+        var_dump($odpId);exit;
+        return $odpId;
+    }
+
     public function updateProject($data,$id_proyecto){
         $db		= JFactory::getDbo();
         foreach ($data as $key => $value) {
