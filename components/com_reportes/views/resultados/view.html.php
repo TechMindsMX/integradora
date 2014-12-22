@@ -25,6 +25,7 @@ class ReportesViewResultados extends JViewLegacy
         $this->ingresos               = $this->get('DetalleIngresos');
         $this->egresos                = $this->get('DetalleEgresos');
         $this->integrado->address     = $this->addressFromatted($integId);
+        $this->proyectos              = $this->get('Proyectos');
 
 		if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

@@ -4,24 +4,36 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.html.html.bootstrap');
 JHTML::_('behavior.calendar');
 
-$egresos = $this->egresos;
-$ingresos = $this->ingresos;
-
-$integ = $this->integrado;
-$report = $this->reporte;
-
-$attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+$egresos    = $this->egresos;
+$ingresos   = $this->ingresos;
+$integ      = $this->integrado;
+$report     = $this->reporte;
+$params     = array('proyecto' => 'INT');
+$input      = (object)JFactory::getApplication()->input->getArray($params);
+$idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
+$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 ?>
 <script>
+    var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
+
     function cambiarPeriodo() {
         fechaInicial   = jQuery('#startDate').val();
         fechaFinal     = jQuery('#endDate').val();
 
-        window.location = 'index.php?option=com_reportes&view=resultados&integradoId=1&startDate='+fechaInicial+'&endDate='+fechaFinal;
+        window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal;
+    }
+
+    function filtraProyectos() {
+        fechaInicial   = jQuery('#startDate').val();
+        fechaFinal     = jQuery('#endDate').val();
+        proyecto       = jQuery(this).val()==0?'':'&proyecto='+jQuery(this).val();
+
+        window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal+proyecto;
     }
 
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
+        jQuery('#proyecto').on('change',filtraProyectos);
     });
 </script>
 
@@ -82,6 +94,20 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
             <div class="span6">&nbsp;</div>
             <div class="span6"><input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" /> </div>
         </div>
+        <div class="clearfix">&nbsp;</div>
+        <div class="row-fluid">
+            <div class="span6">Filtrar por Proyecto</div>
+            <div class="span6">
+                <select id="proyecto" >
+                    <option value="0"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
+                    <?php foreach($this->proyectos as $key => $value ){
+                        $selected   = $key==$idProyecto?'Selected="selected"':'';
+                    ?>
+                        <option value="<?php echo $key.'" '.$selected.'>'.$value->name; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
     </div>
     <div class="span6">
         <h3><?php echo JText::_('LBL_RESUNE_OPERATIONS'); ?></h3>
@@ -128,7 +154,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         }elseif($value->status->id == 13){
             $status = 'COBRADO';
         }
-    ?>
+        ?>
         <tr class="row">
             <td><?php echo $value->paymentDate; ?></td>
             <td><?php echo $value->clientName; ?></td>
@@ -166,7 +192,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         }elseif($value->status->id == 13){
             $status = 'PAGADO';
         }
-    ?>
+        ?>
         <tr class="row">
             <td><?php echo $value->paymentDate; ?></td>
             <td><?php echo $value->proveedor->tradeName; ?></td>
