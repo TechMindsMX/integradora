@@ -18,6 +18,19 @@ INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (34, 'D
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
 
 --changeset lutek:2
+DROP TABLE IF EXISTS `flpmu_mandatos_mutuos`;
+CREATE TABLE `flpmu_mandatos_mutuos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `integradoIdE` int(11) DEFAULT NULL,
+  `integradoIdR` int(11) DEFAULT NULL,
+  `cuenta` int(11) DEFAULT NULL,
+  `expirationDate` int(11) DEFAULT NULL,
+  `payments` int(11) DEFAULT NULL,
+  `jsonTabla` text,
+  `totalAmount` float DEFAULT NULL,
+  `interes` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
 CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
 CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
