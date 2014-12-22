@@ -316,6 +316,42 @@ class getFromTimOne{
 
 		return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
 	}
+    /*DETALLES
+        Este metodo realiza una busqueda en la tabla ordenes_prestamo
+        los parametros recibidos son:
+            1.- Id integrado
+            2.- Id mutuo
+        Se recibe solamente uno de los dos.
+        --Al recibir el Id integrado realiza la busqueda en la tabla y regresa
+        un arreglo con dos nodos
+            a) Acreedor: Este nodo tiene en su contenido todos las coincidencias encontradas para el Id integrado con un acreedor
+            b) Deudor:   Este nodo muestra todas las coincidencias para un Id integrado y el deudor
+        --Si recibe el Id mutuo realiza la busqueda por este id y regresa sus resultados encontrados
+
+    */
+
+
+    public static function getMutuosODP($integradoId=null, $idMutuo=null){
+        $where = null;
+        $respuesta              = new stdClass();
+        if(is_null($integradoId) && is_null($idMutuo)){
+            $where = null;
+        }elseif(!is_null($integradoId) && is_null($idMutuo)){
+
+            $where      = 'acreedor = '.$integradoId;
+            $acredor    = self::selectDB('ordenes_prestamo',$where);
+            $where      = 'deudor='.$integradoId;
+            $deudor     = self::selectDB('ordenes_prestamo',$where);
+            $respuesta->acreedor    = $acredor;
+            $respuesta->deudor      = $deudor;
+        }elseif(!is_null($idMutuo) && is_null($integradoId)){
+            $where = 'mutuo = '.$idMutuo;
+            $mutuo      = self::selectDB('ordenes_prestamo',$where);
+            $respuesta->mudutuo     = $mutuo;
+        }
+
+       return $respuesta;
+    }
 
 	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
@@ -338,7 +374,6 @@ class getFromTimOne{
     public static function selectDB($table, $where = null, $keyAssoc = '', $class = 'stdClass'){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
-
         if(!is_null($where)){
             $query->select('*')
                 ->from($db->quoteName('#__'.$table))
@@ -352,6 +387,7 @@ class getFromTimOne{
             $db->setQuery($query);
             $results = $db->loadObjectList($keyAssoc, $class);
         }catch (Exception $e){
+           echo '<pre>';
             var_dump($e);
             exit;
         }
@@ -1514,22 +1550,22 @@ class sendToTimOne {
 	    return $projectId;
     }
 
+    /* DATA PARA GUARDADO DE ORDEN DE PRESTAMO
+     * $data = new stdClass();
+     * $data->fecha_elaboracion=time();
+     * $data->fecha_deposito=time();
+     * $data->tasa=3;
+     * $data->tipo_movimiento='prestamo';
+     * $data->acreedor='1';
+     * $data->a_rfc='AUEN120101GA1';
+     * $data->deudor='2';
+     * $data->d_rfc='BAEM120101FE3';
+     * $data->capital=1230;
+     * $data->intereses=123;
+     * $data->iva_intereses=23;
+     * RETORNA ID DE PRESTAMO GUARDADO
+     */
     public function saveODP($data){
-        $data = new stdClass();
-        $data->fecha_elaboracion=time();
-        $data->fecha_deposito=time();
-        $data->tasa=3;
-        $data->tipo_movimiento='prestamo';
-        $data->acreedor='1';
-        $data->a_rfc='AUEN120101GA1';
-        $data->deudor='2';
-        $data->d_rfc='BAEM120101FE3';
-        $data->capital=1230;
-        $data->intereses=123;
-        $data->iva_intereses=23;
-        echo '<pre>';
-        var_dump($data);
-
         $db		= JFactory::getDbo();
 
         foreach ($data as $key => $value) {
@@ -1538,7 +1574,7 @@ class sendToTimOne {
         }
 
         $odpId = $this->insertDB('ordenes_prestamo', $columnas, $valores, true);
-        var_dump($odpId);exit;
+
         return $odpId;
     }
 
