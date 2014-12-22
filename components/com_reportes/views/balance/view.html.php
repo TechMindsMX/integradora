@@ -52,6 +52,12 @@ class ReportesViewBalance extends JViewLegacy
 
 		$this->integrado->address = $this->addressFromatted($integId);
 
+		// boton de impresion
+		$this->loadHelper('Reportes');
+
+		$url            = 'index.php?com_reportes&view=balance&id='.$this->report->id.'1&integradoId='.$integId.'&'.JSession::getFormToken(true).'=1';;
+		$this->printBtn = ReportesHelper::getPrintBtn($url);
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{

@@ -8,7 +8,13 @@ $report = $this->report;
 $integ = $this->integrado;
 
 ?>
+<div class="hidden-print form-group">
+	<?php echo $this->printBtn; ?>
+</div>
 
+<div class="clearfix" id="logo">
+	<div class="span6"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
+</div>
 <div class="">
 	<div class="header">
 		<div class="span6">
@@ -89,7 +95,7 @@ $integ = $this->integrado;
 </div>
 
 <h3 class="t-center"><?php echo JText::_('LBL_DETAIL_OPERATIONS'); ?></h3>
-<div class="" id="report detalle content">
+<div class="clearfix" id="report detalle content">
 	<div class="span6" id="col-izquierda">
 		<h2 class=""><?php echo JText::_('LBL_ACTIVOS'); ?></h2>
 		<div class="row-fluid">
@@ -162,5 +168,11 @@ $integ = $this->integrado;
 		</div>
 	</div>
 </div>
+<br class="row-separator clearfix" />
+<div id="footer">
+	<div class="container text-center">
+		<p class="text-capitalize"><?php echo JText::_('LBL_INTEGRADORA'); ?></p>
+		<p><?php echo JText::_('LBL_INTEGRADORA_DIRECCION'); ?></p>
+	</div>
+</div>
 
-<?php //var_dump($this->report); ?>

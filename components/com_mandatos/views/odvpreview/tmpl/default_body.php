@@ -16,8 +16,11 @@ $integrado 	= $this->integCurrent->integrados[0];
 
 $number2word = new AifLibNumber();
 
-echo $this->printBtn;
 ?>
+
+<div class="hidden-print form-group">
+	<?php echo $this->printBtn; ?>
+</div>
 
 <div id="odv_preview">
 <div class="clearfix" id="logo">
