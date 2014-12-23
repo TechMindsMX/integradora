@@ -7,7 +7,6 @@ CREATE TABLE `flpmu_catalog_order_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (1, 'Nueva');
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (3, 'En autorización');
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (5, 'Autorizada');
@@ -16,6 +15,7 @@ INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (13, 'P
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (21, 'Liquidada');
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (34, 'Devuelta');
 INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
+--rollback DROP TABLE `flpmu_catalog_order_status`;
 
 --changeset lutek:2
 DROP TABLE IF EXISTS `flpmu_mandatos_mutuos`;
@@ -34,6 +34,7 @@ CREATE TABLE `flpmu_mandatos_mutuos` (
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
 CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
 CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
+--rollback DROP TABLE `flpmu_mandatos_mutuos`;
 
 --changeset lutek:3
 ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
@@ -110,3 +111,5 @@ CREATE TABLE IF NOT EXISTS `flpmu_ordenes_prestamo` (
 );
 ALTER TABLE `flpmu_ordenes_prestamo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --rollback DROP TABLE `flpmu_ordenes_prestamo`;
+
+

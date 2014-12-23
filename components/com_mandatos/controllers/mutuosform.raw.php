@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
-
+//TODO crear metodo de validación de campos para el formulario
 class MandatosControllerMutuosform extends JControllerLegacy {
 
     public function __construct(){
