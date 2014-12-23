@@ -87,7 +87,14 @@ $formToken  = JSession::getFormToken(true).'=1';
         </div>
 
 
-            <div id="odv" class="table table-bordered" >
+	    <?php 	                // TODO: quitar este boton
+	    ?>
+	    <div class="form-group">
+		    <a class="btn btn-success" href="<?php echo 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken; ?>">Balance periodo actual</a>
+	    </div>
+
+
+	    <div id="odv" class="table table-bordered" >
                 <div class="contenidos" id="contenidos">
                     <div id="columna1"><span class="etiqueta">Fecha</span></div>
                     <div id="columna1"><span class="etiqueta">Integrado</span></div>
@@ -97,8 +104,9 @@ $formToken  = JSession::getFormToken(true).'=1';
 
 
                 </div>
-                <?php foreach ($this->balances as $key => $value) {
-	                $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
+
+	            <?php foreach ($this->balances as $key => $value) {
+	                  $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
 	                ?>
                 <div class="contenidos" id="contenidos">
                     <div id="columna1" class="fecha"><?php echo $value->year; ?></div>
