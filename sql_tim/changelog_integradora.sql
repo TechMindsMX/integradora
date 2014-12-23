@@ -51,6 +51,7 @@ ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `statusName` 
 --rollback ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
 
 --changeset lutek:5
+DROP TABLE IF EXISTS `flpmu_catalog_tipoperiodos`;
 CREATE TABLE `integradb`.`flpmu_catalog_tipoperiodos` (
   `IdTipo` INT(11) NULL,
   `nombre` VARCHAR(45) NULL,
@@ -67,6 +68,7 @@ INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodo
 --rollback ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` DROP `status`;
 
 --changeset lutek:6
+DROP TABLE IF EXISTS `flpmu_integrado_timone`;
 CREATE TABLE `integradb`.`flpmu_integrado_timone` (
   `integradoId` INT NOT NULL,
   `timOneId` INT NULL,
@@ -75,6 +77,7 @@ CREATE TABLE `integradb`.`flpmu_integrado_timone` (
 --rollback DROP TABLE `integradb`.`flpmu_integrado_timone`;
 
 --changeset ricardolyon:7
+DROP TABLE IF EXISTS `flpmu_reportes_balance`;
 CREATE TABLE `integradb`.`flpmu_reportes_balance` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `integradoId` VARCHAR(45) NOT NULL,

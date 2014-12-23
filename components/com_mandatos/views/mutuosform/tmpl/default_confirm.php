@@ -18,15 +18,12 @@ foreach ($bancos as $value) {
 }
 ?>
 <script>
-    function ajax(parametros){
-
-        var request = jQuery.ajax({
-            url: parametros.link,
-            data: parametros.datos,
+    function ajax(parameters) {
+        return jQuery.ajax({
+            url: parameters.link,
+            data: parameters.datos,
             type: 'post'
         });
-
-        return request;
     }
 
     function cancel() {
@@ -38,9 +35,9 @@ foreach ($bancos as $value) {
     function confirm(){
         var form        = jQuery('#confirmForm');
         var data        = form.serialize();
-        var url         = 'index.php?option=com_mandatos&task=mutuosform.saveMutuo&format=raw'
-        var parametros  = {'datos': data, 'link':url};
-        var request     = ajax(parametros);
+        var url         = 'index.php?option=com_mandatos&task=mutuosform.saveMutuo&format=raw';
+        var parameters  = {'datos': data, 'link':url};
+        var request     = ajax(parameters);
 
         request.done(function(result){
             if(result.success && result.redirect){

@@ -11,17 +11,12 @@ class MandatosViewMutuoslist extends JViewLegacy {
         $this->catalogos      = $this->get('catalogos');
         $this->mutuosAcreedor = $this->get('MutuosAcreedor');
         $this->mutuosDeudor   = $this->get('MutuosDeudor');
-
         $this->data           = $this->get('Post');
 
 		// Check for errors.
         if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 			return false;
-        }
-        if($this->data->layout == 'confirmMutuo'){
-            $this->get('servicio');
-            exit;
         }
 
 		$this->loadHelper('Mandatos');
