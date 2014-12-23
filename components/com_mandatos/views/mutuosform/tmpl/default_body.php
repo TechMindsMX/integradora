@@ -157,7 +157,7 @@ $optionBancos = '';
 
 <h1><?php echo JText::_('COM_MANDATOS_MUTUOS_FORM_TITULO'); ?></h1>
 <div class="clearfix">&nbsp;</div>
-<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirmMutuo" role="form" enctype="multipart/form-data">
+<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
     <div>
         <input type="hidden" name="id" id="id" value="<?php echo $datos->id; ?>" />
         <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->integradoId; ?>" />
