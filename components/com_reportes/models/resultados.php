@@ -43,62 +43,63 @@ class ReportesModelResultados extends JModelItem {
     }
 
     public function getReporte(){
-        $input          = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
-        $startPeriod    = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
-        $endPeriod      = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
+        $input                 = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
+        $input->startDate      = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
+        $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
 
-        $reporte = new stdClass();
-
-        $reporte->period->startDate = $startPeriod;
-        $reporte->period->endDate   = $endPeriod;
-
-        getFromTimOne::convierteFechas($reporte->period);
-
-        $reporte->totalIngresos = 0;
-        $cxc = getFromTimOne::getOrdenesVenta($this->input->integradoId);
-        $cxc = getFromTimOne::filterByDate($cxc, $startPeriod,$endPeriod);
-
-        foreach ($cxc as $value) {
-            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
-                if(is_null($input->proyecto)) {
-                    $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
-                }else{
-                    if($value->projectId2 == 0){
-                        if($value->projectId == $input->proyecto){
-                            $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
-                        }
-                    }else{
-                        if($value->projectId2 == $input->proyecto){
-                            $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
-                        }
-                    }
-                }
-            }
-        }
-
-        $reporte->totalEgresos = 0;
-        $cxp = getFromTimOne::getOrdenesCompra($this->input->integradoId);
-        $cxp = getFromTimOne::filterByDate($cxp, $startPeriod,$endPeriod);
-
-        foreach ($cxp as $value) {
-            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
-                if( is_null($input->proyecto) ) {
-                    $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
-                }else{
-                    if( isset($value->sub_proyecto) ){
-                        if( (int)$value->sub_proyecto->id_proyecto == $input->proyecto ){
-                            $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
-                        }
-                    }else{
-                        if( (int)$value->proyecto->id_proyecto == $input->proyecto ){
-                            $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $reporte;
+        getFromTimOne::getReporteResultados($input);
+//        $reporte = new stdClass();
+//
+//        $reporte->period->startDate = $startPeriod;
+//        $reporte->period->endDate   = $endPeriod;
+//
+//        getFromTimOne::convierteFechas($reporte->period);
+//
+//        $reporte->totalIngresos = 0;
+//        $cxc = getFromTimOne::getOrdenesVenta($this->input->integradoId);
+//        $cxc = getFromTimOne::filterByDate($cxc, $startPeriod,$endPeriod);
+//
+//        foreach ($cxc as $value) {
+//            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
+//                if(is_null($input->proyecto)) {
+//                    $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
+//                }else{
+//                    if($value->projectId2 == 0){
+//                        if($value->projectId == $input->proyecto){
+//                            $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
+//                        }
+//                    }else{
+//                        if($value->projectId2 == $input->proyecto){
+//                            $reporte->totalIngresos = (float)$reporte->totalIngresos + $value->totalAmount;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        $reporte->totalEgresos = 0;
+//        $cxp = getFromTimOne::getOrdenesCompra($this->input->integradoId);
+//        $cxp = getFromTimOne::filterByDate($cxp, $startPeriod,$endPeriod);
+//
+//        foreach ($cxp as $value) {
+//            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
+//                if( is_null($input->proyecto) ) {
+//                    $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
+//                }else{
+//                    if( isset($value->sub_proyecto) ){
+//                        if( (int)$value->sub_proyecto->id_proyecto == $input->proyecto ){
+//                            $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
+//                        }
+//                    }else{
+//                        if( (int)$value->proyecto->id_proyecto == $input->proyecto ){
+//                            $reporte->totalEgresos = (float)$reporte->totalEgresos + $value->totalAmount;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return $reporte;
     }
 
     public function getDetalleIngresos($periodStarDate = null, $periodEndDate = null){

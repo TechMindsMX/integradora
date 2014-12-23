@@ -353,7 +353,12 @@ class getFromTimOne{
        return $respuesta;
     }
 
-	public function createNewProject($envio, $integradoId){
+    public static function getReporteResultados($params){
+
+        exit;
+    }
+
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
