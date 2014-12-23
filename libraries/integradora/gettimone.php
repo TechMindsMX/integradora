@@ -180,7 +180,7 @@ class getFromTimOne{
         $tabla->tasa_efectiva_periodo  = (float) $temp*100;
         $tabla->capital_fija           = (float) $data->capital/$data->tiempoplazo;
         $final                         = (float) $tabla->capital;
-        $capital                       = (float) round($tabla->capital_fija);
+        $capital                       = (float) $tabla->capital_fija;
 
         for($i = 1; $i <= $data->tiempoplazo; $i++ ){
             $inicial              = (float)$final;
@@ -198,7 +198,7 @@ class getFromTimOne{
                 'intiva'        => (float) $intiva,
                 'intereses'     => (float) $intereses,
                 'iva'           => (float) $iva,
-                'acapital'      => (float) round($tabla->capital_fija),
+                'acapital'      => (float) $tabla->capital_fija,
                 'final'         => (float) $final
             );
         }
@@ -212,7 +212,7 @@ class getFromTimOne{
         $saldo_final                    = (float) $tabla->capital;
 
         for($i = 1; $i <= $data->tiempoplazo; $i++ ){
-            $saldo_inicial                    = (float)round($saldo_final);
+            $saldo_inicial                    = (float)$saldo_final;
             $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
             $intereses                        = (float)$intiva/1.16;
             $iva                              = (float)$intereses*0.16;
