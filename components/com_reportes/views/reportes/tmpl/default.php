@@ -1,6 +1,6 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
-header('location: ?view=reporteslistados&integradoId=1');
+header('location: ?option=com_reportes&view=reporteslistados&integradoId=1');
 jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
 
