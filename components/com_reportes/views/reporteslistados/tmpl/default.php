@@ -90,7 +90,7 @@ $formToken  = JSession::getFormToken(true).'=1';
 	    <?php 	                // TODO: quitar este boton
 	    ?>
 	    <div class="form-group">
-		    <a class="btn btn-success" href="<?php echo 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken; ?>">Balance periodo actual</a>
+		    <a class="btn btn-success" href="<?php echo 'index.php?option=com_reportes&view=balance&id=&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken; ?>">Balance periodo actual</a>
 	    </div>
 
 
