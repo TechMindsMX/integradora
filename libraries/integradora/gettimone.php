@@ -2200,11 +2200,13 @@ class ReportResultados extends IntegradoOrders{
     }
 
     public function getIngresos(){
-        $this->ingresos = $this->getData($this->odv);
+        $this->ingresos = $this->getData($this->orders->odv);
+        getFromTimOne::filterByDate($this->orders->odv, $this->fechaInicio, $this->fechaFin);
     }
 
     public function getEgresos(){
-        $this->egresos = $this->getData($this->odc);
+        $this->egresos = $this->getData($this->orders->odc);
+        getFromTimOne::filterByDate($this->orders->odc, $this->fechaInicio, $this->fechaFin);
     }
 
     public function getData($Orders){
@@ -2223,16 +2225,16 @@ class IntegradoOrders{
     }
 
     private function setOrders($integradoId){
-        $this->odv = getFromTimOne::getOrdenesVenta($integradoId);
-        $this->odc = getFromTimOne::getOrdenesCompra($integradoId);
-        $this->odd = getFromTimOne::getOrdenesDeposito($integradoId);
-        $this->odr = getFromTimOne::getOrdenesRetiro($integradoId);
+        $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
+        $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
+        $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
+        $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
 
         $this->getTxs();
     }
 
     private function getTxs(){
-        foreach ($this as $key => $value) {
+        foreach ($this->orders as $key => $value) {
             foreach ($value as $orden) {
                 $orden->txs = getFromTimOne::getTxbyIntegradoByOrderTypeAndId($orden->integradoId, $key, $orden->id);
                 $this->getTxDetails($orden->txs);

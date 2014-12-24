@@ -4,14 +4,13 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.html.html.bootstrap');
 JHTML::_('behavior.calendar');
 
-$egresos    = $this->egresos;
-$ingresos   = $this->ingresos;
 $integ      = $this->integrado;
 $report     = $this->reporte;
+var_dump($report);
 $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
-$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+//$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 ?>
 <script>
     var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
@@ -65,7 +64,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </div>
 </div>
 
-<br class="row-separator">
+<!--br class="row-separator">
 
 <h1 class="t-center"><?php echo JText::_('LBL_ESTADORESULTS'); ?></h1>
 
@@ -210,4 +209,4 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </tbody>
 
 </table>
-</div>
+</div-->

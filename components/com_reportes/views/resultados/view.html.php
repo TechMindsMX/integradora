@@ -22,8 +22,6 @@ class ReportesViewResultados extends JViewLegacy
         $this->integrado              = $integrado->integrados[0];
         $this->integrado->displayName = $integrado->getDisplayName();
         $this->reporte                = $this->get('Reporte');
-        $this->ingresos               = $this->get('DetalleIngresos');
-        $this->egresos                = $this->get('DetalleEgresos');
         $this->integrado->address     = $this->addressFromatted($integId);
         $this->proyectos              = $this->get('Proyectos');
 
