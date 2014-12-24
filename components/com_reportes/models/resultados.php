@@ -48,7 +48,9 @@ class ReportesModelResultados extends JModelItem {
         $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
         $input->type           = array('ingresos' => 'odc', 'egresos' => 'odv');
         $input->integradoId    = $this->input->integradoId;
-        $reportResultados      = new ReportResultados(1);
+
+        // TODO: quitar hardcoded data
+        $reportResultados      = new ReportResultados(1 ,1417392000 ,1420070399 );
         $reportResultados->getIngresos();
 
         var_dump($reportResultados->odv[0]);
