@@ -365,7 +365,8 @@ class getFromTimOne{
         $neto = 0;
         $iva = 0;
         $total = 0;
-        $saldo = 0;
+
+        $obj = new stdClass();
 
         foreach ( $orders as $order ) {
             $neto = $neto + $order->subTotalAmount;
@@ -380,8 +381,16 @@ class getFromTimOne{
             //TODO verificar IVA de saldo
             $order->saldo->total = $order->totalAmount - $montoTxs;
             $order->saldo->iva   = $montoTxs * ($order->iva / $order->subTotalAmount);
+
+            $obj->pagado->total[] = $montoTxs;
+            $obj->pagado->iva[] = $order->saldo->iva;
+            $obj->pagado->neto[] = $montoTxs - $order->saldo->iva;
         }
-        $obj = new stdClass();
+
+        $obj->pagado->total     = array_sum($obj->pagado->total);
+        $obj->pagado->iva       = array_sum($obj->pagado->iva);
+        $obj->pagado->neto      = array_sum($obj->pagado->neto);
+
         $obj->neto = $neto;
         $obj->iva = $iva;
         $obj->total = $total;
@@ -620,6 +629,7 @@ class getFromTimOne{
 
     public static function getOrdersCxP( $intergradoId = null ){
         $orders = new stdClass();
+
         $orders->odc = self::getOrdenesCompra($intergradoId);
 
         if ( ! empty( $orders ) ) {
@@ -2020,6 +2030,8 @@ class ReportBalance extends IntegradoOrders {
                 $this->request->balanceId   = $params['balanceId'];
             }
         }
+
+        parent::__construct($params['integradoId']);
     }
 
     public function generateBalance( ) {
@@ -2106,37 +2118,19 @@ class ReportBalance extends IntegradoOrders {
     }
 
     private function getCxP() {
-        $respuesta = new stdClass();
-        $respuesta->neto = 0;
-        $respuesta->iva = 0;
-        $respuesta->total = 0;
-
-        $orders = getFromTimOne::getOrdersCxP($this->request->integradoId);
-
-        $filteredOrders = getFromTimOne::filterByDate($orders->odc, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
-
-        if ( ! empty( $filteredOrders ) ) {
-            $respuesta = $this->sumOrders($filteredOrders);
-        }
-
-        return $respuesta;
+        var_dump($this);exit;
+        return $this->pasivo->data = $this->getData($this->odc);
     }
 
     private function getCxC() {
-        $respuesta = new stdClass();
-        $respuesta->neto = 0;
-        $respuesta->iva = 0;
-        $respuesta->total = 0;
+        return $this->activo->data = $this->getData($this->odv);
+    }
 
-        $orders = getFromTimOne::getOrdersCxC($this->request->integradoId);
+    public function getData($Orders){
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
+        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
 
-        $filteredOrders = getFromTimOne::filterByDate($orders->odv, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
-
-        if ( ! empty( $filteredOrders ) ) {
-            $respuesta = $this->sumOrders($filteredOrders);
-        }
-
-        return $respuesta;
+        return $sumaOrdenes;
     }
 
     /**
@@ -2215,6 +2209,36 @@ class ReportResultados extends IntegradoOrders{
 
         return $sumaOrdenes;
     }
+
+}
+
+class ReportFlujo extends IntegradoOrders {
+
+    protected $fechaInicio;
+    protected $fechaFin;
+
+    function __construct($balanceId, $integradoId, $fechaInicio, $fechaFin ) {
+        $this->fechaInicio = $fechaInicio;
+        $this->fechaFin    = $fechaFin;
+
+        parent::__construct($integradoId);
+    }
+
+    public function getIngresos(){
+        $this->ingresos = $this->getData($this->orders->odv);
+    }
+
+    public function getEgresos(){
+        $this->egresos = $this->getData($this->orders->odc);
+    }
+
+    public function getData($Orders){
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
+        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
+
+        return $sumaOrdenes;
+    }
+
 
 }
 
