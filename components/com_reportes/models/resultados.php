@@ -46,19 +46,24 @@ class ReportesModelResultados extends JModelItem {
         $input                 = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
         $input->startDate      = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
         $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
-        $input->type           = 'ingresos';
+        $input->type           = array('ingresos' => 'odc', 'egresos' => 'odv');
+        $input->integradoId    = $this->input->integradoId;
+        $reportResultados      = new ReportResultados(1);
+        $reportResultados->getIngresos();
 
-        getFromTimOne::getReporteResultados($input);
+        var_dump($reportResultados->odv[0]);
+        exit;
+
 //        $reporte = new stdClass();
 //
-//        $reporte->period->startDate = $startPeriod;
-//        $reporte->period->endDate   = $endPeriod;
+//        $reporte->period->startDate = $input->startDate;
+//        $reporte->period->endDate   = $input->endDate;
 //
 //        getFromTimOne::convierteFechas($reporte->period);
 //
 //        $reporte->totalIngresos = 0;
 //        $cxc = getFromTimOne::getOrdenesVenta($this->input->integradoId);
-//        $cxc = getFromTimOne::filterByDate($cxc, $startPeriod,$endPeriod);
+//        $cxc = getFromTimOne::filterByDate($cxc, $input->startDate,$input->endDate);
 //
 //        foreach ($cxc as $value) {
 //            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
@@ -80,7 +85,7 @@ class ReportesModelResultados extends JModelItem {
 //
 //        $reporte->totalEgresos = 0;
 //        $cxp = getFromTimOne::getOrdenesCompra($this->input->integradoId);
-//        $cxp = getFromTimOne::filterByDate($cxp, $startPeriod,$endPeriod);
+//        $cxp = getFromTimOne::filterByDate($cxp, $input->startDate,$input->endDate);
 //
 //        foreach ($cxp as $value) {
 //            if( ($value->status->id == 5) || ($value->status->id == 13) ) {
@@ -99,7 +104,7 @@ class ReportesModelResultados extends JModelItem {
 //                }
 //            }
 //        }
-//
+//var_dump($reporte);exit;
 //        return $reporte;
     }
 

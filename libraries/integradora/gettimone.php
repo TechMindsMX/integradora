@@ -353,19 +353,40 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getReporteResultados($params){
-        if($params->type == 'ingresos'){
-            $txs = self::selectDB('txs_timone_mandato', 'idIntegrado = 1 AND tipoOrden = "odc"');
-            foreach ($txs as $value) {
-                $value->detalleTx    = self::getTxDataByTxId($value->idTx);
-                $orden = self::getOrdenesCompra(null,$value->idOrden);
-                $value->detalleOrden = $orden[0];
-                $value->diferencia = $value->detalleOrden->totalAmount - $value->detalleTx->amount;
-                var_dump($value);
-            }
+    /*
+    * @param $integradoId
+    * @param $orderType
+    */
+    public static function getTxbyIntegradoByOrderTypeAndId($integradoId, $orderType, $idOrden){
+        return self::selectDB('txs_timone_mandato', 'idIntegrado = '.$integradoId.' AND tipoOrden = "'.$orderType.'" AND idOrden = '.$idOrden);
+    }
 
+    public static function sumaOrders($orders){
+        $neto = 0;
+        $iva = 0;
+        $total = 0;
+        $saldo = 0;
+
+        foreach ( $orders as $order ) {
+            $neto = $neto + $order->subTotalAmount;
+            $iva = $iva + $order->iva;
+            $total = $total + $order->totalAmount;
+
+            $montoTxs = 0;
+            foreach ($order->txs as $tx) {
+                $montoTxs = $montoTxs + $tx->detalleTx->amount;
+                $tx->detalleTx->ivaProporcion = $tx->detalleTx->amount * ($order->iva / $order->subTotalAmount);
+            }
+            //TODO verificar IVA de saldo
+            $order->saldo->total = $order->totalAmount - $montoTxs;
+            $order->saldo->iva   = $montoTxs * ($order->iva / $order->subTotalAmount);
         }
-        exit;
+        $obj = new stdClass();
+        $obj->neto = $neto;
+        $obj->iva = $iva;
+        $obj->total = $total;
+
+        return $obj;
     }
 
     public function createNewProject($envio, $integradoId){
@@ -627,7 +648,7 @@ class getFromTimOne{
      * @param $orders array
      * @param $statusId array
      */
-    private static function filterOrdersByStatus( $orders, $statusId ){
+    public static function filterOrdersByStatus( $orders, $statusId ){
         $resultados = array();
 
         foreach ( $orders as $key => $value ) {
@@ -777,9 +798,6 @@ class getFromTimOne{
             $value = self::getProyectFromId($value);
             $value = self::getClientFromID($value);
             $value->status = self::getOrderStatusName($value->status);
-
-            // TODO: Cambiar por metodo que busca los pagos asociados a la orden
-            $value->partialPaymentsTotal = 350.21;
         }
 
         return $orden;
@@ -801,6 +819,7 @@ class getFromTimOne{
     public static function getParametrosMutuo( ){
         return self::selectDB('mandatos_mutuos', null, 'id');
     }
+
     public static function getOrderStatusName($statusId){
         $where = null;
 
@@ -1195,13 +1214,13 @@ class getFromTimOne{
         return $txs;
     }
 
-    private static function getTxDataByTxId($txId) {
+    public static function getTxDataByTxId($txId) {
 
         $txstp = new stdClass;
         $txstp->referencia = 'A458455A554SJHS445AA2D';
         $txstp->integradoId = 1;
         $txstp->date = 1419897600000;
-        $txstp->amount = '34014.100';
+        $txstp->amount = 3401.100;
 
 
         $array[] = $txstp;
@@ -1210,7 +1229,7 @@ class getFromTimOne{
         $txstp->referencia = 'A458455A5S1S5200S4AA2D';
         $txstp->integradoId = 1;
         $txstp->date = 1408632474029;
-        $txstp->amount = '1520.2145';
+        $txstp->amount = 1520.2145;
 
 
         $array[] = $txstp;
@@ -1219,7 +1238,7 @@ class getFromTimOne{
         $txstp->referencia = 'A458455A55422S5S555220';
         $txstp->integradoId = 1;
         $txstp->date = 1419897603300;
-        $txstp->amount = '34240.10';
+        $txstp->amount = 3424.10;
 
 
         $array[] = $txstp;
@@ -1228,7 +1247,7 @@ class getFromTimOne{
         $txstp->referencia = 'A458455A55422255F6AA2D';
         $txstp->integradoId = 1;
         $txstp->date = 1419897602100;
-        $txstp->amount = '8340.10';
+        $txstp->amount = 830.10;
 
 
         $array[] = $txstp;
@@ -1237,7 +1256,7 @@ class getFromTimOne{
         $txstp->referencia = 'A458455A55421S555S17S74';
         $txstp->integradoId = 1;
         $txstp->date = 1419897600023;
-        $txstp->amount = '1340.10';
+        $txstp->amount = 1340.10;
 
 
         $array[] = $txstp;
@@ -1246,7 +1265,7 @@ class getFromTimOne{
         $txstp->referencia = 'A458455A554222115s11s5s';
         $txstp->integradoId = 1;
         $txstp->date = 1408632474029;
-        $txstp->amount = '34540.10';
+        $txstp->amount = 3454.10;
 
 
         $array[] = $txstp;
@@ -1259,9 +1278,25 @@ class getFromTimOne{
 
         $array[] = $txstp;
 
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897602100;
+        $txstp->amount = 834.10;
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897602100;
+        $txstp->amount = 834.10;
+
+        $array[] = $txstp;
+
         $txId = (int)$txId;
 
-        return $array[$txId];
+        return @$array[$txId];
     }
 
     public static function getMedidas(){
@@ -2295,26 +2330,71 @@ class ReportBalance extends getFromTimOne {
     }
 
     private function sumOrders( $orders ) {
-        $neto = 0;
-        $iva = 0;
-        $total = 0;
-        foreach ( $orders as $order ) {
-            $neto = $neto + $order->subTotalAmount;
-            $iva = $iva + $order->iva;
-            $total = $total + $order->totalAmount;
-        }
-        $obj = new stdClass();
-        $obj->neto = $neto;
-        $obj->iva = $iva;
-        $obj->total = $total;
-
-        return $obj;
+        return getFromTimOne::sumaOrders($orders);
     }
 
     public static function getIntegradoExistingBalanceList($integradoId) {
         $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
 
         return $data;
+    }
+}
+
+/**
+ * @property mixed ingresos
+ * @property mixed egresos
+ */
+class ReportResultados extends IntegradoOrders{
+
+    public function getIngresos(){
+        $this->ingresos = $this->getData($this->odv);
+    }
+
+    public function getEgresos(){
+        $this->egresos = $this->getData($this->odc);
+    }
+
+    public function getData($Orders){
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
+        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
+
+        return $sumaOrdenes;
+    }
+
+}
+
+class IntegradoOrders{
+
+    function __construct($integradoId){
+        self::setOrders($integradoId);
+    }
+
+    private function setOrders($integradoId){
+        $this->odv = getFromTimOne::getOrdenesVenta($integradoId);
+        $this->odc = getFromTimOne::getOrdenesCompra($integradoId);
+        $this->odd = getFromTimOne::getOrdenesDeposito($integradoId);
+        $this->odr = getFromTimOne::getOrdenesRetiro($integradoId);
+
+        $this->getTxs();
+    }
+
+    private function getTxs(){
+        foreach ($this as $key => $value) {
+            foreach ($value as $orden) {
+                $orden->txs = getFromTimOne::getTxbyIntegradoByOrderTypeAndId($orden->integradoId, $key, $orden->id);
+                $this->getTxDetails($orden->txs);
+            }
+        }
+    }
+
+    /**
+     * @param $txs
+     */
+    public function getTxDetails($txs)
+    {
+        foreach ($txs as $tx) {
+            $tx->detalleTx = getFromTimOne::getTxDataByTxId($tx->idTx);
+        }
     }
 }
 
