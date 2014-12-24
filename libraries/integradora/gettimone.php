@@ -67,25 +67,25 @@ class getFromTimOne{
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
 
-	    $orden->impuestos = $datos->impuestos->totalTrasladados;
+        $orden->impuestos = $datos->impuestos->totalTrasladados;
 
-	    //tomo los productos de la factura
-	    foreach ($datos->conceptos as $value) {
-		    $orden->productos[] = $value;
-	    }
+        //tomo los productos de la factura
+        foreach ($datos->conceptos as $value) {
+            $orden->productos[] = $value;
+        }
 
-	    foreach ($datos->impuestos as $key => $value) {
-		    if($key == 'iva'){
-			    $orden->iva = $value;
-		    }elseif($key == 'ieps'){
-			    $orden->ieps = $value;
-		    }
-	    }
+        foreach ($datos->impuestos as $key => $value) {
+            if($key == 'iva'){
+                $orden->iva = $value;
+            }elseif($key == 'ieps'){
+                $orden->ieps = $value;
+            }
+        }
 
-	    return $orden;
+        return $orden;
     }
 
-	// TODO: Este metodo se elimina y se piden las Txs a TimOne
+    // TODO: Este metodo se elimina y se piden las Txs a TimOne
     public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
     {
         $where = null;
@@ -100,7 +100,7 @@ class getFromTimOne{
         return $txs;
     }
 
-	// TODO: Este metodo se elimina, sirve como modelo del objeto de datos
+    // TODO: Este metodo se elimina, sirve como modelo del objeto de datos
     public static function getTxConciliaciones($where){
 
         $txs = self::selectDB('txs_banco_integrado',$where,'','getFromTimOne');
@@ -269,53 +269,53 @@ class getFromTimOne{
         return $data;
     }
 
-	public static function filterByDate( $orders, $timestampStart = null, $timestampEnd = null) {
-		$filteredOrders = array();
+    public static function filterByDate( $orders, $timestampStart = null, $timestampEnd = null) {
+        $filteredOrders = array();
 
-		$timestampEnd = isset($timestampEnd) ? $timestampEnd : time();
+        $timestampEnd = isset($timestampEnd) ? $timestampEnd : time();
 
-		if ( isset( $timestampStart ) ) {
-			foreach ( $orders as $key => $val ) {
-				if ($val->timestamps->paymentDate > $timestampStart && $val->timestamps->paymentDate < $timestampEnd) {
-					$filteredOrders[] = $val;
-				}
-			}
-		} else {
-			foreach ( $orders as $key => $val ) {
-				if ( $val->timestamps->paymentDate < $timestampEnd ) {
-					$filteredOrders[] = $val;
-				}
-			}
-		}
+        if ( isset( $timestampStart ) ) {
+            foreach ( $orders as $key => $val ) {
+                if ($val->timestamps->paymentDate > $timestampStart && $val->timestamps->paymentDate < $timestampEnd) {
+                    $filteredOrders[] = $val;
+                }
+            }
+        } else {
+            foreach ( $orders as $key => $val ) {
+                if ( $val->timestamps->paymentDate < $timestampEnd ) {
+                    $filteredOrders[] = $val;
+                }
+            }
+        }
 
-		return $filteredOrders;
-	}
+        return $filteredOrders;
+    }
 
-	/**
-	 * @param $url
-	 *
-	 * @return string
-	 * @throws Exception
-	 */
-	public static function generatePrintButton( $url ) {
+    /**
+     * @param $url
+     *
+     * @return string
+     * @throws Exception
+     */
+    public static function generatePrintButton( $url ) {
 // Vista previa de impresion
-		$app      = JFactory::getApplication();
-		$document = JFactory::getDocument();
+        $app      = JFactory::getApplication();
+        $document = JFactory::getDocument();
 
-		$isModal  = $app->input->get( 'print' ) == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
-		$template = $app->getTemplate();
-		$document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/bootstrap.css' );
-		$document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/override.css' );
-		if ( $isModal ) {
-			$href = '"#" onclick="window.print(); return false;"';
-		} else {
-			$href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-			$href = "window.open(this.href,'win2','" . $href . "'); return false;";
-			$href = $url . '&tmpl=component&print=1" onclick="' . $href;
-		}
+        $isModal  = $app->input->get( 'print' ) == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
+        $template = $app->getTemplate();
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/bootstrap.css' );
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/override.css' );
+        if ( $isModal ) {
+            $href = '"#" onclick="window.print(); return false;"';
+        } else {
+            $href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
+            $href = "window.open(this.href,'win2','" . $href . "'); return false;";
+            $href = $url . '&tmpl=component&print=1" onclick="' . $href;
+        }
 
-		return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
-	}
+        return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
+    }
     /*DETALLES
         Este metodo realiza una busqueda en la tabla ordenes_prestamo
         los parametros recibidos son:
@@ -350,11 +350,21 @@ class getFromTimOne{
             $respuesta->mudutuo     = $mutuo;
         }
 
-       return $respuesta;
+        return $respuesta;
     }
 
     public static function getReporteResultados($params){
+        if($params->type == 'ingresos'){
+            $txs = self::selectDB('txs_timone_mandato', 'idIntegrado = 1 AND tipoOrden = "odc"');
+            foreach ($txs as $value) {
+                $value->detalleTx    = self::getTxDataByTxId($value->idTx);
+                $orden = self::getOrdenesCompra(null,$value->idOrden);
+                $value->detalleOrden = $orden[0];
+                $value->diferencia = $value->detalleOrden->totalAmount - $value->detalleTx->amount;
+                var_dump($value);
+            }
 
+        }
         exit;
     }
 
@@ -392,7 +402,7 @@ class getFromTimOne{
             $db->setQuery($query);
             $results = $db->loadObjectList($keyAssoc, $class);
         }catch (Exception $e){
-           echo '<pre>';
+            echo '<pre>';
             var_dump($e);
             exit;
         }
@@ -589,7 +599,7 @@ class getFromTimOne{
 
     public static function getOrdersCxP( $intergradoId = null ){
         $orders = new stdClass();
-	    $orders->odc = self::getOrdenesCompra($intergradoId);
+        $orders->odc = self::getOrdenesCompra($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -602,7 +612,7 @@ class getFromTimOne{
 
     public static function getOrdersCxC( $intergradoId = null ){
         $orders = new stdClass();
-	    $orders->odv = self::getOrdenesVenta($intergradoId);
+        $orders->odv = self::getOrdenesVenta($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -647,13 +657,13 @@ class getFromTimOne{
         return $ordenes;
     }
 
-	public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
+    public static function getOrdenesDeposito($integradoId = null, $idOrden = null){
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
 
         foreach ($orden as $value) {
             $value->id              = (INT)$value->id;
             $value->integradoId     = (INT)$value->integradoId;
-	        $value->orderType       = 'odd';
+            $value->orderType       = 'odd';
             $value->numOrden        = (INT)$value->numOrden;
             $value->status          = (INT)$value->status;
             $value->paymentMethod   = (INT)$value->paymentMethod;
@@ -662,11 +672,11 @@ class getFromTimOne{
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
 
-	        $value->status = self::getOrderStatusName($value->status);
-	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
+            $value->status = self::getOrderStatusName($value->status);
+            $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
 
-	        // TODO: Cambiar por metodo que busca los pagos asociados a la orden
-	        $value->partialPaymentsTotal = 350.21;
+            // TODO: Cambiar por metodo que busca los pagos asociados a la orden
+            $value->partialPaymentsTotal = 350.21;
         }
 
         return $orden;
@@ -675,71 +685,71 @@ class getFromTimOne{
     public static function getOrdenesRetiro($integradoId = null, $idOrden= null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_retiro');
 
-		foreach ($orden as $value) {
-			$value->id              = (INT)$value->id;
-			$value->integradoId     = (INT)$value->integradoId;
-			$value->orderType       = 'odr';
-			$value->numOrden        = (INT)$value->numOrden;
-			$value->paymentMethod   = (INT)$value->paymentMethod;
-			$value->status          = (INT)$value->status;
-			$value->totalAmount     = (FLOAT)$value->totalAmount;
-			$value->createdDate     = (STRING)$value->createdDate;
-			$value->paymentDate     = (STRING)$value->paymentDate;
-		}
+        foreach ($orden as $value) {
+            $value->id              = (INT)$value->id;
+            $value->integradoId     = (INT)$value->integradoId;
+            $value->orderType       = 'odr';
+            $value->numOrden        = (INT)$value->numOrden;
+            $value->paymentMethod   = (INT)$value->paymentMethod;
+            $value->status          = (INT)$value->status;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
+            $value->createdDate     = (STRING)$value->createdDate;
+            $value->paymentDate     = (STRING)$value->paymentDate;
+        }
 
-		return $orden;
-	}
+        return $orden;
+    }
 
-	public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
-		$orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
+    public static function getOrdenesCompra($integradoId = null, $idOrden = null) {
+        $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_compra');
 
-		foreach ($orden as $value) {
-			$value->id              = (INT)$value->id;
-			$value->orderType       = 'odc';
-			$value->proyecto        = (INT)$value->proyecto;
-			$value->clientId        = (INT)$value->proveedor;
-			$value->proveedor       = (INT)$value->proveedor;
-			$value->integradoId     = (INT)$value->integradoId;
-			$value->numOrden        = (INT)$value->numOrden;
-			$value->paymentMethod   = (INT)$value->paymentMethod;
-			$value->status          = (INT)$value->status;
-			$value->totalAmount     = (FLOAT)$value->totalAmount;
-			$value->createdDate     = (STRING)$value->createdDate;
-			$value->paymentDate     = (STRING)$value->paymentDate;
-			$value->urlXML          = (STRING)$value->urlXML;
-			$value->observaciones   = (STRING)$value->observaciones;
+        foreach ($orden as $value) {
+            $value->id              = (INT)$value->id;
+            $value->orderType       = 'odc';
+            $value->proyecto        = (INT)$value->proyecto;
+            $value->clientId        = (INT)$value->proveedor;
+            $value->proveedor       = (INT)$value->proveedor;
+            $value->integradoId     = (INT)$value->integradoId;
+            $value->numOrden        = (INT)$value->numOrden;
+            $value->paymentMethod   = (INT)$value->paymentMethod;
+            $value->status          = (INT)$value->status;
+            $value->totalAmount     = (FLOAT)$value->totalAmount;
+            $value->createdDate     = (STRING)$value->createdDate;
+            $value->paymentDate     = (STRING)$value->paymentDate;
+            $value->urlXML          = (STRING)$value->urlXML;
+            $value->observaciones   = (STRING)$value->observaciones;
 
-			$value = self::getProyectFromId($value);
-			$value = self::getClientFromID($value);
-			$value->status = self::getOrderStatusName($value->status);
+            $value = self::getProyectFromId($value);
+            $value = self::getClientFromID($value);
+            $value->status = self::getOrderStatusName($value->status);
 
-			$xmlFileData            = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$value->urlXML);
-			$data 			        = new xml2Array();
-			$value->factura         = $data->manejaXML($xmlFileData);
+            $xmlFileData            = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$value->urlXML);
+            $data 			        = new xml2Array();
+            $value->factura         = $data->manejaXML($xmlFileData);
 
-			$value->subTotalAmount  = (float)$value->factura->comprobante['SUBTOTAL'];
-			$value->totalAmount     = $value->factura->comprobante['TOTAL'];
-			$value->iva             = $value->factura->impuestos->iva->importe;
-			$value->ieps            = $value->factura->impuestos->ieps->importe;
-		}
+            $value->subTotalAmount  = (float)$value->factura->comprobante['SUBTOTAL'];
+            $value->totalAmount     = $value->factura->comprobante['TOTAL'];
+            $value->iva             = $value->factura->impuestos->iva->importe;
+            $value->ieps            = $value->factura->impuestos->ieps->importe;
+        }
 
 
-		return $orden;
-	}
+        return $orden;
+    }
 
-	public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
+    public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
 
         //Cambio el tipo de dato para las validaciones con (===)
         foreach ($orden as $key => $value) {
             $value->id             = (INT)$value->id;
             $value->integradoId    = (INT)$value->integradoId;
-	        $value->orderType      = 'odv';
+            $value->orderType      = 'odv';
             $value->numOrden       = (INT)$value->numOrden;
             $value->proyecto       = (INT)$value->projectId2==0?$value->projectId:$value->projectId2;
             $value->clientId       = (INT)$value->clientId;
             $value->account        = (INT)$value->account;
-	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
+            $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->conditions     = (INT)$value->conditions;
             $value->placeIssue     = (INT)$value->placeIssue;
             $value->status         = (INT)$value->status;
@@ -747,80 +757,80 @@ class getFromTimOne{
             $value->createdDate    = (STRING)$value->createdDate;
             $value->paymentDate    = (STRING)$value->paymentDate;
 
-	        $subTotalOrden        = 0;
-	        $subTotalIva          = 0;
-	        $subTotalIeps         = 0;
+            $subTotalOrden        = 0;
+            $subTotalIva          = 0;
+            $subTotalIeps         = 0;
 
-	        $value->productosData = json_decode($value->productos);
+            $value->productosData = json_decode($value->productos);
 
-	        foreach ($value->productosData  as $producto ) {
-		        $subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
-		        $subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
-		        $subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
-	        }
+            foreach ($value->productosData  as $producto ) {
+                $subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
+                $subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+                $subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
+            }
 
-	        $value->subTotalAmount = (float)$subTotalOrden;
-	        $value->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
-	        $value->iva      = $subTotalIva;
-	        $value->ieps     = $subTotalIeps;
+            $value->subTotalAmount = (float)$subTotalOrden;
+            $value->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
+            $value->iva      = $subTotalIva;
+            $value->ieps     = $subTotalIeps;
 
-	        $value = self::getProyectFromId($value);
-	        $value = self::getClientFromID($value);
-	        $value->status = self::getOrderStatusName($value->status);
+            $value = self::getProyectFromId($value);
+            $value = self::getClientFromID($value);
+            $value->status = self::getOrderStatusName($value->status);
 
-	        // TODO: Cambiar por metodo que busca los pagos asociados a la orden
-	        $value->partialPaymentsTotal = 350.21;
+            // TODO: Cambiar por metodo que busca los pagos asociados a la orden
+            $value->partialPaymentsTotal = 350.21;
         }
 
         return $orden;
     }
 
-	public static function getOrderStatusCatalog( ){
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__catalog_order_status')
-			->order('id');
-		$db->setQuery($query);
+    public static function getOrderStatusCatalog( ){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from('#__catalog_order_status')
+            ->order('id');
+        $db->setQuery($query);
 
-		$result = $db->loadObjectList('id');
+        $result = $db->loadObjectList('id');
 
-		return $result;
-	}
+        return $result;
+    }
 
     public static function getParametrosMutuo( ){
         return self::selectDB('mandatos_mutuos', null, 'id');
     }
-	public static function getOrderStatusName($statusId){
-		$where = null;
+    public static function getOrderStatusName($statusId){
+        $where = null;
 
-		$result = self::getOrderStatusCatalog();
+        $result = self::getOrderStatusCatalog();
 
-		if(isset($statusId)) {
-			if(array_key_exists($statusId, $result)) {
-				$result = $result[$statusId];
-			} else {
-				$result = new stdClass();
-				$result->id = $statusId;
-				$result->name = 'Estatus inválido';
-			}
-		}
+        if(isset($statusId)) {
+            if(array_key_exists($statusId, $result)) {
+                $result = $result[$statusId];
+            } else {
+                $result = new stdClass();
+                $result->id = $statusId;
+                $result->name = 'Estatus inválido';
+            }
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public static function getPaymentMethodName($paymentMethodId){
-		$payMethod = new stdClass();
-		$names = array('SPEI','Cheque','Pago en taquilla','algo','otro');
+    public static function getPaymentMethodName($paymentMethodId){
+        $payMethod = new stdClass();
+        $names = array('SPEI','Cheque','Pago en taquilla','algo','otro');
 
-		$payMethod->id = $paymentMethodId;
-		$payMethod->name = $names[$paymentMethodId];
+        $payMethod->id = $paymentMethodId;
+        $payMethod->name = $names[$paymentMethodId];
 
-		return $payMethod;
-	}
+        return $payMethod;
+    }
 
-	public static function getProyectFromId($orden){
-		$proyectos = self::getProyects($orden->integradoId);
+    public static function getProyectFromId($orden){
+        $proyectos = self::getProyects($orden->integradoId);
 
         if(array_key_exists($orden->proyecto, $proyectos)) {
             $orden->proyecto = $proyectos[$orden->proyecto];
@@ -834,31 +844,31 @@ class getFromTimOne{
         }
 
         $integ = new IntegradoSimple($orden->integradoId);
-		$orden->integradoName = $integ->getDisplayName();
+        $orden->integradoName = $integ->getDisplayName();
 
-		return $orden;
-	}
+        return $orden;
+    }
 
 
-	public static function getClientFromID($orden){
-		$proveedores = array();
+    public static function getClientFromID($orden){
+        $proveedores = array();
 
-		$clientes = self::getClientes($orden->integradoId);
+        $clientes = self::getClientes($orden->integradoId);
 
-		foreach ($clientes as $key => $value) {
-			if ( $value->type == 0 ) {
-				$proveedores[ $value->id ] = $value;
-			} elseif ( $value->type == 1 ) {
-				$proveedores[ $value->id ] = $value;
-			}
-		}
+        foreach ($clientes as $key => $value) {
+            if ( $value->type == 0 ) {
+                $proveedores[ $value->id ] = $value;
+            } elseif ( $value->type == 1 ) {
+                $proveedores[ $value->id ] = $value;
+            }
+        }
 
-		$orden->proveedor = $proveedores[$orden->clientId];
+        $orden->proveedor = $proveedores[$orden->clientId];
 
-		return $orden;
-	}
+        return $orden;
+    }
 
-	public static function getOperacionesPorLiquidar($integradoId){
+    public static function getOperacionesPorLiquidar($integradoId){
         $allOrdenes    = self::getOrdenesVenta($integradoId);
         $subTotalOrden = (FLOAT) 0;
         $subTotalIva   = (FLOAT) 0;
@@ -892,7 +902,7 @@ class getFromTimOne{
         return $odvs;
     }
 
-	public static function getSaldoOperacionesPorLiquidar($integardoId){
+    public static function getSaldoOperacionesPorLiquidar($integardoId){
         $allOdv = self::getOperacionesPorLiquidar($integardoId);
         $montoOperaciones   = new stdClass();
 
@@ -906,7 +916,7 @@ class getFromTimOne{
         return $montoOperaciones;
     }
 
-	public static function getResultados($integradoId)
+    public static function getResultados($integradoId)
     {
         $respuesta = null;
 
@@ -1107,7 +1117,7 @@ class getFromTimOne{
         return $facturas;
     }
 
-	public static function getFactComisiones(){
+    public static function getFactComisiones(){
         $factComiciones = new stdClass();
 
         $factComiciones->id             = 1;
@@ -1171,87 +1181,87 @@ class getFromTimOne{
     }
 
     public static function getTxSinMandato($integradoId = null) {
-	    $where = 'idOrden IS NULL';
-	    if(!is_null($integradoId)) {
-		    $where = $where.' AND idIntegrado = '.$integradoId;
-	    }
+        $where = 'idOrden IS NULL';
+        if(!is_null($integradoId)) {
+            $where = $where.' AND idIntegrado = '.$integradoId;
+        }
 
-	    $txs = getFromTimOne::selectDB( 'txs_timone_mandato', $where );
+        $txs = getFromTimOne::selectDB( 'txs_timone_mandato', $where );
 
-	    foreach ( $txs as $transaction ) {
-		    $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
-	    }
+        foreach ( $txs as $transaction ) {
+            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
+        }
 
-	    return $txs;
+        return $txs;
     }
 
-	private static function getTxDataByTxId($txId) {
+    private static function getTxDataByTxId($txId) {
 
-		$txstp = new stdClass;
-	    $txstp->referencia = 'A458455A554SJHS445AA2D';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1419897600000;
-	    $txstp->amount = '34014.100';
-
-
-	    $array[] = $txstp;
-
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A5S1S5200S4AA2D';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1408632474029;
-	    $txstp->amount = '1520.2145';
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A554SJHS445AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897600000;
+        $txstp->amount = '34014.100';
 
 
-	    $array[] = $txstp;
+        $array[] = $txstp;
 
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A55422S5S555220';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1419897603300;
-	    $txstp->amount = '34240.10';
-
-
-	    $array[] = $txstp;
-
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A55422255F6AA2D';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1419897602100;
-	    $txstp->amount = '8340.10';
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A5S1S5200S4AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1408632474029;
+        $txstp->amount = '1520.2145';
 
 
-	    $array[] = $txstp;
+        $array[] = $txstp;
 
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A55421S555S17S74';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1419897600023;
-	    $txstp->amount = '1340.10';
-
-
-	    $array[] = $txstp;
-
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A554222115s11s5s';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1408632474029;
-	    $txstp->amount = '34540.10';
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422S5S555220';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897603300;
+        $txstp->amount = '34240.10';
 
 
-	    $array[] = $txstp;
+        $array[] = $txstp;
 
-	    $txstp = new stdClass;
-	    $txstp->referencia = 'A458455A55422255F6AA2D';
-	    $txstp->integradoId = 1;
-	    $txstp->date = 1419897600000;
-	    $txstp->amount = '340.10';
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897602100;
+        $txstp->amount = '8340.10';
 
-	    $array[] = $txstp;
 
-		$txId = (int)$txId;
+        $array[] = $txstp;
 
-	    return $array[$txId];
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55421S555S17S74';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897600023;
+        $txstp->amount = '1340.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A554222115s11s5s';
+        $txstp->integradoId = 1;
+        $txstp->date = 1408632474029;
+        $txstp->amount = '34540.10';
+
+
+        $array[] = $txstp;
+
+        $txstp = new stdClass;
+        $txstp->referencia = 'A458455A55422255F6AA2D';
+        $txstp->integradoId = 1;
+        $txstp->date = 1419897600000;
+        $txstp->amount = '340.10';
+
+        $array[] = $txstp;
+
+        $txId = (int)$txId;
+
+        return $array[$txId];
     }
 
     public static function getMedidas(){
@@ -1265,8 +1275,8 @@ class getFromTimOne{
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
             if( is_numeric(strpos(strtolower($key),'date')) ){
-	            $objeto->$key = date('d-m-Y', ($value) );
-	            $objeto->timestamps->$key = (INT)$value;
+                $objeto->$key = date('d-m-Y', ($value) );
+                $objeto->timestamps->$key = (INT)$value;
             }
         }
 
@@ -1293,13 +1303,13 @@ class getFromTimOne{
     }
 
     public static function getTxSTPbyRef( $id ) {
-	    $txs = getFromTimOne::selectDB( 'txs_timone_mandato', 'id = '.(int)$id );
+        $txs = getFromTimOne::selectDB( 'txs_timone_mandato', 'id = '.(int)$id );
 
-	    foreach ( $txs as $transaction ) {
-		    $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
-	    }
+        foreach ( $txs as $transaction ) {
+            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
+        }
 
-	    return $txs[0];
+        return $txs[0];
     }
 
     public static function getOperacionesVenta($integradoId){
@@ -1374,93 +1384,93 @@ class getFromTimOne{
         return $comisiones;
     }
 
-	public static function getComisionesOfIntegrado($integradoId) {
-		$request = new getFromTimOne();
+    public static function getComisionesOfIntegrado($integradoId) {
+        $request = new getFromTimOne();
 
-		$where = null;
-		if(!is_null($integradoId)) {
-			$where = 'integradoId = '.$integradoId;
-		}
-		$comisionesInteg = $request->selectDB('integrado_comisiones', $where);
+        $where = null;
+        if(!is_null($integradoId)) {
+            $where = 'integradoId = '.$integradoId;
+        }
+        $comisionesInteg = $request->selectDB('integrado_comisiones', $where);
 
-		foreach ( $comisionesInteg as $valor ) {
-			$result = $request->getComisiones($valor->comisionId);
-			$comisiones[] = $result[0];
-		}
+        foreach ( $comisionesInteg as $valor ) {
+            $result = $request->getComisiones($valor->comisionId);
+            $comisiones[] = $result[0];
+        }
 
-		return $comisiones;
-	}
-
-	public static function getTriggersComisiones() {
-        $triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
-		$eve = new comisionEvent();
-		$tmp = $eve->getAll();
-
-		foreach ( $tmp as $value ) {
-			$trigg[$value->trigger] = $value->eventFullName;
-		}
-		$triggers = $trigg;
-
-		return $triggers;
+        return $comisiones;
     }
 
-	public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
+    public static function getTriggersComisiones() {
+        $triggers = array('oddpagada' => 'Orden de Depósito pagada', 'odcpagada' => 'Orden de Compra pagada', 'fecha' => 'Según recurrencia');
+        $eve = new comisionEvent();
+        $tmp = $eve->getAll();
 
-		switch ($tipoOrden) {
-			case 'FACTURA':
-				$triggerSearch = 'factpagada';
-				break;
-			case 'ODC':
-				$triggerSearch = 'odcpagada';
-				break;
-			case 'ODD':
-				$triggerSearch = 'oddpagada';
-				break;
-			case 'ODR':
-				$triggerSearch = 'odrpagada';
-				break;
-		}
+        foreach ( $tmp as $value ) {
+            $trigg[$value->trigger] = $value->eventFullName;
+        }
+        $triggers = $trigg;
 
-		if ( ! empty( $comisiones ) && isset($triggerSearch) ) {
-			foreach ( $comisiones as $key => $com ) {
-				if($com->trigger == $triggerSearch) {
-					$comision = $com;
-				}
-			}
-		}
+        return $triggers;
+    }
 
-		// TODO: verificar $orden->totalAmount con el comprobante del xml
-		$montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
+    public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
 
-		return $montoComision;
-	}
+        switch ($tipoOrden) {
+            case 'FACTURA':
+                $triggerSearch = 'factpagada';
+                break;
+            case 'ODC':
+                $triggerSearch = 'odcpagada';
+                break;
+            case 'ODD':
+                $triggerSearch = 'oddpagada';
+                break;
+            case 'ODR':
+                $triggerSearch = 'odrpagada';
+                break;
+        }
 
-	public function getUnpaidOrderStatusCatalog() {
-		$statuses = self::getOrderStatusCatalog();
+        if ( ! empty( $comisiones ) && isset($triggerSearch) ) {
+            foreach ( $comisiones as $key => $com ) {
+                if($com->trigger == $triggerSearch) {
+                    $comision = $com;
+                }
+            }
+        }
 
-		try {
-			if(!array_key_exists(13, $statuses)) {
-				throw new Exception('Código 2001');
-			}
-		}
-		catch (Exception $e) {
-			JFactory::getApplication()->redirect('index.php','Error: '.$e->getMessage());
-		}
+        // TODO: verificar $orden->totalAmount con el comprobante del xml
+        $montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
 
-		foreach ( $statuses as $status ) {
-			if($status->name === 'Pagada' ) {
-				$pagadaStatusId = $status->id;
-			}
-		}
+        return $montoComision;
+    }
 
-		foreach ( $statuses as $id => $status ) {
-			if ($status->id < $pagadaStatusId) {
-				$results[] = $status->id;
-			}
-		}
+    public function getUnpaidOrderStatusCatalog() {
+        $statuses = self::getOrderStatusCatalog();
 
-		return $results;
-	}
+        try {
+            if(!array_key_exists(13, $statuses)) {
+                throw new Exception('Código 2001');
+            }
+        }
+        catch (Exception $e) {
+            JFactory::getApplication()->redirect('index.php','Error: '.$e->getMessage());
+        }
+
+        foreach ( $statuses as $status ) {
+            if($status->name === 'Pagada' ) {
+                $pagadaStatusId = $status->id;
+            }
+        }
+
+        foreach ( $statuses as $id => $status ) {
+            if ($status->id < $pagadaStatusId) {
+                $results[] = $status->id;
+            }
+        }
+
+        return $results;
+    }
 
 }
 
@@ -1479,34 +1489,34 @@ class sendToTimOne {
 
     public static function getTableByType($tipo)
     {
-	    switch($tipo){
+        switch($tipo){
             case 'odd':
-	            $table = 'ordenes_deposito';
-	            break;
-	        case 'odv':
-	            $table = 'ordenes_venta';
-	            break;
-	        case 'odc':
-	            $table = 'ordenes_compra';
-	            break;
-	        case 'odr':
-	            $table = 'ordenes_retiro';
-	            break;
-	        case 'odd_auth':
-	            $table = 'auth_odd';
-	            break;
-	        case 'odv_auth':
-	            $table = 'auth_odv';
-	            break;
-	        case 'odc_auth':
-	            $table = 'auth_odc';
-	            break;
-	        case 'odr_auth':
-	            $table = 'auth_odr';
-	            break;
+                $table = 'ordenes_deposito';
+                break;
+            case 'odv':
+                $table = 'ordenes_venta';
+                break;
+            case 'odc':
+                $table = 'ordenes_compra';
+                break;
+            case 'odr':
+                $table = 'ordenes_retiro';
+                break;
+            case 'odd_auth':
+                $table = 'auth_odd';
+                break;
+            case 'odv_auth':
+                $table = 'auth_odv';
+                break;
+            case 'odc_auth':
+                $table = 'auth_odc';
+                break;
+            case 'odr_auth':
+                $table = 'auth_odr';
+                break;
         }
 
-	    return $table;
+        return $table;
     }
 
     public function getNextOrderNumber($tipo, $integrado){
@@ -1533,9 +1543,9 @@ class sendToTimOne {
     public function formatData($arreglo){
         $db		= JFactory::getDbo();
 
-	    $this->columnas = null;
-	    $this->valores = null;
-	    $this->set = null;
+        $this->columnas = null;
+        $this->valores = null;
+        $this->set = null;
         foreach ($arreglo as $key => $value) {
             $this->columnas[] = $key;
             $this->valores[] = $db->quote($value);
@@ -1552,7 +1562,7 @@ class sendToTimOne {
 
         $projectId = $this->insertDB('integrado_proyectos', $columnas, $valores, true);
 
-	    return $projectId;
+        return $projectId;
     }
 
     /* DATA PARA GUARDADO DE ORDEN DE PRESTAMO
@@ -1613,7 +1623,7 @@ class sendToTimOne {
     }
 
     public function sendDataTIMONE(){
-        
+
     }
 
     public function insertDB($tabla, $columnas=null, $valores=null, $last_inserted_id = null){
@@ -1839,84 +1849,84 @@ class sendToTimOne {
 
     public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
-	    $return = false;
+        $return = false;
 
-	    $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
-	    $integrado = new IntegradoSimple($integradoId);
+        $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+        $integrado = new IntegradoSimple($integradoId);
 
-	    $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
-	    $order = $order[0];
+        $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+        $order = $order[0];
 
-	    //simulado
-	    $integrado->cantidadAuthNecesarias = 1;
+        //simulado
+        $integrado->cantidadAuthNecesarias = 1;
 
-	    $tableAuth = $orderType.'_auth';
-	    $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
+        $tableAuth = $orderType.'_auth';
+        $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
-	    $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
-	    $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+        $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+        $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-	    if ($order->canChangeStatus) {
-		    $this->formatData(array('status' => $orderNewStatus ));
-		    $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
+        if ($order->canChangeStatus) {
+            $this->formatData(array('status' => $orderNewStatus ));
+            $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
 
-		    $this->formatData(array('idOrden'=> $order->id,
-		                            'userId' => JFactory::getUser()->id,
-		                            'changeDate'=> time(),
-		                            'pastStatus' => $order->status ,
-		                            'newStatus'=> $orderNewStatus,
-			                        'result' => $return
-		                      ));
-		    $bitacora = $this->insertDB('bitacora_status_'.$orderType);
-	    }
+            $this->formatData(array('idOrden'=> $order->id,
+                'userId' => JFactory::getUser()->id,
+                'changeDate'=> time(),
+                'pastStatus' => $order->status ,
+                'newStatus'=> $orderNewStatus,
+                'result' => $return
+            ));
+            $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+        }
 
-	    return $return;
+        return $return;
     }
 
-	private function validStatusChange($order,$orderNewStatus) {
-		$return = false;
+    private function validStatusChange($order,$orderNewStatus) {
+        $return = false;
 
-		switch ((INT)$order->status) {
-			case 0:
-				$return = $orderNewStatus == 1 && $order->hasAllAuths;
-				break;
-			case 1:
-				$return = $orderNewStatus == 2 && $order->hasAllAuths;
-				break;
-			case 2:
-				$return = $orderNewStatus == 3 && $order->hasAllAuths;
-				break;
-		}
+        switch ((INT)$order->status) {
+            case 0:
+                $return = $orderNewStatus == 1 && $order->hasAllAuths;
+                break;
+            case 1:
+                $return = $orderNewStatus == 2 && $order->hasAllAuths;
+                break;
+            case 2:
+                $return = $orderNewStatus == 3 && $order->hasAllAuths;
+                break;
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-	public static function referenciaTxMandato($txObject, $idOrden, $orderType) {
-		switch ($orderType){
-			case 'odc':
-				$orders = getFromTimOne::getOrdenesCompra(null, $idOrden);
-				break;
-			case 'odv':
-				$orders = getFromTimOne::getOrdenesVenta(null, $idOrden);
-				break;
-			case 'odd':
-				$orders = getFromTimOne::getOrdenesDeposito(null, $idOrden);
-				break;
-		}
-		$orders = $orders[0];
+    public static function referenciaTxMandato($txObject, $idOrden, $orderType) {
+        switch ($orderType){
+            case 'odc':
+                $orders = getFromTimOne::getOrdenesCompra(null, $idOrden);
+                break;
+            case 'odv':
+                $orders = getFromTimOne::getOrdenesVenta(null, $idOrden);
+                break;
+            case 'odd':
+                $orders = getFromTimOne::getOrdenesDeposito(null, $idOrden);
+                break;
+        }
+        $orders = $orders[0];
 
-		$save = new sendToTimOne();
+        $save = new sendToTimOne();
 
-		$tx['idOrden'] = $orders->id;
-		$tx['tipoOrden'] = $orderType;
+        $tx['idOrden'] = $orders->id;
+        $tx['tipoOrden'] = $orderType;
 
-		$save->formatData($tx);
-		$save->updateDB('txs_timone_mandato',null, 'id = '.$txObject->id);
+        $save->formatData($tx);
+        $save->updateDB('txs_timone_mandato',null, 'id = '.$txObject->id);
 
-		$returnObj = getFromTimOne::getTxSTPbyRef($txObject->id);
+        $returnObj = getFromTimOne::getTxSTPbyRef($txObject->id);
 
-		return $returnObj;
-	}
+        return $returnObj;
+    }
 
     public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
         //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
@@ -1928,125 +1938,125 @@ class sendToTimOne {
 }
 
 class comisionEvent {
-	public $id;
-	public $type;
-	public $trigger;
-	public $eventFullName;
+    public $id;
+    public $type;
+    public $trigger;
+    public $eventFullName;
 
-	public function getAll() {
-		$result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
+    public function getAll() {
+        $result = getFromTimOne::selectDB('catalog_comisiones_eventos', null, '', 'comisionEvent');
 
-		return $result;
-	}
+        return $result;
+    }
 }
 
 /**
  * Class ReportBalance
  */
 class ReportBalance extends getFromTimOne {
-	public $integradoId;
-	public $retiros;
-	public $depositos;
-	public $capital;
-	public $pasivo;
-	public $observaciones;
-	public $status;
-	public $paymentType;
-	public $currency;
-	public $createdDate;
-	public $proyectId;
-	public $numBalance;
-	public $id;
-	public $period;
-	public $year;
-	public $activo;
-	protected $request;
+    public $integradoId;
+    public $retiros;
+    public $depositos;
+    public $capital;
+    public $pasivo;
+    public $observaciones;
+    public $status;
+    public $paymentType;
+    public $currency;
+    public $createdDate;
+    public $proyectId;
+    public $numBalance;
+    public $id;
+    public $period;
+    public $year;
+    public $activo;
+    protected $request;
 
-	/**
-	 * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null)
-	 */
-	function __construct( $params ) {
-		list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin();
+    /**
+     * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null)
+     */
+    function __construct( $params ) {
+        list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin();
 
-		$this->request->integradoId = $params['integradoId'];
+        $this->request->integradoId = $params['integradoId'];
 
-		if ( isset( $params['balanceId'] ) ) {
-			if ( $params['balanceId'] != 0 ) {
-				$this->request->balanceId   = $params['balanceId'];
-			}
-		}
-	}
+        if ( isset( $params['balanceId'] ) ) {
+            if ( $params['balanceId'] != 0 ) {
+                $this->request->balanceId   = $params['balanceId'];
+            }
+        }
+    }
 
-	public function generateBalance( ) {
-		$respuesta = null;
+    public function generateBalance( ) {
+        $respuesta = null;
 
-		$this->createData();
-		getFromTimOne::convierteFechas( $this );
-		$this->setDatesForDisplay();
+        $this->createData();
+        getFromTimOne::convierteFechas( $this );
+        $this->setDatesForDisplay();
 
-	}
+    }
 
-	public function getExistingBalance() {
+    public function getExistingBalance() {
 
-		if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
-			$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
-			list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin($data[0]->year);
-		}
+        if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
+            $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
+            list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin($data[0]->year);
+        }
 
-		$this->generateBalance();
-	}
+        $this->generateBalance();
+    }
 
-	/**
-	 * @internal param $b
-	 */
-	public function createData() {
-		$this->createdDate                     = time();
-		$this->year                            = 2013;
-		$this->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
-		$this->pasivo->ivaVentas               = $this->getCxP()->iva;
-		$this->pasivo->total                   = $this->pasivo->cuentasPorPagar + $this->pasivo->ivaVentas;
-		$this->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
-		$this->activo->cuentasPorCobrar        = $this->getCxC()->neto;
-		$this->activo->ivaCompras              = $this->getCxC()->iva;
-		$this->activo->total                   = $this->activo->cuentasPorCobrar + $this->activo->ivaCompras + $this->activo->bancoSaldoEndDate;
-		$this->capital->ejecicioAnterior       = 0;
-		$this->capital->totalEdoResultados     = 750;
-		$this->depositos->ejecicioAnterior     = 0;
-		$this->depositos->actual               = 600;
-		$this->retiros->ejecicioAnterior       = 0;
-		$this->retiros->actual                 = 350;
+    /**
+     * @internal param $b
+     */
+    public function createData() {
+        $this->createdDate                     = time();
+        $this->year                            = 2013;
+        $this->pasivo->cuentasPorPagar         = $this->getCxP()->neto;; // suma historica de CxP
+        $this->pasivo->ivaVentas               = $this->getCxP()->iva;
+        $this->pasivo->total                   = $this->pasivo->cuentasPorPagar + $this->pasivo->ivaVentas;
+        $this->activo->bancoSaldoEndDate       = $this->getBancoSaldoEndDate();
+        $this->activo->cuentasPorCobrar        = $this->getCxC()->neto;
+        $this->activo->ivaCompras              = $this->getCxC()->iva;
+        $this->activo->total                   = $this->activo->cuentasPorCobrar + $this->activo->ivaCompras + $this->activo->bancoSaldoEndDate;
+        $this->capital->ejecicioAnterior       = 0;
+        $this->capital->totalEdoResultados     = 750;
+        $this->depositos->ejecicioAnterior     = 0;
+        $this->depositos->actual               = 600;
+        $this->retiros->ejecicioAnterior       = 0;
+        $this->retiros->actual                 = 350;
 
-		$this->capital->total                  = ($this->capital->ejecicioAnterior + $this->capital->totalEdoResultados + $this->depositos->ejecicioAnterior + $this->depositos->actual) - ($this->retiros->ejecicioAnterior + $this->retiros->actual);
-	}
+        $this->capital->total                  = ($this->capital->ejecicioAnterior + $this->capital->totalEdoResultados + $this->depositos->ejecicioAnterior + $this->depositos->actual) - ($this->retiros->ejecicioAnterior + $this->retiros->actual);
+    }
 
-	private function getIvaVentasPeriodo( ) {
-		$ivas = array();
-		$invoices   = getFromTimOne::getOrdersCxC($this->request->integradoId);
+    private function getIvaVentasPeriodo( ) {
+        $ivas = array();
+        $invoices   = getFromTimOne::getOrdersCxC($this->request->integradoId);
 
-		$filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+        $filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
-		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
-		foreach ( $filteredOrders as $fact ) {
-			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
+        $unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
+        foreach ( $filteredOrders as $fact ) {
+            $testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
 
-			$testDates = ($fact->timestamps->createdDate >= $this->period->startDate->timestamp && $fact->timestamps->createdDate <= $this->period->endDate->timestamp);
-			if ( $testStatus && $testDates) {
-				$ivas[] = $fact->iva;
-			}
-		}
+            $testDates = ($fact->timestamps->createdDate >= $this->period->startDate->timestamp && $fact->timestamps->createdDate <= $this->period->endDate->timestamp);
+            if ( $testStatus && $testDates) {
+                $ivas[] = $fact->iva;
+            }
+        }
 
-		return array_sum($ivas);
-	}
+        return array_sum($ivas);
+    }
 
-	private function getIvaComprasPeriodo() {
-		$ivas = array();
-		$invoices   = getFromTimOne::getOrdersCxP($this->request->integradoId);
+    private function getIvaComprasPeriodo() {
+        $ivas = array();
+        $invoices   = getFromTimOne::getOrdersCxP($this->request->integradoId);
 
-		$filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+        $filteredOrders = getFromTimOne::filterByDate($invoices, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
-		if ( ! empty( $filteredOrders ) ) {
-			$respuesta = $this->sumOrders($filteredOrders);
-		}
+        if ( ! empty( $filteredOrders ) ) {
+            $respuesta = $this->sumOrders($filteredOrders);
+        }
 //		$unpaidStatusCatalog = parent::getUnpaidOrderStatusCatalog();
 //		foreach ( $filteredOrders as $fact ) {
 //			$testStatus = in_array( $fact->status->id, $unpaidStatusCatalog);
@@ -2057,255 +2067,255 @@ class ReportBalance extends getFromTimOne {
 //			}
 //		}
 
-		return array_sum($ivas);
-	}
+        return array_sum($ivas);
+    }
 
-	private function getCxP() {
-		$respuesta = new stdClass();
-		$respuesta->neto = 0;
-		$respuesta->iva = 0;
-		$respuesta->total = 0;
+    private function getCxP() {
+        $respuesta = new stdClass();
+        $respuesta->neto = 0;
+        $respuesta->iva = 0;
+        $respuesta->total = 0;
 
-		$orders = getFromTimOne::getOrdersCxP($this->request->integradoId);
+        $orders = getFromTimOne::getOrdersCxP($this->request->integradoId);
 
-		$filteredOrders = getFromTimOne::filterByDate($orders->odc, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+        $filteredOrders = getFromTimOne::filterByDate($orders->odc, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
-		if ( ! empty( $filteredOrders ) ) {
-			$respuesta = $this->sumOrders($filteredOrders);
-		}
+        if ( ! empty( $filteredOrders ) ) {
+            $respuesta = $this->sumOrders($filteredOrders);
+        }
 
-		return $respuesta;
-	}
+        return $respuesta;
+    }
 
-	private function getCxC() {
-		$respuesta = new stdClass();
-		$respuesta->neto = 0;
-		$respuesta->iva = 0;
-		$respuesta->total = 0;
+    private function getCxC() {
+        $respuesta = new stdClass();
+        $respuesta->neto = 0;
+        $respuesta->iva = 0;
+        $respuesta->total = 0;
 
-		$orders = getFromTimOne::getOrdersCxC($this->request->integradoId);
+        $orders = getFromTimOne::getOrdersCxC($this->request->integradoId);
 
-		$filteredOrders = getFromTimOne::filterByDate($orders->odv, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
+        $filteredOrders = getFromTimOne::filterByDate($orders->odv, $this->period->startDate->timestamp, $this->period->endDate->timestamp);
 
-		if ( ! empty( $filteredOrders ) ) {
-			$respuesta = $this->sumOrders($filteredOrders);
-		}
+        if ( ! empty( $filteredOrders ) ) {
+            $respuesta = $this->sumOrders($filteredOrders);
+        }
 
-		return $respuesta;
-	}
+        return $respuesta;
+    }
 
-	/**
-	 * @param null $year
-	 *
-	 * @return array
-	 */
-	public function setDatesInicioFin( $year = null ) {
-		$inicio = 'first day of January';
-		$final = 'first day of this month';
-		if (isset($year)) {
-			$inicio = 'first day of January '.$year;
-			$nextYear = (int)$year+1;
-			$final = 'first day of January '.$nextYear;
-		}
-		$timeZone    = new DateTimeZone( 'America/Mexico_City' );
-		$fechaInicio = new DateTime( $inicio, $timeZone );
-		$fechaFin    = new DateTime( $final, $timeZone );
-		$fechaFin->setTime( 0, 0, 0 );
-		$fechaInicio->timestamp = $fechaInicio->getTimestamp();
-		$fechaFin->timestamp    = $fechaFin->getTimestamp();
+    /**
+     * @param null $year
+     *
+     * @return array
+     */
+    public function setDatesInicioFin( $year = null ) {
+        $inicio = 'first day of January';
+        $final = 'first day of this month';
+        if (isset($year)) {
+            $inicio = 'first day of January '.$year;
+            $nextYear = (int)$year+1;
+            $final = 'first day of January '.$nextYear;
+        }
+        $timeZone    = new DateTimeZone( 'America/Mexico_City' );
+        $fechaInicio = new DateTime( $inicio, $timeZone );
+        $fechaFin    = new DateTime( $final, $timeZone );
+        $fechaFin->setTime( 0, 0, 0 );
+        $fechaInicio->timestamp = $fechaInicio->getTimestamp();
+        $fechaFin->timestamp    = $fechaFin->getTimestamp();
 
-		return array ( $fechaInicio, $fechaFin );
-	}
+        return array ( $fechaInicio, $fechaFin );
+    }
 
-	public static function getFlujo( $integradoId ) {
-		$respuesta = null;
+    public static function getFlujo( $integradoId ) {
+        $respuesta = null;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1388880000000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1388880000000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1393718400000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1393718400000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1396137600000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1396137600000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1398816000000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1398816000000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1401408000000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1401408000000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1404086400000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1404086400000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1409356800000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1409356800000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1412035200000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1412035200000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1414627200000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1414627200000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1417305600000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1417305600000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		$flujo                = new stdClass;
-		$flujo->id            = 1;
-		$flujo->integradoId   = 1;
-		$flujo->numflujo      = 1;
-		$flujo->proyectId     = 1;
-		$flujo->created       = 1419897600000;
-		$flujo->currency      = 'MXN';
-		$flujo->paymentType   = 0;
-		$flujo->status        = 0;
-		$flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
+        $flujo                = new stdClass;
+        $flujo->id            = 1;
+        $flujo->integradoId   = 1;
+        $flujo->numflujo      = 1;
+        $flujo->proyectId     = 1;
+        $flujo->created       = 1419897600000;
+        $flujo->currency      = 'MXN';
+        $flujo->paymentType   = 0;
+        $flujo->status        = 0;
+        $flujo->observaciones = 'Muy lejos, más allá de las montañas de palabras, alejados de los países de las vocales y las consonantes, viven los textos simulados. Viven aislados en casas de letras, en la costa de la semántica, un';
 
-		$array[] = $flujo;
+        $array[] = $flujo;
 
-		foreach ( $array as $key => $value ) {
-			if ( $integradoId == $value->integradoId ) {
-				getFromTimOne::convierteFechas( $value );
-				$respuesta[] = $value;
-			}
-		}
+        foreach ( $array as $key => $value ) {
+            if ( $integradoId == $value->integradoId ) {
+                getFromTimOne::convierteFechas( $value );
+                $respuesta[] = $value;
+            }
+        }
 
-		return $respuesta;
-	}
+        return $respuesta;
+    }
 
-	private function setDatesForDisplay() {
-		$this->period->startDate   = date('d-m-Y', $this->period->startDate->timestamp);
-		$this->period->endDate     = date('d-m-Y', $this->period->endDate->timestamp);
-	}
+    private function setDatesForDisplay() {
+        $this->period->startDate   = date('d-m-Y', $this->period->startDate->timestamp);
+        $this->period->endDate     = date('d-m-Y', $this->period->endDate->timestamp);
+    }
 
-	private function getBancoSaldoEndDate() {
-		// TODO: Operar el saldo con las Tx para sacar el saldo a cirre de periodo del balance
-		return (float)946;
-	}
+    private function getBancoSaldoEndDate() {
+        // TODO: Operar el saldo con las Tx para sacar el saldo a cirre de periodo del balance
+        return (float)946;
+    }
 
-	private function sumOrders( $orders ) {
-		$neto = 0;
-		$iva = 0;
-		$total = 0;
-		foreach ( $orders as $order ) {
-			$neto = $neto + $order->subTotalAmount;
-			$iva = $iva + $order->iva;
-			$total = $total + $order->totalAmount;
-		}
-		$obj = new stdClass();
-		$obj->neto = $neto;
-		$obj->iva = $iva;
-		$obj->total = $total;
+    private function sumOrders( $orders ) {
+        $neto = 0;
+        $iva = 0;
+        $total = 0;
+        foreach ( $orders as $order ) {
+            $neto = $neto + $order->subTotalAmount;
+            $iva = $iva + $order->iva;
+            $total = $total + $order->totalAmount;
+        }
+        $obj = new stdClass();
+        $obj->neto = $neto;
+        $obj->iva = $iva;
+        $obj->total = $total;
 
-		return $obj;
-	}
+        return $obj;
+    }
 
-	public static function getIntegradoExistingBalanceList($integradoId) {
-		$data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
+    public static function getIntegradoExistingBalanceList($integradoId) {
+        $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
 
-		return $data;
-	}
+        return $data;
+    }
 }
 
 /**
@@ -2323,91 +2333,91 @@ class ReportBalance extends getFromTimOne {
  */
 class UUID
 {
-	/**
-	 *
-	 * Generate v4 UUID
-	 *
-	 * Version 4 UUIDs are pseudo-random.
-	 */
-	public static function v4()
-	{
-		return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+    /**
+     *
+     * Generate v4 UUID
+     *
+     * Version 4 UUIDs are pseudo-random.
+     */
+    public static function v4()
+    {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
-			// 32 bits for "time_low"
-			           mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            // 32 bits for "time_low"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
 
-			// 16 bits for "time_mid"
-			           mt_rand(0, 0xffff),
+            // 16 bits for "time_mid"
+            mt_rand(0, 0xffff),
 
-			// 16 bits for "time_hi_and_version",
-			// four most significant bits holds version number 4
-			           mt_rand(0, 0x0fff) | 0x4000,
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            mt_rand(0, 0x0fff) | 0x4000,
 
-			// 16 bits, 8 bits for "clk_seq_hi_res",
-			// 8 bits for "clk_seq_low",
-			// two most significant bits holds zero and one for variant DCE1.1
-			           mt_rand(0, 0x3fff) | 0x8000,
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            mt_rand(0, 0x3fff) | 0x8000,
 
-			// 48 bits for "node"
-			           mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-		);
-	}
+            // 48 bits for "node"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
 
-	/**
-	 * Generate v5 UUID
-	 *
-	 * Version 5 UUIDs are named based. They require a namespace (another
-	 * valid UUID) and a value (the name). Given the same namespace and
-	 * name, the output is always the same.
-	 *
-	 * @param	uuid	$namespace
-	 * @param	string	$name
-	 */
-	public static function v5($namespace, $name)
-	{
-		if(!self::is_valid($namespace)) return false;
+    /**
+     * Generate v5 UUID
+     *
+     * Version 5 UUIDs are named based. They require a namespace (another
+     * valid UUID) and a value (the name). Given the same namespace and
+     * name, the output is always the same.
+     *
+     * @param	uuid	$namespace
+     * @param	string	$name
+     */
+    public static function v5($namespace, $name)
+    {
+        if(!self::is_valid($namespace)) return false;
 
-		// Get hexadecimal components of namespace
-		$nhex = str_replace(array('-','{','}'), '', $namespace);
+        // Get hexadecimal components of namespace
+        $nhex = str_replace(array('-','{','}'), '', $namespace);
 
-		// Binary Value
-		$nstr = '';
+        // Binary Value
+        $nstr = '';
 
-		// Convert Namespace UUID to bits
-		for($i = 0; $i < strlen($nhex); $i+=2)
-		{
-			$nstr .= chr(hexdec($nhex[$i].$nhex[$i+1]));
-		}
+        // Convert Namespace UUID to bits
+        for($i = 0; $i < strlen($nhex); $i+=2)
+        {
+            $nstr .= chr(hexdec($nhex[$i].$nhex[$i+1]));
+        }
 
-		// Calculate hash value
-		$hash = sha1($nstr . $name);
+        // Calculate hash value
+        $hash = sha1($nstr . $name);
 
-		return sprintf('%08s-%04s-%04x-%04x-%12s',
+        return sprintf('%08s-%04s-%04x-%04x-%12s',
 
-			// 32 bits for "time_low"
-			           substr($hash, 0, 8),
+            // 32 bits for "time_low"
+            substr($hash, 0, 8),
 
-			// 16 bits for "time_mid"
-			           substr($hash, 8, 4),
+            // 16 bits for "time_mid"
+            substr($hash, 8, 4),
 
-			// 16 bits for "time_hi_and_version",
-			// four most significant bits holds version number 5
-			           (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 5
+            (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
 
-			// 16 bits, 8 bits for "clk_seq_hi_res",
-			// 8 bits for "clk_seq_low",
-			// two most significant bits holds zero and one for variant DCE1.1
-			           (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
 
-			// 48 bits for "node"
-			           substr($hash, 20, 12)
-		);
-	}
+            // 48 bits for "node"
+            substr($hash, 20, 12)
+        );
+    }
 
-	public static function is_valid($uuid) {
-		return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.
-		                  '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
-	}
+    public static function is_valid($uuid) {
+        return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.
+            '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
+    }
 }
 
 // Usage

@@ -46,6 +46,7 @@ class ReportesModelResultados extends JModelItem {
         $input                 = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
         $input->startDate      = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
         $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
+        $input->type           = 'ingresos';
 
         getFromTimOne::getReporteResultados($input);
 //        $reporte = new stdClass();
