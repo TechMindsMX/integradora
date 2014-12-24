@@ -34,7 +34,7 @@ class ReportesModelReporteslistados extends JModelItem {
     }
 
     public function getflujo (){
-        $flujo = ReportBalance::getFlujo( $this->integradoId );
+        $flujo = new ReportFlujo( $this->integradoId , $fechaInicio = null, $fechaInicio = null );
         return $flujo;
     }
 
