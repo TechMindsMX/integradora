@@ -2216,6 +2216,23 @@ class ReportResultados extends IntegradoOrders{
         return $sumaOrdenes;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFechaFin()
+    {
+        return $this->fechaFin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFechaInicio()
+    {
+        return $this->fechaInicio;
+    }
+
+
 }
 
 class IntegradoOrders{

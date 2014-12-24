@@ -49,6 +49,10 @@ class ReportesModelResultados extends JModelItem {
 
         // TODO: quitar hardcoded data
         $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate);
+        $reportResultados->getIngresos();
+        $reportResultados->getEgresos();
+        $reportResultados->startPeriod = $reportResultados->getFechaInicio();
+        $reportResultados->endPeriod   = $reportResultados->getFechaFin();
 
         return $reportResultados;
     }

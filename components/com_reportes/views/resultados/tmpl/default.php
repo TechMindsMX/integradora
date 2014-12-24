@@ -6,11 +6,12 @@ JHTML::_('behavior.calendar');
 
 $integ      = $this->integrado;
 $report     = $this->reporte;
-var_dump($report);
 $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
-//$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+var_dump($report->orders->odv[0]);
 ?>
 <script>
     var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
@@ -64,7 +65,7 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
     </div>
 </div>
 
-<!--br class="row-separator">
+<br class="row-separator">
 
 <h1 class="t-center"><?php echo JText::_('LBL_ESTADORESULTS'); ?></h1>
 
@@ -75,7 +76,7 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d',$report->period->timestamps->startDate);
+                $default = date('Y-m-d', $report->startPeriod);
                 echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%Y-%m-%d', $attsCal);
                 ?>
             </div>
@@ -84,7 +85,7 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d',$report->period->timestamps->endDate);
+                $default = date('Y-m-d',$report->endPeriod);
                 echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%Y-%m-%d', $attsCal);
                 ?>
             </div>
@@ -93,7 +94,9 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
             <div class="span6">&nbsp;</div>
             <div class="span6"><input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" /> </div>
         </div>
+
         <div class="clearfix">&nbsp;</div>
+
         <div class="row-fluid">
             <div class="span6">Filtrar por Proyecto</div>
             <div class="span6">
@@ -115,15 +118,15 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
             <div class="span6">
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_INGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->totalIngresos,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format($report->ingresos->total,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->totalEgresos,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format($report->egresos->total,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->totalIngresos - $report->totalEgresos,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format($report->ingresos->total - $report->egresos->total,2) ;?></div>
                 </div>
             </div>
         </div>
@@ -139,34 +142,45 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
     <tr class="row">
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_CLIENTE'); ?></th>
-        <th><?php echo JText::_('LBL_ORDER_STATUS')?></th>
-        <th><?php echo JText::_('LBL_CONCEPTOS'); ?></th>
+        <th><?php echo JText::_('LBL_TYPE'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($ingresos as $value) {
-        if($value->status->id == 5){
-            $status = 'CXC';
-        }elseif($value->status->id == 13){
-            $status = 'COBRADO';
+    <?php
+    foreach ($report->orders->odv as $orden) {
+        foreach ($orden->txs as $tx) {
+
+            ?>
+            <tr class="row">
+                <td><?php echo date('d-m-Y', $tx->date); ?></td>
+                <td><?php echo $orden->proveedor->corporateName; ?></td>
+                <td>Pagado</td>
+                <td>$<?php echo number_format( ($tx->detalleTx->amount - $tx->detalleTx->ivaProporcion), 2); ?></td>
+                <td>$<?php echo number_format($tx->detalleTx->ivaProporcion,2) ; ?></td>
+                <td>$<?php echo number_format($tx->detalleTx->amount,2) ; ?></td>
+            </tr>
+        <?php
         }
-        ?>
-        <tr class="row">
-            <td><?php echo $value->paymentDate; ?></td>
-            <td><?php echo $value->clientName; ?></td>
-            <td><?php echo $status; ?></td>
-            <td><?php echo count($value->productosData); ?></td>
-            <td>$<?php echo number_format($value->subTotalAmount,2); ?></td>
-            <td>$<?php echo number_format($value->iva,2); ?></td>
-            <td>$<?php echo number_format($value->totalAmount,2); ?></td>
-        </tr>
-    <?php }?>
+        if ($orden->saldo->total > 0) {
+            ?>
+            <tr class="row">
+                <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
+                <td><?php echo $orden->proveedor->corporateName; ?></td>
+                <td>CXC</td>
+                <td>$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></td>
+                <td>$<?php echo number_format($orden->saldo->iva,2); ?></td>
+                <td>$<?php echo number_format($orden->saldo->total,2); ?></td>
+            </tr>
+        <?php
+        }
+    }
+    ?>
     <tr class="row">
-        <td colspan="6">Total de Ingresos</td>
-        <td>$<?php echo number_format($report->totalIngresos,2); ?></td>
+        <td colspan="5">Total de Ingresos</td>
+        <td>$<?php echo number_format($report->ingresos->total,2); ?></td>
     </tr>
     </tbody>
 </table>
@@ -177,36 +191,22 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
     <tr class="row">
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_PROVEEDOR'); ?></th>
-        <th><?php echo JText::_('LBL_ORDER_STATUS')?></th>
-        <th><?php echo JText::_('LBL_CONCEPTOS'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($egresos as $value) {
-        if($value->status->id == 5){
-            $status = 'CXP';
-        }elseif($value->status->id == 13){
-            $status = 'PAGADO';
-        }
-        ?>
-        <tr class="row">
-            <td><?php echo $value->paymentDate; ?></td>
-            <td><?php echo $value->proveedor->tradeName; ?></td>
-            <td><?php echo $status; ?></td>
-            <td><?php echo count($value->factura->conceptos); ?></td>
-            <td>$<?php echo number_format($value->subTotalAmount,2); ?></td>
-            <td>$<?php echo number_format($value->iva,2); ?></td>
-            <td>$<?php echo number_format($value->totalAmount,2); ?></td>
-        </tr>
+    <?php foreach ($report->orders->odc as $value) { ?>
+
     <?php }?>
     <tr class="row">
         <td colspan="6">Total de Egresos</td>
-        <td>$<?php echo number_format($report->totalEgresos,2); ?></td>
+        <td>$<?php echo number_format($report->egresos->total,2); ?></td>
+        <td>$<?php echo number_format($report->egresos->total,2); ?></td>
+        <td>$<?php echo number_format($report->egresos->total,2); ?></td>
     </tr>
     </tbody>
 
 </table>
-</div-->
+</div>
