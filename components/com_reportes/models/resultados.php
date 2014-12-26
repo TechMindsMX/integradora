@@ -47,8 +47,8 @@ class ReportesModelResultados extends JModelItem {
         $input->startDate      = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
         $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
 
-        // TODO: quitar hardcoded data
-        $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate);
+       // TODO: quitar hardcoded data
+        $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate, $input->proyecto);
         $reportResultados->getIngresos();
         $reportResultados->getEgresos();
         $reportResultados->startPeriod = $reportResultados->getFechaInicio();
