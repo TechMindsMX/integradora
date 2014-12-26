@@ -287,7 +287,6 @@ class getFromTimOne{
                 }
             }
         }
-
         return $filteredOrders;
     }
 
@@ -367,6 +366,9 @@ class getFromTimOne{
         $total = 0;
 
         $obj = new stdClass();
+        $obj->pagado->total = array();
+        $obj->pagado->iva = array();
+        $obj->pagado->neto = array();
 
         foreach ( $orders as $order ) {
             $neto = $neto + $order->subTotalAmount;
@@ -2194,13 +2196,13 @@ class ReportResultados extends IntegradoOrders{
     }
 
     public function getIngresos(){
+        $this->orders->odv = getFromTimOne::filterByDate($this->orders->odv, $this->fechaInicio, $this->fechaFin);
         $this->ingresos = $this->getData($this->orders->odv);
-        getFromTimOne::filterByDate($this->orders->odv, $this->fechaInicio, $this->fechaFin);
     }
 
     public function getEgresos(){
+        $this->orders->odc = getFromTimOne::filterByDate($this->orders->odc, $this->fechaInicio, $this->fechaFin);
         $this->egresos = $this->getData($this->orders->odc);
-        getFromTimOne::filterByDate($this->orders->odc, $this->fechaInicio, $this->fechaFin);
     }
 
     public function getData($Orders){
