@@ -2187,20 +2187,57 @@ class ReportResultados extends IntegradoOrders{
 
     protected $fechaInicio;
     protected $fechaFin;
+    protected $filtroProyect;
 
-    function __construct( $integradoId, $fechaInicio, $fechaFin ) {
-        $this->fechaInicio = $fechaInicio;
-        $this->fechaFin    = $fechaFin;
+    function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
+        $this->fechaInicio  = $fechaInicio;
+        $this->fechaFin     = $fechaFin;
+        $this->filtroProyect = $proyecto;
 
         parent::__construct($integradoId);
     }
 
     public function getIngresos(){
+        $orders = array();
+
+        if($this->filtroProyect != null) {
+            foreach ($this->orders->odv as $orden) {
+                if ($orden->projectId2 == 0) {
+                    if($this->filtroProyect == $orden->projectId){
+                        $orders[] = $orden;
+                    }
+                } else {
+                    if($this->filtroProyect == $orden->projectId2 || $orden->projectId == $this->filtroProyect){
+                        $orders[] = $orden;
+                    }
+                }
+            }
+
+            $this->orders->odv = $orders;
+        }
+
         $this->orders->odv = getFromTimOne::filterByDate($this->orders->odv, $this->fechaInicio, $this->fechaFin);
         $this->ingresos = $this->getData($this->orders->odv);
     }
 
     public function getEgresos(){
+        $orders = array();
+
+        if($this->filtroProyect != null){
+            foreach ($this->orders->odc as $orden) {
+                if( !isset($orden->sub_proyecto) ) {
+                    if ($orden->proyecto->id_proyecto == $this->filtroProyect) {
+                        $orders[] = $orden;
+                    }
+                }else{
+                    if( $orden->sub_proyecto->id_proyecto == $this->filtroProyect){
+                        $orders[] = $orden;
+                    }
+                }
+            }
+            $this->orders->odc = $orders;
+        }
+
         $this->orders->odc = getFromTimOne::filterByDate($this->orders->odc, $this->fechaInicio, $this->fechaFin);
         $this->egresos = $this->getData($this->orders->odc);
     }
