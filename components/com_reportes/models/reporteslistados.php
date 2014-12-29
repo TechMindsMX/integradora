@@ -34,8 +34,6 @@ class ReportesModelReporteslistados extends JModelItem {
     }
 
     public function getflujo (){
-        $flujo = new ReportFlujo( $this->integradoId , $fechaInicio = null, $fechaInicio = null );
-        return $flujo;
     }
 
     public function getresultados (){

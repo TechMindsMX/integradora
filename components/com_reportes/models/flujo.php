@@ -15,21 +15,22 @@ class ReportesModelFlujo extends JModelItem {
 
 	public function getFlujo($vars) {
 
-		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['inicio'], $vars['fin']  );		$r->getIngresos();
-		$r->getEgresos();
-		$report = $r;
-
-		var_dump($report);exit;
-		return $report;
-	}
-
-	public function generateFlujo($vars) {
-		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['inicio'], $vars['fin']  );
+		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['inicio'], $vars['fin'] );
 		$r->getIngresos();
 		$r->getEgresos();
 		$report = $r;
 
-		var_dump($report);exit;
+		var_dump(__METHOD__,$report);
+		return $report;
+	}
+
+	public function generateFlujo($vars) {
+		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['inicio'], $vars['fin'] );
+		$r->getIngresos();
+		$r->getEgresos();
+		$report = $r;
+
+		var_dump(__METHOD__,$report);
 		return $report;
 	}
 }

@@ -2268,24 +2268,31 @@ class ReportResultados extends IntegradoOrders{
 
 }
 
+/**
+ * @property  period
+ */
 class ReportFlujo extends IntegradoOrders {
 
-    protected $fechaInicio;
-    protected $fechaFin;
-
     function __construct($balanceId, $integradoId, $fechaInicio, $fechaFin ) {
-        $this->fechaInicio = $fechaInicio;
-        $this->fechaFin    = $fechaFin;
+        $timeZone = new DateTimeZone('America/Mexico_City');
+        $this->period->fechaInicio              = DateTime::createFromFormat('d-m-Y',$fechaInicio, $timeZone);
+        $this->period->fechaFin                 = DateTime::createFromFormat('d-m-Y', $fechaFin, $timeZone);
+        $this->period->fechaInicio->timestamp   = $this->period->fechaInicio->getTimeStamp();
+        $this->period->fechaFin->timestamp      = $this->period->fechaFin->getTimeStamp();
 
         parent::__construct($integradoId);
     }
 
     public function getIngresos(){
-        $this->ingresos = $this->getData($this->orders->odv);
+        // TODO: cambiar ($this->orders->odv) por las Txs
+        $data = getFromTimOne::filterByDate($this->orders->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->ingresos = $this->getData($data);
     }
 
     public function getEgresos(){
-        $this->egresos = $this->getData($this->orders->odc);
+        // TODO: cambiar ($this->orders->odc) por las Txs
+        $data = getFromTimOne::filterByDate($this->orders->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->egresos = $this->getData($data);
     }
 
     public function getData($Orders){

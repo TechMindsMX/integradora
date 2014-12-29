@@ -2,16 +2,13 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
-JHTML::_('behavior.calendar');
 
 $integ      = $this->integrado;
-$report     = $this->reporte;
+$report     = $this->report;
 $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
-$idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
+$idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
-
-var_dump($report->orders->odv[0]);
 ?>
 <script>
     var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
@@ -76,7 +73,7 @@ var_dump($report->orders->odv[0]);
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d', $report->startPeriod);
+                $default = $report->period->fechaInicio->format('Y-m-d');
                 echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%Y-%m-%d', $attsCal);
                 ?>
             </div>
@@ -85,7 +82,7 @@ var_dump($report->orders->odv[0]);
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d',$report->endPeriod);
+                $default = $report->period->fechaFin->format('Y-m-d');
                 echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%Y-%m-%d', $attsCal);
                 ?>
             </div>
@@ -97,19 +94,6 @@ var_dump($report->orders->odv[0]);
 
         <div class="clearfix">&nbsp;</div>
 
-        <div class="row-fluid">
-            <div class="span6">Filtrar por Proyecto</div>
-            <div class="span6">
-                <select id="proyecto" >
-                    <option value="0"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
-                    <?php foreach($this->proyectos as $key => $value ){
-                        $selected   = $key==$idProyecto?'Selected="selected"':'';
-                    ?>
-                        <option value="<?php echo $key.'" '.$selected.'>'.$value->name; ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-        </div>
     </div>
     <div class="span6">
         <h3><?php echo JText::_('LBL_RESUNE_OPERATIONS'); ?></h3>
