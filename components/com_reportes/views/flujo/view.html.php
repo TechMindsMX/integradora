@@ -25,7 +25,7 @@ class ReportesViewFlujo extends JViewLegacy
 		$sesion = JFactory::getSession();
 		$sesIntegId = $sesion->get('integradoId');
 
-		$vars = $this->input->getArray(array('id' => 'INT', 'integradoId' => 'INT', 'inicio' => 'STR', 'fin' => 'STR'));
+		$vars = $this->input->getArray(array('id' => 'INT', 'integradoId' => 'INT', 'startDate' => 'STR', 'endDate' => 'STR'));
 		$integId = isset($sesIntegId) ? $sesIntegId : $vars['integradoId'];
 
 		$model = $this->getModel();

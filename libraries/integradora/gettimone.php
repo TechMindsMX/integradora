@@ -2120,12 +2120,11 @@ class ReportBalance extends IntegradoOrders {
     }
 
     private function getCxP() {
-        var_dump($this);exit;
-        return $this->pasivo->data = $this->getData($this->odc);
+        return $this->pasivo->data = $this->getData($this->orders->odc);
     }
 
     private function getCxC() {
-        return $this->activo->data = $this->getData($this->odv);
+        return $this->activo->data = $this->getData($this->orders->odv);
     }
 
     public function getData($Orders){
@@ -2285,14 +2284,14 @@ class ReportFlujo extends IntegradoOrders {
 
     public function getIngresos(){
         // TODO: cambiar ($this->orders->odv) por las Txs
-        $data = getFromTimOne::filterByDate($this->orders->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
-        $this->ingresos = $this->getData($data);
+        $this->orders->odv = getFromTimOne::filterByDate($this->orders->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->ingresos = $this->getData($this->orders->odv);
     }
 
     public function getEgresos(){
         // TODO: cambiar ($this->orders->odc) por las Txs
-        $data = getFromTimOne::filterByDate($this->orders->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
-        $this->egresos = $this->getData($data);
+        $this->orders->odc = getFromTimOne::filterByDate($this->orders->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->egresos = $this->getData($this->orders->odc);
     }
 
     public function getData($Orders){

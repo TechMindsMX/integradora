@@ -17,20 +17,11 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         fechaInicial   = jQuery('#startDate').val();
         fechaFinal     = jQuery('#endDate').val();
 
-        window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal;
-    }
-
-    function filtraProyectos() {
-        fechaInicial   = jQuery('#startDate').val();
-        fechaFinal     = jQuery('#endDate').val();
-        proyecto       = jQuery(this).val()==0?'':'&proyecto='+jQuery(this).val();
-
-        window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal+proyecto;
+        window.location = 'index.php?option=com_reportes&view=flujo&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal;
     }
 
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
-        jQuery('#proyecto').on('change',filtraProyectos);
     });
 </script>
 
@@ -73,8 +64,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = $report->period->fechaInicio->format('Y-m-d');
-                echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%Y-%m-%d', $attsCal);
+                $default = $report->period->fechaInicio->format('d-m-Y');
+                echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%d-%m-%Y', $attsCal);
                 ?>
             </div>
         </div>
@@ -82,8 +73,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = $report->period->fechaFin->format('Y-m-d');
-                echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%Y-%m-%d', $attsCal);
+                $default = $report->period->fechaFin->format('d-m-Y');
+                echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%d-%m-%Y', $attsCal);
                 ?>
             </div>
         </div>

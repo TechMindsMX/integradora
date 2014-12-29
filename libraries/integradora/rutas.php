@@ -11,10 +11,10 @@ class timoneRoute extends servicesRoute
 {
 
 	function __construct () {
-		parent::__construct();
+		$this->setBaseController('timone/services/integra/');
+		$this->setAddress('api-stage.timone.mx/');
 
-		$this->setBaseController('timone/services/');
-		$this->setAddress('api-stage.timone.mx');
+		parent::__construct();
 	}
 }
 
