@@ -2267,14 +2267,13 @@ class ReportResultados extends IntegradoOrders{
 
 }
 
-/**
- * @property  period
- */
 class ReportFlujo extends IntegradoOrders {
+
+    public $period;
 
     function __construct($balanceId, $integradoId, $fechaInicio, $fechaFin ) {
         $timeZone = new DateTimeZone('America/Mexico_City');
-        $this->period->fechaInicio              = DateTime::createFromFormat('d-m-Y',$fechaInicio, $timeZone);
+        $this->period->fechaInicio              = DateTime::createFromFormat('d-m-Y', $fechaInicio, $timeZone);
         $this->period->fechaFin                 = DateTime::createFromFormat('d-m-Y', $fechaFin, $timeZone);
         $this->period->fechaInicio->timestamp   = $this->period->fechaInicio->getTimeStamp();
         $this->period->fechaFin->timestamp      = $this->period->fechaFin->getTimeStamp();

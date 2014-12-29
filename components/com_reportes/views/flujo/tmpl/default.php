@@ -62,15 +62,17 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         <h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
         <div class="row-fluid">
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
-            <div class="span6">
+            <div class="span6 visible-print-block"><?php echo $report->period->fechaInicio->format('d-m-Y'); ?></div>
+            <div class="span6 hidden-print">
                 <?php
-                $default = $report->period->fechaInicio->format('d-m-Y');
-                echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%d-%m-%Y', $attsCal);
-                ?>
+            $default = $report->period->fechaInicio->format('d-m-Y');
+            echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%d-%m-%Y', $attsCal);
+            ?>
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
+            <div class="span6 visible-print-block"><?php echo $report->period->fechaFin->format('d-m-Y'); ?></div>
             <div class="span6">
                 <?php
                 $default = $report->period->fechaFin->format('d-m-Y');
