@@ -397,6 +397,7 @@ class getFromTimOne{
         $obj->iva = $iva;
         $obj->total = $total;
 
+        var_dump($orders, $obj);
         return $obj;
     }
 
@@ -2280,19 +2281,44 @@ class ReportFlujo extends IntegradoOrders {
 
     public function getIngresos(){
         // TODO: cambiar ($this->orders->odv) por las Txs
-        $this->orders->odv = getFromTimOne::filterByDate($this->orders->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->orders->odv = $this->filterOrders($this->orders->odv);
         $this->ingresos = $this->getData($this->orders->odv);
     }
 
     public function getEgresos(){
         // TODO: cambiar ($this->orders->odc) por las Txs
-        $this->orders->odc = getFromTimOne::filterByDate($this->orders->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->orders->odc = $this->filterOrders($this->orders->odc);
         $this->egresos = $this->getData($this->orders->odc);
     }
 
-    public function getData($Orders){
-        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
-        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
+    public function getDepositos(){
+        // TODO: cambiar ($this->orders->odd) por las Txs
+        $this->orders->odd = $this->filterOrders($this->orders->odd);
+        $this->depositos = $this->getData($this->orders->odd);
+    }
+
+    public function getRetiros(){
+        // TODO: cambiar ($this->orders->odr) por las Txs
+        $this->orders->odr = $this->filterOrders($this->orders->odr);
+        $this->retiros = $this->getData($this->orders->odr);
+    }
+
+    public function getPrestamos(){
+        // TODO: cambiar ($this->orders->odp) por las Txs
+        $this->orders->odp = $this->filterOrders($this->orders->odp);
+        $this->prestamos = $this->getData($this->orders->odp);
+    }
+
+    private function filterOrders($orders)
+    {
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($orders,array(5,8,13));
+        $ordenesFiltradas = getFromTimOne::filterByDate($ordenesFiltradas, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+
+        return $ordenesFiltradas;
+    }
+
+    public function getData($orders){
+        $sumaOrdenes = getFromTimOne::sumaOrders($orders);
 
         return $sumaOrdenes;
     }

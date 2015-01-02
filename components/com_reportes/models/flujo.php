@@ -13,19 +13,13 @@ class ReportesModelFlujo extends JModelItem {
 
 	protected $cancelUrl;
 
-	public function getFlujo($vars) {
-		$r = new ReportFlujo( $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
-		$r->getIngresos();
-		$r->getEgresos();
-		$report = $r;
-
-		return $report;
-	}
-
 	public function generateFlujo($vars) {
 		$r = new ReportFlujo( $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
 		$r->getIngresos();
 		$r->getEgresos();
+		$r->getDepositos();
+		$r->getRetiros();
+		$r->getPrestamos();
 		$report = $r;
 
 		return $report;

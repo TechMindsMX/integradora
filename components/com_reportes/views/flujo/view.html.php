@@ -25,18 +25,13 @@ class ReportesViewFlujo extends JViewLegacy
 		$sesion = JFactory::getSession();
 		$sesIntegId = $sesion->get('integradoId');
 
-		$vars = $this->input->getArray(array('id' => 'INT', 'integradoId' => 'INT', 'startDate' => 'STR', 'endDate' => 'STR'));
+		$vars = $this->input->getArray(array('integradoId' => 'INT', 'startDate' => 'STR', 'endDate' => 'STR'));
 		$integId = isset($sesIntegId) ? $sesIntegId : $vars['integradoId'];
 
 		$model = $this->getModel();
 
-		if ( $vars['id'] != 0 ) {
-			// busca el modelo de un reporte existente
-			$this->report = $model->getFlujo($vars);
-		} else {
-			// genera el modelo de un reporte nuevo
-			$this->report = $model->generateFlujo($vars);
-		}
+		// genera el modelo de un reporte nuevo
+		$this->report = $model->generateFlujo($vars);
 
 		if (is_null($this->report) ) {
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
