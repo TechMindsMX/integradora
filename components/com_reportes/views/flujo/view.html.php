@@ -42,6 +42,10 @@ class ReportesViewFlujo extends JViewLegacy
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
 		}
 
+		if (isset($this->report->error)) {
+			JFactory::getApplication()->redirect($this->getCancelUrl(), $this->report->error->getMessage(), 'error');
+		}
+
 		// verifica el token
 //		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 

@@ -14,7 +14,7 @@ class ReportesModelFlujo extends JModelItem {
 	protected $cancelUrl;
 
 	public function getFlujo($vars) {
-		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
+		$r = new ReportFlujo( $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
 		$r->getIngresos();
 		$r->getEgresos();
 		$report = $r;
@@ -23,7 +23,7 @@ class ReportesModelFlujo extends JModelItem {
 	}
 
 	public function generateFlujo($vars) {
-		$r = new ReportFlujo( $vars['id'], $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
+		$r = new ReportFlujo( $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
 		$r->getIngresos();
 		$r->getEgresos();
 		$report = $r;

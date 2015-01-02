@@ -178,7 +178,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
     <?php }?>
     <tr class="row">
-        <td colspan="6">Total de Egresos</td>
+        <td colspan="2"><?php echo JText::_('LBL_EGRESOS'); ?></td>
         <td>$<?php echo number_format($report->egresos->total,2); ?></td>
         <td>$<?php echo number_format($report->egresos->total,2); ?></td>
         <td>$<?php echo number_format($report->egresos->total,2); ?></td>

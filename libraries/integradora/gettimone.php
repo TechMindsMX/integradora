@@ -2270,13 +2270,10 @@ class ReportResultados extends IntegradoOrders{
 class ReportFlujo extends IntegradoOrders {
 
     public $period;
+    public $error;
 
-    function __construct($balanceId, $integradoId, $fechaInicio, $fechaFin ) {
-        $timeZone = new DateTimeZone('America/Mexico_City');
-        $this->period->fechaInicio              = DateTime::createFromFormat('d-m-Y', $fechaInicio, $timeZone);
-        $this->period->fechaFin                 = DateTime::createFromFormat('d-m-Y', $fechaFin, $timeZone);
-        $this->period->fechaInicio->timestamp   = $this->period->fechaInicio->getTimeStamp();
-        $this->period->fechaFin->timestamp      = $this->period->fechaFin->getTimeStamp();
+    function __construct( $integradoId, $fechaInicio, $fechaFin ) {
+        $this->setDatesInicioFin($fechaInicio, $fechaFin);
 
         parent::__construct($integradoId);
     }
@@ -2298,6 +2295,44 @@ class ReportFlujo extends IntegradoOrders {
         $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
 
         return $sumaOrdenes;
+    }
+
+    /**
+     * @param $fechaInicio
+     * @param $fechaFin
+     */
+    public function setDatesInicioFin($fechaInicio, $fechaFin)
+    {
+        $timeZone = new DateTimeZone('America/Mexico_City');
+
+        if (!isset($fechaInicio)) {
+            // Si no viene la fecha, se toma el primero de enero del año en curso
+            $fechaInicio = 'first day of January';
+            $this->period->fechaInicio = new DateTime($fechaInicio, $timeZone);
+        } else {
+            $this->period->fechaInicio = DateTime::createFromFormat('d-m-Y', $fechaInicio, $timeZone);
+        }
+        if (!isset($fechaFin)) {
+            // Si no viene la fecha, se crea con la fecha actual
+            $this->period->fechaFin = new DateTime('', $timeZone);
+        } else {
+            $this->period->fechaFin = DateTime::createFromFormat('d-m-Y', $fechaFin, $timeZone);
+        }
+        $this->period->fechaInicio->timestamp = $this->period->fechaInicio->getTimeStamp();
+        $this->period->fechaFin->timestamp = $this->period->fechaFin->getTimeStamp();
+
+        try {
+            $this->checkDates();
+        } catch (Exception $e) {
+            $this->error = $e;
+        }
+    }
+
+    public function checkDates()
+    {
+        if ($this->period->fechaInicio->timestamp > $this->period->fechaFin->timestamp) {
+            throw new Exception(JText::_('ERR_INVALID_DATES'));
+        }
     }
 
 
