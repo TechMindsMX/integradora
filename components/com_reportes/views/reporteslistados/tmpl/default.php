@@ -22,6 +22,7 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
 
 $formToken  = JSession::getFormToken(true).'=1';
 
+$url_flujo = 'index.php?option=com_reportes&view=flujo&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
 ?>
 <script>
 
@@ -51,15 +52,16 @@ $formToken  = JSession::getFormToken(true).'=1';
             }
         });
     }
+
 </script>
 
-<form action="" class="form" id="periodo" name="periodo" method="post" enctype="multipart/form-data" >
     <?php
     echo '<h1>'.JText::_('COM_REPORTES_TITLE_LISTADOS').'</h1>';
     echo JHtml::_('bootstrap.startTabSet', 'tabs-lr', array('active' => 'balance'));
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'balance', JText::_('COM_REPORTES_LR_BALANCE'));
     ?>
 
+<form action="" class="form" id="periodo" name="periodo" method="post" enctype="multipart/form-data" >
     <fieldset>
         <div>
             <div class="form-group" style="margin-left: 31px; text-align: 0;">
@@ -122,29 +124,31 @@ $formToken  = JSession::getFormToken(true).'=1';
                 <?php }?>
             </div>
     </fieldset>
+</form>
     <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'lr-eflujo', JText::_('COM_REPORTES_LR_EFLUO'));
     ?>
-    <fieldset>
+<form action="<?php echo $url_flujo; ?>" class="form" id="periodo" name="periodo" method="post" enctype="multipart/form-data" >
+    <fieldset id="flujo">
         <div>
             <div class="form-group" style="margin-left: 31px; text-align: 0;">
                 <div style="display: inline-block">
                     <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
                     <?php
-                    $default = date('Y-m-d');
-                    echo JHTML::_('calendar',$default, 'dupfecha2', 'dupfecha2', $format = '%Y-%m-%d', $attsCal2);
+                    $default = date('d-m-Y');
+                    echo JHTML::_('calendar',$default, 'startDate', 'dupfecha2', $format = '%d-%m-%Y', $attsCal2);
                     ?>
                 </div>
                 <div>
                     <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
                     <?php
-                    $default = date('Y-m-d');
-                    echo JHTML::_('calendar',$default, 'dendfecha2', 'dendfecha2', $format = '%Y-%m-%d', $attsCal2);
+                    $default = date('d-m-Y');
+                    echo JHTML::_('calendar',$default, 'endDate','dendfecha2', $format = '%d-%m-%Y', $attsCal2);
                     ?>
                 </div>
                 <div>
-                    <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte  </button>
+                    <button id="greporte_flujo" class="btn btn-primary span2" type="submit">Generar Reporte  </button>
                 </div>
                 <div style="margin: auto;">
                     <button id="fecha2" onclick="showhide(this.id)" class="btn btn-primary span2" type="button">Buscar</button>
@@ -155,7 +159,8 @@ $formToken  = JSession::getFormToken(true).'=1';
 
 
     </fieldset>
-    <?php
+</form>
+<?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'lr-eresul', JText::_('COM_REPORTES_LR_ERESUL'));
     ?>
@@ -166,15 +171,15 @@ $formToken  = JSession::getFormToken(true).'=1';
                 <div style="display: inline-block">
                     <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
                     <?php
-                    $default = date('Y-m-d');
-                    echo JHTML::_('calendar',$default, 'dupfecha3', 'dupfecha3', $format = '%Y-%m-%d', $attsCal3);
+                    $default = date('d-m-Y');
+                    echo JHTML::_('calendar',$default, 'dupfecha3', 'dupfecha3', $format = '%d-%m-%Y', $attsCal3);
                     ?>
                 </div>
                 <div>
                     <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
                     <?php
-                    $default = date('Y-m-d');
-                    echo JHTML::_('calendar',$default, 'dendfecha3', 'dendfecha3', $format = '%Y-%m-%d', $attsCal3);
+                    $default = date('d-m-Y');
+                    echo JHTML::_('calendar',$default, 'dendfecha3', 'dendfecha3', $format = '%d-%m-%Y', $attsCal3);
                     ?>
                 </div><div>
                     <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte</button>

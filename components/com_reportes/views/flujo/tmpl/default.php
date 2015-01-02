@@ -55,7 +55,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
 <br class="row-separator">
 
-<h1 class="t-center"><?php echo JText::_('LBL_ESTADORESULTS'); ?></h1>
+<h1 class="t-center"><?php echo JText::_('LBL_ESTADO_FLUJO'); ?></h1>
 
 <div id="report resumen content">
     <div class="span6">
