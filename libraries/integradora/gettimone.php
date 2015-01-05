@@ -250,9 +250,9 @@ class getFromTimOne{
      */
     public static function getMutuos($integradoId=null, $idMutuo=null){
         $where = null;
-        if(is_null($integradoId)){
+        if(isset($idMutuo) && is_null($integradoId)){
             $where = 'id = '.$idMutuo;
-        }elseif(is_null($idMutuo)){
+        }elseif(isset($integradoId) && is_null($idMutuo)){
             $where = 'integradoIdE = '.$integradoId;
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
@@ -341,6 +341,30 @@ class getFromTimOne{
         return $filteredOrders;
     }
 
+    public static function filterTxsByDate( $txs, $timestampStart = null, $timestampEnd = null) {
+
+        $filteredTxs = array();
+
+        $timestampEnd = isset($timestampEnd) ? $timestampEnd : time();
+
+        if ( isset( $timestampStart ) ) {
+            foreach ( $txs as $key => $val ) {
+                $val->data->date = getFromTimOne::convertDateLength($val->data->date, 10);
+                if ($val->data->date > $timestampStart && $val->data->date < $timestampEnd) {
+                    $filteredTxs[] = $val;
+                }
+            }
+        } else {
+            foreach ( $txs as $key => $val ) {
+                if ( $val->data->date < $timestampEnd ) {
+                    $filteredTxs[] = $val;
+                }
+            }
+        }
+
+        return $filteredTxs;
+    }
+
 
     /**
      * @param $url
@@ -371,10 +395,13 @@ class getFromTimOne{
         return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
     }
 
-    /*
-    * @param $integradoId
-    * @param $orderType
-    */
+	/**
+     * @param $integradoId
+     * @param $orderType
+     * @param $idOrden
+     *
+     * @return array
+     */
     public static function getTxbyIntegradoByOrderTypeAndId($integradoId, $orderType, $idOrden){
         return self::selectDB('txs_timone_mandato', 'idIntegrado = '.$integradoId.' AND tipoOrden = "'.$orderType.'" AND idOrden = '.$idOrden);
     }
@@ -417,6 +444,17 @@ class getFromTimOne{
         $obj->total = $total;
 
         return $obj;
+    }
+
+    private static function convertDateLength( $date, $int ) {
+
+        $length = ceil(log10($date));
+        if ($length > $int) {
+            $array = str_split($date, $int);
+            $date = (int)$array[0];
+        }
+
+        return $date;
     }
 
     public function createNewProject($envio, $integradoId){
@@ -2203,7 +2241,7 @@ class ReportBalance extends IntegradoOrders {
  * @property integer ingresos
  * @property integer egresos
  */
-class ReportResultados extends IntegradoOrders{
+class ReportResultados extends IntegradoOrders {
 
     protected $fechaInicio;
     protected $fechaFin;
@@ -2288,7 +2326,7 @@ class ReportResultados extends IntegradoOrders{
 
 }
 
-class ReportFlujo extends IntegradoOrders {
+class ReportFlujo extends IntegradoTxs {
 
     public $period;
     public $error;
@@ -2303,41 +2341,55 @@ class ReportFlujo extends IntegradoOrders {
         $this->setDatesInicioFin($fechaInicio, $fechaFin);
 
         parent::__construct($integradoId);
+        $this->txs = parent::getIntegradoTxs();
+
+        $orders = new IntegradoOrders($integradoId);
+        $this->orders = $orders->orders;
     }
 
     public function getIngresos(){
         // TODO: cambiar ($this->orders->odv) por las Txs
         $this->orders->odv = $this->filterOrders($this->orders->odv);
-        $this->ingresos = $this->processOrders($this->orders->odv);
+
+        $this->txs->odv = getFromTimOne::filterTxsByDate($this->txs->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->ingresos = $this->processTxs($this->txs->odv);
     }
 
     public function getEgresos(){
         // TODO: cambiar ($this->orders->odc) por las Txs
         $this->orders->odc = $this->filterOrders($this->orders->odc);
-        $this->egresos = $this->processOrders($this->orders->odc);
+
+        $this->txs->odc = getFromTimOne::filterTxsByDate($this->txs->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->egresos = $this->processTxs($this->txs->odc);
     }
 
     public function getDepositos(){
         // TODO: cambiar ($this->orders->odd) por las Txs
         $this->orders->odd = $this->filterOrders($this->orders->odd);
-        $this->depositos = $this->processOrders($this->orders->odd);
+
+        $this->txs->odd = getFromTimOne::filterTxsByDate($this->txs->odd, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->depositos = $this->processTxs($this->txs->odd);
     }
 
     public function getRetiros(){
         // TODO: cambiar ($this->orders->odr) por las Txs
         $this->orders->odr = $this->filterOrders($this->orders->odr);
-        $this->retiros = $this->processOrders($this->orders->odr);
+
+        $this->txs->odr = getFromTimOne::filterTxsByDate($this->txs->odr, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+        $this->retiros = $this->processTxs($this->txs->odr);
     }
 
     public function getPrestamos(){
         // TODO: cambiar ($this->orders->odp) por las Txs
 //        $this->orders->odp = $this->filterOrders($this->orders->odp);
-//        $this->prestamos = $this->processOrders($this->orders->odp);
+
+//        $this->txs->odp = getFromTimOne::filterTxsByDate($this->txs->odp, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
+//        $this->prestamos = $this->processOrders($this->txs->odp);
     }
 
     private function filterOrders($orders)
     {
-        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($orders,array(13));
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($orders,array(5, 8, 13));
         $ordenesFiltradas = getFromTimOne::filterByDate($ordenesFiltradas, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
 
         return $ordenesFiltradas;
@@ -2347,6 +2399,72 @@ class ReportFlujo extends IntegradoOrders {
         $sumaOrdenes = getFromTimOne::sumaOrders($orders);
 
         return $sumaOrdenes;
+    }
+
+    private function processTxs( $txs ) {
+        $sumas = new stdClass();
+        $sumas->pagado->neto = 0;
+        $sumas->pagado->iva = 0;
+        $sumas->pagado->total = 0;
+
+        foreach ( $txs as $key => $value ) {
+
+            switch ($value->tipoOrden) {
+                case 'odv':
+                        $orden = getFromTimOne::getOrdenesVenta(null, $value->idOrden);
+                        $orden = $orden[0];
+                    break;
+                case 'odc':
+                        $orden = getFromTimOne::getOrdenesCompra(null, $value->idOrden);
+                        $orden = $orden[0];
+                    break;
+                case 'odr':
+                        $orden = getFromTimOne::getOrdenesRetiro(null, $value->idOrden);
+                        $orden = $orden[0];
+                    break;
+                case 'odd':
+                        $orden = getFromTimOne::getOrdenesDeposito(null, $value->idOrden);
+                        $orden = $orden[0];
+                    break;
+                case 'odp':
+                        $orden = getFromTimOne::getMutuos(null, $value->idOrden);
+                        $orden = $orden[0];
+                    break;
+            }
+
+
+            $tasaIva = $orden->iva / $orden->subTotalAmount;
+
+            $ivaTmp = $value->data->amount * $tasaIva;
+
+            // arreglo para suma
+            $neto[] = $value->data->amount - $ivaTmp;
+            $iva[] = $ivaTmp;
+            $total[] = $value->data->amount;
+
+            // asignacion de datos para front
+            $value->data->iva = $ivaTmp;
+            $value->data->neto = $value->data->amount - $ivaTmp;
+            $value->orden->beneficiario = $orden->proveedor->corporateName;
+
+            if ( isset( $orden->factura ) ) {
+                $value->orden->folio = $orden->factura->comprobante['FOLIO'];
+            }
+            if ( isset( $orden->proyecto ) ) {
+                $value->orden->proyectName = $orden->proyecto->name;
+            }
+            if ( isset( $orden->sub_proyecto ) ) {
+                $value->prden->subProyectName = $orden->sub_proyecto->name;
+            }
+        }
+
+        if ( isset( $total ) ) {
+            $sumas->pagado->neto = array_sum($neto);
+            $sumas->pagado->iva = array_sum($iva);
+            $sumas->pagado->total = array_sum($total);
+        }
+
+        return $sumas;
     }
 
     /**
@@ -2387,10 +2505,9 @@ class ReportFlujo extends IntegradoOrders {
         }
     }
 
-
 }
 
-class IntegradoOrders{
+class IntegradoOrders {
 
     public $orders;
 
@@ -2398,12 +2515,17 @@ class IntegradoOrders{
         self::setOrders($integradoId);
     }
 
+    protected function setTxs( ){
+        $this->txs = parent::getIntegradoTxs();
+    }
     private function setOrders($integradoId){
         $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
         $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
         $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
         $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
-//        $this->orders->odp = getFromTimOne::getMutuosODP($integradoId);
+
+        $this->orders->odp_acreedor = getFromTimOne::getMutuosODP($integradoId)->acreedor;
+        $this->orders->odp_deudor   = getFromTimOne::getMutuosODP($integradoId)->deudor;
 
         $this->getTxs();
     }
@@ -2427,6 +2549,69 @@ class IntegradoOrders{
         }
     }
 }
+
+class IntegradoTxs {
+
+    public $txs;
+    protected $integradoId;
+
+    function __construct( $integradoId ) {
+        $this->integradoId = (int)$integradoId;
+    }
+
+	/**
+     * @return array
+     */
+    protected function getIntegradoTxs( ){
+
+        $where = JFactory::getDbo()->quoteName('idIntegrado') . ' = '. $this->integradoId;
+        $results = getFromTimOne::selectDB('txs_timone_mandato', $where);
+
+        $this->txs = $this->groupTxByType( $results );
+
+        return $this->txs;
+    }
+
+	/**
+     * @param $txs
+     *
+     * @return array
+     */
+    protected function groupTxByType( $txs ) {
+        $txsByType = new stdClass();
+        $txsByType->odc = array();
+        $txsByType->odv = array();
+        $txsByType->odd = array();
+        $txsByType->odr = array();
+        $txsByType->odp = array();
+
+        foreach ( $txs as $tx ) {
+            $txData   = getFromTimOne::getTxDataByTxId( $tx->idTx );
+            $tx->data = $txData;
+
+            switch ($tx->tipoOrden) {
+                case 'odc':
+                    $txsByType->odc[] = $tx;
+                    break;
+                case 'odv':
+                    $txsByType->odv[] = $tx;
+                    break;
+                case 'odr':
+                    $txsByType->odr[] = $tx;
+                    break;
+                case 'odd':
+                    $txsByType->odd[] = $tx;
+                    break;
+                case 'odp':
+                    $txsByType->odp[] = $tx;
+                    break;
+            }
+        }
+
+        return $txsByType;
+    }
+}
+
 
 /**
  * UUID class
