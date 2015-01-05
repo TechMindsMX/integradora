@@ -2308,31 +2308,31 @@ class ReportFlujo extends IntegradoOrders {
     public function getIngresos(){
         // TODO: cambiar ($this->orders->odv) por las Txs
         $this->orders->odv = $this->filterOrders($this->orders->odv);
-        $this->ingresos = $this->getData($this->orders->odv);
+        $this->ingresos = $this->processOrders($this->orders->odv);
     }
 
     public function getEgresos(){
         // TODO: cambiar ($this->orders->odc) por las Txs
         $this->orders->odc = $this->filterOrders($this->orders->odc);
-        $this->egresos = $this->getData($this->orders->odc);
+        $this->egresos = $this->processOrders($this->orders->odc);
     }
 
     public function getDepositos(){
         // TODO: cambiar ($this->orders->odd) por las Txs
         $this->orders->odd = $this->filterOrders($this->orders->odd);
-        $this->depositos = $this->getData($this->orders->odd);
+        $this->depositos = $this->processOrders($this->orders->odd);
     }
 
     public function getRetiros(){
         // TODO: cambiar ($this->orders->odr) por las Txs
         $this->orders->odr = $this->filterOrders($this->orders->odr);
-        $this->retiros = $this->getData($this->orders->odr);
+        $this->retiros = $this->processOrders($this->orders->odr);
     }
 
     public function getPrestamos(){
         // TODO: cambiar ($this->orders->odp) por las Txs
 //        $this->orders->odp = $this->filterOrders($this->orders->odp);
-//        $this->prestamos = $this->getData($this->orders->odp);
+//        $this->prestamos = $this->processOrders($this->orders->odp);
     }
 
     private function filterOrders($orders)
@@ -2343,7 +2343,7 @@ class ReportFlujo extends IntegradoOrders {
         return $ordenesFiltradas;
     }
 
-    public function getData($orders){
+    public function processOrders($orders){
         $sumaOrdenes = getFromTimOne::sumaOrders($orders);
 
         return $sumaOrdenes;
