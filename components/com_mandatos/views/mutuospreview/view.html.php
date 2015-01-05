@@ -11,6 +11,8 @@ class MandatosViewMutuospreview extends JViewLegacy {
         $this->integradoId  = $this->data->integradoId;
         $this->idMutuo      = $this->data->idMutuo;
 
+        $this->integCurrent = $this->get('integrado');
+
         if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
                 return false;

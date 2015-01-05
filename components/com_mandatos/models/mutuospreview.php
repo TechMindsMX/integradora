@@ -66,5 +66,8 @@ class MandatosModelMutuospreview extends JModelItem {
         return $data;
 	}
 
+    public function getIntegrado()	{
+        return new IntegradoSimple($this->inputVars['integradoId']);
+    }
 }
 
