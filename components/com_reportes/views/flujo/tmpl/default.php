@@ -9,6 +9,7 @@ $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
 ?>
 <script>
     var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
@@ -139,7 +140,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <tr class="row">
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_CLIENTE'); ?></th>
-        <th><?php echo JText::_('LBL_TYPE'); ?></th>
+        <th><?php echo JText::_('LBL_FACTURA_NUM'); ?></th>
+        <th><?php echo JText::_('LBL_PROYECTO'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
@@ -153,7 +155,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <tr class="row">
                 <td><?php echo date('d-m-Y', $tx->date); ?></td>
                 <td><?php echo $orden->proveedor->corporateName; ?></td>
-                <td>Pagado</td>
+                <td><?php echo @$orden->urlXML->comprobante->FOLIO; ?></td>
+                <td><?php echo @$orden->proyecto->name.' '.@$orden->sub_proyecto->name;  ?></td>
                 <td><div class="text-right">$<?php echo number_format( ($tx->detalleTx->amount - $tx->detalleTx->ivaProporcion), 2); ?></div></td>
                 <td><div class="text-right">$<?php echo number_format($tx->detalleTx->ivaProporcion,2) ; ?></div></td>
                 <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
@@ -163,7 +166,9 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     }
     ?>
     <tr class="row">
-        <td colspan="5"><?php echo JText::_('LBL_INGRESOS_TOTAL'); ?></td>
+        <td colspan="4"><?php echo JText::_('LBL_INGRESOS_TOTAL'); ?></td>
+        <td><div class="text-right">$<?php echo number_format($report->ingresos->pagado->neto,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format($report->ingresos->pagado->iva,2); ?></div></td>
         <td><div class="text-right">$<?php echo number_format($report->ingresos->pagado->total,2); ?></div></td>
     </tr>
     </tbody>
@@ -207,6 +212,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <tr class="row">
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_PROVEEDOR'); ?></th>
+        <th><?php echo JText::_('LBL_FACTURA_NUM'); ?></th>
+        <th><?php echo JText::_('LBL_PROYECTO'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
@@ -220,7 +227,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <tr class="row">
                 <td><?php echo date('d-m-Y', $tx->date); ?></td>
                 <td><?php echo $orden->proveedor->corporateName; ?></td>
-                <td>Pagado</td>
+                <td><?php echo @$orden->urlXML->comprobante->FOLIO; ?></td>
+                <td><?php echo @$orden->proyecto->name.' '.@$orden->sub_proyecto->name;  ?></td>
                 <td>
                     <div class="text-right">
                         $<?php echo number_format(($tx->detalleTx->amount - $tx->detalleTx->ivaProporcion), 2); ?></div>
@@ -237,7 +245,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     }
     ?>
     <tr class="row">
-        <td colspan="3"><?php echo JText::_('LBL_EGRESOS_TOTAL'); ?></td>
+        <td colspan="4"><?php echo JText::_('LBL_EGRESOS_TOTAL'); ?></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->neto,2); ?></div></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->iva,2); ?></div></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->total,2); ?></div></td>

@@ -2337,7 +2337,7 @@ class ReportFlujo extends IntegradoOrders {
 
     private function filterOrders($orders)
     {
-        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($orders,array(5,8,13));
+        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($orders,array(13));
         $ordenesFiltradas = getFromTimOne::filterByDate($ordenesFiltradas, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
 
         return $ordenesFiltradas;
