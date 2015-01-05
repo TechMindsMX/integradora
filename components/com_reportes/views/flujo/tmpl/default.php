@@ -25,6 +25,10 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     });
 </script>
 
+<div class="hidden-print form-group">
+    <?php echo $this->printBtn; ?>
+</div>
+
 <div class="">
     <div class="header">
         <div class="span6">
@@ -95,15 +99,29 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <div class="span6">
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_INGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->ingresos->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format($report->ingresos->pagado->total,2) ;?></div>
                 </div>
                 <div class="row-fluid">
-                    <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->egresos->total,2) ;?></div>
+                    <div class="span6"><?php echo JText::_('LBL_DEPOSITOS'); ?></div>
+                    <div class="span6 num">$<?php echo number_format($report->depositos->pagado->total,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                    <div class="span6 num">$<?php echo number_format($report->ingresos->total - $report->egresos->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format($report->ingresos->pagado->total + $report->depositos->pagado->total,2) ;?></div>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="row-fluid">
+                    <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
+                    <div class="span6 num">$<?php echo number_format($report->egresos->pagado->total,2) ;?></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6"><?php echo JText::_('LBL_RETIROS'); ?></div>
+                    <div class="span6 num">$<?php echo number_format($report->retiros->pagado->total,2) ;?></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
+                    <div class="span6 num">$<?php echo number_format($report->egresos->pagado->total + $report->retiros->pagado->total,2) ;?></div>
                 </div>
             </div>
         </div>
@@ -113,6 +131,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 <div class="clearfix">&nbsp;</div>
 
 <h2 class="t-center"><?php echo JText::_('LBL_DETAIL_OPERATIONS'); ?></h2>
+
+<!-- Ingresos -->
 <h3><?php echo JText::_('LBL_INGRESOS'); ?></h3>
 <table class="table table-bordered">
     <thead>
@@ -143,12 +163,44 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     }
     ?>
     <tr class="row">
-        <td colspan="5">Total de Ingresos</td>
+        <td colspan="5"><?php echo JText::_('LBL_INGRESOS_TOTAL'); ?></td>
         <td><div class="text-right">$<?php echo number_format($report->ingresos->pagado->total,2); ?></div></td>
     </tr>
     </tbody>
 </table>
 
+<!-- Depósitos -->
+<h3><?php echo JText::_('LBL_DEPOSITOS'); ?></h3>
+<table class="table table-bordered">
+    <thead>
+    <tr class="row">
+        <th><?php echo JText::_('LBL_FECHA'); ?></th>
+        <th><?php echo JText::_('LBL_CONCEPTO'); ?></th>
+        <th><?php echo JText::_('LBL_TOTAL'); ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    foreach ($report->orders->odd as $orden) {
+        foreach ($orden->txs as $tx) {
+            ?>
+            <tr class="row">
+                <td><?php echo date('d-m-Y', $tx->date); ?></td>
+                <td><?php echo $orden->proveedor->corporateName; ?></td>
+                <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
+            </tr>
+        <?php
+        }
+    }
+    ?>
+    <tr class="row">
+        <td colspan="2"><?php echo JText::_('LBL_DEPOSITOS_TOTAL'); ?></td>
+        <td><div class="text-right">$<?php echo number_format($report->depositos->pagado->total,2); ?></div></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Egresos -->
 <h3><?php echo JText::_('LBL_EGRESOS'); ?></h3>
 <table class="table table-bordered">
     <thead>
@@ -185,7 +237,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     }
     ?>
     <tr class="row">
-        <td colspan="3"><?php echo JText::_('LBL_EGRESOS'); ?></td>
+        <td colspan="3"><?php echo JText::_('LBL_EGRESOS_TOTAL'); ?></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->neto,2); ?></div></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->iva,2); ?></div></td>
         <td><div class="text-right">$<?php echo number_format($report->egresos->pagado->total,2); ?></div></td>
@@ -193,4 +245,36 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </tbody>
 
 </table>
-</div>
+
+
+<!-- Retiros -->
+<h3><?php echo JText::_('LBL_RETIROS'); ?></h3>
+<table class="table table-bordered">
+    <thead>
+    <tr class="row">
+        <th><?php echo JText::_('LBL_FECHA'); ?></th>
+        <th><?php echo JText::_('LBL_CONCEPTO'); ?></th>
+        <th><?php echo JText::_('LBL_TOTAL'); ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    foreach ($report->orders->odr as $orden) {
+        foreach ($orden->txs as $tx) {
+            ?>
+            <tr class="row">
+                <td><?php echo date('d-m-Y', $tx->date); ?></td>
+                <td><?php echo $orden->proveedor->corporateName; ?></td>
+                <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
+            </tr>
+        <?php
+        }
+    }
+    ?>
+    <tr class="row">
+        <td colspan="2"><?php echo JText::_('LBL_RETIROS_TOTAL'); ?></td>
+        <td><div class="text-right">$<?php echo number_format($report->retiros->pagado->total,2); ?></div></td>
+    </tr>
+    </tbody>
+</table>
+

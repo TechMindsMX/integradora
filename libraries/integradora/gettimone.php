@@ -237,6 +237,17 @@ class getFromTimOne{
         return $tabla;
     }
 
+	/**
+     * Metodo que retorna
+     * 1. todos los mutuos de un integrado
+     * 2. un mutuo según su id
+     * 3. todos los mutuos
+     *
+     * @param null $integradoId
+     * @param null $idMutuo
+     *
+     * @return array
+     */
     public static function getMutuos($integradoId=null, $idMutuo=null){
         $where = null;
         if(is_null($integradoId)){
@@ -247,6 +258,46 @@ class getFromTimOne{
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
         return $mutuos;
+    }
+
+    /**
+     * Metodo que retorna las ODP agrupadas por el usuario, cuando es acreedor y deudor
+     * realiza una busqueda en la tabla ordenes_prestamo
+    los parametros recibidos son:
+    1.- Id integrado
+    2.- Id mutuo
+    Se recibe solamente uno de los dos.
+    --Al recibir el Id integrado realiza la busqueda en la tabla y regresa
+    un arreglo con dos nodos
+    a) Acreedor: Este nodo tiene en su contenido todos las coincidencias encontradas para el Id integrado con un acreedor
+    b) Deudor:   Este nodo muestra todas las coincidencias para un Id integrado y el deudor
+    --Si recibe el Id mutuo realiza la busqueda por este id y regresa sus resultados encontrados
+
+     * @param null $integradoId
+     * @param null $idMutuo
+     *
+     * @return stdClass
+     */
+    public static function getMutuosODP($integradoId=null, $idMutuo=null){
+        $where = null;
+        $respuesta              = new stdClass();
+        if(is_null($integradoId) && is_null($idMutuo)){
+            $where = null;
+        }elseif(!is_null($integradoId) && is_null($idMutuo)){
+
+            $where      = 'acreedor = '.$integradoId;
+            $acredor    = self::selectDB('ordenes_prestamo',$where);
+            $where      = 'deudor='.$integradoId;
+            $deudor     = self::selectDB('ordenes_prestamo',$where);
+            $respuesta->acreedor    = $acredor;
+            $respuesta->deudor      = $deudor;
+        }elseif(!is_null($idMutuo) && is_null($integradoId)){
+            $where = 'mutuo = '.$idMutuo;
+            $mutuo      = self::selectDB('ordenes_prestamo',$where);
+            $respuesta->mudutuo     = $mutuo;
+        }
+
+        return $respuesta;
     }
 
     public static function getTiposPago()
@@ -290,6 +341,7 @@ class getFromTimOne{
         return $filteredOrders;
     }
 
+
     /**
      * @param $url
      *
@@ -303,7 +355,10 @@ class getFromTimOne{
 
         $isModal  = $app->input->get( 'print' ) == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
         $template = $app->getTemplate();
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/bootstrap/output/bootstrap.css' );
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/bootstrap/output/bootstrap-responsive.css' );
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/bootstrap.css' );
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/template.css' );
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/override.css' );
         if ( $isModal ) {
             $href = '"#" onclick="window.print(); return false;"';
@@ -314,42 +369,6 @@ class getFromTimOne{
         }
 
         return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
-    }
-    /*DETALLES
-        Este metodo realiza una busqueda en la tabla ordenes_prestamo
-        los parametros recibidos son:
-            1.- Id integrado
-            2.- Id mutuo
-        Se recibe solamente uno de los dos.
-        --Al recibir el Id integrado realiza la busqueda en la tabla y regresa
-        un arreglo con dos nodos
-            a) Acreedor: Este nodo tiene en su contenido todos las coincidencias encontradas para el Id integrado con un acreedor
-            b) Deudor:   Este nodo muestra todas las coincidencias para un Id integrado y el deudor
-        --Si recibe el Id mutuo realiza la busqueda por este id y regresa sus resultados encontrados
-
-    */
-
-
-    public static function getMutuosODP($integradoId=null, $idMutuo=null){
-        $where = null;
-        $respuesta              = new stdClass();
-        if(is_null($integradoId) && is_null($idMutuo)){
-            $where = null;
-        }elseif(!is_null($integradoId) && is_null($idMutuo)){
-
-            $where      = 'acreedor = '.$integradoId;
-            $acredor    = self::selectDB('ordenes_prestamo',$where);
-            $where      = 'deudor='.$integradoId;
-            $deudor     = self::selectDB('ordenes_prestamo',$where);
-            $respuesta->acreedor    = $acredor;
-            $respuesta->deudor      = $deudor;
-        }elseif(!is_null($idMutuo) && is_null($integradoId)){
-            $where = 'mutuo = '.$idMutuo;
-            $mutuo      = self::selectDB('ordenes_prestamo',$where);
-            $respuesta->mudutuo     = $mutuo;
-        }
-
-        return $respuesta;
     }
 
     /*
@@ -397,7 +416,6 @@ class getFromTimOne{
         $obj->iva = $iva;
         $obj->total = $total;
 
-        var_dump($orders, $obj);
         return $obj;
     }
 
@@ -665,8 +683,10 @@ class getFromTimOne{
         $resultados = array();
 
         foreach ( $orders as $key => $value ) {
-            if (in_array($value->status->id, $statusId)) {
-                $resultados[] = $value;
+            if ( isset( $value->status->id ) ) {
+                if (in_array($value->status->id, $statusId)) {
+                    $resultados[] = $value;
+                }
             }
         }
 
@@ -2272,6 +2292,12 @@ class ReportFlujo extends IntegradoOrders {
 
     public $period;
     public $error;
+    public $orders;
+    public $ingresos;
+    public $egresos;
+    public $prestamos;
+    public $retiros;
+    public $depositos;
 
     function __construct( $integradoId, $fechaInicio, $fechaFin ) {
         $this->setDatesInicioFin($fechaInicio, $fechaFin);
@@ -2305,8 +2331,8 @@ class ReportFlujo extends IntegradoOrders {
 
     public function getPrestamos(){
         // TODO: cambiar ($this->orders->odp) por las Txs
-        $this->orders->odp = $this->filterOrders($this->orders->odp);
-        $this->prestamos = $this->getData($this->orders->odp);
+//        $this->orders->odp = $this->filterOrders($this->orders->odp);
+//        $this->prestamos = $this->getData($this->orders->odp);
     }
 
     private function filterOrders($orders)
@@ -2366,6 +2392,8 @@ class ReportFlujo extends IntegradoOrders {
 
 class IntegradoOrders{
 
+    public $orders;
+
     function __construct($integradoId){
         self::setOrders($integradoId);
     }
@@ -2375,6 +2403,7 @@ class IntegradoOrders{
         $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
         $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
         $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
+//        $this->orders->odp = getFromTimOne::getMutuosODP($integradoId);
 
         $this->getTxs();
     }
