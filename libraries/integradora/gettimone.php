@@ -2723,3 +2723,57 @@ class UUID
 // Pseudo-random UUID
 
 // $v4uuid = UUID::v4();
+
+
+class Factura {
+    public $emisor;
+    public $receptor;
+    public $format;
+    public $datosDeFacturacion;
+    public $conceptos;
+
+    public function setEmisor(  ) {
+        $this->emisor->datosDiscales->rfc          = 'RFC';
+        $this->emisor->datosFiscales->razonSocial  = 'Razon Social';
+        $this->emisor->datosFiscales->codigoPostal = '03330';
+        $this->emisor->datosFiscales->pais         = 'MEXICO';
+        $this->emisor->datosFiscales->ciudad       = 'DISTRITO FEDERAL';
+        $this->emisor->datosFiscales->delegacion   = 'BENITO JUAREZ';
+        $this->emisor->datosFiscales->calle        = 'REFORMA';
+        $this->emisor->datosFiscales->regime       = 'PERSONA FISICA';
+    }
+
+    public function setReceptor( ) {
+        $this->receptor->datosDiscales->rfc             = 'RFC';
+        $this->receptor->datosFiscales->razonSocial     = 'PUBLICO EN GENERAL';
+        $this->receptor->datosFiscales->pais            = 'MEXICO';
+        $this->receptor->datosFiscales->calle           = 'INSURGENTES';
+    }
+
+    public function setFormat( ) {
+        $this->format = 'Xml';
+    }
+
+    public function setDatosDeFacturacion( ) {
+        $this->datosDeFacturacion->moneda = 'MXN';
+        $this->datosDeFacturacion->lugarDeExpedicion = 'Mexico DF';
+
+        $this->datosDeFacturacion->numeroDeCuentaDePago = 'DESCONOCIDO';
+        $this->datosDeFacturacion->formaDePago = 'PAGO EN UNA SOLA EXHIBICION';
+
+        $this->datosDeFacturacion->metodoDePago = 'TRANSFERENCIA ELECTRONICA';
+        $this->datosDeFacturacion->tipoDeComprobante = 'ingreso';
+
+    }
+
+    public function setConceptos( $conceptos ) {
+
+        $this->conceptos[0]->valorUnitario = '100.00';
+        $this->conceptos[0]->descripcion = 'Product description';
+        $this->conceptos[0]->cantidad = '10';
+        $this->conceptos[0]->unidad = 'UNIDAD';
+
+    }
+
+
+}
