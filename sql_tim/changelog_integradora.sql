@@ -112,4 +112,12 @@ CREATE TABLE IF NOT EXISTS `flpmu_ordenes_prestamo` (
 ALTER TABLE `flpmu_ordenes_prestamo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --rollback DROP TABLE `flpmu_ordenes_prestamo`;
 
-
+--changeset ricardolyon:9
+DROP TABLE IF EXISTS `integradb`.`flpmu_auth_mutuo`;
+CREATE TABLE `integradb`.`flpmu_auth_mutuo` (
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  idOrden INT NOT NULL,
+  userId INT NOT NULL,
+  authDate BIGINT NOT NULL
+  );
+--rollback DROP TABLE `integradb`.`flpmu_auth_mutuo`;

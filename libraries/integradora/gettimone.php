@@ -42,8 +42,8 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
 
         $query->select('*')
-            ->from($db->quoteName('#__integrado_users'))
-            ->where($db->quoteName('integrado_principal').' = 1');
+              ->from($db->quoteName('#__integrado_users'))
+              ->where($db->quoteName('integrado_principal').' = 1');
 
         try {
             $db->setQuery($query);
@@ -237,7 +237,7 @@ class getFromTimOne{
         return $tabla;
     }
 
-	/**
+    /**
      * Metodo que retorna
      * 1. todos los mutuos de un integrado
      * 2. un mutuo según su id
@@ -395,7 +395,7 @@ class getFromTimOne{
         return '<a class="btn btn-default" href="' . $href . '">' . JText::_( 'LBL_IMPRIMIR' ) . '</a>';
     }
 
-	/**
+    /**
      * @param $integradoId
      * @param $orderType
      * @param $idOrden
@@ -480,11 +480,11 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
         if(!is_null($where)){
             $query->select('*')
-                ->from($db->quoteName('#__'.$table))
-                ->where($where);
+                  ->from($db->quoteName('#__'.$table))
+                  ->where($where);
         }else{
             $query->select('*')
-                ->from($db->quoteName('#__'.$table));
+                  ->from($db->quoteName('#__'.$table));
         }
 
         try {
@@ -536,8 +536,8 @@ class getFromTimOne{
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
             $query->select('integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
-                ->from('#__integrado_clientes_proveedor')
-                ->where('integrado_Id = ' . $userId);
+                  ->from('#__integrado_clientes_proveedor')
+                  ->where('integrado_Id = ' . $userId);
             try {
                 $db->setQuery($query);
                 $response = $db->loadObjectList();
@@ -551,9 +551,9 @@ class getFromTimOne{
                 $querygral = $db->getQuery(true);
 
                 $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
-                    ->from('#__integrado_datos_personales AS DP')
-                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
-                    ->where('DE.integrado_id = ' . $value->id);
+                          ->from('#__integrado_datos_personales AS DP')
+                          ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
+                          ->where('DE.integrado_id = ' . $value->id);
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
@@ -573,8 +573,8 @@ class getFromTimOne{
                 $queryphone = $db->getQuery(true);
 
                 $queryphone->select('*')
-                    ->from('#__integrado_contacto')
-                    ->where('integrado_id = ' . $value->id);
+                           ->from('#__integrado_contacto')
+                           ->where('integrado_id = ' . $value->id);
 
                 try {
                     $db->setQuery($queryphone);
@@ -591,8 +591,8 @@ class getFromTimOne{
                 $querybanco = $db->getQuery(true);
 
                 $querybanco->select('*')
-                    ->from('#__integrado_datos_bancarios')
-                    ->where('integrado_id = ' . $value->id);
+                           ->from('#__integrado_datos_bancarios')
+                           ->where('integrado_id = ' . $value->id);
 
                 try {
                     $db->setQuery($querybanco);
@@ -614,10 +614,10 @@ class getFromTimOne{
             $query->select('clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
                             DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
                             DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
-                ->from('#__integrado_clientes_proveedor AS clientes')
-                ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
-                ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
-                ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
+                  ->from('#__integrado_clientes_proveedor AS clientes')
+                  ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
+                  ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
+                  ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
 
             try{
                 $db->setQuery($query);
@@ -878,8 +878,8 @@ class getFromTimOne{
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__catalog_order_status')
-            ->order('id');
+              ->from('#__catalog_order_status')
+              ->order('id');
         $db->setQuery($query);
 
         $result = $db->loadObjectList('id');
@@ -1398,8 +1398,8 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
 
         $query->insert($db->quoteName('#__integrado'))
-            ->columns($db->quoteName('status').','.$db->quoteName('pers_juridica'))
-            ->values($db->quote(0).','.$db->quote($envio));
+              ->columns($db->quoteName('status').','.$db->quoteName('pers_juridica'))
+              ->values($db->quote(0).','.$db->quote($envio));
 
         $db->setQuery($query);
         $db->execute();
@@ -1635,8 +1635,8 @@ class sendToTimOne {
         $query 	= $db->getQuery(true);
 
         $query->select('max(numOrden) AS lastOrderNum')
-            ->from($db->quoteName('#__'.$table))
-            ->where($where);
+              ->from($db->quoteName('#__'.$table))
+              ->where($where);
 
         $db->setQuery($query);
         $resultado = $db->loadObject();
@@ -1740,8 +1740,8 @@ class sendToTimOne {
         $query 	= $db->getQuery(true);
 
         $query->insert($db->quoteName('#__'.$tabla))
-            ->columns($db->quoteName($columnas))
-            ->values(implode(',',$valores));
+              ->columns($db->quoteName($columnas))
+              ->values(implode(',',$valores));
 
         try{
             $db->setQuery($query);
@@ -1766,8 +1766,8 @@ class sendToTimOne {
         $query 	= $db->getQuery(true);
 
         $query->update($db->quoteName('#__'.$table))
-            ->set(implode(',', $set))
-            ->where($condicion);
+              ->set(implode(',', $set))
+              ->where($condicion);
 
         try {
             $db->setQuery($query);
@@ -1788,7 +1788,7 @@ class sendToTimOne {
             $query = $db->getQuery(true);
 
             $query->delete($db->quoteName('#__' . $table))
-                ->where($condicion);
+                  ->where($condicion);
 
             $db->setQuery($query);
             $db->execute();
@@ -1850,11 +1850,11 @@ class sendToTimOne {
                     CURLOPT_FOLLOWLOCATION => false,
                     CURLOPT_VERBOSE        => $verboseflag,
                     CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json',
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
+//                    CURLOPT_HTTPHEADER	   => array(
+//                        'Accept: application/json',
+//                        'Content-Type: application/json',
+//                        'Content-Length: ' . strlen($this->jsonData)
+//                    )
                 );
                 break;
             case ('PUT'):
@@ -1915,7 +1915,7 @@ class sendToTimOne {
 
         if($verboseflag === true) {
             $headers = curl_getinfo( $ch,
-                CURLINFO_HEADER_OUT );
+                                     CURLINFO_HEADER_OUT );
             $this->result->data = curl_exec($ch);
 
             rewind( $verbose );
@@ -1977,12 +1977,12 @@ class sendToTimOne {
             $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
 
             $this->formatData(array('idOrden'=> $order->id,
-                'userId' => JFactory::getUser()->id,
-                'changeDate'=> time(),
-                'pastStatus' => $order->status ,
-                'newStatus'=> $orderNewStatus,
-                'result' => $return
-            ));
+                                    'userId' => JFactory::getUser()->id,
+                                    'changeDate'=> time(),
+                                    'pastStatus' => $order->status ,
+                                    'newStatus'=> $orderNewStatus,
+                                    'result' => $return
+                              ));
             $bitacora = $this->insertDB('bitacora_status_'.$orderType);
         }
 
@@ -2411,31 +2411,33 @@ class ReportFlujo extends IntegradoTxs {
 
             switch ($value->tipoOrden) {
                 case 'odv':
-                        $orden = getFromTimOne::getOrdenesVenta(null, $value->idOrden);
-                        $orden = $orden[0];
+                    $orden = getFromTimOne::getOrdenesVenta(null, $value->idOrden);
+                    $orden = $orden[0];
                     break;
                 case 'odc':
-                        $orden = getFromTimOne::getOrdenesCompra(null, $value->idOrden);
-                        $orden = $orden[0];
+                    $orden = getFromTimOne::getOrdenesCompra(null, $value->idOrden);
+                    $orden = $orden[0];
                     break;
                 case 'odr':
-                        $orden = getFromTimOne::getOrdenesRetiro(null, $value->idOrden);
-                        $orden = $orden[0];
+                    $orden = getFromTimOne::getOrdenesRetiro(null, $value->idOrden);
+                    $orden = $orden[0];
                     break;
                 case 'odd':
-                        $orden = getFromTimOne::getOrdenesDeposito(null, $value->idOrden);
-                        $orden = $orden[0];
+                    $orden = getFromTimOne::getOrdenesDeposito(null, $value->idOrden);
+                    $orden = $orden[0];
                     break;
                 case 'odp':
-                        $orden = getFromTimOne::getMutuos(null, $value->idOrden);
-                        $orden = $orden[0];
+                    $orden = getFromTimOne::getMutuos(null, $value->idOrden);
+                    $orden = $orden[0];
                     break;
             }
 
-
-            $tasaIva = $orden->iva / $orden->subTotalAmount;
-
-            $ivaTmp = $value->data->amount * $tasaIva;
+            if ( isset( $orden->subTotalAmount ) && isset( $orden->iva ) ) {
+                $tasaIva = $orden->iva / $orden->subTotalAmount;
+                $ivaTmp = $value->data->amount * $tasaIva;
+            } else {
+                $ivaTmp = 0;
+            }
 
             // arreglo para suma
             $neto[] = $value->data->amount - $ivaTmp;
@@ -2559,7 +2561,7 @@ class IntegradoTxs {
         $this->integradoId = (int)$integradoId;
     }
 
-	/**
+    /**
      * @return array
      */
     protected function getIntegradoTxs( ){
@@ -2572,7 +2574,7 @@ class IntegradoTxs {
         return $this->txs;
     }
 
-	/**
+    /**
      * @param $txs
      *
      * @return array
@@ -2639,22 +2641,22 @@ class UUID
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
             // 32 bits for "time_low"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                       mt_rand(0, 0xffff), mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
-            mt_rand(0, 0xffff),
+                       mt_rand(0, 0xffff),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
-            mt_rand(0, 0x0fff) | 0x4000,
+                       mt_rand(0, 0x0fff) | 0x4000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand(0, 0x3fff) | 0x8000,
+                       mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+                       mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
 
@@ -2690,28 +2692,28 @@ class UUID
         return sprintf('%08s-%04s-%04x-%04x-%12s',
 
             // 32 bits for "time_low"
-            substr($hash, 0, 8),
+                       substr($hash, 0, 8),
 
             // 16 bits for "time_mid"
-            substr($hash, 8, 4),
+                       substr($hash, 8, 4),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 5
-            (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
+                       (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
+                       (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            substr($hash, 20, 12)
+                       substr($hash, 20, 12)
         );
     }
 
     public static function is_valid($uuid) {
         return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.
-            '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
+                          '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
     }
 }
 
@@ -2728,52 +2730,90 @@ class UUID
 class Factura {
     public $emisor;
     public $receptor;
-    public $format;
     public $datosDeFacturacion;
     public $conceptos;
+    public $format;
 
-    public function setEmisor(  ) {
-        $this->emisor->datosDiscales->rfc          = 'RFC';
-        $this->emisor->datosFiscales->razonSocial  = 'Razon Social';
-        $this->emisor->datosFiscales->codigoPostal = '03330';
-        $this->emisor->datosFiscales->pais         = 'MEXICO';
-        $this->emisor->datosFiscales->ciudad       = 'DISTRITO FEDERAL';
-        $this->emisor->datosFiscales->delegacion   = 'BENITO JUAREZ';
-        $this->emisor->datosFiscales->calle        = 'REFORMA';
-        $this->emisor->datosFiscales->regime       = 'PERSONA FISICA';
+    function __construct() {
+        $this->setEmisor();
+        $this->setReceptor();
+        $this->setFormat();
+        $this->setConceptos();
+        $this->setDatosDeFacturacion();
     }
 
-    public function setReceptor( ) {
-        $this->receptor->datosDiscales->rfc             = 'RFC';
-        $this->receptor->datosFiscales->razonSocial     = 'PUBLICO EN GENERAL';
-        $this->receptor->datosFiscales->pais            = 'MEXICO';
-        $this->receptor->datosFiscales->calle           = 'INSURGENTES';
+    public function setEmisor() {
+        $this->emisor = new Emisor();
     }
 
-    public function setFormat( ) {
+    public function setReceptor() {
+        $this->receptor = new datosFiscales();
+    }
+
+    public function setFormat() {
         $this->format = 'Xml';
     }
 
-    public function setDatosDeFacturacion( ) {
-        $this->datosDeFacturacion->moneda = 'MXN';
-        $this->datosDeFacturacion->lugarDeExpedicion = 'Mexico DF';
-
-        $this->datosDeFacturacion->numeroDeCuentaDePago = 'DESCONOCIDO';
-        $this->datosDeFacturacion->formaDePago = 'PAGO EN UNA SOLA EXHIBICION';
-
-        $this->datosDeFacturacion->metodoDePago = 'TRANSFERENCIA ELECTRONICA';
-        $this->datosDeFacturacion->tipoDeComprobante = 'ingreso';
-
+    public function setDatosDeFacturacion() {
+        $this->datosDeFacturacion = new datosDeFacturacion();
     }
 
-    public function setConceptos( $conceptos ) {
-
-        $this->conceptos[0]->valorUnitario = '100.00';
-        $this->conceptos[0]->descripcion = 'Product description';
-        $this->conceptos[0]->cantidad = '10';
-        $this->conceptos[0]->unidad = 'UNIDAD';
-
+    public function setConceptos() {
+        $array = array(
+            'valorUnitario' => '100.00',
+            'descripcion' => 'Product description',
+            'cantidad' => '10',
+            'unidad' => 'UNIDAD'
+        );
+        $this->conceptos[0] = new Conceptos();
     }
+}
+
+class Conceptos
+{
+    public $valorUnitario = '100.00';
+    public $descripcion = 'Product description';
+    public $cantidad = '10';
+    public $unidad = 'UNIDAD';
+}
+
+class Emisor {
+    public $datosFiscales;
+
+    function __construct( ) {
+        $this->datosFiscales = new datosFiscales();
+    }
+}
+
+class Receptor {
+    public $datosFiscales;
+
+    function __construct() {
+        $this->datosFiscales = new datosFiscales();
+    }
+}
+
+class datosFiscales {
+    public $rfc          = 'RFC';
+    public $razonSocial  = 'Razon Social';
+    public $codigoPostal = '03330';
+    public $pais         = 'MEXICO';
+    public $ciudad       = 'DISTRITO FEDERAL';
+    public $delegacion   = 'BENITO JUAREZ';
+    public $calle        = 'REFORMA';
+    public $regime       = 'PERSONA FISICA';
+}
+
+class datosDeFacturacion {
+    public $moneda = 'MXN';
+    public $lugarDeExpedicion = 'Mexico DF';
+    public $numeroDeCuentaDePago = 'DESCONOCIDO';
+    public $formaDePago = 'PAGO EN UNA SOLA EXHIBICION';
+    public $metodoDePago = 'TRANSFERENCIA ELECTRONICA';
+    public $tipoDeComprobante = 'ingreso';
+}
 
 
+class UserTimone {
+    public $uuid = '913905d70f5546f3ad0e6efc7d344b49';
 }
