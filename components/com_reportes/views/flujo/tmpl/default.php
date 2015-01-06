@@ -142,7 +142,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_CLIENTE'); ?></th>
         <th><?php echo JText::_('LBL_FACTURA_NUM'); ?></th>
-        <th><?php echo JText::_('LBL_PROYECTO'); ?></th>
+        <th><?php echo JText::_('LBL_PROY'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
@@ -212,7 +212,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         <th><?php echo JText::_('LBL_FECHA'); ?></th>
         <th><?php echo JText::_('LBL_PROVEEDOR'); ?></th>
         <th><?php echo JText::_('LBL_FACTURA_NUM'); ?></th>
-        <th><?php echo JText::_('LBL_PROYECTO'); ?></th>
+        <th><?php echo JText::_('LBL_PROY'); ?></th>
         <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
         <th><?php echo JText::_('LBL_IVA'); ?></th>
         <th><?php echo JText::_('LBL_TOTAL'); ?></th>
