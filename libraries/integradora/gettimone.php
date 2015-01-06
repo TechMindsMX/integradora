@@ -1608,6 +1608,9 @@ class sendToTimOne {
             case 'odr':
                 $table = 'ordenes_retiro';
                 break;
+            case 'mutuo':
+                $table = 'mandatos_mutuos';
+                break;
             case 'odd_auth':
                 $table = 'auth_odd';
                 break;
@@ -1619,6 +1622,9 @@ class sendToTimOne {
                 break;
             case 'odr_auth':
                 $table = 'auth_odr';
+                break;
+            case 'mutuo_auth':
+                $table = 'auth_mutuo';
                 break;
         }
 
@@ -1732,9 +1738,9 @@ class sendToTimOne {
 
     }
 
-    public function insertDB($tabla, $columnas=null, $valores=null, $last_inserted_id = null){
-        $columnas = is_null($columnas)?$this->columnas:$columnas;
-        $valores = is_null($valores)?$this->valores:$valores;
+    public function insertDB($tabla, $columnas = null, $valores = null, $last_inserted_id = null){
+        $columnas = is_null($columnas) ? $this->columnas : $columnas;
+        $valores = is_null($valores) ? $this->valores : $valores;
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
@@ -1840,7 +1846,7 @@ class sendToTimOne {
         switch($this->getHttpType()) {
             case ('POST'):
                 $options = array(
-                    CURLOPT_POST 			=> true,
+                    CURLOPT_POST 		    => true,
                     CURLOPT_URL            => $this->serviceUrl,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_SSL_VERIFYPEER => false,
@@ -1850,11 +1856,11 @@ class sendToTimOne {
                     CURLOPT_FOLLOWLOCATION => false,
                     CURLOPT_VERBOSE        => $verboseflag,
                     CURLOPT_STDERR		   => $verbose,
-//                    CURLOPT_HTTPHEADER	   => array(
-//                        'Accept: application/json',
-//                        'Content-Type: application/json',
-//                        'Content-Length: ' . strlen($this->jsonData)
-//                    )
+                    CURLOPT_HTTPHEADER	   => array(
+                        'Accept: application/json',
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($this->jsonData)
+                    )
                 );
                 break;
             case ('PUT'):
@@ -1993,14 +1999,14 @@ class sendToTimOne {
         $return = false;
 
         switch ((INT)$order->status) {
-            case 0:
-                $return = $orderNewStatus == 1 && $order->hasAllAuths;
-                break;
             case 1:
-                $return = $orderNewStatus == 2 && $order->hasAllAuths;
-                break;
-            case 2:
                 $return = $orderNewStatus == 3 && $order->hasAllAuths;
+                break;
+            case 3:
+                $return = $orderNewStatus == 5 && $order->hasAllAuths;
+                break;
+            case 5:
+                $return = $orderNewStatus == 8 && $order->hasAllAuths;
                 break;
         }
 

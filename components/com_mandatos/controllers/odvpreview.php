@@ -44,7 +44,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             if($resultado) {
                 // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '1');
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '3');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 	            }
