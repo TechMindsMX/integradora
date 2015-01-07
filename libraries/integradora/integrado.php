@@ -119,9 +119,13 @@ class Integrado {
 			->from($db->quoteName('#__'.$table))
 			->where($db->quoteName($where) . '=' . $db->quote($id));
 		$result = $db->setQuery($query)->loadObjectList();
-		
+
 		if(!empty($result)){
-			$return = $result[0];
+            if($table == 'integrado_datos_bancarios'){
+                $return = $result;
+            }else {
+                $return = $result[0];
+            }
 		}else{
 			$return = null;
 		}
