@@ -63,22 +63,43 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosAcreedor as $value) {
+        var_dump($value->status);
+        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
+
         $url = 'index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
         if($value->status == 1){
-            $edit = '<a class="btn btn-primary disabled" href="#">Editar</a>';
-            $odp = '<td><a class="btn btn-primary disabled" href="#">'.JText::_('LBL_VER_ODPS').'</a></td>';
+            $style  = '';
+            $edit   = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Editar</a>';
+            if ($this->permisos['canAuth']){
+                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&integradoId=' . $this->data->integradoId . '&idMutuo=' . $value->id);
+                $odp = '<td><a class="btn btn-primary" href="'.$authorizeURL.'">'.JText::_('LBL_AUTORIZE').'</a></td>';
+            }else{
+                $odp = '';
+            }
+        }elseif($value->status == 3){
+            $style  = 'style="color: #FFBB00;"';
+            $edit   = '<a class="btn btn-primary disabled">Editar</a>';
+            if ($this->permisos['canAuth']){
+                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&integradoId=' . $this->data->integradoId . '&idMutuo=' . $value->id);
+                $odp = '<td><a class="btn btn-primary" href="'.$authorizeURL.'">'.JText::_('LBL_AUTORIZE').'</a></td>';
+            }else{
+                $odp = '';
+            }
         }else{
-            $edit = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Editar</a>';
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Generar ODP</a></td>';
+            $style  = 'style="color: #FF0000;"';
+            $edit   = '<a class="btn btn-primary disabled">Editar</a>';
+            $odp    = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&integradoId='.$this->data->integradoId.'&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
-    ?>
-        <tr class="row">
-            <td><?php echo $value->integradoDeudor->nombre; ?></td>
+        ?>
+        <tr class="row" <?php echo $style;?> >
+            <td><?php echo $preview_button.' '.$value->integradoDeudor->nombre; ?></td>
             <td>$<?php echo number_format($value->totalAmount,2); ?></td>
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo $value->duracion; ?> años</td>
             <td><?php echo $edit; ?></td>
+            <?php echo $odp; ?>
         </tr>
     <?php }?>
 
@@ -99,19 +120,23 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosDeudor as $value) {
+        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
+
         $url = 'index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
         if($value->status == 1){
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
+            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Generar ODP</a></td>';
         }else{
-            $odp = '<td><a class="btn btn-primary disabled" href="#">Generar ODP</a></td>';
+            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&integradoId='.$this->data->integradoId.'&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
         <tr class="row">
-            <td><?php echo $value->integradoAcredor->nombre; ?></td>
+            <td><?php echo $preview_button.' '.$value->integradoAcredor->nombre; ?></td>
             <td>$<?php echo number_format($value->totalAmount,2); ?></td>
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo $value->duracion; ?> años</td>
+            <?php echo $odp; ?>
         </tr>
     <?php }?>
 

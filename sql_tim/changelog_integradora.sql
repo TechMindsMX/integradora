@@ -139,3 +139,13 @@ CREATE TABLE `integradb`.`flpmu_integrado_params` (
 --changeset lutek:12
 ALTER TABLE `flpmu_ordenes_prestamo` ADD `idMutuo` INT NOT NULL AFTER `id`;
 --rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `idMutuo`;
+
+--changeset lutek:13
+CREATE TABLE `flpmu_bitacora_status_mutuo` (
+  `idOrden` INT NULL,
+  `userId` INT NULL,
+  `changeDate` BIGINT NULL,
+  `pastStatus` INT NULL,
+  `newStatus` INT NULL,
+  `result` INT NULL);
+--rollback DROP TABLE `flpmu_bitacora_status_mutuo`;

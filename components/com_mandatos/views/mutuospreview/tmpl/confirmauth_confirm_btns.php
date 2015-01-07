@@ -6,7 +6,8 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=mutuoslist&integradoI
 
 <legend class="container botones clearfix form-actions">
     <?php
-    if($this->permisos['canAuth'] && $this->mutuo->status == 1 ):
+    $status = array(1,3);
+    if($this->permisos['canAuth'] && in_array($this->mutuo->status,$status) ):
         $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&task=mutuospreview.authorize&integradoId='.$this->integradoId.'&idOrden='.$this->mutuo->id);
         ?>
         <p class="text-warning">

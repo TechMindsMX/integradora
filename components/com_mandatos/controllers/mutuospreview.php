@@ -32,7 +32,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 			$this->parametros['authDate'] = time();
 			unset($this->parametros['integradoId']);
 
-			$save->formatData($this->parametros);
+            $save->formatData($this->parametros);
 
 			$auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
 
@@ -51,14 +51,16 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 					$this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 				}
 
-                $odps = $this->generateODP($this->parametros['idOrden']);
+                $odps = $this->generateODP($this->parametros['idOrden'], $this->parametros['userId']);
 
                 if($odps){
                     $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                    $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED').'<br /> '.$msgOdps);
                 }else{
                     $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
+                    $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
-				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED').' '.$msgOdps);
+
 			}else{
 				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
 			}
@@ -68,7 +70,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 		}
 	}
 
-    function generateODP($idMutuo){
+    function generateODP($idMutuo,$userId){
         $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
         $mutuo     = $mutuos[0];
         $jsontabla = json_decode($mutuo->jsonTabla);
@@ -80,7 +82,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $tabla = $jsontabla->amortizacion_cuota_fija;
         }
 
-        foreach ($tabla as $objeto) {
+        foreach ($tabla as $key => $objeto) {
             $odp = new stdClass();
             $fecha = new DateTime();
 
@@ -102,8 +104,13 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $saved = $save->insertDB('ordenes_prestamo');
 
             if(!$saved){
+                //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
                 $save->deleteDB('ordenes_prestamo','idMutuo='.$idMutuo);
+                $save->changeOrderStatus($idMutuo,'mutuo','3');
+                $save->deleteDB('auth_mutuo','idOrden = '.$idMutuo.' && userId = '.$userId);
+
                 $resultado = false;
+                break;
             }else{
                 $resultado = true;
             }
