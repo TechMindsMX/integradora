@@ -121,3 +121,16 @@ CREATE TABLE `integradb`.`flpmu_auth_mutuo` (
   authDate BIGINT NOT NULL
   );
 --rollback DROP TABLE `integradb`.`flpmu_auth_mutuo`;
+
+--changeset ricardolyon:10
+ALTER TABLE `integradb`.`flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` INT NOT NULL;
+--rollback ALTER  TABLE `integradb`.`flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` VARCHAR(45) NOT NULL;
+
+--changeset ricardolyon:11
+DROP TABLE IF EXISTS `integradb`.`flpmu_integrado_params`;
+CREATE TABLE `integradb`.`flpmu_integrado_params` (
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `integradoId` INT NOT NULL,
+  `params` VARCHAR(255) NULL
+);
+--rollback DROP TABLE `integradb`.`flpmu_integrado_params`;
