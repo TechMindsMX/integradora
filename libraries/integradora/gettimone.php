@@ -1970,13 +1970,19 @@ class sendToTimOne {
         $order = $order[0];
 
         //simulado
-        $integrado->cantidadAuthNecesarias = 1;
+        $integrado->cantidadAuthNecesarias = $integrado->getOrdersAtuhorizationParams();
 
         $tableAuth = $orderType.'_auth';
         $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
         $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
         $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
+
+        if ($order->status == 1 && !$order->canChangeStatus) {
+            // pasa de esatus 1 (Nuevo) a 3 (En Autorizacion) en caso que no tiene las autrizaciones completas
+            $orderNewStatus = 3;
+            $order->canChangeStatus = true;
+        }
 
         if ($order->canChangeStatus) {
             $this->formatData(array('status' => $orderNewStatus ));
@@ -2000,10 +2006,10 @@ class sendToTimOne {
 
         switch ((INT)$order->status) {
             case 1:
-                $return = $orderNewStatus == 3 && $order->hasAllAuths;
+                $return = in_array($orderNewStatus, array(3,5)) && $order->hasAllAuths;
                 break;
             case 3:
-                $return = $orderNewStatus == 5 && $order->hasAllAuths;
+                $return = in_array($orderNewStatus, array(5,55)) && $order->hasAllAuths;
                 break;
             case 5:
                 $return = $orderNewStatus == 8 && $order->hasAllAuths;
@@ -2741,10 +2747,10 @@ class Factura {
     public $format;
 
     function __construct() {
-        $this->setEmisor();
-        $this->setReceptor();
-        $this->setFormat();
-        $this->setConceptos();
+//        $this->setEmisor();
+//        $this->setReceptor();
+//        $this->setFormat();
+//        $this->setConceptos();
         $this->setDatosDeFacturacion();
     }
 

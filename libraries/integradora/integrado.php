@@ -205,7 +205,7 @@ class Integrado {
 
 class IntegradoSimple extends Integrado {
 
-	public $cantidadAuthNecesarias;
+	protected $ordersAtuhorizationParams;
 
 	function __construct($integ_id) {
 		$this->user = JFactory::getUser();
@@ -217,7 +217,25 @@ class IntegradoSimple extends Integrado {
 		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
 		
 		parent::getSolicitud($integ_id, 0);
+
+		$this->setOrdersAtuhorizationParams();
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getOrdersAtuhorizationParams() {
+		return $this->ordersAtuhorizationParams;
+	}
+
+	/**
+	 * @param mixed $ordersAtuhorizationParams
+	 */
+	public function setOrdersAtuhorizationParams( ) {
+		getFromTimOne::selectDB('integrado_params', 'integradoId');
+		$this->ordersAtuhorizationParams = 1;
+	}
+
 
 	public function getDisplayName() {
 		$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;

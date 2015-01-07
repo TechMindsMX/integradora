@@ -44,7 +44,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 
             if($resultado) {
 	            // autorización guardada
-	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '3');
+	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '5');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 	            }
