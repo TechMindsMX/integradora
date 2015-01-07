@@ -189,7 +189,7 @@ class MandatosController extends JControllerLegacy {
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
-        if($respuesta['msg'] == '') {
+        if($respuesta['msg']) {
             $respuesta['success'] = true;
         }else{
             $respuesta['success'] = false;

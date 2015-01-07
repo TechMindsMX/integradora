@@ -11,6 +11,7 @@ JHTML::_('behavior.calendar');
 $datos = @$this->data->integrados;
 $user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+$optionBancos = '';
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
@@ -32,6 +33,15 @@ if(!empty($datos->integrado)){
 }
 ?>
 <script>
+    var catalogoBancos = new Array();
+
+    <?php
+   foreach ($this->catalogos->bancos as $key => $value){
+       $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
+       echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
+   }
+   ?>
+
 	jQuery(document).ready(function(){
         jQuery('button').click(function(){
             var boton = jQuery(this).prop('id');
@@ -114,7 +124,7 @@ if(!empty($datos->integrado)){
 			var datos_bancarios = eval ("(" + datos_bancarios + ")");
 
 			jQuery.each(datos_bancarios, function(key, value){
-				jQuery('#db_'+key).val(value);
+                llenatablabancos(value);
 			});
 		<?php
 		}
@@ -159,7 +169,81 @@ if(!empty($datos->integrado)){
 		<?php
 		}
 		?>
+        jQuery('#agregarBanco').on('click', AltaBanco);
 	});
+
+    function ajax(parametros){
+
+        var request = jQuery.ajax({
+            url: parametros.link,
+            data: parametros.datos,
+            type: 'post'
+        });
+
+        return request;
+    }
+
+    function llenatablabancos(obj) {
+        var fieldset = jQuery('fieldset#datosBancarios');
+        fieldset.find('input').val('');
+        fieldset.find('select').val(0);
+        html = '<tr id="' + obj.datosBan_id + '">';
+        html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
+        html += '<td>' + obj.banco_cuenta + '</td>';
+        html += '<td>' + obj.banco_sucursal + '</td>';
+        html += '<td>' + obj.banco_clabe + '</td>';
+        html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
+        html += '</tr>';
+
+        jQuery('#banco').find('table.tableBancos tbody').append(html);
+    }
+
+    function AltaBanco(){
+        var idIntegradoAlta = jQuery('#idCliPro').val();
+        var data = jQuery('#banco').find('select, input').serialize();
+        var idIntegradoAlta = jQuery('#integradoId').val();
+
+        data +='&integradoId='+idIntegradoAlta;
+
+        var parametros = {
+            'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBanco&format=raw',
+            'datos' : data
+        };
+
+        var resultado = ajax(parametros);
+
+        resultado.done(function(response){
+            var obj = response;
+
+            if(obj.success === true) {
+                llenatablabancos(obj);
+            }else{
+                alert('no se pudo agregar la cuenta');
+            }
+        });
+
+    }
+
+    function bajaBanco(campo){
+        var id		 = jQuery(campo).prop('id');
+        var idCliPro = jQuery('#integradoId').val();
+        var parametros = {
+            'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
+            'datos' : {
+                'datosBan_id' : id,
+                'integradoId' : idCliPro
+            }
+        };
+        var envioajax = ajax(parametros);
+
+        envioajax.done(function(response){
+            if(response.success) {
+                jQuery('#' + id).remove();
+            }else{
+                alert(response.msg);
+            }
+        });
+    }
 </script>
 
 <div class="msgs_plataforma" id="msgs_plataforma"></div>
@@ -603,33 +687,48 @@ if(!empty($datos->integrado)){
 	?>
 	<fieldset>
         <div class="form-group">
-           	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
-           	<select name="db_banco_codigo" id="db_banco_codigo">
-           		<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
-				<?php 
-				foreach ($this->catalogos->bancos as $key => $value) {
-					echo '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
-				}
-				?>
-			</select>
+            <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
+            <label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
+            <select name="db_banco_codigo" id="db_banco_codigo">
+                <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+                <?php
+                    echo $optionBancos;
+                ?>
+            </select>
         </div>
-		<div class="form-group">
-			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
-		</div>
-		<div class="form-group">
-			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
-		</div>
-		<div class="form-group">
-			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
-			<input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
-		</div>
-		
+        <div class="form-group">
+            <label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
+            <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
+        </div>
+        <div class="form-group">
+            <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
+            <input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
+        </div>
+        <div class="form-group">
+            <label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
+            <input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
+        </div>
 
-		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="bancos"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-		</div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-primary span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+        </div>
+
+        <div>
+            <table class="table table-bordered tableBancos">
+                <thead>
+                <tr>
+                    <th>Banco</th>
+                    <th>Número de cuenta</th>
+                    <th>Número de surcusal</th>
+                    <th>CLABE</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
 	</fieldset>
 	<?php
 		echo JHtml::_('bootstrap.endTab');

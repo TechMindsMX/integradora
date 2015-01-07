@@ -97,27 +97,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		});
 	}
 	
-	function bajaBanco(campo){
-		var id		 = jQuery(campo).prop('id');
-        var idCliPro = jQuery('#idCliPro').val();
-        var parametros = {
-            'link'  : '?task=deleteBanco&format=raw',
-            'datos' : {
-                'datosBan_id' : id,
-                'integradoId' : idCliPro
-            }
-        };
-        var envioajax = ajax(parametros);
-
-        envioajax.done(function(response){
-            if(response.success) {
-                jQuery('#' + id).remove();
-            }else{
-                alert(response.msg);
-            }
-        });
-	}
-	
 	function busqueda(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
 			
@@ -177,6 +156,27 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		});
 		
 	}
+
+    function bajaBanco(campo){
+        var id		 = jQuery(campo).prop('id');
+        var idCliPro = jQuery('#idCliPro').val();
+        var parametros = {
+            'link'  : '?task=deleteBanco&format=raw',
+            'datos' : {
+                'datosBan_id' : id,
+                'integradoId' : idCliPro
+            }
+        };
+        var envioajax = ajax(parametros);
+
+        envioajax.done(function(response){
+            if(response.success) {
+                jQuery('#' + id).remove();
+            }else{
+                alert(response.msg);
+            }
+        });
+    }
 	
 	function mensajes(msg, tipo){
 		var spanError = jQuery('#errorRFC');
