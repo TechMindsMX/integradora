@@ -1,6 +1,8 @@
 <?php
 defined('JPATH_PLATFORM') or die;
 
+define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
+
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
@@ -1930,6 +1932,7 @@ class sendToTimOne {
         }
 
         $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
+        $this->result->info = curl_getinfo ($ch);
         curl_close($ch);
 
         switch ($this->result->code) {
@@ -2047,10 +2050,39 @@ class sendToTimOne {
     }
 
     public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
-        //metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
+        //TODO: metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
     }
 
-    public function generarFactturaComisiones($dataFactura){
+    public function generarFacturaComisiones($dataFactura){
+        // TODO: crear las facturas de comisiones
+    }
+
+    public function saveXMLFile( $data ) {
+        $xmlpath = XML_FILES_PATH;
+        $uuid = $this->getXmlUUID($data);
+
+        $filename = $xmlpath.$uuid.'.xml';
+        $handle = fopen($filename, 'w');
+        $write = fwrite($handle, $data);
+        fclose($handle);
+
+        return $write;
+    }
+
+    /**
+     * @param $string
+     */
+    public function getXmlUUID( $string ) {
+        $name = false;
+
+        $parse  = new xml2Array();
+        $objXml = $parse->manejaXML( $string );
+
+        if( isset( $objXml->complemento['children'][0]['attrs']['UUID'] )) {
+            $name = $objXml->complemento['children'][0]['attrs']['UUID'];
+        }
+
+        return $name;
     }
 
 }
@@ -2747,10 +2779,10 @@ class Factura {
     public $format;
 
     function __construct() {
-//        $this->setEmisor();
-//        $this->setReceptor();
-//        $this->setFormat();
-//        $this->setConceptos();
+        $this->setEmisor();
+        $this->setReceptor();
+        $this->setFormat();
+        $this->setConceptos();
         $this->setDatosDeFacturacion();
     }
 
@@ -2759,7 +2791,7 @@ class Factura {
     }
 
     public function setReceptor() {
-        $this->receptor = new datosFiscales();
+        $this->receptor = new Receptor();
     }
 
     public function setFormat() {
@@ -2777,16 +2809,25 @@ class Factura {
             'cantidad' => '10',
             'unidad' => 'UNIDAD'
         );
-        $this->conceptos[0] = new Conceptos();
+        $this->conceptos[0] = new Conceptos(1);
+        $this->conceptos[1] = new Conceptos(3);
     }
 }
 
 class Conceptos
 {
+
     public $valorUnitario = '100.00';
     public $descripcion = 'Product description';
     public $cantidad = '10';
     public $unidad = 'UNIDAD';
+
+    function __construct($mullti) {
+        $this->valorUnitario = (int)$this->valorUnitario * $mullti;
+        $this->descripcion = $this->descripcion . $mullti;
+        $this->cantidad = (int)$this->cantidad * $mullti;
+        $this->unidad = $this->unidad . $mullti;
+    }
 }
 
 class Emisor {
@@ -2806,7 +2847,7 @@ class Receptor {
 }
 
 class datosFiscales {
-    public $rfc          = 'RFC';
+    public $rfc          = 'AAD990814BP7';
     public $razonSocial  = 'Razon Social';
     public $codigoPostal = '03330';
     public $pais         = 'MEXICO';

@@ -73,7 +73,7 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
         var_dump($dataFactura);
         $create = new sendToTimOne();
 
-        $create->generarFactturaComisiones($dataFactura);
+        $create->generarFacturaComisiones($dataFactura);
         exit;
     }
 
