@@ -51,7 +51,14 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 					$this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 				}
 
-				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED'));
+                $odps = $this->generateODP($this->parametros['idOrden']);
+
+                if($odps){
+                    $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                }else{
+                    $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
+                }
+				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED').' '.$msgOdps);
 			}else{
 				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
 			}
@@ -60,4 +67,48 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 			$this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
 		}
 	}
+
+    function generateODP($idMutuo){
+        $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
+        $mutuo     = $mutuos[0];
+        $jsontabla = json_decode($mutuo->jsonTabla);
+        $save      = new sendToTimOne();
+
+        if( isset($jsontabla->amortizacion_capital_fijo) ){
+            $tabla = $jsontabla->amortizacion_capital_fijo;
+        }else{
+            $tabla = $jsontabla->amortizacion_cuota_fija;
+        }
+
+        foreach ($tabla as $objeto) {
+            $odp = new stdClass();
+            $fecha = new DateTime();
+
+            $odp->idMutuo           = $idMutuo;
+            $odp->fecha_elaboracion = $fecha->getTimestamp();
+            $odp->fecha_deposito    = 0;
+            $odp->tasa             = $jsontabla->tasa_periodo;
+            $odp->tipo_movimiento   = 'Integrado a Integrado';
+            $odp->acreedor          = $mutuo->integradoAcredor->nombre;
+            $odp->a_rfc             = $mutuo->integradoAcredor->rfc;
+            $odp->deudor            = $mutuo->integradoDeudor->nombre;
+            $odp->d_rfc             = $mutuo->integradoDeudor->rfc;
+            $odp->capital           = $objeto->cuota;
+            $odp->intereses         = $objeto->intereses;
+            $odp->iva_intereses     = $objeto->iva;
+
+            $save->formatData($odp);
+
+            $saved = $save->insertDB('ordenes_prestamo');
+
+            if(!$saved){
+                $save->deleteDB('ordenes_prestamo','idMutuo='.$idMutuo);
+                $resultado = false;
+            }else{
+                $resultado = true;
+            }
+        }
+
+        return $resultado;
+    }
 }

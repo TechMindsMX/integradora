@@ -134,3 +134,8 @@ CREATE TABLE `integradb`.`flpmu_integrado_params` (
   `params` VARCHAR(255) NULL
 );
 --rollback DROP TABLE `integradb`.`flpmu_integrado_params`;
+
+
+--changeset lutek:12
+ALTER TABLE `flpmu_ordenes_prestamo` ADD `idMutuo` INT NOT NULL AFTER `id`;
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `idMutuo`;

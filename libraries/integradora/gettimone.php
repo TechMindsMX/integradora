@@ -257,6 +257,43 @@ class getFromTimOne{
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
+        $tipos = getFromTimOne::getTiposPago();
+        $integradoAcredor = new stdClass();
+        $integradoDeudor  = new stdClass();
+
+
+        foreach ($mutuos as $key => $data) {
+            $integradoEmisor = new IntegradoSimple($data->integradoIdE);
+            $integradoReceptor = new IntegradoSimple($data->integradoIdR);
+
+            if (is_null($integradoEmisor->integrados[0]->datos_empresa)) {
+                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_personales->nom_comercial;
+                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_personales->rfc;
+            } else {
+                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_empresa->razon_social;
+                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_empresa->rfc;
+            }
+
+            if (is_null($integradoReceptor->integrados[0]->datos_empresa)) {
+                if (is_null($integradoReceptor->integrados[0]->datos_personales->nom_comercial)) {
+                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nombre_representante;
+                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
+                } else {
+                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nom_comercial;
+                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
+                }
+            } else {
+                $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_empresa->razon_social;
+                $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_empresa->rfc;
+            }
+
+            $integradoAcredor->datosBancarios = $integradoEmisor->integrados[0]->datos_bancarios;
+            $integradoDeudor->datosBancarios = $integradoReceptor->integrados[0]->datos_bancarios;
+
+            $data->integradoAcredor = $integradoAcredor;
+            $data->integradoDeudor = $integradoDeudor;
+        }
+
         return $mutuos;
     }
 
@@ -2012,7 +2049,11 @@ class sendToTimOne {
                 $return = in_array($orderNewStatus, array(5,55)) && $order->hasAllAuths;
                 break;
             case 5:
-                $return = $orderNewStatus == 8 && $order->hasAllAuths;
+                if($orderNewStatus < $order->status){
+                    $return = $orderNewStatus == 1 && $order->hasAllAuths;
+                }else {
+                    $return = $orderNewStatus == 8 && $order->hasAllAuths;
+                }
                 break;
         }
 
