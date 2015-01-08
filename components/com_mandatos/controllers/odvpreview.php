@@ -53,7 +53,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                         $factObj = $save->generaObjetoFactura( $newOrden );
 
                         if ( $factObj != false ) {
-                            $xmlFactura = $save->generateFacturaFromTimOe( $factObj );
+                            $xmlFactura = $save->generateFacturaFromTimone( $factObj );
 
                             $file = $save->saveXMLFile( $xmlFactura );
                         }

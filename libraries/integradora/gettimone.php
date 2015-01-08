@@ -2123,9 +2123,8 @@ class sendToTimOne {
         return $data;
     }
 
-    public function generateFacturaFromTimOe( $factura ) {
+    public function generateFacturaFromTimone( $factura ) {
         // TODO: quitar mocks de sandbox
-
 //mocks sandbox
         $serviceUrl = 'http://192.168.0.111:8081/facturacion/create';
         $rfcTest = 'AAD990814BP7';
