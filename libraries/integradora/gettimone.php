@@ -496,6 +496,40 @@ class getFromTimOne{
         return $date;
     }
 
+    public static function getOrdenesPrestamo($idMutuo=null,$idOrden=null){
+        if( is_null($idOrden) ){
+            $where = 'idMutuo = '.$idMutuo;
+        }else{
+            $where = 'id = '.$idOrden;
+        }
+
+        $ordenes = self::selectDB('ordenes_prestamo',$where);
+        $odps    = array();
+
+        foreach ($ordenes as $key => $value) {
+            $orden = new stdClass();
+
+            $orden->id                = (INT)$value->id;
+            $orden->idMutuo           = (INT)$value->idMutuo;
+            $orden->numOrden          = (INT)$value->numOrden;
+            $orden->fecha_elaboracion = (INT)$value->fecha_elaboracion;
+            $orden->fecha_deposito    = (INT)$value->fecha_deposito;
+            $orden->tasa              = (FLOAT)$value->tasa;
+            $orden->tipo_movimiento   = (STRING)$value->tipo_movimiento;
+            $orden->acreedor          = (STRING)$value->acreedor;
+            $orden->a_rfc             = (STRING)$value->a_rfc;
+            $orden->deudor            = (STRING)$value->deudor;
+            $orden->d_rfc             = (STRING)$value->d_rfc;
+            $orden->capital           = (FLOAT)$value->capital;
+            $orden->intereses         = (FLOAT)$value->intereses;
+            $orden->iva_intereses     = (FLOAT)$value->iva_intereses;
+
+            $odps[] = $orden;
+        }
+
+        return $odps;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 

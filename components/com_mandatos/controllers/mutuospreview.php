@@ -87,9 +87,10 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $fecha = new DateTime();
 
             $odp->idMutuo           = $idMutuo;
+            $odp->numOrden          = $idMutuo.'-'.($key+1);
             $odp->fecha_elaboracion = $fecha->getTimestamp();
             $odp->fecha_deposito    = 0;
-            $odp->tasa             = $jsontabla->tasa_periodo;
+            $odp->tasa              = $jsontabla->tasa_periodo;
             $odp->tipo_movimiento   = 'Integrado a Integrado';
             $odp->acreedor          = $mutuo->integradoAcredor->nombre;
             $odp->a_rfc             = $mutuo->integradoAcredor->rfc;
@@ -98,6 +99,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $odp->capital           = $objeto->cuota;
             $odp->intereses         = $objeto->intereses;
             $odp->iva_intereses     = $objeto->iva;
+            $odp->status            = 1;
 
             $save->formatData($odp);
 

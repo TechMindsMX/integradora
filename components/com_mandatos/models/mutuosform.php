@@ -65,24 +65,6 @@ class MandatosModelMutuosform extends JModelItem {
         $mutuo = getFromTimOne::getMutuos(null, $idMutuo);
         $mutuo = $mutuo[0];
 
-        $integradoDeudor  = new IntegradoSimple($mutuo->integradoIdR);
-        $integradoDeudor = $integradoDeudor->integrados[0];
-
-        if( is_null($integradoDeudor->datos_empresa) ){
-            $datosPersonales = $integradoDeudor->datos_personales;
-            $nombre = is_null($datosPersonales->nom_comercial)?$datosPersonales->nombre_representante:$datosPersonales->nom_comercial;
-        }else{
-            $datosEmpresa = $integradoDeudor->datos_empresa;
-            $nombre = $datosEmpresa->razon_social;
-        }
-        $mutuo->rfc = $integradoDeudor->datos_personales->rfc;
-        $mutuo->beneficiario = $nombre;
-
-        $mutuo->banco_codigo   = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_codigo  :null;
-        $mutuo->banco_cuenta   = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_cuenta  :null;
-        $mutuo->banco_sucursal = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_sucursal:null;
-        $mutuo->banco_clabe    = !is_null($integradoDeudor->datos_bancarios)?$integradoDeudor->datos_bancarios->banco_clabe   :null;
-
         return $mutuo;
     }
 }
