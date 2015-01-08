@@ -14,15 +14,15 @@ class MandatosModelOddlist extends JModelItem {
 	protected $dataModelo;
 
     function __construct(){
-        $this->data 		= JFactory::getApplication()->input->getArray();
-        $this->integradoId  = $this->data['integradoId'];
+        $session = JFactory::getSession();
+        $this->integradoId 	= $session->get('integradoId', null, 'integrado');
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
 
         parent::__construct();
     }
 	
-	public function getOrdenes($integradoId = null){
+	public function getOrdenes(){
         $respuesta = getFromTimOne::getOrdenesDeposito($this->integradoId);
 
         return $respuesta;

@@ -3,11 +3,16 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 class MandatosViewOddlist extends JViewLegacy {
+	public $integradoId;
+	public $data;
+	public $permisos;
+
 	function display($tpl = null){
-		$data 				= JFactory::getApplication()->input->getArray();
-		$this->integradoId	= $data['integradoId'];
+
+		$session = JFactory::getSession();
+		$this->integradoId 	= $session->get('integradoId', null, 'integrado');
+
 		$this->data         = $this->get('ordenes');
-		$this->token        = getFromTimOne::token();
 
         if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
@@ -15,15 +20,9 @@ class MandatosViewOddlist extends JViewLegacy {
         }
 
 		$this->loadHelper('Mandatos');
-		
-		/*foreach ($this->data as $key => $odd) {
-			$odc->proveedor = MandatosHelper::getProviderFromID($odc->proveedor, $this->integradoId);
-
-			$this->data[$key] = $odc;
-		}*/
 
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
-		
+
 		parent::display($tpl);
 	}
 }

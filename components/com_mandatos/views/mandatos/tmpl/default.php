@@ -15,44 +15,11 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 <script type="application/javascript">
 	function redirect() {
 		var campo = jQuery(this);
+		var ruta = campo.prop('id');
 		var form = jQuery('#form_listados');
-		var action = '';
+		var action = "<?php echo JRoute::_('index.php?option=com_mandatos&task=mandatos.route'); ?>";
 
-		switch(campo.prop('id')){
-			case 'list_proyectos':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=proyectoslist'); ?>';
-				break;
-			case 'list_productos':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=productoslist'); ?>';
-				break;
-			case 'list_clientes':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=clienteslist'); ?>';
-				break;
-			case 'list_odc':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist'); ?>';
-				break;
-			case 'list_odd':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=oddlist'); ?>';
-				break;
-			case 'list_odr':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=odrlist'); ?>';
-				break;
-			case 'list_odv':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=odvlist'); ?>';
-				break;
-			case 'list_fv':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=facturalist'); ?>';
-				break;
-			case 'list_mutos':
-				action = 'index.php?option=com_mandatos&view=mutuoslist';
-				break;
-			case 'go_liquidacion':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ?>';
-				break;
-			case 'tx_sin_mandato':
-				action = '<?php echo JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist') ?>';
-				break;
-		}
+		jQuery('#ruta').val(ruta);
 
 		form.prop('action', action);
 
@@ -82,6 +49,7 @@ echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 		}
 		?>
 	</select>
+	<input type="hidden" name="ruta" id="ruta" value="" />
 </form>
 
 <div class="col-xs-6">

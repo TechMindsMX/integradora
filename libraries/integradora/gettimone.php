@@ -8,6 +8,7 @@ jimport('joomla.factory');
 jimport('integradora.catalogos');
 jimport('integradora.rutas');
 jimport('integradora.xmlparser');
+jimport('integradora.integrado');
 
 class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
@@ -496,6 +497,14 @@ class getFromTimOne{
         return $date;
     }
 
+    private static function getNombreEstado( $code ) {
+
+        $where = 'id = '.(int)$code;
+        $nombreEstado = getFromTimOne::selectDB('catalog_estados', $where);
+
+        return $nombreEstado[0];
+    }
+
     public static function getOrdenesPrestamo($idMutuo=null,$idOrden=null){
         if( is_null($idOrden) ){
             $where = 'idMutuo = '.$idMutuo;
@@ -916,7 +925,7 @@ class getFromTimOne{
             $value->account        = (INT)$value->account;
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->conditions     = (INT)$value->conditions;
-            $value->placeIssue     = (INT)$value->placeIssue;
+            $value->placeIssue     = self::getNombreEstado($value->placeIssue);
             $value->status         = (INT)$value->status;
             $value->productos      = (STRING)$value->productos;
             $value->createdDate    = (STRING)$value->createdDate;
@@ -2052,9 +2061,10 @@ class sendToTimOne {
         $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
         $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-        if ($order->status == 1 && !$order->canChangeStatus) {
+        if ( $order->status == 1 && !$order->canChangeStatus && $orderNewStatus == 5 ) {
             // pasa de esatus 1 (Nuevo) a 3 (En Autorizacion) en caso que no tiene las autrizaciones completas
             $orderNewStatus = 3;
+            $order->hasAllAuths = true;
             $order->canChangeStatus = true;
         }
 
@@ -2132,29 +2142,61 @@ class sendToTimOne {
         // TODO: crear las facturas de comisiones
     }
 
+    public function generaObjetoFactura( $newOrden ) {
+
+        $emisor = new Emisor( $newOrden->integradoId );
+        $receptor = new Receptor( $newOrden->proveedor->id );
+        $datosDeFacturacion = new datosDeFacturacion( $newOrden );
+
+        foreach ( $newOrden->productosData as $key => $concepto ) {
+            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
+        }
+
+        $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
+
+        return $data;
+    }
+
+    public function generateFacturaFromTimone( $factura ) {
+        // TODO: quitar mocks de sandbox
+//mocks sandbox
+        $serviceUrl = 'http://192.168.0.111:8081/facturacion/create';
+        $rfcTest = 'AAD990814BP7';
+        $factura->emisor->datosFiscales->rfc = $rfcTest;
+        $factura->receptor->datosFiscales->rfc = $rfcTest;
+//fin mocks sandbox
+
+        $jsonData   = json_encode( $factura );
+        $httpType   = 'POST';
+
+        $request = new sendToTimOne();
+        $request->setServiceUrl( $serviceUrl );
+        $request->setJsonData( $jsonData );
+        $request->setHttpType( $httpType );
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return bool|string filename {uuid}.xml
+     */
     public function saveXMLFile( $data ) {
         $xmlpath = XML_FILES_PATH;
-        $uuid = $this->getXmlUUID($data);
+        $uuid = Factura::getXmlUUID($data);
 
         $filename = $xmlpath.$uuid.'.xml';
         $handle = fopen($filename, 'w');
         $write = fwrite($handle, $data);
         fclose($handle);
 
-        return $write;
-    }
-
-    /**
-     * @param $string
-     */
-    public function getXmlUUID( $string ) {
-        $name = false;
-
-        $parse  = new xml2Array();
-        $objXml = $parse->manejaXML( $string );
-
-        if( isset( $objXml->complemento['children'][0]['attrs']['UUID'] )) {
-            $name = $objXml->complemento['children'][0]['attrs']['UUID'];
+        if($write) {
+            $return = $filename;
+        } else {
+            $return = false;
         }
 
         return $name;
@@ -2853,39 +2895,32 @@ class Factura {
     public $conceptos;
     public $format;
 
-    function __construct() {
-        $this->setEmisor();
-        $this->setReceptor();
+    function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos) {
+        $this->emisor = $emisor;
+        $this->receptor = $receptor;
+        $this->datosDeFacturacion = $datosDeFacturacion;
+        $this->conceptos = $conceptos;
         $this->setFormat();
-        $this->setConceptos();
-        $this->setDatosDeFacturacion();
-    }
-
-    public function setEmisor() {
-        $this->emisor = new Emisor();
-    }
-
-    public function setReceptor() {
-        $this->receptor = new Receptor();
     }
 
     public function setFormat() {
         $this->format = 'Xml';
     }
 
-    public function setDatosDeFacturacion() {
-        $this->datosDeFacturacion = new datosDeFacturacion();
-    }
+    /**
+     * @param $string
+     */
+    public static function getXmlUUID( $string ) {
+        $name = false;
 
-    public function setConceptos() {
-        $array = array(
-            'valorUnitario' => '100.00',
-            'descripcion' => 'Product description',
-            'cantidad' => '10',
-            'unidad' => 'UNIDAD'
-        );
-        $this->conceptos[0] = new Conceptos(1);
-        $this->conceptos[1] = new Conceptos(3);
+        $parse  = new xml2Array();
+        $objXml = $parse->manejaXML( $string );
+
+        if( isset( $objXml->complemento['children'][0]['attrs']['UUID'] )) {
+            $name = $objXml->complemento['children'][0]['attrs']['UUID'];
+        }
+
+        return $name;
     }
 }
 
@@ -2897,27 +2932,29 @@ class Conceptos
     public $cantidad = '10';
     public $unidad = 'UNIDAD';
 
-    function __construct($mullti) {
-        $this->valorUnitario = (int)$this->valorUnitario * $mullti;
-        $this->descripcion = $this->descripcion . $mullti;
-        $this->cantidad = (int)$this->cantidad * $mullti;
-        $this->unidad = $this->unidad . $mullti;
+    function __construct( $concepto ) {
+        $this->valorUnitario = $concepto->p_unitario;
+        $this->descripcion = $concepto->descripcion;
+        $this->cantidad = $concepto->cantidad;
+        $this->unidad = $concepto->unidad;
     }
 }
 
 class Emisor {
     public $datosFiscales;
 
-    function __construct( ) {
-        $this->datosFiscales = new datosFiscales();
+    function __construct( $integradoId ) {
+        $integ = new IntegradoSimple($integradoId);
+        $this->datosFiscales = new datosFiscales( $integ );
     }
 }
 
 class Receptor {
     public $datosFiscales;
 
-    function __construct() {
-        $this->datosFiscales = new datosFiscales();
+    function __construct( $integradoId ) {
+        $integ = new IntegradoSimple($integradoId);
+        $this->datosFiscales = new datosFiscales( $integ );
     }
 }
 
@@ -2930,6 +2967,21 @@ class datosFiscales {
     public $delegacion   = 'BENITO JUAREZ';
     public $calle        = 'REFORMA';
     public $regime       = 'PERSONA FISICA';
+
+    function __construct( IntegradoSimple $integ ) {
+        $integ = $integ->integrados[0];
+        $pJuri = $integ->integrado->pers_juridica;
+
+        $this->rfc          = $pJuri == 2 ? $integ->datos_personales->rfc : $integ->datos_empresa->rfc ;
+        $this->razonSocial  = $pJuri == 2 ? $integ->datos_personales->nombre_representante : $integ->datos_empresa->razon_social ;
+        $this->regime       = $pJuri ;
+        $this->calle        = $pJuri == 2 ? $integ->datos_personales->calle : $integ->datos_empresa->calle ;
+        $this->delegacion   = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dMnpio : $integ->datos_empresa->direccion_CP->dMnpio ;
+        $this->ciudad       = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dCiudad : $integ->datos_empresa->direccion_CP->dCiudad ;
+        $this->codigoPostal = $pJuri == 2 ? $integ->datos_personales->cod_postal : $integ->datos_empresa->cod_postal ;
+    }
+
+
 }
 
 class datosDeFacturacion {
@@ -2939,6 +2991,17 @@ class datosDeFacturacion {
     public $formaDePago = 'PAGO EN UNA SOLA EXHIBICION';
     public $metodoDePago = 'TRANSFERENCIA ELECTRONICA';
     public $tipoDeComprobante = 'ingreso';
+
+    function __construct( $orden ) {
+//        $this->moneda               = $orden->moneda;
+        $this->lugarDeExpedicion    = $orden->placeIssue->nombre;
+//        $this->numeroDeCuentaDePago = $numeroDeCuentaDePago;
+//        $this->formaDePago          = $formaDePago;
+//        $this->metodoDePago         = $metodoDePago;
+//        $this->tipoDeComprobante    = $tipoDeComprobante;
+    }
+
+
 }
 
 

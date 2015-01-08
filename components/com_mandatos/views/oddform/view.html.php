@@ -4,14 +4,18 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 class MandatosViewOddform extends JViewLegacy {
-	
-	function display($tpl = null){
+
+    private $integradoId;
+
+    function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
-		$integradoId        = JFactory::getSession()->get('integradoId', null, 'integrado');
-		$this->integradoId 	= isset($integradoId) ? $integradoId : $data['integradoId'];
+
+        $session = JFactory::getSession();
+        $this->integradoId    = $session->get('integradoId', null, 'integrado');
+
 		$this->odd		 	= $this->get('orden');
-        $this->actionUrl    = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'&confirmacion=1') : '#';
+        $this->actionUrl    = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=oddform&confirmacion=1') : '#';
         $this->datos        = $data;
 
         if(isset($_FILES['attachment']['size'])){

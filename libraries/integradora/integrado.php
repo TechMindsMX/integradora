@@ -4,6 +4,7 @@ defined('JPATH_PLATFORM') or die;
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
+jimport('integradora.gettimone');
 
 
 /**
@@ -26,7 +27,7 @@ class Integrado {
 
 	}
 
-    function getIntegrados (){
+	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
         $query
@@ -92,12 +93,16 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
 
+			$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+
 			$empresa = $this->integrados[$key]->datos_empresa;
 			if (isset($empresa)){		
 				$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
 				$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
 				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
+
+				$this->integrados[$key]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_empresa->cod_postal));
 			}
 		}else{
 			$this->integrados[$key]->integrado 			= null;
@@ -242,6 +247,14 @@ class IntegradoSimple extends Integrado {
 
 		return $name;
 	}
+
+	public static function isValidIntegradoId( $integ_id ) {
+		$db =& JFactory::getDbo();
+		$integradosRegistrados = getFromTimOne::selectDB('integrado','integrado_id = '.$db->quote($integ_id) );
+
+		return !empty($integradosRegistrados);
+	}
+
 }
 
 class Autoriza {

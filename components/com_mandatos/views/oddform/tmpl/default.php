@@ -144,7 +144,7 @@ if(!$this->confirmacion){
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <form id="oddform" method="post" action="index.php?option=com_mandatos&view=oddform&integradoId=<?php echo $this->integradoId; ?>&task=oddform.saveODD">
+        <form id="oddform" method="post" action="index.php?option=com_mandatos&view=oddform&task=oddform.saveODD">
 
             <input type="hidden" value='<?php echo json_encode($datos); ?>' name="datos" />
             <input type="button" class="btn btn-primary" id="envio" value="<?php echo JText::_('LBL_ENVIAR'); ?>">

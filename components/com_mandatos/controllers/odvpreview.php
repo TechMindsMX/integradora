@@ -47,6 +47,25 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '3');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+
+                    $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
+                    if ( $newOrden->status == 5 && !$newOrden->urlXml ) {
+                        $factObj = $save->generaObjetoFactura( $newOrden );
+
+                        if ( $factObj != false ) {
+                            $xmlFactura = $save->generateFacturaFromTimone( $factObj );
+
+                            $file = $save->saveXMLFile( $xmlFactura );
+                        }
+
+                        if ( isset( $file ) ) {
+                            if ( $file != false ) {
+                                $save->formatData(array('columnas' => 'urlXML', 'valores' => $file ));
+                                $where = 'id = '.$newOrden->id;
+                                $save->updateDB('ordenes_vaneta', null, $where);
+                            }
+                        }
+                    }
 	            }
 
                 $this->app->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
