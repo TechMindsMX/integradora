@@ -520,7 +520,7 @@ class getFromTimOne{
 
             $orden->id                = (INT)$value->id;
             $orden->idMutuo           = (INT)$value->idMutuo;
-            $orden->numOrden          = (INT)$value->numOrden;
+            $orden->numOrden          = (STRING)$value->numOrden;
             $orden->fecha_elaboracion = (INT)$value->fecha_elaboracion;
             $orden->fecha_deposito    = (INT)$value->fecha_deposito;
             $orden->tasa              = (FLOAT)$value->tasa;
@@ -532,6 +532,7 @@ class getFromTimOne{
             $orden->capital           = (FLOAT)$value->capital;
             $orden->intereses         = (FLOAT)$value->intereses;
             $orden->iva_intereses     = (FLOAT)$value->iva_intereses;
+            $orden->status            = (INT)$value->status;
 
             $odps[] = $orden;
         }

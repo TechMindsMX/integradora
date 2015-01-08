@@ -33,7 +33,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 $btnOrden = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odppreview&integradoId='.$this->integradoId.'&id='.$value->id.'">'.JText::_('ODPS_LBL_IR_ORDEN').'</a> ';
                 ?>
                 <tr class="row">
-                    <td style="text-align: center; vertical-align: middle;"><?php echo $value->idMutuo.'-'.($key+1); ?></td>
+                    <td style="text-align: center; vertical-align: middle;"><?php echo $value->numOrden; ?></td>
                     <td style="text-align: center; vertical-align: middle;"><?php echo $value->fecha_deposito; ?></td>
                     <td style="text-align: right; vertical-align: middle;">$<?php echo number_format($value->capital,2); ?></td>
                     <td style="text-align: center; vertical-align: middle;"><?php echo $btnOrden; ?></td>

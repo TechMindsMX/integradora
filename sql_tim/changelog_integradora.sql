@@ -154,3 +154,19 @@ CREATE TABLE `flpmu_bitacora_status_mutuo` (
 ALTER TABLE  `flpmu_ordenes_prestamo` ADD  `numOrden` INT NOT NULL AFTER  `idMutuo`;
 ALTER TABLE  `flpmu_ordenes_prestamo` ADD  `status` INT NOT NULL
 --rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `numOrden`, DROP `status`;
+
+--changeset lutek:15
+ALTER TABLE `integradb`.`flpmu_ordenes_prestamo`
+CHANGE COLUMN `numOrden` `numOrden` VARCHAR(50) NULL ,
+CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(100) NULL ,
+CHANGE COLUMN `acreedor` `acreedor` VARCHAR(100) NULL DEFAULT NULL ,
+CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(100) NULL DEFAULT NULL ,
+CHANGE COLUMN `deudor` `deudor` VARCHAR(100) NULL DEFAULT NULL ,
+CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(100) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `integradb`.`flpmu_ordenes_prestamo`
+--rollback CHANGE COLUMN `numOrden` `numOrden` INT(10) NULL ,
+--rollback CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(45) NULL ,
+--rollback CHANGE COLUMN `acreedor` `acreedor` VARCHAR(45) NULL DEFAULT NULL ,
+--rollback CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(45) NULL DEFAULT NULL ,
+--rollback CHANGE COLUMN `deudor` `deudor` VARCHAR(45) NULL DEFAULT NULL ,
+--rollback CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(45) NULL DEFAULT NULL ;
