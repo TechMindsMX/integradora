@@ -12,6 +12,7 @@ $datos        = $this->data;
 $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
+var_dump($datos);
 ?>
 
 <script>
@@ -20,7 +21,7 @@ $optionBancos = '';
 
     <?php
     foreach ($this->catalogos->bancos as $key => $value){
-        $selected = $datos->banco_codigo == $value->claveClabe?'selected="selected"':'';
+        $selected = $datos->integradoDeudor->datosBancarios[0]->banco_codigo == $value->claveClabe?'selected="selected"':'';
         $optionBancos .= '<option value="'.$value->claveClabe.'" '.$selected.'>'.$value->banco.'</option>';
         echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
 	}
@@ -30,7 +31,7 @@ $optionBancos = '';
         jQuery('#rfc').on('change',searchrfc);
         jQuery('#amortizacion').on('click',getTable);
 
-        <?php echo (!is_null($datos->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
+        <?php echo (!is_null($datos->integradoDeudor->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
     });
 
     function ajax(parametros){
@@ -166,12 +167,12 @@ $optionBancos = '';
 
         <div class="form-group">
             <label for="rfc"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_RFC'); ?></label>
-            <input type="text" name="rfc" id="rfc" value="<?php echo $datos->rfc; ?>" />
+            <input type="text" name="rfc" id="rfc" value="<?php echo $datos->integradoDeudor->rfc; ?>" />
         </div>
 
         <div class="form-group">
             <label for="beneficiario"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_BENEFICIARIO') ?></label>
-            <input type="text" name="beneficiario" id="beneficiario" value="<?php echo isset($datos->beneficiario)?$datos->beneficiario:''; ?>" />
+            <input type="text" name="beneficiario" id="beneficiario" value="<?php echo isset($datos->integradoDeudor)?$datos->integradoDeudor->nombre:''; ?>" />
         </div>
 
         <div class="form-group">
@@ -200,7 +201,7 @@ $optionBancos = '';
             <input type="text" name="interes" id="interes" value="<?php echo $datos->interes; ?>" />
         </div>
 
-        <div id="dataBanco" style="display: <?php echo !is_null($datos->banco_codigo)?'show':'none'; ?>">
+        <div id="dataBanco" style="display: <?php echo !is_null($datos->integradoDeudor->datosBancarios[0]->banco_codigo)?'show':'none'; ?>">
             <span style="font-size: 12px;">Es necesario llenar los datos bancarios.</span>
             <div class="form-group">
                 <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
@@ -215,15 +216,15 @@ $optionBancos = '';
             </div>
             <div class="form-group">
                 <label for="banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="10" value="<?php echo $datos->banco_cuenta ?>" />
+                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="10" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_cuenta ?>" />
             </div>
             <div class="form-group">
                 <label for="banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-                <input name="banco_sucursal" id="banco_sucursal" type="text" maxlength="3" value="<?php echo $datos->banco_sucursal ?>" />
+                <input name="banco_sucursal" id="banco_sucursal" type="text" maxlength="3" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_sucursal ?>" />
             </div>
             <div class="form-group">
                 <label for="banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
-                <input name="banco_clabe" id="banco_clabe" type="text" maxlength="18" value="<?php echo $datos->banco_clabe ?>" />
+                <input name="banco_clabe" id="banco_clabe" type="text" maxlength="18" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_clabe ?>" />
             </div>
         </div>
 

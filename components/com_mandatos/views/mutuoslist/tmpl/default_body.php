@@ -12,7 +12,6 @@ $document        = JFactory::getDocument();
 $datosAcreedor   = $this->mutuosAcreedor;
 $datosDeudor     = $this->mutuosDeudor;
 
-//var_dump($datos);
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 ?>
 <script>
@@ -63,7 +62,6 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosAcreedor as $value) {
-        var_dump($value->status);
         $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
         $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
