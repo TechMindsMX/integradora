@@ -4,6 +4,7 @@ defined('JPATH_PLATFORM') or die;
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
+jimport('integradora.gettimone');
 
 
 /**
@@ -26,7 +27,7 @@ class Integrado {
 
 	}
 
-    function getIntegrados (){
+	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
         $query
@@ -246,6 +247,14 @@ class IntegradoSimple extends Integrado {
 
 		return $name;
 	}
+
+	public static function isValidIntegradoId( $integ_id ) {
+		$db =& JFactory::getDbo();
+		$integradosRegistrados = getFromTimOne::selectDB('integrado','integrado_id = '.$db->quote($integ_id) );
+
+		return !empty($integradosRegistrados);
+	}
+
 }
 
 class Autoriza {
