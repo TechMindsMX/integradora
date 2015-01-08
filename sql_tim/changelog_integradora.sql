@@ -149,3 +149,8 @@ CREATE TABLE `flpmu_bitacora_status_mutuo` (
   `newStatus` INT NULL,
   `result` INT NULL);
 --rollback DROP TABLE `flpmu_bitacora_status_mutuo`;
+
+--changeset lutek:14
+ALTER TABLE  `flpmu_ordenes_prestamo` ADD  `numOrden` INT NOT NULL AFTER  `idMutuo`;
+ALTER TABLE  `flpmu_ordenes_prestamo` ADD  `status` INT NOT NULL
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `numOrden`, DROP `status`;
