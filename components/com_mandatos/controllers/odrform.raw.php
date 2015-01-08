@@ -7,16 +7,21 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdrform extends JControllerLegacy {
 
+    private $integradoId;
+
     public function __construct(){
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
-        $post = array('integradoId'   => 'STRING',
+        $post = array(
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
-            'totalAmount'        => 'STRING'
+            'totalAmount'   => 'STRING'
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
+
+        $session = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
 
         parent::__construct();
     }
@@ -28,7 +33,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
         $datos['paymentDate'] = $date->getTimestamp();
 
-        $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $datos['integradoId']);
+        $this->permisos  = MandatosHelper::checkPermisos(__CLASS__,  $this->integradoId);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -40,7 +45,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
         if( !isset($datos['id']) ) {
             $datos['createdDate'] = time();
-            $datos['numOrden'] = $save->getNextOrderNumber('odr', $datos['integradoId']);
+            $datos['numOrden'] = $save->getNextOrderNumber('odr',  $this->integradoId);
             $save->formatData($datos);
 
             $salvado = $save->insertDB('ordenes_retiro', null, null, true);
@@ -53,7 +58,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $sesion = JFactory::getSession();
             $sesion->set('msg','Datos Almacenados', 'odrCorrecta');
 
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&integradoId=' . $datos['integradoId'] . '&idOrden=' . $salvado.'&success=true',
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $salvado.'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);
@@ -101,7 +106,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
 		$parametros = $this->parametros;
 
 		$diccionario = array(
-			'integradoId'   => array('tipo' => 'number', 'length' => 10,    'notNull' => true),
 			'amount'        => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
 			'paymentDate'   => array('tipo' => 'date',   'length' => 10,    'notNull' => true),
 			'paymentMethod' => array('tipo' => 'number', 'length' => 1,     'notNull' => true)

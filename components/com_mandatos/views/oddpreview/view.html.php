@@ -5,7 +5,7 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOddpreview extends JViewLegacy {
 
-	public $integradoId;
+	private $integradoId;
 	public $odd;
 	public $integCurrent;
 	public $printBtn;

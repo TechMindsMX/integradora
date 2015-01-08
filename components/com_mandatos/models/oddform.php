@@ -9,7 +9,10 @@ class MandatosModelOddform extends JModelItem {
 
     public function getOrden($integradoId = null){
         $data 		    = JFactory::getApplication()->input->getArray();
-        $integradoId    = $data['integradoId'];
+
+        $session = JFactory::getSession();
+        $integradoId    = $session->get('integradoId', null, 'integrado');
+
         $oddId          = isset($data['idOrden']) ? $data['idOrden'] : null;
         $listado        = getFromTimOne::getOrdenesDeposito($integradoId, $oddId);
 
