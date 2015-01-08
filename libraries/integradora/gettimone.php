@@ -2027,9 +2027,10 @@ class sendToTimOne {
         $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
         $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-        if ($order->status == 1 && !$order->canChangeStatus) {
+        if ( $order->status == 1 && !$order->canChangeStatus && $orderNewStatus == 5 ) {
             // pasa de esatus 1 (Nuevo) a 3 (En Autorizacion) en caso que no tiene las autrizaciones completas
             $orderNewStatus = 3;
+            $order->hasAllAuths = true;
             $order->canChangeStatus = true;
         }
 
@@ -2107,7 +2108,43 @@ class sendToTimOne {
         // TODO: crear las facturas de comisiones
     }
 
-	/**
+    public function generaObjetoFactura( $newOrden ) {
+
+        $emisor = new Emisor( $newOrden->integradoId );
+        $receptor = new Receptor( $newOrden->proveedor->id );
+        $datosDeFacturacion = new datosDeFacturacion( $newOrden );
+
+        foreach ( $newOrden->productosData as $key => $concepto ) {
+            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
+        }
+
+        $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
+
+        return $data;
+    }
+
+    public function generateFacturaFromTimOe( $factura ) {
+        //		creacion de factura
+        $serviceUrl = 'http://192.168.0.111:8081/facturacion/create';
+
+        $rfcTest = 'AAD990814BP7';
+        $factura->emisor->datosFiscales->rfc = $rfcTest;
+        $factura->receptor->datosFiscales->rfc = $rfcTest;
+
+        $jsonData   = json_encode( $factura );
+        $httpType   = 'POST';
+
+        $request = new sendToTimOne();
+        $request->setServiceUrl( $serviceUrl );
+        $request->setJsonData( $jsonData );
+        $request->setHttpType( $httpType );
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    /**
      * @param $data
      *
      * @return bool|string filename {uuid}.xml
@@ -2128,21 +2165,6 @@ class sendToTimOne {
         }
 
         return $return;
-    }
-
-    public function generaObjetoFactura( $newOrden ) {
-
-        $emisor = new Emisor( $newOrden->integradoId );
-        $receptor = new Receptor( $newOrden->proveedor->id );
-        $datosDeFacturacion = new datosDeFacturacion( $newOrden );
-
-        foreach ( $newOrden->productosData as $key => $concepto ) {
-            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
-        }
-
-        $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
-
-        return $data;
     }
 
 }
