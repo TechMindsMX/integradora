@@ -10,7 +10,10 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 class MandatosControllerOdvform extends JControllerAdmin {
 
     function safeform(){
-        $post       = array('integradoId'   => 'INT',
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+        $post       = array(
             'idOrden'       => 'INT',
             'projectId'     => 'STRING',
             'projectId2'    => 'STRING',
@@ -104,7 +107,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
                 exit;
             }
 
-            $numOrden = $save->getNextOrderNumber('odv', $data['integradoId']);
+            $numOrden = $save->getNextOrderNumber('odv', $this->integradoId);
 
             $columnas[] = 'numOrden';
             $valores[]  = $numOrden;
@@ -121,7 +124,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $url = null;
         if($tab == 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=1&idOrden='.$id.'&layout=confirmOdv';
+            $url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$id.'&layout=confirmOdv';
         }
 
         $respuesta['success']  = true;

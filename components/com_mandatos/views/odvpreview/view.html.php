@@ -4,11 +4,17 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 class MandatosViewOdvpreview extends JViewLegacy {
-	
+
+	protected $integradoId;
+	protected $permisos;
+
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
-		$this->integradoId 	= $data['integradoId'];
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
 		$this->odv		 	= $this->get('ordenes');
 		$this->integCurrent = $this->get('integrado');
 
@@ -20,7 +26,7 @@ class MandatosViewOdvpreview extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=odvpreview&integradoId=' . $this->integradoId . '&irOrden=' . $data['idOrden'];
+		$url = 'index.php?option=com_mandatos&view=odvpreview&idOrden=' . $data['idOrden'];
 		$this->printBtn = MandatosHelper::getPrintButton($url);
 
 		// Verifica los permisos de edición y autorización

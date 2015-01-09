@@ -1,14 +1,14 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId=' . $this->integradoId.'&task=cancelOdv&idOrden='.$this->odv->id);
+$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&task=cancelOdv&idOrden='.$this->odv->id);
 ?>
 
 <legend class="container botones clearfix form-actions">
 	<?php
 	echo JText::_('LBL_CONFIRM_ORDEN');
 	if ($this->permisos['canAuth'] && $this->odv->status->id === 0):
-        $aceptUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&integradoId=' . $this->integradoId);
+        $aceptUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist');
 		?>
         <a class="btn btn-primary" href="<?php echo $aceptUrl; ?>">Aceptar</a>
 	<?php

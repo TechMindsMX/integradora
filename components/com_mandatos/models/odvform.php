@@ -12,15 +12,17 @@ jimport('integradora.catalogos');
 class MandatosModelOdvform extends JModelItem {
 
     public function __construct(){
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray();
-        $this->integradoId       = $this->inputVars['integradoId'];
+        $this->inputVars 		 = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
         parent::__construct();
     }
 
     public function getOrden(){
-        $inputVars = JFactory::getApplication()->input->getArray();
 
-        $orden = getFromTimOne::getOrdenesVenta($inputVars['integradoId'], $inputVars['idOrden']);
+        $orden = getFromTimOne::getOrdenesVenta($this->integradoId, $this->inputVars['idOrden']);
 
         return $orden[0];
     }

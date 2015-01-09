@@ -13,8 +13,6 @@ jimport('integradora.catalogos');
 class MandatosModelOdvlist extends JModelItem {
 
     function __construct(){
-        $this->data 		= JFactory::getApplication()->input->getArray();
-        $this->integradoId  = $this->data['integradoId'];
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
 
@@ -22,7 +20,7 @@ class MandatosModelOdvlist extends JModelItem {
     }
 	
 	public function getOrdenes($integradoId = null){
-        $listado = getFromTimOne::getOrdenesVenta($this->integradoId);
+        $listado = getFromTimOne::getOrdenesVenta($integradoId);
 
         foreach ($listado as $key => $value) {
             $value->productos = json_decode($value->productos);

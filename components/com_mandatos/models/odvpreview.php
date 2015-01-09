@@ -8,7 +8,10 @@ class MandatosModelOdvpreview extends JModelItem {
 	public $odv;
 
 	public function __construct(){
-		$this->inputVars 		 = JFactory::getApplication()->input->getArray();
+		$this->inputVars 		 = JFactory::getApplication()->input->getArray(array('idOrden'=>'INT'));
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
 		parent::__construct();
 	}
@@ -16,13 +19,13 @@ class MandatosModelOdvpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odv)) {
-			$odv = getFromTimOne::getOrdenesVenta($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+			$odv = getFromTimOne::getOrdenesVenta($this->integradoId, $this->inputVars['idOrden']);
 			$this->odv = $odv[0];
 		}
 
 		// Verifica si la ODV exite para el integrado o redirecciona
 		if (is_null($this->odv)){
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODV_INVALID'), 'error');
+			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODV_INVALID'), 'error');
 		}
 
 		$this->odv->account = getFromTimOne::selectDB('integrado_datos_bancarios', 'datosBan_id = '.$this->odv->account);
@@ -32,7 +35,7 @@ class MandatosModelOdvpreview extends JModelItem {
 
 
 	public function getIntegrado()	{
-		return new IntegradoSimple($this->inputVars['integradoId']);
+		return new IntegradoSimple($this->integradoId);
 	}
 
 }

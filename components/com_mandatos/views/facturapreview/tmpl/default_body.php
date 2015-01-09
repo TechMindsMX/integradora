@@ -18,8 +18,12 @@ $number2word = new AifLibNumber();
 
 ?>
 
+<div class="hidden-print form-group">
+	<?php echo $this->printBtn; ?>
+</div>
+
 <div id="factura_preview">
-<?php echo $this->printBtn; ?>
+
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base() . 'images/logo_iecce.png'; ?>"/></div>
 		<h3 class="span2 text-right">No. Orden</h3>

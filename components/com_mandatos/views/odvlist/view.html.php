@@ -11,11 +11,15 @@ jimport('joomla.application.component.view');
  */
 class MandatosViewOdvlist extends JViewLegacy {
 
+	protected $integradoId;
+	protected $permisos;
+
 	function display($tpl = null){
-		$data 				= JFactory::getApplication()->input->getArray();
-		$this->integradoId	= $data['integradoId'];
-		
-		$this->data         = $this->get('ordenes');
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$model              = $this->getModel();
+		$this->data         = $model->getOrdenes($this->integradoId);
 		$this->token        = getFromTimOne::token();
 		
         if (count($errors = $this->get('Errors'))) {

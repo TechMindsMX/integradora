@@ -5,9 +5,13 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOdvform extends JViewLegacy {
 
+    protected $integradoId;
+
     function display($tpl = null){
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
         $inputVars 		    = JFactory::getApplication()->input->getArray();
-        $this->integradoId  = $inputVars['integradoId'];
         $this->clientes     = $this->get('clientes');
         $this->proyectos    = $this->get('proyectos');
         $this->estados      = $this->get('estados');
@@ -44,7 +48,6 @@ class MandatosViewOdvform extends JViewLegacy {
             JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
             return false;
         }
-
 
         parent::display($tpl);
     }

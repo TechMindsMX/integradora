@@ -63,8 +63,8 @@ if(is_null($ordenes) || empty($ordenes)){
 
 <div>
     <div class="col-md-4">
-        <?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId); ?>
-        <a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORV_LBL_AGREGAR'); ?></a>
+        <?php $newOdvUrl = jRoute::_('index.php?option=com_mandatos&view=odvform'); ?>
+        <a class="btn btn-primary" href="<?php echo $newOdvUrl; ?>" ><?php echo JText::_('COM_MANDATOS_ORV_LBL_AGREGAR'); ?></a>
     </div>
 
     <div class="col-md-4">
@@ -93,16 +93,16 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach ($ordenes as $key => $value) {
-                $url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&integradoId='.$this->integradoId.'&idOrden='.$value->id);
+                $url_preview = JRoute::_('index.php?option=com_mandatos&view=odvpreview&idOrden='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
                 if ($value->status->id == 0 && $this->permisos['canAuth']){
-                    $url_auth = JRoute::_('index.php?option=com_mandatos&view=odvpreview&layout=confirmauth&integradoId='.$this->integradoId.'&idOrden='.$value->id);
+                    $url_auth = JRoute::_('index.php?option=com_mandatos&view=odvpreview&layout=confirmauth&idOrden='.$value->id);
                     $auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-                    $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status->id == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
                     $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-                    $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+                    $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
                 } elseif ($value->status->id == 1) {
                     $auth_button = JText::_('LBL_AUTHORIZED');
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
@@ -130,7 +130,7 @@ if(is_null($ordenes) || empty($ordenes)){
 </div>
 
 <div style="margin-top: 20px;">
-    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
+    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>" >
     <?php echo JText::_('COM_MANDATOS_TITULO'); ?>
     </a>
 </div>
