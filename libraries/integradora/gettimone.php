@@ -502,7 +502,9 @@ class getFromTimOne{
         $where = 'id = '.(int)$code;
         $nombreEstado = getFromTimOne::selectDB('catalog_estados', $where);
 
-        return $nombreEstado[0];
+        $return = !empty($nombreEstado) ? $nombreEstado[0] : false;
+
+        return $return;
     }
 
     public static function getOrdenesPrestamo($idMutuo=null,$idOrden=null){
