@@ -226,7 +226,6 @@ class MandatosController extends JControllerLegacy {
 
             $send                   = new Send_email();
             $info = $send->notification($data);
-            var_dump('<h3>'.$info.'</h3>');
         }
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
     }
@@ -253,6 +252,20 @@ class MandatosController extends JControllerLegacy {
         }else{
             $save->updateProduct($data, $id_producto);
         }
+        if(isset($data['integradoId'])){
+            $integrado              = new IntegradoSimple($data['integradoId']);
+
+            $data['corrUser']       = $this->currUser->name;
+            $data['titulo']         = 'IECCE- Alta de producto.';
+            $data['nameIntegrado']  = $integrado->getDisplayName();
+
+            $data['body']           = "Estimado ".$data['nameIntegrado']." Por medio de la presente informamos a Usted que dio de alta un nuevo"
+                                    . " producto denominado ".$data['productName']." en la plataforma de IECCE, a través del Usuario ".$data['corrUser']
+                                    . " con fecha ".date('d-m-Y').". En caso de no reconocer esta operación, favor de comunicarse al XXXXXX.";
+            $send                   = new Send_email();
+            $info = $send->notification($data);
+        }
+
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']);
     }
 
