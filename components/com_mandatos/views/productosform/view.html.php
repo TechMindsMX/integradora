@@ -5,13 +5,19 @@ jimport('joomla.application.component.view');
 jimport('integradora.gettimone');
 
 class MandatosViewProductosform extends JViewLegacy {
-	
+
+	protected $integradoId;
+	protected $permisos;
+
 	function display($tpl = null){
-		$post               = array('integradoId' => 'INT', 'id_producto' => 'INT');
+		$post               = array('id_producto' => 'INT');
         $app 				= JFactory::getApplication();
         $data               = $app->input->getArray($post);
-		$integradoId 	    = $data['integradoId'];
-        $this->currencies   = getFromTimOne::getCurrencies();
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$this->currencies   = getFromTimOne::getCurrencies();
 
         if( $data['id_producto'] != 0 ){
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_EDITAR';
@@ -20,7 +26,7 @@ class MandatosViewProductosform extends JViewLegacy {
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_AGREGAR';
             $this->producto 				= new stdClass;
             $this->producto->id_producto    = null;
-            $this->producto->integradoId	= $data['integradoId'];
+            $this->producto->integradoId	= $this->integradoId;
             $this->producto->productName	= '';
             $this->producto->measure		= '';
             $this->producto->price		    = '';
@@ -40,10 +46,10 @@ class MandatosViewProductosform extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 		
 		// Verifica los permisos de edición y autorización
-		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
 		if (!$this->permisos['canEdit']) {
-			$url = 'index.php?option=com_mandatos&view=productoslist&integradoId='.$integradoId;
+			$url = 'index.php?option=com_mandatos&view=productoslist';
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
 			$app->redirect(JRoute::_($url), $msg, 'error');
 		}

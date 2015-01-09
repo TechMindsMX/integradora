@@ -14,12 +14,13 @@ jimport('integradora.gettimone');
 class MandatosModelProyectoslist extends JModelItem {
 	
 	protected $dataModelo;
-	
+	protected $integradoId;
+
 	public function getProyectos(){
-		$data			= JFactory::getApplication()->input->getArray();
-		$integradoId	= $data['integradoId'];
-		
-		$this->dataModelo = getFromTimOne::getProyects($integradoId['integrado_id']);
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$this->dataModelo = getFromTimOne::getProyects($this->integradoId);
 
 		return $this->dataModelo;
 	}

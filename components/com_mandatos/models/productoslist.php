@@ -13,9 +13,10 @@ jimport('integradora.gettimone');
  */
 class MandatosModelProductoslist extends JModelItem {
 	public function getProductos(){
-        $post       = array('integradoId' => 'INT');
-		$data		= JFactory::getApplication()->input->getArray($post);
-		$productos	= getFromTimOne::getProducts($data['integradoId']);
+		$session            = JFactory::getSession();
+		$integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$productos	= getFromTimOne::getProducts($integradoId);
 		
 		return $productos;
 	}

@@ -16,7 +16,7 @@ class MandatosModelProductosform extends JModelItem {
 	protected $dataModelo;
 	
 	public function getProducto(){
-        $post           = array('integradoId' => 'INT', 'id_producto' => 'INT');
+        $post           = array('id_producto' => 'INT');
         $app            = JFactory::getApplication();
         $data           = $app->input->getArray($post);
 		$currUser		= JFactory::getUser();

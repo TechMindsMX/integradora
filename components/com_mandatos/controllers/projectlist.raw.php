@@ -9,14 +9,11 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerProjectlist extends JControllerAdmin {
 
-    function disabledProject(){
-        $post       = array('integradoId' => 'INT',
-                            'id'          => 'INT');
-        $db	        = JFactory::getDbo();
+    function disableProject(){
         $document   = JFactory::getDocument();
         $this->app  = JFactory::getApplication();
+        $post       = array('id'          => 'INT');
         $data       = $this->app->input->getArray($post);
-        $id         = $data['id'];
         $save       = new sendToTimOne();
 
         $document->setMimeEncoding('application/json');

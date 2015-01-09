@@ -14,14 +14,19 @@ jimport('integradora.gettimone');
 class MandatosModelProyectosform extends JModelItem {
 	
 	protected $dataModelo;
-	
+	protected $integradoId;
+
 	public function getProyecto(){
 		$app			= JFactory::getApplication();
 		$currUser		= JFactory::getUser();
-        $post           = array('integradoId'=>'INT','id_proyecto'=>'INT');
+        $post           = array('id_proyecto'=>'INT');
         $data   		= $app->input->getArray($post);
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
 		$integrado		= new Integrado;
-		$isValid		= $integrado->isValidPrincipal($data['integradoId'], $currUser->id);
+		$isValid		= $integrado->isValidPrincipal($this->integradoId, $currUser->id);
 		
 		if($currUser->guest){
 			$app->redirect('index.php/login');
@@ -32,8 +37,8 @@ class MandatosModelProyectosform extends JModelItem {
 		$dataProject = getFromTimOne::getProyects(null,$data['id_proyecto']);
         $dataProject = $dataProject[0];
 
-        if($data['integradoId'] != $dataProject->integradoId){
-            $app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']));
+        if($this->integradoId != $dataProject->integradoId){
+            $app->redirect(JRoute::_('index.php?option=com_mandatos&view=proyectoslist'));
         }
 
         return $dataProject;

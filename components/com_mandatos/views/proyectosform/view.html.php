@@ -6,10 +6,16 @@ jimport('integradora.gettimone');
 
 class MandatosViewProyectosform extends JViewLegacy {
 
+    protected $integradoId;
+    protected $permisos;
+
     function display($tpl = null){
         $app 				= JFactory::getApplication();
-        $post               = array('integradoId'=>'INT','id_proyecto'=>'INT');
+        $post               = array('id_proyecto'=>'INT');
         $data				= $app->input->getArray($post);
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         if( !is_null($data['id_proyecto']) ){
             $this->titulo = 'COM_MANDATOS_PROYECTOS_EDICION_PROY_TITULO';
@@ -18,7 +24,7 @@ class MandatosViewProyectosform extends JViewLegacy {
             $this->titulo = 'COM_MANDATOS_PROYECTOS_ALTA_PROY_TITULO';
             $proyecto = new stdClass();
             $proyecto->id_proyecto = null;
-            $proyecto->integradoId = $data['integradoId'];
+            $proyecto->integradoId = $this->integradoId;
             $proyecto->parentId = 0;
             $proyecto->name = null;
             $proyecto->description = null;
@@ -37,10 +43,10 @@ class MandatosViewProyectosform extends JViewLegacy {
         $this->loadHelper('Mandatos');
 
         // Verifica los permisos de edición y autorización
-        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $data['integradoId']);
+        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if (!$this->permisos['canEdit']) {
-            $url = 'index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId'];
+            $url = 'index.php?option=com_mandatos&view=proyectoslist';
             $msg = JText::_('JERROR_ALERTNOAUTHOR');
             $app->redirect(JRoute::_($url), $msg, 'error');
         }
