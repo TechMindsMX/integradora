@@ -5,17 +5,25 @@ jimport('joomla.application.component.view');
 jimport('integradora.gettimone');
 
 class MandatosViewClientesform extends JViewLegacy {
-	
+
+	public $idCliPro;
+	protected $integradoId;
+	protected $permisos;
+
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
-        $post               = array('integradoId'=>'INT', 'idCliPro' => 'INT');
+        $post               = array( 'idCliPro' => 'INT');
 		$data				= $app->input->getArray($post);
-		$this->integradoId 	= $data['integradoId'];
-        $this->idCliPro     = $data['idCliPro'];
+		$this->idCliPro     = $data['idCliPro'];
 
-        if( !is_null($this->idCliPro) ){
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		if( !is_null($this->idCliPro) ){
 			$this->titulo   = 'COM_MANDATOS_CLIENT_LBL_EDITAR';
-            $this->datos    = $this->get('Cliente');
+
+			$model = $this->getModel();
+            $this->datos    = $model->getCliente( $this->integradoId );
 		}else{
 			$this->titulo = 'COM_MANDATOS_CLIENT_LBL_AGREGAR';
             $datos    = new stdClass();
