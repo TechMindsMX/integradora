@@ -9,10 +9,10 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $datos        = $this->data;
+$datosBanco   = isset($datos->integradoDeudor->datosBancarios[0])?$datos->integradoDeudor->datosBancarios[0]:null;
 $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
-var_dump($datos);
 ?>
 
 <script>
@@ -21,7 +21,9 @@ var_dump($datos);
 
     <?php
     foreach ($this->catalogos->bancos as $key => $value){
-        $selected = $datos->integradoDeudor->datosBancarios[0]->banco_codigo == $value->claveClabe?'selected="selected"':'';
+        $bancoCodigo = isset($datosBanco->banco_codigo)?$datosBanco->banco_codigo:null;
+
+        $selected = $bancoCodigo == $value->claveClabe?'selected="selected"':'';
         $optionBancos .= '<option value="'.$value->claveClabe.'" '.$selected.'>'.$value->banco.'</option>';
         echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
 	}
@@ -201,7 +203,7 @@ var_dump($datos);
             <input type="text" name="interes" id="interes" value="<?php echo $datos->interes; ?>" />
         </div>
 
-        <div id="dataBanco" style="display: <?php echo !is_null($datos->integradoDeudor->datosBancarios[0]->banco_codigo)?'show':'none'; ?>">
+        <div id="dataBanco" style="display: <?php echo isset($datos_banco->banco_codigo)?'show':'none'; ?>">
             <span style="font-size: 12px;">Es necesario llenar los datos bancarios.</span>
             <div class="form-group">
                 <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
@@ -216,15 +218,15 @@ var_dump($datos);
             </div>
             <div class="form-group">
                 <label for="banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="10" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_cuenta ?>" />
+                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="10" value="<?php echo isset($datos_banco->banco_cuenta)?$datos_banco->banco_cuenta:'' ?>" />
             </div>
             <div class="form-group">
                 <label for="banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-                <input name="banco_sucursal" id="banco_sucursal" type="text" maxlength="3" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_sucursal ?>" />
+                <input name="banco_sucursal" id="banco_sucursal" type="text" maxlength="3" value="<?php echo isset($datos_banco->sucursal)?$datos_banco->sucursal:'' ?>" />
             </div>
             <div class="form-group">
                 <label for="banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
-                <input name="banco_clabe" id="banco_clabe" type="text" maxlength="18" value="<?php echo $datos->integradoDeudor->datosBancarios[0]->banco_clabe ?>" />
+                <input name="banco_clabe" id="banco_clabe" type="text" maxlength="18" value="<?php echo isset($datos_banco->banco_clabe)?$datos_banco->banco_clabe:'' ?>" />
             </div>
         </div>
 

@@ -45,7 +45,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     <h1>Listado de Mutuos</h1>
 </div>
 <div class="clearfix">
-    <a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId=<?php echo $this->data->integradoId; ?>">Crear Mutuo</a>
+    <a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform">Crear Mutuo</a>
 </div>
 
 <h3>Mutuos como Acreedor</h3>
@@ -62,15 +62,15 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosAcreedor as $value) {
-        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&idMutuo='.$value->id;
         $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
-        $url = 'index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $url = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
         if($value->status == 1){
             $style  = '';
-            $edit   = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Editar</a>';
+            $edit   = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Editar</a>';
             if ($this->permisos['canAuth']){
-                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&integradoId=' . $this->data->integradoId . '&idMutuo=' . $value->id);
+                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&idMutuo=' . $value->id);
                 $odp = '<td><a class="btn btn-primary" href="'.$authorizeURL.'">'.JText::_('LBL_AUTORIZE').'</a></td>';
             }else{
                 $odp = '';
@@ -79,7 +79,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             $style  = 'style="color: #FFBB00;"';
             $edit   = '<a class="btn btn-primary disabled">Editar</a>';
             if ($this->permisos['canAuth']){
-                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&integradoId=' . $this->data->integradoId . '&idMutuo=' . $value->id);
+                $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&layout=confirmauth&idMutuo=' . $value->id);
                 $odp = '<td><a class="btn btn-primary" href="'.$authorizeURL.'">'.JText::_('LBL_AUTORIZE').'</a></td>';
             }else{
                 $odp = '';
@@ -87,7 +87,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         }else{
             $style  = 'style="color: #FF0000;"';
             $edit   = '<a class="btn btn-primary disabled">Editar</a>';
-            $odp    = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&integradoId='.$this->data->integradoId.'&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
+            $odp    = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
         <tr class="row" <?php echo $style;?> >
@@ -118,14 +118,14 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosDeudor as $value) {
-        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&idMutuo='.$value->id;
         $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
-        $url = 'index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&idMutuo='.$value->id;
+        $url = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
         if($value->status == 1){
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&integradoId='.$this->data->integradoId.'&id='.$value->id.'">Generar ODP</a></td>';
+            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Generar ODP</a></td>';
         }else{
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&integradoId='.$this->data->integradoId.'&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
+            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
         <tr class="row">

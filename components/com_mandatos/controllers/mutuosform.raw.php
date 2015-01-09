@@ -78,7 +78,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             'totalAmount'       => $datos->totalAmount,
             'interes'           => $datos->interes,
             'cuotaOcapital'     => $datos->cuotaOcapital,
-            'status'            => 0
+            'status'            => 1
         );
 
         $save->formatData($dataMutuo);

@@ -6,10 +6,12 @@ jimport('integradora.gettimone');
 
 class MandatosModelMutuoslist extends JModelItem {
     public function __construct(){
+        $session            = JFactory::getSession();
         $app 				= JFactory::getApplication();
-        $post               = array('integradoId' => 'INT', 'layout' => 'string');
+        $post               = array('layout' => 'string');
         $this->catalogos    = $this->get('catalogos');
         $this->data			= (object) $app->input->getArray($post);
+        $this->data->integradoId = $session->get('integradoId',null,'integrado');
 
         parent::__construct();
     }

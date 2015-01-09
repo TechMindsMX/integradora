@@ -5,6 +5,38 @@ jimport('integradora.integrado');
 jimport('integradora.gettimone');
 
 class MandatosModelMutuosform extends JModelItem {
+
+    function __construct(){
+        $session                      = JFactory::getSession();
+        $app                          = JFactory::getApplication();
+        $post                         = array(
+            'id'                => 'INT',
+            'integradoId'       => 'INT',
+            'integradoIdR'      => 'INT',
+            'paymentPeriod'     => 'INT',
+            'cuotaOcapital'     => 'INT',
+            'quantityPayments'  => 'FLOAT',
+            'totalAmount'       => 'FLOAT',
+            'interes'           => 'FLOAT',
+            'beneficiario'      => 'STRING',
+            'rfc'               => 'STRING',
+            'layout'            => 'STRING',
+            'banco_codigo'      => 'STRING',
+            'banco_cuenta'      => 'STRING',
+            'banco_sucursal'    => 'STRING',
+            'banco_clabe'       => 'STRING'
+        );
+        $this->inputData              = (object)$app->input->getArray($post);
+        $integradoId                  = $session->get('integradoId', null, 'integrado');
+        $this->inputData->integradoId = is_null($integradoId)?$this->inputData->integradoId:$integradoId;
+
+        parent::__construct();
+    }
+
+    public function getInputData(){
+        return $this->inputData;
+    }
+
     public function getTiposPago(){
         $catalogos = new Catalogos();
 

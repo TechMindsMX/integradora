@@ -14,11 +14,10 @@ class MandatosModelodppreview extends JModelItem {
 
 
 	public function __construct(){
-        $post               = array(
-            'integradoId'       => 'INT',
-            'id'                => 'INT'
-        );
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray($post);
+        $session                      = JFactory::getSession();
+        $post                         = array('id' => 'INT');
+        $this->inputVars 		      = (object) JFactory::getApplication()->input->getArray($post);
+        $this->inputVars->integradoId = $session->get('integradoId',null, 'integrado');
 
 		parent::__construct();
 	}
@@ -28,7 +27,7 @@ class MandatosModelodppreview extends JModelItem {
     }
 
     public function getOrden(){
-        $orden = getFromTimOne::getOrdenesPrestamo(null,$this->inputVars['id']);
+        $orden = getFromTimOne::getOrdenesPrestamo(null,$this->inputVars->id);
         $orden = $orden[0];
 
         $orden->datosMutuo = getFromTimOne::getMutuos(null,$orden->idMutuo);

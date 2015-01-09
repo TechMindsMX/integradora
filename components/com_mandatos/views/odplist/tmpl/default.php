@@ -30,7 +30,7 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach($ordenes as $key => $value){
-                $btnOrden = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odppreview&integradoId='.$this->integradoId.'&id='.$value->id.'">'.JText::_('ODPS_LBL_IR_ORDEN').'</a> ';
+                $btnOrden = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odppreview&id='.$value->id.'">'.JText::_('ODPS_LBL_IR_ORDEN').'</a> ';
                 ?>
                 <tr class="row">
                     <td style="text-align: center; vertical-align: middle;"><?php echo $value->numOrden; ?></td>
@@ -46,4 +46,4 @@ if(is_null($ordenes) || empty($ordenes)){
     </table>
 </div>
 
-<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuoslist&integradoId=<?php echo $this->integradoId; ?>">Listado de Mutuos</a>
+<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuoslist">Listado de Mutuos</a>
