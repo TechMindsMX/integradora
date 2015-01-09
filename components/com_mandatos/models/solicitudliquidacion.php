@@ -17,9 +17,8 @@ class MandatosModelSolicitudliquidacion extends JModelItem
 
     function __construct()
     {
-        $filtro = array('integradoId' => 'NUMBER');
-        $data = JFactory::getApplication()->input->getArray($filtro);
-        $this->integradoId = $data['integradoId'];
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         parent::__construct();
     }

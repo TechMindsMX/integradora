@@ -11,17 +11,18 @@ jimport('integradora.gettimone');
  * @property mixed orders
  */
 class MandatosViewTxsinmandatoform extends JViewLegacy {
-	
+
+	protected $integradoId;
+
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
-        $post               = array('txnum'=>'INT', 'integradoId' => 'INT');
+        $post               = array('txnum'=>'INT');
         $data				= $app->input->getArray($post);
 
 		$sesion             = JFactory::getSession();
-		$integradoId        = $sesion->get('integradoId', null, 'integrado');
-		$integradoId	    = isset($integradoId) ? $integradoId : $data['integradoId'];
+		$this->integradoId        = $sesion->get('integradoId', null, 'integrado');
 
-		$integ = new IntegradoSimple($integradoId);
+		$integ = new IntegradoSimple($this->integradoId);
 		$this->integrado->displayName = $integ->getDisplayName();
 
 		// get the model
@@ -29,7 +30,7 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 			$model = $this->getModel();
 			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_FORM_TITLE';
 			$this->data     = $model->getItem($data['txnum']);
-			$this->orders   = $model->getOrders($integradoId);
+			$this->orders   = $model->getOrders($this->integradoId);
 		}
 
 		// Check for errors.
@@ -41,10 +42,10 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		// Verifica los permisos de edición y autorización
-		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
+		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
 		if (!$this->permisos['canEdit']) {
-			$url = 'index.php?option=com_mandatos&view=txsinmandatolist&integradoId='.$integradoId;
+			$url = 'index.php?option=com_mandatos&view=txsinmandatolist&';
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
 			$app->redirect(JRoute::_($url), $msg, 'error');
 		}

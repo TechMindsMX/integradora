@@ -14,12 +14,13 @@ jimport('integradora.gettimone');
 class MandatosModelSubproyectosform extends JModelItem {
 	
 	protected $dataModelo;
-	
+	protected $integradoId;
+
 	public function getProyectos(){
-		$app       		= JFactory::getApplication();
-        $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
-        $data			= $app->input->getArray($post);
-		$allProjects 	= getFromTimOne::getProyects($data['integradoId']);
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$allProjects 	= getFromTimOne::getProyects($this->integradoId);
 		
 		foreach ($allProjects as $key => $value) {
 			if( $value->parentId == 0){
@@ -33,7 +34,7 @@ class MandatosModelSubproyectosform extends JModelItem {
 	public function getProyecto(){
 		$currUser	= JFactory::getUser();
         $app       		= JFactory::getApplication();
-        $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
+        $post           = array('id_proyecto'=>'INT');
         $data			= $app->input->getArray($post);
 
         if($currUser->guest){

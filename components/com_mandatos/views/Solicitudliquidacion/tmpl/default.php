@@ -83,7 +83,7 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
     }
 
     function cancel() {
-        window.location = 'index.php?option_com_mandatos&view=solicitudliquidacion&integradoId=<?php echo $this->integradoId; ?>';
+        window.location = 'index.php?option_com_mandatos&view=solicitudliquidacion';
     }
     jQuery(document).ready(function(){
         jQuery('#monto').on('change', validaMonto);

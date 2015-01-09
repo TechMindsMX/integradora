@@ -21,7 +21,11 @@ class MandatosController extends JControllerLegacy {
         $this->currUser	 	= JFactory::getUser();
         $this->input_data	= $this->app->input;
         $data		 		= $this->input_data->getArray();
-        $integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+        $integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $this->integradoId;
 
         // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
 
@@ -36,7 +40,7 @@ class MandatosController extends JControllerLegacy {
     function editarproyecto(){
         $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
         $data 			= $this->input_data->getArray($post);
-        $proyectos 		= getFromTimOne::getProyects($data['integradoId']);
+        $proyectos 		= getFromTimOne::getProyects($this->integradoId);
         $count          = 0;
 
         if($this->currUser->guest){
@@ -46,9 +50,9 @@ class MandatosController extends JControllerLegacy {
         foreach ($proyectos as $key => $value) {
             if($data['id_proyecto'] == $value->id_proyecto){
                 if($value->parentId == 0){
-                    $this->app->redirect('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']);
+                    $this->app->redirect('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto']);
                 }else{
-                    $this->app->redirect('index.php?option=com_mandatos&view=subproyectosform&id_proyecto='.$data['id_proyecto'].'&integradoId='.$data['integradoId']);
+                    $this->app->redirect('index.php?option=com_mandatos&view=subproyectosform&id_proyecto='.$data['id_proyecto']);
                 }
             }else{
                 $count++;
@@ -56,15 +60,15 @@ class MandatosController extends JControllerLegacy {
         }
 
         if( $count == count($proyectos) ){
-            $this->app->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
+            $this->app->redirect('index.php?option=com_mandatos&view=proyectoslist');
         }
         exit;
     }
 
     function editarproducto(){
-        $post           = array('integradoId'=>'INT', 'id_producto'=>'INT');
+        $post           = array('id_producto'=>'INT');
         $data 			= $this->input_data->getArray($post);
-        $productos 		= getFromTimOne::getProducts($data['integradoId']);
+        $productos 		= getFromTimOne::getProducts($this->integradoId);
         $count          = 0;
 
         if($this->currUser->guest){
@@ -73,14 +77,14 @@ class MandatosController extends JControllerLegacy {
 
         foreach ($productos as $key => $value) {
             if($data['id_producto'] == $value->id_producto){
-                $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productosform&id_producto='.$data['id_producto'].'&integradoId='.$data['integradoId']));
+                $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productosform&id_producto='.$data['id_producto']));
             }else{
                 $count++;
             }
         }
 
         if( $count == count($productos) ){
-            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']));
+            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=productoslist'));
         }
         exit;
     }
@@ -142,14 +146,14 @@ class MandatosController extends JControllerLegacy {
             'db_banco_cuenta' => 'STRING',
             'db_banco_sucursal' => 'STRING',
             'db_banco_clabe' => 'STRING',
-            'integradoId' => 'STRING');
+            );
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integrado_id').' = '.$data['integradoId'].' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
         $existe     = getFromTimOne::selectDB($table,$where);
 
         $columnas[] = 'integrado_id';
-        $valores[]	= $data['integradoId'];
+        $valores[]	= $this->integradoId;
 
         $datosQuery['columnas']  = $columnas;
         $datosQuery['valores']   = $valores;
@@ -183,11 +187,10 @@ class MandatosController extends JControllerLegacy {
     function deleteBanco(){
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
-        $post       = array('datosBan_id' => 'INT',
-            'integradoId' => 'STRING');
+        $post       = array('datosBan_id' => 'INT');
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integrado_id').' = '.$data['integradoId'].' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
@@ -202,9 +205,10 @@ class MandatosController extends JControllerLegacy {
     }
 
     function saveProyects(){
-        $campos      = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
+        $campos      = array('parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
         $data        = $this->input_data->getArray($campos);
         $id_proyecto = $data['id_proyecto'];
+        $data['integradoId'] = $this->integradoId;
 
         $save        = new sendToTimOne();
 
@@ -215,8 +219,8 @@ class MandatosController extends JControllerLegacy {
             $save->updateProject($data,$id_proyecto);
         }
 
-        if(isset($data['integradoId'])){
-            $integrado              = new IntegradoSimple($data['integradoId']);
+        if(isset($this->integradoId)){
+            $integrado              = new IntegradoSimple($this->integradoId);
 
             $data['corrUser']       = $this->currUser->name;
             $data['titulo']         = 'IECCE- Alta de proyecto.';
@@ -228,7 +232,7 @@ class MandatosController extends JControllerLegacy {
             $info = $send->notification($data);
             var_dump('<h3>'.$info.'</h3>');
         }
-        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist');
     }
 
     function saveProducts(){
@@ -253,13 +257,13 @@ class MandatosController extends JControllerLegacy {
         }else{
             $save->updateProduct($data, $id_producto);
         }
-        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist&integradoId='.$data['integradoId']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
     }
 
     function  cargaProducto(){
         $this->document->setMimeEncoding('application/json');
         $data = $this->input_data->getArray();
-        $productos = getFromTimOne::getProducts($data['integradoId']);
+        $productos = getFromTimOne::getProducts($this->integradoId);
         foreach ($productos as $key => $val) {
             if($data['id'] == $val->id){
                 $producto = $val;
@@ -275,7 +279,6 @@ class MandatosController extends JControllerLegacy {
         $datosQuery = array();
         $arrayPost  = array(
             'idCliPro'                      => 'INT',
-            'integradoId'                   => 'INT',
             'co_email1'                     => 'STRING',
             'co_email2'                     => 'STRING',
             'co_email3'                     => 'STRING',
@@ -331,11 +334,12 @@ class MandatosController extends JControllerLegacy {
 
         $tab        = 'tipo_alta';
         $data       = $this->input_data->getArray($arrayPost);
+        $data['integradoId'] = $this->integradoId;
         $idCliPro   = $data['idCliPro'];
         $datosQuery['setUpdate'] = array();
 
         // verificación que no sea el mismo integrado
-        $currentIntegrado = new IntegradoSimple($data['integradoId']);
+        $currentIntegrado = new IntegradoSimple($this->integradoId);
 
         if($idCliPro == 0){
             $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
@@ -345,11 +349,11 @@ class MandatosController extends JControllerLegacy {
         switch($data['tab']){
             case 'tipoAlta':
                 $table 		= 'integrado_clientes_proveedor';
-                $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$data['integradoId'];
+                $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
                 $existe     = getFromTimOne::selectDB($table,$where);
 
                 $columnas[] = 'integrado_id';
-                $valores[]	= $data['integradoId'];
+                $valores[]	= $this->integradoId;
                 $columnas[] = 'integradoIdCliente';
                 $valores[]	= $idCliPro;
 
@@ -501,10 +505,10 @@ class MandatosController extends JControllerLegacy {
 
         $respuesta = array();
         $db     = JFactory::getDbo();
-        $campos = array('integradoId'=>'INT','productName'=>'STRING');
+        $campos = array('productName'=>'STRING');
         $data   = $this->input_data->getArray($campos);
 
-        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$data['integradoId'];
+        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$this->integradoId;
 
         $producto = getFromTimOne::selectDB('integrado_products',$where);
 
@@ -539,7 +543,7 @@ class MandatosController extends JControllerLegacy {
         $delete = new sendToTimOne();
 
         $delete->deleteDB('ordenes_venta','id = '.$idOdv);
-        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odvlist&integradoId='.$data['integradoId']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odvlist');
     }
 
     public function disable(){

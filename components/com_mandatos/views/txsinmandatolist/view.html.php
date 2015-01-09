@@ -6,6 +6,7 @@ jimport('joomla.application.component.view');
 class MandatosViewTxsinmandatolist extends JViewLegacy {
 
 	protected $txs;
+	protected $integradoId;
 
 	function display($tpl = null){
 		$this->txs 		    = $this->get('items');

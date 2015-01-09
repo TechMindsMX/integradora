@@ -7,9 +7,6 @@
  */
 defined('_JEXEC') or die('Restricted access');
 
-// TODO: Ingresar el dato en el modelo
-$integradoId = JFactory::getApplication()->input->get('integradoId');
-
 $accion = 'index.php?com_mandatos&view=txsinmandatoform&task=asociatxmandato.save';
 $cancelUrl = 'index.php?com_mandatos&view=txsinmandatolist';
 
@@ -46,7 +43,7 @@ echo $this->loadTemplate('tx_head');
 	<input type="hidden" name="numOrden" value="<?php echo $this->orders->id; ?>">
 	<input type="hidden" name="orderType" value="<?php echo $this->orders->orderType; ?>">
 	<input type="hidden" name="idTx" value="<?php echo $this->data[0]->id; ?>">
-	<input type="hidden" name="integradoId" value="<?php echo $integradoId; ?>">
+	<input type="hidden" name="integradoId" value="<?php echo $this->integradoId; ?>">
 	<?php echo JHtml::_('form.token'); ?>
 
 	<div class="form-actions">

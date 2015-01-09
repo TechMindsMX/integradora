@@ -9,15 +9,20 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllersolicitudliquidacion extends JControllerAdmin {
 
+    protected $integradoId;
+
     function saveform() {
         $document       = JFactory::getDocument();
         $this->app 	    = JFactory::getApplication();
         $parametros     = array(
             'saldo'       => 'FLOAT',
-            'integradoId' => 'INT',
             'monto'       => 'FLOAT'
         );
         $data           = $this->app->input->getArray($parametros);
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
         $validacion     = new validador();
         $diccionario    = array('integradoId'   => array('tipo'=>'number', 'length' => '1'),
             'monto'         => array('tipo'=>'float', 'length' => '15'),
@@ -32,7 +37,7 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
             }
         }
         $save = new sendToTimOne();
-        $save->sendSolicitudLiquidacionTIMONE($data['monto'], $data['integradoId']);
+        $save->sendSolicitudLiquidacionTIMONE($data['monto'], $this->integradoId);
 
         $sesion = JFactory::getSession();
         $nuevoSaldo = $data['saldo'] - $data['monto'];
