@@ -16,8 +16,8 @@ $orden = $this->orden;
     <div class="clearfix" id="logo">
         <div class="span5"><img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" /></div>
         <div class="span5">
-            <div class="row"><h3 class="span2 text-right" style="width: 40%;">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $orden->numOrden; ?></h3></div>
             <div class="row"><h3 class="span2 text-right" style="width: 40%;">No. Mutuo</h3><h3 class="span2 bordes-box text-center"><?php echo $orden->idMutuo; ?></h3></div>
+            <div class="row"><h3 class="span2 text-right" style="width: 40%;">No. Orden</h3><h3 class="span2 bordes-box text-center"><?php echo $orden->numOrden; ?></h3></div>
         </div>
     </div>
 
@@ -25,7 +25,7 @@ $orden = $this->orden;
 
     <div>
         <div class="span6">Fecha de Elaboración: <strong><?php echo date('d-m-Y', $orden->fecha_elaboracion) ?></strong></div>
-        <div class="span6">Fecha de depósito: <strong><?php echo $orden->fecha_deposito; ?></strong></div>
+        <div class="span6">Fecha de depósito: <strong><?php echo date('d-m-Y',$orden->fecha_deposito); ?></strong></div>
     </div>
 
     <div>

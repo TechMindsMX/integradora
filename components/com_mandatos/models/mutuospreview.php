@@ -14,12 +14,10 @@ class MandatosModelMutuospreview extends JModelItem {
 
 
 	public function __construct(){
-        $post               = array(
-            'integradoId'       => 'INT',
-            'idMutuo'           => 'INT'
-        );
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray($post);
-
+        $session                      = JFactory::getSession();
+        $post                         = array('idMutuo'=> 'INT');
+        $this->inputVars 		      = (object)JFactory::getApplication()->input->getArray($post);
+        $this->inputVars->integradoId = $session->get('integradoId', null, 'integrado');
 
 		parent::__construct();
 	}
@@ -29,7 +27,7 @@ class MandatosModelMutuospreview extends JModelItem {
     }
 
     public function getMutuo(){
-        $data = getFromTimOne::getMutuos(null,$this->inputVars['idMutuo']);
+        $data = getFromTimOne::getMutuos(null,$this->inputVars->idMutuo);
         $tipos = getFromTimOne::getTiposPago();
         $integradoAcredor = new stdClass();
         $integradoDeudor  = new stdClass();
@@ -67,7 +65,7 @@ class MandatosModelMutuospreview extends JModelItem {
 	}
 
     public function getIntegrado()	{
-        return new IntegradoSimple($this->inputVars['integradoId']);
+        return new IntegradoSimple($this->inputVars->integradoId);
     }
 }
 

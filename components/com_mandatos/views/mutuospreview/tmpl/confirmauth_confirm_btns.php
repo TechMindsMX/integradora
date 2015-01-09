@@ -1,14 +1,14 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-$returnUrl = JRoute::_('index.php?option=com_mandatos&view=mutuoslist&integradoId='.$this->integradoId);
+$returnUrl = JRoute::_('index.php?option=com_mandatos&view=mutuoslist');
 ?>
 
 <legend class="container botones clearfix form-actions">
     <?php
     $status = array(1,3);
     if($this->permisos['canAuth'] && in_array($this->mutuo->status,$status) ):
-        $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&task=mutuospreview.authorize&integradoId='.$this->integradoId.'&idOrden='.$this->mutuo->id);
+        $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=mutuospreview&task=mutuospreview.authorize.&idOrden='.$this->mutuo->id);
         ?>
         <p class="text-warning">
 		        <span>

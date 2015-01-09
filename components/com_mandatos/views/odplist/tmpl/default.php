@@ -34,7 +34,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 ?>
                 <tr class="row">
                     <td style="text-align: center; vertical-align: middle;"><?php echo $value->numOrden; ?></td>
-                    <td style="text-align: center; vertical-align: middle;"><?php echo $value->fecha_deposito; ?></td>
+                    <td style="text-align: center; vertical-align: middle;"><?php echo date('d-m-Y',$value->fecha_deposito); ?></td>
                     <td style="text-align: right; vertical-align: middle;">$<?php echo number_format($value->capital,2); ?></td>
                     <td style="text-align: center; vertical-align: middle;"><?php echo $btnOrden; ?></td>
                 </tr>

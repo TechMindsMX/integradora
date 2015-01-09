@@ -95,7 +95,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td>$<?php echo number_format($value->totalAmount,2); ?></td>
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
-            <td><?php echo $value->duracion; ?> años</td>
+            <td><?php echo round($value->duracion,2); ?> años</td>
             <td><?php echo $edit; ?></td>
             <?php echo $odp; ?>
         </tr>
