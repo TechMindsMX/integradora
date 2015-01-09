@@ -8,6 +8,7 @@ class MandatosViewSolicitudliquidacion extends JViewLegacy {
         protected $integradoId;
 
         function display($tpl = null){
+
                 $session            = JFactory::getSession();
                 $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
