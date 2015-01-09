@@ -10,25 +10,25 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 
 	protected $txs;
 	protected $orders;
+	protected $integradoId;
 
 	function __construct() {
-		$this->vars = $this->getVars();
+		$this->vars = JFactory::getApplication()->input->getArray();
+
+		$sesion             = JFactory::getSession();
+		$this->integradoId  = $sesion->get('integradoId', null, 'integrado');
 
 		parent::__construct();
 	}
 
 	public function getItem( $idTX ){
-		$integradoId = $this->getIntegradoId();
-
-		$this->txs = getFromTimOne::getTxIntegradoSinMandato($integradoId, $idTX);
+		$this->txs = getFromTimOne::getTxIntegradoSinMandato($this->integradoId, $idTX);
 
 		return $this->txs;
 	}
 
 	public function getOrders() {
-		$integradoId = $this->getIntegradoId();
-
-		$this->orders = getFromTimOne::getOrdersCxP($integradoId);
+		$this->orders = getFromTimOne::getOrdersCxP($this->integradoId);
 
 		if(isset($this->vars['numOrden']) && isset($this->vars['orderType']) && JSession::checkToken( 'get' )) {
 			$this->orders = $this->getOrderByIdAndType($this->orders, $this->vars['numOrden'], $this->vars['orderType']);
@@ -49,18 +49,6 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 		}
 
 		return $order;
-	}
-
-	private function getIntegradoId() {
-		$sesion             = JFactory::getSession();
-		$integradoId        = $sesion->get('integradoId', null, 'integrado');
-		$integradoId	    = isset($integradoId) ? $integradoId : $this->vars['integradoId'];
-
-		return $integradoId;
-	}
-
-	private function getVars( ){
-		return JFactory::getApplication()->input->getArray();
 	}
 
 }

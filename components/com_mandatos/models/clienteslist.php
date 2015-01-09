@@ -11,12 +11,11 @@ jimport('integradora.catalogos');
  * Modelo de datos para Listado de los clientes dados de alta para un integrado
  */
 class MandatosModelClienteslist extends JModelItem {
+
 	protected $dataModelo;
 	
-	public function getclientes($integradoId = null){
-		$data 		 = JFactory::getApplication()->input->getArray();
-		$integradoId = $data['integradoId'];
-		
+	public function getClientes( $integradoId ){
+
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = getFromTimOne::getClientes($integradoId);
 		}

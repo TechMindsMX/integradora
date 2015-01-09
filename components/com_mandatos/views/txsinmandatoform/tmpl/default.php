@@ -27,9 +27,9 @@ $selected 	= '';
 
 	<?php
 
-	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx, $this->data[0]->integradoId);
+	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx);
 
-	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx, $this->data[0]->integradoId);
+	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx);
 
 ?>
 
@@ -39,52 +39,54 @@ $selected 	= '';
 
 
 <?php
-function showTableOrders($orderArray, $tableTitle, $tx, $integId){
-	?>
-	<h4><?php echo JText::_($tableTitle); ?></h4>
+function showTableOrders($orderArray, $tableTitle, $tx){
+
+	$html = '<h4>'. JText::_($tableTitle) .'</h4>
 	<div class="table-responsive">
 		<table id="myTable" class="table table-bordered tablesorter tableOrders">
 
 			<thead>
 			<tr>
-				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?></span> </th>
-				<th><span class="etiqueta"><?php echo JText::_('LBL_PAYMENT_DATE'); ?> </span> </th>
-				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT'); ?> </span> </th>
-				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?> </span> </th>
-				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?> </span> </th>
-				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
-				<th style="width: 20%;"><span class="etiqueta"><?php echo JText::_(''); ?> </span> </th>
+				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN') .'</span> </th>
+				<th><span class="etiqueta">'. JText::_('LBL_PAYMENT_DATE') .'</span> </th>
+				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_LIST_TX_AMOUNT') .' </span> </th>
+				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN') .'</span> </th>
+				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ODC_PAYMENTFORM') .' </span> </th>
+				<th><span class="etiqueta">'. JText::_('LBL_ORDER_STATUS') .'</span> </th>
+				<th style="width: 20%;"><span class="etiqueta">'. JText::_('') .'</span> </th>
 				<th>&nbsp;</th>
 			</tr>
 			</thead>
 			<tbody>
-			<?php
+			';
 			if( !is_null($orderArray) ){
 				foreach ($orderArray as $key => $value) {
 
 					$btn_asoociar = JText::_('COM_MANDATOS_ORDERS_MONTO_SUPERIOR_A_TX');
 
 					if($tx->amount > ($value->totalAmount - $value->partialPaymentsTotal)) {
-						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType.'&integradoId='.$integId);
-						$btn_asoociar = '<a class="btn btn-success" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR');
+						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType);
+						$btn_asoociar = '<a class="btn btn-success" id="asociar" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 					}
 
-					echo '<tr class="row_'.$value->id.'">';
-					echo '	<td>'.$value->createdDate.'</td>';
-					echo '	<td>'.$value->paymentDate.'</td>';
-					echo '	<td>$'.number_format($value->totalAmount,2).'</td>';
-					echo '	<td class="margen-fila" >'.$value->numOrden.'</td>';
-					echo '	<td>'.$value->paymentMethod->name.'</td>';
-					echo '	<td>'.$value->status->name.'</td>';
-					echo '	<td>'.$btn_asoociar.'</td>';
-					echo '</tr>';
+					$html .= '<tr class="row_'.$value->id.'">';
+					$html .= '	<td>'.$value->createdDate.'</td>';
+					$html .= '	<td>'.$value->paymentDate.'</td>';
+					$html .= '	<td>$'.number_format($value->totalAmount,2).'</td>';
+					$html .= '	<td class="margen-fila" >'.$value->numOrden.'</td>';
+					$html .= '	<td>'.$value->paymentMethod->name.'</td>';
+					$html .= '	<td>'.$value->status->name.'</td>';
+					$html .= '	<td>'.$btn_asoociar.'</td>';
+					$html .= '</tr>';
 				}
 			}else{
 				JFactory::getApplication()->enqueueMessage(JText::_('COM_MANDATOS_LIST_TX_NO_TXLIST'));
 			}
-			?>
-			</tbody>
+
+	$html = '</tbody>
 		</table>
 	</div>
-<?php
+	';
+
+	return $html;
 }

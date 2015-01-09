@@ -13,11 +13,7 @@ jimport('integradora.catalogos');
 class MandatosModelFacturalist extends JModelItem {
 	protected $dataModelo;
 
-	public function getFacturas($integradoId = null){
-
-		$data 		 = JFactory::getApplication()->input->getArray();
-
-		$integradoId = $data['integradoId'];
+	public function getFacturas( $integradoId = null ){
 
 		$listado = getFromTimOne::getFacturasVenta($integradoId);
 

@@ -119,22 +119,6 @@ class servicesUrls
 		$this->disable->type = 'DELETE';
 	}
 
-	public function setProject () {
-		$this->list->url = 'users/{userId}/projects';
-		$this->create->url = 'users/{userId}/projects';
-		$this->details->url = 'users/{userId}/projects/{id}';
-		$this->update->url = 'users/{userId}/projects/{id}';
-		$this->disable->url = 'users/{userId}/projects/{id}';
-	}
-
-	public function setProduct () {
-		$this->list->url = 'users/{userId}/products';
-		$this->create->url = 'users/{userId}/products';
-		$this->details->url = 'users/{userId}/products/{id}';
-		$this->update->url = 'users/{userId}/products/{id}';
-		$this->disable->url = 'users/{userId}/products/{id}';
-	}
-
 	public function setUser () {
 		$this->list->url = 'users';
 		$this->create->url = 'users';
@@ -143,13 +127,6 @@ class servicesUrls
 		$this->disable->url = 'users/{id}';
 	}
 
-	public function setComisions () {
-		$this->list->url = 'users';
-		$this->create->url = 'users/create';
-		$this->details->url = 'users/{id}';
-		$this->update->url = 'users/{id}';
-		$this->disable->url = 'users/{id}';
-	}
 
 }
 

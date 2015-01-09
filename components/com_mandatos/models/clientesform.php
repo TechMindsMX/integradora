@@ -10,13 +10,16 @@ class MandatosModelClientesform extends JModelItem {
 	
 	protected $dataModelo;
 
-    public function getCliente(){
+    public function getCliente( $integradoId ){
         $app			= JFactory::getApplication();
         $currUser		= JFactory::getUser();
         $input   		= JFactory::getApplication()->input;
-        $post           = array('integradoId'=>'INT', 'idCliPro' => 'INT');
+        $post           = array( 'idCliPro' => 'INT');
         $data			= $input->getArray($post);
-        $integradoId    = $data['integradoId'];
+
+        $sesion             = JFactory::getSession();
+        $integradoId        = $sesion->get('integradoId', null, 'integrado');
+
         $idCliPro       = $data['idCliPro'];
         $return         = '';
 

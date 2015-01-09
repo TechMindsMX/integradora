@@ -7,8 +7,8 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-$btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODV_DESCRIPTION').'</a>';
-$btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').JText::_('ODD_DESCRIPTION').'</a>';
+$btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').'">'.JText::_('ODV_DESCRIPTION').'</a>';
+$btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').'">'.JText::_('ODD_DESCRIPTION').'</a>';
 
 ?>
 
@@ -30,7 +30,7 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 		<?php
 		if( !is_null($this->txs) ){
 			foreach ($this->txs as $key => $value) {
-				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandatoform&txnum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
+				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandatoform&txnum='.$value->id.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 
 				echo '<tr class="row_'.$value->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->referencia.'</td>';
@@ -49,8 +49,8 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 </div>
 
 <div style="margin-top: 20px;">
-	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
-	<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
+	<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>">
+		<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 	</a>
 </div>
 

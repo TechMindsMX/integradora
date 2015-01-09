@@ -11,7 +11,7 @@ defined('_JEXEC') or die('Restricted access');
 $integradoId = JFactory::getApplication()->input->get('integradoId');
 
 $accion = 'index.php?com_mandatos&view=txsinmandatoform&task=asociatxmandato.save';
-$cancelUrl = 'index.php?com_mandatos&view=txsinmandatolist&integradoId='.$integradoId;
+$cancelUrl = 'index.php?com_mandatos&view=txsinmandatolist';
 
 
 //var_dump($this);exit;
