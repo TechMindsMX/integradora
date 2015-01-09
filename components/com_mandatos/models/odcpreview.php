@@ -16,7 +16,10 @@ class MandatosModelOdcpreview extends JModelItem {
 
     public function __construct()
     {
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray();
+        $this->inputVars 		 = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         parent::__construct();
     }
@@ -24,7 +27,7 @@ class MandatosModelOdcpreview extends JModelItem {
     public function getOrdenes(){
 
         if (!isset($odcs)) {
-            $odc = getFromTimOne::getOrdenesCompra($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+            $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->inputVars['idOrden']);
         }
 
         $this->odc = $odc[0];
@@ -41,7 +44,7 @@ class MandatosModelOdcpreview extends JModelItem {
 
 
     public function getIntegrado()	{
-        return new IntegradoSimple($this->inputVars['integradoId']);
+        return new IntegradoSimple($this->integradoId);
 	    }
 
     public function getDataFactura($orden){

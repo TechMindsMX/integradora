@@ -1,13 +1,13 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odclist&integradoId=' . $this->integradoId);
+$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odclist');
 ?>
 
 <legend class="container botones clearfix form-actions">
 	<?php
 	if ($this->permisos['canAuth'] && $this->odc->status->id === 0):
-		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=odcpreview.authorize&integradoId=' . $this->integradoId . '&idOrden=' . $this->odc->id);
+		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odcpreview&task=odcpreview.authorize&idOrden=' . $this->odc->id);
 		?>
 		<p class="text-warning">
 		        <span>

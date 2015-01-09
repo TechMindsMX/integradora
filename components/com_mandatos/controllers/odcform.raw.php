@@ -11,7 +11,6 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
         $post = array('idOrden'  => 'INT',
-                'integradoId'    => 'INT',
                 'numOrden'       => 'INT',
                 'proyecto'       => 'STRING',
                 'proveedor'      => 'STRING',
@@ -22,6 +21,9 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 'observaciones'  => 'STRING');
 
         $this->parametros   = $this->inputVars->getArray($post);
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         parent::__construct();
     }
@@ -36,7 +38,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $datos['paymentDate'] = $date->getTimestamp();
 
-        $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $datos['integradoId']);
+        $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -49,7 +51,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         if( $id === 0 ) {
             unset($datos['idOrden']);
             $datos['createdDate'] = time();
-            $datos['numOrden'] = $save->getNextOrderNumber('odc', $datos['integradoId']);
+            $datos['numOrden'] = $save->getNextOrderNumber('odc', $this->integradoId);
 
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
@@ -65,7 +67,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
 
             $respuesta = array(
-                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&integradoId=' . $datos['integradoId'] . '&idOrden=' . $id .'&success=true',
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
                 'redireccion' => true
             );
         }else{

@@ -85,7 +85,7 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
         }
 
         function agregaProveedor(){
-            window.location = 'index.php?option=com_mandatos&view=clientesform&integradoId=1';
+            window.location = 'index.php?option=com_mandatos&view=clientesform';
         }
     </script>
 
@@ -95,7 +95,7 @@ if(!isset($this->datos['confirmacion'])){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
-    <form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&integradoId=1&confirmacion=1') ?>" role="form" enctype="multipart/form-data">
+    <form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&confirmacion=1') ?>" role="form" enctype="multipart/form-data">
         <input type="hidden" name="integradoId" id="integradiId" value="<?php echo $this->integradoId; ?>" />
         <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $datos->id; ?>" />
