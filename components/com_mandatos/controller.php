@@ -7,6 +7,8 @@ jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.classDB');
+jimport('integradora.notifications');
+
 
 
 class MandatosController extends JControllerLegacy {
@@ -203,16 +205,29 @@ class MandatosController extends JControllerLegacy {
         $campos      = array('integradoId'=>'INT', 'parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
         $data        = $this->input_data->getArray($campos);
         $id_proyecto = $data['id_proyecto'];
+
         $save        = new sendToTimOne();
 
         unset($data['id_proyecto']);
-
         if( $id_proyecto == 0 ){
             $save->saveProject($data);
         }else{
             $save->updateProject($data,$id_proyecto);
         }
 
+        if(isset($data['integradoId'])){
+            $integrado              = new IntegradoSimple($data['integradoId']);
+
+            $data['corrUser']       = $this->currUser->name;
+            $data['titulo']         = 'IECCE- Alta de proyecto.';
+            $data['nameIntegrado']  = $integrado->getDisplayName();
+            $data['body']       = "Estimado ".$data['nameIntegrado']." Por medio de la presente informamos a Usted que dio de alta un nuevo proyecto denominado "
+                                . $data['name']." en la plataforma de IECCE, a través del Usuario ".$data['corrUser']." con fecha ".date('d-m-Y').". En caso de no reconocer esta operación, favor de comunicarse al XXXXXX.";
+
+            $send                   = new Send_email();
+            $info = $send->notification($data);
+            var_dump('<h3>'.$info.'</h3>');
+        }
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist&integradoId='.$data['integradoId']);
     }
 

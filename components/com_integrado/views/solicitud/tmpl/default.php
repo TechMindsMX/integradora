@@ -415,8 +415,8 @@ if(!empty($datos->integrado)){
 			<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" />
 		</div>
 		<div class="form-group">
-			<label for="email"><?php echo JText::_('LBL_CORREO'); ?></label>
-			<input name="dp_email" id="dp_email" type="email" maxlength="100" />
+			<label for="email"><?php echo JText::_('LBL_CORREO'); ?>*</label>
+			<input name="dp_email" id="dp_email" type="email" maxlength="100" required />
 		</div>
 		<div class="form-group">
 			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
