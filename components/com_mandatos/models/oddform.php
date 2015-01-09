@@ -8,7 +8,7 @@ jimport('integradora.rutas');
 class MandatosModelOddform extends JModelItem {
 
     public function getOrden($integradoId = null){
-        $data 		    = JFactory::getApplication()->input->getArray();
+        $data 		    = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
 
         $session = JFactory::getSession();
         $integradoId    = $session->get('integradoId', null, 'integrado');
