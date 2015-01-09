@@ -16,17 +16,8 @@ $integrado 	= $this->integCurrent->integrados[0];
 
 $number2word = new AifLibNumber();
 
-       // $isModal = $app->input->get('print') == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
-        // if( $isModal) {
-                // $href = '"#" onclick="window.print(); return false;"';
-        // } else {
-                // $href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';
-                // $href = "window.open(this.href,'win2','".$href."'); return false;";
-                // $href = '"index.php?option=com_mandatos&view=odrpreview&integradoId='.$params['integradoId'].'&idOrden='.$params['odrnum'].'&tmpl=component&print=1" '.$href;
-        // }
+echo $this->printBtn;
 ?>
-<!--        <a href=--><?php //echo $href; ?><!-- >Click for Printing</a>-->
-
 
 <div id="odr_preview">
 	<div class="clearfix" id="logo">

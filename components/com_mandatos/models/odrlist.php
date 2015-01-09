@@ -14,8 +14,7 @@ class MandatosModelOdrlist extends JModelItem {
     protected $dataModelo;
 
     function __construct(){
-        $this->data 		= JFactory::getApplication()->input->getArray();
-        $this->integradoId  = $this->data['integradoId'];
+
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
 

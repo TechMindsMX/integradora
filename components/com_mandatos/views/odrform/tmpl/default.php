@@ -170,7 +170,7 @@ if(!$this->confirmacion){
 
 	<form id="generaODR">
 		<div class="form-group">
-			<input type="hidden" value="<?php echo $datos['integradoId']; ?>" name="integradoId" />
+			<input type="hidden" value="<?php echo $this->integradoId; ?>" name="integradoId" />
 			<input type="hidden" value="<?php echo $datos['paymentMethod']; ?>" name="paymentMethod" />
 			<input type="hidden" value="<?php echo $datos['paymentDate']; ?>" name="paymentDate" />
 			<input type="hidden" value="<?php echo $datos['totalAmount']; ?>" name="amount" />

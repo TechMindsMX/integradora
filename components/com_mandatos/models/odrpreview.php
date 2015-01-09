@@ -7,19 +7,21 @@ class MandatosModelOdrpreview extends JModelItem {
 
 	public function __construct()
 	{
-		$this->inputVars 		 = JFactory::getApplication()->input->getArray();
+		$this->inputVars 		 = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
 		parent::__construct();
 	}
 
 	public function getOrdenes(){
 
-		$odr = getFromTimOne::getOrdenesRetiro($this->inputVars['integradoId'], $this->inputVars['idOrden']);
+		$odr = getFromTimOne::getOrdenesRetiro($this->integradoId, $this->inputVars['idOrden']);
 		$this->odr = $odr[0];
 
 		// Verifica si la ODR exite para el integrado o redirecciona
 		if (is_null($this->odr)){
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->inputVars['integradoId']), JText::_('ODR_INVALID'), 'error');
+			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODR_INVALID'), 'error');
 		}
 
 		// simulado
@@ -29,7 +31,7 @@ class MandatosModelOdrpreview extends JModelItem {
 	}
 
 	public function getIntegrado()	{
-		return new IntegradoSimple($this->inputVars['integradoId']);
+		return new IntegradoSimple($this->integradoId);
 	}
 
 }

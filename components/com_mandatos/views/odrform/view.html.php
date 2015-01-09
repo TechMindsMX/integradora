@@ -4,14 +4,20 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 
 class MandatosViewOdrform extends JViewLegacy {
-	
-	function display($tpl = null){
+
+    protected $integradoId;
+    protected $permisos;
+
+    function display($tpl = null){
 		$app 				        = JFactory::getApplication();
 		$data				        = $app->input->getArray();
-		$this->integradoId 	        = $data['integradoId'];
-		$this->odr		 	        = $this->get('ordenes');
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+        $this->odr		 	        = $this->get('ordenes');
 		$this->integrado->balance   = $this->get('balance');
-        $this->actionUrl            = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=odrform&integradoId='.$this->integradoId.'&confirmacion=1'):'#';
+        $this->actionUrl            = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1'):'#';
         $this->datos                = $data;
 
         if(isset($data['confirmacion'])){

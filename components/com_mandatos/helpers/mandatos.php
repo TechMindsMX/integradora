@@ -52,7 +52,7 @@ class MandatosHelper {
 		
 		$permisos = Integrado::checkPermisos($viewClass, $user->id, $integradoId);
 		
-		return $permisos;;
+		return $permisos;
 	}
 
 	public static function getPrintButton($url)
