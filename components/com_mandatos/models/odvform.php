@@ -60,7 +60,7 @@ class MandatosModelOdvform extends JModelItem {
         $integrado = new Integrado();
 
         foreach($integrado->integrados as $key => $value){
-            if($value->integrado_id === $this->integradoId){
+            if($value->integrado_id == $this->integradoId){
                 $data = $value;
             }
         }
