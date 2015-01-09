@@ -163,10 +163,17 @@ CHANGE COLUMN `acreedor` `acreedor` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `deudor` `deudor` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(100) NULL DEFAULT NULL ;
---rollback ALTER TABLE `integradb`.`flpmu_ordenes_prestamo`
---rollback CHANGE COLUMN `numOrden` `numOrden` INT(10) NULL ,
---rollback CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(45) NULL ,
---rollback CHANGE COLUMN `acreedor` `acreedor` VARCHAR(45) NULL DEFAULT NULL ,
---rollback CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(45) NULL DEFAULT NULL ,
---rollback CHANGE COLUMN `deudor` `deudor` VARCHAR(45) NULL DEFAULT NULL ,
---rollback CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(45) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `integradb`.`flpmu_ordenes_prestamo` CHANGE COLUMN `numOrden` `numOrden` INT(10) NULL ,CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(45) NULL ,CHANGE COLUMN `acreedor` `acreedor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `deudor` `deudor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(45) NULL DEFAULT NULL ;
+
+--changeset lutek:16
+ALTER TABLE `integradb`.`flpmu_catalog_tipoperiodos`
+ADD COLUMN `multiplicador` INT(11) NULL AFTER `periodosAnio`,
+ADD COLUMN `nombreCiclo` VARCHAR(45) NULL AFTER `multiplicador`;
+UPDATE flpmu_catalog_tipoperiodos SET nombreCiclo = 'M' WHERE idTipo IN (3,4,5,6);
+UPDATE flpmu_catalog_tipoperiodos SET nombreCiclo = 'Y' WHERE idTipo = 7;
+UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 1 WHERE idTipo = 3;
+UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 2 WHERE idTipo = 4;
+UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 3 WHERE idTipo = 5;
+UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 6 WHERE idTipo = 6;
+UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 1 WHERE idTipo = 7;
+--rollback ALTER TABLE `integradb`.`flpmu_catalog_tipoperiodos` DROP COLUMN `nombreCiclo`, DROP COLUMN `multiplicador`;

@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.catalogos');
 
 /**
  * metodo de envio a TimOne
@@ -13,45 +14,47 @@ jimport('integradora.gettimone');
  */
 class MandatosControllerMutuospreview extends JControllerAdmin {
 
-	function authorize() {
-		$post               = array('integradoId' => 'INT', 'idOrden' => 'INT');
-		$this->app 			= JFactory::getApplication();
-		$this->parametros	= $this->app->input->getArray($post);
-		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
-		$this->integradoId = JFactory::getSession()->get('integradoId', null,'integrado');
-		$this->integradoId = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
+    function authorize() {
+        $session                         = JFactory::getSession();
+        $post                            = array('idOrden' => 'INT');
+        $this->app 			             = JFactory::getApplication();
+        $this->parametros	             = $this->app->input->getArray($post);
+        $this->parametros['integradoId'] = $session->get('integradoId', null, 'integrado');
+        $this->permisos                  = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
+        $this->integradoId               = JFactory::getSession()->get('integradoId', null,'integrado');
+        $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
 
-		$redirectUrl ='index.php?option=com_mandatos&view=mutuoslist&integradoId='.$this->integradoId;
+        $redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
 
-		if($this->permisos['canAuth']) {
-			// acciones cuando tiene permisos para autorizar
-			$user = JFactory::getUser();
-			$save = new sendToTimOne();
+        if($this->permisos['canAuth']) {
+            // acciones cuando tiene permisos para autorizar
+            $user = JFactory::getUser();
+            $save = new sendToTimOne();
 
-			$this->parametros['userId']   = (INT)$user->id;
-			$this->parametros['authDate'] = time();
-			unset($this->parametros['integradoId']);
+            $this->parametros['userId']   = (INT)$user->id;
+            $this->parametros['authDate'] = time();
+            unset($this->parametros['integradoId']);
 
             $save->formatData($this->parametros);
 
-			$auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
+            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
 
-			$check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths);
 
-			if($check){
-				$this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
-			}
+            if($check){
+                $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
+            }
 
-			$resultado = $save->insertDB('auth_mutuo');
+            $resultado = $save->insertDB('auth_mutuo');
 
-			if($resultado) {
-				// autorización guardada
-				$statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', '5');
-				if ($statusChange){
-					$this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
-				}
+            if($resultado) {
+                // autorización guardada
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', '5');
+                if ($statusChange){
+                    $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                }
 
-                $odps = $this->generateODP($this->parametros['idOrden'], $this->parametros['userId']);
+                $odps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
                 if($odps){
                     $msgOdps = JText::_('LBL_ODPS_GENERATED');
@@ -61,16 +64,17 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
 
-			}else{
-				$this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
-			}
-		} else {
-			// acciones cuando NO tiene permisos para autorizar
-			$this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
-		}
-	}
+            }else{
+                $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+            }
+        } else {
+            // acciones cuando NO tiene permisos para autorizar
+            $this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
+        }
+    }
 
     function generateODP($idMutuo,$userId){
+        $timezone  = new DateTimeZone('America/Mexico_City');
         $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
         $mutuo     = $mutuos[0];
         $jsontabla = json_decode($mutuo->jsonTabla);
@@ -81,15 +85,28 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         }else{
             $tabla = $jsontabla->amortizacion_cuota_fija;
         }
+        $elemento0 = new stdClass();
+
+        $elemento0->periodo = 0;
+        $elemento0->inicial = $mutuo->totalAmount;
+        $elemento0->cuota = $mutuo->totalAmount;
+        $elemento0->intiva = 0;
+        $elemento0->intereses = 0;
+        $elemento0->iva = 0;
+        $elemento0->acapital = $mutuo->totalAmount;
+        $elemento0->final = 0;
+
+        array_unshift($tabla,$elemento0);
 
         foreach ($tabla as $key => $objeto) {
-            $odp = new stdClass();
-            $fecha = new DateTime();
+            $odp           = new stdClass();
+            $fecha         = new DateTime('now', $timezone);
 
             $odp->idMutuo           = $idMutuo;
-            $odp->numOrden          = $idMutuo.'-'.($key+1);
+            $odp->numOrden          = $idMutuo.'-'.($key);
             $odp->fecha_elaboracion = $fecha->getTimestamp();
-            $odp->fecha_deposito    = 0;
+            $fechaDeposito          = $this->calcFechaDeposito($fecha, $mutuo->paymentPeriod, $key);
+            $odp->fecha_deposito    = $fechaDeposito->getTimestamp();
             $odp->tasa              = $jsontabla->tasa_periodo;
             $odp->tipo_movimiento   = 'Integrado a Integrado';
             $odp->acreedor          = $mutuo->integradoAcredor->nombre;
@@ -117,7 +134,17 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 $resultado = true;
             }
         }
-
         return $resultado;
+    }
+
+    public function calcFechaDeposito($fechaAutorizacionMutuo, $periodoPagos, $orderKey){
+        $catalogos = new Catalogos();
+        $catalogoPeriodos = $catalogos->getTiposPeriodos();
+
+        $strInterval = 'P'.$catalogoPeriodos[$periodoPagos]->multiplicador*$orderKey.$catalogoPeriodos[$periodoPagos]->nombreCiclo;
+        $interval = new DateInterval($strInterval);
+        $fechaAutorizacionMutuo->add($interval);
+
+        return $fechaAutorizacionMutuo;
     }
 }
