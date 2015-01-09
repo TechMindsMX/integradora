@@ -63,8 +63,8 @@ function filtro(){
 
 <div>
 	<div class="col-md-4">
-		<?php $newOdcUrl = jRoute::_('index.php?option=com_mandatos&view=odcform&integradoId='.$this->integradoId); ?>
-		<a class="btn btn-primary" href="<?php echo $newOdcUrl; ?>" /><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_AGREGAR'); ?></a>
+		<?php $newOdcUrl = jRoute::_('index.php?option=com_mandatos&view=odcform'); ?>
+		<a class="btn btn-primary" href="<?php echo $newOdcUrl; ?>" ><?php echo JText::_('COM_MANDATOS_ORDENES_LBL_AGREGAR'); ?></a>
 	</div>
 	
 	<div class="col-md-4">
@@ -93,24 +93,24 @@ function filtro(){
 		<?php
 		if( !is_null($ordenes) ){
 			foreach ($ordenes as $key => $value) {
-				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odcpreview&integradoId='.$this->integradoId.'&idOrden='.$value->id);
+				$url_preview = JRoute::_('index.php?option=com_mandatos&view=odcpreview&idOrden='.$value->id);
 				$preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
-				if ($value->status->id == 0 && $this->permisos['canAuth']){
-					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odcpreview&layout=confirmauth&integradoId='.$this->integradoId.'&idOrden='.$value->id);
+				if ($value->status->id == 1 && $this->permisos['canAuth']){
+					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odcpreview&layout=confirmauth&idOrden='.$value->id);
 					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-					$edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odcform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
-				} elseif ($value->status->id == 0 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
+					$edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odcform&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+				} elseif ($value->status->id == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-					$edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odcform&integradoId='.$this->integradoId.'&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
-				} elseif ($value->status->id == 1) {
+					$edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odcform&idOrden='.$value->id.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
+				} elseif ($value->status->id == 5) {
 					$auth_button = JText::_('LBL_AUTHORIZED');
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} else {
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				}
-				$class = $value->status->id == 0?'':'status1';
+				$class = $value->status->id == 1 ? '' : 'status1';
 				
 				echo '<tr class="type_'.$value->status->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
@@ -130,7 +130,7 @@ function filtro(){
 </div>
 
 	<div style="margin-top: 20px;">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>" >
 			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 		</a>
 	</div>

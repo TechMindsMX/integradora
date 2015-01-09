@@ -8,7 +8,7 @@ class MandatosModelFacturapreview extends JModelItem {
 
 	public function __construct()
 	{
-		$this->inputVars 		 = JFactory::getApplication()->input->getArray(array('facturanum', null, 'INT'));
+		$this->inputVars 		 = JFactory::getApplication()->input->getArray( array('facturanum' => 'INT') );
 
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
@@ -30,7 +30,7 @@ class MandatosModelFacturapreview extends JModelItem {
 
 		// Verifica si la FACTURA exite para el integrado o redirecciona
 		if (is_null($this->factura)){
-			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId), JText::_('FACTURA_INVALID'), 'error');
+			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('FACTURA_INVALID'), 'error');
 		}
 
 		return $this->factura;

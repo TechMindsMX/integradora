@@ -5,6 +5,9 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOdcform extends JViewLegacy {
 
+    protected $integradoId;
+    protected $permisos;
+
     function display($tpl = null){
         $app	            = JFactory::getApplication();
         $post               = array(
@@ -19,8 +22,10 @@ class MandatosViewOdcform extends JViewLegacy {
             'observaciones' => 'STRING'
         );
         $data	            = $app->input->getArray($post);
-        $integradoId        = JFactory::getSession()->get('integradoId', null,'integrado');
-        $this->integradoId	= isset($integradoId)?$integradoId:$data['integradoId'];
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
         $this->proyectos 	= $this->get('proyectos');
         $this->proveedores	= $this->get('providers');
 
@@ -34,7 +39,7 @@ class MandatosViewOdcform extends JViewLegacy {
                 $sesion->set('datos',$objeto, 'misdatos');
                 $sesion->set('msg','Falta el Archivo XML', 'misdatos');
 
-                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&integradoId='.$data['integradoId'].'&idOrden='.$data['idOrden']);
+                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden='.$data['idOrden']);
             }else {
                 $this->dataXML = $this->get('data2xml');
             }

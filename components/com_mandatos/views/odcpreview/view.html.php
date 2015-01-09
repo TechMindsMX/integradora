@@ -5,10 +5,13 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOdcpreview extends JViewLegacy {
 
+    protected $integradoId;
+
     function display($tpl = null){
         $app 				= JFactory::getApplication();
-        $data				= $app->input->getArray();
-        $this->integradoId 	= $data['integradoId'];
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         $this->odc		 	= $this->get('ordenes');
         $this->integCurrent = $this->get('integrado');

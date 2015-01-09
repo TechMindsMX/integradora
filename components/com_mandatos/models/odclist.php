@@ -13,9 +13,7 @@ jimport('integradora.catalogos');
 class MandatosModelOdclist extends JModelItem {
 	protected $dataModelo;
 	
-	public function getOrdenes(){
-		$data 		 = JFactory::getApplication()->input->getArray();
-		$integradoId = $data['integradoId'];
+	public function getOrdenes( $integradoId){
 
 		$listado = getFromTimOne::getOrdenesCompra($integradoId);
 

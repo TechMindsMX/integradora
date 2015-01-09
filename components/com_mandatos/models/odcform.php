@@ -15,10 +15,13 @@ class MandatosModelOdcform extends JModelItem {
     protected $dataModelo;
 
     public function __construct(){
-        $post              = array('integradoId' => 'INT', 'idOrden' => 'INT');
+        $post              = array( 'idOrden' => 'INT');
         $this->inputVars   = JFactory::getApplication()->input->getArray($post);
-        $this->integradoId = $this->inputVars['integradoId'];
         $this->id          = $this->inputVars['idOrden'];
+
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
         parent::__construct();
     }
 
