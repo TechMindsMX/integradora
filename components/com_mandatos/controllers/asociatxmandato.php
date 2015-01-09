@@ -22,12 +22,14 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 
 	public function save( ) {
 		JSession::checkToken() or die( 'Invalid Token' );
-		$post               = array ( 'numOrden' => 'INT', 'orderType' => 'STRING', 'idTx' => 'INT', 'integradoId' => 'INT' );
+		$post               = array ( 'numOrden' => 'INT', 'orderType' => 'STRING', 'idTx' => 'INT' );
 		$this->app          = JFactory::getApplication();
 		$this->vars         = $this->app->input->getArray( $post );
-		$this->integradoId  = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
-		$this->integradoId  = isset( $this->integradoId ) ? $this->integradoId : $this->vars['integradoId'];
-		$redirectUrl = 'index.php?option=com_mandatos&view=txsinmandatolist&integradoId='.$this->integradoId;
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$redirectUrl = 'index.php?option=com_mandatos&view=txsinmandatolist';
 
 		$this->permisos     = MandatosHelper::checkPermisos( __CLASS__, $this->integradoId );
 		if ( !$this->permisos['canAuth'] ) {

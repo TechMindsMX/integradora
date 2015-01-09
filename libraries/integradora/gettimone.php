@@ -3008,4 +3008,20 @@ class datosDeFacturacion {
 
 class UserTimone {
     public $uuid = '913905d70f5546f3ad0e6efc7d344b49';
+    public $name = 'Ricardo Lyon';
+    public $email = 'ricardo.lyon@trama.mx';
+
+//    function __construct( Integrado $user ) {
+//        var_dump($user);exit;
+//
+//        $this->name = $user->name;
+//        $this->email = $user->email;
+//    }
+}
+
+class Cashout {
+    public $uuid = '913905d70f5546f3ad0e6efc7d344b49';
+    public $clabe = '014180566389265712';
+    public $bankCode = 14;
+    public $amount = 10.50;
 }
