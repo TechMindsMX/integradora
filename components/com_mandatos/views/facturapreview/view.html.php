@@ -15,7 +15,9 @@ class MandatosViewFacturapreview extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
-		$this->integradoId 	= $data['integradoId'];
+
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
 		$this->factura		= $this->get('facturas');
 
@@ -31,7 +33,7 @@ class MandatosViewFacturapreview extends JViewLegacy {
 		$this->factura->proveedor   = MandatosHelper::getClientsFromID($this->factura->clientId, $this->integradoId);
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=facturapreview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
+		$url = 'index.php?option=com_mandatos&view=facturapreview&facturanum=' . $data['facturanum'];
 		$this->printBtn = MandatosHelper::getPrintButton($url);
 
 		// Verifica los permisos de edición y autorización

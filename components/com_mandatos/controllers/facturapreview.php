@@ -13,13 +13,15 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 
 	function cancel() {
 		$this->app 			= JFactory::getApplication();
-		$this->parametros	= $this->app->input->getArray();
 
-		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
+		$session            = JFactory::getSession();
+		$integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
+		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
 
 		if($this->permisos['canAuth']) {
 			// acciones cuando tiene permisos para autorizar
-			$this->app->redirect('index.php?option=com_mandatos&view=facturalist&integradoId='.$this->parametros['integradoId'],'aqui enviamos a timone la autorizacion y redireccion con mensaje');
+			$this->app->redirect('index.php?option=com_mandatos&view=facturalist' ,'aqui enviamos a timone la autorizacion y redireccion con mensaje');
 		} else {
 			// acciones cuando NO tiene permisos para autorizar
 			$this->app->redirect(JRoute::_(''), JText::_(''), 'error');

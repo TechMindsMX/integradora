@@ -88,9 +88,9 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 		<?php
 		if( !is_null($facturas) ){
 			foreach ($facturas as $key => $value) {
-				$url_preview = JRoute::_('index.php?option=com_mandatos&view=facturapreview&integradoId='.$this->integradoId.'&facturanum='.$value->id);
+				$url_preview = JRoute::_('index.php?option=com_mandatos&view=facturapreview&facturanum='.$value->id);
 				$preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
-                $btn = '<a class="btn btn-warning" href="index.php?option=com_mandatos&view=facturapreview&layout=confirmcancel&facturanum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_ORDENES_CANCEL_FACT').'</a>';
+                $btn = '<a class="btn btn-warning" href="index.php?option=com_mandatos&view=facturapreview&layout=confirmcancel&facturanum='.$value->id.'">'.JText::_('COM_MANDATOS_ORDENES_CANCEL_FACT').'</a>';
 
 				echo '<tr class="client_'.$value->clientId.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$preview_button.$value->id.'</td>';
@@ -109,7 +109,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 </div>
 
 	<div style="margin-top: 20px;">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&integradoId='.$this->integradoId); ?>" />
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos'); ?>">
 			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 		</a>
 	</div>

@@ -1,13 +1,13 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-$returnUrl = JRoute::_('index.php?option=com_mandatos&view=facturalist&integradoId=' . $this->integradoId);
+$returnUrl = JRoute::_('index.php?option=com_mandatos&view=facturalist');
 ?>
 
 <legend class="container botones clearfix form-actions">
 	<?php
 	if ($this->permisos['canAuth'] && $this->factura->status === 0):
-		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=facturapreview&task=facturapreview.cancel&integradoId=' . $this->integradoId . '&facturanum=' . $this->factura->id);
+		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=facturapreview&task=facturapreview.cancel&facturanum=' . $this->factura->id);
 		?>
 		<p class="text-warning">
 		        <span>
