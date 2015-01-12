@@ -18,7 +18,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         fechaInicial   = jQuery('#startDate').val();
         fechaFinal     = jQuery('#endDate').val();
 
-        window.location = 'index.php?option=com_reportes&view=flujo&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal;
+        window.location = 'index.php?option=com_reportes&view=flujo&startDate='+fechaInicial+'&endDate='+fechaFinal;
     }
 
     jQuery(document).ready(function(){
