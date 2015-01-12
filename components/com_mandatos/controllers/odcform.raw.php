@@ -94,7 +94,16 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
-            $info = $send->notification($data);
+            $send->notification($data);
+
+            if ($send->isError()){
+                $resp = $send->getErrorMsg();
+                $this->app->enqueueMessage($send->getErrorMsg());
+            }else{
+                $resp = 'enviado';
+                $this->app->enqueueMessage('Correos enviados');
+            }
+            var_dump( $resp);exit;
 
         }else{
             $respuesta = array('redireccion' => false);

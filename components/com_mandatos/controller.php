@@ -235,8 +235,10 @@ class MandatosController extends JControllerLegacy {
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
-            $info = $send->notification($data);
+            $send->notification($data);
+
         }
+
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist');
     }
 
@@ -279,7 +281,7 @@ class MandatosController extends JControllerLegacy {
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
-            $info = $send->notification($data);
+            $send->notification($data);
         }
 
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
