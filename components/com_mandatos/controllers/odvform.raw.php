@@ -134,15 +134,22 @@ class MandatosControllerOdvform extends JControllerAdmin {
         /*NOTIFICACIONES 6*/
 
         if($respuesta['success']==true){
+            $contenido = JText::_('NOTIFICACIONES_6');
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
+            $contenido = str_replace('$odvId', '<strong style="color: #000000">'.$data['name'].'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
+            $contenido = str_replace('$monto', '<strong style="color: #000000">$'.$data['monto'].'</strong>',$contenido);
+            $contenido = str_replace('$cliente', '<strong style="color: #000000">$'.$data['cliente'].'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
 
 
             $integrado              = new IntegradoSimple($this->integradoId);
 
             $data['corrUser']       = $this->currUser->name;
-            $data['titulo']         = 'IECCE- Alta de proyecto.';
+            $data['titulo']         = JText::_('TITULO_6');
             $data['nameIntegrado']  = $integrado->getDisplayName();
-            $data['body']       = "Estimado ".$data['nameIntegrado']." Por medio de la presente informamos a Usted que dio de alta un nuevo proyecto denominado "
-                . $data['name']." en la plataforma de IECCE, a través del Usuario ".$data['corrUser']." con fecha ".date('d-m-Y').". En caso de no reconocer esta operación, favor de comunicarse al XXXXXX.";
+            $data['body']           = $contenido;
 
             $send                   = new Send_email();
             $info = $send->notification($data);

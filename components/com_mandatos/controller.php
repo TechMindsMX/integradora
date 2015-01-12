@@ -267,21 +267,18 @@ class MandatosController extends JControllerLegacy {
         }
         if(isset($this->integradoId)){
             $contenido = JText::_('NOTIFICACIONES_4');
-
             $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
             $contenido = str_replace('$producto', '<strong style="color: #000000">'.$data['productName'].'</strong>',$contenido);
             $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-
 
             $integrado              = new IntegradoSimple($this->integradoId);
 
             $data['corrUser']       = $this->currUser->name;
             $data['titulo']         = JText::_('TITULO_4');
             $data['nameIntegrado']  = $integrado->getDisplayName();
-
             $data['body']           = $contenido;
+
             $send                   = new Send_email();
             $info = $send->notification($data);
         }
