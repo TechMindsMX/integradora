@@ -10,7 +10,6 @@ $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
-//var_dump($report);
 ?>
 <script>
     var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
@@ -153,7 +152,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     foreach ($report->txs->odv as $tx) {
         ?>
         <tr class="row">
-            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+            <td><?php echo date('d-m-Y', $tx->data->date); ?></td>
             <td><?php echo $tx->orden->beneficiario; ?></td>
             <td><?php echo @$tx->orden->folio; ?></td>
             <td><?php echo @$tx->orden->proyectName.' '.@$tx->orden->subProyectName;  ?></td>
@@ -185,16 +184,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    foreach ($report->orders->odd as $orden) {
-        foreach ($orden->txs as $tx) {
-            ?>
-            <tr class="row">
-                <td><?php echo date('d-m-Y', $tx->date); ?></td>
-                <td><?php echo $orden->proveedor->corporateName; ?></td>
-                <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
-            </tr>
-        <?php
-        }
+    foreach ($report->txs->odd as $tx) {
+        ?>
+        <tr class="row">
+            <td><?php echo date('d-m-Y', $tx->data->date); ?></td>
+            <td><?php echo $tx->orden->beneficiario; ?></td>
+            <td><div class="text-right">$<?php echo number_format($tx->data->amount,2) ; ?></div></td>
+        </tr>
+    <?php
     }
     ?>
     <tr class="row">
@@ -223,7 +220,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     foreach ($report->txs->odc as $tx) {
         ?>
         <tr class="row">
-            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+            <td><?php echo date('d-m-Y', $tx->data->date); ?></td>
             <td><?php echo $tx->orden->beneficiario; ?></td>
             <td><?php echo @$tx->orden->folio; ?></td>
             <td><?php echo @$tx->orden->proyectName.' '.@$tx->orden->subProyectName;  ?></td>
@@ -257,16 +254,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    foreach ($report->orders->odr as $orden) {
-        foreach ($orden->txs as $tx) {
-            ?>
-            <tr class="row">
-                <td><?php echo date('d-m-Y', $tx->date); ?></td>
-                <td><?php echo $orden->proveedor->corporateName; ?></td>
-                <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
-            </tr>
-        <?php
-        }
+    foreach ($report->txs->odr as $tx) {
+        ?>
+        <tr class="row">
+            <td><?php echo date('d-m-Y', $tx->data->date); ?></td>
+            <td><?php echo $tx->orden->beneficiario; ?></td>
+            <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
+        </tr>
+    <?php
     }
     ?>
     <tr class="row">

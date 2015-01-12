@@ -23,13 +23,11 @@ class ReportesViewFlujo extends JViewLegacy
 	function display($tpl = null)
 	{
 		$sesion = JFactory::getSession();
-		$sesIntegId = $sesion->get('integradoId');
 
-		$vars = $this->input->getArray(array('integradoId' => 'INT', 'startDate' => 'STR', 'endDate' => 'STR'));
-		$integId = isset($sesIntegId) ? $sesIntegId : $vars['integradoId'];
+		$vars = $this->input->getArray(array('startDate' => 'STR', 'endDate' => 'STR'));
+		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
 
 		$model = $this->getModel();
-
 		// genera el modelo de un reporte nuevo
 		$this->report = $model->generateFlujo($vars);
 
@@ -44,16 +42,14 @@ class ReportesViewFlujo extends JViewLegacy
 		// verifica el token
 //		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
-		$integrado = new IntegradoSimple($integId);
+		$integrado = new IntegradoSimple($vars['integradoId']);
 		$this->integrado = $integrado->integrados[0];
 		$this->integrado->displayName = $integrado->getDisplayName();
-
-		$this->integrado->address = $this->addressFromatted($integId);
 
 		// boton de impresion
 		$this->loadHelper('Reportes');
 
-		$url            = 'index.php?com_reportes&view=flujo&integradoId='.$integId.'&inicio='.$this->report->period->fechaInicio->format('d-m-Y').'&fechaFin='.$this->report->period->fechaFin->format('d-m-Y').'&'.JSession::getFormToken(true).'=1';
+		$url            = 'index.php?com_reportes&view=flujo&inicio='.$this->report->period->fechaInicio->format('d-m-Y').'&fechaFin='.$this->report->period->fechaFin->format('d-m-Y').'&'.JSession::getFormToken(true).'=1';
 		$this->printBtn = ReportesHelper::getPrintBtn($url);
 
 		// Check for errors.
@@ -67,27 +63,11 @@ class ReportesViewFlujo extends JViewLegacy
 		parent::display($tpl);
 	}
 
-	private function addressFromatted() {
-		// TODO: Llevar este metodo a IntegradoSimple en el refactor
-		$sesion = JFactory::getSession();
-		$sesIntegId = $sesion->get('integradoId');
-		$integId = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
-		$integrado = new IntegradoSimple($integId);
-
-		$integrado = $integrado->integrados[0];
-
-		$postalData = json_decode(file_get_contents(SEPOMEX_SERVICE.$integrado->datos_empresa->cod_postal));
-		$coloniaId     = 0; // TODO: quitar mock al traer campo de db
-		$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
-		$address = $integrado->datos_empresa->calle.' '.$integrado->datos_empresa->num_exterior.' No. Int'.$integrado->datos_empresa->num_interior.', ';
-
-		return $address;
-	}
 	/**
 	 * @return mixed
 	 */
 	private function getCancelUrl() {
-		return 'index.php?option=com_reportes&view=reporteslistados&integradoId='.$this->input->get('integradoId', null, 'INT');
+		return 'index.php?option=com_reportes&view=reporteslistados';
 	}
 
 

@@ -280,11 +280,3 @@ class IntegradoSimple extends Integrado {
 
 }
 
-class Autoriza {
-	
-	public static function __($usuario='')
-	{
-		$checkUsuario = is_a($usuario, 'JUser');
-		//var_dump($checkUsuario);
-	}	
-}
