@@ -22,7 +22,7 @@ $direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior
 
 $formToken  = JSession::getFormToken(true).'=1';
 
-$url_flujo = 'index.php?option=com_reportes&view=flujo&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
+$url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
 ?>
 <script>
 
@@ -92,7 +92,7 @@ $url_flujo = 'index.php?option=com_reportes&view=flujo&integradoId='.$this->data
 	    <?php 	                // TODO: quitar este boton
 	    ?>
 	    <div class="form-group">
-		    <a class="btn btn-success" href="<?php echo 'index.php?option=com_reportes&view=balance&id=&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken; ?>">Balance periodo actual</a>
+		    <a class="btn btn-success" href="<?php echo 'index.php?option=com_reportes&view=balance&id=&'.$formToken; ?>">Balance periodo actual</a>
 	    </div>
 
 
@@ -108,7 +108,7 @@ $url_flujo = 'index.php?option=com_reportes&view=flujo&integradoId='.$this->data
                 </div>
 
 	            <?php foreach ($this->balances as $key => $value) {
-	                  $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&integradoId='.$this->data->integrados[0]->integrado_id.'&'.$formToken;
+	                  $balanceUrl = 'index.php?option=com_reportes&view=balance&id='.$value->id.'&'.$formToken;
 	                ?>
                 <div class="contenidos" id="contenidos">
                     <div id="columna1" class="fecha"><?php echo $value->year; ?></div>

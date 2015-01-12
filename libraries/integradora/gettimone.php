@@ -2690,8 +2690,13 @@ class IntegradoOrders {
         $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
         $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
 
-        $this->orders->odp_acreedor = getFromTimOne::getMutuosODP($integradoId)->acreedor;
-        $this->orders->odp_deudor   = getFromTimOne::getMutuosODP($integradoId)->deudor;
+        $mutuosOdps = getFromTimOne::getMutuosODP($integradoId);
+        if ( ! empty( $mutuosOdps->acreedor ) ) {
+            $this->orders->odp_acreedor = $mutuosOdps->acreedor;
+        }
+        if ( ! empty( $mutuosOdps->deudor ) ) {
+            $this->orders->odp_deudor   = $mutuosOdps->deudor;
+        }
 
         $this->getTxs();
     }

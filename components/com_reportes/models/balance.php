@@ -19,7 +19,6 @@ class ReportesModelBalance extends JModelItem {
 		$r->getExistingBalance();
 		$report = $r;
 
-		var_dump($report);exit;
 		return $report;
 	}
 
@@ -28,7 +27,6 @@ class ReportesModelBalance extends JModelItem {
 		$r->generateBalance();
 		$report = $r;
 
-		var_dump($report);exit;
 		return $report;
 	}
 }

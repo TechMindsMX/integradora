@@ -224,6 +224,8 @@ class IntegradoSimple extends Integrado {
 		parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
+
+		$this->setMainAddressFormatted();
 	}
 
 	/**
@@ -253,6 +255,27 @@ class IntegradoSimple extends Integrado {
 		$integradosRegistrados = getFromTimOne::selectDB('integrado','integrado_id = '.$db->quote($integ_id) );
 
 		return !empty($integradosRegistrados);
+	}
+
+	public function setMainAddressFormatted() {
+		$codPostal = null;
+		$address = null;
+
+		if ( isset( $this->integrados[0]->integrado->pers_juridica ) ) {
+			if ($this->integrados[0]->integrado->pers_juridica === '1') {
+				$postalData = $this->integrados[0]->datos_empresa->direccion_CP;
+			} elseif ($this->integrados[0]->integrado->pers_juridica === '2') {
+				$postalData = $this->integrados[0]->datos_personales->direccion_CP;
+			}
+
+			$coloniaId     = 0; // TODO: quitar mock al traer campo de db
+
+			$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
+			$address = $this->integrados[0]->datos_empresa->calle.' '.$this->integrados[0]->datos_empresa->num_exterior.' No. Int: '.$this->integrados[0]->datos_empresa->num_interior.', '.$postalAddress;
+
+		}
+
+		$this->integrados[0]->address = $address;
 	}
 
 }
