@@ -11,25 +11,27 @@ jimport('integradora.classDB');
 
 class ReportesController extends JControllerLegacy {
 
+    protected $integradoId;
+    protected $permisos;
+
     public function __construct()
     {
         parent::__construct();
-        $integrado	 		= new Integrado;
 
-        $this->app			= JFactory::getApplication();
-        $this->input_data	= $this->app->input;
+        $this->app = JFactory::getApplication();
 
+        $sesion = JFactory::getSession();
+        $this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
-
-        $data		 		= $this->input_data->getArray();
-        $integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
         $this->currUser	 	= JFactory::getUser();
-        // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
+        // $isValid 	 		= $integrado->isValidPrincipal($this->integradoId, $this->currUser->id);
+
+        $this->permisos = Integrado::checkPermisos(__CLASS__, $this->currUser->id, $this->integradoId);
 
         if($this->currUser->guest){
             $this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
-        if(is_null($integradoId)){
+        if(is_null($this->integradoId)){
             $this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
         }
     }
