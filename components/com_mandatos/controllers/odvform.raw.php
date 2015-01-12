@@ -131,6 +131,22 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $respuesta['id']       = $id;
         $respuesta['numOrden'] = $numOrden;
         $respuesta['redirect'] = $url;
+        /*NOTIFICACIONES 6*/
+
+        if($respuesta['success']==true){
+
+
+            $integrado              = new IntegradoSimple($this->integradoId);
+
+            $data['corrUser']       = $this->currUser->name;
+            $data['titulo']         = 'IECCE- Alta de proyecto.';
+            $data['nameIntegrado']  = $integrado->getDisplayName();
+            $data['body']       = "Estimado ".$data['nameIntegrado']." Por medio de la presente informamos a Usted que dio de alta un nuevo proyecto denominado "
+                . $data['name']." en la plataforma de IECCE, a través del Usuario ".$data['corrUser']." con fecha ".date('d-m-Y').". En caso de no reconocer esta operación, favor de comunicarse al XXXXXX.";
+
+            $send                   = new Send_email();
+            $info = $send->notification($data);
+        }
 
         echo json_encode($respuesta);
     }
