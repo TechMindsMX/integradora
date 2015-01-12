@@ -177,3 +177,7 @@ UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 3 WHERE idTipo = 5;
 UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 6 WHERE idTipo = 6;
 UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 1 WHERE idTipo = 7;
 --rollback ALTER TABLE `integradb`.`flpmu_catalog_tipoperiodos` DROP COLUMN `nombreCiclo`, DROP COLUMN `multiplicador`;
+
+--changeset ricardolyon:17
+INSERT INTO integradb.flpmu_menu (id, menutype, title, alias, note, path, link, type, published, parent_id, level, component_id, checked_out, checked_out_time, browserNav, access, img, template_style_id, params, lft, rgt, home, language, client_id) VALUES (204, 'mainmenu', 'Integrado', 'integrado', '', 'integrado', 'index.php?option=com_integrado', 'url', 1, 1, 1, 0, 0, null, 0, 1, '', 0, '{"menu-anchor_title":"","menu-anchor_css":"","menu_image":"","menu_text":1}', 179, 180, 0, '*', 0);
+--DELETE FROM integradb.flpmu_menu WHERE id = 204;
