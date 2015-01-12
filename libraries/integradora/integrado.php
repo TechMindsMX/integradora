@@ -238,6 +238,7 @@ class IntegradoSimple extends Integrado {
 	/**
 	 * @param mixed $ordersAtuhorizationParams
 	 */
+    //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
 		getFromTimOne::selectDB('integrado_params', 'integradoId');
 		$this->ordersAtuhorizationParams = 1;
@@ -245,7 +246,8 @@ class IntegradoSimple extends Integrado {
 
 
 	public function getDisplayName() {
-		$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
+
+		@$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
 
 		return $name;
 	}

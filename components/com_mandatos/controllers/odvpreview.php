@@ -47,13 +47,13 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             if($resultado) {
                 // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '3');
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '5');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 
                     $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
-                    if ( $newOrden->status == 5 && !$newOrden->urlXml ) {
-                        $factObj = $save->generaObjetoFactura( $newOrden );
+                    if ( $newOrden[0]->status->id == 5 && is_null($newOrden->urlXml) ) {
+                        $factObj = $save->generaObjetoFactura( $newOrden[0] );
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
@@ -76,7 +76,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
             }
         } else {
-            // acciones cuando NO tiene permisos para autorizar
+            //acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
 	}

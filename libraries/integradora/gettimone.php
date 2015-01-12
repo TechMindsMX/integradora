@@ -2022,6 +2022,7 @@ class sendToTimOne {
                                     'newStatus'=> $orderNewStatus,
                                     'result' => $return
                               ));
+
             $bitacora = $this->insertDB('bitacora_status_'.$orderType);
         }
 
