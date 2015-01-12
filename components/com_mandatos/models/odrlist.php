@@ -12,8 +12,12 @@ jimport('integradora.catalogos');
  */
 class MandatosModelOdrlist extends JModelItem {
     protected $dataModelo;
+    protected $integradoId;
 
     function __construct(){
+
+        $session = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
 
         $this->integrado 	= new Integrado;
         $this->currUser	    = Jfactory::getUser();
