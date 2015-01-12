@@ -21,14 +21,18 @@ class Send_email{
 
         $int = new IntegradoSimple($currentIntegradoId);
 
+        array_push($int->usuarios, JFactory::getUser(93));
+
         foreach ($int->usuarios as $key => $val) {
-            if ($val->permission_level>=3 || $val->id==JFactory::getUser()->id){
+
+            if ($val->permission_level>=3 || $val->id==JFactory::getUser()->id || $val->authorise('core.admin')){
                 $this->recipient = $val->email;
 
                 $this->responses[$val->id.'-'.$key]=$this->envia();
 
             }
         }
+        exit;
         return $this;
     }
 
