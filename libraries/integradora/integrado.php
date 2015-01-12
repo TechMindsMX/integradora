@@ -224,6 +224,8 @@ class IntegradoSimple extends Integrado {
 		parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
+
+		$this->setMainAddressFormatted();
 	}
 
 	/**
@@ -236,6 +238,7 @@ class IntegradoSimple extends Integrado {
 	/**
 	 * @param mixed $ordersAtuhorizationParams
 	 */
+    //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
 		getFromTimOne::selectDB('integrado_params', 'integradoId');
 		$this->ordersAtuhorizationParams = 1;
@@ -243,7 +246,8 @@ class IntegradoSimple extends Integrado {
 
 
 	public function getDisplayName() {
-		$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
+
+		@$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
 
 		return $name;
 	}
@@ -255,13 +259,26 @@ class IntegradoSimple extends Integrado {
 		return !empty($integradosRegistrados);
 	}
 
+	public function setMainAddressFormatted() {
+		$codPostal = null;
+		$address = null;
+
+		if ( isset( $this->integrados[0]->integrado->pers_juridica ) ) {
+			if ($this->integrados[0]->integrado->pers_juridica === '1') {
+				$postalData = $this->integrados[0]->datos_empresa->direccion_CP;
+			} elseif ($this->integrados[0]->integrado->pers_juridica === '2') {
+				$postalData = $this->integrados[0]->datos_personales->direccion_CP;
+			}
+
+			$coloniaId     = 0; // TODO: quitar mock al traer campo de db
+
+			$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
+			$address = $this->integrados[0]->datos_empresa->calle.' '.$this->integrados[0]->datos_empresa->num_exterior.' No. Int: '.$this->integrados[0]->datos_empresa->num_interior.', '.$postalAddress;
+
+		}
+
+		$this->integrados[0]->address = $address;
+	}
+
 }
 
-class Autoriza {
-	
-	public static function __($usuario='')
-	{
-		$checkUsuario = is_a($usuario, 'JUser');
-		//var_dump($checkUsuario);
-	}	
-}

@@ -13,11 +13,12 @@ jimport('integradora.catalogos');
 class IntegradoModelAltausuarios extends JModelItem {
 	
 	protected $dataModelo;
-	
-	public function getUsuarios($integradoId = null){
-		$data = JFactory::getApplication()->input->getArray();
-		$integradoId = $data['integradoId'];
-		
+	protected $integradoId;
+
+	public function getUsuarios(){
+		$sesion = JFactory::getSession();
+		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
+
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 			$integrado = new ReflectionClass('integradoSimple');
@@ -25,7 +26,7 @@ class IntegradoModelAltausuarios extends JModelItem {
 			if (count($this->dataModelo->integrados) == 0) {
 				return false;
 			}
-			$this->dataModelo = $integrado->newInstance($integradoId);
+			$this->dataModelo = $integrado->newInstance($this->integradoId);
 		}
 
 		return $this->dataModelo;

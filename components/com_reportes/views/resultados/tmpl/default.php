@@ -12,13 +12,12 @@ $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 ?>
     <script>
-        var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
 
         function cambiarPeriodo() {
             fechaInicial   = jQuery('#startDate').val();
             fechaFinal     = jQuery('#endDate').val();
 
-            window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal;
+            window.location = 'index.php?option=com_reportes&view=resultados&startDate='+fechaInicial+'&endDate='+fechaFinal;
         }
 
         function filtraProyectos() {
@@ -26,7 +25,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             fechaFinal     = jQuery('#endDate').val();
             proyecto       = jQuery(this).val()==0?'':'&proyecto='+jQuery(this).val();
 
-            window.location = 'index.php?option=com_reportes&view=resultados&integradoId='+integradoId+'&startDate='+fechaInicial+'&endDate='+fechaFinal+proyecto;
+            window.location = 'index.php?option=com_reportes&view=resultados&startDate='+fechaInicial+'&endDate='+fechaFinal+proyecto;
         }
 
         jQuery(document).ready(function(){

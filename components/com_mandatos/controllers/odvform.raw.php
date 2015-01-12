@@ -87,15 +87,10 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $data['productos'] = json_encode($productosArray);
 
-        foreach ($data as $key => $value) {
-            $columnas[] = $key;
-            $valores[]  = $db->quote($value);
-            $update[]   = $db->quoteName($key).' = '.$db->quote($value);
-        }
+        $data['integradoId'] = $this->integradoId;
+        $save->formatData($data);
 
         if($id === 0){
-            $data['id'] = $id;
-
             $query 	= $db->getQuery(true);
             $query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
 
@@ -109,17 +104,18 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
             $numOrden = $save->getNextOrderNumber('odv', $this->integradoId);
 
-            $columnas[] = 'numOrden';
-            $valores[]  = $numOrden;
+            $data['numOrden'] = $numOrden;
+            $data['createdDate'] = $results[0];
+            $data['status'] = 1;
 
-            $columnas[] = 'createdDate';
-            $valores[]  = $results[0];
+            $save->formatData($data);
 
-            $save->insertDB('ordenes_venta', $columnas, $valores);
+            $data['id'] = $id;
+            $save->insertDB('ordenes_venta');
 
             $id = $db->insertid();
         }else{
-            $save->updateDB('ordenes_venta',$update,$db->quoteName('id').' = '.$db->quote($id));
+            $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
         }
 
         $url = null;
@@ -131,9 +127,9 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $respuesta['id']       = $id;
         $respuesta['numOrden'] = $numOrden;
         $respuesta['redirect'] = $url;
-        /*NOTIFICACIONES 6*/
+        /*NOTIFICACIONES 6
 
-        if($respuesta['success']==true){
+        /*if($respuesta['success']==true){
             $contenido = JText::_('NOTIFICACIONES_6');
             $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
             $contenido = str_replace('$odvId', '<strong style="color: #000000">'.$data['name'].'</strong>',$contenido);
@@ -153,7 +149,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
             $send                   = new Send_email();
             $info = $send->notification($data);
-        }
+        }*/
 
         echo json_encode($respuesta);
     }

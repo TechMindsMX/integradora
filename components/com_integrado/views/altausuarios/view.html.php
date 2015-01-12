@@ -9,14 +9,7 @@ class IntegradoViewAltausuarios extends JViewLegacy {
 	function display($tpl = null)
 	{
 		$this->data 		= $this->get('Usuarios');
-		$this->token 		= getFromTimOne::token(); 
 		$this->catalogos	= $this->get('catalogos');
-		
-		$usuario = JFactory::getUser();
-		$modelo  = $this->getModel();
-		
-		$canDo = Autoriza::__($usuario);
-		//var_dump($canDo, $usuario, $modelo);
 		
 		// Check for errors.
         if (count($errors = $this->get('Errors'))) 

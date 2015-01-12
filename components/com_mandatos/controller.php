@@ -8,8 +8,7 @@ jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.classDB');
 jimport('integradora.notifications');
-
-
+jimport('integradora.facturasComision');
 
 class MandatosController extends JControllerLegacy {
 
@@ -624,5 +623,14 @@ class MandatosController extends JControllerLegacy {
         $tabla = getFromTimOne::getTabla($data);
         echo json_encode($tabla);
 
+    }
+
+    public function getFacturasCom(){
+        $integradoId = $this->integradoId;
+
+        $factura = new facturasComision();
+
+        $test = $factura->getFacturaComision($integradoId);
+        exit;
     }
 }

@@ -21,7 +21,6 @@ class MandatosModelOdvlist extends JModelItem {
 	
 	public function getOrdenes($integradoId = null){
         $listado = getFromTimOne::getOrdenesVenta($integradoId);
-
         foreach ($listado as $key => $value) {
             $value->productos = json_decode($value->productos);
             $value->totalAmount = $this->getTotalAmount($value->productos);

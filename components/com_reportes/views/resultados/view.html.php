@@ -14,15 +14,16 @@ jimport('integradora.integrado');
 class ReportesViewResultados extends JViewLegacy
 {
 	// Overwriting JView display method
+	protected $integradoId;
+
 	function display($tpl = null){
-		$sesion                       = JFactory::getSession();
-		$sesIntegId                   = $sesion->get('integradoId');
-		$integId                      = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
-        $integrado                    = new IntegradoSimple($integId);
+		$sesion = JFactory::getSession();
+		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
+
+        $integrado                    = new IntegradoSimple($this->integradoId);
         $this->integrado              = $integrado->integrados[0];
         $this->integrado->displayName = $integrado->getDisplayName();
         $this->reporte                = $this->get('Reporte');
-        $this->integrado->address     = $this->addressFromatted($integId);
         $this->proyectos              = $this->get('Proyectos');
 
 		if (count($errors = $this->get('Errors'))){
@@ -34,21 +35,5 @@ class ReportesViewResultados extends JViewLegacy
 		parent::display($tpl);
 	}
 
-	private function addressFromatted() {
-		// TODO: Llevar este metodo a IntegradoSimple en el refactor
-		$sesion = JFactory::getSession();
-		$sesIntegId = $sesion->get('integradoId');
-		$integId = isset($sesIntegId) ? $sesIntegId : JFactory::getApplication()->input->get('integradoId', null, 'INT');
-		$integrado = new IntegradoSimple($integId);
-
-		$integrado = $integrado->integrados[0];
-
-		$postalData = json_decode(file_get_contents(SEPOMEX_SERVICE.$integrado->datos_empresa->cod_postal));
-		$coloniaId     = 0; // TODO: quitar mock al traer campo de db
-		$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
-		$address = $integrado->datos_empresa->calle.' '.$integrado->datos_empresa->num_exterior.' No. Int: '.$integrado->datos_empresa->num_interior.', ';
-
-		return $address;
-	}
 
 }

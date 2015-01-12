@@ -13,24 +13,23 @@ jimport('integradora.catalogos');
 class IntegradoModelSolicitud extends JModelItem {
 	
 	protected $dataModelo;
-	
+	protected $integradoId;
+
 	public function getSolicitud($integradoId = null){
-		$app 			= JFactory::getApplication();
-		$input 			= $app->input;
-		$data			= $input->getArray();
-		$integradoId	= isset($data['integradoId'])?$data['integradoId']:null;
+		$sesion = JFactory::getSession();
+		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
 		if (!isset($this->dataModelo)) {
 			$this->dataModelo = new Integrado;
 			
-			if( !$this->dataModelo->isValidPrincipal($integradoId, JFactory::getUser()->id) ){
+			if( !$this->dataModelo->isValidPrincipal($this->integradoId, JFactory::getUser()->id) ){
 				JFactory::getApplication()->redirect('index.php/component/mandatos', 'no tienes permisos para ver este elemento');
 			}
 			
 			$integrado = new ReflectionClass('integradoSimple');
-			$this->dataModelo = $integrado->newInstance($integradoId);
+			$this->dataModelo = $integrado->newInstance($this->integradoId);
 		}
-		$this->dataModelo->user->integradoId = $integradoId;
+		$this->dataModelo->user->integradoId = $this->integradoId;
 		$this->dataModelo->integrados = $this->dataModelo->integrados[0];
 
 		return $this->dataModelo;

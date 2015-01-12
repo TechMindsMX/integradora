@@ -149,7 +149,7 @@ $number2word = new AifLibNumber();
 		foreach (json_decode($this->odv->productos)as $key => $prod) :
 			?>
 			<tr>
-				<td><?php echo $key; ?></td>
+				<td><?php echo $key+1; ?></td>
 				<td><?php if ( ! empty( $prod->cantidad ) ) {
 						echo $prod->cantidad;
 					} ?></td>
