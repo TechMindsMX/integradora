@@ -70,6 +70,32 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
                 'redireccion' => true
             );
+
+
+            /*NOTIFICACIONES 11*/
+            $titulo = JText::_('TITULO_11');
+            $titulo = str_replace('$idOrden', '<strong style="color: #000000">'.$data['id_orden'].'</strong>',$titulo);
+
+            $contenido = JText::_('NOTIFICACIONES_11');
+
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
+            $contenido = str_replace('$idOrden', '<strong style="color: #000000">$'.$data['id_orden'].'</strong>',$contenido);
+            $contenido = str_replace('$cliente', '<strong style="color: #000000">$'.$data['cliente'].'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$data('monto').'</strong>',$contenido);
+            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$data('odv').'</strong>',$contenido);
+
+            $integrado              = new IntegradoSimple($this->integradoId);
+
+            $data['corrUser']       = $this->currUser->name;
+            $data['titulo']         = $titulo;
+            $data['nameIntegrado']  = $integrado->getDisplayName();
+            $data['body']           = $contenido;
+
+            $send                   = new Send_email();
+            $info = $send->notification($data);
+
         }else{
             $respuesta = array('redireccion' => false);
         }
