@@ -35,12 +35,12 @@ class facturasComision {
 
         $factObj = $save->generaObjetoFactura( $datosFacturaComision );
 
-        if ( $factObj != false ) {
+        /*if ( $factObj != false ) {
             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
 
             var_dump($xmlFactura);
-        }
-
+        }*/
+var_dump($factObj);
         exit;
         return $xmlFactura;
     }
