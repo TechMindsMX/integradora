@@ -10,8 +10,34 @@ jimport('joomla.factory');
 
 class Send_email{
 
+    public $responses;
+    protected $recipient;
 
     public function notification($data){
+
+        $this->data = (object)$data;
+
+        $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
+
+        $int = new IntegradoSimple($currentIntegradoId);
+
+        array_push($int->usuarios, JFactory::getUser(93));
+
+        foreach ($int->usuarios as $key => $val) {
+
+            if ($val->permission_level>=3 || $val->id==JFactory::getUser()->id || $val->authorise('core.admin')){
+                $this->recipient = $val->email;
+
+                $this->responses[$val->id.'-'.$key]=$this->envia();
+
+            }
+        }
+        exit;
+        return $this;
+    }
+
+    private function envia()
+    {
 
         $mailer = JFactory :: getMailer ();
         $Config = JFactory :: getConfig ();
@@ -21,12 +47,10 @@ class Send_email{
             $Config['fromname']);
 
         $mailer->setSender($remitente);
-        $user = JFactory::getUser();
-        $recipient = $user->email;
 
-        $mailer->addRecipient('aguilar_2001@hotmail.com');
+        $mailer->addRecipient($this->recipient);
 
-        $body   = $data['body'];
+        $body   = $this->data->body;
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';
         $mailer->setBody($body);
@@ -34,11 +58,8 @@ class Send_email{
         //$mailer->AddEmbeddedImage( JPATH_COMPONENT.'/assets/logo128.jpg', 'logo_id', 'logo.jpg', 'base64', 'image/jpeg' );
 
         $send = $mailer->Send();
-        if ( $send !== true ) {
-            return 'Error sending email: ' . $send->__toString();
-        } else {
-            return 'Mail sent';
-        }
+
     }
+
 
 }

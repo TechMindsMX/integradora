@@ -848,6 +848,8 @@ class getFromTimOne{
             $value->attachment      = (STRING)$value->attachment;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
+            $receptor    = new IntegradoSimple($value->integradoId);
+            $value->recepror        = $receptor->getDisplayName();
 
             $value->status = self::getOrderStatusName($value->status);
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
@@ -1372,83 +1374,21 @@ class getFromTimOne{
 
     public static function getTxDataByTxId($txId) {
 
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A554SJHS445AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897600000;
-        $txstp->amount = 3401.100;
+        // TODO: traer los datos de la Tx desde TimOne
 
+        $intId = JFactory::getSession()->get('integradoId', null, 'integrado');
+        $where = JFactory::getDbo()->quoteName('idIntegrado') . ' = '. $intId;
+        $results = getFromTimOne::selectDB('txs_timone_mandato', $where, 'idTx');
 
-        $array[] = $txstp;
+        foreach ( $results as $key => $val ) {
+            $txstp = new stdClass;
+            $txstp->referencia = 'A458455A554SJHS445AA2'.$key;
+            $txstp->integradoId = $results[$txId]->idIntegrado;
+            $txstp->date = $results[$txId]->date;
+            $txstp->amount = 10.10 * ($key+1);
 
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A5S1S5200S4AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1408632474029;
-        $txstp->amount = 1520.2145;
-
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55422S5S555220';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897603300;
-        $txstp->amount = 3424.10;
-
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55422255F6AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897602100;
-        $txstp->amount = 830.10;
-
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55421S555S17S74';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897600023;
-        $txstp->amount = 1340.10;
-
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A554222115s11s5s';
-        $txstp->integradoId = 1;
-        $txstp->date = 1408632474029;
-        $txstp->amount = 3454.10;
-
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55422255F6AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897600000;
-        $txstp->amount = '340.10';
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55422255F6AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897602100;
-        $txstp->amount = 834.10;
-
-        $array[] = $txstp;
-
-        $txstp = new stdClass;
-        $txstp->referencia = 'A458455A55422255F6AA2D';
-        $txstp->integradoId = 1;
-        $txstp->date = 1419897602100;
-        $txstp->amount = 834.10;
-
-        $array[] = $txstp;
+            $array[$key] = $txstp;
+        }
 
         $txId = (int)$txId;
 
@@ -2513,7 +2453,6 @@ class ReportFlujo extends IntegradoTxs {
     }
 
     public function getIngresos(){
-        // TODO: cambiar ($this->orders->odv) por las Txs
         $this->orders->odv = $this->filterOrders($this->orders->odv);
 
         $this->txs->odv = getFromTimOne::filterTxsByDate($this->txs->odv, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
@@ -2521,7 +2460,6 @@ class ReportFlujo extends IntegradoTxs {
     }
 
     public function getEgresos(){
-        // TODO: cambiar ($this->orders->odc) por las Txs
         $this->orders->odc = $this->filterOrders($this->orders->odc);
 
         $this->txs->odc = getFromTimOne::filterTxsByDate($this->txs->odc, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
@@ -2529,7 +2467,6 @@ class ReportFlujo extends IntegradoTxs {
     }
 
     public function getDepositos(){
-        // TODO: cambiar ($this->orders->odd) por las Txs
         $this->orders->odd = $this->filterOrders($this->orders->odd);
 
         $this->txs->odd = getFromTimOne::filterTxsByDate($this->txs->odd, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
@@ -2537,7 +2474,6 @@ class ReportFlujo extends IntegradoTxs {
     }
 
     public function getRetiros(){
-        // TODO: cambiar ($this->orders->odr) por las Txs
         $this->orders->odr = $this->filterOrders($this->orders->odr);
 
         $this->txs->odr = getFromTimOne::filterTxsByDate($this->txs->odr, $this->period->fechaInicio->timestamp, $this->period->fechaFin->timestamp);
@@ -2612,7 +2548,8 @@ class ReportFlujo extends IntegradoTxs {
             // asignacion de datos para front
             $value->data->iva = $ivaTmp;
             $value->data->neto = $value->data->amount - $ivaTmp;
-            $value->orden->beneficiario = $orden->proveedor->corporateName;
+
+            $value->orden->beneficiario = isset($orden->receptor) ? $orden->proveedor->corporateName : null;
 
             if ( isset( $orden->factura ) ) {
                 $value->orden->folio = $orden->factura->comprobante['FOLIO'];
