@@ -31,7 +31,7 @@ class JConfig {
 	public $offset = 'UTC';
 	public $mailonline = '1';
 	public $mailer = 'mail';
-	public $mailfrom = 'ricardo.lyon@trama.mx';
+	public $mailfrom = 'aguilar_2001@hotmail.com';
 	public $fromname = 'Integradora';
 	public $sendmail = '/usr/sbin/sendmail';
 	public $smtpauth = '0';
@@ -49,7 +49,7 @@ class JConfig {
 	public $MetaAuthor = '1';
 	public $MetaVersion = '0';
 	public $robots = '';
-	public $sef = '1';
+	public $sef = '0';
 	public $sef_rewrite = '0';
 	public $sef_suffix = '0';
 	public $unicodeslugs = '0';
