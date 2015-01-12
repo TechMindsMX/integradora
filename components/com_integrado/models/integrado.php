@@ -12,7 +12,7 @@ class IntegradoModelIntegrado extends JModelItem {
 	
 	protected $data;
 	
-	public function getDisplay($integradoId = null)
+	public function getDisplay()
 	{
 		if (!isset($this->data)) {
 			$this->data = 'Mensaje desde model Integrado';

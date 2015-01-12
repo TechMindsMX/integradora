@@ -16,12 +16,21 @@ if($currUser->guest){
 
 class IntegradoController extends JControllerLegacy {
     //Revisa si el usaurio existe dado un correo electronico
+    protected $integradoId;
+
+    function __construct() {
+        $sesion = JFactory::getSession();
+        $this->integradoId = $sesion->get('integradoId', null, 'integrado');
+
+        parent::__construct();
+    }
+
     function checkUser(){
         $db = JFactory::getDbo();
         $input = JFactory::getApplication()->input;
-        $email = $input->getArray();
+        $email = $input->get('data', null, 'STRING');
 
-        $respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email['data']));
+        $respuesta = self::checkData('users', $db->quoteName('email').' = '.$db->quote($email));
 
         if(!is_null($respuesta)){
             $response = array('success' => true, 'name' => $respuesta[0]->name, 'userId' => $respuesta[0]->id, 'delete' => false);
@@ -39,13 +48,14 @@ class IntegradoController extends JControllerLegacy {
     //Salva la alta de usuarios a un integrado
     function savaAltaNewUserOfInteg(){
         $db = JFactory::getDbo();
-        $input = JFactory::getApplication()->input;
-        $data = $input->getArray();
+        $app = JFactory::getApplication();
+        $data = $app->input->getArray();
 
         $columnas	= array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($data['integrado_id'], $data['userId'], 0, $data['permission_level']);
+        $valores	= array($this->integrado_id, $data['userId'], 0, $data['permission_level']);
 
+        var_dump($this);exit;
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
 
         if( empty($existe) ){
@@ -54,7 +64,7 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_users', $update, $db->quoteName('user_id').' = '.$data['userId']);
         }
 
-        JApplication::redirect('index.php?option=com_integrado&view=altausuarios&integradoId='.$data['integrado_id'], false);
+        JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
     }
 
     //elimina la relacion entre el integrado y el usuario dado de alta
@@ -79,6 +89,7 @@ class IntegradoController extends JControllerLegacy {
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
         $db 	= JFactory::getDbo();
+
         $data	= JFactory::getApplication()->input->getArray();
         $integrado_id = $data['integradoId']!=''?$data['integradoId']:'';
 
@@ -140,8 +151,8 @@ class IntegradoController extends JControllerLegacy {
             return true;
         }
         $input 	= JFactory::getApplication()->input;
-        $arrayPost =array('user_id'                     => 'string',
-            'integradoId'                 => 'string',
+        $arrayPost =array(
+            'user_id'                     => 'string',
             'pj_pers_juridica'            => 'string',
             'dp_nacionalidad'             => 'string',
             'dp_sexo'                     => 'string',
@@ -186,9 +197,12 @@ class IntegradoController extends JControllerLegacy {
             't1_instrum_fecha'            => 'string',
             't2_instrum_fecha'            => 'string',
             'pn_instrum_fecha'            => 'string',
-            'rp_instrum_fecha'            => 'string');
+            'rp_instrum_fecha'            => 'string'
+        );
 
         $post 	= $input->getArray($arrayPost);
+
+        $post['integradoId'] = $this->integradoId;
 
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
@@ -215,7 +229,8 @@ class IntegradoController extends JControllerLegacy {
         $db	= JFactory::getDbo();
         $integrado_id = empty($data['integradoId']) ? null : $data['integradoId'];
 
-        $diccionario  = array('user_id'                    => array('tipo'=>'number',		    	'length'=>10),
+        $diccionario  = array(
+            'user_id'                    => array('tipo'=>'number',		    	'length'=>10),
             'integradoId'                => array('tipo'=>'number',		    	'length'=>10),
             'pj_pers_juridica'           => array('tipo'=>'number',		    	'length'=>10),
             'dp_nacionalidad'            => array('tipo'=>'alphaNumber',      	'length'=>45),
