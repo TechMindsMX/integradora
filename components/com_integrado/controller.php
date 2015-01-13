@@ -55,7 +55,7 @@ class IntegradoController extends JControllerLegacy {
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
         $valores	= array($this->integrado_id, $data['userId'], 0, $data['permission_level']);
 
-        var_dump($this);exit;
+
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
 
         if( empty($existe) ){
@@ -150,6 +150,7 @@ class IntegradoController extends JControllerLegacy {
             echo json_encode($response);
             return true;
         }
+
         $input 	= JFactory::getApplication()->input;
         $arrayPost =array(
             'user_id'                     => 'string',
@@ -206,6 +207,20 @@ class IntegradoController extends JControllerLegacy {
 
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
+
+        if($post->tab=='personales'){
+            $contenido = JText::_('NOTIFICACIONES_1');
+            $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$post['dp_nom_comercial'].'</strong>',$contenido);
+            $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$post['user_id'].'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+            $data['titulo']         = JText::_('TITULO_1');
+            $data['body']           = $contenido;
+
+            $send                   = new Send_email();
+            $send->notification($data);
+        }
+
         // Get the document object.
         $document = JFactory::getDocument();
         // Set the MIME type for JSON output.
@@ -238,7 +253,7 @@ class IntegradoController extends JControllerLegacy {
             'dp_rfc'                     => array('tipo'=>'rfc',      	    	'length'=>13),
             'dp_calle'                   => array('tipo'=>'alphaNumber',	    'length'=>100),
             'dp_num_exterior'            => array('tipo'=>'number',		        'length'=>10),
-            'dp_num_interior'            => array('tipo'=>'number',		        'length'=>10),
+            'dp_num_interior'            => array('tipo'=>'alphaNumber',        'length'=>10),
             'dp_cod_postal'              => array('tipo'=>'number',		        'length'=>13),
             'dp_tel_fijo'                => array('tipo'=>'alphaNumber',      	'length'=>10),
             'dp_tel_fijo_extension'      => array('tipo'=>'alphaNumber',	    'length'=>5),
@@ -283,7 +298,7 @@ class IntegradoController extends JControllerLegacy {
         $resultado = $validador->procesamiento($data, $diccionario);
 
         foreach ($resultado as $key => $value) {
-            if( is_array($value) ){
+            if(is_array($value) ){
                 $resultado['safeComplete']  = false;
                 $resultado['integradoId']   = $integrado_id;
                 return $resultado;
@@ -387,8 +402,10 @@ class IntegradoController extends JControllerLegacy {
                 $resultado['nextTab'] = 'files';
                 break;
         }
+
         $resultado['safeComplete']  = true;
         $resultado['integradoId'] = $integrado_id;
+
 
         return $resultado;
     }

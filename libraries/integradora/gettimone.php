@@ -870,10 +870,14 @@ class getFromTimOne{
             $value->orderType       = 'odr';
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
-            $value->status          = (INT)$value->status;
+            $value->status          = self::getOrderStatusName($value->status);
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
+            $value->cuentaId        = 0;
+
+            $integCurrent = new IntegradoSimple(JFactory::getSession()->get('integradoId',null,'integrado'));
+            $value->cuenta = $integCurrent->integrados[0]->datos_bancarios[$value->cuentaId];
         }
 
         return $orden;
@@ -2969,4 +2973,20 @@ class Cashout {
     public $clabe = '014180566389265712';
     public $bankCode = 14;
     public $amount = 10.50;
+
+    function __construct($ordenRetiro)
+    {
+        $this->clabe = $ordenRetiro->cuenta->banco_clabe;
+        $this->bankCode = (INT)$ordenRetiro->cuenta->banco_codigo;
+        $this->amount = (FLOAT)$ordenRetiro->totalAmount;
+        $this->uuid = $this->getUuid();
+
+    }
+
+    private function getUuid()
+    {
+        return $this->uuid;
+    }
+
+
 }

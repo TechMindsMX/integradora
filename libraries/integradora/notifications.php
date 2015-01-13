@@ -26,13 +26,12 @@ class Send_email{
         foreach ($int->usuarios as $key => $val) {
 
             if ($val->permission_level>=3 || $val->id==JFactory::getUser()->id || $val->authorise('core.admin')){
-                $this->recipient = $val->email;
 
+                $this->recipient = $val->email;
                 $this->responses[$val->id.'-'.$key]=$this->envia();
 
             }
         }
-        exit;
         return $this;
     }
 
@@ -51,8 +50,10 @@ class Send_email{
         $mailer->addRecipient($this->recipient);
 
         $body   = $this->data->body;
+        $title  = $this->data->title;
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';
+        $mailer->setSubject($title);
         $mailer->setBody($body);
         // Optionally add embedded image
         //$mailer->AddEmbeddedImage( JPATH_COMPONENT.'/assets/logo128.jpg', 'logo_id', 'logo.jpg', 'base64', 'image/jpeg' );

@@ -121,14 +121,16 @@ if(!$this->confirmacion){
 	        <?php
 	        $select0 = '';
 	        $select1 = '';
-	        switch ($this->odr->paymentMethod) {
-		        case 0:
-					$select0 = 'selected';
-			        break;
-		        case 1:
-			        $select1 = 'selected';
-			        break;
-	        }
+            if (isset($this->odr->paymentMethod)) {
+                switch ($this->odr->paymentMethod) {
+                    case 0:
+                        $select0 = 'selected';
+                        break;
+                    case 1:
+                        $select1 = 'selected';
+                        break;
+                }
+            }
 	        ?>
             <option value="0" <?php echo $select0; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
             <option value="1" <?php echo $select1; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
@@ -173,7 +175,7 @@ if(!$this->confirmacion){
 			<input type="hidden" value="<?php echo $this->integradoId; ?>" name="integradoId" />
 			<input type="hidden" value="<?php echo $datos['paymentMethod']; ?>" name="paymentMethod" />
 			<input type="hidden" value="<?php echo $datos['paymentDate']; ?>" name="paymentDate" />
-			<input type="hidden" value="<?php echo $datos['totalAmount']; ?>" name="amount" />
+			<input type="hidden" value="<?php echo $datos['totalAmount']; ?>" name="totalAmount" />
 <!--			<input type="hidden" value="--><?php //echo $datos['id']; ?><!--" name="id" />-->
 			<?php echo JHtml::_( 'form.token' ); ?>
 

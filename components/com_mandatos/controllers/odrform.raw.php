@@ -10,6 +10,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
     private $integradoId;
 
     public function __construct(){
+        $session = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
         $post = array(
@@ -19,10 +21,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
-
-        $session = JFactory::getSession();
-        $this->integradoId = $session->get('integradoId', null, 'integrado');
-
+        $this->parametros['integradoId'] = $this->integradoId;
         parent::__construct();
     }
 
@@ -32,7 +31,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $date  = new DateTime($datos['paymentDate']);
 
         $datos['paymentDate'] = $date->getTimestamp();
-
         $this->permisos  = MandatosHelper::checkPermisos(__CLASS__,  $this->integradoId);
 
         if($this->permisos['canAuth']) {
@@ -42,10 +40,10 @@ class MandatosControllerOdrform extends JControllerLegacy {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
-
         if( !isset($datos['id']) ) {
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odr',  $this->integradoId);
+            $datos['status'] = 1;
             $save->formatData($datos);
 
             $salvado = $save->insertDB('ordenes_retiro', null, null, true);
