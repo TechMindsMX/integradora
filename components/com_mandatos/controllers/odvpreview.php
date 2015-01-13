@@ -75,11 +75,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                             $contenido = str_replace('$odv', '<strong style="color: #000000">'.$data('odv').'</strong>',$contenido);
 
 
-                            $integrado              = new IntegradoSimple($this->integradoId);
-
-                            $data['corrUser']       = $this->currUser->name;
                             $data['titulo']         = $titulo;
-                            $data['nameIntegrado']  = $integrado->getDisplayName();
                             $data['body']           = $contenido;
 
                             $send                   = new Send_email();

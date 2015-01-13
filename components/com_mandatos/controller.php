@@ -229,9 +229,7 @@ class MandatosController extends JControllerLegacy {
 
             $integrado              = new IntegradoSimple($this->integradoId);
 
-            $data['corrUser']       = $this->currUser->name;
             $data['titulo']         = JText::_('TITULO_2');
-            $data['nameIntegrado']  = $integrado->getDisplayName();
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
@@ -273,11 +271,7 @@ class MandatosController extends JControllerLegacy {
             $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
 
-            $integrado              = new IntegradoSimple($this->integradoId);
-
-            $data['corrUser']       = $this->currUser->name;
             $data['titulo']         = JText::_('TITULO_4');
-            $data['nameIntegrado']  = $integrado->getDisplayName();
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
@@ -476,9 +470,6 @@ class MandatosController extends JControllerLegacy {
             $contenido = str_replace('$nombre_cliente', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
             $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$int->user->username.'</strong>',$contenido);
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $integrado              = new IntegradoSimple($this->integradoId);
-
 
             $data['titulo']         = $titulo;
             $data['body']           = $contenido;

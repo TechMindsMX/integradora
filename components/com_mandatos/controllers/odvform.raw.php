@@ -127,6 +127,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $respuesta['id']       = $id;
         $respuesta['numOrden'] = $numOrden;
         $respuesta['redirect'] = $url;
+
         /*NOTIFICACIONES 6
 
         /*if($respuesta['success']==true){
@@ -139,12 +140,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
 
 
-
-            $integrado              = new IntegradoSimple($this->integradoId);
-
-            $data['corrUser']       = $this->currUser->name;
             $data['titulo']         = JText::_('TITULO_6');
-            $data['nameIntegrado']  = $integrado->getDisplayName();
             $data['body']           = $contenido;
 
             $send                   = new Send_email();
