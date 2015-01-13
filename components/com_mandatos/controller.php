@@ -672,4 +672,11 @@ class MandatosController extends JControllerLegacy {
         $test = $factura->getFacturaComision($integradoId);
         exit;
     }
+
+    public function pruebas()
+    {
+        $services= new servicesRoute();
+        var_dump($services);
+        exit;
+    }
 }

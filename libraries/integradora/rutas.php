@@ -7,26 +7,15 @@ jimport ('joomla.factory');
  * Clase rutas de servicios
  */
 
-class timoneRoute extends servicesRoute
-{
-
-	function __construct () {
-		$this->setBaseController('timone/services/integra/');
-		$this->setAddress('api-stage.timone.mx/');
-
-		parent::__construct();
-	}
-}
-
-class servicesRoute
+class servicesRoute extends servicesUrls
 {
 	private $ssl;
 
-	protected $address = 'api.integradora.mx/';
+	protected $timone = 'api-stage.timone.mx/services/integra/';
+
+    protected $facturacion = 'api.timone-factura.mx/factura/';
 
 	protected $port = '';
-
-	private $baseController = '';
 
 	public $baseUrl;
 
@@ -37,7 +26,7 @@ class servicesRoute
 		$juri = JUri::getInstance ();
 		$this->ssl = ($juri->getScheme() === null) ? 'http' : $juri->getScheme();
 
-		$this->baseUrl = $this->ssl .'://'. $this->address . $this->port . $this->baseController;
+		$this->baseUrl = $this->ssl .'://'. $this->facturacion . $this->port;
 	}
 
 	/**
@@ -47,37 +36,7 @@ class servicesRoute
 		return $this->baseUrl;
 	}
 
-	public function userUrls() {
-		$this->urls = new servicesUrls();
 
-		$this->urls->setUser ();
-
-		return $this;
-	}
-
-	public function projectUrls () {
-		$this->urls = new servicesUrls();
-
-		$this->urls->setProject ();
-
-		return $this;
-	}
-
-	public function productUrls (){
-		$this->urls = new servicesUrls();
-
-		$this->urls->setProduct ();
-
-		return $this;
-	}
-
-	public function comisionUrls () {
-		$this->urls = new servicesUrls();
-
-		$this->urls->setComisions ();
-
-		return $this;
-	}
 
 	/**
 	 * @param string $baseController

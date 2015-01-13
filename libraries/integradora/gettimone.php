@@ -2124,7 +2124,7 @@ class sendToTimOne {
 
         $result = $request->to_timone(); // realiza el envio
 
-        return $result;
+        return $result->data;
     }
 
     /**
@@ -2147,7 +2147,7 @@ class sendToTimOne {
             $return = false;
         }
 
-        return $name;
+        return $return;
     }
 
 }

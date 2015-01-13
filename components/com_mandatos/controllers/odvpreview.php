@@ -53,7 +53,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                     $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
                     $newOrden = $newOrden[0];
-                    if ( $newOrden->status->id == 5 && is_null($newOrden->urlXml) ) {
+                    if ( $newOrden->status->id == 5 && is_null($newOrden->urlXML) ) {
                         $factObj = $save->generaObjetoFactura( $newOrden );
 
                         if ( $factObj != false ) {
@@ -91,9 +91,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         if ( isset( $file ) ) {
                             if ( $file != false ) {
-                                $save->formatData(array('columnas' => 'urlXML', 'valores' => $file ));
+                                $save->formatData(array('urlXML' => $file ));
                                 $where = 'id = '.$newOrden->id;
-                                $save->updateDB('ordenes_vaneta', null, $where);
+                                $save->updateDB('ordenes_venta', null, $where);
                             }
                         }
                     }
