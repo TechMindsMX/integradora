@@ -96,7 +96,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_BANCOS'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta->banco_codigo; } ?>
 			</div>
 		</div>
 		<div>
@@ -108,7 +108,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta->banco_cuenta; } ?>
 			</div>
 		</div>
 		<div>
@@ -120,7 +120,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta; } ?>
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta->banco_clabe; } ?>
 			</div>
 		</div>
 	</div>
