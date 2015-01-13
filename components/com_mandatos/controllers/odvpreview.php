@@ -52,8 +52,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 
                     $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
-                    if ( $newOrden[0]->status->id == 5 && is_null($newOrden->urlXml) ) {
-                        $factObj = $save->generaObjetoFactura( $newOrden[0] );
+                    $newOrden = $newOrden[0];
+                    if ( $newOrden->status->id == 5 && is_null($newOrden->urlXml) ) {
+                        $factObj = $save->generaObjetoFactura( $newOrden );
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );

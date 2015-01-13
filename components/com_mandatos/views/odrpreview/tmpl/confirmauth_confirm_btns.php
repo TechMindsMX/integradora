@@ -6,7 +6,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=odrlist');
 ?>
         <legend class="container botones clearfix form-actions">
         <?php
-        if($this->permisos['canAuth'] && $this->odr->status === 0 ):
+        if($this->permisos['canAuth'] && $this->odr->status == 1 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=odrpreview&task=odrpreview.authorize&idOrden='.$this->odr->id);
         ?>
         	<p class="text-warning">
