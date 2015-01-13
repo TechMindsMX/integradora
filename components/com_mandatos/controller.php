@@ -450,6 +450,43 @@ class MandatosController extends JControllerLegacy {
         $response['success'] = true;
         $response['nextTab'] = $tab;
 
+
+
+        if(isset($this->integradoId)){
+
+            if($data['tp_tipo_alta']==0){
+                $dato = 'Cliente';
+            }
+            if($data['tp_tipo_alta']==1){
+                $dato = 'Proveedor';
+            }
+            if($data['tp_tipo_alta']==2){
+                $dato = 'Cliente/Proveedor';
+            }
+
+            $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
+            $int = new IntegradoSimple($currentIntegradoId);
+
+            $titulo = JText::_('TITULO_5');
+            $titulo = str_replace('$tipo', '<strong style="color: #000000">'.$dato.'</strong>',$titulo);
+
+            $contenido = JText::_('NOTIFICACIONES_5');
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
+            $contenido = str_replace('$tipo', '<strong style="color: #000000">'.$dato.'</strong>',$contenido);
+            $contenido = str_replace('$nombre_cliente', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$int->user->username.'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+            $integrado              = new IntegradoSimple($this->integradoId);
+
+
+            $data['titulo']         = $titulo;
+            $data['body']           = $contenido;
+
+            $send                   = new Send_email();
+            $send->notification($data);
+        }
+
         $this->document->setMimeEncoding('application/json');
         echo json_encode($response);
     }
