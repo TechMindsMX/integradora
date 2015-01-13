@@ -68,7 +68,6 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
             $send                   = new Send_email();
             $send->notification($data);
         }
-
         echo json_encode($respuesta);
     }
 
