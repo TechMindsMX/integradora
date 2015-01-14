@@ -19,8 +19,8 @@ class IntegradoController extends JControllerLegacy {
     protected $integradoId;
 
     function __construct() {
-        $sesion = JFactory::getSession();
-        $this->integradoId = $sesion->get('integradoId', null, 'integrado');
+        $this->sesion = JFactory::getSession();
+        $this->integradoId = $this->sesion->get('integradoId', null, 'integrado');
 
         parent::__construct();
     }
@@ -153,52 +153,53 @@ class IntegradoController extends JControllerLegacy {
 
         $input 	= JFactory::getApplication()->input;
         $arrayPost =array(
-            'user_id'                     => 'string',
-            'pj_pers_juridica'            => 'string',
-            'dp_nacionalidad'             => 'string',
-            'dp_sexo'                     => 'string',
-            'dp_rfc'                      => 'string',
-            'dp_calle'                    => 'string',
-            'dp_num_exterior'             => 'string',
-            'dp_num_interior'             => 'string',
-            'dp_cod_postal'               => 'string',
-            'dp_tel_fijo'                 => 'string',
-            'dp_tel_fijo_extension'       => 'string',
-            'dp_tel_movil'                => 'string',
-            'dp_email'                    => 'string',
-            'dp_nom_comercial'            => 'string',
-            'dp_curp'                     => 'string',
-            'de_razon_social'             => 'string',
-            'dp_nombre_representante'     => 'string',
-            'de_rfc'                      => 'string',
-            'de_calle'                    => 'string',
-            'de_num_exterior'             => 'string',
-            'de_num_interior'             => 'string',
-            'de_cod_postal'               => 'string',
-            't1_instrum_notaria'          => 'string',
-            't1_instrum_estado'           => 'string',
-            't1_instrum_nom_notario'      => 'string',
-            't1_instrum_num_instrumento'  => 'string',
-            't2_instrum_notaria'          => 'string',
-            't2_instrum_estado'           => 'string',
-            't2_instrum_nom_notario'      => 'string',
-            't2_instrum_num_instrumento'  => 'string',
-            'pn_instrum_notaria'          => 'string',
-            'pn_instrum_estado'           => 'string',
-            'pn_instrum_nom_notario'      => 'string',
-            'pn_instrum_num_instrumento'  => 'string',
-            'rp_instrum_num_instrumento'  => 'string',
-            'rp_instrum_estado'           => 'string',
-            'db_banco_codigo'             => 'string',
-            'db_banco_cuenta'             => 'string',
-            'db_banco_sucursal'           => 'string',
-            'db_banco_clabe'              => 'string',
-            'tab'                         => 'string',
-            'dp_fecha_nacimiento'         => 'string',
-            't1_instrum_fecha'            => 'string',
-            't2_instrum_fecha'            => 'string',
-            'pn_instrum_fecha'            => 'string',
-            'rp_instrum_fecha'            => 'string'
+            'user_id'                     => 'STRING',
+            'pj_pers_juridica'            => 'STRING',
+            'dp_nacionalidad'             => 'STRING',
+            'dp_sexo'                     => 'STRING',
+            'dp_rfc'                      => 'STRING',
+            'dp_calle'                    => 'STRING',
+            'dp_num_exterior'             => 'STRING',
+            'dp_num_interior'             => 'STRING',
+            'dp_cod_postal'               => 'STRING',
+            'dp_tel_fijo'                 => 'STRING',
+            'dp_tel_fijo_extension'       => 'STRING',
+            'dp_tel_movil'                => 'STRING',
+            'dp_email'                    => 'STRING',
+            'dp_nom_comercial'            => 'STRING',
+            'dp_curp'                     => 'STRING',
+            'de_razon_social'             => 'STRING',
+            'dp_nombre_representante'     => 'STRING',
+            'de_rfc'                      => 'STRING',
+            'de_calle'                    => 'STRING',
+            'de_num_exterior'             => 'STRING',
+            'de_num_interior'             => 'STRING',
+            'de_cod_postal'               => 'STRING',
+            't1_instrum_notaria'          => 'STRING',
+            't1_instrum_estado'           => 'STRING',
+            't1_instrum_nom_notario'      => 'STRING',
+            't1_instrum_num_instrumento'  => 'STRING',
+            't2_instrum_notaria'          => 'STRING',
+            't2_instrum_estado'           => 'STRING',
+            't2_instrum_nom_notario'      => 'STRING',
+            't2_instrum_num_instrumento'  => 'STRING',
+            'pn_instrum_notaria'          => 'STRING',
+            'pn_instrum_estado'           => 'STRING',
+            'pn_instrum_nom_notario'      => 'STRING',
+            'pn_instrum_num_instrumento'  => 'STRING',
+            'rp_instrum_num_instrumento'  => 'STRING',
+            'rp_instrum_estado'           => 'STRING',
+            'db_banco_codigo'             => 'STRING',
+            'db_banco_cuenta'             => 'STRING',
+            'db_banco_sucursal'           => 'STRING',
+            'db_banco_clabe'              => 'STRING',
+            'tab'                         => 'STRING',
+            'dp_fecha_nacimiento'         => 'STRING',
+            't1_instrum_fecha'            => 'STRING',
+            't2_instrum_fecha'            => 'STRING',
+            'pn_instrum_fecha'            => 'STRING',
+            'rp_instrum_fecha'            => 'STRING',
+            'integradoId'                 => 'STRING'
         );
 
         $post 	= $input->getArray($arrayPost);
@@ -208,7 +209,7 @@ class IntegradoController extends JControllerLegacy {
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
 
-        if($post->tab=='personales'){
+        /*if($post['tab']=='personales'){
             $contenido = JText::_('NOTIFICACIONES_1');
             $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$post['dp_nom_comercial'].'</strong>',$contenido);
             $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$post['user_id'].'</strong>',$contenido);
@@ -219,7 +220,7 @@ class IntegradoController extends JControllerLegacy {
 
             $send                   = new Send_email();
             $send->notification($data);
-        }
+        }*/
 
         // Get the document object.
         $document = JFactory::getDocument();
@@ -242,7 +243,7 @@ class IntegradoController extends JControllerLegacy {
 
     public static function manejoDatos($data){
         $db	= JFactory::getDbo();
-        $integrado_id = empty($data['integradoId']) ? null : $data['integradoId'];
+        $integrado_id = is_null($data['integradoId']) ? null : $data['integradoId'];
 
         $diccionario  = array(
             'user_id'                    => array('tipo'=>'number',		    	'length'=>10),
@@ -305,6 +306,7 @@ class IntegradoController extends JControllerLegacy {
             }
         }
 
+
         if($integrado_id === null){
             $integrado_id = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
 
@@ -313,8 +315,12 @@ class IntegradoController extends JControllerLegacy {
 
             self::insertData('integrado_users', $columnas, $valores);
 
+            $session = JFactory::getSession();
+            $session->set('integradoId',$integrado_id,'integrado');
+
             $data['integradoId'] = $integrado_id;
         }
+
         switch($data['tab']){
             case 'juridica':
                 $table 		  = 'integrado';

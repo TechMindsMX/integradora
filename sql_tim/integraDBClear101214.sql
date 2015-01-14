@@ -2080,16 +2080,6 @@ CREATE TABLE `flpmu_integrado_users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `flpmu_integrado_users`
---
-
-LOCK TABLES `flpmu_integrado_users` WRITE;
-/*!40000 ALTER TABLE `flpmu_integrado_users` DISABLE KEYS */;
-INSERT INTO `flpmu_integrado_users` VALUES (1,172,'',3),(1,174,'\0',1),(1,176,'\0',3),(8,172,'',3),(11,172,'',3),(12,174,'',3);
-/*!40000 ALTER TABLE `flpmu_integrado_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `flpmu_js_ip_2_country`
 --
 
