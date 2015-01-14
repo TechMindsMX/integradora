@@ -10,6 +10,14 @@ JHTML::_('behavior.calendar');
 jimport('integradora.numberToWord');
 $number2word = new AifLibNumber;
 $orden = $this->orden;
+
+if ( strpos($orden->numOrden,'-0') ){
+    $signoAcreedor = '-$';
+    $signoDeudor = '$';
+}else{
+    $signoAcreedor = '$';
+    $signoDeudor = '-$';
+}
 ?>
 
 <div id="odr_preview">
@@ -37,28 +45,28 @@ $orden = $this->orden;
 
     <div>
         <div class="span6">Acreedor: <strong><?php echo $orden->acreedor ?></strong></div>
-        <div class="span6">Capital: <strong>-$<?php echo number_format($orden->capital,2); ?></strong></div>
+        <div class="span6">Capital: <strong><?php echo $signoAcreedor.number_format($orden->capital,2); ?></strong></div>
     </div>
 
     <div>
         <div class="span6">RFC: <strong><?php echo $orden->a_rfc; ?></strong></div>
-        <div class="span6">Intereses: <strong>-$<?php echo number_format($orden->intereses,2); ?></strong></div>
+        <div class="span6">Intereses: <strong><?php echo $signoAcreedor.number_format($orden->intereses,2); ?></strong></div>
         <div class="clearfix"></div>
-        <div class="span7" style="text-align: right;">IVA: <strong>$<?php echo number_format($orden->iva_intereses,2); ?></strong></div>
+        <div class="span7" style="text-align: right;">IVA: <strong><?php echo $signoAcreedor.number_format($orden->iva_intereses,2); ?></strong></div>
     </div>
 
-    <div class="clearfix">&nbsp;</div>
+    <br /><br />
 
     <div>
         <div class="span6">Deudor: <strong><?php echo $orden->deudor; ?></strong></div>
-        <div class="span6">Capital: <strong>$<?php echo number_format($orden->capital,2); ?></strong></div>
+        <div class="span6">Capital: <strong><?php echo $signoDeudor.number_format($orden->capital,2); ?></strong></div>
     </div>
 
     <div>
         <div class="span6">RFC: <strong><?php echo $orden->d_rfc; ?></strong></div>
-        <div class="span6">interese: <strong>$<?php echo number_format($orden->intereses,2); ?></strong></div>
+        <div class="span6">interese: <strong><?php echo $signoDeudor.number_format($orden->intereses,2); ?></strong></div>
         <div class="clearfix"></div>
-        <div class="span7" style="text-align: right;">IVA: <strong>$<?php echo number_format($orden->iva_intereses,2); ?></strong></div>
+        <div class="span7" style="text-align: right;">IVA: <strong><?php echo $signoDeudor.number_format($orden->iva_intereses,2); ?></strong></div>
     </div>
 
     <div>

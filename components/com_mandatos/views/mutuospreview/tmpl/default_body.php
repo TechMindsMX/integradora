@@ -9,11 +9,12 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 $params = $this->mutuo;
 $contenido = JText::_('CONTENIDO_MUTUO');
+$date = new DateTime();
 
 $contenido = str_replace('$emisor', '<strong style="color: #000000">'.$params->integradoAcredor->nombre.'</strong>',$contenido);
 $contenido = str_replace('$receptor', '<strong style="color: #000000">'.$params->integradoDeudor->nombre.'</strong>',$contenido);
 $contenido = str_replace('$totalAmount', '<strong style="color: #000000">$'.number_format($params->totalAmount,2).'</strong>',$contenido);
-$contenido = str_replace('$expirationDate', '<strong style="color: #000000">28-03-2014</strong>',$contenido);
+$contenido = str_replace('$todayDate', '<strong style="color: #000000">'.date('d-m-Y', $date->getTimestamp()).'</strong>',$contenido);
 
 $tabla = json_decode($params->jsonTabla);
 
@@ -22,7 +23,7 @@ $totalInteres = 0;
 $totalIVA = 0;
 
 if($params->cuotaOcapital == 0){
-    $titulo     = '<h3 style="margin-top: 60px;">Tabla de amortizacion a Capital Fijo</h3>';
+    $titulo     = '<h3 style="margin-top: 60px;">ANEXO 3: Tabla de amortizacion a Capital Fijo</h3>';
     $encabezado = '<div class="span3">Abono a Capital: $'.number_format($tabla->capital_fija,2).'</div>';
 
     foreach ($tabla->amortizacion_capital_fijo as $value) {
@@ -44,7 +45,7 @@ if($params->cuotaOcapital == 0){
     $encabezado .= '<div class="span3">Total de IVA: $'.number_format($totalIVA,2).'</div>';
 
 }elseif($params->cuotaOcapital == 1){
-    $titulo = '<h3 style="margin-top: 60px;">Tabla de amortizacion a Cuota Fija</h3>';
+    $titulo = '<h3 style="margin-top: 60px;">ANEXO 3:Tabla de amortizacion a Cuota Fija</h3>';
     $encabezado = '<div class="span3">Monto de la Cuota: $'.number_format($tabla->cuota_Fija,2).'</div>';
 
     foreach ($tabla->amortizacion_cuota_fija as $value) {
