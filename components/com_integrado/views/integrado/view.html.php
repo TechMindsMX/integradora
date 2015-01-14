@@ -16,8 +16,6 @@ class IntegradoViewIntegrado extends JViewLegacy {
 
 		$this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
 		
-		$this->data = $this->get('Display');
-		
 		// Check for errors.
         if (count($errors = $this->get('Errors'))) 
         {

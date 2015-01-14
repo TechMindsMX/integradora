@@ -98,21 +98,21 @@ function filtro(){
 				$edit_url       = 'index.php?option=com_mandatos&view=odrform&idOrden='.$value->id;
 				$edit_button    = '<a class="btn btn-primary" href="'.$edit_url.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a>';
 
-				if ($value->status == 1 && $this->permisos['canAuth']){
+				if ($value->status->id == 1 && $this->permisos['canAuth']){
 					$url_auth = JRoute::_('index.php?option=com_mandatos&view=odrpreview&layout=confirmauth&idOrden='.$value->id);
 					$auth_button = '<a class="btn btn-primary" id=baja_"'.$value->id.'" name="baja" href="'.$url_auth.'">'.JText::_("LBL_AUTORIZE") .'</a>';
-				} elseif ($value->status == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
+				} elseif ($value->status->id == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-				} elseif ($value->status == 5) {
+				} elseif ($value->status->id == 5) {
 					$auth_button = JText::_('LBL_AUTHORIZED');
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} else {
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				}
-				$class = $value->status == 1?'':'status1';
+				$class = $value->status->id == 1?'':'status1';
 				
-				echo '<tr class="type_'.$value->status.'">';
+				echo '<tr class="type_'.$value->status->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
