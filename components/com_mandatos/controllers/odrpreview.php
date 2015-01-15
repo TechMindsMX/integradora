@@ -68,8 +68,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         var_dump($orden);
         $orden = $orden[0];
         if($orden->status->id == 5){
-
-
             $data      = new Cashout($orden);
 
             $serviceUrl = 'http://192.168.0.111:8081/web/services/integra/stp/cashout';
