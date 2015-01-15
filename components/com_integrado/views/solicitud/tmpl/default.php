@@ -43,7 +43,21 @@ if(!empty($datos->integrado)){
    ?>
 
 	jQuery(document).ready(function(){
-        jQuery('button').click(function(){
+
+		var tabs = jQuery('#tabs-solicitudTabs li');
+		jQuery(tabs).each(function () {
+			jQuery(this).addClass('disabled');
+			jQuery(this).find('a').attr("data-toggle", "disabled");
+		});
+
+		var habilitaTabs = function () {
+			var tabs = jQuery('#tabs-solicitudTabs li');
+			jQuery(tabs).each(function () {
+				jQuery(this).removeClass('disabled');
+				jQuery(this).find('a').attr("data-toggle", "tab");
+			});
+		};
+		jQuery('button').click(function(){
             var boton = jQuery(this).prop('id');
 
             if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'bancos')){
@@ -72,6 +86,7 @@ if(!empty($datos->integrado)){
 
                     if(obj.safeComplete){
                         mensajes('Datos Almacenados','msg', 'msgs_plataforma');
+	                    habilitaTabs();
                         jQuery('#tabs-solicitudTabs').find('a[href="#'+obj.nextTab+'"]').trigger('click');
                     }
 
