@@ -120,7 +120,7 @@ function busquedapor(valor, campo){
 
 <div>
 	<div class="col-md-4">
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=clientesform'); ?>"><?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?></a>
+		<a class="btn btn-primary" href="index.php?option=com_mandatos&view=clientesform"><?php echo JText::_('COM_MANDATOS_CLIENTES_LBL_AGREGAR'); ?></a>
 	</div>
 	
 	<div class="col-md-4">
@@ -173,7 +173,7 @@ function busquedapor(valor, campo){
                 echo '      <div></div></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
-				echo '  	<a class="btn btn-primary" href="index.php/component/mandatos/?view=clientesform&idCliPro='.$value->id.'">';
+				echo '  	<a class="btn btn-primary" href="index.php?option=com_mandatos&view=clientesform&idCliPro='.$value->id.'">';
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
 				echo '		</a>';
 				echo '	</td>';

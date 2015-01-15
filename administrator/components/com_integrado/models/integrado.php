@@ -69,8 +69,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 	public function getForm($data = array(), $loadData = true)
 	{
-		$form = $this->loadForm('com_integrado.integrado', 'integrado',
-			array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_integrado.integrado', 'integrado', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
 			return false;
 		}

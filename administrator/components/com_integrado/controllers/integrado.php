@@ -86,6 +86,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 		return (in_array($newStatus, $validos)) ? true : false ;
 	}
+
 	public function getCatalogos() {
 		$catalogos = new Catalogos;
 		

@@ -47,7 +47,7 @@ class MandatosController extends JControllerLegacy {
         }
 
         foreach ($proyectos as $key => $value) {
-            if($data['id_proyecto'] == $value->id_proyecto){
+            if($key == $data['id_proyecto']){
                 if($value->parentId == 0){
                     $this->app->redirect('index.php?option=com_mandatos&view=proyectosform&id_proyecto='.$data['id_proyecto']);
                 }else{
