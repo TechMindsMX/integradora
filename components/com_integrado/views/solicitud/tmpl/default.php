@@ -31,10 +31,10 @@ if(!empty($datos->integrado)){
 	$fisica = '';
 	$moral = '';
 }
+
 ?>
 <script>
     var catalogoBancos = new Array();
-
     <?php
    foreach ($this->catalogos->bancos as $key => $value){
        $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
@@ -45,10 +45,13 @@ if(!empty($datos->integrado)){
 	jQuery(document).ready(function(){
 
 		var tabs = jQuery('#tabs-solicitudTabs li');
-		jQuery(tabs).each(function () {
-			jQuery(this).addClass('disabled');
-			jQuery(this).find('a').attr("data-toggle", "disabled");
-		});
+		var integradoIdModel = '<?php if (isset($this->data->integrados->integrado->integrado_id)) : echo $this->data->integrados->integrado->integrado_id; endif; ?>';
+		if (integradoIdModel == '') {
+			jQuery(tabs).each(function () {
+				jQuery(this).addClass('disabled');
+				jQuery(this).find('a').attr("data-toggle", "disabled");
+			});
+		}
 
 		var habilitaTabs = function () {
 			var tabs = jQuery('#tabs-solicitudTabs li');
