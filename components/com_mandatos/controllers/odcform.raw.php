@@ -53,6 +53,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
             unset($datos['idOrden']);
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odc', $this->integradoId);
+            $datos['status'] = 1;
+            $datos['integradoId'] = $this->integradoId;
 
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
@@ -75,7 +77,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
             /*NOTIFICACIONES 11*/
 
-            $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
+            /*$currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
             $int = new IntegradoSimple($currentIntegradoId);
 
             $titulo = JText::_('TITULO_11');
