@@ -10,12 +10,16 @@ class MandatosControllerOddform extends JControllerLegacy {
     function saveODD() {
         $this->app 			= JFactory::getApplication();
         $this->parametros	= $this->app->input->getArray();
-        $datos = json_decode($this->parametros['datos']);
-        $save = new sendToTimOne();
-        $date = new DateTime($datos->paymentDate);
+        $datos              = json_decode($this->parametros['datos']);
+        $save               = new sendToTimOne();
+        $date               = new DateTime($datos->paymentDate);
+        $session            = JFactory::getSession();
         $datos->paymentDate = $date->getTimestamp();
 
         unset($datos->view, $datos->option, $datos->Itemid, $datos->confirmacion);
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
+
+        $datos->integradoId = $this->integradoId;
 
         $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $datos->integradoId);
 
@@ -31,7 +35,7 @@ class MandatosControllerOddform extends JControllerLegacy {
 		    $datos->createdDate = time();
 		    $datos->numOrden = $save->getNextOrderNumber('odd', $datos->integradoId);
 		    unset($datos->id);
-
+            $datos->status=1;
 		    $save->formatData($datos);
 		    $salvado = $save->insertDB('ordenes_deposito', null, null, true);
 	    }else{

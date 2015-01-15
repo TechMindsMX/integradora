@@ -61,6 +61,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
             $id = $db->insertid();
         }else{
+            unset($datos['idOrden']);
             $save->formatData($datos);
             $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$datos['numOrden']);
         }
