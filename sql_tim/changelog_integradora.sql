@@ -7,14 +7,14 @@ CREATE TABLE `flpmu_catalog_order_status` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (1, 'Nueva');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (3, 'En autorización');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (5, 'Autorizada');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (8, 'Procesando');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (13, 'Pagada');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (21, 'Liquidada');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (34, 'Devuelta');
-INSERT INTO integradb.flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (1, 'Nueva');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (3, 'En autorización');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (5, 'Autorizada');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (8, 'Procesando');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (13, 'Pagada');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (21, 'Liquidada');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (34, 'Devuelta');
+INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada');
 --rollback DROP TABLE `flpmu_catalog_order_status`;
 
 --changeset lutek:2
@@ -31,55 +31,55 @@ CREATE TABLE `flpmu_mandatos_mutuos` (
   `interes` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
+ALTER TABLE `flpmu_mandatos_mutuos`
 CHANGE COLUMN `expirationDate` `paymentPeriod` INT(11) NULL DEFAULT NULL ,
 CHANGE COLUMN `payments` `quantityPayments` INT(11) NULL DEFAULT NULL ;
 --rollback DROP TABLE `flpmu_mandatos_mutuos`;
 
 --changeset lutek:3
-ALTER TABLE `integradb`.`flpmu_mandatos_mutuos`
+ALTER TABLE `flpmu_mandatos_mutuos`
 CHANGE COLUMN `cuenta` `idCuenta` INT(11) NULL DEFAULT NULL ,
 ADD COLUMN `cuotaOcapital` INT(11) NULL AFTER `interes`;
---rollback ALTER TABLE integradb.flpmu_mandatos_mutuos CHANGE COLUMN `idCuenta` `cuenta` INT(11) NULL DEFAULT NULL;
---rollback ALTER TABLE integradb.flpmu_mandatos_mutuos DROP cuotaOcapital;
+--rollback ALTER TABLE flpmu_mandatos_mutuos CHANGE COLUMN `idCuenta` `cuenta` INT(11) NULL DEFAULT NULL;
+--rollback ALTER TABLE flpmu_mandatos_mutuos DROP cuotaOcapital;
 
 --changeset ricardolyon:4
-ALTER TABLE integradb.flpmu_txs_timone_mandato CHANGE idTx idTx VARCHAR(255);
-ALTER TABLE integradb.flpmu_txs_timone_mandato ADD CONSTRAINT unique_idTx UNIQUE (idTx);
-ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `statusName` `name` VARCHAR(45) NOT NULL ,ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
---rollback ALTER TABLE integradb.flpmu_txs_timone_mandato CHANGE idTx idTx INT(11);
---rollback ALTER TABLE integradb.flpmu_txs_timone_mandato DROP INDEX unique_idTx;
---rollback ALTER TABLE `integradb`.`flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
+ALTER TABLE flpmu_txs_timone_mandato CHANGE idTx idTx VARCHAR(255);
+ALTER TABLE flpmu_txs_timone_mandato ADD CONSTRAINT unique_idTx UNIQUE (idTx);
+ALTER TABLE `flpmu_catalog_order_status` CHANGE COLUMN `statusName` `name` VARCHAR(45) NOT NULL ,ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
+--rollback ALTER TABLE flpmu_txs_timone_mandato CHANGE idTx idTx INT(11);
+--rollback ALTER TABLE flpmu_txs_timone_mandato DROP INDEX unique_idTx;
+--rollback ALTER TABLE `flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
 
 --changeset lutek:5
 DROP TABLE IF EXISTS `flpmu_catalog_tipoperiodos`;
-CREATE TABLE `integradb`.`flpmu_catalog_tipoperiodos` (
+CREATE TABLE `flpmu_catalog_tipoperiodos` (
   `IdTipo` INT(11) NULL,
   `nombre` VARCHAR(45) NULL,
   `periodosAnio` INT(11) NULL);
-ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` ADD COLUMN `status` INT(11) NULL AFTER `cuotaOcapital`;
+ALTER TABLE `flpmu_mandatos_mutuos` ADD COLUMN `status` INT(11) NULL AFTER `cuotaOcapital`;
 
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Quincenal',104);
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(3,'Mensual',12);
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(4,'Bimestral',6);
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(5,'Trimestral',4);
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(6,'Semestral',2);
-INSERT INTO `integradb`.`flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(7,'Anual',1);
---rollback DROP TABLE `integradb`.`flpmu_catalog_tipoperiodos`;
---rollback ALTER TABLE `integradb`.`flpmu_mandatos_mutuos` DROP `status`;
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(2,'Quincenal',104);
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(3,'Mensual',12);
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(4,'Bimestral',6);
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(5,'Trimestral',4);
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(6,'Semestral',2);
+INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUES(7,'Anual',1);
+--rollback DROP TABLE `flpmu_catalog_tipoperiodos`;
+--rollback ALTER TABLE `flpmu_mandatos_mutuos` DROP `status`;
 
 --changeset lutek:6
 DROP TABLE IF EXISTS `flpmu_integrado_timone`;
-CREATE TABLE `integradb`.`flpmu_integrado_timone` (
+CREATE TABLE `flpmu_integrado_timone` (
   `integradoId` INT NOT NULL,
   `timOneId` INT NULL,
   `account` BIGINT NULL,
   PRIMARY KEY (`integradoId`));
---rollback DROP TABLE `integradb`.`flpmu_integrado_timone`;
+--rollback DROP TABLE `flpmu_integrado_timone`;
 
 --changeset ricardolyon:7
 DROP TABLE IF EXISTS `flpmu_reportes_balance`;
-CREATE TABLE `integradb`.`flpmu_reportes_balance` (
+CREATE TABLE `flpmu_reportes_balance` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `integradoId` VARCHAR(45) NOT NULL,
   `year` INT(4) NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE `integradb`.`flpmu_reportes_balance` (
   `retiros` FLOAT NOT NULL,
   `createdDate` BIGINT NOT NULL,
   PRIMARY KEY (`id`));
---rollback DROP TABLE `integradb`.`flpmu_reportes_balance`;
+--rollback DROP TABLE `flpmu_reportes_balance`;
 
 --changeset nestor:8
 DROP TABLE IF EXISTS `flpmu_ordenes_prestamo`;
@@ -113,27 +113,27 @@ ALTER TABLE `flpmu_ordenes_prestamo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT
 --rollback DROP TABLE `flpmu_ordenes_prestamo`;
 
 --changeset ricardolyon:9
-DROP TABLE IF EXISTS `integradb`.`flpmu_auth_mutuo`;
-CREATE TABLE `integradb`.`flpmu_auth_mutuo` (
+DROP TABLE IF EXISTS `flpmu_auth_mutuo`;
+CREATE TABLE `flpmu_auth_mutuo` (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   idOrden INT NOT NULL,
   userId INT NOT NULL,
   authDate BIGINT NOT NULL
   );
---rollback DROP TABLE `integradb`.`flpmu_auth_mutuo`;
+--rollback DROP TABLE `flpmu_auth_mutuo`;
 
 --changeset ricardolyon:10
-ALTER TABLE `integradb`.`flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` INT NOT NULL;
---rollback ALTER  TABLE `integradb`.`flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` VARCHAR(45) NOT NULL;
+ALTER TABLE `flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` INT NOT NULL;
+--rollback ALTER  TABLE `flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` VARCHAR(45) NOT NULL;
 
 --changeset ricardolyon:11
-DROP TABLE IF EXISTS `integradb`.`flpmu_integrado_params`;
-CREATE TABLE `integradb`.`flpmu_integrado_params` (
+DROP TABLE IF EXISTS `flpmu_integrado_params`;
+CREATE TABLE `flpmu_integrado_params` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `integradoId` INT NOT NULL,
   `params` VARCHAR(255) NULL
 );
---rollback DROP TABLE `integradb`.`flpmu_integrado_params`;
+--rollback DROP TABLE `flpmu_integrado_params`;
 
 
 --changeset lutek:12
@@ -156,17 +156,17 @@ ALTER TABLE  `flpmu_ordenes_prestamo` ADD  `status` INT NOT NULL
 --rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `numOrden`, DROP `status`;
 
 --changeset lutek:15
-ALTER TABLE `integradb`.`flpmu_ordenes_prestamo`
+ALTER TABLE `flpmu_ordenes_prestamo`
 CHANGE COLUMN `numOrden` `numOrden` VARCHAR(50) NULL ,
 CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(100) NULL ,
 CHANGE COLUMN `acreedor` `acreedor` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `deudor` `deudor` VARCHAR(100) NULL DEFAULT NULL ,
 CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(100) NULL DEFAULT NULL ;
---rollback ALTER TABLE `integradb`.`flpmu_ordenes_prestamo` CHANGE COLUMN `numOrden` `numOrden` INT(10) NULL ,CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(45) NULL ,CHANGE COLUMN `acreedor` `acreedor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `deudor` `deudor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(45) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `numOrden` `numOrden` INT(10) NULL ,CHANGE COLUMN `tipo_movimiento` `tipo_movimiento` VARCHAR(45) NULL ,CHANGE COLUMN `acreedor` `acreedor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `a_rfc` `a_rfc` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `deudor` `deudor` VARCHAR(45) NULL DEFAULT NULL ,CHANGE COLUMN `d_rfc` `d_rfc` VARCHAR(45) NULL DEFAULT NULL ;
 
 --changeset lutek:16
-ALTER TABLE `integradb`.`flpmu_catalog_tipoperiodos`
+ALTER TABLE `flpmu_catalog_tipoperiodos`
 ADD COLUMN `multiplicador` INT(11) NULL AFTER `periodosAnio`,
 ADD COLUMN `nombreCiclo` VARCHAR(45) NULL AFTER `multiplicador`;
 UPDATE flpmu_catalog_tipoperiodos SET nombreCiclo = 'M' WHERE idTipo IN (3,4,5,6);
@@ -176,11 +176,11 @@ UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 2 WHERE idTipo = 4;
 UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 3 WHERE idTipo = 5;
 UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 6 WHERE idTipo = 6;
 UPDATE flpmu_catalog_tipoperiodos SET multiplicador = 1 WHERE idTipo = 7;
---rollback ALTER TABLE `integradb`.`flpmu_catalog_tipoperiodos` DROP COLUMN `nombreCiclo`, DROP COLUMN `multiplicador`;
+--rollback ALTER TABLE `flpmu_catalog_tipoperiodos` DROP COLUMN `nombreCiclo`, DROP COLUMN `multiplicador`;
 
 --changeset ricardolyon:17
-INSERT INTO integradb.flpmu_menu (id, menutype, title, alias, note, path, link, type, published, parent_id, level, component_id, checked_out, checked_out_time, browserNav, access, img, template_style_id, params, lft, rgt, home, language, client_id) VALUES (204, 'mainmenu', 'Integrado', 'integrado', '', 'integrado', 'index.php?option=com_integrado', 'url', 1, 1, 1, 0, 0, null, 0, 1, '', 0, '{"menu-anchor_title":"","menu-anchor_css":"","menu_image":"","menu_text":1}', 179, 180, 0, '*', 0);
---rollback DELETE FROM integradb.flpmu_menu WHERE id = 204;
+INSERT INTO flpmu_menu (id, menutype, title, alias, note, path, link, type, published, parent_id, level, component_id, checked_out, checked_out_time, browserNav, access, img, template_style_id, params, lft, rgt, home, language, client_id) VALUES (204, 'mainmenu', 'Integrado', 'integrado', '', 'integrado', 'index.php?option=com_integrado', 'url', 1, 1, 1, 0, 0, null, 0, 1, '', 0, '{"menu-anchor_title":"","menu-anchor_css":"","menu_image":"","menu_text":1}', 179, 180, 0, '*', 0);
+--rollback DELETE FROM flpmu_menu WHERE id = 204;
 
 --changeset lutek:18
 ALTER TABLE  `flpmu_bitacora_status_mutuo` ADD  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
