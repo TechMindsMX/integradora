@@ -93,7 +93,9 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
 
-			$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+			if ( ! empty( $this->integrados[ $key ]->datos_personales ) ) {
+				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
 			if (isset($empresa)){		
@@ -102,7 +104,9 @@ class Integrado {
 				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
-				$this->integrados[$key]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_empresa->cod_postal));
+				if ( isset( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
+					$this->integrados[$key]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_empresa->cod_postal));
+				}
 			}
 		}else{
 			$this->integrados[$key]->integrado 			= null;
