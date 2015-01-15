@@ -15,11 +15,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 	
 	function authorize() {
         $post               = array('integradoId' => 'INT', 'idOrden' => 'INT');
-		$this->app 			= JFactory::getApplication();
-		$this->parametros	= $this->app->input->getArray($post);
-        $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
+        $this->app 			= JFactory::getApplication();
+        $this->parametros	= $this->app->input->getArray($post);
         $this->integradoId = JFactory::getSession()->get('integradoId', null,'integrado');
         $this->integradoId = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
+        $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -48,6 +48,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 	            }
+                //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
 
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{

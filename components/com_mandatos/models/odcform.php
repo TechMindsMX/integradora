@@ -29,6 +29,7 @@ class MandatosModelOdcform extends JModelItem {
         if (!isset($this->dataModelo)) {
             $this->dataModelo = getFromTimOne::getOrdenesCompra($this->integradoId, $this->id);
         }
+        $this->dataModelo = $this->dataModelo[0];
 
         $dataxml = $this->getdata2xml($this->dataModelo->urlXML);
 
