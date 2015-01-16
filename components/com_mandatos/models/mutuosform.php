@@ -64,7 +64,7 @@ class MandatosModelMutuosform extends JModelItem {
             'capital'     => $data->totalAmount,
             'interes'     => $data->interes
         );
-        $tablas = getFromTimOne::getTabla((object)$dataTabla);
+        $tablas = getFromTimOne::getTablaAmotizacion((object)$dataTabla);
 
             if($data->cuotaOcapital === 0){
                 $respuesta->intereses_con_iva          = $tablas->intereses_con_iva;

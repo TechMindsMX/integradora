@@ -23,22 +23,22 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 		switch (intval($item->integrados[0]->integrado->status)) {
 			case 0: // Nueva solicitud 0
-				$validos = array(2, 3, 99);
+				$validos = array(0, 2, 3, 99);
 				break;
 			case 1: // para revision nuevamente 1
-				$validos = array(2, 3, 99);
+				$validos = array(1, 2, 3, 99);
 				break;
 			case 2: // Devuelto 2
-				$validos = array(1);
+				$validos = array(1, 2);
 				break;
 			case 3: // contrato 3
-				$validos = array(50, 99);
+				$validos = array(3, 50, 99);
 				break;
 			case 50: // integrado 50
-				$validos = array();
+				$validos = array(50);
 				break;
 			case 99: // cancelada 99
-				$validos = array();
+				$validos = array(99);
 				break;
 			default:
 				$validos = array();
@@ -64,7 +64,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 	public function getVerifications( ){
 		$data = getFromTimOne::selectDB('integrado_verificacion_solicitud', 'integradoId = '. $this->integ_id );
-		var_dump( $data, $this->integ_id );
+		$data = $data[0];
 
 		return $data;
 
@@ -146,7 +146,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 		);
 
 		$campos->LBL_TAB_BANCO = array(
-			'banco_nombre',
+			'banco_codigo',
 			'banco_cuenta',
 			'banco_sucursal',
 			'banco_clabe'

@@ -199,3 +199,10 @@ CREATE TABLE `flpmu_integrado_verificacion_solicitud` (
   `instrumentos` VARCHAR(255)
 );
 --rollback DROP TABLE `flpmu_integrado_verificacion_solicitud`;
+
+--changeset ricardolyon:20
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_personales` `datos_personales` VARCHAR(1024) DEFAULT NULL;
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_empresa` `datos_empresa` VARCHAR(1024) DEFAULT NULL;
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_bancarios` `datos_bancarios` VARCHAR(50000) DEFAULT NULL;
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `instrumentos` `instrumentos` VARCHAR(1024) DEFAULT NULL;
+--rollback ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_personales` `datos_personales` VARCHAR(255) NOT NULL; ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_empresa` `datos_empresa` VARCHAR(255) NOT NULL; ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `datos_bancarios` `datos_bancarios` VARCHAR(255) NOT NULL; ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE `instrumentos` `instrumentos` VARCHAR(255) NOT NULL;

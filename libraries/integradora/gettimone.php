@@ -120,7 +120,7 @@ class getFromTimOne{
         return $txs;
     }
 
-    public static function getTabla($data){
+    public static function getTablaAmotizacion($data){
 
         /*
          * object(stdClass)#354 (4) {

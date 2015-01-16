@@ -46,11 +46,14 @@ $verifications = $this->verifications;
                     echo JHtml::_('bootstrap.startAccordion', $jhtml_group, array('active' => 'LBL_SLIDE_BASIC'));
                     $dat_pers = isset($verifications->datos_personales)     ? $verifications->datos_personales      : '{}';
                     $dat_empr = isset($verifications->datos_empresa)        ? $verifications->datos_empresa         : '{}';
-                    $dat_banc = isset($verifications->datos_bancarios[0])   ? $verifications->datos_bancarios[0]    : '{}';
+                    $dat_banc = isset($verifications->datos_bancarios)      ? $verifications->datos_bancarios       : '{}';
 
                     tabValores($integ->datos_personales, 	$this->item->campos, 	$dat_pers, $jhtml_group, 'LBL_SLIDE_BASIC');
                     tabValores($integ->datos_empresa, 		$this->item->campos, 	$dat_empr, $jhtml_group, 'LBL_TAB_EMPRESA');
-                    tabValores($integ->datos_bancarios[0], 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO');
+//                    foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
+//                        tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
+//                    }
+                    tabValores($integ->datos_bancarios[0],  $this->item->campos,    $dat_banc, $jhtml_group,  'LBL_TAB_BANCO');
                     echo JHtml::_('bootstrap.endAccordion');
                     ?>
                 </div>
@@ -61,25 +64,29 @@ $verifications = $this->verifications;
     </form>
 
 <?php
-function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label)
+function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $key = null)
 {
-    echo JHtml::_('bootstrap.addSlide', $jhtml_group, JText::_($jtext_label), $jtext_label);
+    echo JHtml::_('bootstrap.addSlide', $jhtml_group, JText::_($jtext_label), $jtext_label.$key);
     ?>
     <div class="clearfix">
         <?php
-        if ($obj) :
+        if ($obj) {
             ?>
             <div class="span5">
                 <?php
-                foreach ($obj as $label => $field):
-                    if (in_array($label, $campos->$jtext_label)) :
+                foreach ( $obj as $label => $field ):
+                    if ( in_array( $label, $campos->$jtext_label ) ) :
                         if ( ! empty( $verificacion ) ) {
-                            $checked = array_key_exists($label, get_object_vars(json_decode($verificacion))) ? 'checked': '';
+                            $checked = array_key_exists( $label,
+                                                         get_object_vars( json_decode( $verificacion ) ) ) ? 'checked' : '';
                         }
                         ?>
                         <div class="control-group">
-                            <input name="<?php echo get_class($obj).'_'.$label; ?>" type="checkbox" class="check" value="verified" <?php echo $checked; ?>>
-                            <div class="control-label" style="text-transform: capitalize; padding-left: 0.5em;"><?php echo JText::_($label); ?></div>
+                            <input name="<?php echo get_class( $obj ) . '_' . $label; ?>" type="checkbox" class="check"
+                                   value="1" <?php echo $checked; ?>>
+
+                            <div class="control-label"
+                                 style="text-transform: capitalize; padding-left: 0.5em;"><?php echo JText::_( $label ); ?></div>
                             <div class="controls"><?php echo $field; ?></div>
                         </div>
                     <?php
@@ -89,13 +96,13 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label)
             </div>
             <div class="span7">
                 <?php
-                $attachCampos = 'attach_'.$jtext_label;
-                $attachments = $campos->$attachCampos;
-                foreach ($obj as $label => $field) :
-                    if (in_array($label,$attachments)) :
+                $attachCampos = 'attach_' . $jtext_label;
+                $attachments  = $campos->$attachCampos;
+                foreach ( $obj as $label => $field ) :
+                    if ( in_array( $label, $attachments ) ) :
                         ?>
                         <div class="control-group">
-                            <a href="<?php echo $field; ?>"><?php echo JText::_($label); ?></a>
+                            <a href="<?php echo $field; ?>"><?php echo JText::_( $label ); ?></a>
                         </div>
                     <?php
                     endif;
@@ -103,7 +110,7 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label)
                 ?>
             </div>
         <?php
-        endif;
+        }
         ?>
     </div>
     <?php
