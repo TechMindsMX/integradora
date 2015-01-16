@@ -10,25 +10,30 @@ jimport('joomla.application.component.view');
  */
 class ReportesViewReporteslistados extends JViewLegacy
 {
-	// Overwriting JView display method
-	function display($tpl = null)
-	{
+    // Overwriting JView display method
+    protected $permisos;
 
-	    $this->data             = $this->get('Solicitud');
+    function display($tpl = null)
+    {
+
+        $this->data             = $this->get('Solicitud');
         $this->balances         = $this->get('BalanceList');
         $this->flujo            = $this->get('Flujo');
         $this->resultados       = $this->get('Resultados');
 
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 
-			return false;
-		}
-		// Display the view
-		parent::display($tpl);
-	}
+            return false;
+        }
+
+        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
+
+        // Display the view
+        parent::display($tpl);
+    }
 
 }

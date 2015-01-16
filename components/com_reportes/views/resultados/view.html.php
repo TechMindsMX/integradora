@@ -15,8 +15,9 @@ class ReportesViewResultados extends JViewLegacy
 {
 	// Overwriting JView display method
 	protected $integradoId;
+    protected $permisos;
 
-	function display($tpl = null){
+    function display($tpl = null){
 		$sesion = JFactory::getSession();
 		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
@@ -31,6 +32,7 @@ class ReportesViewResultados extends JViewLegacy
 			return false;
 		}
 
+        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
 		// Display the view
 		parent::display($tpl);
 	}

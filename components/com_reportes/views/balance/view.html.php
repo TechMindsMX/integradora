@@ -26,6 +26,7 @@ class ReportesViewBalance extends JViewLegacy
 
 		$vars = $this->input->getArray(array('id' => 'INT'));
 		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
+        $this->integradoId = $vars['integradoId'];
 
 		$model = $this->getModel();
 
@@ -67,6 +68,8 @@ class ReportesViewBalance extends JViewLegacy
 
 			return false;
 		}
+
+        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
 		// Display the view
 		parent::display($tpl);
 	}

@@ -144,8 +144,14 @@ class Integrado {
 	
 	public static function checkPermisos($class, $userId, $integradoId)
 	{
+        $app = JFactory::getApplication();
+
+        if( !isset($integradoId) ){
+            $app->redirect('index.php?option=com_mandatos', JText::_('ERROR_NO_SELECCION_INTEGRADO'), 'error');
+        }
+
 		$db = JFactory::getDbo();
-		
+
 		$query = $db->getQuery(true)
 					->select('*')
 					->from($db->quoteName('#__integrado_permisos'));
@@ -167,7 +173,6 @@ class Integrado {
 
 		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
 		if(is_null($perm_level)) {
-			$app = JFactory::getApplication();
 			$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
 		}
 

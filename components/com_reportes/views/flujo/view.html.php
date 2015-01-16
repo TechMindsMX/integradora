@@ -26,6 +26,7 @@ class ReportesViewFlujo extends JViewLegacy
 
 		$vars = $this->input->getArray(array('startDate' => 'STR', 'endDate' => 'STR'));
 		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
+        $this->integradoId = $vars['integradoId'];
 
 		$model = $this->getModel();
 		// genera el modelo de un reporte nuevo
@@ -59,6 +60,8 @@ class ReportesViewFlujo extends JViewLegacy
 
 			return false;
 		}
+
+        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
 		// Display the view
 		parent::display($tpl);
 	}
