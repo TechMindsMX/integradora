@@ -8,9 +8,10 @@ $integ = $this->item->integrados[0];
 
 $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->razon_social : $this->item->usuarios[0]->name;
 
+$verifications = $this->verifications;
 ?>
 
-    <form action="<?php echo JRoute::_('index.php?option=com_integrado&layout=edit&id=' . (int)$this -> item -> id); ?>"
+    <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integrado&layout=edit&id=' . (int)$this -> item -> id); ?>"
           method="post" name="adminForm" id="adminForm">
         <div class="form-horizontal">
             <fieldset class="adminform">
@@ -43,15 +44,19 @@ $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->
                     $jhtml_group = 'slide-detalle-integrado';
 
                     echo JHtml::_('bootstrap.startAccordion', $jhtml_group, array('active' => 'LBL_SLIDE_BASIC'));
-                    tabValores($integ->datos_personales, 	$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_SLIDE_BASIC');
-                    tabValores($integ->datos_empresa, 		$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_TAB_EMPRESA');
-                    tabValores($integ->datos_bancarios, 	$this->item->campos, 	$integ->integrado->verificacion, $jhtml_group, 'LBL_TAB_BANCO');
+                    $dat_pers = isset($verifications->datos_personales)     ? $verifications->datos_personales      : '{}';
+                    $dat_empr = isset($verifications->datos_empresa)        ? $verifications->datos_empresa         : '{}';
+                    $dat_banc = isset($verifications->datos_bancarios[0])   ? $verifications->datos_bancarios[0]    : '{}';
+
+                    tabValores($integ->datos_personales, 	$this->item->campos, 	$dat_pers, $jhtml_group, 'LBL_SLIDE_BASIC');
+                    tabValores($integ->datos_empresa, 		$this->item->campos, 	$dat_empr, $jhtml_group, 'LBL_TAB_EMPRESA');
+                    tabValores($integ->datos_bancarios[0], 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO');
                     echo JHtml::_('bootstrap.endAccordion');
                     ?>
                 </div>
             </fieldset>
         </div>
-        <input type="hidden" name="task" value="integrado.edit" />
+        <input type="hidden" name="task" value="integrado.save" />
         <?php echo JHtml::_('form.token'); ?>
     </form>
 
@@ -68,10 +73,12 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label)
                 <?php
                 foreach ($obj as $label => $field):
                     if (in_array($label, $campos->$jtext_label)) :
-                        $checked = array_key_exists($label, get_object_vars(json_decode($verificacion))) ? 'checked': '';
+                        if ( ! empty( $verificacion ) ) {
+                            $checked = array_key_exists($label, get_object_vars(json_decode($verificacion))) ? 'checked': '';
+                        }
                         ?>
                         <div class="control-group">
-                            <input name="<?php echo $label; ?>" type="checkbox" class="check" value="verified" <?php echo $checked; ?>>
+                            <input name="<?php echo get_class($obj).'_'.$label; ?>" type="checkbox" class="check" value="verified" <?php echo $checked; ?>>
                             <div class="control-label" style="text-transform: capitalize; padding-left: 0.5em;"><?php echo JText::_($label); ?></div>
                             <div class="controls"><?php echo $field; ?></div>
                         </div>

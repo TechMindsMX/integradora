@@ -7,16 +7,18 @@ class IntegradoViewIntegrado extends JViewLegacy {
 
 	public function display($tpl = null) {
 
-		$form = $this -> get('Form');
+//		$form = $this -> get('Form');
 		$item = $this -> get('Item');
+		$verifications = $this -> get('Verifications');
 
 		if (count($errors = $this -> get('Errors'))) {
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;
 		}
 
-		$this -> form = $form;
-		$this -> item = $item;
+//		$this->form = $form;
+		$this->item = $item;
+		$this->verifications = $verifications;
 
 		$this -> addToolBar();
 

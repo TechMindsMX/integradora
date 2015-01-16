@@ -189,3 +189,13 @@ ALTER TABLE  `flpmu_bitacora_status_odd` CHANGE  `id`  `id` INT( 11 ) NOT NULL A
 ALTER TABLE  `flpmu_bitacora_status_odr` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT;
 ALTER TABLE  `flpmu_bitacora_status_odv` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT;
 --rollback ALTER TABLE `flpmu_bitacora_status_mutuo` DROP `id`; ALTER TABLE  `flpmu_bitacora_status_odc` CHANGE  `id`  `id` INT( 11 ) NOT NULL; ALTER TABLE  `flpmu_bitacora_status_odd` CHANGE  `id`  `id` INT( 11 ) NOT NULL; ALTER TABLE  `flpmu_bitacora_status_odr` CHANGE  `id`  `id` INT( 11 ) NOT NULL; ALTER TABLE  `flpmu_bitacora_status_odv` CHANGE  `id`  `id` INT( 11 ) NOT NULL;
+
+--changeset ricardolyon:19
+CREATE TABLE `flpmu_integrado_verificacion_solicitud` (
+  `integradoId` INT NOT NULL,
+  `datos_personales` VARCHAR(255),
+  `datos_empresa` VARCHAR(255),
+  `datos_bancarios` VARCHAR(255),
+  `instrumentos` VARCHAR(255)
+);
+--rollback DROP TABLE `flpmu_integrado_verificacion_solicitud`;

@@ -355,7 +355,7 @@ class getFromTimOne{
     }
 
     public static function getIntegradoId($timOneId){
-        $data = self::selectDB('integrado_timOne','timOneId = '.$timOneId);
+        $data = self::selectDB('integrado_timone','timOneId = '.$timOneId);
 
         return $data;
     }

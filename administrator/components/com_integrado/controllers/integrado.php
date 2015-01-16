@@ -5,10 +5,12 @@ jimport('joomla.application.component.controllerform');
 jimport('integradora.integrado');
 
 /**
- * 
+ *
  */
 class IntegradoControllerIntegrado extends JControllerForm {
-	
+
+	protected $data;
+
 	public function save($key = null, $urlVar = null)
 	{
 
@@ -16,14 +18,17 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 		$lang  = JFactory::getLanguage();
 
-		$value = JFactory::getApplication()->input->getArray();
+		$this->data = JFactory::getApplication()->input->getArray();
+
+		$this->groupVerifications();
+		exit;
 
 		// Create an object for the record we are going to update.
 		$object = new stdClass();
-		$object->integrado_id = $value['id'];
-		$object->status = $value['status'];
+		$object->integrado_id = $this->data['id'];
+		$object->status = $this->data['status'];
 
-		$verified = $this->verified($value);
+		$verified = $this->verified($this->data);
 
 		$object->datosIntegrado = new IntegradoSimple($object->integrado_id);
 		$valido = $this->cambioStatusValido($object->integrado_id, $object->datosIntegrado->integrados[0]->integrado->status, $object->status);
@@ -103,6 +108,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		unset($verificacion['option']);
 		unset($verificacion['task']);
 		unset($verificacion['layout']);
+		unset($verificacion['view']);
 		count($verificacion);
 		array_pop($verificacion);
 		$verificacionObj = json_encode($verificacion);
@@ -113,6 +119,39 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 		return count($verificacionObj) == $totalCamposVerify;
 
+	}
+
+	private function groupVerifications() {
+		$verificacion = $this->data;
+		unset($verificacion['id']);
+		unset($verificacion['status']);
+		unset($verificacion['option']);
+		unset($verificacion['task']);
+		unset($verificacion['layout']);
+		unset($verificacion['view']);
+		count($verificacion);
+		array_pop($verificacion);
+
+		foreach ( $verificacion as $key => $value ) {
+			$keyLimpia = $this->explodeX(array('integrado_datos_personales_', 'integrado_datos_empresa_','integrado_datos_bancarios_'), $key);
+			$valores[$keyLimpia->table][$keyLimpia->key] = $value;
+		}
+
+	}
+
+	function explodeX( $delimiters, $string )
+	{
+		$val = new stdClass();
+
+		foreach ( $delimiters as $key => $value ) {
+			if ( strstr($string, $value) ){
+				$val->delimiter = $value;
+				$val->table =  substr($val->delimiter, 0 ,-1);
+				$val->key    = str_replace( $val->delimiter , '', $string);
+			}
+		}
+
+		return $val;
 	}
 
 

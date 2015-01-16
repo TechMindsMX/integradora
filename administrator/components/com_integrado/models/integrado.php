@@ -14,9 +14,9 @@ class IntegradoModelIntegrado extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$input = JFactory::getApplication()->input;
-		$integ_id = ($input->get('integrado_id', 0, 'int') ? $input->get('integrado_id', 0, 'int') : $input->get('id', 0, 'int'));
+		$this->integ_id = ($input->get('integrado_id', 0, 'int') ? $input->get('integrado_id', 0, 'int') : $input->get('id', 0, 'int'));
 
-		$integrado = new IntegradoSimple($integ_id);
+		$integrado = new IntegradoSimple($this->integ_id);
 		$item = $integrado;
 
 		$item->catalogos = $this->getCatalogos();
@@ -62,6 +62,14 @@ class IntegradoModelIntegrado extends JModelAdmin
 		return $catalogos;
 	}
 
+	public function getVerifications( ){
+		$data = getFromTimOne::selectDB('integrado_verificacion_solicitud', 'integradoId = '. $this->integ_id );
+		var_dump( $data, $this->integ_id );
+
+		return $data;
+
+	}
+
 	public function getTable($type = 'Integrado', $prefix = 'IntegradoTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
@@ -69,11 +77,11 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 	public function getForm($data = array(), $loadData = true)
 	{
-		$form = $this->loadForm('com_integrado.integrado', 'integrado', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+//		$form = $this->loadForm('com_integrado.integrado', 'integrado', array('control' => 'jform', 'load_data' => $loadData));
+//		if (empty($form)) {
+//			return false;
+//		}
+//		return $form;
 	}
 
 	protected function loadFormData()
@@ -94,10 +102,11 @@ class IntegradoModelIntegrado extends JModelAdmin
 	function getCampos()
 	{
 		$campos = new stdClass();
-		$campos->LBL_SLIDE_BASIC = array('nacionalidad',
+		$campos->LBL_SLIDE_BASIC = array(
+			'nacionalidad',
 			'sexo',
 			'fecha_nacimiento',
-			'RFC',
+			'rfc',
 			'calle',
 			'num_exterior',
 			'num_interior',
@@ -110,11 +119,13 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'nom_comercial'
 		);
 
-		$campos->attach_LBL_SLIDE_BASIC = array('url_identificacion',
+		$campos->attach_LBL_SLIDE_BASIC = array(
+			'url_identificacion',
 			'url_rfc',
 			'url_comprobante_domicilio');
 
-		$campos->LBL_TAB_EMPRESA = array('razon_social',
+		$campos->LBL_TAB_EMPRESA = array(
+			'razon_social',
 			'rfc',
 			'calle',
 			'num_exterior',
@@ -126,19 +137,22 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'sitio_web'
 		);
 
-		$campos->attach_LBL_TAB_EMPRESA = array('url_rfc',
+		$campos->attach_LBL_TAB_EMPRESA = array(
+			'url_rfc',
 			'testimonio_1',
 			'testimonio_2',
 			'poder',
 			'reg_propiedad'
 		);
 
-		$campos->LBL_TAB_BANCO = array('banco_nombre',
+		$campos->LBL_TAB_BANCO = array(
+			'banco_nombre',
 			'banco_cuenta',
 			'banco_sucursal',
 			'banco_clabe'
 		);
-		$campos->attach_LBL_TAB_BANCO = array('banco_file');
+		$campos->attach_LBL_TAB_BANCO = array(
+			'banco_file');
 
 		return $campos;
 	}

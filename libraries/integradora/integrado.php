@@ -122,12 +122,14 @@ class Integrado {
 	}
 
 	function selectDataSolicitud($table, $where, $id){
+		$className = ($table != 'integrado') ? $table : 'stdClass';
+
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__'.$table))
 			->where($db->quoteName($where) . '=' . $db->quote($id));
-		$result = $db->setQuery($query)->loadObjectList();
+		$result = $db->setQuery($query)->loadObjectList('', $className);
 
 		if(!empty($result)){
             if($table == 'integrado_datos_bancarios'){
@@ -291,3 +293,14 @@ class IntegradoSimple extends Integrado {
 
 }
 
+class integrado_datos_personales {
+}
+
+class integrado_datos_empresa {
+}
+
+class integrado_datos_bancarios {
+}
+
+class integrado_instrumentos {
+}
