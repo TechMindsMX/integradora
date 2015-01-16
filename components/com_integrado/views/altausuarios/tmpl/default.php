@@ -13,8 +13,7 @@ function functionajax(){
 	var data 	= '';
 	var task 	= '';
 	var $campo 	= jQuery(this);
-	var token	= '<?php echo $this->token; ?>';
-	
+
 	if( $campo.prop('id') == 'email_user' ){
 		data = $campo.val();
 		task = 'checkUser';
@@ -114,8 +113,7 @@ if( count($data->usuarios) > 1 ){
 
 
 <!--a class="button" href="<?php echo JRoute::_('index.php/su/template/users-manager/registration-form'); ?>">Ir a Solicitud de alta de Integrado</a-->
-
-<form id="from_alta" action="index.php?option=com_integrado&task=savaAltaNewUserOfInteg" method="post">
+<form id="from_alta" action="index.php?option=com_integrado&task=saveAltaNewUserOfInteg" method="post">
 	<input type="hidden" name="integrado_id" value="<?php echo $data->id; ?>">
 	<input type="hidden" name="userId" id="userId">
 	<div class="form-group">

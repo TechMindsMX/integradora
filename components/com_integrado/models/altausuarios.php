@@ -41,5 +41,9 @@ class IntegradoModelAltausuarios extends JModelItem {
 		
 		return $catalogos;
 	}
+
+    public function getIntegradoId(){
+        return $this->integradoId;
+    }
 }
 

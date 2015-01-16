@@ -10,7 +10,8 @@ class IntegradoViewAltausuarios extends JViewLegacy {
 	{
 		$this->data 		= $this->get('Usuarios');
 		$this->catalogos	= $this->get('catalogos');
-		
+		$this->integradoId  = $this->get('IntegradoId');
+
 		// Check for errors.
         if (count($errors = $this->get('Errors'))) 
         {

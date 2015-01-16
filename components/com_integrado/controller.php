@@ -41,19 +41,18 @@ class IntegradoController extends JControllerLegacy {
 
         $document->setMimeEncoding('application/json');
 
-        JResponse::setHeader('Content-Disposition','attachment;filename="result.json"');
         echo json_encode($response);
     }
 
     //Salva la alta de usuarios a un integrado
-    function savaAltaNewUserOfInteg(){
+    function saveAltaNewUserOfInteg(){
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
 
         $columnas	= array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($this->integrado_id, $data['userId'], 0, $data['permission_level']);
+        $valores	= array($this->integradoId, $data['userId'], 0, $data['permission_level']);
 
 
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
