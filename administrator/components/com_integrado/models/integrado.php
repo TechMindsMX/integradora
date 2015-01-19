@@ -64,7 +64,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 	public function getVerifications( ){
 		$data = getFromTimOne::selectDB('integrado_verificacion_solicitud', 'integradoId = '. $this->integ_id );
-		$data = $data[0];
+		$data = empty($data)?$data:$data[0];
 
 		return $data;
 
@@ -102,6 +102,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 	function getCampos()
 	{
 		$campos = new stdClass();
+
 		$campos->LBL_SLIDE_BASIC = array(
 			'nacionalidad',
 			'sexo',
@@ -118,7 +119,6 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'tel_movil',
 			'nom_comercial'
 		);
-
 		$campos->attach_LBL_SLIDE_BASIC = array(
 			'url_identificacion',
 			'url_rfc',
@@ -136,7 +136,6 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'tel_fax',
 			'sitio_web'
 		);
-
 		$campos->attach_LBL_TAB_EMPRESA = array(
 			'url_rfc',
 			'testimonio_1',
@@ -153,6 +152,11 @@ class IntegradoModelIntegrado extends JModelAdmin
 		);
 		$campos->attach_LBL_TAB_BANCO = array(
 			'banco_file');
+
+        $campos->LBL_TAB_AUTHORIZATIONS = array(
+            'params'
+        );
+        $campos->attach_LBL_TAB_AUTHORIZATIONS = array();
 
 		return $campos;
 	}

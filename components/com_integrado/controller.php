@@ -188,6 +188,7 @@ class IntegradoController extends JControllerLegacy {
             'pn_instrum_num_instrumento'  => 'STRING',
             'rp_instrum_num_instrumento'  => 'STRING',
             'rp_instrum_estado'           => 'STRING',
+            'au_params'                   => 'STRING',
             'db_banco_codigo'             => 'STRING',
             'db_banco_cuenta'             => 'STRING',
             'db_banco_sucursal'           => 'STRING',
@@ -282,6 +283,7 @@ class IntegradoController extends JControllerLegacy {
             'pn_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	    'length'=>10),
             'rp_instrum_num_instrumento' => array('tipo'=>'alphaNumber',	    'length'=>10),
             'rp_instrum_estado'          => array('tipo'=>'alphaNumber',	    'length'=>10),
+            'au_params'                  => array('tipo'=>'number',     	    'length'=>2),
             'db_banco_codigo'            => array('tipo'=>'alphaNumber',	    'length'=>3),
             'db_banco_cuenta'            => array('tipo'=>'alphaNumber',        'length'=>10),
             'db_banco_sucursal'          => array('tipo'=>'alphaNumber',	    'length'=>10),
@@ -365,6 +367,23 @@ class IntegradoController extends JControllerLegacy {
                 }
 
                 break;
+            case 'params':
+                $table = 'integrado_params';
+                $columnas[] = 'integrado_id';
+                $valores[]  = $integrado_id;
+
+                foreach ($data as $key => $value) {
+                    $columna 	= substr($key, 3);
+                    $clave 		= substr($key, 0,3);
+
+                    if($clave == 'au_'){
+                        $columnas[] = $columna;
+                        $valores[] = $db->quote($value);
+                        $updateSet[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                        $valoresvalidaicon[$columna] = $value;
+                    }
+                }
+                break;
             case 'bancos':
                 $table = 'integrado_datos_bancarios';
                 $columnas[] = 'integrado_id';
@@ -401,6 +420,9 @@ class IntegradoController extends JControllerLegacy {
                 $resultado['nextTab'] = 'empresa';
                 break;
             case 'empresa':
+                $resultado['nextTab'] = 'params';
+                break;
+            case 'params':
                 $resultado['nextTab'] = 'banco';
                 break;
             case 'bancos':

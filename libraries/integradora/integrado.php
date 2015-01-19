@@ -94,7 +94,8 @@ class Integrado {
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
-			$this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
+            $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integrado_id', $integrado_id);
+            $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales ) ) {
 				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
@@ -254,7 +255,7 @@ class IntegradoSimple extends Integrado {
 	 */
     //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
-		getFromTimOne::selectDB('integrado_params', 'integradoId');
+		getFromTimOne::selectDB('integrado_params', 'integrado_Id');
 		$this->ordersAtuhorizationParams = 1;
 	}
 
@@ -305,4 +306,6 @@ class integrado_datos_bancarios {
 class integrado_instrumentos {
 }
 class integrado_users {
+}
+class integrado_params {
 }

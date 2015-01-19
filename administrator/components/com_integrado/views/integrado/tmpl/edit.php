@@ -47,13 +47,16 @@ $verifications = $this->verifications;
                     $dat_pers = isset($verifications->datos_personales)     ? $verifications->datos_personales      : '{}';
                     $dat_empr = isset($verifications->datos_empresa)        ? $verifications->datos_empresa         : '{}';
                     $dat_banc = isset($verifications->datos_bancarios)      ? $verifications->datos_bancarios       : '{}';
+                    $dat_banc = isset($verifications->params)               ? $verifications->params                : '{}';
 
                     tabValores($integ->datos_personales, 	$this->item->campos, 	$dat_pers, $jhtml_group, 'LBL_SLIDE_BASIC');
                     tabValores($integ->datos_empresa, 		$this->item->campos, 	$dat_empr, $jhtml_group, 'LBL_TAB_EMPRESA');
-//                    foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
-//                        tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
-//                    }
+                    //                    foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
+                    //                        tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
+                    //                    }
                     tabValores($integ->datos_bancarios[0],  $this->item->campos,    $dat_banc, $jhtml_group,  'LBL_TAB_BANCO');
+                    tabValores($integ->params,  $this->item->campos,    $dat_banc, $jhtml_group,  'LBL_TAB_AUTHORIZATIONS');
+
                     echo JHtml::_('bootstrap.endAccordion');
                     ?>
                 </div>
@@ -75,10 +78,11 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $k
             <div class="span5">
                 <?php
                 foreach ( $obj as $label => $field ):
+                    $checked = '';
                     if ( in_array( $label, $campos->$jtext_label ) ) :
                         if ( ! empty( $verificacion ) ) {
                             $checked = array_key_exists( $label,
-                                                         get_object_vars( json_decode( $verificacion ) ) ) ? 'checked' : '';
+                                get_object_vars( json_decode( $verificacion ) ) ) ? 'checked' : '';
                         }
                         ?>
                         <div class="control-group">

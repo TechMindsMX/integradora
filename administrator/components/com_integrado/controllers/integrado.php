@@ -37,12 +37,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		$object->integrado_id = $this->data['id'];
 		$object->status = $this->data['status'];
 
-		$verified = $this->hasAllVerifications();
-
 		$datosIntegrado = new IntegradoSimple($object->integrado_id);
 		$valido = $this->cambioStatusValido( $datosIntegrado->integrados[0]->integrado->status, $object->status);
 
-		if (!$valido || !$verified) {
+		if (!$valido) {
 			$this->setMessage(JText::_('JERROR_VALIDACION_STATUS'),'error');
 			$this->setRedirect(
 				JRoute::_(
@@ -53,12 +51,16 @@ class IntegradoControllerIntegrado extends JControllerForm {
 			return true;
 		}
 
-		// Update their details in the users table using id as the primary key.
-		$result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
+        if($datosIntegrado->integrados[0]->integrado->status != $object->status) {
+            // Update their details in the users table using id as the primary key.
+            $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
+        }
 
-		$this->setMessage(
-			JText::_('JLIB_APPLICATION' . '_SUBMIT'  . '_SAVE_SUCCESS')
-		);
+        if($result) {
+            $this->setMessage(
+                JText::_('JLIB_APPLICATION' . '_SUBMIT' . '_SAVE_SUCCESS')
+            );
+        }
 
 		// Redirect to the list screen.
 		$this->setRedirect(
@@ -73,16 +75,18 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 	public function cambioStatusValido($oldStatus, $newStatus)
 	{
+        $verified = $this->hasAllVerifications();
+
 		$catalogos = $this->getCatalogos();
 		switch (intval($oldStatus)) {
 			case 0: // Nueva solicitud
-				$validos = array(2,3,99);
+				$validos = array(0,2,3,99);
 				break;
 			case 1: // para revision nuevamente
-				$validos = array(2,3,99);
+				$validos = array(1,2,3,99);
 				break;
 			case 2: // Devuelto
-				$validos = array(1);
+				$validos = array(1,2);
 				break;
 			case 3: // contrato
 				$validos = array(50,99);
@@ -97,6 +101,11 @@ class IntegradoControllerIntegrado extends JControllerForm {
 				$validos = array();
 				break;
 		}
+
+        //Verifica que tenga todas las autorizaciones solo para cambiar 3 o 50
+        if( in_array($newStatus, array(3,50)) && !$verified ){
+            $validos = array();
+        }
 
 		return (in_array($newStatus, $validos)) ? true : false ;
 	}
@@ -121,9 +130,9 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 		$camposVerify = $this->getModel('Integrado')->getCampos();
 
-		$totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) +  count($camposVerify->LBL_TAB_EMPRESA) +  count($camposVerify->LBL_TAB_BANCO);
+		$totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) +  count($camposVerify->LBL_TAB_EMPRESA) +  count($camposVerify->LBL_TAB_BANCO) + count($camposVerify->LBL_TAB_AUTHORIZATIONS);
 
-		return $countVerifObj == $totalCamposVerify;
+        return $countVerifObj == $totalCamposVerify;
 
 	}
 
@@ -141,7 +150,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		array_pop($verificacion);
 
 		foreach ( $verificacion as $key => $value ) {
-			$keyLimpia = $this->explodeX(array('integrado_datos_personales_', 'integrado_datos_empresa_','integrado_datos_bancarios_'), $key);
+			$keyLimpia = $this->explodeX(array('integrado_datos_personales_', 'integrado_datos_empresa_','integrado_datos_bancarios_', 'integrado_params_'), $key);
 			$valores[$keyLimpia->table][$keyLimpia->key] = $value;
 		}
 
