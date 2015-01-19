@@ -57,6 +57,8 @@ class Integrado {
 	
 	//Retorna todos los usuarios agregados a un Integrado
 	public function getUsersOfIntegrado($integ_id){
+		if(is_null($integ_id)) { $integ_id = 0; }
+
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true)
@@ -86,6 +88,7 @@ class Integrado {
 			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
 		}
 		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
+
 
 		if(!is_null($integrado_id) && $integrado_id != 0){
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
@@ -226,12 +229,12 @@ class IntegradoSimple extends Integrado {
 	function __construct($integ_id) {
 		$this->user = JFactory::getUser();
 
-		if( is_null($integ_id) ){
-			$integ_id = 0;
-		}
+//		if( is_null($integ_id) ){
+//			$integ_id = 0;
+//		}
 		$this->id = $integ_id;
 		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
-		
+
 		parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
@@ -295,12 +298,11 @@ class IntegradoSimple extends Integrado {
 
 class integrado_datos_personales {
 }
-
 class integrado_datos_empresa {
 }
-
 class integrado_datos_bancarios {
 }
-
 class integrado_instrumentos {
+}
+class integrado_users {
 }
