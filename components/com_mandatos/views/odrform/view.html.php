@@ -12,8 +12,8 @@ class MandatosViewOdrform extends JViewLegacy {
 		$app 				        = JFactory::getApplication();
 		$data				        = $app->input->getArray();
 
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+        $session                    = JFactory::getSession();
+        $this->integradoId          = $session->get( 'integradoId', null, 'integrado' );
 
         $this->odr		 	        = $this->get('ordenes');
 		$this->integrado->balance   = $this->get('balance');

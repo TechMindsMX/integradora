@@ -48,7 +48,7 @@ class servicesRoute extends servicesUrls
 	}
 
 
-    public function getUrlService($service, $action, $controller){
+    public function getUrlService($controller, $service, $action){
         call_user_func (array ('servicesRoute', $service));
         $respuesta = new urlAndType();
 

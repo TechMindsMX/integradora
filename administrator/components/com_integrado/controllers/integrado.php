@@ -230,7 +230,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $integradoData = new UserTimone(new IntegradoSimple($this->integradoId));
 
         $rutas = new servicesRoute();
-        $retorno = $rutas->getUrlService('user','create','timone');
+        $retorno = $rutas->getUrlService('timone', 'user', 'create');
 
         $request = new sendToTimOne();
 
