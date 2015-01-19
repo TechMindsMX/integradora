@@ -10,14 +10,14 @@ jimport('joomla.application.component.view');
  */
 class ReportesViewReportes extends JViewLegacy
 {
-	// Overwriting JView display method
+	protected $integradoId;
+
 	function display($tpl = null)
 	{
-        $integrado	 		= new Integrado;
+		$sesion = JFactory::getSession();
+		$this->integradoId = $sesion->get('integradoId', null, 'Integrado');
 
-        $data				= JFactory::getApplication()->input->getArray();
-        $this->data 		= $this->get('Solicitud');
-        $this->integradoId	= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $data['integradoId'];
+		$this->data 		= $this->get('Solicitud');
         $this->catalogos 	= $this->get('catalogos');
 
 		// Check for errors.

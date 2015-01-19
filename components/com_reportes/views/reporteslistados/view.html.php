@@ -12,15 +12,17 @@ class ReportesViewReporteslistados extends JViewLegacy
 {
     // Overwriting JView display method
     protected $permisos;
+    protected $integradoId;
 
     function display($tpl = null)
     {
+        $sesion = JFactory::getSession();
+        $this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
         $this->data             = $this->get('Solicitud');
         $this->balances         = $this->get('BalanceList');
         $this->flujo            = $this->get('Flujo');
         $this->resultados       = $this->get('Resultados');
-
 
         // Check for errors.
         if (count($errors = $this->get('Errors')))
