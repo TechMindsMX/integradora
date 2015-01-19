@@ -11,22 +11,17 @@ class servicesRoute extends servicesUrls
 {
 	private $ssl;
 
-	protected $timone = 'api-stage.timone.mx/services/integra/';
-
-    protected $facturacion = 'api.timone-factura.mx/factura/';
-
 	protected $port = '';
 
 	public $baseUrl;
 
-	public $urls;
 
 	public function __construct () {
 
 		$juri = JUri::getInstance ();
 		$this->ssl = ($juri->getScheme() === null) ? 'http' : $juri->getScheme();
 
-		$this->baseUrl = $this->ssl .'://'. $this->facturacion . $this->port;
+        parent::__construct();
 	}
 
 	/**
@@ -53,9 +48,28 @@ class servicesRoute extends servicesUrls
 	}
 
 
+    public function getUrlService($service, $action, $controller){
+        call_user_func (array ('servicesRoute', $service));
+        $respuesta = new urlAndType();
+
+        $respuesta->url = $this->ssl.'://'.$this->controllers->$controller.$this->$action->url;
+        $respuesta->type = $this->$action->type;
+
+        return $respuesta;
+    }
+
 }
 
-class servicesUrls
+class timOneControllers{
+    public $controllers;
+
+    public function __construct(){
+        $this->controllers->timone       = 'api-stage.timone.mx/timone/services/integra/';
+        $this->controllers->facturacion  = 'api.timone-factura.mx/factura/';
+    }
+}
+
+class servicesUrls extends timOneControllers
 {
 
 	public $list;
@@ -76,9 +90,11 @@ class servicesUrls
 		$this->details->type = 'GET';
 		$this->update->type = 'PUT';
 		$this->disable->type = 'DELETE';
+
+        parent::__construct();
 	}
 
-	public function setUser () {
+	public function user () {
 		$this->list->url = 'users';
 		$this->create->url = 'users';
 		$this->details->url = 'users/{id}';
@@ -86,6 +102,22 @@ class servicesUrls
 		$this->disable->url = 'users/{id}';
 	}
 
+	public function cashOut () {
+		$this->list->url    = 'stp/cashout';
+		$this->create->url  = 'stp/cashout';
+		$this->details->url = 'stp/cashout/{id}';
+		$this->update->url  = 'stp/cashout/{id}';
+		$this->disable->url = 'stp/cashout/{id}';
+
+	}
+
+    public function transferFunds(){
+        $this->list->url    = 'tx/transferFunds';
+        $this->create->url  = 'tx/transferFunds';
+        $this->details->url = 'tx/transferFunds/{id}';
+        $this->update->url  = 'tx/transferFunds/{id}';
+        $this->disable->url = 'tx/transferFunds/{id}';
+    }
 
 }
 

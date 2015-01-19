@@ -27,7 +27,27 @@ class Integrado {
 
 	}
 
-	function getIntegrados (){
+    /**
+     * @param $integ_id
+     * @param $db
+     * @return mixed
+     */
+    public static function getUsuarioPrincipal($integ_id)
+    {
+        $db 		= JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('user_id'))
+            ->from($db->quoteName('#__integrado_users'))
+            ->where($db->quoteName('integrado_id') . ' = ' . $integ_id . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
+
+        $result = $db->setQuery($query)->loadResult();
+
+        $result = JFactory::getUser($result);
+        return $result;
+    }
+
+    function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
         $query
@@ -205,18 +225,12 @@ class Integrado {
 	
 	public static function isValidPrincipal($integ_id, $userJoomla){
 		$isValid 	= true;
-		$db 		= JFactory::getDbo();
-		
+
 		if(!is_null($integ_id) ){
-			$query = $db->getQuery(true)
-						->select($db->quoteName('user_id'))
-						->from($db->quoteName('#__integrado_users'))
-						->where($db->quoteName('integrado_id').' = '.$integ_id.' AND '.$db->quoteName('integrado_principal').' = 1');
+            $result = self::getUsuarioPrincipal($integ_id);
 			
-			$result = $db->setQuery($query)->loadResult();
-			
-			if( !is_null($result) ){
-				$isValid = $result==$userJoomla?true:false;
+			if( !is_null($result->id) ){
+				$isValid = $result->id==$userJoomla?true:false;
 			}
 		}
 		return $isValid;
@@ -228,15 +242,15 @@ class IntegradoSimple extends Integrado {
 	protected $ordersAtuhorizationParams;
 
 	function __construct($integ_id) {
-		$this->user = JFactory::getUser();
+        $this->user = JFactory::getUser();
 
 //		if( is_null($integ_id) ){
 //			$integ_id = 0;
 //		}
-		$this->id = $integ_id;
-		$this->usuarios = parent::getUsersOfIntegrado($integ_id);
+        $this->id = $integ_id;
+        $this->usuarios = parent::getUsersOfIntegrado($integ_id);
 
-		parent::getSolicitud($integ_id, 0);
+        parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
 
