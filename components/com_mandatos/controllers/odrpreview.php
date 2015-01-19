@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.rutas');
 
 /**
  * metodo de envio a TimOne
@@ -47,12 +48,18 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 // autorización guardada
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
                 if ($statusChange){
-                    $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                    $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
                 }
 
-                $this->cashout();
+                $cashOut = $this->cashout();
+                if($cashOut){
+                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
+                    if ($statusChange){
+                        $this->app->enqueueMessage(JText::_('ORDER_PAID'));
+                    }
+                }
 
-                $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_AUTHORIZED'));
+                $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
             }
@@ -65,33 +72,28 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     private function cashout(){
         //cashOut si cambia al 5
         $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
-        var_dump($orden);
+
         $orden = $orden[0];
+
+        $orden->status->id = 5;
         if($orden->status->id == 5){
             $data      = new Cashout($orden);
 
-            $serviceUrl = 'http://192.168.0.111:8081/web/services/integra/stp/cashout';
             $jsonData   = json_encode( $data );
-            $httpType = 'POST';
-
-//  $ruta = $this->route->cashOutUrls();
-//  var_dump($ruta);exit;
-//  $httpType = $ruta->urls->create->type;
-
+            $rutas = new servicesRoute();
+            $retorno = $rutas->getUrlService('cashOut','create','timone');
 
             $request = new sendToTimOne();
-            $request->setServiceUrl( $serviceUrl );
+            $request->setServiceUrl( $retorno->url );
             $request->setJsonData( $jsonData );
-            $request->setHttpType( $httpType );
+            $request->setHttpType( $retorno->type );
 
             $result = $request->to_timone(); // realiza el envio
-
-            var_dump( $request );
             if ( isset( $result ) ) {
-                var_dump( $result );
+                echo $result->data;
             }
 
-            return $result;
+            return $result->code == 200;
         }
     }
 }

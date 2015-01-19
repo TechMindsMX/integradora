@@ -207,3 +207,8 @@ CREATE TABLE `flpmu_integrado_verificacion_solicitud` (
 --changeset lutek:20
 ALTER TABLE  `flpmu_integrado_params` CHANGE  `integradoId`  `integrado_id` INT( 11 ) NOT NULL
 --rollback ALTER TABLE `flpmu_integrado_params` CHANGE `integrado_id` `integradoId` INT(11) NOT NULL
+
+--changeset lutek:21
+ALTER TABLE  `flpmu_integrado_timone` CHANGE  `timOneId`  `timoneUuid` VARCHAR( 50 ) NULL DEFAULT NULL ,
+CHANGE  `account`  `stpClabe` BIGINT( 20 ) NULL DEFAULT NULL
+--rollback ALTER TABLE  `flpmu_integrado_timone` CHANGE  `timoneUuid`  `timOneId` INT( 11 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE  `stpClabe`  `account` BIGINT( 20 ) NULL DEFAULT NULL

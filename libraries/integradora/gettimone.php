@@ -3131,36 +3131,35 @@ class datosDeFacturacion {
 
 
 class UserTimone {
-    public $uuid = '913905d70f5546f3ad0e6efc7d344b49';
-    public $name = 'Ricardo Lyon';
-    public $email = 'ricardo.lyon@trama.mx';
+    public $uuid  = '';
+    public $name  = '';
+    public $email = '';
 
-//    function __construct( Integrado $user ) {
-//        var_dump($user);exit;
-//
-//        $this->name = $user->name;
-//        $this->email = $user->email;
-//    }
+    function __construct( Integrado $integrado ) {
+        $user = $integrado->getUsuarioPrincipal($integrado->integrados[0]->integrado->integrado_id);
+
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->uuid = $integrado->integrados[0]->integrado->integrado_id;
+    }
 }
 
 class Cashout {
-    public $uuid = '913905d70f5546f3ad0e6efc7d344b49';
-    public $clabe = '014180566389265712';
-    public $bankCode = 14;
-    public $amount = 10.50;
 
     function __construct($ordenRetiro)
     {
         $this->clabe = $ordenRetiro->cuenta->banco_clabe;
         $this->bankCode = (INT)$ordenRetiro->cuenta->banco_codigo;
         $this->amount = (FLOAT)$ordenRetiro->totalAmount;
-        $this->uuid = $this->getUuid();
+        $this->uuid = $this->getUuid($ordenRetiro);
 
     }
 
-    private function getUuid()
+    private function getUuid($orden)
     {
-        return $this->uuid;
+        $timoneUUID = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$orden->integradoId);
+
+        return $timoneUUID[0]->timoneUuid;
     }
 
 
