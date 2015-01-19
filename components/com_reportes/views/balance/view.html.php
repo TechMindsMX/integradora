@@ -13,6 +13,8 @@ jimport('integradora.integrado');
  */
 class ReportesViewBalance extends JViewLegacy
 {
+	protected $integradoId;
+
 	function __construct() {
 		$this->input = JFactory::getApplication()->input;
 
@@ -22,21 +24,17 @@ class ReportesViewBalance extends JViewLegacy
 	// Overwriting JView display method
 	function display($tpl = null)
 	{
-		$sesion = JFactory::getSession();
-
 		$vars = $this->input->getArray(array('id' => 'INT'));
+
+		// TODO: recibir en año
+		$var['year'] = 2014;
+
+		$sesion = JFactory::getSession();
 		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
         $this->integradoId = $vars['integradoId'];
 
 		$model = $this->getModel();
-
-		if ( $vars['id'] != 0 ) {
-			// busca el modelo de un reporte existente
-			$this->report = $model->getBalance($vars);
-		} else {
-			// genera el modelo de un reporte nuevo
-			$this->report = $model->generateBalance($vars);
-		}
+		$this->report = $model->generateBalance($vars);
 
 		if (is_null($this->report) ) {
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');

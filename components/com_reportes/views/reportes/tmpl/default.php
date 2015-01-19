@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
-header('location: ?option=com_reportes&view=reporteslistados&integradoId=1');
+header('location: ?option=com_reportes&view=reporteslistados');
+
 jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
 
@@ -11,7 +12,7 @@ echo '<h1>'.JText::_('COM_REPORTES_TITLE').'</h1>';
 
 ?>
 <div style="margin-top: 50px;">
-    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_reportes&view=reporteslistados&integradoId='.$this->integradoId); ?>">
+    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_reportes&view=reporteslistados'); ?>">
         <?php echo JText::_('COM_REPORTES_LISTAD_REPORTES'); ?>
     </a>
 </div>

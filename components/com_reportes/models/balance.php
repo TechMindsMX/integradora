@@ -13,20 +13,14 @@ class ReportesModelBalance extends JModelItem {
 
 	protected $cancelUrl;
 
-	public function getBalance($vars) {
-
-		$r = new ReportBalance( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
-		$r->getExistingBalance();
-		$report = $r;
-
-		return $report;
-	}
-
 	public function generateBalance($vars) {
 		$r = new ReportBalance( array('balanceId'=>null, 'integradoId' => $vars['integradoId']) );
 		$r->generateBalance();
 		$report = $r;
 
+		$rtxs = new ReportBalanceTxs( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
+		$rtxs->generateBalance($vars['year']);
+		var_dump($report, $rtxs);exit;
 		return $report;
 	}
 }

@@ -38,7 +38,9 @@ class MandatosControllerMandatos extends JControllerAdmin {
             'tx_sin_mandato' => JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist')
 		);
 
-		$valid = IntegradoSimple::isValidIntegradoId($this->integradoId);
+		$usuario = new UsuarioIntegradora();
+		$valid = $usuario->isValidIntegradoIdOfCurrentUser( $this->integradoId );
+
 		if ( $valid ) {
 			$integ = new IntegradoSimple($this->integradoId);
 		}

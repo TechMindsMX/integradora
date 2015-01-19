@@ -13,7 +13,15 @@ jimport('integradora.gettimone');
  */
 class ReportesModelReporteslistados extends JModelItem {
 
-    public function getSolicitud($integradoId = null)
+    public function __construct(){
+
+        $sesion = JFactory::getSession();
+        $this->integradoId = $sesion->get('integradoId', null, 'integrado');
+
+        parent::__construct();
+    }
+
+    public function getSolicitud()
     {
         if (!isset($this->dataModelo)) {
             $this->dataModelo = new Integrado;
@@ -21,16 +29,10 @@ class ReportesModelReporteslistados extends JModelItem {
         return $this->dataModelo;
     }
 
-    public function __construct(){
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray();
-        $this->integradoId       = $this->inputVars['integradoId'];
-        parent::__construct();
-    }
-
     public function getBalanceList (){
         $list = ReportBalance::getIntegradoExistingBalanceList( $this->integradoId );
 
-	    return $list;
+        return $list;
     }
 
     public function getflujo (){

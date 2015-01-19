@@ -269,7 +269,7 @@ class IntegradoSimple extends Integrado {
 	 */
     //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
-		getFromTimOne::selectDB('integrado_params', 'integrado_Id');
+		getFromTimOne::selectDB('integrado_params', 'integrado_id');
 		$this->ordersAtuhorizationParams = 1;
 	}
 
@@ -279,13 +279,6 @@ class IntegradoSimple extends Integrado {
 		@$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
 
 		return $name;
-	}
-
-	public static function isValidIntegradoId( $integ_id ) {
-		$db =& JFactory::getDbo();
-		$integradosRegistrados = getFromTimOne::selectDB('integrado','integrado_id = '.$db->quote($integ_id) );
-
-		return !empty($integradosRegistrados);
 	}
 
 	public function setMainAddressFormatted() {
@@ -322,4 +315,37 @@ class integrado_instrumentos {
 class integrado_users {
 }
 class integrado_params {
+}
+
+class UsuarioIntegradora {
+
+	protected $user;
+
+	function __construct() {
+		$this->arrayIntIds = $this->setIntegradoIdsCurrentUser();
+
+		$this->user = JFactory::getUser();
+
+	}
+
+	public function isValidIntegradoIdOfCurrentUser( $integ_id ) {
+		$valido = in_array($integ_id, $this->arrayIntIds);
+
+		return $valido;
+	}
+
+	protected function setIntegradoIdsCurrentUser() {
+		$arrayIntIds = array();
+
+		$integrado        = new Integrado();
+		$ints = $integrado->getIntegradosCurrUser();
+
+		if ( ! empty( $ints ) ) {
+			foreach ( $ints as $int ) {
+				$arrayIntIds[] = $int->integrado_id;
+			}
+		}
+
+		return $arrayIntIds;
+	}
 }
