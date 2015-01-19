@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 /**
  * metodo de envio a TimOne
@@ -47,6 +48,52 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '5');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+
+                    if(isset($this->integradoId)){
+                        $integradoSimple     = new IntegradoSimple($this->integradoId);
+                        $getCurrUser         = new Integrado($this->integradoId);
+
+                        $titulo     = JText::_('TITULO_13');
+                        $titulo     = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
+
+                        $contenido = JText::_('NOTIFICACIONES_13');
+
+                        $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
+                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
+                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
+                        $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+                        $data['titulo']         = $titulo;
+                        $data['body']           = $contenido;
+                        $data['email']          = $getCurrUser->user->email;
+
+                        $send                   = new Send_email();
+                        $send->notification($data);
+
+
+                        $integradoAdmin     = new IntegradoSimple(93);
+                        $getCurrUser         = new Integrado($this->integradoId);
+
+                        $titulo     = JText::_('TITULO_14');
+                        $titulo = str_replace('$integrado', '<strong style="color: #000000">'.$integradoAdmin->user->username.'</strong>',$titulo);
+                        $titulo     = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
+
+                        $contenido = JText::_('NOTIFICACIONES_14');
+
+                        $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoAdmin->user->username.'</strong>',$contenido);
+                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
+                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
+                        $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+                        $data['titulo']         = $titulo;
+                        $data['body']           = $contenido;
+                        $data['email']          = $integradoAdmin->user->email;
+
+                        $send                   = new Send_email();
+                        $send->notification($data);
+
+                    }
+
 	            }
                 //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
 

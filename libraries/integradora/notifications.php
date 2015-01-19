@@ -19,20 +19,18 @@ class Send_email{
 
         $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
 
+
         $int = new IntegradoSimple($currentIntegradoId);
 
         array_push($int->usuarios, JFactory::getUser(93));
 
         foreach ($int->usuarios as $key => $val) {
-
-            if ($val->permission_level>=3 || $val->id==JFactory::getUser()->id || $val->authorise('core.admin')){
-
-                $this->recipient = $val->email;
-                $this->responses[$val->id.'-'.$key]=$this->envia();
-
+            if(isset($val->permission_level)) {
+                if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id || $val->authorise('core.admin')) {
+                    $this->envia();
+                }
             }
         }
-        return $this;
     }
 
     private function envia()
@@ -44,21 +42,17 @@ class Send_email{
         $remitente = array (
             $Config['mailfrom'],
             $Config['fromname']);
-
         $mailer->setSender($remitente);
 
-        $mailer->addRecipient($this->recipient);
-
+        $mailer->addRecipient($this->data->email);
         $body   = $this->data->body;
-        $title  = $this->data->title;
+        $title  = $this->data->titulo;
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';
         $mailer->setSubject($title);
         $mailer->setBody($body);
-        // Optionally add embedded image
-        //$mailer->AddEmbeddedImage( JPATH_COMPONENT.'/assets/logo128.jpg', 'logo_id', 'logo.jpg', 'base64', 'image/jpeg' );
-
         $send = $mailer->Send();
+        return $send;
 
     }
 
