@@ -15,7 +15,7 @@ class IntegradoModelSolicitud extends JModelItem {
 	protected $dataModelo;
 	protected $integradoId;
 
-	public function getSolicitud($integradoId = null){
+	public function getSolicitud( ){
 		$sesion = JFactory::getSession();
 		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
@@ -26,8 +26,9 @@ class IntegradoModelSolicitud extends JModelItem {
 				JFactory::getApplication()->redirect('index.php?option=com_mandatos', 'no tienes permisos para ver este elemento');
 			}
 			
-			$integrado = new ReflectionClass('integradoSimple');
-			$this->dataModelo = $integrado->newInstance($this->integradoId);
+//			$integrado = new ReflectionClass('integradoSimple');
+//			$this->dataModelo = $integrado->newInstance($this->integradoId);
+			$this->dataModelo = new IntegradoSimple($this->integradoId);
 		}
 		$this->dataModelo->user->integradoId = $this->integradoId;
 		$this->dataModelo->integrados = $this->dataModelo->integrados[0];
