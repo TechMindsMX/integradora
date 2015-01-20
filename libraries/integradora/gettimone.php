@@ -2386,22 +2386,24 @@ class ReportBalanceTxs extends IntegradoTxs {
     /**
      * @param $params array(integradoId => $integradoId, balanceId  => $balanceId = null)
      */
-    function __construct( $params ) {
-
-        $this->request->integradoId = $params['integradoId'];
-
-        if ( isset( $params['balanceId'] ) ) {
-            if ( $params['balanceId'] != 0 ) {
-                $this->request->balanceId   = $params['balanceId'];
-            }
-        }
-
-        parent::__construct($params['integradoId']);
-    }
+//    function __construct( $params ) {
+//
+//        $this->request->integradoId = $params['integradoId'];
+//
+//        if ( isset( $params['balanceId'] ) ) {
+//            if ( $params['balanceId'] != 0 ) {
+//                $this->request->balanceId   = $params['balanceId'];
+//            }
+//        }
+//
+//        parent::__construct($params['integradoId']);
+//    }
 
     public function generateBalance( $year = null ) {
         list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin($year);
         $respuesta = null;
+
+        $this->txs = $this->getIntegradoTxs();
 
         $this->createData();
         getFromTimOne::convierteFechas( $this );
