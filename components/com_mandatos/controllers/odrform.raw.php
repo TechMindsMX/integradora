@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('integradora.gettimone');
 jimport('integradora.validator');
+
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdrform extends JControllerLegacy {
@@ -61,8 +62,19 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }else{
             $respuesta = array('redireccion' => false);
         }
+        /*NOTIFICACIONES 17*/
+        $integradoSimple     = new IntegradoSimple($this->integradoId);
+        $getCurrUser         = new Integrado($this->integradoId);
 
+        $titulo = JText::_('TITULO_17');
 
+        $contenido = JText::_('NOTIFICACIONES_17');
+
+        $dato['titulo']         = $titulo;
+        $dato['body']           = $contenido;
+        $dato['email']          = $getCurrUser->user->email;
+        $send                   = new Send_email();
+        $info = $send->notification($dato);
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
     }
