@@ -89,7 +89,7 @@ if( count($data->usuarios) > 1 ){
 ?>
 			<li id="li_<?php echo $value->id; ?>">
 				<div><?php echo JText::_('JGLOBAL_USERNAME');?>: <?php echo $value->name;?>.</div>
-				<div>Nivel de Permisos: <?php echo $value->permission_level ?></div>
+				<div>Nivel de Permisos: <?php echo $this->catalogos->permissionLevels[$value->permission_level]->name ?></div>
 				<div style="margin-top: 10px;">
 					<input type="hidden" class="permission_user_integrado" value="<?php echo $value->permission_level; ?>" />
 					<input type="hidden" class="name_user_integrado" value="<?php echo $value->name; ?>" />
