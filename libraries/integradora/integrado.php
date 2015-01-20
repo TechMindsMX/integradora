@@ -244,9 +244,6 @@ class IntegradoSimple extends Integrado {
 	function __construct($integ_id) {
         $this->user = JFactory::getUser();
 
-//		if( is_null($integ_id) ){
-//			$integ_id = 0;
-//		}
         $this->id = $integ_id;
         $this->usuarios = parent::getUsersOfIntegrado($integ_id);
 
@@ -255,8 +252,6 @@ class IntegradoSimple extends Integrado {
 		$this->setOrdersAtuhorizationParams();
 
 		$this->setMainAddressFormatted();
-        $this->timonedata = $this->timOneData();
-
 	}
 
 	/**
@@ -304,15 +299,13 @@ class IntegradoSimple extends Integrado {
 		$this->integrados[0]->address = $address;
 	}
 
-    private function timOneData()
+    public function getTimOneData()
     {
         $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
         $timoneData = $timoneData[0];
 
         $uuidTimone = $timoneData->timoneUuid;
-        $timoneData->balance = getFromTimOne::getBalance();
-
-//        return $timoneData[0];
+        $this->timoneData = getFromTimOne::getTimoneUserDetalis($uuidTimone);
     }
 
 }

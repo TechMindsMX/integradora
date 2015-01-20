@@ -542,11 +542,21 @@ class getFromTimOne{
         return $odps;
     }
 
-    public static function getBalance($uuidTimone){
+    public static function getTimoneUserDetalis($uuidTimone){
+        $send  = new sendToTimOne();
         $rutas = new servicesRoute();
         $get = $rutas->getUrlService('timone', 'user', 'details');
 
-//        $servceUrl = str_replace()
+        $serviceUrl = str_replace('{id}',$uuidTimone,$get->url);
+
+        $send->setHttpType($get->type);
+        $send->setServiceUrl($serviceUrl);
+        $send->setJsonData('');
+
+        $result = $send->to_timone();
+        $datos = json_decode($result->data);
+
+        return $datos;
     }
 
     public function createNewProject($envio, $integradoId){
@@ -1876,7 +1886,7 @@ class sendToTimOne {
 
         $verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
-        $verbose = fopen('curl.log', 'w');
+        $verbose = fopen('curl.log', 'a+');
         $ch = curl_init();
 
         switch($this->getHttpType()) {
@@ -1962,7 +1972,7 @@ class sendToTimOne {
 
             rewind( $verbose );
             $verboseLog = stream_get_contents( $verbose );
-            echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
+            //echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
         }
 
         $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);

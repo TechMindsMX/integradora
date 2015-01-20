@@ -25,15 +25,6 @@ class servicesRoute extends servicesUrls
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getBaseUrl () {
-		return $this->baseUrl;
-	}
-
-
-
-	/**
 	 * @param string $baseController
 	 */
 	public function setBaseController ($baseController) {
