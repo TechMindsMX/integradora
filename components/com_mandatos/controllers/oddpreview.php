@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 /**
  * metodo de envio a TimOne
@@ -49,6 +50,20 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', '5');
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+
+                    /*NOTIFICACIONES 19*/
+                    $integradoSimple     = new IntegradoSimple($this->integradoId);
+                    $getCurrUser         = new Integrado($this->integradoId);
+
+                    $titulo = JText::_('TITULO_19');
+
+                    $contenido = JText::_('NOTIFICACIONES_19');
+
+                    $dato['titulo']         = $titulo;
+                    $dato['body']           = $contenido;
+                    $dato['email']          = $getCurrUser->user->email;
+                    $send                   = new Send_email();
+                    $info = $send->notification($dato);
 	            }
 
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_AUTHORIZED'));
