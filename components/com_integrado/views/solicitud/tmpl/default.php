@@ -308,13 +308,14 @@ if(!empty($datos->integrado)){
     ?>
     <fieldset>
         <div class="form-group">
+            <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE_COMPLETO_REPRESENTANTE'); ?></label>
+            <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" value="<?php echo $user->name ?>" />
+        </div>
+        <div class="form-group">
             <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
             <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
         </div>
-        <div class="form-group">
-            <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE'); ?></label>
-            <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" value="<?php echo $user->name ?>" />
-        </div>
+
         <div class="form-group">
             <label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
             <select name="dp_nacionalidad" id="dp_nacionalidad">
