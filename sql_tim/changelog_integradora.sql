@@ -197,10 +197,10 @@ ALTER TABLE  `flpmu_bitacora_status_odv` CHANGE  `id`  `id` INT( 11 ) NOT NULL A
 --changeset ricardolyon:19
 CREATE TABLE `flpmu_integrado_verificacion_solicitud` (
   `integradoId` INT NOT NULL,
-  `datos_personales` VARCHAR(1024) NOT NULL,
-  `datos_empresa` VARCHAR(1024) NOT NULL,
+`datos_personales` VARCHAR(1024) NOT NULL,
+`datos_empresa` VARCHAR(1024) NOT NULL,
   `datos_bancarios` TEXT NOT NULL,
-  `instrumentos` VARCHAR(1024) NOT NULL
+`instrumentos` VARCHAR(1024) NOT NULL
 );
 --rollback DROP TABLE `flpmu_integrado_verificacion_solicitud`;
 
@@ -212,3 +212,15 @@ ALTER TABLE  `flpmu_integrado_params` CHANGE  `integradoId`  `integrado_id` INT(
 ALTER TABLE  `flpmu_integrado_timone` CHANGE  `timOneId`  `timoneUuid` VARCHAR( 50 ) NULL DEFAULT NULL ,
 CHANGE  `account`  `stpClabe` BIGINT( 20 ) NULL DEFAULT NULL
 --rollback ALTER TABLE  `flpmu_integrado_timone` CHANGE  `timoneUuid`  `timOneId` INT( 11 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE  `stpClabe`  `account` BIGINT( 20 ) NULL DEFAULT NULL
+
+--changeset ricardolyon:22
+CREATE TABLE `flpmu_catalog_permission_levels` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(1024) NOT NULL
+);
+INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (1, 'Consulta');
+INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (2, 'Operaciones');
+INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (3, 'Autorizador');
+INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (4, 'Full');
+
+--rollback DROP TABLE `flpmu_catalog_permission_levels`;

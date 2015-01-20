@@ -88,7 +88,7 @@ if( count($data->usuarios) > 1 ){
 		if($value->integrado_principal == 0){
 ?>
 			<li id="li_<?php echo $value->id; ?>">
-				<div>Usuario: <?php echo $value->name;?>.</div>
+				<div><?php echo JText::_('JGLOBAL_USERNAME');?>: <?php echo $value->name;?>.</div>
 				<div>Nivel de Permisos: <?php echo $value->permission_level ?></div>
 				<div style="margin-top: 10px;">
 					<input type="hidden" class="permission_user_integrado" value="<?php echo $value->permission_level; ?>" />
@@ -106,6 +106,7 @@ if( count($data->usuarios) > 1 ){
 }
 ?>
 </ul>
+<h1><?php echo JText::_('LBL_ALTA_USUARIO'); ?></h1>
 <div class="form-group">
 	<label for="email_user"><?php echo JText::_('LBL_CORREO'); ?></label>
 	<input type="text" name="email_user" id="email_user">
@@ -114,6 +115,7 @@ if( count($data->usuarios) > 1 ){
 
 <!--a class="button" href="<?php echo JRoute::_('index.php/su/template/users-manager/registration-form'); ?>">Ir a Solicitud de alta de Integrado</a-->
 <form id="from_alta" action="index.php?option=com_integrado&task=saveAltaNewUserOfInteg" method="post">
+
 	<input type="hidden" name="integrado_id" value="<?php echo $data->id; ?>">
 	<input type="hidden" name="userId" id="userId">
 	<div class="form-group">
@@ -123,10 +125,12 @@ if( count($data->usuarios) > 1 ){
 	
 	<div class="form-group">
 		<label><?php echo JText::_('LBL_PERMISSION_LEVEL') ?></label>
-		<label for="permission_level"><input type="radio" value="0" name="permission_level" id="permission_level_0" /> 0</label>
-		<label for="permission_level"><input type="radio" value="1" name="permission_level" id="permission_level_1" /> 1</label>
-		<label for="permission_level"><input type="radio" value="2" name="permission_level" id="permission_level_2" /> 2</label>
-		<label for="permission_level"><input type="radio" value="3" name="permission_level" id="permission_level_3" /> 3</label>
+		<?php
+		foreach ( $this->catalogos->permissionLevels as $key => $value ) {
+			echo '<label for="permission_level"><input type="radio" value="'.$value->id.'" name="permission_level" id="permission_level_'.$value->id.'" /> '.$value->name.'</label>';
+
+		}
+		?>
 	</div>
 	
 	<div class="form-group">

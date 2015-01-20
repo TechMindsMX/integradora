@@ -38,7 +38,9 @@ class IntegradoModelAltausuarios extends JModelItem {
 		$catalogos->getNacionalidades();
 		$catalogos->getEstados();
 		$catalogos->getBancos();
-		
+
+		$catalogos->permisionLevels();
+
 		return $catalogos;
 	}
 

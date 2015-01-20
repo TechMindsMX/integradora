@@ -36,7 +36,21 @@ class Catalogos {
 
         return $result;
 	}
-	
+
+	public function permisionLevels()
+	{
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true)
+			->select(array($db->quoteName('id'),$db->quoteName('name')))
+			->from($db->quoteName('#__catalog_permission_levels'));
+		$result = $db->setQuery($query)->loadObjectList('id');
+
+		$this->permissionLevels = $result;
+
+        return $result;
+	}
+
 	public function getBancos(){
 		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes'));
 
