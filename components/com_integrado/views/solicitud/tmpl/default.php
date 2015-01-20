@@ -212,7 +212,8 @@ if(!empty($datos->integrado)){
         var request = jQuery.ajax({
             url: parametros.link,
             data: parametros.datos,
-            type: 'post'
+            type: 'post',
+            async: false
         });
 
         return request;
