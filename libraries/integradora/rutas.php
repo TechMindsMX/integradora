@@ -13,9 +13,6 @@ class servicesRoute extends servicesUrls
 
 	protected $port = '';
 
-	public $baseUrl;
-
-
 	public function __construct () {
 
 		$juri = JUri::getInstance ();
@@ -23,21 +20,6 @@ class servicesRoute extends servicesUrls
 
         parent::__construct();
 	}
-
-	/**
-	 * @param string $baseController
-	 */
-	public function setBaseController ($baseController) {
-		$this->baseController = $baseController;
-	}
-
-	/**
-	 * @param string $address
-	 */
-	public function setAddress ($address) {
-		$this->address = $address;
-	}
-
 
     public function getUrlService($controller, $service, $action){
         call_user_func (array ('servicesRoute', $service));
