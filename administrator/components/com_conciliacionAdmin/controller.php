@@ -6,6 +6,7 @@ jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.classDB');
+jimport('integradora.notifications');
 
 class conciliacionAdminController extends JControllerLegacy {
     public function __construct($config = array()) {
@@ -101,6 +102,21 @@ class conciliacionAdminController extends JControllerLegacy {
         $resultado = $save->insertDB('tx_orden');
 
         if($resultado){
+
+            /*NOTIFICACIONES 20*/
+            $integradoSimple     = new IntegradoSimple($this->integradoId);
+            $getCurrUser         = new Integrado($this->integradoId);
+
+            $titulo = JText::_('TITULO_20');
+
+            $contenido = JText::_('NOTIFICACIONES_20');
+
+            $dato['titulo']         = $titulo;
+            $dato['body']           = $contenido;
+            $dato['email']          = $getCurrUser->user->email;
+            $send                   = new Send_email();
+            $info = $send->notification($dato);
+
             JFactory::getApplication()->redirect('index.php?option=com_conciliacionadmin&view='.$data->type.'list');
         }else{
             JFactory::getApplication()->enqueueMessage(JText::_('com_comciliacionadmin_error_save'),'error');
