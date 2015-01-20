@@ -72,5 +72,16 @@ class MandatosHelper {
         return $cliente;
     }
 
+	public static function valida($diccionario){
+		$validacion = new validador();
+		$document = JFactory::getDocument();
+		$parametros = JFactory::getApplication()->input->getArray();
+
+		$respuesta = $validacion->procesamiento($parametros,$diccionario);
+
+		$document->setMimeEncoding('application/json');
+		echo json_encode($respuesta);
+	}
+
 
 }
