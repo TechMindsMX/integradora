@@ -43,6 +43,10 @@ if(!empty($datos->integrado)){
    }
    ?>
 
+    function toUpper() {
+        jQuery(this).val(jQuery(this).val().toUpperCase());
+    }
+
     jQuery(document).ready(function(){
 
         var tabs = jQuery('#tabs-solicitudTabs li');
@@ -200,6 +204,7 @@ if(!empty($datos->integrado)){
         }
         ?>
         jQuery('#agregarBanco').on('click', AltaBanco);
+        jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
     });
 
     function ajax(parametros){
