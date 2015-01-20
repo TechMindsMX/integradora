@@ -68,30 +68,51 @@ class servicesUrls extends timOneControllers
 	}
 
 	public function user () {
-		$this->list->url = 'users';
-		$this->create->url = 'users';
-		$this->details->url = 'users/{id}';
-		$this->update->url = 'users/{id}';
-		$this->disable->url = 'users/{id}';
+		$this->list->url    = 'users';
+		$this->create->url  = 'users';
+		$this->details->url = 'users/{uuid}';
+		$this->update->url  = 'users/{uuid}';
+		$this->disable->url = 'users/{uuid}';
 	}
 
 	public function cashOut () {
 		$this->list->url    = 'stp/cashout';
 		$this->create->url  = 'stp/cashout';
-		$this->details->url = 'stp/cashout/{id}';
-		$this->update->url  = 'stp/cashout/{id}';
-		$this->disable->url = 'stp/cashout/{id}';
+		$this->details->url = 'stp/cashout/{uuid}';
+		$this->update->url  = 'stp/cashout/{uuid}';
+		$this->disable->url = 'stp/cashout/{uuid}';
 
 	}
 
     public function transferFunds(){
         $this->list->url    = 'tx/transferFunds';
         $this->create->url  = 'tx/transferFunds';
-        $this->details->url = 'tx/transferFunds/{id}';
-        $this->update->url  = 'tx/transferFunds/{id}';
-        $this->disable->url = 'tx/transferFunds/{id}';
+        $this->details->url = 'tx/transferFunds/{uuid}';
+        $this->update->url  = 'tx/transferFunds/{uuid}';
+        $this->disable->url = 'tx/transferFunds/{uuid}';
     }
 
+	public function userTxs( ){
+		$this->list->url = 'tx/{uuid}';
+	}
+
+	public function txDetails() {
+		$this->details->url = 'tx/getTransaction/{uuid}';
+	}
+
+	public function txByDateRange() {
+		$this->list->url = 'tx/getTransactions/{uuid}/{startDate}/{endDate}';
+	}
+
+	public function factura() {
+		$this->create->url = 'create';
+		$this->disable->url = 'cancel';
+		$this->disable->url = 'cancel';
+	}
+
+	public function validateXml() {
+		$this->create->url = 'validate';
+	}
 }
 
 class urlAndType
