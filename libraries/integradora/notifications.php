@@ -27,7 +27,7 @@ class Send_email{
         foreach ($int->usuarios as $key => $val) {
             if(isset($val->permission_level)) {
                 if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id || $val->authorise('core.admin')) {
-                    $this->envia();
+                 return  $this->envia();
                 }
             }
         }

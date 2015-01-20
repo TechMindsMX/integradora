@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 /**
  * metodo de envio a TimOne
@@ -60,29 +61,52 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
 
                             $file = $save->saveXMLFile( $xmlFactura );
-
                             /*NOTIFICACIONES 7*/
+                            $integradoSimple     = new IntegradoSimple($this->integradoId);
+                            $getCurrUser         = new Integrado($this->integradoId);
+
                             $titulo = JText::_('TITULO_7');
-                            $titulo = str_replace('$num_factura', '<strong style="color: #000000">'.$data['factura'].'</strong>',$titulo);
+                            $titulo = str_replace('$num_factura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
 
                             $contenido = JText::_('NOTIFICACIONES_7');
 
-                            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
-                            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
-                            $contenido = str_replace('$numfactura', '<strong style="color: #000000">$'.$data['factura'].'</strong>',$contenido);
-                            $contenido = str_replace('$cliente', '<strong style="color: #000000">$'.$data['cliente'].'</strong>',$contenido);
+                            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
+                            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
+                            $contenido = str_replace('$numfactura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
+                            $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$factObj->receptor->datosFiscales->razonSocial.'</strong>',$contenido);
                             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-                            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$data('monto').'</strong>',$contenido);
-                            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$data('odv').'</strong>',$contenido);
+                            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$factObj->conceptos['valorUnitario'].'</strong>',$contenido);
+                            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$this->parametros['idOrde'].'</strong>',$contenido);
 
 
-                            $data['titulo']         = $titulo;
-                            $data['body']           = $contenido;
-
+                            $dato['titulo']         = $titulo;
+                            $dato['body']           = $contenido;
+                            $dato['email']          = $getCurrUser->user->email;
                             $send                   = new Send_email();
-                            $info = $send->notification($data);
+                            $info = $send->notification($dato);
 
 
+                            $titulo = JText::_('TITULO_8');
+                            $titulo = str_replace('$integrado', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$titulo);
+                            $titulo = str_replace('$num_factura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
+
+
+                            $contenido = JText::_('NOTIFICACIONES_8');
+
+                            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
+                            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
+                            $contenido = str_replace('$numfactura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
+                            $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$factObj->receptor->datosFiscales->razonSocial.'</strong>',$contenido);
+                            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+                            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$factObj->conceptos['valorUnitario'].'</strong>',$contenido);
+                            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$this->parametros['idOrde'].'</strong>',$contenido);
+
+
+                            $datoAdmin['titulo']         = $titulo;
+                            $datoAdmin['body']           = $contenido;
+                            $datoAdmin['email']          = $getCurrUser->user->email;
+                            $send                   = new Send_email();
+                            $infoAdmin = $send->notification($datoAdmin);
                         }
 
                         if ( isset( $file ) ) {

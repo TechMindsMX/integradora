@@ -447,9 +447,7 @@ class MandatosController extends JControllerLegacy {
         $response['success'] = true;
         $response['nextTab'] = $tab;
 
-
-
-        if(isset($this->integradoId)){
+       /* if(isset($this->integradoId)){
 
             if($data['tp_tipo_alta']==0){
                 $alta = 'Cliente';
@@ -479,8 +477,7 @@ class MandatosController extends JControllerLegacy {
             $dato['email']          = $getCurrUser->user->email;
             $send                   = new Send_email();
             $send->notification($dato);
-            var_dump($send);exit;
-        }
+        }*/
 
         $this->document->setMimeEncoding('application/json');
         echo json_encode($response);
