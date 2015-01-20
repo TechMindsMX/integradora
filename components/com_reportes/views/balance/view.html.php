@@ -27,7 +27,7 @@ class ReportesViewBalance extends JViewLegacy
 		$vars = $this->input->getArray(array('id' => 'INT'));
 
 		// TODO: recibir en año
-		$var['year'] = 2014;
+		$vars['year'] = 2014;
 
 		$sesion = JFactory::getSession();
 		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
