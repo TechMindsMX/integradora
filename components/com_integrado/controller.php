@@ -6,6 +6,7 @@ jimport('integradora.validator');
 jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 $app = JFactory::getApplication();
 $currUser	= JFactory::getUser();
@@ -208,19 +209,6 @@ class IntegradoController extends JControllerLegacy {
 
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
-
-        /*if($post['tab']=='personales'){
-            $contenido = JText::_('NOTIFICACIONES_1');
-            $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$post['dp_nom_comercial'].'</strong>',$contenido);
-            $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$post['user_id'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $data['titulo']         = JText::_('TITULO_1');
-            $data['body']           = $contenido;
-
-            $send                   = new Send_email();
-            $send->notification($data);
-        }*/
 
         // Get the document object.
         $document = JFactory::getDocument();
@@ -433,6 +421,19 @@ class IntegradoController extends JControllerLegacy {
         $resultado['safeComplete']  = true;
         $resultado['integradoId'] = $integrado_id;
 
+        /*if($data['tab']=='personales'){
+            $contenido = JText::_('NOTIFICACIONES_1');
+            $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
+            $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$data['user_id'].'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+            $dato['titulo']         = JText::_('TITULO_1');
+            $dato['body']           = $contenido;
+
+            $send                   = new Send_email();
+            $send->notification($dato);
+        }
+*/
 
         return $resultado;
     }

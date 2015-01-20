@@ -7,6 +7,7 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
+jimport('integradora.notifications');
 
 $datos = @$this->data->integrados;
 $user		= JFactory::getUser();
@@ -919,5 +920,4 @@ if(!empty($datos->integrado)){
     </form>
 <?php
 
-// var_dump($this);
 ?>

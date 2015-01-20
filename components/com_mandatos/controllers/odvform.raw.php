@@ -128,25 +128,6 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $respuesta['numOrden'] = $numOrden;
         $respuesta['redirect'] = $url;
 
-        /*NOTIFICACIONES 6
-
-        /*if($respuesta['success']==true){
-            $contenido = JText::_('NOTIFICACIONES_6');
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
-            $contenido = str_replace('$odvId', '<strong style="color: #000000">'.$data['name'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
-            $contenido = str_replace('$monto', '<strong style="color: #000000">$'.$data['monto'].'</strong>',$contenido);
-            $contenido = str_replace('$cliente', '<strong style="color: #000000">$'.$data['cliente'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-
-            $data['titulo']         = JText::_('TITULO_6');
-            $data['body']           = $contenido;
-
-            $send                   = new Send_email();
-            $info = $send->notification($data);
-        }*/
-
         echo json_encode($respuesta);
     }
 }
