@@ -219,11 +219,14 @@ class MandatosController extends JControllerLegacy {
         }
 
         if(isset($this->integradoId)){
+            $integradoSimple     = new IntegradoSimple($this->integradoId);
+            $getCurrUser         = new Integrado($this->integradoId);
+
             $contenido = JText::_('NOTIFICACIONES_2');
 
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
             $contenido = str_replace('$proyecto', '<strong style="color: #000000">'.$data['name'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
 
 
@@ -231,10 +234,10 @@ class MandatosController extends JControllerLegacy {
 
             $data['titulo']         = JText::_('TITULO_2');
             $data['body']           = $contenido;
+            $data['email']          = $getCurrUser->user->email;
 
             $send                   = new Send_email();
             $send->notification($data);
-
         }
 
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist');
@@ -449,33 +452,34 @@ class MandatosController extends JControllerLegacy {
         if(isset($this->integradoId)){
 
             if($data['tp_tipo_alta']==0){
-                $dato = 'Cliente';
+                $alta = 'Cliente';
             }
             if($data['tp_tipo_alta']==1){
-                $dato = 'Proveedor';
+                $alta = 'Proveedor';
             }
             if($data['tp_tipo_alta']==2){
-                $dato = 'Cliente/Proveedor';
+                $alta = 'Cliente/Proveedor';
             }
 
-            $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
-            $int = new IntegradoSimple($currentIntegradoId);
+
+            $getCurrUser         = new Integrado($this->integradoId);
 
             $titulo = JText::_('TITULO_5');
-            $titulo = str_replace('$tipo', '<strong style="color: #000000">'.$dato.'</strong>',$titulo);
+            $titulo = str_replace('$tipo', '<strong style="color: #000000">'.$alta.'</strong>',$titulo);
 
             $contenido = JText::_('NOTIFICACIONES_5');
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$tipo', '<strong style="color: #000000">'.$dato.'</strong>',$contenido);
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
+            $contenido = str_replace('$tipo', '<strong style="color: #000000">'.$alta.'</strong>',$contenido);
             $contenido = str_replace('$nombre_cliente', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$int->user->username.'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
             $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
 
-            $data['titulo']         = $titulo;
-            $data['body']           = $contenido;
-
+            $dato['titulo']         = $titulo;
+            $dato['body']           = $contenido;
+            $dato['email']          = $getCurrUser->user->email;
             $send                   = new Send_email();
-            $send->notification($data);
+            $send->notification($dato);
+            var_dump($send);exit;
         }
 
         $this->document->setMimeEncoding('application/json');
