@@ -542,6 +542,13 @@ class getFromTimOne{
         return $odps;
     }
 
+    public static function getBalance($uuidTimone){
+        $rutas = new servicesRoute();
+        $get = $rutas->getUrlService('timone', 'user', 'details');
+
+//        $servceUrl = str_replace()
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -3157,9 +3164,10 @@ class Cashout {
 
     private function getUuid($orden)
     {
-        $timoneUUID = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$orden->integradoId);
+        $integrado = new IntegradoSimple($orden->integradoId);
+        $timoneUUID = $integrado->timonedata->timoneUuid;
 
-        return $timoneUUID[0]->timoneUuid;
+        return $timoneUUID->timoneUuid;
     }
 
 

@@ -109,7 +109,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
             $jsonData   = json_encode( $data );
             $rutas = new servicesRoute();
-            $retorno = $rutas->getUrlService('cashOut','create','timone');
+            $retorno = $rutas->getUrlService('timone', 'cashOut', 'create');
 
             $request = new sendToTimOne();
             $request->setServiceUrl( $retorno->url );
@@ -117,9 +117,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $request->setHttpType( $retorno->type );
 
             $result = $request->to_timone(); // realiza el envio
-            if ( isset( $result ) ) {
-                echo $result->data;
-            }
 
             return $result->code == 200;
         }

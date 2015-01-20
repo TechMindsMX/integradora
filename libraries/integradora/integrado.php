@@ -255,6 +255,8 @@ class IntegradoSimple extends Integrado {
 		$this->setOrdersAtuhorizationParams();
 
 		$this->setMainAddressFormatted();
+        $this->timonedata = $this->timOneData();
+
 	}
 
 	/**
@@ -301,6 +303,17 @@ class IntegradoSimple extends Integrado {
 
 		$this->integrados[0]->address = $address;
 	}
+
+    private function timOneData()
+    {
+        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
+        $timoneData = $timoneData[0];
+
+        $uuidTimone = $timoneData->timoneUuid;
+        $timoneData->balance = getFromTimOne::getBalance();
+
+//        return $timoneData[0];
+    }
 
 }
 
