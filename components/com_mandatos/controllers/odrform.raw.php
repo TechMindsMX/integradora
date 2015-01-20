@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('integradora.gettimone');
 jimport('integradora.validator');
+jimport('integradora.notifications');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
