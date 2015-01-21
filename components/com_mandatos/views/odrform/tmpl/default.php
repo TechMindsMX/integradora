@@ -66,7 +66,8 @@ $amount     = isset($this->odr->amount) ? $this->odr->amount : '';
 			var request = jQuery.ajax({
 				url: 'index.php?option=com_mandatos&task='+task+'&format=raw',
 				data: datos,
-				type: 'post'
+				type: 'post',
+				async: false
 			});
 
 			request.done(function(result){

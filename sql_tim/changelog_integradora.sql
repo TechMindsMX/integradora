@@ -233,3 +233,7 @@ CREATE TABLE `flpmu_catalogo_ivas` (
 INSERT INTO  `integradb`.`flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
 
 --rollback DROP TABLE `flpmu_catalogo_ivas`;
+
+--changeset ricardolyon:24
+UPDATE flpmu_menu SET access = 2 WHERE id IN (193,195,204);
+--rollback UPDATE flpmu_menu SET access = 1 WHERE id IN (193,195,204);

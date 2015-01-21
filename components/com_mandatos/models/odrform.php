@@ -40,7 +40,8 @@ class MandatosModelOdrform extends JModelItem {
 
 	public function getBalance( ){
         $integrado = new IntegradoSimple($this->integradoId);
-        $integrado->getTimOneData();
+//        $integrado->getTimOneData();
+		$integrado->timoneData->balance = 0;
 
         return $integrado->timoneData->balance;
 	}
