@@ -205,6 +205,7 @@ class MandatosController extends JControllerLegacy {
 
     function saveProyects(){
         $campos      = array('parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
+
         $data        = $this->input_data->getArray($campos);
         $id_proyecto = $data['id_proyecto'];
         $data['integradoId'] = $this->integradoId;
@@ -665,10 +666,5 @@ class MandatosController extends JControllerLegacy {
         exit;
     }
 
-    public function pruebas()
-    {
-        $services= new servicesRoute();
-        var_dump($services);
-        exit;
-    }
+
 }
