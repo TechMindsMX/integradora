@@ -68,7 +68,7 @@ if(!empty($datos->integrado)){
         jQuery('button').click(function(){
             var boton = jQuery(this).prop('id');
 
-            if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params') || (boton == 'bancos')){
+            if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params')){
                 var serializado = jQuery('form#solicitud').serialize();
                 datos = serializado
                 datos += '&tab='+boton
@@ -111,6 +111,10 @@ if(!empty($datos->integrado)){
                 request.fail(function (jqXHR, textStatus) {
                     console.log(jqXHR, textStatus);
                 });
+            } else {
+                if(boton == 'nextTab') {
+                    jQuery('#tabs-solicitudTabs').find('a[href="#files"]').trigger('click');
+                }
             }
         });
 
@@ -254,7 +258,7 @@ if(!empty($datos->integrado)){
             if(obj.success === true) {
                 llenatablabancos(obj);
             }else{
-                alert('no se pudo agregar la cuenta');
+                alert('No se pudo agregar la cuenta revisa los datos');
             }
         });
 
@@ -753,7 +757,7 @@ if(!empty($datos->integrado)){
         </div>
         <div class="form-group">
             <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
-            <input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
+            <input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="10" />
         </div>
         <div class="form-group">
             <label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
@@ -761,7 +765,8 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-actions">
-            <button type="button" class="btn btn-primary span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+            <button type="button" class="btn btn-success span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+            <button type="button" class="btn btn-primary span3" id="nextTab"><?php echo JText::_('LBL_NEXTTAB'); ?></button>
         </div>
 
         <div>

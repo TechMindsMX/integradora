@@ -7,7 +7,7 @@ include_once 'catalogos.php';
 class validador{
     public $dataPost;
 
-    public function procesamiento ($data,$diccionario) {
+    public function  procesamiento ($data,$diccionario) {
         $respuesta = array();
         $this->dataPost = $data;
         foreach ($data as $key => $value) {
@@ -60,6 +60,10 @@ class validador{
         $response = array ('success' => false, 'msg' => $msg);
 
         return $response;
+    }
+
+    protected function diccionaroErrores($tipo,$campo){
+        $tipos = array('Longitud');
     }
 
     public static function noErrors ($array) {
@@ -259,6 +263,18 @@ class validador{
 
     protected function valida_notNull ($valor){
         if($valor != '' && $valor != 0){
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    protected function valida_phone($valor){
+        $regex =   '/^[1-9]{1}?[0-9]{9}$/';
+
+        if(preg_match($regex, $valor)){
             $respuesta = true;
         } else {
             $respuesta = false;
