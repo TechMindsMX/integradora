@@ -47,6 +47,17 @@ if(!empty($datos->integrado)){
         jQuery(this).val(jQuery(this).val().toUpperCase());
     }
 
+    function deshabilitaregistroProp() {
+        var checkbox = jQuery(this).prop('checked');
+        var campos   = jQuery('div#registro-propiedad').find('input, select');
+
+        jQuery.each(campos, function(key, value){
+            var campo = jQuery(value);
+            if( campo.prop('id') != 'tramiteRegistro' ){
+                jQuery(value).prop('disabled',checkbox);
+            }
+        });
+    }
     jQuery(document).ready(function(){
 
         var tabs = jQuery('#tabs-solicitudTabs li');
@@ -209,6 +220,7 @@ if(!empty($datos->integrado)){
         ?>
         jQuery('#agregarBanco').on('click', AltaBanco);
         jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
+        jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp)
     });
 
     function ajax(parametros){
@@ -685,7 +697,7 @@ if(!empty($datos->integrado)){
 
         <div id="registro-propiedad">
             <div class="checkbox">
-                <label><input type="checkbox"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
+                <label><input type="checkbox" id="tramiteRegistro"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
             </div>
 
             <h3><?php echo JText::_('LBL_RPP'); ?></h3>
@@ -793,7 +805,7 @@ if(!empty($datos->integrado)){
     <fieldset>
 
         <div class="form-group">
-            <label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
+            <label for="dp_url_identificacion" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_ID_FILE'); ?></label>
             <input name="dp_url_identificacion" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -806,7 +818,7 @@ if(!empty($datos->integrado)){
             ?>
         </div>
         <div class="form-group">
-            <label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+            <label for="dp_url_rfc" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
             <input name="dp_url_rfc" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -821,7 +833,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
+            <label for="dp_url_comprobante_domicilio" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
             <input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -835,7 +847,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+            <label for="de_url_rfc" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
             <input name="de_url_rfc" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -849,7 +861,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="t1_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+            <label for="t1_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
             <input name="t1_url_instrumento" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -863,7 +875,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="t2_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
+            <label for="t2_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
             <input name="t2_url_instrumento" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -877,7 +889,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+            <label for="pn_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO3_FILE'); ?></label>
             <input name="pn_url_instrumento" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -891,7 +903,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="rp_url_instrumento"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
+            <label for="rp_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
             <input name="rp_url_instrumento" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
@@ -905,7 +917,7 @@ if(!empty($datos->integrado)){
         </div>
 
         <div class="form-group">
-            <label for="db_banco_file"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
+            <label for="db_banco_file" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
             <input name="db_banco_file" type="file" maxlength="" />
             <?php
             if( isset($datos->datos_personales->url_identificacion) ){
