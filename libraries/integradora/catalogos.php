@@ -109,5 +109,17 @@ class Catalogos {
 
         return $tipos;
     }
+
+	public function getCatalogoIVA(){
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName('#__catalogo_ivas'));
+
+		$catIva = $db->setQuery($query)->loadObjectList('valor');
+
+		return $catIva;
+	}
 }
 	

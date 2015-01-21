@@ -161,8 +161,7 @@ if(!empty($datos->integrado)){
         var params = '<?php echo json_encode($datos->params); ?>';
         var params = eval ("(" + params + ")");
 
-
-        jQuery.each(datos_empresa, function(key, value){
+        jQuery.each(params, function(key, value){
             jQuery('#au_'+key).val(value);
         });
         <?php

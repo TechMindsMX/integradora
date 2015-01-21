@@ -224,3 +224,12 @@ INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (3, 'Autorizador
 INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (4, 'Full');
 
 --rollback DROP TABLE `flpmu_catalog_permission_levels`;
+
+--changeset lutek:23
+CREATE TABLE `flpmu_catalogo_ivas` (
+  `valor` int(11) NOT NULL,
+  `leyenda` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO  `integradb`.`flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
+
+--rollback DROP TABLE `flpmu_catalogo_ivas`;

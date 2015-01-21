@@ -8,6 +8,7 @@ class MandatosViewProductoslist extends JViewLegacy {
 	function display($tpl = null){
 
         $this->data         = $this->get('productos');
+        $this->catalogo         = $this->get('CatalogoIva');
 
         // Check for errors.
         if (count($errors = $this->get('Errors')) ) {

@@ -70,12 +70,21 @@ $producto 	= $this->producto;
         </div>
         <div class="col-md-6">
             <label for="iva"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>: </label>
-            <input type="text"
-                   class="alto form-control"
-                   id="iva"
-                   name="iva"
-                   value="<?php echo $producto->iva ?>"
-                   placeholder="<?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_NAME').JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>" />
+            <select class="alto form-control" id="iva" name="iva">
+                <option><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS').' de '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?></option>
+                <?php
+                foreach ($this->catalogoIva as $key => $value) {
+                    $selected = '';
+                    if($producto->iva == $key){
+                        $selected = 'selected="selected"';
+                    }elseif($key == '3' && $producto->iva == ''){
+                        $selected = 'selected="selected"';
+                    }
+                    echo '<option value="'.$key.'" '.$selected.'>'.$value->leyenda.'</option>';
+                }
+                ?>
+            </select>
+
         </div>
     </div>
 

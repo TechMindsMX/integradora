@@ -20,6 +20,12 @@ class MandatosModelProductoslist extends JModelItem {
 		
 		return $productos;
 	}
+
+	public function getCatalogoIva(){
+		$catalogos = new Catalogos();
+
+		return $catalogos->getCatalogoIVA();
+	}
 	
 }
 

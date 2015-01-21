@@ -13,11 +13,10 @@ class MandatosViewProductosform extends JViewLegacy {
 		$post               = array('id_producto' => 'INT');
         $app 				= JFactory::getApplication();
         $data               = $app->input->getArray($post);
-
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
 		$this->currencies   = getFromTimOne::getCurrencies();
+		$this->catalogoIva  = $this->get('CatalogoIva');
 
         if( $data['id_producto'] != 0 ){
 			$this->titulo = 'COM_MANDATOS_PRODUCTOS_LBL_EDITAR';

@@ -8,7 +8,6 @@ class IntegradoViewSolicitud extends JViewLegacy {
 	function display($tpl = null)
 	{
 		$this->data = $this->get('solicitud');
-
 		$this->catalogos = $this->get('catalogos');
 
 		// Check for errors.

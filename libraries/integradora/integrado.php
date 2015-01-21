@@ -136,6 +136,7 @@ class Integrado {
 			$this->integrados[$key]->integrado 			= null;
 			$this->integrados[$key]->datos_personales 	= null;
 			$this->integrados[$key]->datos_empresa 		= null;
+			$this->integrados[$key]->params		 		= null;
 			$this->integrados[$key]->datos_bancarios 	= null;
 			
 			$this->integrados[$key]->testimonio1		= null;
