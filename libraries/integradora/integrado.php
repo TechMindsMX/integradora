@@ -128,8 +128,10 @@ class Integrado {
 				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
-				if ( isset( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$this->integrados[$key]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_empresa->cod_postal));
+				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+				} else {
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
 				}
 			}
 		}else{
@@ -292,7 +294,7 @@ class IntegradoSimple extends Integrado {
 
 			$coloniaId     = 0; // TODO: quitar mock al traer campo de db
 
-			$postalAddress = $postalData->dTipoAsenta.' '.$postalData->dAsenta[$coloniaId].', '.$postalData->dMnpio.', '.$postalData->dCiudad.', '.$postalData->dEstado;
+			$postalAddress = @$postalData->dTipoAsenta.' '.@$postalData->dAsenta[$coloniaId].', '.@$postalData->dMnpio.', '.@$postalData->dCiudad.', '.@$postalData->dEstado;
 			$address = $this->integrados[0]->datos_empresa->calle.' '.$this->integrados[0]->datos_empresa->num_exterior.' No. Int: '.$this->integrados[0]->datos_empresa->num_interior.', '.$postalAddress;
 
 		}

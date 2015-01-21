@@ -92,6 +92,8 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
 <?php
 if(!isset($this->datos['confirmacion'])){
     $datos = is_null($datos)?$this->orden:$datos;
+    $now = new DateTime('now', new DateTimeZone('America/Mexico_City'));
+    $createdDate = isset($datos->createdDate) ? $datos->createdDate : $now->format('d-m-Y');
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
@@ -101,12 +103,17 @@ if(!isset($this->datos['confirmacion'])){
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $datos->id; ?>" />
 
         <div class="form-group">
+            <label for="createdDate"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN')?></label>
+            <p><?php echo $createdDate; ?></p>
+        </div>
+
+        <div class="form-group">
             <label for="proveedor"><?php echo JText::_('LBL_PROVEEDOR') ?></label>
             <select id="proveedor" name="proveedor">
                 <?php
                 foreach ($this->proveedores as $key => $value) {
                     $selected = $datos->proveedor == $value->id?'selected':'';
-                    echo '<option value="'.$value->id.'" '.$selected.'>'.$value->tradeName.'</option>';
+                    echo '<option value="'.$value->id.'" '.$selected.'>'.$value->displayName.'</option>';
                 }
                 ?>
                 <option value="other"><?php echo JText::_('LBL_OTHER'); ?></option>
@@ -132,7 +139,7 @@ if(!isset($this->datos['confirmacion'])){
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
             <?php
-            $default = $datos->paymentDate!=''?$datos->paymentDate:date('Y-m-d');
+            $default = $datos->paymentDate != '' ? $datos->paymentDate : date('Y-m-d');
             echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
             ?>
         </div>
@@ -140,8 +147,8 @@ if(!isset($this->datos['confirmacion'])){
         <div class="form-group">
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
-                <option value="0" <?php echo $datos->paymentMethod==0?'selected':''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
-                <option value="1" <?php echo $datos->paymentMethod==1?'selected':''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
+                <option value="0" <?php echo $datos->paymentMethod == 0 ? 'selected' : ''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
+                <option value="1" <?php echo $datos->paymentMethod == 1 ? 'selected' : ''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
             </select>
         </div>
 
@@ -196,7 +203,7 @@ if(!isset($this->datos['confirmacion'])){
                     <?php
                     foreach ($this->proveedores as $key => $value) {
                         if($value->id == $this->datos['proveedor']){
-                            echo $value->tradeName;
+                            echo $value->displayName;
                         }
                     }
                     ?>
@@ -309,7 +316,7 @@ if(!isset($this->datos['confirmacion'])){
 
         <div class="form-group">
             <input type="button" id="enviar" class="btn btn-primary" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
-            <input type="button" class="btn btn-danger"  onclick="window.history.back()" value="<?php echo jText::_('LBL_CANCELAR'); ?>" />
+            <a class="btn btn-danger span3" id="cancel" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist'); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
     </form>
 <?php
