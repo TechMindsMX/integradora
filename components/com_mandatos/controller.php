@@ -10,6 +10,8 @@ jimport('integradora.classDB');
 jimport('integradora.notifications');
 jimport('integradora.facturasComision');
 
+require_once JPATH_COMPONENT . '/helpers/mandatos.php';
+
 class MandatosController extends JControllerLegacy {
 
     public function __construct(){
@@ -201,47 +203,6 @@ class MandatosController extends JControllerLegacy {
 
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
-    }
-
-    function saveProyects(){
-        $campos      = array('parentId'=>'INT','name'=>'STRING','description'=>'STRING','status'=>'INT', 'id_proyecto'=>'INT');
-
-        $data        = $this->input_data->getArray($campos);
-        $id_proyecto = $data['id_proyecto'];
-        $data['integradoId'] = $this->integradoId;
-
-        $save        = new sendToTimOne();
-
-        unset($data['id_proyecto']);
-        if( $id_proyecto == 0 ){
-            $save->saveProject($data);
-        }else{
-            $save->updateProject($data,$id_proyecto);
-        }
-
-        if(isset($this->integradoId)){
-            $integradoSimple     = new IntegradoSimple($this->integradoId);
-            $getCurrUser         = new Integrado($this->integradoId);
-
-            $contenido = JText::_('NOTIFICACIONES_2');
-
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$proyecto', '<strong style="color: #000000">'.$data['name'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-
-            $integrado              = new IntegradoSimple($this->integradoId);
-
-            $data['titulo']         = JText::_('TITULO_2');
-            $data['body']           = $contenido;
-            $data['email']          = $getCurrUser->user->email;
-
-            $send                   = new Send_email();
-            $send->notification($data);
-        }
-
-        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist');
     }
 
     function saveProducts(){

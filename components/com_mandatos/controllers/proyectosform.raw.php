@@ -9,16 +9,103 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerProyectosform extends JControllerLegacy {
 
-	public function valida() {
+	function saveProject() {
+		$diccionario = array (
+			'name'        => array ( 'tipo' => 'alphaNum', 'length' => 100, 'notNull' => true ),
+			'description' => array ( 'tipo' => 'alphaNum', 'length' => 1000, 'notNull' => true ),
+		);
+		$this->validateAndSave($diccionario);
+	}
 
-		$diccionario = array(
-			'parentId'      => array('tipo'=>'number', 'length' => 10),
-			'name'          => array('tipo'=>'number', 'length' => 100, 'notNull' => true),
-			'description'   => array('tipo'=>'number', 'length' => 1000, 'notNull' => true),
-			'status'        => array('tipo'=>'number', 'length' => 10),
-			'id_proyecto'   => array('tipo'=>'number', 'length' => 10)
+	function saveSubProject() {
+		$diccionario = array (
+			'parentId'    => array ( 'tipo' => 'number',   'length' => 10, 'notNull' => true ),
+			'name'        => array ( 'tipo' => 'alphaNum', 'length' => 100, 'notNull' => true ),
+			'description' => array ( 'tipo' => 'alphaNum', 'length' => 1000, 'notNull' => true ),
+		);
+		$this->validateAndSave($diccionario);
+	}
+
+	function validateAndSave($diccionario) {
+		JFactory::getDocument()->setMimeEncoding( 'application/json' );
+		$this->integradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
+
+		$campos = array ( 'parentId'    => 'INT',
+		                  'name'        => 'STRING',
+		                  'description' => 'STRING',
+		                  'status'      => 'INT',
+		                  'id_proyecto' => 'INT'
 		);
 
-		MandatosHelper::valida($diccionario);
+		$data = JFactory::getApplication()->input->getArray( $campos );
+
+// validacion
+
+		$validaciones = MandatosHelper::valida( $data, $diccionario );
+
+		// valida que el nombre del proyecto no este duplicado para el integrado
+		$validaciones['name'] = MandatosHelper::checkDuplicatedProjectName( $data['name'], $validaciones['name'] );
+
+		foreach ( $validaciones as $key => $check ) {
+			if ( is_array( $check ) ) {
+				$errores[ $key ] = ' ' . $check['msg'] . $key . ', ';
+			}
+		}
+		if ( isset( $errores ) ) {
+
+			echo json_encode( $validaciones );
+
+			return false;
+		}
+// fin validacion
+
+		$id_proyecto         = $data['id_proyecto'];
+		$data['integradoId'] = $this->integradoId;
+
+		$save = new sendToTimOne();
+
+		unset( $data['id_proyecto'] );
+		if ( $id_proyecto == 0 ) {
+			$save->saveProject( $data );
+		} else {
+			$save->updateProject( $data, $id_proyecto );
+		}
+
+		if ( isset( $this->integradoId ) ) {
+			$integradoSimple = new IntegradoSimple( $this->integradoId );
+			$getCurrUser     = new Integrado( $this->integradoId );
+
+			$contenido = JText::_( 'NOTIFICACIONES_2' );
+
+			$contenido = str_replace( '$integrado',
+			                          '<strong style="color: #000000">' . $integradoSimple->user->username . '</strong>',
+			                          $contenido );
+			$contenido = str_replace( '$proyecto', '<strong style="color: #000000">' . $data['name'] . '</strong>',
+			                          $contenido );
+			$contenido = str_replace( '$usuario',
+			                          '<strong style="color: #000000">$' . $getCurrUser->user->username . '</strong>',
+			                          $contenido );
+			$contenido = str_replace( '$fecha', '<strong style="color: #000000">' . date( 'd-m-Y' ) . '</strong>',
+			                          $contenido );
+
+
+			$integrado = new IntegradoSimple( $this->integradoId );
+
+			$data['titulo'] = JText::_( 'TITULO_2' );
+			$data['body']   = $contenido;
+			$data['email']  = $getCurrUser->user->email;
+
+			$send = new Send_email();
+			$send->notification( $data );
+		}
+
+
+		echo json_encode(array('redirect' => 'index.php?option=com_mandatos&task=proyectosform.redirectUrl&format=raw'));
 	}
+
+	public function redirectUrl(){
+		JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist', JText::_('LBLB_PROJECT_SAVED'));
+
+	}
+
 }

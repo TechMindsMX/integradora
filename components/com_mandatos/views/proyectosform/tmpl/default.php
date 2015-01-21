@@ -25,29 +25,23 @@ $proyecto = $this->proyecto;
 		var data = form.serialize();
 
 		var request = jQuery.ajax({
-			url: "index.php?option=com_mandatos&view=proyectosform&task=proyectosform.valida&format=raw",
+			url: "index.php?option=com_mandatos&view=proyectosform&task=proyectosform.saveProject&format=raw",
 			data: data,
 			type: 'post',
 			async: false
 		});
 
 		request.done(function (result) {
-			var enviar = true;
-			jQuery.each(result, function(k, v){
-				if(v != true){
-					mensajes(v.msg,'error',k);
-					enviar = false;
-				}
-			});
+			var envio = mensajesError(result);
 
-			if(enviar === true && id === 'validacion'){
-				form.submit();
+			if(envio === true){
+				document.location.href=result.redirect;
 			}
 		});
 	}
 </script>
 
-<form id="form_alta" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&task=saveProyects'); ?>">
+<form id="form_alta" method="post" action="">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 
     <input type="hidden" name="confirm" value="1" />

@@ -1,3 +1,18 @@
+function mensajesError($result){
+    var $enviar = true;
+    jQuery('span.error').remove();
+
+    if (typeof ($result.redirect) == 'undefined') {
+        jQuery.each($result, function(k, v){
+            if(v != true){
+                mensajes(v.msg,'error',k);
+                $enviar = false;
+            }
+        });
+    }
+    return $enviar;
+}
+
 function mensajes($msg, $tipo, $campo){
     var spanError   = jQuery('#'+$campo);
     var divMsg      = jQuery('.msgs_plataforma');

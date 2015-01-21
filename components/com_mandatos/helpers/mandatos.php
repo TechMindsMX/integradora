@@ -72,16 +72,31 @@ class MandatosHelper {
         return $cliente;
     }
 
-	public static function valida($diccionario){
+	public static function valida($input, $diccionario){
 		$validacion = new validador();
 		$document = JFactory::getDocument();
-		$parametros = JFactory::getApplication()->input->getArray();
 
-		$respuesta = $validacion->procesamiento($parametros,$diccionario);
+		$respuesta = $validacion->procesamiento($input, $diccionario);
 
 		$document->setMimeEncoding('application/json');
-		echo json_encode($respuesta);
+
+		return $respuesta;
 	}
 
+	public static function checkDuplicatedProjectName( $name, $currentValidations ) {
+		$integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+
+		$projects = getFromTimOne::getProyects($integradoId);
+
+		foreach ( $projects as $value ) {
+			if($value->name == $name) {
+				$validacion['success'] = false;
+				$validacion['msg'] = JText::_('ERROR_PROJECT_NAME_DUPLICATED');
+			}
+		}
+		$validacion = isset($validacion) ? $validacion : $currentValidations;
+
+		return $validacion;
+	}
 
 }
