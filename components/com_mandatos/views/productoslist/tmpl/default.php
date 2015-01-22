@@ -35,6 +35,25 @@ $productos = $this->data;
         jQuery('#input_filtro_nombre').multifilter({
             'target' : jQuery('#myTable')
         });
+
+
+        jQuery("input[name*='baja']").click(function ($) {
+            var $this = jQuery(this);
+            var itemId = $this.data('id');
+            var valor = $this.is(':checked') ? 1 : 0;
+
+            var request = $.ajax({
+                    url: 'index.php?option=com_mandatos&task=productoslist.changestatus',
+                    data: {id_producto: itemId,
+                    status: valor},
+                    type: 'POST'
+                });
+
+            request.done(function (result) {
+                console.log(result.mensaje);
+            });
+
+        });
     });
 
 </script>
@@ -85,7 +104,7 @@ $productos = $this->data;
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'%</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a class="btn btn-primary" href="'.$editUrl.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id_producto.'" name="baja_'.$value->id_producto.'" '.$selected.' /></td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" data-id="'.$value->id_producto.'" name="baja_'.$value->id_producto.'" '.$selected.' /></td>';
                 echo '</tr>';
             }
         }else{
