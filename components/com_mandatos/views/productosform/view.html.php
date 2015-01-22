@@ -32,7 +32,7 @@ class MandatosViewProductosform extends JViewLegacy {
             $this->producto->iva			= '';
             $this->producto->ieps		    = '';
             $this->producto->currency	    = 'MXN';
-            $this->producto->status		    = '';
+            $this->producto->status		    = 1;
             $this->producto->description   = '';
 		}
 

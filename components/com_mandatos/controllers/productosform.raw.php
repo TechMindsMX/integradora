@@ -51,4 +51,46 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
         echo json_encode(array('redirect' =>'index.php?option=com_mandatos&view=productosform&id_producto=1'));
     }
+
+    function saveProducts(){
+        $campos      = array(
+            'id_producto'=>'INT',
+            'productName'=>'STRING',
+            'measure'=>'STRING',
+            'price'=>'STRING',
+            'iva'=>'STRING',
+            'ieps'=>'STRING',
+            'currency'=>'STRING',
+            'status'=>'STRING',
+            'description'=>'STRING');
+
+        $data                = $this->inputVars->getArray($campos);
+        $data['integradoId'] = JFactory::getSession()->get('integradoId',null,'integrado');
+
+        $id_producto = $data['id_producto'];
+        $save        = new sendToTimOne();
+
+        unset($data['id_producto']);
+
+        if($id_producto == 0){
+            $save->saveProduct($data);
+        }else{
+            $save->updateProduct($data, $id_producto);
+        }
+        if(isset($this->integradoId)){
+            $contenido = JText::_('NOTIFICACIONES_4');
+            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
+            $contenido = str_replace('$producto', '<strong style="color: #000000">'.$data['productName'].'</strong>',$contenido);
+            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
+            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+
+            $data['titulo']         = JText::_('TITULO_4');
+            $data['body']           = $contenido;
+
+            $send                   = new Send_email();
+            $send->notification($data);
+        }
+
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
+    }
 }

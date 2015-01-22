@@ -12,6 +12,7 @@ JFactory::getDocument()->addStyleSheet('templates/meet_gavern/css/bootstrap.css'
 JFactory::getDocument()->addStyleSheet('templates/meet_gavern/css/bootstrap.min.css');
 
 $producto 	= $this->producto;
+//index.php?option=com_mandatos&task=saveProducts
 ?>
 <script>
     function valida() {
@@ -73,7 +74,7 @@ $producto 	= $this->producto;
 </script>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
-<form id="formProduct" class="form-inline" role="form" method="post" action="index.php?option=com_mandatos&task=saveProducts">
+<form id="formProduct" class="form-inline" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw">
     <div id="formulario">
         <h1><?php echo ucwords(JText::_($this->titulo)); ?></h1>
 
