@@ -12,12 +12,13 @@ $document = JFactory::getDocument();
 
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('libraries/integradora/js/multifilter.js');
 $productos = $this->data;
 ?>
 <script>
     jQuery(document).ready(function(){
-        jQuery('.btn').on('click',editarProd);
         jQuery('.status1 input:button').prop('disabled', true);
+
         jQuery("#myTable").tablesorter({
             sortList: [[0,0]],
             headers: {
@@ -30,30 +31,33 @@ $productos = $this->data;
                 8:{ sorter: false }
             }
         });
+
+        jQuery('#input_filtro_nombre').multifilter({
+            'target' : jQuery('#myTable')
+        });
     });
 
-    function editarProd(){
-        var clickedBtn	= jQuery(this).prop('id');
-        var productId	= clickedBtn.split('_')[1];
-
-        window.location = 'index.php?option=com_mandatos&task=editarproducto&id_producto='+productId;
-    }
 </script>
 
 <h1><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_TITULO'); ?></h1>
 
-<div class="agregarProducto">
+<div class="agregarProducto control-group">
     <?php
     $ruta = JRoute::_('index.php?option=com_mandatos&view=productosform');
     echo '<a class="btn btn-primary" href="'.$ruta.'">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_AGREGAR').'</a>';
     ?>
 </div>
 
+<div class="form-search control-group" id="filtro_nombre">
+    <label class="form-control" for="filtro_nombre"><?php echo JText::_('LBL_FILTRO_NOMBRE'); ?></label>
+    <input class="form-control" name="filtro_nombre" id="input_filtro_nombre" value="" placeholder="<?php echo JText::_('LBL_FILTRO_NOMBRE'); ?>" data-col="nombre" />
+</div>
+
 <div class="table-responsive">
     <table id="myTable" class="table table-bordered tablesorter">
         <thead>
         <tr>
-            <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_NAME'); ?></span> </th>
+            <th class="header nombre" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_NAME'); ?></span> </th>
             <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MEDIDAS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_PRECIO'); ?> </span> </th>
@@ -61,15 +65,16 @@ $productos = $this->data;
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MONEDA'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ></th>
-            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESHABILITA_PROYECTO'); ?></span></th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_PUBLISHED'); ?></span></th>
         </tr>
         </thead>
         <tbody>
         <?php
         if( !is_null($productos) ){
             foreach ($productos as $key => $value) {
-                $selected = $value->status == 0?'':'checked';
-                $class = $value->status == 0?'':'status1';
+                $selected = $value->status == 1 ? '' : 'checked';
+                $class = $value->status == 1 ? '' : 'status1';
+                $editUrl = 'index.php?option=com_mandatos&view=productosform&id_producto='.$value->id_producto;
 
                 echo '<tr>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->productName.'</td>';
@@ -79,7 +84,7 @@ $productos = $this->data;
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$this->catalogo[$value->iva]->leyenda.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'%</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="button" class="btn btn-primary" id="editar_'.$value->id_producto.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a class="btn btn-primary" href="'.$editUrl.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id_producto.'" name="baja_'.$value->id_producto.'" '.$selected.' /></td>';
                 echo '</tr>';
             }
