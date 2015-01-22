@@ -520,6 +520,8 @@ class MandatosController extends JControllerLegacy {
     function searchProducts(){
         $document = JFactory::getDocument();
         $document->setMimeEncoding('application/json');
+        $catalogos = new Catalogos();
+        $catalogoIva = $catalogos->getCatalogoIVA();
 
         $respuesta = array();
         $db     = JFactory::getDbo();
