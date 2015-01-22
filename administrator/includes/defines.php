@@ -32,4 +32,5 @@ $hostname = $middle.$puertoTimOne.$controllerTimOne;
 define("MIDDLE", 'http://'.$middle);
 define("PUERTO", $puertoTimOne);
 define("TIMONE", $controllerTimOne);
-define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+//define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");

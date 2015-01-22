@@ -15,16 +15,13 @@ class Integrado {
 	
 	function __construct($integ_id = null) {
 		$this->user = JFactory::getUser();
-		
 		$this->integrados = $this->getIntegradosCurrUser();
 
 		foreach ($this->integrados as $key => $value) {
 			$id = $value->integrado_id;
 			$this->getSolicitud($id, $key);
 		}
-		
 		unset($this->user->password);
-
 	}
 
     /**
@@ -36,8 +33,8 @@ class Integrado {
     {
         $db 		= JFactory::getDbo();
 
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('user_id'))
+        $query = $db->getQuery(true);
+	    $query->select($db->quoteName('user_id'))
             ->from($db->quoteName('#__integrado_users'))
             ->where($db->quoteName('integrado_id') . ' = ' . $integ_id . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
 
@@ -47,11 +44,24 @@ class Integrado {
         return $result;
     }
 
-    function getIntegrados (){
+	public static function getSessionIntegradoIdOrRedirectWtihError( $instance ) {
+		$sesionIntegradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
+
+		$vars = $instance->getQuery( true );
+		$uri  = 'index.php?' . str_replace( '&task=' . $vars['task'], '', $instance->getQuery() );
+
+		if ( is_null( $sesionIntegradoId ) ) {
+			JFactory::getApplication()->redirect( 'index.php?', 'ERROR_SELECCION_INTEGRADO' );
+		} else {
+			return $sesionIntegradoId;
+		}
+
+	}
+
+	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
-        $query
-            ->select('intuser.integrado_id, user.id,user.name' )
+        $query->select('intuser.integrado_id, user.id,user.name' )
             ->from('#__integrado_users as intuser')
             ->join('INNER', '#__users as user on  intuser.user_id = user.id')
             ->where('intuser.integrado_principal'.' <> 0 ');
@@ -66,8 +76,8 @@ class Integrado {
 	{
 		$db = JFactory::getDbo();
 		
-		$query = $db->getQuery(true)
-			->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
 		$result = $db->setQuery($query)->loadObjectList();
@@ -81,8 +91,8 @@ class Integrado {
 
 		$db = JFactory::getDbo();
 		
-		$query = $db->getQuery(true)
-			->select('*')
+		$query = $db->getQuery(true);
+		$query->select('*')
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('integrado_id') . '=' . $integ_id);
 
@@ -108,7 +118,6 @@ class Integrado {
 			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
 		}
 		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
-
 
 		if(!is_null($integrado_id) && $integrado_id != 0){
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
@@ -167,7 +176,7 @@ class Integrado {
 		}else{
 			$return = null;
 		}
-		
+
 		return $return;
 	}
 	

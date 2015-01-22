@@ -9,6 +9,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdrform extends JControllerLegacy {
 
+    protected $diccionario;
     private $integradoId;
 
     public function __construct(){
@@ -24,10 +25,39 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
         $this->parametros   = $this->inputVars->getArray($post);
         $this->parametros['integradoId'] = $this->integradoId;
+
+        $this->diccionario = array(
+            'amount'        => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
+            'paymentDate'   => array('tipo' => 'date',   'length' => 10,    'notNull' => true),
+            'paymentMethod' => array('tipo' => 'number', 'length' => 1,     'notNull' => true)
+        );
+
         parent::__construct();
     }
 
     function saveODR() {
+
+        //validacion
+        $validaciones = MandatosHelper::valida($this->parametros, $this->diccionario);
+
+        $saldoValidacion = $this->validaSaldo();
+        $validaciones['totalAmount'] = $saldoValidacion['totalAmount'];
+
+        foreach ( $validaciones as $key => $check ) {
+            if ( is_array( $check ) ) {
+                $errores[ $key ] = ' ' . $check['msg'] . $key . ', ';
+            }
+        }
+        if ( isset( $errores ) ) {
+
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&task=odrform.redirectWithMsg&format=raw',
+                               'redireccion' => true);
+            echo json_encode( $respuesta );
+
+            return false;
+        }
+        //validacion
+
         $datos = $this->parametros;
         $save  = new sendToTimOne();
         $date  = new DateTime($datos['paymentDate']);
@@ -76,6 +106,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $dato['email']          = $getCurrUser->user->email;
         $send                   = new Send_email();
         $info = $send->notification($dato);
+
+
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
     }
@@ -95,7 +127,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	private function getBalance() {
 		$model = $this->getModel('odrform');
-// cambiar esto por el balance del usuario
 		$balance = $model->getBalance();
 
 		return $balance;
@@ -116,15 +147,13 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 		$parametros = $this->parametros;
 
-		$diccionario = array(
-			'amount'        => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
-			'paymentDate'   => array('tipo' => 'date',   'length' => 10,    'notNull' => true),
-			'paymentMethod' => array('tipo' => 'number', 'length' => 1,     'notNull' => true)
-		);
-
-		$respuesta = $validacion->procesamiento($parametros,$diccionario);
+		$respuesta = $validacion->procesamiento($parametros,$this->diccionario);
 
 		return $respuesta;
 	}
+
+    public function redirectWithMsg() {
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odrlist', 'LBL_ERROR' ,'error');
+    }
 
 }

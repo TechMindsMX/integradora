@@ -1537,6 +1537,7 @@ class getFromTimOne{
     }
 
     public static function getComisionesOfIntegrado($integradoId) {
+        $comisiones = null;
         $request = new getFromTimOne();
 
         $where = null;
