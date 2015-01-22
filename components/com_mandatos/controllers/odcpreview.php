@@ -11,18 +11,28 @@ jimport('integradora.notifications');
  * @property mixed app
  * @property mixed permisos
  * @property mixed integradoId
+ * @property string returnUrl
  */
 class MandatosControllerOdcpreview extends JControllerAdmin {
 	
 	function authorize() {
-        $post               = array('integradoId' => 'INT', 'idOrden' => 'INT');
+        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
+
+        $post               = array('idOrden' => 'INT');
         $this->app 			= JFactory::getApplication();
         $this->parametros	= $this->app->input->getArray($post);
-        $this->integradoId = JFactory::getSession()->get('integradoId', null,'integrado');
-        $this->integradoId = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
+
+        $this->integradoId = Integrado::getSessionIntegradoIdOrRedirectWtihError( JUri::getInstance() );
+
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if($this->permisos['canAuth']) {
+            $getCurrUser         = new Integrado($this->integradoId);
+            $integradoSimple     = new IntegradoSimple($this->integradoId);
+            $integradoSimple->getTimOneData();
+
+            $this->checkSaldoSuficienteOrRedirectWithError( $integradoSimple );
+
             // acciones cuando tiene permisos para autorizar
             $user = JFactory::getUser();
             $save = new sendToTimOne();
@@ -38,20 +48,18 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
             $check = getFromTimOne::checkUserAuth($auths);
 
             if($check){
-                $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_USER_AUTHORIZED'), 'error');
+                $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
             $resultado = $save->insertDB('auth_odc');
 
             if($resultado) {
-	            // autorización guardada
-	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '5');
-	            if ($statusChange){
-		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                // autorización guardada
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '5');
+                if ($statusChange){
+                    $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
 
                     if(isset($this->integradoId)){
-                        $integradoSimple     = new IntegradoSimple($this->integradoId);
-                        $getCurrUser         = new Integrado($this->integradoId);
 
                         $titulo     = JText::_('TITULO_13');
                         $titulo     = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
@@ -75,7 +83,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
                         $getCurrUser         = new Integrado($this->integradoId);
 
                         $titulo     = JText::_('TITULO_14');
-                        $titulo = str_replace('$integrado', '<strong style="color: #000000">'.$integradoAdmin->user->username.'</strong>',$titulo);
+                        $titulo     = str_replace('$integrado', '<strong style="color: #000000">'.$integradoAdmin->user->username.'</strong>',$titulo);
                         $titulo     = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
 
                         $contenido = JText::_('NOTIFICACIONES_14');
@@ -97,13 +105,39 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 	            }
                 //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
 
-                $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_AUTHORIZED'));
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
-                $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect('index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
+            $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
 	}
+
+    private function checkSaldoSuficienteOrRedirectWithError( $integradoSimple ) {
+
+        if ( $integradoSimple->timoneData->balance < $this->totalOperacion() ) {
+            $this->app->redirect($this->returnUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function totalOperacion() {
+        $orden = getFromTimOne::getOrdenesCompra( null, $this->parametros['idOrden'] );
+        $orden = $orden[0];
+
+        $comisiones = getFromTimOne::getComisionesOfIntegrado( $this->integradoId );
+
+        $montoComision = 0;
+        if ( isset( $comisiones ) ) {
+            $montoComision = getFromTimOne::calculaComision( $orden, 'FACTURA', $comisiones );
+        }
+
+        $totalOperacion = (float) $orden->totalAmount + (float) $montoComision;
+
+        return $totalOperacion;
+    }
 }

@@ -44,7 +44,21 @@ class Integrado {
         return $result;
     }
 
-    function getIntegrados (){
+	public static function getSessionIntegradoIdOrRedirectWtihError( $instance ) {
+		$sesionIntegradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
+
+		$vars = $instance->getQuery( true );
+		$uri  = 'index.php?' . str_replace( '&task=' . $vars['task'], '', $instance->getQuery() );
+
+		if ( is_null( $sesionIntegradoId ) ) {
+			JFactory::getApplication()->redirect( 'index.php?', 'ERROR_SELECCION_INTEGRADO' );
+		} else {
+			return $sesionIntegradoId;
+		}
+
+	}
+
+	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
         $query->select('intuser.integrado_id, user.id,user.name' )
