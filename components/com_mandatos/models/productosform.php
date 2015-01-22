@@ -29,8 +29,8 @@ class MandatosModelProductosform extends JModelItem {
 			$producto = getFromTimOne::getProducts(null,$data['id_producto']);
             $producto = $producto[0];
 
-            if($producto->status == 1){
-				$app->redirect('index.php/component/mandatos/?view=productos', 'El producto esta Deshabilitado', 'warning');
+            if($producto->status == 0){
+				$app->redirect('index.php?option=com_mandatos&view=productos', 'El producto esta Deshabilitado', 'warning');
 			}
 		}else{
 			$this->producto = null;
