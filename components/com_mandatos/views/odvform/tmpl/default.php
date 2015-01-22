@@ -11,6 +11,8 @@ JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
+
+var_dump($this->catalogoIva);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -350,6 +352,19 @@ $productosOrden = json_decode($orden->productos);
                             <div id="subtotal"></div>
                         </div>
                         <div id="columna2">
+                            <?php var_dump($value->iva) ?>
+                            <select>
+                            <?php foreach ($this->catalogoIva as $indice => $valor) {
+                                if($value->iva == $indice){
+                                    $selected = 'selected="selected"';
+                                }elseif( $indice == 3 && $value->iva==0 ){
+                                    $selected = 'selected="selected"';
+                                }
+                                ?>
+                                <option value="<?php echo $indice; ?>" <?php echo $selected; ?>><?php echo $valor->leyenda; ?></option>
+                                <?php
+                            }
+                            ?>
                             <input id="iva[]<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="iva[]"

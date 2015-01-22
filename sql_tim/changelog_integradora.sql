@@ -237,3 +237,14 @@ INSERT INTO  `integradb`.`flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0',
 --changeset ricardolyon:24
 UPDATE flpmu_menu SET access = 2 WHERE id IN (193,195,204);
 --rollback UPDATE flpmu_menu SET access = 1 WHERE id IN (193,195,204);
+
+--changeset lutek:25
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0'  WHERE  `flpmu_catalogo_ivas`.`valor` = 1;
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11' WHERE  `flpmu_catalogo_ivas`.`valor` = 2;
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16' WHERE  `flpmu_catalogo_ivas`.`valor` = 3;
+ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0%'  WHERE  `flpmu_catalogo_ivas`.`valor` = 1;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11%' WHERE  `flpmu_catalogo_ivas`.`valor` = 2;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%' WHERE  `flpmu_catalogo_ivas`.`valor` = 3;
+--rollback ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
+
