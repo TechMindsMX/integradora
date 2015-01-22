@@ -91,7 +91,7 @@ class validador{
     }
 
     protected function valida_curp ($data) {
-        $curp = $data;
+        $curp = strtoupper($data);
         $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([H M]{1})([A-Z]{2})([A-Z]{3})([A-Z0-9]{2})$/';
 
         if (preg_match ($regex,
@@ -120,15 +120,37 @@ class validador{
     }
 
     public function valida_rfc ($data) {
-        $rfc = $data;
+        $rfc = strtoupper($data);
 
-        //if ($clave == 'de_') {
-        //	$regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
-        //} elseif ($clave == 'dp_') {
-        //	$regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
-        //} else {
         $regex = '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
-        //}
+
+        if (preg_match ($regex, $rfc, $coicidencias) == 1) {
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    public function valida_rfc_fisica ($data) {
+        $rfc = strtoupper($data);
+
+        $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+
+        if (preg_match ($regex, $rfc, $coicidencias) == 1) {
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    public function valida_rfc_moral ($data) {
+        $rfc = strtoupper($data);
+
+        $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 
         if (preg_match ($regex, $rfc, $coicidencias) == 1) {
             $respuesta = true;
