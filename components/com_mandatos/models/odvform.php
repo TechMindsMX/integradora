@@ -12,10 +12,10 @@ jimport('integradora.catalogos');
 class MandatosModelOdvform extends JModelItem {
 
     public function __construct(){
-        $this->inputVars 		 = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
-
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+        $this->inputVars   = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
+        $session           = JFactory::getSession();
+        $this->catalogos   = new Catalogos();
+        $this->integradoId = $session->get( 'integradoId', null, 'integrado' );
 
         parent::__construct();
     }
@@ -50,10 +50,14 @@ class MandatosModelOdvform extends JModelItem {
     }
 
     public function getestados(){
-        $catalogos  = new Catalogos();
-        $estados    = $catalogos->getEstados();
+        $estados    = $this->catalogos->getEstados();
 
         return $estados;
+    }
+
+    public function getCatalogoIva(){
+        return $this->catalogos->getCatalogoIVA();
+
     }
 
     public function getDatosSolicitud(){
@@ -92,5 +96,6 @@ class MandatosModelOdvform extends JModelItem {
 
         return $cuentas;
     }
+
 }
 
