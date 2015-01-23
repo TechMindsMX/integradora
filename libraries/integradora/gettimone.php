@@ -616,7 +616,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getProducts($integradoId = null, $productId = null){
+    public static function getProducts($integradoId = null, $productId = null, $status = null){
         $where = null;
 
         if(is_null($integradoId) && is_null($productId)){
@@ -626,6 +626,11 @@ class getFromTimOne{
         }elseif(!is_null($productId) && is_null($integradoId)){
             $where = 'id_producto = '.$productId;
         }
+
+        if(!is_null($status) ){
+            $where .= ' AND status = '.$status;
+        }
+
         $respuesta = self::selectDB('integrado_products',$where);
 
         return $respuesta;
@@ -939,6 +944,8 @@ class getFromTimOne{
 
     public static function getOrdenesVenta($integradoId = null, $idOrden = null) {
         $orden = self::getOrdenes($integradoId, $idOrden, 'ordenes_venta');
+        $catalogo = new Catalogos();
+        $catalogoIva = $catalogo->getCatalogoIVA();
 
         //Cambio el tipo de dato para las validaciones con (===)
         foreach ($orden as $key => $value) {
@@ -964,6 +971,8 @@ class getFromTimOne{
             $value->productosData = json_decode($value->productos);
 
             foreach ($value->productosData  as $producto ) {
+                $producto->iva = $catalogoIva[$producto->iva]->leyenda;
+
                 $subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
                 $subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
                 $subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);

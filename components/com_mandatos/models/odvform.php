@@ -45,7 +45,6 @@ class MandatosModelOdvform extends JModelItem {
                 $data['subproyectos'][$value->parentId][]= $value;
             }
         }
-
         return $data;
     }
 
@@ -76,7 +75,7 @@ class MandatosModelOdvform extends JModelItem {
         $respuesta = array();
         $datos = new stdClass();
 
-        $allproducts = getFromTimOne::getProducts($this->integradoId);
+        $allproducts = getFromTimOne::getProducts($this->integradoId,null,1);
 
         foreach ($allproducts as $key => $value) {
             $datos = new stdClass();

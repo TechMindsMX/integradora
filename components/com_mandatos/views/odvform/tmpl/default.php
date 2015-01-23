@@ -11,8 +11,6 @@ JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
-
-var_dump($this->catalogoIva);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -61,16 +59,19 @@ var_dump($this->catalogoIva);
     });
 
     function sum(){
+        //Columna es en la que se esta llenando los datos
         var columna    = jQuery(this).parent().parent();
+        //Tomo los valores de los campos.
         var cantidad    = columna.find('.cantidad').val();
         var precio      = columna.find('.p_unit').val();
-        var iva         = columna.find('.iva').val();
+        var iva         = columna.find('select option:selected').html()
         var ieps        = columna.find('.ieps').val();
         var subtotal    = 0;
         var total       = 0;
         var montoIva    = 0;
         var montoIeps   = 0;
 
+        //convierto el valor de los campos en numero para poder operar con ellos
         cantidad        = isNaN(parseFloat(cantidad))?0:parseFloat(cantidad);
         precio          = isNaN(parseFloat(precio))?0:parseFloat(precio);
         iva             = isNaN(parseFloat(iva))?0:parseFloat(iva);
@@ -140,7 +141,7 @@ var_dump($this->catalogoIva);
         var campoDescrip    = parentsCampo.find('input[name*="descripcion"]');
         var campoUnidad     = parentsCampo.find('input[name*="unidad"]');
         var campoP_unit     = parentsCampo.find('input[name*="p_unitario"]');
-        var campoIva        = parentsCampo.find('input[name*="iva"]');
+        var campoIva        = parentsCampo.find('select[name*="iva"]');
         var campoIeps       = parentsCampo.find('input[name*="ieps"]');
 
         var request = jQuery.ajax({
@@ -184,7 +185,7 @@ var_dump($this->catalogoIva);
                     window.location = result.redirect;
                 }
             } else if (!result.success) {
-	            jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>')
+                jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>')
             }
         });
 
@@ -250,7 +251,7 @@ var_dump($this->catalogoIva);
     <div class="form-actions" style="max-width: 30%">
         <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
         <button type="button" class="btn btn-primary span3" id="seleccion"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+        <a href="index.php?option=com_mandatos&view=odvlist" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></a>
     </div>
 
     <?php
@@ -310,7 +311,17 @@ var_dump($this->catalogoIva);
             </div>
             <?php
             if(is_array($productosOrden)) {
+
                 foreach ($productosOrden as $key => $value) {
+                    $options = '';
+
+                    foreach ($this->catalogoIva as $indice => $valor) {
+                        $selected = '';
+                        if($value->iva == $indice){
+                            $selected = 'selected="selected"';
+                        }
+                        $options .= '<option value="'.$valor->valor.'" '.$selected.'>'.$valor->leyenda.'</option>';
+                    }
                     ?>
                     <div class="contenidos" id="content<?php echo $key + 1000; ?>">
                         <div id="columna2">
@@ -352,24 +363,9 @@ var_dump($this->catalogoIva);
                             <div id="subtotal"></div>
                         </div>
                         <div id="columna2">
-                            <?php var_dump($value->iva) ?>
-                            <select>
-                            <?php foreach ($this->catalogoIva as $indice => $valor) {
-                                if($value->iva == $indice){
-                                    $selected = 'selected="selected"';
-                                }elseif( $indice == 3 && $value->iva==0 ){
-                                    $selected = 'selected="selected"';
-                                }
-                                ?>
-                                <option value="<?php echo $indice; ?>" <?php echo $selected; ?>><?php echo $valor->leyenda; ?></option>
-                                <?php
-                            }
-                            ?>
-                            <input id="iva[]<?php echo $key + 1000; ?>"
-                                   type="text"
-                                   name="iva[]"
-                                   class="iva cantidades"
-                                   value="<?php echo $value->iva; ?>">
+                            <select id="iva[]<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                            <?php echo $options; ?>
+                            </select>
                         </div>
                         <div id="columna2">
                             <input id="ieps[]<?php echo $key + 1000; ?>"
@@ -395,7 +391,13 @@ var_dump($this->catalogoIva);
                 <div id="columna2"><input id="unidad" type="text" name="unidad[]" class="cantidades"></div>
                 <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" value="0" class="p_unit cantidades" ></div>
                 <div id="columna2"><div id="subtotal"></div></div>
-                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>
+                <!--                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>-->
+                <div id="columna2"><select id="iva[]<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                    <?php foreach ($this->catalogoIva as $indice => $valor) {?>
+                        <option value="<?php echo $indice; ?>" <?php echo $selected; ?>><?php echo $valor->leyenda; ?></option>
+                    <?php } ?>
+                    </select>
+                </div>
                 <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="0" class="ieps cantidades"></div>
                 <div id="columna2"><div id="total"></div> </div>
             </div>

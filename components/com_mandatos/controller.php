@@ -528,7 +528,7 @@ class MandatosController extends JControllerLegacy {
         $campos = array('productName'=>'STRING');
         $data   = $this->input_data->getArray($campos);
 
-        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$this->integradoId;
+        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$this->integradoId.' AND '.$db->quoteName('status').' = 1';
 
         $producto = getFromTimOne::selectDB('integrado_products',$where);
 
