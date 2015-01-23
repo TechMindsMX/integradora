@@ -25,7 +25,7 @@ function proyectos ($parent, $proys){
             echo '<li class="proyectoslist">'.
                 '<div class="filas status'.$value->status.'">'.
                 '<div class="columnas"><span>'.$value->name.'</span></div>'.
-                '<div class="columnas"><input type="button" '.$disabled.' class="btn btn-primary editar" id="'.$value->id_proyecto.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
+                '<div class="columnas"><a '.$disabled.' class="btn btn-primary editar" id="'.$value->id_proyecto.'" href="index.php?option=com_mandatos&task=editarproyecto&id_proyecto='.$value->id_proyecto.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></div>'.
                 '<div class="columnas"><input type="checkbox" class="deshabilitar" data-id="'.$value->id_proyecto.'" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
                 '</div>';
 
@@ -48,10 +48,9 @@ if( !is_null($proyectos) ){
 ?>
 <script>
     jQuery(document).ready(function($){
-//        jQuery('.deshabilitar').on('click', deshabilita);
-        jQuery('.deshabilitar').on('click', changeStatus);
         jQuery('.editar').on('click', editarProy);
 
+        jQuery('.deshabilitar').on('click', changeStatus);
 
         function changeStatus() {
             var $this = $(this);
@@ -60,8 +59,10 @@ if( !is_null($proyectos) ){
 
             var request = $.ajax({
                 url: 'index.php?option=com_mandatos&task=projectlist.changeStatus&format=raw',
-                data: {id_proyecto: itemId,
-                    status: valor},
+                data: {
+                    id_proyecto: itemId,
+                    status: valor
+                },
                 type: 'POST',
                 async: false
             });
@@ -86,52 +87,6 @@ if( !is_null($proyectos) ){
 
     });
 
-
-    function deshabilita(){
-        var boton = jQuery(this);
-
-        if(confirm('<?php echo JText::_('LAB_WARNING_DISABLED'); ?>')){
-            if(!boton.prop('checked')){
-                deshabilitaAjax(this,'enabled');
-            }else{
-                deshabilitaAjax(this, 'disabled');
-            }
-        }
-    }
-
-    function editarProy(){
-        var id = jQuery(this).prop('id');
-
-        window.location = 'index.php?option=com_mandatos&task=editarproyecto&id_proyecto='+id;
-    }
-
-    function deshabilitaAjax(campo, accion){
-        var checkbox = jQuery(campo);
-        var id = checkbox.prop('id');
-        var parents = checkbox.parent().parent();
-        var request = jQuery.ajax({
-            url:'index.php?option=com_mandatos&task=disable&format=raw',
-            data: {
-                'type': 'proyecto',
-                'id': id,
-                'accion': accion
-            },
-            type: 'post',
-            async: false
-        });
-
-        request.done(function(result){
-            if(result.success){
-                if(result.accion == 'enabled'){
-                    parents.find('.editar').prop('disabled', false);
-                    parents.find('span[class*="status"]').prop('class', 'status0');
-                }else if(result.accion == 'disabled'){
-                    checkbox.parent().parent().find('.editar').prop('disabled', true);
-                    parents.find('span[class*="status"]').prop('class', 'status1');
-                }
-            }
-        });
-    }
 </script>
 <h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TITULO'); ?></h1>
 

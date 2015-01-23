@@ -28,6 +28,7 @@ class MandatosModelClientesform extends JModelItem {
         }
 
         $clientes = getFromTimOne::getClientes($integradoId);
+var_dump($clientes);
         foreach ($clientes as $key => $value) {
             if($value->id == $idCliPro){
                 $return = $value;

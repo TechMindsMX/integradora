@@ -559,6 +559,20 @@ class getFromTimOne{
         return $datos;
     }
 
+    public static function getClientProvider( $client_id ) {
+        $client = array();
+
+        $clientes = self::getClientes();
+
+        foreach ( $clientes as $key => $value ) {
+            if ( $client_id == $value->client_id ) {
+                $client[$key] = $value;
+            }
+        }
+
+        return $client;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -636,13 +650,14 @@ class getFromTimOne{
         return $respuesta;
     }
 
+
     public static function getClientes($userId = null, $type = 2){
         $db       = JFactory::getDbo();
         $query    = $db->getQuery(true);
 
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
-            $query->select('integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
+            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
                   ->from('#__integrado_clientes_proveedor')
                   ->where('integrado_Id = ' . $userId);
             try {
@@ -664,6 +679,8 @@ class getFromTimOne{
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
+var_dump($general);
+
                     $value->rfc = @$general->rfc;
                     $value->tradeName = @$general->tradeName;
                     $value->corporateName = @$general->corporateName;
@@ -718,7 +735,7 @@ class getFromTimOne{
             }
         }else{
             //Se regresan los datos de los clientes/proveedores dados de alta.
-            $query->select('clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
+            $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
                             DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
                             DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
                   ->from('#__integrado_clientes_proveedor AS clientes')
@@ -2208,6 +2225,24 @@ class sendToTimOne {
             $response['status'] = $project->status;
             $response['name'] = $project->name;
             $response['statusName'] = ($project->status == 0) ? JText::_('JUNPUBLISHED') : JText::_('JPUBLISHED');
+        }
+
+        return $response;
+    }
+
+    public function changeClientOrProviderStatus( $data ) {
+        $response = false;
+
+        self::formatData(array( 'status' => $data['status'] ));
+        $result = self::updateDB('integrado_clientes_proveedor', null, 'id = '.$data['client_id']);
+
+        $client = getFromTimOne::getClientProvider($data['client_id']);
+        $client = reset($client);
+
+        if($result){
+            $response['status'] = $client->status;
+            $response['name'] = !empty($client->de_razon_social) ? $client->de_razon_social : $client->dp_con_comercial;
+            $response['statusName'] = ($client->status == 0) ? JText::_('JUNPUBLISHED') : JText::_('JPUBLISHED');
         }
 
         return $response;

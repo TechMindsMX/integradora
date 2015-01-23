@@ -1,4 +1,4 @@
-<?php
+ <?php
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.form.validation');
@@ -20,7 +20,7 @@ if(is_null($clientes) || empty($clientes)){
 }
 ?>
 <script>
-jQuery(document).ready(function(){
+jQuery(document).ready(function($){
 	jQuery('#search').on('click', busqueda);
 	jQuery('.filtro').on('click', filtro);
 	jQuery('input[name$="rfc"]').on('change', limpiarfc);
@@ -34,8 +34,44 @@ jQuery(document).ready(function(){
 			7:{ sorter: false },
 			8:{ sorter: false }, 
 			9:{ sorter: false }
-		} 
+		}
 	});
+
+	jQuery('#baja').on('click', changeStatus);
+
+	function changeStatus() {
+		var $this = $(this);
+		var itemId = $this.data('id');
+		var valor = $this.is(':checked') ? 1 : 0;
+
+		var request = $.ajax({
+			url: 'index.php?option=com_mandatos&task=clienteslist.changeStatus&format=raw',
+			data: {
+				client_id: itemId,
+				status: valor
+			},
+			type: 'POST',
+			async: false
+		});
+
+		request.done(function (result) {
+			var $row = $this.parentsUntil('table', 'tr');
+			$row.removeClass('status0');
+			if(typeof result.success.status != 'undefined'){
+				if(result.success.status == 0) {
+					$row.addClass('status0')
+				}
+			}
+
+			$('#system-message-container').remove();
+
+			var $html = '<div id="system-message-container"><div id="system-message"><div class="alert alert-message"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Mensaje</h4><div>';
+			$html += '<p>' + result.msg + '</p></div></div></div></div>';
+
+			$('header').prepend($html);
+		});
+	}
+
 });
 
 function limpiarfc(){
@@ -152,7 +188,7 @@ function busquedapor(valor, campo){
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_STATUS'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_ACCOUNT_BANK'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ></th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESHABILITA_PROYECTO'); ?></span></th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JPUBLISHED'); ?></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -161,7 +197,8 @@ function busquedapor(valor, campo){
 			foreach ($clientes as $key => $value) {
 				$selected = $value->status == 0?'':'checked';
 				$class = $value->status == 0?'':'status1';
-				
+
+				var_dump($value);
 				echo '<tr class="type_'.$value->type.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$type[$value->type].'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->rfc.'</td>';
@@ -177,7 +214,7 @@ function busquedapor(valor, campo){
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
 				echo '		</a>';
 				echo '	</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" id=baja_"'.$value->id.'" name="baja" '.$selected.' /></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" data-id="'.$value->client_id.'" id="baja" name="baja" '.$selected.' /></td>';
 				echo '</tr>';
 			}
 		}else{
