@@ -23,10 +23,10 @@ function proyectos ($parent, $proys){
             }
 
             echo '<li class="proyectoslist">'.
-                '<div class="filas">'.
-                '<div class="columnas"><span class="status'.$value->status.'">'.$value->name.'</span></div>'.
+                '<div class="filas status'.$value->status.'">'.
+                '<div class="columnas"><span>'.$value->name.'</span></div>'.
                 '<div class="columnas"><input type="button" '.$disabled.' class="btn btn-primary editar" id="'.$value->id_proyecto.'" value="'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'" /></div>'.
-                '<div class="columnas"><input type="checkbox" class="deshabilitar" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
+                '<div class="columnas"><input type="checkbox" class="deshabilitar" data-id="'.$value->id_proyecto.'" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
                 '</div>';
 
             proyectos($value->id_proyecto, $proys);
@@ -47,10 +47,45 @@ if( !is_null($proyectos) ){
 }
 ?>
 <script>
-    jQuery(document).ready(function(){
-        jQuery('.deshabilitar').on('click', deshabilita);
+    jQuery(document).ready(function($){
+//        jQuery('.deshabilitar').on('click', deshabilita);
+        jQuery('.deshabilitar').on('click', changeStatus);
         jQuery('.editar').on('click', editarProy);
+
+
+        function changeStatus() {
+            var $this = $(this);
+            var itemId = $this.data('id');
+            var valor = $this.is(':checked') ? 1 : 0;
+
+            var request = $.ajax({
+                url: 'index.php?option=com_mandatos&task=projectlist.changeStatus&format=raw',
+                data: {id_proyecto: itemId,
+                    status: valor},
+                type: 'POST',
+                async: false
+            });
+
+            request.done(function (result) {
+                var $row = $this.parentsUntil('li.proyectoslist', 'div.filas');
+                $row.removeClass('status0');
+                if(typeof result.success.status != 'undefined'){
+                    if(result.success.status == 0) {
+                        $row.addClass('status0')
+                    }
+                }
+
+                $('#system-message-container').remove();
+
+                var $html = '<div id="system-message-container"><div id="system-message"><div class="alert alert-message"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Mensaje</h4><div>';
+                $html += '<p>' + result.msg + '</p></div></div></div></div>';
+
+                $('header').prepend($html);
+            });
+        }
+
     });
+
 
     function deshabilita(){
         var boton = jQuery(this);
@@ -109,7 +144,7 @@ if( !is_null($proyectos) ){
     <div class="filas" style="margin-bottom: 30px;">
         <div class="columnas"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO'); ?></div>
         <div class="columnas">&nbsp;</div>
-        <div class="columnas"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESHABILITA_PROYECTO'); ?></div>
+        <div class="columnas"><?php echo JText::_('LBL_PUBLISHED'); ?></div>
     </div>
     <?php !is_null($proyectos)?proyectos(0, $proyectos):''; ?>
 </div>

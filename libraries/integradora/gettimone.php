@@ -2177,6 +2177,42 @@ class sendToTimOne {
         return $return;
     }
 
+    public function changeProductStatus( $data ) {
+        $response = false;
+
+        self::formatData(array( 'status' => $data['status'] ));
+        $result = self::updateDB('integrado_products', null, 'id_producto = '.$data['id_producto']);
+
+        $product = getFromTimOne::getProducts(null, $data['id_producto']);
+        $product = reset($product);
+
+        if($result){
+            $response['status'] = $product->status;
+            $response['name'] = $product->productName;
+            $response['statusName'] = ($product->status == 0) ? JText::_('JUNPUBLISHED') : JText::_('JPUBLISHED');
+        }
+
+        return $response;
+    }
+
+    public function changeProjectStatus( $data ) {
+        $response = false;
+
+        self::formatData(array( 'status' => $data['status'] ));
+        $result = self::updateDB('integrado_proyectos', null, 'id_proyecto = '.$data['id_proyecto']);
+
+        $project = getFromTimOne::getProyects(null, $data['id_proyecto']);
+        $project = reset($project);
+
+        if($result){
+            $response['status'] = $project->status;
+            $response['name'] = $project->name;
+            $response['statusName'] = ($project->status == 0) ? JText::_('JUNPUBLISHED') : JText::_('JPUBLISHED');
+        }
+
+        return $response;
+    }
+
 }
 
 class comisionEvent {
