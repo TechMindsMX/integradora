@@ -16,10 +16,10 @@ $document->addScript('libraries/integradora/js/multifilter.js');
 $productos = $this->data;
 ?>
 <script>
-    jQuery(document).ready(function(){
-        jQuery('.status1 input:button').prop('disabled', true);
+    jQuery(document).ready(function($){
+        $('.status0 input:button').prop('disabled', true);
 
-        jQuery("#myTable").tablesorter({
+        $("#myTable").tablesorter({
             sortList: [[0,0]],
             headers: {
                 2:{ sorter: false },
@@ -32,25 +32,37 @@ $productos = $this->data;
             }
         });
 
-        jQuery('#input_filtro_nombre').multifilter({
+        $('#input_filtro_nombre').multifilter({
             'target' : jQuery('#myTable')
         });
 
 
-        jQuery("input[name*='baja']").click(function ($) {
-            var $this = jQuery(this);
+        $("input[name*='baja']").click(function () {
+            var $this = $(this);
             var itemId = $this.data('id');
             var valor = $this.is(':checked') ? 1 : 0;
 
             var request = $.ajax({
-                    url: 'index.php?option=com_mandatos&task=productoslist.changestatus',
+                    url: 'index.php?option=com_mandatos&task=productoslist.changeStatus&format=raw',
                     data: {id_producto: itemId,
                     status: valor},
-                    type: 'POST'
+                    type: 'POST',
+                    async: false
                 });
 
             request.done(function (result) {
-                console.log(result.mensaje);
+                var $row = $this.parentsUntil('table', 'tr');
+                $row.removeClass('status0');
+                if(result.success.status == 0) {
+                    $row.addClass('status0')
+                }
+
+                $('#system-message-container').remove();
+
+                var $html = '<div id="system-message-container"><div id="system-message"><div class="alert alert-message"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Mensaje</h4><div>';
+                $html += '<p>' + result.msg + '</p></div></div></div></div>';
+
+                $('header').prepend($html);
             });
 
         });
@@ -91,20 +103,20 @@ $productos = $this->data;
         <?php
         if( !is_null($productos) ){
             foreach ($productos as $key => $value) {
-                $selected = $value->status == 1 ? '' : 'checked';
-                $class = $value->status == 1 ? '' : 'status1';
+                $selected = $value->status == 0 ? '' : 'checked';
+                $class = $value->status == 0 ? 'status0' : '';
                 $editUrl = 'index.php?option=com_mandatos&view=productosform&id_producto='.$value->id_producto;
 
-                echo '<tr>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->productName.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->description.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->measure.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->price,2).'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$this->catalogo[$value->iva]->leyenda.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->ieps.'%</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->currency.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a class="btn btn-primary" href="'.$editUrl.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" data-id="'.$value->id_producto.'" name="baja_'.$value->id_producto.'" '.$selected.' /></td>';
+                echo '<tr class="'.$class.'" >';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$value->productName.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$value->description.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$value->measure.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">$'.number_format($value->price,2).'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$this->catalogo[$value->iva]->leyenda.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$value->ieps.'%</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;">'.$value->currency.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;"><a class="btn btn-primary" href="'.$editUrl.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></td>';
+                echo '	<td style="text-align: center; vertical-align: middle;"><input type="checkbox" data-id="'.$value->id_producto.'" name="baja_'.$value->id_producto.'" '.$selected.' /></td>';
                 echo '</tr>';
             }
         }else{
