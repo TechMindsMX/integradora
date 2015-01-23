@@ -175,7 +175,7 @@ $producto 	= $this->producto;
         <div class="clearfix">&nbsp;</div>
 
         <button type="button" id="enviar" class="btn btn-primary"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" id="" class="btn btn-danger" id="cancel"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+        <a href="index.php?option=com_mandatos&view=productoslist" class="btn btn-danger"><?php echo JText::_('LBL_CANCELAR'); ?></a>
     </div>
 
     <div id="confirmacion" style="display: none;">

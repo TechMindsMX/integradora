@@ -36,7 +36,7 @@ class MandatosControllerProductosform extends JControllerLegacy {
             'measure'     => array('tipo' => 'string', 'length' => '100'),
             'price'       => array('tipo' => 'float', 'length' => '10'),
             'iva'         => array('tipo' => 'number', 'length' => '10'),
-            'ieps'        => array('tipo' => 'float', 'length' => '100'),
+            'ieps'        => array('tipo' => 'float', 'length' => '5', 'minlength' => '1'),
             'currency'    => array('tipo' => 'string', 'length' => '100'),
             'description' => array('tipo' => 'text', 'length' => '1000'));
 

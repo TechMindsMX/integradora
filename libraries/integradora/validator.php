@@ -169,7 +169,7 @@ class validador{
                 $respuesta = false;
             }
         } else {
-            if ((strlen ($valor) == $length) && (strlen ($valor) == $minlength)) {
+            if ((strlen ($valor) <= $length) && (strlen ($valor) >= $minlength)) {
                 $respuesta = true;
             } else {
                 $respuesta = false;
