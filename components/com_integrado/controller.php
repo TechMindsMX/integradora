@@ -88,59 +88,17 @@ class IntegradoController extends JControllerLegacy {
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
-        $db 	= JFactory::getDbo();
 
-        $data	= JFactory::getApplication()->input->getArray();
-        $integrado_id = $data['integradoId']!=''?$data['integradoId']:'';
+        sendToTimOne::uploadFiles();
 
-        foreach ($_FILES as $key => $value) {
-            manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
-            $columna 	= substr($key, 3);
-            $clave 		= substr($key, 0,3);
-            $where		= $db->quoteName('integrado_id').' = '.$integrado_id;
-
-            switch ($clave) {
-                case 'dp_':
-                    $table = 'integrado_datos_personales';
-                    break;
-                case 'de_':
-                    $table = 'integrado_datos_empresa';
-                    break;
-                case 'db_':
-                    $table = 'integrado_datos_bancarios';
-                    break;
-                case 't1_':
-                    $table = 'integrado_instrumentos';
-                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 1';
-                    break;
-                case 't2_':
-                    $table = 'integrado_instrumentos';
-                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 2';
-                    break;
-                case 'pn_':
-                    $table = 'integrado_instrumentos';
-                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 3';
-                    break;
-                case 'rp_':
-                    $table = 'integrado_instrumentos';
-                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 4';
-                    break;
-
-                default:
-
-                    break;
-            }
-            $updateSet 	= array($db->quoteName($columna).' = '.$db->quote("media/archivosJoomla/" . $integrado_id.'_'.$key . ".jpg") );
-            self::updateData($table, $updateSet, $where);
-        }
-
-        if($integrado_id==''){
+        if($this->integradoId ==''){
             $url = 'index.php?option=com_integrado&view=solicitud';
         }else{
-            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$integrado_id;
+            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId;
         }
 
-        JApplication::redirect($url, false);
+        JFactory::getApplication()->redirect($url, false);
+
     }
 
     //Recibe el post y lo envia a procesar y guardar

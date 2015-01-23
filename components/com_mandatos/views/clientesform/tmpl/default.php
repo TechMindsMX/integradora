@@ -50,6 +50,44 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
             })";
         }
         ?>
+
+		jQuery('#files').change( function(event) {
+			//check whether browser fully supports all File API
+			if (window.File && window.FileReader && window.FileList && window.Blob)
+			{
+				//get the file size and file type from file input field
+				var $files = jQuery('input[type="file"]');
+
+				$files.each(function(k, $fileInput){
+					console.log($fileInput);
+					var fsize = $fileInput.files[0].size;
+					var ftype = $fileInput.files[0].type;
+					var fname = $fileInput.files[0].name;
+
+					switch(ftype)
+					{
+						case 'image/png':
+						case 'image/gif':
+						case 'image/jpeg':
+						case 'image/pjpeg':
+						case 'application/pdf':
+							break;
+						default:
+							alert(<?php echo JText::_('UNSUPPORTED_FILE!'); ?>);
+							event.preventDefault();
+					}
+					if (fsize >= 1000000) {
+						alert(<?php echo JText::_('UNSUPPORTED_FILE!'); ?>);
+						event.preventDefault();
+					}
+
+				});
+
+			}else{
+				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
+			}
+		});
+
     });
 
 	function ajax(parametros){
@@ -117,9 +155,10 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 				llenaForm(response);
 			}else{
 				jQuery('#altaC_P').clearForm();
+				jQuery('input, select, textarea').prop("readonly", false);
 
 				mensajes(response.msg, 'error');
-				jQuery('#tipo_alta').prop('checked', true);
+				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
 			}
 		});
 	}
@@ -271,7 +310,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
-<form action="" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
+<form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
     <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
 	<?php
@@ -834,7 +873,9 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'files', JText::_('LBL_TAB_ARCHIVOS'));
 	?>
 	<fieldset>
-		
+		<p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
+		<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+
 		<div class="form-group">
 			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
 			<input name="dp_url_identificacion" type="file" maxlength="" />
@@ -880,7 +921,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		</div>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="submit" class="btn btn-primary span3" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		</div>
 	</fieldset>
 	<?php

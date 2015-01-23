@@ -1666,6 +1666,62 @@ class sendToTimOne {
         $this->setHttpType('GET');
     }
 
+    public static function uploadFiles() {
+        $save = array();
+        $db 	= JFactory::getDbo();
+
+        $data	= JFactory::getApplication()->input->getArray();
+        if ( isset( $data['integradoId'] ) ) {
+            $integrado_id = $data['integradoId'] != '' ? $data['integradoId'] : '';
+        } else {
+            $integrado_id = '';
+        }
+
+        foreach ($_FILES as $key => $value) {
+            manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
+            $columna 	= substr($key, 3);
+            $clave 		= substr($key, 0,3);
+            $where		= $db->quoteName('integrado_id').' = '.$integrado_id;
+
+            switch ($clave) {
+                case 'dp_':
+                    $table = 'integrado_datos_personales';
+                    break;
+                case 'de_':
+                    $table = 'integrado_datos_empresa';
+                    break;
+                case 'db_':
+                    $table = 'integrado_datos_bancarios';
+                    break;
+                case 't1_':
+                    $table = 'integrado_instrumentos';
+                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 1';
+                    break;
+                case 't2_':
+                    $table = 'integrado_instrumentos';
+                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 2';
+                    break;
+                case 'pn_':
+                    $table = 'integrado_instrumentos';
+                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 3';
+                    break;
+                case 'rp_':
+                    $table = 'integrado_instrumentos';
+                    $where = $db->quoteName('integrado_id').' = '.$integrado_id.' AND '.$db->quoteName('instrum_type').' = 4';
+                    break;
+
+                default:
+
+                    break;
+            }
+            $updateSet 	= array($db->quoteName($columna).' = '.$db->quote("media/archivosJoomla/" . $integrado_id.'_'.$key . ".jpg") );
+            $save[] = self::updateData($table, $updateSet, $where);
+        }
+
+        return !in_array(false, $save);
+
+    }
+
     public static function getTableByType($tipo)
     {
         switch($tipo){

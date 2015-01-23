@@ -3,14 +3,14 @@
 class manejoImagenes {
 
 	public static function cargar_imagen($tipo, $usuario, $archivos, $key) {
-		$validaciones = (($tipo === 'image/jpeg') || ($tipo === 'image/gif') || ($tipo === 'image/png'));
+		$validaciones = (($tipo === 'image/jpeg') || ($tipo === 'image/gif') || ($tipo === 'image/png') );
 
 			if ($validaciones && getimagesize($archivos["tmp_name"])) {
-				move_uploaded_file($archivos["tmp_name"], "media/archivosJoomla/" . $usuario.'_'.$key . ".jpg");
-                $regreso = "media/archivosJoomla/" . $usuario.'_'.$key . ".jpg";
+				move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".jpg");
+                $regreso = MEDIA_FILES . $usuario.'_'.$key . ".jpg";
 			} elseif('application/pdf' == $archivos['type']) {
-				move_uploaded_file($archivos["tmp_name"], "media/archivosJoomla/" . $usuario.'_'.$key . ".pdf");
-                $regreso = "media/archivosJoomla/" . $usuario.'_'.$key . ".pdf";
+				move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".pdf");
+                $regreso = MEDIA_FILES . $usuario.'_'.$key . ".pdf";
 			} else{
 				echo 'no es imagen o el archivo esta corrupto <br />';
                 $regreso = 'verificar';
