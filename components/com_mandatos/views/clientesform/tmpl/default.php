@@ -13,9 +13,9 @@ $document = JFactory::getDocument();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('libraries/integradora/js/form_helper.js');
 $optionBancos = '';
 
-var_dump($datos);
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 ?>
 <script>
@@ -112,9 +112,14 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		resultado.done(function(response){
 			if(response.success){
 				mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
+
+				jQuery('#altaC_P').clearForm();
 				llenaForm(response);
 			}else{
-				mensajes(response.msg, 'error')
+				jQuery('#altaC_P').clearForm();
+
+				mensajes(response.msg, 'error');
+				jQuery('#tipo_alta').prop('checked', true);
 			}
 		});
 	}
