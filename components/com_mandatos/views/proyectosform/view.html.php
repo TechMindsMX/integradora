@@ -28,7 +28,7 @@ class MandatosViewProyectosform extends JViewLegacy {
             $proyecto->parentId = 0;
             $proyecto->name = null;
             $proyecto->description = null;
-            $proyecto->status = 0;
+            $proyecto->status = 1;
 
             $this->proyecto = $proyecto;
         }

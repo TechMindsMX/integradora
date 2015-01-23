@@ -15,12 +15,22 @@ $selected 	= '';
 
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 <script>
+	function limpiar() {
+		jQuery('input[name*="id_proyecto"]').val('<?php echo $proyecto->id_proyecto; ?>');
+		jQuery('input[name*="integradoId"]').val('<?php echo $proyecto->integradoId; ?>');
+		jQuery('input[name*="status"]').val('<?php echo $proyecto->status; ?>');
+		jQuery('select[name*="parentId"]').val(1);
+		jQuery('input[name*="name"]').val('');
+		jQuery('textarea[name*="description"]').val('');
+	}
+
 	jQuery(document).ready(function(){
 		jQuery('#form_alta').submit(function(event) {
 			event.preventDefault();
 			envioAjax();
 		});
 		jQuery('input:button').on('click', envioAjax);
+		jQuery('#empty').on('click',limpiar);
 	});
 
 	function envioAjax() {
@@ -57,7 +67,7 @@ $selected 	= '';
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
         <select name="parentId" id="parentId">
-            <option>Seleccione su proyecto</option>
+            <option value="0">Seleccione su proyecto</option>
 			<?php
 				foreach ($proyectos as $key => $value) {
 					if( !is_null($proyecto) ){
@@ -89,6 +99,6 @@ $selected 	= '';
 	</div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-primary span3" id="empty"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
+        <button type="button" class="btn btn-default span3" id="empty"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
     </div>
 </form>
