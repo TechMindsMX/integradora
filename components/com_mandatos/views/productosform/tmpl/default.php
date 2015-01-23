@@ -208,6 +208,9 @@ $producto 	= $this->producto;
             <div class="col-md-6">
                 <span><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MEDIDAS'); ?>: </span><span id="valor_measure"></span>
             </div>
+            <div class="col-md-6">
+                <span><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>: </span><span id="valor_ieps"></span>
+            </div>
         </div>
 
         <div class="clearfix">&nbsp;</div>
