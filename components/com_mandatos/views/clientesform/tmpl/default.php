@@ -14,6 +14,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
+
+var_dump($datos);
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 ?>
 <script>
