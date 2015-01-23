@@ -239,12 +239,13 @@ UPDATE flpmu_menu SET access = 2 WHERE id IN (193,195,204);
 --rollback UPDATE flpmu_menu SET access = 1 WHERE id IN (193,195,204);
 
 --changeset lutek:25
-UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0'  WHERE  `flpmu_catalogo_ivas`.`valor` = 1;
-UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11' WHERE  `flpmu_catalogo_ivas`.`valor` = 2;
-UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16' WHERE  `flpmu_catalogo_ivas`.`valor` = 3;
+ALTER TABLE `flpmu_catalogo_ivas` ADD PRIMARY KEY (`valor`), ADD UNIQUE INDEX `valor_UNIQUE` (`valor` ASC);
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0', `valor` = 1  WHERE `valor` = 0;
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11', `valor` = 2 WHERE `valor` = 11;
+UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16', `valor` = 3 WHERE `valor` = 16;
 ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
---rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0%'  WHERE  `flpmu_catalogo_ivas`.`valor` = 1;
---rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11%' WHERE  `flpmu_catalogo_ivas`.`valor` = 2;
---rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%' WHERE  `flpmu_catalogo_ivas`.`valor` = 3;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0%', `valor` = 0 WHERE `valor` = 1;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11%', `valor` = 11 WHERE `valor` = 2;
+--rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%', `valor` = 16 WHERE `valor` = 3;
 --rollback ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
 
