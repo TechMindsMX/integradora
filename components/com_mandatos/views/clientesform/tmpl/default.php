@@ -321,6 +321,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
+<?php var_dump($datos); ?>
 <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
     <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
@@ -330,12 +331,11 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	?>
 	<fieldset>
 		<div class="form-group">
-			<input type="text" id="bu_rfc" placeholder="Ingrese el RFC" /> <span id="errorRFC" style="display: none;"></span>
+			<input type="text" id="bu_rfc" placeholder="Ingrese el RFC" maxlength="13" /> <span id="errorRFC" style="display: none;"></span>
 		</div>
 
 		<div class="form-group">
 			<input type="button" class="btn btn-primary" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
-			<input type="button" class="btn btn-danger" onclick="window.history.back()" value="<?php echo JText::_("LBL_CANCELAR"); ?>" />
 		</div>
 	</fieldset>
 	<?php
@@ -362,7 +362,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	</fieldset>
 	
 	<div class="form-actions">
-		<button type="button" class="btn btn-primary span3" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		<button type="button" class="btn btn-primary" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 	</div>
 	<?php
 		echo JHtml::_('bootstrap.endTab');
@@ -379,7 +379,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	</fieldset>
 	
 	<div class="form-actions">
-		<button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		<button type="button" class="btn btn-primary" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 	</div>
 
 	<?php
@@ -576,7 +576,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		echo JHtml::_('bootstrap.endAccordion');
 	?>
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		</div>
 	
 	<?php
@@ -827,7 +827,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		echo JHtml::_('bootstrap.endAccordion');
 	?>
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		</div>
 	<?php
 		echo JHtml::_('bootstrap.endTab');
@@ -858,7 +858,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		</div>
 		
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+			<button type="button" class="btn btn-primary" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
 		</div>
 		
 		<div>
@@ -931,7 +931,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		</div>
 
 		<div class="form-actions">
-			<button type="submit" class="btn btn-primary span3" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 		</div>
 	</fieldset>
 	<?php

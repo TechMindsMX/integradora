@@ -249,3 +249,6 @@ ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` 
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%', `valor` = 16 WHERE `valor` = 3;
 --rollback ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
 
+--changeset ricardolyon:26
+ALTER TABLE `flpmu_integrado_clientes_proveedor` ADD COLUMN `bancos` VARCHAR(255);
+--rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` DROP COLUMN `bancos`;
