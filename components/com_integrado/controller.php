@@ -588,4 +588,9 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_datos_empresa', $updateSet, $where);
         }
     }
+
+    public function createNewSolicitud() {
+        $this->sesion->clear('integradoId', 'integrado');
+        JFactory::getApplication()->redirect('index.php?option=com_integrado&view=solicitud');
+    }
 }

@@ -657,7 +657,7 @@ class getFromTimOne{
 
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
-            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status')
+            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status, bancos AS bancoIds')
                   ->from('#__integrado_clientes_proveedor')
                   ->where('integrado_Id = ' . $userId);
             try {
@@ -713,9 +713,11 @@ class getFromTimOne{
                 $db = JFactory::getDbo();
                 $querybanco = $db->getQuery(true);
 
+                $bancoIds = isset($value->bancoIds) ? ' IN '.json_decode($value) : '';
+
                 $querybanco->select('*')
                            ->from('#__integrado_datos_bancarios')
-                           ->where('integrado_id = ' . $value->id);
+                           ->where('integrado_id = ' . $value->id );
 
                 try {
                     $db->setQuery($querybanco);

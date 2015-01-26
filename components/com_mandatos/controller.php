@@ -139,6 +139,8 @@ class MandatosController extends JControllerLegacy {
 
 
     function agregarBanco(){
+        $respuesta['success'] = false;
+
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
         $datosQuery = array('setUpdate'=>array());
@@ -157,7 +159,7 @@ class MandatosController extends JControllerLegacy {
         $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
         $existe     = getFromTimOne::selectDB($table,$where);
 
-        if ( ! empty( $existe ) ) {
+        if ( empty( $existe ) ) {
             $columnas[] = 'integrado_id';
             $valores[]	= $this->integradoId;
 
@@ -188,9 +190,11 @@ class MandatosController extends JControllerLegacy {
             }
         }
 
+        if ( $this->integradoId != $data['integradoId'] )
         $table 		= 'integrado_datos_bancarios';
         $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
         $existe     = getFromTimOne::selectDB($table,$where);
+        $existe     = $existe[0];
 
         // se busca la relacion del cliente y el integrado
         $tableRelacion 		= 'integrado_clientes_proveedor';
@@ -206,18 +210,23 @@ class MandatosController extends JControllerLegacy {
             $datos   = array('bancos' => json_encode($bancos));
 
             $save->formatData($datos);
-            var_dump($bancos, $datos);
-
-            $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];;
+            $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
             $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
+
+            $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
+            $respuesta['success'] = $update;
+            $respuesta['banco_codigo'] = $data['db_banco_codigo'];
+            $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];
+            $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
+            $respuesta['banco_clabe'] = $data['db_banco_clabe'];
+            $respuesta['datosBan_id'] = $idClipro;
+
         }
 
-        var_dump($this->integradoId, $whereRelacion, $relacion, $update);
-
-        exit;
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
     }
+
     function deleteBanco(){
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
