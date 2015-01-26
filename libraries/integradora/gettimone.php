@@ -679,7 +679,6 @@ class getFromTimOne{
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
-var_dump($general);
 
                     $value->rfc = @$general->rfc;
                     $value->tradeName = @$general->tradeName;

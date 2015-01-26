@@ -14,6 +14,7 @@ $type		= array('Cliente', 'Proveedor');
 $status		= array('Activo', 'Inactivo');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('libraries/integradora/js/form_helper.js');
 
 if(is_null($clientes) || empty($clientes)){
 	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_CLIENTS'), 'Message');
@@ -198,7 +199,6 @@ function busquedapor(valor, campo){
 				$selected = $value->status == 0?'':'checked';
 				$class = $value->status == 0?'':'status1';
 
-				var_dump($value);
 				echo '<tr class="type_'.$value->type.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$type[$value->type].'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->rfc.'</td>';

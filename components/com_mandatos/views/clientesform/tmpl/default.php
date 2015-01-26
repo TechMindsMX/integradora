@@ -13,7 +13,6 @@ $document = JFactory::getDocument();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
-$document->addScript('libraries/integradora/js/form_helper.js');
 $optionBancos = '';
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
@@ -52,37 +51,49 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
         ?>
 
 		jQuery('#files').change( function(event) {
+
 			//check whether browser fully supports all File API
 			if (window.File && window.FileReader && window.FileList && window.Blob)
 			{
+
 				//get the file size and file type from file input field
 				var $files = jQuery('input[type="file"]');
-
 				$files.each(function(k, $fileInput){
-					console.log($fileInput);
-					var fsize = $fileInput.files[0].size;
-					var ftype = $fileInput.files[0].type;
-					var fname = $fileInput.files[0].name;
 
-					switch(ftype)
-					{
-						case 'image/png':
-						case 'image/gif':
-						case 'image/jpeg':
-						case 'image/pjpeg':
-						case 'application/pdf':
-							break;
-						default:
-							alert(<?php echo JText::_('UNSUPPORTED_FILE!'); ?>);
-							event.preventDefault();
-					}
-					if (fsize >= 1000000) {
-						alert(<?php echo JText::_('UNSUPPORTED_FILE!'); ?>);
+					function displayError($error) {
 						event.preventDefault();
+						input(event.target).val('');
+
+						alert($error);
+					}
+
+					if ($fileInput.files[0]) {
+
+						var fsize = $fileInput.files[0].size;
+						var ftype = $fileInput.files[0].type;
+						var fname = $fileInput.files[0].name;
+						var $error = Array();
+
+						switch(ftype)
+						{
+							case 'image/png':
+							case 'image/gif':
+							case 'image/jpeg':
+							case 'image/pjpeg':
+							case 'application/pdf':
+								break;
+							default:
+								$error[$error.length] = '<?php echo JText::_('UNSUPPORTED_FILE!'); ?>';
+								displayError($error);
+						}
+
+						if (fsize >= 1000000) {
+							$error[$error.length] = '<?php echo JText::_('UNSUPPORTED_FILE!'); ?>';
+							displayError($error);
+						}
 					}
 
 				});
-
 			}else{
 				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
 			}
@@ -151,14 +162,14 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			if(response.success){
 				mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
 
-				jQuery('#altaC_P').clearForm();
+//				jQuery('#altaC_P').clearForm();
 				llenaForm(response);
 			}else{
-				jQuery('#altaC_P').clearForm();
-				jQuery('input, select, textarea').prop("readonly", false);
+//				jQuery('#altaC_P').clearForm();
+//				jQuery('input, select, textarea').prop("readonly", false);
 
 				mensajes(response.msg, 'error');
-				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
+//				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
 			}
 		});
 	}
@@ -486,7 +497,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
            	<select name="pais" id="pais" >
            		<?php
            		foreach ($this->catalogos->nacionalidades as $key => $value) {
-           			var_dump($value->id);
            			$selected = $value->id == 146?'selected':'';
            			echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
 				}
@@ -932,3 +942,4 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	?>
 	
 </form>
+<a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
