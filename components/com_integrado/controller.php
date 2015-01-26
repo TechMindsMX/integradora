@@ -266,13 +266,17 @@ class IntegradoController extends JControllerLegacy {
             $session->set('integradoId',$integrado_id,'integrado');
 
             $data['integradoId'] = $integrado_id;
+
+            JFactory::getSession()->set('integradoId',$integrado_id, 'integrado');
         }
 
         switch($data['tab']){
             case 'juridica':
+
+                $createdDate  = time();
                 $table 		  = 'integrado';
-                $columnas 	  = array('integrado_id','status','pers_juridica');
-                $valores	  = array( $integrado_id, '0', $data['pj_pers_juridica'] );
+                $columnas 	  = array('integrado_id','status','pers_juridica', 'createdDate');
+                $valores	  = array( $integrado_id, '0', $data['pj_pers_juridica'], $createdDate );
                 $updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pj_pers_juridica'] );
                 break;
             case 'personales':
@@ -350,6 +354,7 @@ class IntegradoController extends JControllerLegacy {
         }
 
         $existe = self::checkData($table, $db->quoteName('integrado_id').' = '.$integrado_id);
+
 
         if( empty($existe) ){
             $respuesta = self::insertData($table, $columnas, $valores);

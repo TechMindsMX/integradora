@@ -252,3 +252,7 @@ ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` 
 --changeset ricardolyon:26
 ALTER TABLE `flpmu_integrado_clientes_proveedor` ADD COLUMN `bancos` VARCHAR(255);
 --rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` DROP COLUMN `bancos`;
+
+--changeset lutek:27
+ALTER TABLE `flpmu_integrado` ADD COLUMN `createdDate` BIGINT (20);
+--rollback ALTER  TABLE `flpmu_integrado` DROP COLUMN `createdDate`;
