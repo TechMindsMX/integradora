@@ -22,6 +22,8 @@ if(!defined('DS')) {
 // include framework classes and files
 require_once('lib/gk.framework.php');
 // run the framework
+JFactory::getDocument()->addScript('libraries/integradora/js/form_helper.js');
 $tpl = new GKTemplate($this);
 
 // EOF
+

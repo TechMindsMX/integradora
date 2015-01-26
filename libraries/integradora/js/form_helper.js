@@ -11,3 +11,20 @@ jQuery.fn.clearForm = function() {
             this.selectedIndex = -1;
     });
 }
+
+
+jQuery(document).ready( function() {
+    var $body = jQuery('body');
+    var $divLoading = '<link type="text/css" href="libraries/integradora/js/css/ajaxloader.css" rel="stylesheet" />' +
+    '<div id="loadingDiv"><div id="fadingBarsG"><div id="fadingBarsG_1" class="fadingBarsG"></div><div id="fadingBarsG_2" class="fadingBarsG"></div><div id="fadingBarsG_3" class="fadingBarsG"></div><div id="fadingBarsG_4" class="fadingBarsG"></div><div id="fadingBarsG_5" class="fadingBarsG"></div><div id="fadingBarsG_6" class="fadingBarsG"></div><div id="fadingBarsG_7" class="fadingBarsG"></div><div id="fadingBarsG_8" class="fadingBarsG"></div></div></div>';
+    $body.append($divLoading);
+
+    var $loading = jQuery('#loadingDiv').hide();
+    jQuery(document)
+        .ajaxStart(function () {
+            $loading.show();
+        })
+        .ajaxStop(function () {
+            $loading.hide();
+        });
+});
