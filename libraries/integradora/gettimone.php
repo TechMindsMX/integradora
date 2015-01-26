@@ -547,7 +547,7 @@ class getFromTimOne{
         $rutas = new servicesRoute();
         $get = $rutas->getUrlService('timone', 'user', 'details');
 
-        $serviceUrl = str_replace('{id}',$uuidTimone,$get->url);
+        $serviceUrl = str_replace('{uuid}',$uuidTimone,$get->url);
 
         $send->setHttpType($get->type);
         $send->setServiceUrl($serviceUrl);
