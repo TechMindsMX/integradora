@@ -126,12 +126,14 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $diccionario = array(
             'integradoId'   => array('tipo' => 'number', 'length' => 10),
             'numOrden'      => array('tipo' => 'number', 'length' => 10),
-            'provider'      => array('tipo' => 'number', 'length' => 10),
-            'project'       => array('tipo' => 'number', 'length' => 10),
+            'proveedor'     => array('tipo' => 'number', 'length' => 10, 'notNull' => true),
+            'proyecto'      => array('tipo' => 'number', 'length' => 10),
             'paymentDate'   => array('tipo' => 'date',   'length' => 10),
-            'paymentMethod' => array('tipo' => 'number', 'length' => 10));
+            'paymentMethod' => array('tipo' => 'number', 'length' => 10),
+            'observaciones' => array('tipo' => 'text',   'length' => 1000));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
+        $respuesta['proveedor'] = $parametros['proveedor']==0?array('success'=>false,'msg'=>'Seleccione el proveedor'):$respuesta['proveedor'];
 
         $document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
