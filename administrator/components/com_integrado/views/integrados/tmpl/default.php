@@ -63,7 +63,7 @@ JHtml::_('behavior.tooltip');
  ?>
 			</td>
 			<td>
-			<?php echo $item -> name; ?>
+			<?php echo $item -> nombre_representante; ?>
 			</td>
 			<td>
 				<?php echo is_null($item->createdDate)?'':date('d-m-Y',$item->createdDate); ?>

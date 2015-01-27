@@ -20,9 +20,10 @@ class IntegradoModelIntegrados extends JModelList
         $query 	= $db->getQuery(true);
 		$q2		= $db->getQuery(true);
         $query
-            ->select($db->quoteName(array('a.integrado_id','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'c.name')))
+            ->select($db->quoteName(array('a.integrado_id','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'c.name', 'p.nombre_representante')))
             ->from($db->quoteName('#__integrado', 'a'))
 			->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'b') . ' ON ('. $db->quoteName('a.integrado_id') . ' = ' . $db->quoteName('b.integrado_id') .')' )
+			->join('LEFT', $db->quoteName('#__integrado_datos_personales', 'p') . ' ON ('. $db->quoteName('a.integrado_id') . ' = ' . $db->quoteName('p.integrado_id') .')' )
 			->join('LEFT', $db->quoteName('#__users', 'c') . ' ON ('. $db->quoteName('c.id') . ' = (' .
 				$q2->select($db->quoteName('d.user_id'))
 				 	->from($db->quoteName('#__integrado_users', 'd'))
@@ -38,7 +39,7 @@ class IntegradoModelIntegrados extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-
+var_dump($items);
 		return $items;
 	}
 	protected function populateState($ordering = null, $direction = null) {
