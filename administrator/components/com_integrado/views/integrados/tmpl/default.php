@@ -58,7 +58,7 @@ JHtml::_('behavior.tooltip');
 			<?php echo $item -> integrado_id; ?>
 			</td>
 			<td>
-			<?php $nombre = ($item -> razon_social) ? $item -> razon_social : $item -> name;
+			<?php $nombre = ($item -> razon_social) ? $item -> razon_social : $item -> nombre_representante;
 				echo $nombre;
  ?>
 			</td>
