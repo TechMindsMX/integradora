@@ -117,7 +117,8 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'tel_fijo',
 			'tel_fijo_extension',
 			'tel_movil',
-			'nom_comercial'
+			'nom_comercial',
+			'nombre_representante'
 		);
 		$campos->attach_LBL_SLIDE_BASIC = array(
 			'url_identificacion',
