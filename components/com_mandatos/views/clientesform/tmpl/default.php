@@ -51,6 +51,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
         ?>
 
 		jQuery('#files').change( function(event) {
+			jQuery('.errormsg').remove();
 
 			//check whether browser fully supports all File API
 			if (window.File && window.FileReader && window.FileList && window.Blob)
@@ -58,14 +59,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 
 				//get the file size and file type from file input field
 				var $files = jQuery('input[type="file"]');
-				$files.each(function(k, $fileInput){
-
-					function displayError($error) {
-						event.preventDefault();
-						input(event.target).val('');
-
-						alert($error);
-					}
+				var $loop = jQuery.each($files, function(k, $fileInput){
 
 					if ($fileInput.files[0]) {
 
@@ -83,17 +77,18 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 							case 'application/pdf':
 								break;
 							default:
-								$error[$error.length] = '<?php echo JText::_('UNSUPPORTED_FILE!'); ?>';
-								displayError($error);
+								var $error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+								jQuery($fileInput).val('').after($error_span);
 						}
 
 						if (fsize >= 1000000) {
-							$error[$error.length] = '<?php echo JText::_('UNSUPPORTED_FILE!'); ?>';
-							displayError($error);
+							var $error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+							jQuery($fileInput).val('').after($error_span);
 						}
 					}
-
+					return $fileInput;
 				});
+
 			}else{
 				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
 			}
@@ -321,7 +316,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
-<?php var_dump($datos); ?>
 <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
     <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 

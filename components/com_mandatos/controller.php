@@ -190,7 +190,6 @@ class MandatosController extends JControllerLegacy {
             }
         }
 
-        if ( $this->integradoId != $data['integradoId'] )
         $table 		= 'integrado_datos_bancarios';
         $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
         $existe     = getFromTimOne::selectDB($table,$where);

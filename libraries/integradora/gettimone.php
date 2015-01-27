@@ -710,21 +710,23 @@ class getFromTimOne{
 
             //obtengo los datos de cuentas bancarias del cliente;
             foreach ($response as $value) {
-                $db = JFactory::getDbo();
-                $querybanco = $db->getQuery(true);
+                $bancoIds = isset($value->bancoIds) ? ' IN ('.implode(',', json_decode($value->bancoIds, true)).')' : null;
 
-                $bancoIds = isset($value->bancoIds) ? ' IN '.json_decode($value) : '';
+                if (!is_null($bancoIds)) {
+                    $db = JFactory::getDbo();
+                    $querybanco = $db->getQuery(true);
 
-                $querybanco->select('*')
-                           ->from('#__integrado_datos_bancarios')
-                           ->where('integrado_id = ' . $value->id );
+                    $querybanco->select('*')
+                               ->from('#__integrado_datos_bancarios')
+                               ->where('datosBan_id' .$bancoIds );
 
-                try {
-                    $db->setQuery($querybanco);
-                    $banco = $db->loadObjectList();
-                    $value->bancos = $banco;
-                } catch (Exception $e) {
-                    echo $e->getMessage();
+                    try {
+                        $db->setQuery($querybanco);
+                        $banco = $db->loadObjectList();
+                        $value->bancos = $banco;
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
             }
 
