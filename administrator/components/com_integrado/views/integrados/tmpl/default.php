@@ -38,6 +38,9 @@ JHtml::_('behavior.tooltip');
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_CONTACTO'); ?>
 			</th>
 			<th>
+				<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_CREATED'); ?>
+			</th>
+			<th>
 				<?php echo JHTML::_('grid.sort', JText::_('COM_INTEGRADO_INTEGRADO_HEADING_STATUS'), 'a.status', $this -> sortDirection, $this -> sortColumn); ?>
 			</th>
 			<th>
@@ -61,6 +64,9 @@ JHtml::_('behavior.tooltip');
 			</td>
 			<td>
 			<?php echo $item -> name; ?>
+			</td>
+			<td>
+				<?php echo is_null($item->createdDate)?'':date('d-m-Y',$item->createdDate); ?>
 			</td>
 			<td>
 			<?php echo $item -> status; ?>
