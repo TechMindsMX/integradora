@@ -82,13 +82,13 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 						}
 
 						if (fsize >= 1000000) {
-							$fileInput.error = '<?php echo JText::_('UNSUPPORTED_FILE!'); ?>';
+							var $error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+							jQuery($fileInput).val('').after($error_span);
 						}
 					}
 					return $fileInput;
 				});
 
-				console.log($loop);
 			}else{
 				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
 			}
