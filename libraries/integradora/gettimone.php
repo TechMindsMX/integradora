@@ -1717,7 +1717,8 @@ class sendToTimOne {
                     break;
             }
             $updateSet 	= array($db->quoteName($columna).' = '.$db->quote("media/archivosJoomla/" . $integrado_id.'_'.$key . ".jpg") );
-            $save[] = self::updateData($table, $updateSet, $where);
+
+            $save[] = self::updateDB($table, $updateSet, $where);
         }
 
         return !in_array(false, $save);
