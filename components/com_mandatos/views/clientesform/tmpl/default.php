@@ -60,6 +60,8 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 				var $files = jQuery('input[type="file"]');
 				var $loop = jQuery.each($files, function(k, $fileInput){
 
+					var $error_span = '';
+
 					if ($fileInput.files[0]) {
 
 						var fsize = $fileInput.files[0].size;
@@ -76,12 +78,12 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 							case 'application/pdf':
 								break;
 							default:
-								var $error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+								$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
 								jQuery($fileInput).val('').after($error_span);
 						}
 
 						if (fsize >= 1000000) {
-							var $error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+							$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
 							jQuery($fileInput).val('').after($error_span);
 						}
 					}

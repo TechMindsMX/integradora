@@ -1672,13 +1672,16 @@ class sendToTimOne {
         $this->setHttpType('GET');
     }
 
-    public static function uploadFiles() {
+public static function uploadFiles($integradoId = null) {
         $save = array();
         $db 	= JFactory::getDbo();
 
         $data	= JFactory::getApplication()->input->getArray();
+
         if ( isset( $data['integradoId'] ) ) {
             $integrado_id = $data['integradoId'] != '' ? $data['integradoId'] : '';
+        } elseif ( isset($integradoId) ) {
+            $integrado_id = $integradoId;
         } else {
             $integrado_id = '';
         }

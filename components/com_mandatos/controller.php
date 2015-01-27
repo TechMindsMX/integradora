@@ -493,12 +493,22 @@ class MandatosController extends JControllerLegacy {
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
+        $save = array();
+        $db 	= JFactory::getDbo();
 
-        sendToTimOne::uploadFiles();
+        $idCliPro	= JFactory::getApplication()->input->get('idCliPro', null, 'INT');
+        $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'id = '.$idCliPro);
+        $integrado_id = $result[0]->integradoIdCliente;
 
-        $url = 'index.php?option=com_mandatos&view=clientesform';
+        $resultado = sendToTimOne::uploadFiles($integrado_id);
 
-//        JFactory::getApplication()->redirect($url, false);
+        $app = JFactory::getApplication();
+        if ($resultado) {
+            $app->enqueueMessage('LBL_DATOS_GUARDADOS');
+        }
+        $url = 'index.php?option=com_mandatos&view=clienteslist';
+
+        $app->redirect($url, false);
 
     }
 
