@@ -39,7 +39,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
         if(!is_null($datos->rfc)){
             echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
             echo 'jQuery("#search").trigger("click");'."\n";
-            echo 'jQuery("#tipoAlta'.$datos->type.'").trigger("click");'."\n";
 
         }
         if(!empty($datos->bancos)){
@@ -157,11 +156,13 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			if(response.success){
 				mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
 
+
 //				jQuery('#altaC_P').clearForm();
 				llenaForm(response);
+
 			}else{
 //				jQuery('#altaC_P').clearForm();
-//				jQuery('input, select, textarea').prop("readonly", false);
+				jQuery('input, select, textarea').prop("readonly", false);
 
 				mensajes(response.msg, 'error');
 //				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
@@ -280,6 +281,10 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			});
 			jQuery('#de_cod_postal').trigger('click');
 		}
+
+		if(objeto.tipo_alta != null) {
+			jQuery("#tipoAlta"+objeto.tipo_alta).trigger("click");
+		}
 	}
 
     function saveCliente(){
@@ -299,7 +304,6 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
             var resultado = ajax(parametros);
 
             resultado.done(function(response){
-                console.log(response);
                if(response.success){
                    var spanMsg = jQuery('#msg')
                    jQuery('#idCliPro').val(response.idCliPro);

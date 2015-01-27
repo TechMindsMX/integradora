@@ -731,9 +731,11 @@ class getFromTimOne{
             }
 
             foreach ($response as $key => $value) {
-                foreach ($value->bancos as $indice => $valor) {
-                    $valor->banco_cuenta_xxx = 'XXXXXX' . substr($valor->banco_cuenta, -4, 4);
-                    $valor->banco_clabe_xxx = 'XXXXXXXXXXXXXX' . substr($valor->banco_clabe, -4, 4);
+                if ( isset( $value->bancos ) ) {
+                    foreach ($value->bancos as $indice => $valor) {
+                        $valor->banco_cuenta_xxx = 'XXXXXX' . substr($valor->banco_cuenta, -4, 4);
+                        $valor->banco_clabe_xxx = 'XXXXXXXXXXXXXX' . substr($valor->banco_clabe, -4, 4);
+                    }
                 }
             }
         }else{

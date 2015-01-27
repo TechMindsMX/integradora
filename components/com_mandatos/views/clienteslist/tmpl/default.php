@@ -10,7 +10,7 @@ JHTML::_('behavior.calendar');
 
 $document	= JFactory::getDocument();
 $clientes	= $this->data;
-$type		= array('Cliente', 'Proveedor');
+$type		= array('Cliente', 'Proveedor', 'Ambos');
 $status		= array('Activo', 'Inactivo');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
@@ -187,7 +187,7 @@ function busquedapor(valor, campo){
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?> </span> </th>
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_STATUS'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_ACCOUNT_BANK'); ?> </span> </th>
+<!--				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">--><?php //echo JText::_('COM_MANDATOS_CLIENTES_ACCOUNT_BANK'); ?><!-- </span> </th>-->
 				<th style="text-align: center; vertical-align: middle;" ></th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JPUBLISHED'); ?></span></th>
 			</tr>
@@ -208,7 +208,7 @@ function busquedapor(valor, campo){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->phone.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$status[$value->status];
                 echo '      <div></div></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
+//				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
 				echo '  	<a class="btn btn-primary" href="index.php?option=com_mandatos&view=clientesform&idCliPro='.$value->id.'">';
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
