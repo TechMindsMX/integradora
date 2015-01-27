@@ -124,8 +124,13 @@ class MandatosController extends JControllerLegacy {
         }
 
         if(!empty($existe)){
+            // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
+            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe[0]->integrado_id );
+
             $datos = new IntegradoSimple($existe[0]->integrado_id);
             $datos->integrados[0]->success = true;
+
+            $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
 
             echo json_encode($datos->integrados[0]);
         }else{
