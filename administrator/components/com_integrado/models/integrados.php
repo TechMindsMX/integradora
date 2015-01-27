@@ -39,7 +39,7 @@ class IntegradoModelIntegrados extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-var_dump($items);
+
 		return $items;
 	}
 	protected function populateState($ordering = null, $direction = null) {
