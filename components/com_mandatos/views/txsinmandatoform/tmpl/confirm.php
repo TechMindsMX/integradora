@@ -11,7 +11,6 @@ $accion = 'index.php?com_mandatos&view=txsinmandatoform&task=asociatxmandato.sav
 $cancelUrl = 'index.php?com_mandatos&view=txsinmandatolist';
 
 
-//var_dump($this);exit;
 echo $this->loadTemplate('tx_head');
 ?>
 
@@ -34,7 +33,7 @@ echo $this->loadTemplate('tx_head');
 	<span id="name"><?php echo $this->orders->paymentMethod->name; ?></span>
 </div>
 <div class="form-group">
-	<label for="name"><?php echo JText::_('LBL_ORDER_STATUS') ?></label>
+	<label for="name"><?php echo JText::_('JSTATUS') ?></label>
 	<span id="name"><?php echo $this->orders->status->name; ?></span>
 </div>
 </div>

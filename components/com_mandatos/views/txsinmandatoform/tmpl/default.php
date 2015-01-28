@@ -52,7 +52,7 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_LIST_TX_AMOUNT') .' </span> </th>
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN') .'</span> </th>
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ODC_PAYMENTFORM') .' </span> </th>
-				<th><span class="etiqueta">'. JText::_('LBL_ORDER_STATUS') .'</span> </th>
+				<th><span class="etiqueta">'. JText::_('JSTATUS') .'</span> </th>
 				<th style="width: 20%;"><span class="etiqueta">'. JText::_('') .'</span> </th>
 				<th>&nbsp;</th>
 			</tr>

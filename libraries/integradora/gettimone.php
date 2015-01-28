@@ -573,6 +573,12 @@ class getFromTimOne{
         return $client;
     }
 
+    public static function getBasicStatusCatalog() {
+        $catalog = new Catalogos();
+
+        return $catalog;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 

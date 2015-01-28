@@ -44,5 +44,9 @@ class MandatosModelProyectosform extends JModelItem {
 
         return $dataProject;
 	}
+
+	public function getCatalogos() {
+		return getFromTimOne::getBasicStatusCatalog();
+	}
 }
 

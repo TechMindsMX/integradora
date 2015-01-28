@@ -142,7 +142,6 @@ class MandatosController extends JControllerLegacy {
         }
     }
 
-
     function agregarBanco(){
         $respuesta['success'] = false;
 

@@ -33,6 +33,7 @@ class MandatosViewProyectosform extends JViewLegacy {
             $this->proyecto = $proyecto;
         }
 
+        $this->catalogos = $this->get('Catalogos');
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))){

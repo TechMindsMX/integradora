@@ -9,6 +9,7 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $proyecto = $this->proyecto;
+var_dump($proyecto);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 <script>
@@ -68,6 +69,17 @@ $proyecto = $this->proyecto;
 	<div class="form-group">
 		<label for="description"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_DESCRIPCION_PROY') ?></label>
 		<textarea name="description" id="description" rows="10" maxlength="1000" style="width: 90%;"><?php echo $proyecto->description ?></textarea>
+	</div>
+
+	<div class="form-group">
+		<label for="status"><?php echo JText::_('JSTATUS'); ?></label>
+		<select class="form-control">
+			<?php
+			foreach ( $this->catalogos->basic as $value => $name ) {
+				echo '<option value="'.$value.'">'.$name.'</option>';
+			}
+			?>
+		</select>
 	</div>
 
 	<div class="form-actions">

@@ -8,7 +8,13 @@ jimport('joomla.factory');
  * Clase catalogos
  */
 class Catalogos {
-	
+
+	public $basic;
+
+	function __construct() {
+		$this->basic = $this->getBasicStatus();
+	}
+
 	public function getNacionalidades()
 	{
 		$db = JFactory::getDbo();
@@ -91,7 +97,7 @@ class Catalogos {
 	}
 
 	public function getBasicStatus () {
-		return array('Desabilitada', 'Habilitada');
+		return array('Desabilitado', 'Habilitado');
 	}
 
 	public function getComisionesFrecuencyTimes () {
