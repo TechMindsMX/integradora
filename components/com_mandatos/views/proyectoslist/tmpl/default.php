@@ -55,7 +55,7 @@ if( !is_null($proyectos) ){
             var valor = $this.is(':checked') ? 1 : 0;
 
             var request = $.ajax({
-                url: 'index.php?option=com_mandatos&task=projects.changeStatus&format=raw',
+                url: 'index.php?option=com_mandatos&task=projectlist.changeStatus&format=raw',
                 data: {
                     id_proyecto: itemId,
                     status: valor

@@ -7,7 +7,7 @@ jimport('integradora.gettimone');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
-class MandatosControllerProjects extends JControllerAdmin {
+class MandatosControllerProjectlist extends JControllerAdmin {
 
     function changeStatus(){
         $document   = JFactory::getDocument();
