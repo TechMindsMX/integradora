@@ -28,6 +28,8 @@ class MandatosModelOdrlist extends JModelItem {
     public function getOrdenes($integradoId = null){
         $listado = getFromTimOne::getOrdenesRetiro($this->integradoId);
 
+        JLog::add('vacio', JLog::ERROR);
+        JLog::add('este es de bitacora', JLog::INFO, 'bitacora');
         return $listado;
     }
 }

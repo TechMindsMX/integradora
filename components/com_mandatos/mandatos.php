@@ -1,10 +1,14 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-
 // import joomla controller library
 jimport('joomla.application.component.controller');
- 
+jimport('joomla.log.log');
+
+JLog::addLogger(array('text_file' => date('d-m-Y').'_com_mandatos_errors.php'), JLog::ALL & ~JLog::INFO & ~JLog::DEBUG);
+JLog::addLogger(array('text_file' => date('d-m-Y').'_com_mandatos_bitacora.php'), JLog::INFO + JLog::DEBUG, 'bitacora');
+
+
 // Get an instance of the controller prefixed by HelloWorld
 $controller = JControllerLegacy::getInstance('Mandatos');
  
