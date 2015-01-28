@@ -75,18 +75,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 			$integradoSimple = new IntegradoSimple( $this->integradoId );
 			$getCurrUser     = new Integrado( $this->integradoId );
 
-			$contenido = JText::_( 'NOTIFICACIONES_2' );
-
-			$contenido = str_replace( '$integrado',
-			                          '<strong style="color: #000000">' . $integradoSimple->user->username . '</strong>',
-			                          $contenido );
-			$contenido = str_replace( '$proyecto', '<strong style="color: #000000">' . $data['name'] . '</strong>',
-			                          $contenido );
-			$contenido = str_replace( '$usuario',
-			                          '<strong style="color: #000000">$' . $getCurrUser->user->username . '</strong>',
-			                          $contenido );
-			$contenido = str_replace( '$fecha', '<strong style="color: #000000">' . date( 'd-m-Y' ) . '</strong>',
-			                          $contenido );
+			$contenido = JText::sprintf( 'NOTIFICACIONES_2', $integradoSimple->user->username, $data['name'], $getCurrUser->user->username, date( 'd-m-Y' ) );
 
 			$data['titulo'] = JText::_( 'TITULO_2' );
 			$data['body']   = $contenido;
