@@ -78,6 +78,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $orden = $orden[0];
 
+// TODO: quitar el mock
         $orden->status->id = 5;
         if($orden->status->id == 5){
             $data      = new Cashout($orden);
@@ -99,7 +100,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     private function sendNotifications() {
         /*NOTIFICACIONES 23*/
-        $integradoSimple     = new IntegradoSimple($this->integradoId);
         $getCurrUser         = new Integrado($this->integradoId);
 
         $titulo = JText::_('TITULO_23');
@@ -113,7 +113,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $info = $send->notification($dato);
 
         $integradoAdmin     = new IntegradoSimple(93);
-        $getCurrUser         = new Integrado($this->integradoId);
 
         $titulo = JText::_('TITULO_24');
 
