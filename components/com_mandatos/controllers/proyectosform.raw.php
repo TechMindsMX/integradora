@@ -44,7 +44,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		$validaciones = MandatosHelper::valida( $data, $diccionario );
 
 		// valida que el nombre del proyecto no este duplicado para el integrado
-		$validaciones['name'] = MandatosHelper::checkDuplicatedProjectName( $data['name'], $validaciones['name'] );
+		$validaciones['name'] = MandatosHelper::checkDuplicatedProjectName( $data, $validaciones['name'] );
 
 		foreach ( $validaciones as $key => $check ) {
 			if ( is_array( $check ) ) {
@@ -88,9 +88,6 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 			$contenido = str_replace( '$fecha', '<strong style="color: #000000">' . date( 'd-m-Y' ) . '</strong>',
 			                          $contenido );
 
-
-			$integrado = new IntegradoSimple( $this->integradoId );
-
 			$data['titulo'] = JText::_( 'TITULO_2' );
 			$data['body']   = $contenido;
 			$data['email']  = $getCurrUser->user->email;
@@ -99,12 +96,18 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 			$send->notification( $data );
 		}
 
+		$sesion = JFactory::getSession();
+		$sesion->set('project_name', $data['name'], 'mensajes');
 
 		echo json_encode(array('redirect' => 'index.php?option=com_mandatos&task=proyectosform.redirectUrl&format=raw'));
 	}
 
 	public function redirectUrl(){
-		JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist', JText::_('LBLB_PROJECT_SAVED'));
+
+		$sesion = JFactory::getSession();
+		$projectName = $sesion->get('project_name', '', 'mensajes');
+		$sesion->clear('mensajes');
+		JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist', JText::sprintf('LBL_PROJECT_SAVED', $projectName));
 
 	}
 

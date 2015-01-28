@@ -83,13 +83,13 @@ class MandatosHelper {
 		return $respuesta;
 	}
 
-	public static function checkDuplicatedProjectName( $name, $currentValidations ) {
+	public static function checkDuplicatedProjectName( $post, $currentValidations ) {
 		$integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
 
 		$projects = getFromTimOne::getProyects($integradoId);
 
 		foreach ( $projects as $value ) {
-			if($value->name == $name) {
+			if($value->name == $post['name'] && $value->id_proyecto != $post['id_proyecto']) {
 				$validacion['success'] = false;
 				$validacion['msg'] = JText::_('ERROR_PROJECT_NAME_DUPLICATED');
 			}

@@ -9,7 +9,6 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $proyecto = $this->proyecto;
-var_dump($proyecto);
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 <script>
@@ -57,7 +56,6 @@ var_dump($proyecto);
 
 	<input type="hidden" name="confirm" 	value="1" />
 	<input type="hidden" name="integradoId" value="<?php echo $proyecto->integradoId; ?>">
-	<input type="hidden" name="status" 		value="<?php echo $proyecto->status ?>">
 	<input type="hidden" name="parentId" 	value="<?php echo $proyecto->parentId ?>">
 	<input type="hidden" name="id_proyecto" value="<?php echo $proyecto->id_proyecto ?>">
 
@@ -73,10 +71,11 @@ var_dump($proyecto);
 
 	<div class="form-group">
 		<label for="status"><?php echo JText::_('JSTATUS'); ?></label>
-		<select class="form-control">
+		<select class="form-control" name="status">
 			<?php
 			foreach ( $this->catalogos->basic as $value => $name ) {
-				echo '<option value="'.$value.'">'.$name.'</option>';
+				$selected = ($value == $proyecto->status) ? 'selected' : '';
+				echo '<option value="'.$value.'" '.$selected.'>'.$name.'</option>';
 			}
 			?>
 		</select>

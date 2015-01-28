@@ -16,16 +16,14 @@ function proyectos ($parent, $proys){
 
             if($value->status == 1){
                 $checked = 'checked';
-                $disabled = 'disabled="disabled"';
             }else{
                 $checked = '';
-                $disabled = '';
             }
 
             echo '<li class="proyectoslist">'.
                 '<div class="filas status'.$value->status.'">'.
                 '<div class="columnas"><span>'.$value->name.'</span></div>'.
-                '<div class="columnas"><a '.$disabled.' class="btn btn-primary editar" id="'.$value->id_proyecto.'" href="index.php?option=com_mandatos&task=editarproyecto&id_proyecto='.$value->id_proyecto.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></div>'.
+                '<div class="columnas"><a class="btn btn-primary editar" id="'.$value->id_proyecto.'" href="index.php?option=com_mandatos&task=editarproyecto&id_proyecto='.$value->id_proyecto.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></div>'.
                 '<div class="columnas"><input type="checkbox" class="deshabilitar" data-id="'.$value->id_proyecto.'" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
                 '</div>';
 
@@ -48,7 +46,6 @@ if( !is_null($proyectos) ){
 ?>
 <script>
     jQuery(document).ready(function($){
-        jQuery('.editar').on('click', editarProy);
 
         jQuery('.deshabilitar').on('click', changeStatus);
 
