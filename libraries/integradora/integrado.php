@@ -249,6 +249,9 @@ class Integrado {
 	}
 }
 
+/**
+ * @property null timoneData
+ */
 class IntegradoSimple extends Integrado {
 
 	protected $ordersAtuhorizationParams;
@@ -314,10 +317,14 @@ class IntegradoSimple extends Integrado {
     public function getTimOneData()
     {
         $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
-        $timoneData = $timoneData[0];
+		if(!empty($timoneData)) {
+			$timoneData = $timoneData[0];
 
-        $uuidTimone = $timoneData->timoneUuid;
-        $this->timoneData = getFromTimOne::getTimoneUserDetalis($uuidTimone);
+			$uuidTimone = $timoneData->timoneUuid;
+			$this->timoneData = getFromTimOne::getTimoneUserDetalis($uuidTimone);
+		}else{
+			$this->timoneData = null;
+		}
     }
 
 }

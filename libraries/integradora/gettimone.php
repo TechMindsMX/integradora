@@ -3356,3 +3356,9 @@ class Cashout {
 
 
 }
+
+class transferFunds {
+    function __construct(){
+
+    }
+}

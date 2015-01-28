@@ -27,9 +27,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if($this->permisos['canAuth']) {
-            $getCurrUser         = new Integrado($this->integradoId);
             $integradoSimple     = new IntegradoSimple($this->integradoId);
             $integradoSimple->getTimOneData();
+            $integradoSimple->timoneData->balance = (float)10000000;
 
             $this->checkSaldoSuficienteOrRedirectWithError( $integradoSimple );
 
@@ -50,7 +50,29 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
+            //TODO datos para crear el movimiento de lana mandar a funcion
+            $orden = getFromTimOne::getOrdenes(null, $this->parametros['idOrden'], 'ordenes_compra');
+            $orden = $orden[0];
 
+            $proveedor = new IntegradoSimple($orden->proveedor);
+
+
+            if( !empty($proveedor->usuarios) ){
+                //TODO operacion de transfer entre integrados y realizar el calculo de comision y tx
+                $proveedor->getTimOneData();
+
+                $txData = new stdClass();
+                $txData->uuidOrigin = $integradoSimple->timoneData->timoneUuid;
+                $txData->uuidDestination = $proveedor->timoneData->timoneUuid;
+                $txData->amount = $orden->totalAmount;
+
+                var_dump($txData, $orden);
+//                getFromTimOne::calculaComision($orden,'ODC',10);
+            }else{
+                //TODO operacion de integrado a tercero
+                echo 'aqui';
+            }
+            exit;
             $resultado = $save->insertDB('auth_odc');
 
             if($resultado) {
