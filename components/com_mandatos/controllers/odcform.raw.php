@@ -19,7 +19,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 'paymentMethod'  => 'STRING',
                 'totalAmount'    => 'STRING',
                 'urlXML'         => 'STRING',
-                'observaciones'  => 'STRING');
+                'observaciones'  => 'STRING',
+            );
 
         $this->parametros   = $this->inputVars->getArray($post);
 

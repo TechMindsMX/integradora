@@ -256,3 +256,7 @@ ALTER TABLE `flpmu_integrado_clientes_proveedor` ADD COLUMN `bancos` VARCHAR(255
 --changeset lutek:27
 ALTER TABLE `flpmu_integrado` ADD COLUMN `createdDate` BIGINT (20);
 --rollback ALTER  TABLE `flpmu_integrado` DROP COLUMN `createdDate`;
+
+--changeset lutek:28
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` ADD COLUMN `params` varchar (20);
+--rollback ALTER  TABLE `flpmu_integrado_verificacion_solicitud` DROP COLUMN `params`;

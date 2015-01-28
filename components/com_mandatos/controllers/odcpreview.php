@@ -56,7 +56,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
             if($resultado) {
 
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-                $newStatusId  = 5;;
+                $newStatusId  = 5;
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
@@ -106,6 +106,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
 
 	            }
                 //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
+
 
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             }else{

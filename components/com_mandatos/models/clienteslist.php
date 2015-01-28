@@ -20,7 +20,7 @@ class MandatosModelClienteslist extends JModelItem {
 			$this->dataModelo = getFromTimOne::getClientes($integradoId);
 		}
 
-		return $this->dataModelo;
+        return $this->dataModelo;
 	}
 
     public function getCatalogos() {

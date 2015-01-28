@@ -5,6 +5,7 @@ define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
 jimport('joomla.user.user');
 jimport('joomla.factory');
+jimport('joomla.log.log');
 jimport('integradora.catalogos');
 jimport('integradora.rutas');
 jimport('integradora.xmlparser');
@@ -1897,6 +1898,7 @@ public static function uploadFiles($integradoId = null) {
     }
 
     public function insertDB($tabla, $columnas = null, $valores = null, $last_inserted_id = null){
+        JLog::addLogger(array());
         $columnas = is_null($columnas) ? $this->columnas : $columnas;
         $valores = is_null($valores) ? $this->valores : $valores;
 
@@ -1908,11 +1910,12 @@ public static function uploadFiles($integradoId = null) {
               ->values(implode(',',$valores));
 
         try{
+//            JLog::add($query,JLog::INFO,'Salvo');
             $db->setQuery($query);
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo '<pre>'.$e->getMessage().'</pre>';
+            JLog::add($e->getMessage(),JLog::ERROR,'Error INTEGRADORA'.__METHOD__);
             $return = false;
         }
 
@@ -1924,6 +1927,7 @@ public static function uploadFiles($integradoId = null) {
     }
 
     public function updateDB($table, $set=null, $condicion=null){
+        JLog::addLogger(array());
         $set = is_null($set)?$this->set:$set;
 
         $db		= JFactory::getDbo();
@@ -1938,7 +1942,7 @@ public static function uploadFiles($integradoId = null) {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            echo '<pre>'.$e->getMessage().'</pre>';
+            JLog::add($e->getMessage(),JLog::ERROR,'Error INTEGRADORA'.__METHOD__);
             $return = false;
         }
 
@@ -1946,6 +1950,7 @@ public static function uploadFiles($integradoId = null) {
     }
 
     public function deleteDB($table, $condicion){
+        JLog::addLogger(array());
         $return = '';
         try {
             $db = JFactory::getDbo();
@@ -1960,6 +1965,7 @@ public static function uploadFiles($integradoId = null) {
             $return = true;
 
         }catch (Exception $e){
+            JLog::add($e->getMessage(),JLog::ERROR,'Error INTEGRADORA'.__METHOD__);
             $return = $e->getMessage();
 
         }
