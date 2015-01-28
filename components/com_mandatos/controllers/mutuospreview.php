@@ -49,9 +49,11 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
             if($resultado) {
                 // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', '5');
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                $newStatusId  = 5;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', $newStatusId);
                 if ($statusChange){
-                    $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                 }
 
                 $odps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);

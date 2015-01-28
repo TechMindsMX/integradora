@@ -98,7 +98,7 @@ $selected 	= '';
 		<a class="btn btn-danger span3" id="cancel" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=proyectoslist'); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
 	</div>
 
-	<?php if( is_null($proyecto->id_proyecto) ){ ?>}
+	<?php if( is_null($proyecto->id_proyecto) ){ ?>
     <div class="form-actions">
         <button type="button" class="btn btn-default span3" id="empty"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
     </div>

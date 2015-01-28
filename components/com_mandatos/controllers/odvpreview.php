@@ -48,9 +48,11 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             if($resultado) {
                 // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', '5');
-	            if ($statusChange){
-		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                $newStatusId  = 5;;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
+                if ($statusChange){
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
                     $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
                     $newOrden = $newOrden[0];

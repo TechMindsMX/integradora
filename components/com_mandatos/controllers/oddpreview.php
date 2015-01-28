@@ -47,9 +47,12 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
             if($resultado) {
                 // autorización guardada
-	            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', '5');
+
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                $newStatusId  = 5;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', $newStatusId);
 	            if ($statusChange){
-		            $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+		            $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
                     /*NOTIFICACIONES 19*/
                     $integradoSimple     = new IntegradoSimple($this->integradoId);

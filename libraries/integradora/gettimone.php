@@ -656,7 +656,6 @@ class getFromTimOne{
         return $respuesta;
     }
 
-
     public static function getClientes($userId = null, $type = 2){
         $db       = JFactory::getDbo();
         $query    = $db->getQuery(true);
@@ -790,6 +789,7 @@ class getFromTimOne{
 
         return $response;
     }
+
 
     public static function getRemainderOrder($idOrden, $tipoOrden, $montoTx){
         switch($tipoOrden){
@@ -1028,6 +1028,19 @@ class getFromTimOne{
         $db->setQuery($query);
 
         $result = $db->loadObjectList('id');
+
+        return $result;
+    }
+
+    public static function getOrderStatusCatalogByName( ) {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')
+              ->from('#__catalog_order_status')
+              ->order('id');
+        $db->setQuery($query);
+
+        $result = $db->loadObjectList('name');
 
         return $result;
     }

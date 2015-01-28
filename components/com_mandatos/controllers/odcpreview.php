@@ -54,10 +54,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin {
             $resultado = $save->insertDB('auth_odc');
 
             if($resultado) {
-                // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', '5');
+
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                $newStatusId  = 5;;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange){
-                    $this->app->enqueueMessage(JText::_('ORDER_STATUS_CHANGED'));
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
                     if(isset($this->integradoId)){
 

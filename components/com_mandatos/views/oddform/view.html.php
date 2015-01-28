@@ -42,7 +42,7 @@ class MandatosViewOddform extends JViewLegacy {
                 $datos->numOrden = '';
                 $datos->paymentDate = '';
                 $datos->totalAmount = '';
-                $datos->paymentMethod = '';
+                $datos->paymentMethod->id = 0;
                 $datos->attachment = '';
 
                 $this->datos = $datos;
