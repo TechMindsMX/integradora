@@ -44,7 +44,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         }
 
         if($salvado) {
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&integradoId=' . $datos->integradoId . '&idOrden=' . $salvado.'&success=true',
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&idOrden=' . $salvado.'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);
@@ -58,9 +58,11 @@ class MandatosControllerOddform extends JControllerLegacy {
         $validacion = new validador();
         $document = JFactory::getDocument();
         $parametros = JFactory::getApplication()->input->getArray();
-        $diccionario = array('paymentMethod' => array('tipo'=>'number', 'length' => 10),
-            'paymentDate' => array('tipo'=>'fecha', 'length' => 10),
-            'totalAmount' => array('tipo'=>'float', 'length' => 100));
+        $diccionario = array(
+            'paymentMethod' => array('tipo'=>'number',  'length' => 10 ,    'notNull' => true),
+            'paymentDate'   => array('tipo'=>'fecha',   'length' => 10,     'notNull' => true),
+            'totalAmount'   => array('tipo'=>'float',   'length' => 10,     'notNull' => true)
+        );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
 

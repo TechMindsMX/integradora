@@ -716,7 +716,8 @@ class getFromTimOne{
 
             //obtengo los datos de cuentas bancarias del cliente;
             foreach ($response as $value) {
-                $bancoIds = isset($value->bancoIds) ? ' IN ('.implode(',', json_decode($value->bancoIds, true)).')' : null;
+                $arrayBancoIds = array_filter( json_decode($value->bancoIds, true) );
+                $bancoIds = isset($value->bancoIds) ? ' IN ('.implode(',', $arrayBancoIds).')' : null;
 
                 if (!is_null($bancoIds)) {
                     $db = JFactory::getDbo();
