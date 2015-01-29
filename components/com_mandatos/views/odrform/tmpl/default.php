@@ -11,8 +11,7 @@ $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 $default    = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
-$amount     = isset($this->odr->amount) ? $this->odr->amount : '';
-
+$amount     = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
 ?>
 	<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 	<script>
@@ -113,10 +112,11 @@ if(!$this->confirmacion){
 		?>
 	</div>
 	<input type="hidden" id="balance" value="<?php echo $this->integrado->balance; ?>">
-
     <input type="hidden" id="integradoId" name="integradoId" value="<?php echo $this->integradoId; ?>">
+	<input type="hidden" value="<?php echo isset($this->odr->id) ? $this->odr->id : ''; ?>" name="idOrden" />
 
-    <div class="form-group">
+
+	<div class="form-group">
         <label for="paymentMethod"><?php echo JText::_('LBL_FORMA_PAGO'); ?></label>
         <select id="paymentMethod" name="paymentMethod">
 	        <?php
@@ -177,7 +177,7 @@ if(!$this->confirmacion){
 			<input type="hidden" value="<?php echo $datos['paymentMethod']; ?>" name="paymentMethod" />
 			<input type="hidden" value="<?php echo $datos['paymentDate']; ?>" name="paymentDate" />
 			<input type="hidden" value="<?php echo $datos['totalAmount']; ?>" name="totalAmount" />
-<!--			<input type="hidden" value="--><?php //echo $datos['id']; ?><!--" name="id" />-->
+			<input type="hidden" value="<?php echo isset($datos['idOrden'])?$datos['idOrden']:''; ?>" name="idOrden" />
 			<?php echo JHtml::_( 'form.token' ); ?>
 
 			<input type="button" id="enviar" class="btn btn-primary" value="<?php echo JText::_('LBL_ENVIAR'); ?>">

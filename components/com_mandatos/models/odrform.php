@@ -29,7 +29,8 @@ class MandatosModelOdrform extends JModelItem {
     }
 
     public function getOrdenes(){
-        $this->dataOrden = getFromTimOne::getOrdenesRetiro($this->integradoId, $this->idOrden);
+        $orden = getFromTimOne::getOrdenesRetiro(null, $this->idOrden);
+		$this->dataOrden = $orden[0];
 
 	    if(isset($this->idOrden)){
 		    $this->verifyStatusEditable();
@@ -47,7 +48,7 @@ class MandatosModelOdrform extends JModelItem {
 	}
 
 	private function verifyStatusEditable() {
-		if($this->dataOrden->status > 0){
+		if($this->dataOrden->status->id != 1){
 			$url = 'index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId;
 			$msg = 'ORDEN_CON_ESTATUS_NO_EDITABLE';
 			JFactory::getApplication()->redirect($url, $msg, 'error');

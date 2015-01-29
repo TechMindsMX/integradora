@@ -20,14 +20,15 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $post = array(
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
-            'totalAmount'   => 'STRING'
+            'totalAmount'   => 'FLOAT',
+            'idOrden'       => 'INT'
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
         $this->parametros['integradoId'] = $this->integradoId;
 
         $this->diccionario = array(
-            'amount'        => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
+            'totalAmount'   => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
             'paymentDate'   => array('tipo' => 'date',   'length' => 10,    'notNull' => true),
             'paymentMethod' => array('tipo' => 'number', 'length' => 1,     'notNull' => true)
         );
@@ -72,23 +73,31 @@ class MandatosControllerOdrform extends JControllerLegacy {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
-        if( !isset($datos['id']) ) {
+
+        if( $datos['idOrden'] == 0) {
+            $idOrden = $datos['idOrden'];
+            unset($datos['idOrden']);
+
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odr',  $this->integradoId);
             $datos['status'] = 1;
             $save->formatData($datos);
 
             $salvado = $save->insertDB('ordenes_retiro', null, null, true);
+
+            $idOrden = $salvado;
         }else{
+            $idOrden = $datos['idOrden'];
+            unset($datos['idOrden']);
             $save->formatData($datos);
-            $salvado = $save->updateDB('ordenes_retiro', null,'numOrden = '.$datos['id']);
+            $salvado = $save->updateDB('ordenes_retiro', null,'id = '.$idOrden);
         }
 
         if($salvado) {
             $sesion = JFactory::getSession();
             $sesion->set('msg','Datos Almacenados', 'odrCorrecta');
 
-            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $salvado.'&success=true',
+            $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $idOrden.'&success=true',
                 'redireccion' => true);
         }else{
             $respuesta = array('redireccion' => false);
@@ -110,19 +119,24 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
+        exit;
     }
 
     function valida(){
 
-	    $respuesta = $this->validaSaldo();
+        $validacionFunds = $this->enoughFunds();
 
-	    if(!$respuesta['totalAmount']) {
-		    $respuesta = $this->validaDatos();
-	    }
+        if( $validacionFunds['totalAmount'] === true ) {
+            $validacion = array_merge($validacionFunds, $this->validaDatos());
+        } else {
+            $validaDatos = $this->validaDatos();
+            unset($validaDatos['totalAmount']);
+            $validacion = array_merge($validacionFunds, $validaDatos);
+        }
 
 	    $document = JFactory::getDocument();
 	    $document->setMimeEncoding('application/json');
-        echo json_encode($respuesta);
+        echo json_encode($validacion);
     }
 
 	private function getBalance() {
@@ -132,7 +146,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 		return $balance;
 	}
 
-	private function validaSaldo() {
+	private function enoughFunds() {
 		$respuesta = array('totalAmount' => true);
 		if($this->parametros['totalAmount'] > $this->getBalance()) {
 			$respuesta = array('totalAmount' => array('success' => false, 'msg' => 'SALDO INSUFICIENTE'));
