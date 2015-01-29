@@ -37,16 +37,6 @@ class MandatosHelper {
 		return $proyecto;
 	}
 	
-	public static function getProviderFromID($providerId, $integradoId){
-        $proveedores = getFromTimOne::getClientes($integradoId, 1);
-
-        return $proveedores;
-	}
-
-    public static function getOddListado(){
-
-    }
-	
 	public static function checkPermisos($viewClass, $integradoId) {
 		$user = JFactory::getUser();
 		

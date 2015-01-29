@@ -716,23 +716,25 @@ class getFromTimOne{
 
             //obtengo los datos de cuentas bancarias del cliente;
             foreach ($response as $value) {
-                $arrayBancoIds = array_filter( json_decode($value->bancoIds, true) );
-                $bancoIds = isset($value->bancoIds) ? ' IN ('.implode(',', $arrayBancoIds).')' : null;
+                if(!is_null($value->bancoIds)) {
+                    $arrayBancoIds = array_filter(json_decode($value->bancoIds, true));
+                    $bancoIds = isset($value->bancoIds) ? ' IN (' . implode(',', $arrayBancoIds) . ')' : null;
 
-                if (!is_null($bancoIds)) {
-                    $db = JFactory::getDbo();
-                    $querybanco = $db->getQuery(true);
+                    if (!is_null($bancoIds)) {
+                        $db = JFactory::getDbo();
+                        $querybanco = $db->getQuery(true);
 
-                    $querybanco->select('*')
-                               ->from('#__integrado_datos_bancarios')
-                               ->where('datosBan_id' .$bancoIds );
+                        $querybanco->select('*')
+                            ->from('#__integrado_datos_bancarios')
+                            ->where('datosBan_id' . $bancoIds);
 
-                    try {
-                        $db->setQuery($querybanco);
-                        $banco = $db->loadObjectList();
-                        $value->bancos = $banco;
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
+                        try {
+                            $db->setQuery($querybanco);
+                            $banco = $db->loadObjectList();
+                            $value->bancos = $banco;
+                        } catch (Exception $e) {
+                            echo $e->getMessage();
+                        }
                     }
                 }
             }
