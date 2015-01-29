@@ -66,9 +66,28 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $newStatusId = 5;
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange) {
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+
+                    $TxOdc = $this->realizaTx();
+                    if($TxOdc){
+                        $cobroComision = $this->txComision();
+
+                        if($cobroComision) {
+                            $newStatusId = 13;
+                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+
+                            if($statusChange){
+                                $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+                            }
+                        }else{
+                            //mensaje no se cobro la comision;
+                        }
+                    }else{
+//                        no se hizo el pago al proveedor;
+                    }
 
                     if (isset($this->integradoId)) {
+                        $getCurrUser = new Integrado($this->integradoId);
+                        $integradoAdmin = new IntegradoSimple(93);
 
                         $titulo = JText::_('TITULO_13');
                         $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
@@ -88,9 +107,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                         $send->notification($data);
 
 
-                        $integradoAdmin = new IntegradoSimple(93);
-                        $getCurrUser = new Integrado($this->integradoId);
-
                         $titulo = JText::_('TITULO_14');
                         $titulo = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $titulo);
                         $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
@@ -108,7 +124,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                         $send = new Send_email();
                         $send->notification($data);
-
                     }
 
                 }
@@ -152,8 +167,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     }
 
     private function realizaTx(){
-        $orden = getFromTimOne::getOrdenes(null, $this->parametros['idOrden'], 'ordenes_compra');
-        $orden = $orden[0];
+        $orden = $this->getOrden();
 
         $proveedor = new IntegradoSimple($orden->proveedor);
         $rutas = new servicesRoute();
@@ -167,13 +181,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             //TODO cashout a la cuenta del cliente
         }
 
-        if($resultadoTX){
-            $return = $this->txComision($orden);
-        }else{
-            $return = false;
-        }
-
-        return $return;
+        return $resultadoTX;
     }
 
     private function enviotxTimone($datosEnvio, $txData){
@@ -188,8 +196,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         return $resultado->code == 200;
     }
 
-    private function txComision($orden){
+    private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
+        $orden = $this->getOrden();
         $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
         $dataTransfer = new stdClass();
@@ -200,5 +209,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $txComision = new transferFunds($dataTransfer);
 
         return $txComision;
+    }
+
+    private function getOrden(){
+        $orden = getFromTimOne::getOrdenes(null, $this->parametros['idOrden'], 'ordenes_compra');
+        $orden = $orden[0];
+
+        return $orden;
     }
 }
