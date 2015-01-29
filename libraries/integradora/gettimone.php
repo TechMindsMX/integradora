@@ -1603,9 +1603,8 @@ class getFromTimOne{
 
         foreach ( $comisionesInteg as $valor ) {
             $result = $request->getComisiones($valor->comisionId);
-            $comisiones[] = $result[0];
+            $comisiones[] = isset($result[0])?$result[0]:null;
         }
-
         return $comisiones;
     }
 
@@ -3360,8 +3359,29 @@ class Cashout {
 
 }
 
+/**
+ * @property string uuidOrigin
+ * @property string uuidDestination
+ * @property float amount
+ */
 class transferFunds {
-    function __construct(){
+    function __construct($orden){
+            $this->uuidOrigin = $this->getUuidOrigin($orden->integradoId);
+            $this->uuidDestination = $this->getUuidDestination($orden->proveedor);
+            $this->amount = (float)$orden->totalAmount;
+    }
 
+    private function getUuidOrigin($idIntegradoEnvia){
+        $integradoEnvia = new IntegradoSimple($idIntegradoEnvia);
+        $integradoEnvia->getTimOneData();
+
+        return $integradoEnvia->timoneData->timoneUuid;
+    }
+
+    private function getUuidDestination($idIntegradoRecibe){
+        $integradoRecibe = new IntegradoSimple($idIntegradoRecibe);
+        $integradoRecibe->getTimOneData();
+
+        return $integradoRecibe->timoneData->timoneUuid;
     }
 }
