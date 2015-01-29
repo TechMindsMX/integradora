@@ -46,8 +46,8 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
 
         $query->select('*')
-              ->from($db->quoteName('#__integrado_users'))
-              ->where($db->quoteName('integrado_principal').' = 1');
+            ->from($db->quoteName('#__integrado_users'))
+            ->where($db->quoteName('integrado_principal').' = 1');
 
         try {
             $db->setQuery($query);
@@ -603,11 +603,11 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
         if(!is_null($where)){
             $query->select('*')
-                  ->from($db->quoteName('#__'.$table))
-                  ->where($where);
+                ->from($db->quoteName('#__'.$table))
+                ->where($where);
         }else{
             $query->select('*')
-                  ->from($db->quoteName('#__'.$table));
+                ->from($db->quoteName('#__'.$table));
         }
 
         try {
@@ -664,8 +664,8 @@ class getFromTimOne{
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
             $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status, bancos AS bancoIds')
-                  ->from('#__integrado_clientes_proveedor')
-                  ->where('integrado_Id = ' . $userId);
+                ->from('#__integrado_clientes_proveedor')
+                ->where('integrado_Id = ' . $userId);
             try {
                 $db->setQuery($query);
                 $response = $db->loadObjectList();
@@ -679,9 +679,9 @@ class getFromTimOne{
                 $querygral = $db->getQuery(true);
 
                 $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
-                          ->from('#__integrado_datos_personales AS DP')
-                          ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
-                          ->where('DE.integrado_id = ' . $value->id);
+                    ->from('#__integrado_datos_personales AS DP')
+                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
+                    ->where('DE.integrado_id = ' . $value->id);
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
@@ -702,8 +702,8 @@ class getFromTimOne{
                 $queryphone = $db->getQuery(true);
 
                 $queryphone->select('*')
-                           ->from('#__integrado_contacto')
-                           ->where('integrado_id = ' . $value->id);
+                    ->from('#__integrado_contacto')
+                    ->where('integrado_id = ' . $value->id);
 
                 try {
                     $db->setQuery($queryphone);
@@ -752,10 +752,10 @@ class getFromTimOne{
             $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
                             DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
                             DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
-                  ->from('#__integrado_clientes_proveedor AS clientes')
-                  ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
-                  ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
-                  ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
+                ->from('#__integrado_clientes_proveedor AS clientes')
+                ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
+                ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
+                ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
 
             try{
                 $db->setQuery($query);
@@ -1027,8 +1027,8 @@ class getFromTimOne{
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
-              ->from('#__catalog_order_status')
-              ->order('id');
+            ->from('#__catalog_order_status')
+            ->order('id');
         $db->setQuery($query);
 
         $result = $db->loadObjectList('id');
@@ -1040,8 +1040,8 @@ class getFromTimOne{
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
-              ->from('#__catalog_order_status')
-              ->order('id');
+            ->from('#__catalog_order_status')
+            ->order('id');
         $db->setQuery($query);
 
         $result = $db->loadObjectList('name');
@@ -1499,8 +1499,8 @@ class getFromTimOne{
         $query 	= $db->getQuery(true);
 
         $query->insert($db->quoteName('#__integrado'))
-              ->columns($db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
-              ->values($db->quote(0).','.$db->quote($envio).', '.$createdDate);
+            ->columns($db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
+            ->values($db->quote(0).','.$db->quote($envio).', '.$createdDate);
 
         $db->setQuery($query);
         $db->execute();
@@ -1694,7 +1694,7 @@ class sendToTimOne {
         $this->setHttpType('GET');
     }
 
-public static function uploadFiles($integradoId = null) {
+    public static function uploadFiles($integradoId = null) {
         $save = array();
         $db 	= JFactory::getDbo();
 
@@ -1802,8 +1802,8 @@ public static function uploadFiles($integradoId = null) {
         $query 	= $db->getQuery(true);
 
         $query->select('max(numOrden) AS lastOrderNum')
-              ->from($db->quoteName('#__'.$table))
-              ->where($where);
+            ->from($db->quoteName('#__'.$table))
+            ->where($where);
 
         $db->setQuery($query);
         $resultado = $db->loadObject();
@@ -1908,8 +1908,8 @@ public static function uploadFiles($integradoId = null) {
         $query 	= $db->getQuery(true);
 
         $query->insert($db->quoteName('#__'.$tabla))
-              ->columns($db->quoteName($columnas))
-              ->values(implode(',',$valores));
+            ->columns($db->quoteName($columnas))
+            ->values(implode(',',$valores));
 
         try{
 //            JLog::add($query,JLog::INFO,'Salvo');
@@ -1936,8 +1936,8 @@ public static function uploadFiles($integradoId = null) {
         $query 	= $db->getQuery(true);
 
         $query->update($db->quoteName('#__'.$table))
-              ->set(implode(',', $set))
-              ->where($condicion);
+            ->set(implode(',', $set))
+            ->where($condicion);
 
         try {
             $db->setQuery($query);
@@ -1959,7 +1959,7 @@ public static function uploadFiles($integradoId = null) {
             $query = $db->getQuery(true);
 
             $query->delete($db->quoteName('#__' . $table))
-                  ->where($condicion);
+                ->where($condicion);
 
             $db->setQuery($query);
             $db->execute();
@@ -2087,7 +2087,7 @@ public static function uploadFiles($integradoId = null) {
 
         if($verboseflag === true) {
             $headers = curl_getinfo( $ch,
-                                     CURLINFO_HEADER_OUT );
+                CURLINFO_HEADER_OUT );
             $this->result->data = curl_exec($ch);
 
             rewind( $verbose );
@@ -2157,12 +2157,12 @@ public static function uploadFiles($integradoId = null) {
             $return = $this->updateDB(self::getTableByType($orderType),null, 'id ='.$order->id);
 
             $this->formatData(array('idOrden'=> $order->id,
-                                    'userId' => JFactory::getUser()->id,
-                                    'changeDate'=> time(),
-                                    'pastStatus' => $order->status ,
-                                    'newStatus'=> $orderNewStatus,
-                                    'result' => $return
-                              ));
+                'userId' => JFactory::getUser()->id,
+                'changeDate'=> time(),
+                'pastStatus' => $order->status ,
+                'newStatus'=> $orderNewStatus,
+                'result' => $return
+            ));
 
             $bitacora = $this->insertDB('bitacora_status_'.$orderType);
         }
@@ -3120,22 +3120,22 @@ class UUID
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
             // 32 bits for "time_low"
-                       mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
-                       mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
-                       mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x0fff) | 0x4000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-                       mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-                       mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
 
@@ -3171,28 +3171,28 @@ class UUID
         return sprintf('%08s-%04s-%04x-%04x-%12s',
 
             // 32 bits for "time_low"
-                       substr($hash, 0, 8),
+            substr($hash, 0, 8),
 
             // 16 bits for "time_mid"
-                       substr($hash, 8, 4),
+            substr($hash, 8, 4),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 5
-                       (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
+            (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-                       (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
+            (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-                       substr($hash, 20, 12)
+            substr($hash, 20, 12)
         );
     }
 
     public static function is_valid($uuid) {
         return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.
-                          '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
+            '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
     }
 }
 
@@ -3364,11 +3364,11 @@ class Cashout {
  * @property string uuidDestination
  * @property float amount
  */
-class transferFunds {
-    function __construct($orden){
-            $this->uuidOrigin = $this->getUuidOrigin($orden->integradoId);
-            $this->uuidDestination = $this->getUuidDestination($orden->proveedor);
-            $this->amount = (float)$orden->totalAmount;
+class transferFunds extends makeTx {
+    function __construct($idPagador, $idBeneficiario, $totalAmount){
+        $this->uuidOrigin = $this->getUuidOrigin($idPagador);
+        $this->uuidDestination = $this->getUuidDestination($idBeneficiario);
+        $this->amount = (float)$totalAmount;
     }
 
     private function getUuidOrigin($idIntegradoEnvia){
@@ -3383,5 +3383,26 @@ class transferFunds {
         $integradoRecibe->getTimOneData();
 
         return $integradoRecibe->timoneData->timoneUuid;
+    }
+
+    public function sendTx()
+    {
+        $rutas = new servicesRoute();
+        parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+    }
+}
+
+class makeTx{
+    public function create($datosEnvio){
+
+        $request = new sendToTimOne();
+        $request->setServiceUrl($datosEnvio->url);
+        $request->setJsonData(json_encode($this));
+        $request->setHttpType($datosEnvio->type);
+
+        var_dump($request);
+        //$resultado = $request->to_timone();
+
+//        return $resultado->code == 200;
     }
 }
