@@ -105,7 +105,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
                 break;
         }
 
-        //Verifica que tenga todas las autorizaciones solo para cambiar 3 o 50
+        //Verifica que tenga todas las verificaciones solo para cambiar 3 o 50
         if( in_array($newStatus, array(3,50)) && !$verified ){
             $validos = array();
         }

@@ -3337,25 +3337,25 @@ class UserTimone {
     }
 }
 
-class Cashout {
+class Cashout extends makeTx{
 
-    function __construct($ordenRetiro)
+    function __construct($idPagador, $idBeneficiario, $totalAmount, $accountId)
     {
-        $this->clabe = $ordenRetiro->cuenta->banco_clabe;
-        $this->bankCode = (INT)$ordenRetiro->cuenta->banco_codigo;
-        $this->amount = (FLOAT)$ordenRetiro->totalAmount;
-        $this->uuid = $this->getUuid($ordenRetiro);
-
+        $this->uuid     = parent::getTimOneUuid($idPagador);
+        $this->setDataBeneficiario($idBeneficiario, $accountId);
+        $this->amount   = (FLOAT)$totalAmount;
     }
 
-    private function getUuid($orden)
-    {
-        $integrado = new IntegradoSimple($orden->integradoId);
-        $timoneUUID = $integrado->timonedata->timoneUuid;
+    private function setDataBeneficiario( $idBenefiario, $accountId){
+        $beneficiario = new IntegradoSimple($idBenefiario);
 
-        return $timoneUUID->timoneUuid;
+        foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
+            if($accountId == $banco->datosBan_id){
+                $this->clabe    = $banco->banco_clabe;
+                $this->bankCode = (INT)$banco->banco_codigo;
+            }
+        }
     }
-
 
 }
 
@@ -3366,23 +3366,9 @@ class Cashout {
  */
 class transferFunds extends makeTx {
     function __construct($idPagador, $idBeneficiario, $totalAmount){
-        $this->uuidOrigin = $this->getUuidOrigin($idPagador);
-        $this->uuidDestination = $this->getUuidDestination($idBeneficiario);
-        $this->amount = (float)$totalAmount;
-    }
-
-    private function getUuidOrigin($idIntegradoEnvia){
-        $integradoEnvia = new IntegradoSimple($idIntegradoEnvia);
-        $integradoEnvia->getTimOneData();
-
-        return $integradoEnvia->timoneData->timoneUuid;
-    }
-
-    private function getUuidDestination($idIntegradoRecibe){
-        $integradoRecibe = new IntegradoSimple($idIntegradoRecibe);
-        $integradoRecibe->getTimOneData();
-
-        return $integradoRecibe->timoneData->timoneUuid;
+        $this->uuidOrigin       = parent::getTimOneUuid($idPagador);
+        $this->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+        $this->amount           = (float)$totalAmount;
     }
 
     public function sendTx()
@@ -3405,4 +3391,13 @@ class makeTx{
 
 //        return $resultado->code == 200;
     }
+
+    protected function getTimOneUuid($idIntegradoEnvia){
+        $integradoEnvia = new IntegradoSimple($idIntegradoEnvia);
+        $integradoEnvia->getTimOneData();
+
+        return $integradoEnvia->timoneData->timoneUuid;
+    }
+
+
 }

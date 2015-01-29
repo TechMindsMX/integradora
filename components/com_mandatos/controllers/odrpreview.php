@@ -15,6 +15,8 @@ jimport('integradora.notifications');
  */
 class MandatosControllerOdrpreview extends JControllerAdmin {
 
+    protected $orden;
+
     function authorize() {
         $post               = array( 'idOrden' => 'INT' );
         $this->app 			= JFactory::getApplication();
@@ -27,6 +29,17 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
+
+            $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
+            $this->orden = $orden[0];
+
+            $comisiones = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
+
+            $montoComision = getFromTimOne::calculaComision( $this->orden, 'ODR', $comisiones);
+
+
+var_dump(new Cashout($this->orden->integradoId, 2, $this->orden->totalAmount, 2));exit;
+
             $user = JFactory::getUser();
             $save = new sendToTimOne();
 
@@ -74,14 +87,9 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     private function cashout(){
         //cashOut si cambia al 5
-        $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
 
-        $orden = $orden[0];
-
-// TODO: quitar el mock
-        $orden->status->id = 5;
-        if($orden->status->id == 5){
-            $data      = new Cashout($orden);
+        if($this->orden->status->id == 5){
+            $data      = new Cashout($this->orden);
 
             $jsonData   = json_encode( $data );
             $rutas = new servicesRoute();

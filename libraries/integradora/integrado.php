@@ -316,14 +316,14 @@ class IntegradoSimple extends Integrado {
 
     public function getTimOneData()
     {
+	    $this->timoneData = new TimOneData();
+
         $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
 		if(!empty($timoneData)) {
 			$timoneData = $timoneData[0];
 
 			$uuidTimone = $timoneData->timoneUuid;
 			$this->timoneData = getFromTimOne::getTimoneUserDetalis($uuidTimone);
-		}else{
-			$this->timoneData = null;
 		}
     }
 
@@ -373,4 +373,12 @@ class UsuarioIntegradora {
 
 		return $arrayIntIds;
 	}
+}
+
+class TimOneData {
+	public $id;
+	public $integraUuid;
+	public $timoneUuid;
+	public $stpClabe;
+	public $balance;
 }
