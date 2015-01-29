@@ -50,33 +50,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
-
-                    /*NOTIFICACIONES 23*/
-                    $integradoSimple     = new IntegradoSimple($this->integradoId);
-                    $getCurrUser         = new Integrado($this->integradoId);
-
-                    $titulo = JText::_('TITULO_23');
-
-                    $contenido = JText::_('NOTIFICACIONES_23');
-
-                    $dato['titulo']         = $titulo;
-                    $dato['body']           = $contenido;
-                    $dato['email']          = $getCurrUser->user->email;
-                    $send                   = new Send_email();
-                    $info = $send->notification($dato);
-
-                    $integradoAdmin     = new IntegradoSimple(93);
-                    $getCurrUser         = new Integrado($this->integradoId);
-
-                    $titulo = JText::_('TITULO_24');
-
-                    $contenido = JText::_('NOTIFICACIONES_24');
-
-                    $datoAdmin['titulo']         = $titulo;
-                    $datoAdmin['body']           = $contenido;
-                    $datoAdmin['email']          = $integradoAdmin->user->email;
-                    $send                   = new Send_email();
-                    $infoAdmin = $send->notification($datoAdmin);
                 }
 
                 $cashOut = $this->cashout();
@@ -84,6 +57,8 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                     $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
                     if ($statusChange){
                         $this->app->enqueueMessage(JText::_('ORDER_PAID'));
+
+                        $this->sendNotifications();
                     }
                 }
 
@@ -103,6 +78,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $orden = $orden[0];
 
+// TODO: quitar el mock
         $orden->status->id = 5;
         if($orden->status->id == 5){
             $data      = new Cashout($orden);
@@ -120,5 +96,33 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
             return $result->code == 200;
         }
+    }
+
+    private function sendNotifications() {
+        /*NOTIFICACIONES 23*/
+        $getCurrUser         = new Integrado($this->integradoId);
+
+        $titulo = JText::_('TITULO_23');
+
+        $contenido = JText::_('NOTIFICACIONES_23');
+
+        $dato['titulo']         = $titulo;
+        $dato['body']           = $contenido;
+        $dato['email']          = $getCurrUser->user->email;
+        $send                   = new Send_email();
+        $info = $send->notification($dato);
+
+        $integradoAdmin     = new IntegradoSimple(93);
+
+        $titulo = JText::_('TITULO_24');
+
+        $contenido = JText::_('NOTIFICACIONES_24');
+
+        $datoAdmin['titulo']         = $titulo;
+        $datoAdmin['body']           = $contenido;
+        $datoAdmin['email']          = $integradoAdmin->user->email;
+        $send                   = new Send_email();
+        $infoAdmin = $send->notification($datoAdmin);
+
     }
 }
