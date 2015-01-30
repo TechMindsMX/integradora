@@ -38,7 +38,7 @@ jQuery(document).ready(function($){
 		}
 	});
 
-	jQuery('#baja').on('click', changeStatus);
+	jQuery('.baja').on('click', changeStatus);
 
 	function changeStatus() {
 		var $this = $(this);
@@ -196,25 +196,25 @@ function busquedapor(valor, campo){
 		<?php
 		if( !is_null($clientes) ){
 			foreach ($clientes as $key => $value) {
-				$selected = $value->status == 0?'':'checked';
-				$class = $value->status == 0?'':'status1';
+				$selected = $value->status == 1 ? '' :'checked';
+				$class = $value->status == 0 ? '' :'status0';
 
-				echo '<tr class="type_'.$value->type.'">';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$type[$value->type].'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->rfc.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->tradeName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rz '.$class.'" >'.$value->corporateName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->contact.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$value->phone.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$status[$value->status];
+				echo '<tr class="type_'.$value->type.' '.$class.'">';
+				echo '	<td style="text-align: center; vertical-align: middle;">'.$type[$value->type].'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc" >'.$value->rfc.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->tradeName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rz" >'.$value->corporateName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->contact.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->phone.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;">'.$status[$value->status];
                 echo '      <div></div></td>';
-//				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a>visualizar</a></td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >';
+//				echo '	<td style="text-align: center; vertical-align: middle;"><a>visualizar</a></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;">';
 				echo '  	<a class="btn btn-primary" href="index.php?option=com_mandatos&view=clientesform&idCliPro='.$value->id.'">';
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');
 				echo '		</a>';
 				echo '	</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" data-id="'.$value->client_id.'" id="baja" name="baja" '.$selected.' /></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><input type="checkbox" data-id="'.$value->client_id.'" class="baja" name="baja" '.$selected.' /></td>';
 				echo '</tr>';
 			}
 		}else{
