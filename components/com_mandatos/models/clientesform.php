@@ -35,7 +35,6 @@ class MandatosModelClientesform extends JModelItem {
             }
         }
 
-        var_dump($return);
         return $return;
 	}
 	

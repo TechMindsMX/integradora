@@ -198,7 +198,7 @@ function busquedapor(valor, campo){
 			foreach ($clientes as $key => $value) {
 				$selected = $value->status == 1 ? '' :'checked';
 				$class = $value->status == 0 ? '' :'status0';
-
+var_dump($value);
 				echo '<tr class="type_'.$value->type.' '.$class.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$type[$value->type].'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc" >'.$value->rfc.'</td>';

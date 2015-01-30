@@ -226,7 +226,7 @@ class MandatosController extends JControllerLegacy {
             $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
             $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
 
-            $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
+            $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
             $respuesta['success'] = $update;
             $respuesta['banco_codigo'] = $data['db_banco_codigo'];
             $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];

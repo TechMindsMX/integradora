@@ -174,17 +174,17 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 
     function llenatablabancos(obj) {
         var fieldset = jQuery('fieldset#datosBancarios');
-        fieldset.find('input').val('');
+        fieldset.find('input:not(.eliminaBanco)').val('');
         fieldset.find('select').val(0);
-        html = '<tr id="' + obj.datosBan_id + '">';
-        html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
-        html += '<td>' + obj.banco_cuenta + '</td>';
-        html += '<td>' + obj.banco_sucursal + '</td>';
-        html += '<td>' + obj.banco_clabe + '</td>';
-        html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
-        html += '</tr>';
+        var $html = '<tr id="' + obj.datosBan_id + '">';
+        $html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
+        $html += '<td>' + obj.banco_cuenta + '</td>';
+        $html += '<td>' + obj.banco_sucursal + '</td>';
+        $html += '<td>' + obj.banco_clabe + '</td>';
+        $html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
+        $html += '</tr>';
 
-        jQuery('#banco').find('table.tableBancos tbody').append(html);
+        jQuery('#banco').find('table.tableBancos tbody').append($html);
     }
 
     function AltaBanco(){
@@ -216,7 +216,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
         var id		 = jQuery(campo).prop('id');
         var idCliPro = jQuery('#idCliPro').val();
         var parametros = {
-            'link'  : '?task=deleteBanco&format=raw',
+            'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
             'datos' : {
                 'datosBan_id' : id,
                 'integradoId' : idCliPro
