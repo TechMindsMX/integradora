@@ -139,7 +139,7 @@ function busquedapor(valor, campo){
 	jQuery.each(jQuery('#myTable tbody tr'), function(key, value){
 		elementos[key] = jQuery(value).find('.'+campo).text();
 		
-		if( jQuery(value).find('.'+campo).text() == valor ){
+		if( elementos[key].toLowerCase().indexOf( valor.toLowerCase() ) > -1 ){
 			jQuery(value).show();
 		}else{
 			jQuery(value).hide();
@@ -198,7 +198,6 @@ function busquedapor(valor, campo){
 			foreach ($clientes as $key => $value) {
 				$selected = $value->status == 1 ? '' :'checked';
 				$class = $value->status == 0 ? '' :'status0';
-var_dump($value);
 				echo '<tr class="type_'.$value->type.' '.$class.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$type[$value->type].'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc" >'.$value->rfc.'</td>';
@@ -230,3 +229,6 @@ var_dump($value);
 			<?php echo JText::_('COM_MANDATOS_TITULO'); ?>
 		</a>
 	</div>
+
+
+<!-- --><?php //var_dump($clientes);
