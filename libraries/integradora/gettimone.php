@@ -3338,12 +3338,24 @@ class UserTimone {
 }
 
 class Cashout extends makeTx{
+    protected $amount;
+    protected $uuid;
+    protected $clabe;
+    protected $bankCode;
 
-    function __construct($idPagador, $idBeneficiario, $totalAmount, $accountId)
+    /**
+     * @param $idPagador
+     * @param $idBeneficiario
+     * @param $totalAmount
+     * @param $options array accountId, paymentMethod
+     */
+    function __construct($idPagador, $idBeneficiario, $totalAmount, $options)
     {
-        $this->uuid     = parent::getTimOneUuid($idPagador);
-        $this->setDataBeneficiario($idBeneficiario, $accountId);
+        $this->options  = $options;
         $this->amount   = (FLOAT)$totalAmount;
+        $this->uuid     = parent::getTimOneUuid($idPagador);
+        $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
+
     }
 
     private function setDataBeneficiario( $idBenefiario, $accountId){
@@ -3357,6 +3369,35 @@ class Cashout extends makeTx{
         }
     }
 
+    public function getComisionFijaTx() {
+        switch($this->options['paymentMethod']) {
+            case 0: // SPEI
+                $comision = $this->comisionSPEI();
+                break;
+            case 1: // Cheque
+                $comision = $this->comsionCheque();
+        }
+
+        return $comision;
+    }
+    private function comisionSPEI() {
+        // TODO: crear el parametro y traerlo de la db
+        $neto = 8; // siempre aplica IVA 16
+
+        return $neto;
+    }
+
+    private function comsionCheque() {
+        // TODO: crear el parametro y traerlo de la db
+        $neto = 15; // siempre aplica IVA 16
+
+        return $neto;
+    }
+
+    public function sendTx() {
+        $rutas = new servicesRoute();
+        parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+    }
 }
 
 /**
@@ -3380,16 +3421,23 @@ class transferFunds extends makeTx {
 
 class makeTx{
     public function create($datosEnvio){
+        unset($this->options);
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
         $request->setJsonData(json_encode($this));
         $request->setHttpType($datosEnvio->type);
 
-        var_dump($request);
-        //$resultado = $request->to_timone();
+        $resultado = $request->to_timone();
 
-//        return $resultado->code == 200;
+        jimport('joomla.log.log');
+
+        $scope = JFactory::getApplication()->scope;
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
+        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
+
+        return $resultado->code == 200;
     }
 
     protected function getTimOneUuid($idIntegradoEnvia){

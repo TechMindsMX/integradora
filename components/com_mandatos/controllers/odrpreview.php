@@ -12,18 +12,26 @@ jimport('integradora.notifications');
  * @property mixed app
  * @property mixed permisos
  * @property mixed integradoId
+ * @property  txsToDo
  */
 class MandatosControllerOdrpreview extends JControllerAdmin {
 
     protected $orden;
+    protected $cashoutObj;
+    protected $currentIntegrado;
+    protected $txsToDo;
 
     function authorize() {
+
         $post               = array( 'idOrden' => 'INT' );
         $this->app 			= JFactory::getApplication();
         $this->parametros	= $this->app->input->getArray($post);
 
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+        $currentIntegrado = new IntegradoSimple($this->integradoId);
+        $currentIntegrado->getTimOneData();
+        $this->currentIntegrado = $currentIntegrado;
 
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
@@ -33,12 +41,18 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
             $this->orden = $orden[0];
 
-            $comisiones = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
+            $this->cashoutObj =  new Cashout($this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('paymentMethod' => $this->orden->paymentMethod, 'accountId' => $this->orden->cuentaId ));
 
-            $montoComision = getFromTimOne::calculaComision( $this->orden, 'ODR', $comisiones);
+            $this->txsToDo = $this->calculoComisionesOrdenRetiro();
 
+            $enoughBalance = $this->enoughBalance();
 
-var_dump(new Cashout($this->orden->integradoId, 2, $this->orden->totalAmount, 2));exit;
+            $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->orden->id, $enoughBalance) ) ) );
+            JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
+            if (!$enoughBalance) {
+                $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_INSUFFIENT_FUND'), 'error');
+            }
 
             $user = JFactory::getUser();
             $save = new sendToTimOne();
@@ -55,6 +69,9 @@ var_dump(new Cashout($this->orden->integradoId, 2, $this->orden->totalAmount, 2)
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
+
+            $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($check, $this->parametros) ) ) );
+            JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
             $resultado = $save->insertDB('auth_odr');
 
@@ -89,20 +106,9 @@ var_dump(new Cashout($this->orden->integradoId, 2, $this->orden->totalAmount, 2)
         //cashOut si cambia al 5
 
         if($this->orden->status->id == 5){
-            $data      = new Cashout($this->orden);
+            $result = $this->cashoutObj->create();
 
-            $jsonData   = json_encode( $data );
-            $rutas = new servicesRoute();
-            $retorno = $rutas->getUrlService('timone', 'cashOut', 'create');
-
-            $request = new sendToTimOne();
-            $request->setServiceUrl( $retorno->url );
-            $request->setJsonData( $jsonData );
-            $request->setHttpType( $retorno->type );
-
-            $result = $request->to_timone(); // realiza el envio
-
-            return $result->code == 200;
+            return $result;
         }
     }
 
@@ -132,5 +138,23 @@ var_dump(new Cashout($this->orden->integradoId, 2, $this->orden->totalAmount, 2)
         $send                   = new Send_email();
         $infoAdmin = $send->notification($datoAdmin);
 
+    }
+
+    private function calculoComisionesOrdenRetiro() {
+        $comisiones = getFromTimOne::getComisionesOfIntegrado( $this->integradoId );
+
+        $txs['montoComisionOrden'] = getFromTimOne::calculaComision( $this->orden, 'ODR', $comisiones );
+
+        $txs['montoComisionFijaTx'] = $this->cashoutObj->getComisionFijaTx();
+
+        return $txs;
+    }
+
+    private function enoughBalance() {
+
+        $balance = $this->currentIntegrado->timoneData->balance;
+        $totalOrden = $this->orden->totalAmount + array_sum($this->txsToDo);
+
+        return $balance >= $totalOrden;
     }
 }

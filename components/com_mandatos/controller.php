@@ -163,6 +163,9 @@ class MandatosController extends JControllerLegacy {
         $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
         $existe     = getFromTimOne::selectDB($table,$where);
 
+        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__, json_encode($existe) ) );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
         if ( empty( $existe ) ) {
             $columnas[] = 'integrado_id';
             $valores[]	= $this->integradoId;
@@ -175,6 +178,10 @@ class MandatosController extends JControllerLegacy {
             $validacion = validador::valida_banco_clabe($data['db_banco_clabe'], $data['db_banco_codigo']);
 
             if(!$validacion){
+
+                $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__, json_encode($validacion, $data['db_banco_clabe'], $data['db_banco_codigo']) ) );
+                JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
                 $respuesta['success'] = false;
             }else {
                 if (empty($existe)) {
@@ -203,11 +210,14 @@ class MandatosController extends JControllerLegacy {
         $tableRelacion 		= 'integrado_clientes_proveedor';
         $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
         $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
-        $relacion           = $relacion[0];
+        if ( ! empty( $relacion[0] ) ) {
+            $relacion           = $relacion[0];
+        }
 
         // Si no existe la relacion la creamos
         $bancos = isset($relacion->bancos) ? json_decode($relacion->bancos, true) : array();
-        if( !in_array( $existe->datosBan_id, $bancos ) ) {
+
+        if( !in_array( $existe->datosBan_id, $bancos) && $this->integradoId != $data['integradoId'] ) {
             array_push($bancos, $existe->datosBan_id);
 
             $datos   = array('bancos' => json_encode($bancos));
