@@ -12,90 +12,17 @@ $triggersRecurrent['fecha'] = array_pop($this->cats->triggers);
 $triggersByTx = $this->cats->triggers;
 
 JFactory::getDocument()->addScript( JUri::root() . 'libraries/integradora/js/tim-validation.js' );
+JFactory::getDocument()->addScript( JUri::root() . 'libraries/integradora/js/form_helper.js' );
 
 $accion = 'index.php?option=com_adminintegradora';
 ?>
-	<script type="text/javascript">
-
-		jQuery(document).ready(function () {
-			var $type = jQuery('#type');
-			$type.change($type, checkType);
-			$type.triggerHandler('change');
-
-			jQuery('#toolbar-apply').click(function () {
-				var data = jQuery('#comision-form').find('select, input').serialize();
-
-				var parametros = {
-					'link': '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
-					'datos': data
-				};
-
-				var request = jQuery.ajax({
-					url: parametros.link,
-					data: parametros.datos,
-					type: 'post'
-				});
-
-				request.done(function (response) {
-					if (response.redirect === true) {
-						window.location = 'index.php?option=com_adminintegradora&view=comisions';
-					} else {
-						jQuery.each(response, function (i, v) {
-							if (v !== true) {
-								mensajes(v.msg, 'error', i)
-							}
-						});
-					}
-				});
-			});
-
-			jQuery('#toolbar-cancel').click(function () {
-				jQuery('#comision-form').prop('action', 'index.php?option=com_adminintegradora&view=comisions').submit();
-			});
-
-		});
-
-		function checkType() {
-			var $freqTime = jQuery('#frequency, .frequency');
-			var $rate = jQuery('#percentage');
-
-			function optionsTrigger(myObj) {
-				var $triggers = jQuery('#trigger');
-				$triggers.empty();
-
-				jQuery.each(myObj, function(index, value){
-					$triggers.append(jQuery("<option>",{
-						value: index,
-						text: value
-					}));
-				});
-			}
-
-			if (this.value == '1') { // por Tx
-				$freqTime.hide();
-				$rate.show('300');
-
-				optionsTrigger(<?php echo json_encode($triggersByTx); ?>);
-			} else if (this.value == '0') { // recurrente
-				$rate.hide();
-				$freqTime.show('300');
-
-				optionsTrigger(<?php echo json_encode($triggersRecurrent); ?>);
-			}
-
-
-		}
-	</script>
-
 	<div class="btn-toolbar">
-		<button id="toolbar-apply" class="btn btn-small btn-success"><span
-				class="icon-apply icon-white"></span><?php echo JText::_( 'LBL_GUARDAR' ); ?></button>
-		<button id="toolbar-cancel" class="btn btn-small btn-danger"><span
-				class="icon-apply icon-white"></span><?php echo JText::_( 'LBL_CANCEL' ); ?></button>
+		<button id="toolbar-apply" class="btn btn-small btn-success"><span class="icon-apply icon-white"></span><?php echo JText::_( 'LBL_GUARDAR' ); ?></button>
+		<button id="toolbar-clear" class="btn btn-small btn-default"><span class=""></span><?php echo JText::_( 'LBL_LIMPIAR' ); ?></button>
+		<button id="toolbar-cancel" class="btn btn-small btn-danger"><span class=""></span><?php echo JText::_( 'LBL_CANCEL' ); ?></button>
 	</div>
 
-	<form action="<?php echo $accion; ?>"
-	      method="post" name="adminForm" id="comision-form" class="form-validate">
+	<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="comision-form" class="form-validate">
 
 		<div class="control-group">
 			<div class="control-group">
@@ -195,5 +122,84 @@ $accion = 'index.php?option=com_adminintegradora';
 
 			<?php echo JHtml::_( 'form.token' ); ?>
 	</form>
+
+
+	<script type="text/javascript">
+
+		jQuery(document).ready(function () {
+
+			jQuery('#toolbar-cancel').click(function () {
+				jQuery('#comision-form').prop('action', 'index.php?option=com_adminintegradora&view=comisions').submit();
+			});
+
+			jQuery('#toolbar-clear').click(function () {
+				jQuery('#comision-form').clearForm();
+			});
+
+			var $type = jQuery('#type');
+			$type.change($type, checkType);
+
+			$type.triggerHandler('change');
+
+			jQuery('#toolbar-apply').click(function () {
+				var data = jQuery('#comision-form').find('select, input').serialize();
+
+				var parametros = {
+					'link': '<?php echo $accion; ?>&task=comision.savecomision&format=raw',
+					'datos': data
+				};
+
+				var request = jQuery.ajax({
+					url: parametros.link,
+					data: parametros.datos,
+					type: 'post'
+				});
+
+				request.done(function (response) {
+					if (response.redirect === true) {
+						window.location = 'index.php?option=com_adminintegradora&view=comisions';
+					} else {
+						jQuery.each(response, function (i, v) {
+							if (v !== true) {
+								mensajes(v.msg, 'error', i)
+							}
+						});
+					}
+				});
+			});
+
+		});
+
+		function checkType() {
+			var $freqTime = jQuery('#frequency, .frequency');
+			var $rate = jQuery('#percentage');
+
+			function optionsTrigger(myObj) {
+				var $triggers = jQuery('#trigger');
+				$triggers.empty();
+
+				jQuery.each(myObj, function(index, value){
+					$triggers.append(jQuery("<option>",{
+						value: index,
+						text: value
+					}));
+				});
+			}
+
+			if (this.value == '1') { // por Tx
+				$freqTime.hide();
+				$rate.show('300');
+
+				optionsTrigger(<?php echo json_encode($triggersByTx); ?>);
+			} else if (this.value == '0') { // recurrente
+				$rate.hide();
+				$freqTime.show('300');
+
+				optionsTrigger(<?php echo json_encode($triggersRecurrent); ?>);
+			}
+
+
+		}
+	</script>
 
 <?php

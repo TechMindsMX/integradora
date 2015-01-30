@@ -79,8 +79,10 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 
 			if (!$existe->verificacion) {
 				$result = $request->insertDB('mandatos_comisiones');
+				$this->sendNotifications('nueva');
 			} else {
 				$result = $request->updateDB('mandatos_comisiones', null, 'id = '.$existe->idExistente );
+				$this->sendNotifications('actualizó');
 			}
 
 			$sesion = JFactory::getSession();
@@ -129,6 +131,40 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 	private function toList ($msg = null, $msgType = 'message') {
 		$url = 'index.php?option=com_adminintegradora&view=comisions';
 		JFactory::getApplication ()->redirect ($url, $msg, $msgType);
+
+	}
+
+	private function sendNotifications($accion) {
+		/*NOTIFICACIONES 23*/
+		$data[0] = '<table>';
+		$data[2] = '</table>';
+		foreach ( $this->envio as $key => $value ) {
+			$data[] = '<tr><td>'.$key.'</td><td>'.$value.'</td></tr>';
+		}
+
+		$getCurrUser         = new Integrado($this->integradoId);
+
+		$titulo = JText::_('TITULO_37');
+
+		$contenido = JText::sprintf('NOTIFICACIONES_37', $accion, implode($data) );
+
+		$dato['titulo']         = $titulo;
+		$dato['body']           = $contenido;
+		$dato['email']          = $getCurrUser->user->email;
+		$send                   = new Send_email();
+		$info = $send->notification($dato);
+
+		$integradoAdmin     = new IntegradoSimple(93);
+
+		$titulo = JText::_('TITULO_38');
+
+		$contenido = JText::sprintf('NOTIFICACIONES_38', $accion, implode($data) , JFactory::getUser()->username);
+
+		$datoAdmin['titulo']         = $titulo;
+		$datoAdmin['body']           = $contenido;
+		$datoAdmin['email']          = $integradoAdmin->user->email;
+		$send                   = new Send_email();
+		$infoAdmin = $send->notification($datoAdmin);
 
 	}
 
