@@ -40,11 +40,10 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
             $this->orden = $orden[0];
 
-            $this->cashoutObj =  new Cashout($this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('paymentMethod' => $this->orden->paymentMethod, 'accountId' => $this->orden->cuentaId ));
+            $this->cashoutObj =  new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('paymentMethod' => $this->orden->paymentMethod, 'accountId' => $this->orden->cuentaId  ));
 
             $this->txsToDo = $this->calculoComisionesOrdenRetiro();
 
-$this->cashout();
             $enoughBalance = $this->enoughBalance();
 
             $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->orden->id, $enoughBalance) ) ) );
