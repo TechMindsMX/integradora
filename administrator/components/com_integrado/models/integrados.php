@@ -2,6 +2,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
+jimport('integradora.catalogos');
 
 
 class IntegradoModelIntegrados extends JModelList
@@ -20,7 +21,7 @@ class IntegradoModelIntegrados extends JModelList
         $query 	= $db->getQuery(true);
 		$q2		= $db->getQuery(true);
         $query
-            ->select($db->quoteName(array('a.integrado_id','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'c.name', 'p.nombre_representante')))
+            ->select($db->quoteName(array('a.integrado_id','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'p.nom_comercial', 'c.name', 'p.nombre_representante')))
             ->from($db->quoteName('#__integrado', 'a'))
 			->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'b') . ' ON ('. $db->quoteName('a.integrado_id') . ' = ' . $db->quoteName('b.integrado_id') .')' )
 			->join('LEFT', $db->quoteName('#__integrado_datos_personales', 'p') . ' ON ('. $db->quoteName('a.integrado_id') . ' = ' . $db->quoteName('p.integrado_id') .')' )
@@ -46,5 +47,15 @@ class IntegradoModelIntegrados extends JModelList
 	}
 	protected function populateState($ordering = null, $direction = null) {
     	parent::populateState('a.status', 'ASC');
+	}
+
+	public function getCatalogos() {
+		$catalog = new Catalogos();
+
+		$pers_juridicas = $catalog->getPesonalidadesJuridicas();
+
+		$solicitudStatus = $catalog->getStatusSolicitud();
+
+		return $catalog;
 	}
 }

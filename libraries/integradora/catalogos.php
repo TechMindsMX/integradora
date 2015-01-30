@@ -3,7 +3,6 @@ defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.factory');
 
-
 /**
  * Clase catalogos
  */
@@ -90,6 +89,8 @@ class Catalogos {
 		$status = $db->setQuery($query)->loadObjectList(); 
 
 		$this->statusSolicitud = $status;
+
+		return $status;
 	}
 
 	public function getComisionesTypes () {
@@ -126,6 +127,12 @@ class Catalogos {
 		$catIva = $db->setQuery($query)->loadObjectList('valor');
 
 		return $catIva;
+	}
+
+	public function getPesonalidadesJuridicas() {
+		$this->pers_juridica = array( 1 => 'Moral', 2 => 'Física');
+
+		return $this->pers_juridica;
 	}
 }
 	

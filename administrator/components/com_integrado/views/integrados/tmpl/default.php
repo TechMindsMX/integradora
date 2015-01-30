@@ -35,6 +35,9 @@ JHtml::_('behavior.tooltip');
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_R_SOCIAL'); ?>
 			</th>
 			<th>
+			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_NOM_COMERCIAL'); ?>
+			</th>
+			<th>
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_CONTACTO'); ?>
 			</th>
 			<th>
@@ -63,16 +66,25 @@ JHtml::_('behavior.tooltip');
  ?>
 			</td>
 			<td>
+			<?php echo $item -> nom_comercial; ?>
+			</td>
+			<td>
 			<?php echo $item -> nombre_representante; ?>
 			</td>
 			<td>
 				<?php echo is_null($item->createdDate)?'':date('d-m-Y',$item->createdDate); ?>
 			</td>
 			<td>
-			<?php echo $item -> status; ?>
+			<?php
+			foreach ( $this->catalogos->statusSolicitud as $value ) {
+				if ( $item->status == $value->status ) {
+					echo $value -> status_name;
+				}
+			}
+			?>
 			</td>
 			<td>
-			<?php echo $item -> pers_juridica; ?>
+			<?php echo $this->catalogos->pers_juridica[$item -> pers_juridica]; ?>
 			</td>
 		</tr>
 		<?php endforeach; ?>

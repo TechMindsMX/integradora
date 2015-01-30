@@ -18,6 +18,7 @@ class IntegradoViewIntegrados extends JViewLegacy {
 
         $items = $this->get('Items');
         $state = $this->get('State');
+        $this->catalogos = $this->get('Catalogos');
 		
 		$pagination = $this->get('Pagination');
  
