@@ -89,6 +89,7 @@ $producto 	= $this->producto;
                        class="alto form-control"
                        id="productName"
                        name="productName"
+                       maxlength="100"
                        value="<?php echo $producto->productName; ?>"
                        placeholder="<?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_NAME').JText::_('COM_MANDATOS_PRODUCTOS_LBL_NAME') ?>">
             </div>
@@ -155,6 +156,7 @@ $producto 	= $this->producto;
                        id="ieps"
                        name="ieps"
                        value="<?php echo $producto->ieps; ?>"
+                       maxlength="4"
                        placeholder="<?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_NAME').JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS') ?>"/>
             </div>
         </div>
@@ -168,6 +170,7 @@ $producto 	= $this->producto;
                       id="description"
                       rows="7"
                       style="width: 304px;"
+                      maxlength="100"
                       placeholder="<?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_NAME').JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?>"><?php echo $producto->description;?></textarea>
             </div>
         </div>

@@ -32,13 +32,14 @@ class MandatosControllerProductosform extends JControllerLegacy {
         $validacion  = new validador();
         $parametros  = $this->parametros;
         $diccionario = array(
-            'productName' => array('tipo' => 'alphaNumber', 'length' => '100'),
-            'measure'     => array('tipo' => 'string', 'length' => '100'),
-            'price'       => array('tipo' => 'float', 'length' => '10'),
-            'iva'         => array('tipo' => 'number', 'length' => '10'),
-            'ieps'        => array('tipo' => 'float', 'length' => '5', 'minlength' => '1'),
-            'currency'    => array('tipo' => 'string', 'length' => '100'),
-            'description' => array('tipo' => 'text', 'length' => '1000'));
+            'productName' => array('tipo' => 'alphaNumber', 'length' => '100',  'notNull' => true),
+            'measure'     => array('tipo' => 'string',      'length' => '100',  'notNull' => true),
+            'price'       => array('tipo' => 'float',       'length' => '10',   'notNull' => true),
+            'iva'         => array('tipo' => 'number',      'length' => '10',   'notNull' => true),
+            'ieps'        => array('tipo' => 'float',       'length' => '5',    'minlength' => '1'),
+            'currency'    => array('tipo' => 'string',      'length' => '100',  'notNull' => true),
+            'description' => array('tipo' => 'text',        'length' => '1000', 'notNull' => true)
+        );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
 
@@ -65,6 +66,7 @@ class MandatosControllerProductosform extends JControllerLegacy {
             'description'=>'STRING');
 
         $data                = $this->inputVars->getArray($campos);
+        $data['price']       = round( (float)$data['price'] );
         $data['integradoId'] = JFactory::getSession()->get('integradoId',null,'integrado');
 
         $id_producto = $data['id_producto'];
