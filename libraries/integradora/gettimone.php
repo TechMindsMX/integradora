@@ -3338,24 +3338,23 @@ class UserTimone {
 }
 
 class Cashout extends makeTx{
-    protected $amount;
-    protected $uuid;
-    protected $clabe;
-    protected $bankCode;
+    protected $objEnvio;
 
-    /**
+	/**
+     * @param $orden
      * @param $idPagador
      * @param $idBeneficiario
      * @param $totalAmount
-     * @param $options array accountId, paymentMethod
+     * @param $options array(accountId =>, paymentMethod => )
      */
-    function __construct($idPagador, $idBeneficiario, $totalAmount, $options)
+    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount, $options)
     {
         $this->options  = $options;
-        $this->amount   = (FLOAT)$totalAmount;
-        $this->uuid     = parent::getTimOneUuid($idPagador);
-        $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
+        $this->orden    = $orden;
 
+        $this->objEnvio->amount   = (FLOAT)$totalAmount;
+        $this->objEnvio->uuid     = parent::getTimOneUuid($idPagador);
+        $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
     }
 
     private function setDataBeneficiario( $idBenefiario, $accountId){
@@ -3363,8 +3362,8 @@ class Cashout extends makeTx{
 
         foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
             if($accountId == $banco->datosBan_id){
-                $this->clabe    = $banco->banco_clabe;
-                $this->bankCode = (INT)$banco->banco_codigo;
+                $this->objEnvio->clabe    = $banco->banco_clabe;
+                $this->objEnvio->bankCode = (INT)$banco->banco_codigo;
             }
         }
     }
@@ -3380,6 +3379,7 @@ class Cashout extends makeTx{
 
         return $comision;
     }
+
     private function comisionSPEI() {
         // TODO: crear el parametro y traerlo de la db
         $neto = 8; // siempre aplica IVA 16
@@ -3394,50 +3394,64 @@ class Cashout extends makeTx{
         return $neto;
     }
 
-    public function sendTx() {
+    public function sendCreateTx() {
         $rutas = new servicesRoute();
         parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
     }
 }
 
-/**
- * @property string uuidOrigin
- * @property string uuidDestination
- * @property float amount
- */
 class transferFunds extends makeTx {
-    function __construct($idPagador, $idBeneficiario, $totalAmount){
-        $this->uuidOrigin       = parent::getTimOneUuid($idPagador);
-        $this->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
-        $this->amount           = (float)$totalAmount;
+    protected $objEnvio;
+
+    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
+        $this->orden    = $orden;
+
+        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
+        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+        $this->objEnvio->amount           = (float)$totalAmount;
     }
 
-    public function sendTx()
+    public function sendCreateTx()
     {
         $rutas = new servicesRoute();
         parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
     }
+
 }
 
-class makeTx{
+class makeTx {
     public function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
-        $request->setJsonData(json_encode($this));
+        $request->setJsonData(json_encode($this->objEnvio));
         $request->setHttpType($datosEnvio->type);
 
-        $resultado = $request->to_timone();
+        $this->resultado = $request->to_timone();
 
         jimport('joomla.log.log');
 
-        $scope = JFactory::getApplication()->scope;
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
         $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
-        return $resultado->code == 200;
+        if ($this->resultado->code == 200) {
+            $this->saveTxOrderRelationship();
+        }
+
+        return $this->resultado->code == 200;
+    }
+
+    public function saveTxOrderRelationship() {
+        $request = new sendToTimOne();
+
+        $request->formatData(array('idTx' => $this->resultado->data, 'idOrden' => $this->orden->id, 'idIntegrado' => $this->orden->id, 'tipoOrden' => $this->orden->OrderType) );
+        $resultado = $request->insertDB('txs_timone_mandato');
+
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
+        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
     }
 
     protected function getTimOneUuid($idIntegradoEnvia){

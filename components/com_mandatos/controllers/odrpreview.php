@@ -22,7 +22,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     protected $txsToDo;
 
     function authorize() {
-
         $post               = array( 'idOrden' => 'INT' );
         $this->app 			= JFactory::getApplication();
         $this->parametros	= $this->app->input->getArray($post);
@@ -45,6 +44,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
             $this->txsToDo = $this->calculoComisionesOrdenRetiro();
 
+$this->cashout();
             $enoughBalance = $this->enoughBalance();
 
             $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->orden->id, $enoughBalance) ) ) );
@@ -106,7 +106,14 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         //cashOut si cambia al 5
 
         if($this->orden->status->id == 5){
-            $result = $this->cashoutObj->create();
+            $result = $this->cashoutObj->sendCreateTx();
+
+            foreach ( $this->txsToDo as $txAmount ) {
+                // TODO: traer el id de integradora de la db
+                $tranfer = new transferFunds($this->orden, $this->orden->integradoId, 1, $txAmount);
+                $tranfer->sendCreateTx();
+            }
+
 
             return $result;
         }
