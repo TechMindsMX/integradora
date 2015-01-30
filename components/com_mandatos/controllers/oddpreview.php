@@ -54,20 +54,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-                    /*NOTIFICACIONES 19*/
-                    $integradoSimple     = new IntegradoSimple($this->integradoId);
-                    $getCurrUser         = new Integrado($this->integradoId);
+                    $this->sendNotifications( );
 
-                    $titulo = JText::_('TITULO_19');
-
-                    $contenido = JText::_('NOTIFICACIONES_19');
-
-                    $dato['titulo']         = $titulo;
-                    $dato['body']           = $contenido;
-                    $dato['email']          = $getCurrUser->user->email;
-                    $send                   = new Send_email();
-                    $info = $send->notification($dato);
-	            }
+                }
 
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
@@ -77,5 +66,32 @@ class MandatosControllerOddpreview extends JControllerAdmin {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
+    }
+
+    /**
+     * @param $dato
+     */
+    private function sendNotifications( ) {
+        /*NOTIFICACIONES 19*/
+        $integradoSimple = new IntegradoSimple( $this->integradoId );
+        $getCurrUser     = new Integrado( $this->integradoId );
+
+        $titulo = JText::_( 'TITULO_19' );
+
+        $contenido = JText::_( 'NOTIFICACIONES_19' );
+
+        $dato['titulo'] = $titulo;
+        $dato['body']   = $contenido;
+        $dato['email']  = $getCurrUser->user->email;
+        $send           = new Send_email();
+        $info           = $send->notification( $dato );
+
+        $logdata = $logdata = implode( ', ', array (
+            JFactory::getUser()->id,
+            $this->integradoId,
+            __METHOD__,
+            json_encode( array ( $info, $dato  ) )
+        ) );
+        JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
     }
 }
