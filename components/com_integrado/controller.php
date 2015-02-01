@@ -18,6 +18,7 @@ if($currUser->guest){
 class IntegradoController extends JControllerLegacy {
     //Revisa si el usaurio existe dado un correo electronico
     protected $integradoId;
+    protected $app;
 
     function __construct() {
         $this->sesion = JFactory::getSession();
@@ -597,5 +598,40 @@ class IntegradoController extends JControllerLegacy {
     public function createNewSolicitud() {
         $this->sesion->clear('integradoId', 'integrado');
         JFactory::getApplication()->redirect('index.php?option=com_integrado&view=solicitud');
+    }
+
+    public function select() {
+        $this->app = JFactory::getApplication();
+
+        if (!JSession::checkToken()) {
+            $this->redirectToSelectIntegrado();
+        } else {
+            $this->id = $this->app->input->get('integradoId', null, 'INT');
+
+            list($valid, $integrado) = $this->isValidIntegradoIdForUser();
+            if ($valid) {
+
+                $sesion = JFactory::getSession();
+                $sesion->set('integradoId', $this->id, 'integrado');
+
+                $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
+            }
+
+            $this->redirectToSelectIntegrado();
+        }
+
+
+    }
+
+    public function isValidIntegradoIdForUser() {
+        $model = $this->getModel();
+        $integrados = $model->getIntegrados();
+        $check = array_key_exists($this->id, $integrados);
+
+        return array($check, $integrados[$this->id]);
+    }
+
+    public function redirectToSelectIntegrado() {
+        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change', JText::_( 'LBL_ERROR' ), 'error' );
     }
 }

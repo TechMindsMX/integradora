@@ -2,16 +2,27 @@
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
-
-
 jimport('integradora.integrado');
+
 /**
- * Modelo de datos para formulario de solicitud de alta de integrado
+ * Modelo de datos para formulario de seleccion de integrado
  */
 class IntegradoModelIntegrado extends JModelItem {
 	
-	public function getDisplay()
-	{
+	public function getIntegrados()	{
+		$integrados = array();
+		$integ = new Integrado();
+
+		foreach ( $integ->integrados as $key => $value ) {
+
+			$integrado = new IntegradoSimple($value->integrado->integrado_id);
+
+			$integrados[$value->integrado->integrado_id] = new stdClass();
+			$integrados[$value->integrado->integrado_id]->id           = $integrado->id;
+			$integrados[$value->integrado->integrado_id]->displayName  = $integrado->getDisplayName();
+		}
+
+		return $integrados;
 	}
 }
 

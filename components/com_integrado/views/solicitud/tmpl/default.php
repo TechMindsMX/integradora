@@ -803,131 +803,37 @@ if(!empty($datos->integrado)){
     ?>
     <fieldset>
 
-        <div class="form-group">
-            <label for="dp_url_identificacion" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_ID_FILE'); ?></label>
-            <input name="dp_url_identificacion" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->datos_personales->url_identificacion; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-        <div class="form-group">
-            <label for="dp_url_rfc" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
-            <input name="dp_url_rfc" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->datos_personales->url_rfc; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
+        <?php
+        $archivos = array(
+            'dp_url_identificacion'         => array(@$datos->datos_personales->url_identificacion, 'LBL_ID_FILE'),
+            'dp_url_rfc'                    => array(@$datos->datos_personales->url_rfc, 'LBL_RFC_FILE'),
+            'dp_url_comprobante_domicilio'  => array(@$datos->datos_personales->url_comprobante_domicilio, 'LBL_COMP_DOMICILIO_FILE'),
+            'de_url_rfc'                    => array(@$datos->datos_empresa->url_rfc, 'LBL_RFC_FILE'),
+            't1_url_instrumento'            => array(@$datos->testimonio1->url_instrumento, 'LBL_TESTIMONIO1_FILE'),
+            't2_url_instrumento'            => array(@$datos->testimonio2->url_instrumento, 'LBL_TESTIMONIO2_FILE'),
+            'pn_url_instrumento'            => array(@$datos->poder->url_instrumento, 'LBL_TESTIMONIO3_FILE'),
+            'rp_url_instrumento'            => array(@$datos->reg_propiedad->url_instrumento, 'LBL_RPP_FILE'),
+            'db_banco_file'                 => array(@$datos->datos_bancarios->banco_file, 'LBL_BANCO_FILE')
+        );
 
-        </div>
-
+        foreach ( $archivos as $key => $value ) {
+        ?>
         <div class="form-group">
-            <label for="dp_url_comprobante_domicilio" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
-            <input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
+            <label for="<?php echo $key; ?>" class="head" ><?php echo JText::_($value[1]); ?></label>
+            <input class="btn btn-default" name="<?php echo $key; ?>" type="file" maxlength="" />
             <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
+            if( isset($value[0]) ){
                 ?>
                 <div>
-                    <a href="<?php echo @$datos->datos_personales->url_comprobante_domicilio; ?>" target="_blank">Abrir Archivo</a>
+                    <a class="" href="<?php echo $value[0]; ?>" target="_blank"><?php echo JText::_('LBL_OPEN_FILE'); ?></a>
                 </div>
             <?php
             }
             ?>
         </div>
-
-        <div class="form-group">
-            <label for="de_url_rfc" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
-            <input name="de_url_rfc" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->datos_empresa->url_rfc; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label for="t1_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
-            <input name="t1_url_instrumento" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->testimonio1->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label for="t2_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO2_FILE'); ?></label>
-            <input name="t2_url_instrumento" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->testimonio2->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label for="pn_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_TESTIMONIO3_FILE'); ?></label>
-            <input name="pn_url_instrumento" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->poder->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label for="rp_url_instrumento" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_RPP_FILE'); ?></label>
-            <input name="rp_url_instrumento" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->reg_propiedad->url_instrumento; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
-
-        <div class="form-group">
-            <label for="db_banco_file" style="font-size: 14px; font-weight: bolder;"><?php echo JText::_('LBL_BANCO_FILE'); ?></label>
-            <input name="db_banco_file" type="file" maxlength="" />
-            <?php
-            if( isset($datos->datos_personales->url_identificacion) ){
-                ?>
-                <div>
-                    <a href="<?php echo @$datos->datos_bancarios->banco_file; ?>" target="_blank">Abrir Archivo</a>
-                </div>
-            <?php
-            }
-            ?>
-        </div>
+        <?php
+        }
+        ?>
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary span3" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>

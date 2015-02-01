@@ -10,87 +10,41 @@ JHTML::_('behavior.calendar');
 
 $integrados = $this->data;
 
+$rutas = array(
+	'COM_MANDATOS_LISTAD_PROYECTOS'             => JRoute::_('index.php?option=com_mandatos&view=proyectoslist'),
+	'COM_MANDATOS_LISTAD_PRODUCTOS'             => JRoute::_('index.php?option=com_mandatos&view=productoslist'),
+	'COM_MANDATOS_LISTAD_CLIENTES'              => JRoute::_('index.php?option=com_mandatos&view=clienteslist'),
+	'COM_MANDATOS_LISTAD_ORDENES'               => JRoute::_('index.php?option=com_mandatos&view=odclist'),
+	'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO'      => JRoute::_('index.php?option=com_mandatos&view=oddlist'),
+	'COM_MANDATOS_ORDENES_RETIRO_LISTADO'       => JRoute::_('index.php?option=com_mandatos&view=odrlist'),
+	'COM_MANDATOS_ODV_LIST'                     => JRoute::_('index.php?option=com_mandatos&view=odvlist'),
+	'COM_MANDATOS_FACTURA_LIST'                 => JRoute::_('index.php?option=com_mandatos&view=facturalist'),
+	'COM_MANDATOS_MUTUOS'                       => JRoute::_('index.php?option=com_mandatos&view=mutuoslist'),
+	'COM_MANDATOS_GO_LIQUIDACION'               => JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion'),
+	'COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE'    => JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist')
+);
+$perRow = 1;
+$rutas = array_chunk($rutas, $perRow, true);
+
 echo '<h1>'.JText::_('COM_MANDATOS_TITULO').'</h1>';
 ?>
-<script type="application/javascript">
-	function redirect() {
-		var campo = jQuery(this);
-		var ruta = campo.prop('id');
-		var form = jQuery('#form_listados');
-		var action = "<?php echo JRoute::_('index.php?option=com_mandatos&task=mandatos.route'); ?>";
 
-		jQuery('#ruta').val(ruta);
-
-		form.prop('action', action);
-
-		form.submit();
-	}
-	function habilitaBtns() {
-		var btns = jQuery('.btn');
-		var select = jQuery(this);
-
-		if(select.val() > 0){
-			btns.prop('disabled', false);
-		}else if(select.val() == 0){
-			btns.prop('disabled', true);
-		}
-	}
-	jQuery(document).ready(function(){
-		jQuery('#integradoId').on('change',habilitaBtns);
-		jQuery('.btn').on('click', redirect);
-	});
-</script>
-<form id="form_listados" method="post">
-	<select name="integradoId" id="integradoId">
-		<option value="0">Seleccione Integrado</option>
+<div class="col-xs-12 col-md-6 col-lg-6">
+	<div class="control-group form-horizontal row-fluid">
 		<?php
-		foreach ($integrados as $value) {
-			echo '<option value="'.$value->integradoId.'">'.$value->name.'</option>';
+		foreach ( $rutas as $fila ) {
+		?>
+			<div class="control-group row-fluid">
+				<?php
+				foreach ( $fila as $texto => $href ) {
+					?>
+					<div class="span<?php echo 12/$perRow; ?>">
+						<a class="btn btn-primary" id="list_proyectos" href="<?php echo $href; ?>"><?php echo JText::_( $texto ); ?></a>
+					</div>
+				<?php
+				}
+				?>
+				</div>
+		<?php
 		}
 		?>
-	</select>
-	<input type="hidden" name="ruta" id="ruta" value="" />
-</form>
-
-<div class="col-xs-6">
-	<div class="control-group">
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_proyectos"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LISTAD_PROYECTOS'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_productos"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LISTAD_PRODUCTOS'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_clientes"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LISTAD_CLIENTES'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_odc"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LISTAD_ORDENES'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_odd"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LISTAD_ORDENES_DEPOSITO'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_odr"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_LISTADO'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_odv"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_ODV_LIST'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_fv"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_FACTURA_LIST'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="list_mutos"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_MUTUOS'); ?>" />
-		</div>
-	</div>
-</div>
-
-<div class="col-xs-6">
-	<div class="control-group">
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="go_liquidacion"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?>" />
-		</div>
-		<div class="margen-fila">
-			<input type="button" class="btn btn-primary" id="tx_sin_mandato"  disabled="disabled" value="<?php echo JText::_('COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE'); ?>" />
-		</div>
-	</div>
-</div>

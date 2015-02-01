@@ -47,15 +47,14 @@ $verifications = $this->verifications;
                     $dat_pers = isset($verifications->datos_personales)     ? $verifications->datos_personales      : '{}';
                     $dat_empr = isset($verifications->datos_empresa)        ? $verifications->datos_empresa         : '{}';
                     $dat_banc = isset($verifications->datos_bancarios)      ? $verifications->datos_bancarios       : '{}';
-                    $dat_banc = isset($verifications->params)               ? $verifications->params                : '{}';
+                    $dat_para = isset($verifications->params)               ? $verifications->params                : '{}';
 
                     tabValores($integ->datos_personales, 	$this->item->campos, 	$dat_pers, $jhtml_group, 'LBL_SLIDE_BASIC');
                     tabValores($integ->datos_empresa, 		$this->item->campos, 	$dat_empr, $jhtml_group, 'LBL_TAB_EMPRESA');
-                    //                    foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
-                    //                        tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
-                    //                    }
-                    tabValores($integ->datos_bancarios[0],  $this->item->campos,    $dat_banc, $jhtml_group,  'LBL_TAB_BANCO');
-                    tabValores($integ->params,  $this->item->campos,    $dat_banc, $jhtml_group,  'LBL_TAB_AUTHORIZATIONS');
+                            foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
+                                tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
+                            }
+                    tabValores($integ->params,  $this->item->campos,    $dat_para, $jhtml_group,  'LBL_TAB_AUTHORIZATIONS');
 
                     echo JHtml::_('bootstrap.endAccordion');
                     ?>
@@ -67,6 +66,7 @@ $verifications = $this->verifications;
     </form>
 
 <?php
+
 function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $key = null)
 {
     echo JHtml::_('bootstrap.addSlide', $jhtml_group, JText::_($jtext_label), $jtext_label.$key);
@@ -102,15 +102,17 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $k
                 <?php
                 $attachCampos = 'attach_' . $jtext_label;
                 $attachments  = $campos->$attachCampos;
-                foreach ( $obj as $label => $field ) :
-                    if ( in_array( $label, $attachments ) ) :
-                        ?>
-                        <div class="control-group">
-                            <a href="<?php echo $field; ?>"><?php echo JText::_( $label ); ?></a>
-                        </div>
-                    <?php
-                    endif;
-                endforeach;
+                foreach ( $obj as $label => $field ) {
+                    if ( in_array( $label, $attachments ) ) {
+                        echo '<div class="control-group">';
+                        if ( isset( $field ) ) {
+                            echo '<a class="label label-success" href="' . $field . '">' . JText::_( $label ) . '</a>';
+                        } else {
+                            echo '<p class="label label-important">' . JText::_( $label ) . '</p>';
+                        }
+                        echo '</div>';
+                    }
+                }
                 ?>
             </div>
         <?php

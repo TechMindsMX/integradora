@@ -37,6 +37,7 @@ class timOneControllers{
     public $controllers;
 
     public function __construct(){
+	    $this->controllers = new stdClass();
         $this->controllers->timone       = 'api-stage.timone.mx/timone/services/integra/';
         $this->controllers->facturacion  = 'api.timone-factura.mx/factura/';
     }

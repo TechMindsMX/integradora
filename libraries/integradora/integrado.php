@@ -11,17 +11,17 @@ jimport('integradora.gettimone');
  * Clase datos de integrado
  */
 class Integrado {
-	public $user;
+	public $integrados;
 	
 	function __construct($integ_id = null) {
-		$this->user = JFactory::getUser();
+//		$this->user = JFactory::getUser();
+//		unset($this->user->password);
 		$this->integrados = $this->getIntegradosCurrUser();
 
 		foreach ($this->integrados as $key => $value) {
 			$id = $value->integrado_id;
 			$this->getSolicitud($id, $key);
 		}
-		unset($this->user->password);
 	}
 
     /**
@@ -79,7 +79,7 @@ class Integrado {
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('user_id') . '=' . $db->quote($this->user->id));
+			->where($db->quoteName('user_id') . '=' . $db->quote( JFactory::getUser()->id ));
 		$result = $db->setQuery($query)->loadObjectList();
 
         return $result;
@@ -115,11 +115,12 @@ class Integrado {
 	
 	function getSolicitud($integ_id = null, $key){
 		if ($integ_id == null){
-			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', $this->user->id);
+			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
 		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
 
 		if(!is_null($integrado_id) && $integrado_id != 0){
+			$this->integrados[$key] = new stdClass();
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
