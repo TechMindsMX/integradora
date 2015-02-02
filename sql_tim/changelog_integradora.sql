@@ -260,3 +260,7 @@ ALTER TABLE `flpmu_integrado` ADD COLUMN `createdDate` BIGINT (20);
 --changeset lutek:28
 ALTER TABLE `flpmu_integrado_verificacion_solicitud` ADD COLUMN `params` varchar (20);
 --rollback ALTER  TABLE `flpmu_integrado_verificacion_solicitud` DROP COLUMN `params`;
+
+--changeset ricardolyon:29
+ALTER TABLE `flpmu_ordenes_deposito` CHANGE `totalAmount` `totalAmount` FLOAT (11) NOT NULL;
+--rollback ALTER TABLE `flpmu_ordenes_deposito` CHANGE `totalAmount` `totalAmount` INT;

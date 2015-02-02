@@ -1482,6 +1482,8 @@ class getFromTimOne{
         foreach ($objeto as $key => $value) {
             if( is_numeric(strpos(strtolower($key),'date')) ){
                 $objeto->$key = date('d-m-Y', ($value) );
+
+                $objeto->timestamps = new stdClass();
                 $objeto->timestamps->$key = (INT)$value;
             }
         }
@@ -1939,7 +1941,7 @@ class sendToTimOne {
         $scope = JFactory::getApplication()->scope;
         JLog::addLogger(array('text_file' => date('d-m-Y').'_'.$scope.'_errors.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::ALL & ~JLog::WARNING & ~JLog::INFO & ~JLog::DEBUG);
 
-        $set = is_null($set)?$this->set:$set;
+        $set = is_null($set) ? $this->set : $set;
 
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);

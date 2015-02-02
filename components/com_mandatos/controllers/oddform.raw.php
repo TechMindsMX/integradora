@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('integradora.gettimone');
 jimport('integradora.validator');
+jimport('integradora.notifications');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOddform extends JControllerLegacy {
@@ -38,9 +39,12 @@ class MandatosControllerOddform extends JControllerLegacy {
             $datos->status=1;
 		    $save->formatData($datos);
 		    $salvado = $save->insertDB('ordenes_deposito', null, null, true);
-	    }else{
-		    $save->formatData($datos);
-		    $salvado = $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
+            $this->sendNotifications('generado', $datos);
+        }else{
+            $save->formatData($datos);
+            $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
+            $salvado = $datos->id;
+            $this->sendNotifications('actualizado', $datos);
         }
 
         if($salvado) {
@@ -69,4 +73,39 @@ class MandatosControllerOddform extends JControllerLegacy {
         $document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
     }
+
+    private function sendNotifications($accion, $datos) {
+        $data[0] = '<table>';
+        $data[2] = '</table>';
+        foreach ( $datos as $key => $value ) {
+            $data[] = '<tr><td>'.$key.'</td><td>'.$value.'</td></tr>';
+        }
+
+        $titulo = JText::_('TITULO_19');
+
+        $contenido = JText::sprintf('NOTIFICACIONES_19', $accion, implode($data) );
+
+        $dato['titulo']         = $titulo;
+        $dato['body']           = $contenido;
+        $dato['email']          = JFactory::getUser()->email;
+        $send                   = new Send_email();
+        $info = $send->notification($dato);
+
+        $integradoAdmin     = new IntegradoSimple(93);
+
+        $titulo = JText::_('TITULO_19A');
+
+        $contenido = JText::sprintf('NOTIFICACIONES_19A', $accion, implode($data) , JFactory::getUser()->username);
+
+        $datoAdmin['titulo']         = $titulo;
+        $datoAdmin['body']           = $contenido;
+        $datoAdmin['email']          = $integradoAdmin->user->email;
+        $send                   = new Send_email();
+        $infoAdmin = $send->notification($datoAdmin);
+
+    }
+
+    protected $integradoId;
+
+
 }

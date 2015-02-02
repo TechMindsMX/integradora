@@ -90,7 +90,7 @@ if(!$this->confirmacion){
 
         <div class="form-group">
             <label for="totalAmount"><?php echo JText::_('LBL_AMOUNT_DEPOSITED'); ?></label>
-            <input type="text" name="totalAmount" id="totalAmount" value="<?php echo $datos->totalAmount; ?>"/>
+            <input maxlength="10" type="text" name="totalAmount" id="totalAmount" value="<?php echo $datos->totalAmount; ?>"/>
         </div>
 
         <div class="form-group">
@@ -138,7 +138,7 @@ if(!$this->confirmacion){
     <div class="form-group">
         <span class="label-default"><?php echo JText::_('LBL_ONLY_PROOF'); ?>: </span>
         <span>
-            <a href="<?php echo JRoute::_($archivo['ruta']); ?>"><?php echo $archivo['name']; ?></a>
+            <a target="_blank" href="<?php echo JRoute::_($archivo['ruta']); ?>"><?php echo $archivo['name']; ?></a>
         </span>
     </div>
 

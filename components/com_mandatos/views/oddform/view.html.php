@@ -22,9 +22,15 @@ class MandatosViewOddform extends JViewLegacy {
             if($_FILES['attachment']['size'] != 0) {
                 $this->file['name'] = $_FILES['attachment']['name'];
                 $this->file['ruta'] = manejoImagenes::cargar_imagen('image/jpeg', $this->integradoId, $_FILES['attachment'], 'odd_attachment');
+
+                if($this->file['ruta'] == 'verificar') {
+                    $msg = JText::_('UNSUPPORTED_FILE').'<br /> '.JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, PDF').'. '.JText::sprintf('LBL_MAX_FILE_SIZE', '10MB').'. ';
+                    $app->redirect('index.php?option=com_mandatos&view=oddform', $msg, 'error');
+                }
             }else{
                 $this->file['name'] = '';
-            }   $this->file['ruta'] = '';
+                $this->file['ruta'] = '';
+            }
         }
 
 
@@ -37,6 +43,7 @@ class MandatosViewOddform extends JViewLegacy {
                 $this->datos = $this->odd[0];
             }else{
                 $datos = new stdClass();
+                $datos->paymentMethod = new stdClass();
 
                 $datos->id = '';
                 $datos->numOrden = '';
@@ -54,11 +61,11 @@ class MandatosViewOddform extends JViewLegacy {
             return false;
         }
 
-		$this->loadHelper('Mandatos');
+        $this->loadHelper('Mandatos');
 
-		// Verifica los permisos de edición y autorización
-		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+        // Verifica los permisos de edición y autorización
+        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
-		parent::display($tpl);
+        parent::display($tpl);
 	}
 }

@@ -16,7 +16,10 @@ class manejoImagenes {
                 $regreso = 'verificar';
 			}
 
-        return $regreso;
+		$logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__.':'.__LINE__, json_encode( array($tipo, $archivos, $validaciones, $regreso) ) ) );
+		JLog::add($logdata,JLog::DEBUG, 'bitacora');
+
+		return $regreso;
 	}
 
 	public static function resize($uploaded, $ruta, $tipo, $nombre, $max_ancho, $max_alto) {
