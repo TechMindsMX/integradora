@@ -163,7 +163,7 @@ class MandatosController extends JControllerLegacy {
         $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
         $existe     = getFromTimOne::selectDB($table,$where);
 
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__, json_encode($existe) ) );
+        $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode($existe) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
         if ( empty( $existe ) ) {
@@ -180,7 +180,7 @@ class MandatosController extends JControllerLegacy {
 
             if(!$validacion){
 
-                $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__, json_encode($validacion, $data['db_banco_clabe'], $data['db_banco_codigo']) ) );
+                $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( array($validacion, $data['db_banco_clabe'], $data['db_banco_codigo'] ) ) ) );
                 JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
                 $respuesta['success'] = false;

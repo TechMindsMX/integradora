@@ -1905,7 +1905,9 @@ class sendToTimOne {
     }
 
     public function insertDB($tabla, $columnas = null, $valores = null, $last_inserted_id = null){
-        JLog::addLogger(array());
+        $scope = JFactory::getApplication()->scope;
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_'.$scope.'_errors.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::ALL);
+
         $columnas = is_null($columnas) ? $this->columnas : $columnas;
         $valores = is_null($valores) ? $this->valores : $valores;
 
@@ -1917,12 +1919,12 @@ class sendToTimOne {
             ->values(implode(',',$valores));
 
         try{
-//            JLog::add($query,JLog::INFO,'Salvo');
             $db->setQuery($query);
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            JLog::add($e->getMessage(),JLog::ERROR,'Error INTEGRADORA'.__METHOD__);
+            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
 
@@ -1934,7 +1936,9 @@ class sendToTimOne {
     }
 
     public function updateDB($table, $set=null, $condicion=null){
-        JLog::addLogger(array());
+        $scope = JFactory::getApplication()->scope;
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_'.$scope.'_errors.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::ALL & ~JLog::WARNING & ~JLog::INFO & ~JLog::DEBUG);
+
         $set = is_null($set)?$this->set:$set;
 
         $db		= JFactory::getDbo();
@@ -1949,7 +1953,8 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            JLog::add($e->getMessage(),JLog::ERROR,'Error INTEGRADORA'.__METHOD__);
+            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
 
