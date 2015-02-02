@@ -775,16 +775,18 @@ class getFromTimOne{
             $response = $listAllCliPro;
         }
 
-        if($type == 0 && !empty($response)){
+        $tiposClientes = array(0,2);
+        $tiposProveedores = array(1,2);
+        if(in_array($type, $tiposClientes) && !empty($response)){
             foreach ($response as $value) {
-                if($value->type == $type){
+                if(in_array($value->type, $tiposClientes)){
                     $clientes[] = $value;
                 }
             }
             $response = $clientes;
-        }elseif($type == 1 && !empty($response)){
+        }elseif(in_array($type, $tiposProveedores) && !empty($response)){
             foreach ($response as $value) {
-                if($value->type == $type){
+                if(in_array($value->type, $tiposProveedores)){
                     $proveedores[] = $value;
                 }
             }

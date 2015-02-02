@@ -83,7 +83,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                             $dato['titulo']         = $titulo;
                             $dato['body']           = $contenido;
-                            $dato['email']          = $getCurrUser->user->email;
+                            $dato['email']          = JFactory::getUser()->email;
                             $send                   = new Send_email();
                             $info = $send->notification($dato);
 
@@ -106,7 +106,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                             $datoAdmin['titulo']         = $titulo;
                             $datoAdmin['body']           = $contenido;
-                            $datoAdmin['email']          = $getCurrUser->user->email;
+                            $datoAdmin['email']          = JFactory::getUser()->email;
                             $send                   = new Send_email();
                             $infoAdmin = $send->notification($datoAdmin);
                         }

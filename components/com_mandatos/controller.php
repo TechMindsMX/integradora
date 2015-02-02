@@ -492,7 +492,7 @@ class MandatosController extends JControllerLegacy {
 
             $dato['titulo']         = $titulo;
             $dato['body']           = $contenido;
-            $dato['email']          = $getCurrUser->user->email;
+            $dato['email']          = JFactory::getUser()->email;
             $send                   = new Send_email();
             $send->notification($dato);
         }*/

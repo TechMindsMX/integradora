@@ -79,7 +79,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 
 			$data['titulo'] = JText::_( 'TITULO_2' );
 			$data['body']   = $contenido;
-			$data['email']  = $getCurrUser->user->email;
+			$data['email']  = JFactory::getUser()->email;
 
 			$send = new Send_email();
 			$send->notification( $data );

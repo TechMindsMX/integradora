@@ -11,6 +11,7 @@ JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
+$subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subproyectos'] : '';
 ?>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
@@ -21,7 +22,7 @@ $productosOrden = json_decode($orden->productos);
             echo 'productsTypeahead['.$key.'] = "'.$value->productName.'";'."\n";
         }
     ?>
-    var subprojects     = <?php echo json_encode($this->proyectos['subproyectos']);?>;
+    var subprojects     = <?php echo json_encode($subProyects);?>;
     var global_var      = 0;
     var arrayProd       = <?php echo json_encode($this->products)?>;
     var nextinput       = 0;
@@ -227,9 +228,11 @@ $productosOrden = json_decode($orden->productos);
         <select name="projectId" id="project">
             <option value="0">Proyecto</option>
             <?php
-            foreach ($this->proyectos['proyectos'] as $key => $value) {
-                $selected = $value->id_proyecto==$orden->projectId?'selected':'';
-                echo '<option value="'.$value->id_proyecto.'" '.$selected.'>'.$value->name.'</option>';
+            if ( isset( $this->proyectos['proyectos'] ) ) {
+                foreach ($this->proyectos['proyectos'] as $key => $value) {
+                    $selected = $value->id_proyecto == $orden->projectId ? 'selected' : '';
+                    echo '<option value="'.$value->id_proyecto.'" '.$selected.'>'.$value->name.'</option>';
+                }
             }
             ?>
         </select>
@@ -242,7 +245,7 @@ $productosOrden = json_decode($orden->productos);
             <option value="0">Cliente</option>
             <?php
             foreach ($this->clientes as $key => $value) {
-                $selectedCli = ($value->id==$orden->clientId)?'selected':'';
+                $selectedCli = ($value->id == $orden->clientId) ? 'selected' : '';
                 echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$value->tradeName.'</option>';
             }
             ?>
@@ -273,24 +276,24 @@ $productosOrden = json_decode($orden->productos);
         </select>
 
         <select name="paymentMethod">
-            <option value="0" <?php echo $orden->paymentMethod->id==0?'selected':''; ?>>Método de pago</option>
-            <option value="1" <?php echo $orden->paymentMethod->id==1?'selected':''; ?>>Cheque</option>
-            <option value="2" <?php echo $orden->paymentMethod->id==2?'selected':''; ?>>Transferencia</option>
-            <option value="3" <?php echo $orden->paymentMethod->id==3?'selected':''; ?>>Efectivo</option>
-            <option value="4" <?php echo $orden->paymentMethod->id==4?'selected':''; ?>>No Definido</option>
+            <option value="0" <?php echo $orden->paymentMethod->id == 0 ? 'selected' : ''; ?>>Método de pago</option>
+            <option value="1" <?php echo $orden->paymentMethod->id == 1 ? 'selected' : ''; ?>>Cheque</option>
+            <option value="2" <?php echo $orden->paymentMethod->id == 2 ? 'selected' : ''; ?>>Transferencia</option>
+            <option value="3" <?php echo $orden->paymentMethod->id == 3 ? 'selected' : ''; ?>>Efectivo</option>
+            <option value="4" <?php echo $orden->paymentMethod->id == 4 ? 'selected' : ''; ?>>No Definido</option>
         </select>
 
         <select name="conditions">
-            <option value="0" <?php echo $orden->conditions==0?'selected':''; ?>>Condiciones</option>
-            <option value="1" <?php echo $orden->conditions==1?'selected':''; ?>>Contado</option>
-            <option value="2" <?php echo $orden->conditions==2?'selected':''; ?>>Parcialidades</option>
+            <option value="0" <?php echo $orden->conditions == 0 ? 'selected' : ''; ?>>Condiciones</option>
+            <option value="1" <?php echo $orden->conditions == 1 ? 'selected' : ''; ?>>Contado</option>
+            <option value="2" <?php echo $orden->conditions == 2 ? 'selected' : ''; ?>>Parcialidades</option>
         </select>
 
         <select name="placeIssue">
             <option value="0">Lugar de Expedición</option>
             <?php
             foreach ($this->estados as $key => $value) {
-                $selectedPlace = $value->id==$orden->placeIssue?'selected':'';
+                $selectedPlace = $value->id == $orden->placeIssue ? 'selected' : '';
                 echo '<option value="'.$value->id.'" '.$selectedPlace.'>'.$value->nombre.'</option>';
             }
             ?>
@@ -394,7 +397,7 @@ $productosOrden = json_decode($orden->productos);
                 <!--                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>-->
                 <div id="columna2"><select id="iva[]<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
                     <?php foreach ($this->catalogoIva as $indice => $valor) {?>
-                        <option value="<?php echo $indice; ?>" <?php echo $selected; ?>><?php echo $valor->leyenda; ?></option>
+                        <option value="<?php echo $indice; ?>" ><?php echo $valor->leyenda; ?></option>
                     <?php } ?>
                     </select>
                 </div>

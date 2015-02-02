@@ -19,6 +19,7 @@ class MandatosViewOdrform extends JViewLegacy {
             $this->odr = $this->get('ordenes');
         }
 
+        $this->integrado = new stdClass();
 		$this->integrado->balance   = $this->get('balance');
         $this->actionUrl            = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1'):'#';
         $this->datos                = $data;

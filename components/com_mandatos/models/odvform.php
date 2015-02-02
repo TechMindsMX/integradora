@@ -60,15 +60,8 @@ class MandatosModelOdvform extends JModelItem {
     }
 
     public function getDatosSolicitud(){
-        $integrado = new Integrado();
 
-        foreach($integrado->integrados as $key => $value){
-            if($value->integrado_id == $this->integradoId){
-                $data = $value;
-            }
-        }
-
-        return $data;
+        return new IntegradoSimple($this->integradoId);
     }
 
     public function getProductos(){

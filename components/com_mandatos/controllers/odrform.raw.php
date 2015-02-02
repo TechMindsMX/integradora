@@ -41,7 +41,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
         //validacion
         $validaciones = MandatosHelper::valida($this->parametros, $this->diccionario);
 
-        $saldoValidacion = $this->validaSaldo();
+        $saldoValidacion = $this->enoughFunds();
         $validaciones['totalAmount'] = $saldoValidacion['totalAmount'];
 
         foreach ( $validaciones as $key => $check ) {
@@ -103,8 +103,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $respuesta = array('redireccion' => false);
         }
         /*NOTIFICACIONES 17*/
-        $integradoSimple     = new IntegradoSimple($this->integradoId);
-        $getCurrUser         = new Integrado($this->integradoId);
 
         $titulo = JText::_('TITULO_17');
 
@@ -112,14 +110,13 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
-        $dato['email']          = $getCurrUser->user->email;
+        $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
         $info = $send->notification($dato);
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
-        exit;
     }
 
     function valida(){

@@ -128,7 +128,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
-        $dato['email']          = $getCurrUser->user->email;
+        $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
         $info = $send->notification($dato);
 
