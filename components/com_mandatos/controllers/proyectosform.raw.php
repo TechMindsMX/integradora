@@ -73,9 +73,8 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 
 		if ( isset( $this->integradoId ) ) {
 			$integradoSimple = new IntegradoSimple( $this->integradoId );
-			$getCurrUser     = new Integrado( $this->integradoId );
 
-			$contenido = JText::sprintf( 'NOTIFICACIONES_2', $integradoSimple->user->username, $data['name'], $getCurrUser->user->username, date( 'd-m-Y' ) );
+			$contenido = JText::sprintf( 'NOTIFICACIONES_2', $integradoSimple->user->username, $data['name'], $integradoSimple->user->username, date( 'd-m-Y' ) );
 
 			$data['titulo'] = JText::_( 'TITULO_2' );
 			$data['body']   = $contenido;
