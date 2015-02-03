@@ -15,11 +15,11 @@ jimport('integradora.notifications');
 class MandatosControllerOddpreview extends JControllerAdmin {
 
     private $integradoId;
+    private $orden;
 
     function authorize() {
         $this->app 			= JFactory::getApplication();
         $this->parametros['idOrden']	= $this->app->input->get('idOrden', null, 'INT');
-        $this->sendNotifications($this->parametros );
 
         $session = JFactory::getSession();
         $this->integradoId = $session->get('integradoId', null,'integrado');
@@ -55,7 +55,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-                    $this->sendNotifications($this->parametros );
+                    $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
+                    $this->orden = $orden[0];
+                    $this->sendNotifications( );
 
                 }
 
@@ -69,20 +71,13 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         }
     }
 
-    private function sendNotifications( $datos) {
-        var_dump($datos);
-        $data[0] = '<table>';
-        $data[2] = '</table>';
-        foreach ( $datos as $key => $value ) {
-            $data[] = '<tr><td>'.$key.'</td><td>'.$value.'</td></tr>';
-        }
-
+    private function sendNotifications( ) {
         $integrado = new IntegradoSimple($this->integradoId);
         $nombreIntegrado = $integrado->getDisplayName();
 
         $titulo = JText::_('TITULO_29');
 
-        $contenido = JText::sprintf('NOTIFICACIONES_`29', $nombreIntegrado, JFactory::getUser()->username, implode($data) );
+        $contenido = JText::sprintf('NOTIFICACIONES_29', $nombreIntegrado, $this->orden->numOrden, JFactory::getUser()->username, $this->orden->paymentDate, $this->orden->totalAmount, $this->orden->paymentMethod->name );
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
@@ -96,7 +91,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
         $titulo = JText::_('TITULO_30');
 
-        $contenido = JText::sprintf('NOTIFICACIONES_30', $nombreIntegrado, implode($data));
+        $contenido = JText::sprintf('NOTIFICACIONES_30', $nombreIntegrado, $this->orden->numOrden, JFactory::getUser()->username, $this->orden->paymentDate, $this->orden->totalAmount, $this->orden->paymentMethod->name);
 
         $datoAdmin['titulo']         = $titulo;
         $datoAdmin['body']           = $contenido;
@@ -104,14 +99,14 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         $send                   = new Send_email();
         $infoAdmin = $send->notification($datoAdmin);
 
-        $this->logEvent($infoAdmin, $dato);
+        $this->logEvent($infoAdmin, $datoAdmin);
     }
 
     private function logEvent( $info, $dato ) {
         $logdata = $logdata = implode( ', ', array (
             JFactory::getUser()->id,
             $this->integradoId,
-            __METHOD__,
+            __METHOD__.':'.__LINE__,
             json_encode( array ( $info, $dato  ) )
         ) );
         JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
