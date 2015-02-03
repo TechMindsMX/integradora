@@ -2493,7 +2493,7 @@ class GeSHi {
 
                                 $comment_regexp_cache_per_key[$comment_key] = array(
                                     'key' => $comment_key,
-                                    'length' => strlen($match[0][0]),
+                                    'maxlength' => strlen($match[0][0]),
                                     'pos' => $match_i
                                 );
                             } else {
@@ -2601,7 +2601,7 @@ class GeSHi {
 
                                             $escape_regexp_cache_per_key[$escape_key] = array(
                                                 'key' => $escape_key,
-                                                'length' => strlen($match[0][0]),
+                                                'maxlength' => strlen($match[0][0]),
                                                 'pos' => $match_i
                                             );
                                         } else {

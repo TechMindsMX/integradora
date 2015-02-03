@@ -105,12 +105,12 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $parametros = $this->parametros;
 
         $diccionario = array(
-            'integradoIdE'   => array('string' => true, 'length' => '100'),
-            'integradoIdR'   => array('string' => true, 'length' => '100'),
-            'expirationDate' => array('date' => true, 'length' => '10'),
-            'payments'       => array('string' => true, 'length' => '10'),
-            'totalAmount'    => array('float' => true, 'length' => '100'),
-            'interes'        => array('string' => true, 'length' => '100'));
+            'integradoIdE'   => array('string' => true, 'maxlength' => '100'),
+            'integradoIdR'   => array('string' => true, 'maxlength' => '100'),
+            'expirationDate' => array('date' => true, 'maxlength' => '10'),
+            'payments'       => array('string' => true, 'maxlength' => '10'),
+            'totalAmount'    => array('float' => true, 'maxlength' => '100'),
+            'interes'        => array('string' => true, 'maxlength' => '100'));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
 

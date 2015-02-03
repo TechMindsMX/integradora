@@ -73,9 +73,6 @@ class MandatosControllerOddpreview extends JControllerAdmin {
      */
     private function sendNotifications( ) {
         /*NOTIFICACIONES 19*/
-        $integradoSimple = new IntegradoSimple( $this->integradoId );
-        $getCurrUser     = new Integrado( $this->integradoId );
-
         $titulo = JText::_( 'TITULO_19' );
 
         $contenido = JText::_( 'NOTIFICACIONES_19' );

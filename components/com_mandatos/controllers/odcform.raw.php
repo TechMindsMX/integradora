@@ -125,13 +125,13 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $parametros = $this->parametros;
 
         $diccionario = array(
-            'integradoId'   => array('number' => true, 'length' => 10),
-            'numOrden'      => array('number' => true, 'length' => 10),
-            'proveedor'     => array('number' => true, 'length' => 10, 'notNull' => true),
-            'proyecto'      => array('number' => true, 'length' => 10),
-            'paymentDate'   => array('date' => true,   'length' => 10),
-            'paymentMethod' => array('number' => true, 'length' => 10),
-            'observaciones' => array('text' => true,   'length' => 1000));
+            'integradoId'   => array('number' => true, 'maxlength' => 10),
+            'numOrden'      => array('number' => true, 'maxlength' => 10),
+            'proveedor'     => array('number' => true, 'maxlength' => 10, 'notNull' => true),
+            'proyecto'      => array('number' => true, 'maxlength' => 10),
+            'paymentDate'   => array('date' => true,   'maxlength' => 10),
+            'paymentMethod' => array('number' => true, 'maxlength' => 10),
+            'observaciones' => array('text' => true,   'maxlength' => 1000));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
         $respuesta['proveedor'] = $parametros['proveedor']==0?array('success'=>false,'msg'=>'Seleccione el proveedor'):$respuesta['proveedor'];
