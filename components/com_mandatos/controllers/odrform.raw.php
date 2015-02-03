@@ -21,11 +21,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
             'totalAmount'   => 'FLOAT',
-            'idOrden'       => 'INT'
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
-        $this->parametros['integradoId'] = $this->integradoId;
 
         $this->diccionario = array(
             'totalAmount'   => array('float' => true,  'maxlength' => 10,    'notNull' => true),

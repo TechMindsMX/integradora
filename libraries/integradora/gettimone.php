@@ -777,21 +777,24 @@ class getFromTimOne{
 
         $tiposClientes = array(0,2);
         $tiposProveedores = array(1,2);
-        if(in_array($type, $tiposClientes) && !empty($response)){
+
+        $clientes = array();
+        $proveedores = array();
+
+        if(!empty($response)){
             foreach ($response as $value) {
-                if(in_array($value->type, $tiposClientes)){
+
+                if( in_array($value->type, $tiposClientes) && in_array($type, $tiposClientes) ){
                     $clientes[] = $value;
                 }
-            }
-            $response = $clientes;
-        }elseif(in_array($type, $tiposProveedores) && !empty($response)){
-            foreach ($response as $value) {
-                if(in_array($value->type, $tiposProveedores)){
+                if( in_array($value->type, $tiposProveedores) && in_array($type, $tiposProveedores) ){
+                    echo 'aqui';
                     $proveedores[] = $value;
                 }
+
             }
-            $response = $proveedores;
         }
+        $response = array_merge($clientes, $proveedores);
 
         return $response;
     }
@@ -1075,7 +1078,7 @@ class getFromTimOne{
 
     public static function getPaymentMethodName($paymentMethodId){
         $payMethod = new stdClass();
-        $names = array('SPEI','Cheque','Pago en taquilla','algo','otro');
+        $names = array('<span style="color: red">No Seleccionado</span>','Cheque','Tranferencia','Efectivo','No Definido');
 
         $payMethod->id = $paymentMethodId;
         $payMethod->name = $names[$paymentMethodId];

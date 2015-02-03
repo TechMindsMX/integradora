@@ -288,12 +288,17 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
             <option value="1" <?php echo $orden->conditions == 1 ? 'selected' : ''; ?>>Contado</option>
             <option value="2" <?php echo $orden->conditions == 2 ? 'selected' : ''; ?>>Parcialidades</option>
         </select>
-
         <select name="placeIssue">
             <option value="0">Lugar de Expedición</option>
             <?php
             foreach ($this->estados as $key => $value) {
-                $selectedPlace = $value->id == $orden->placeIssue ? 'selected' : '';
+                $selectedPlace = '';
+                if($value->id == $orden->placeIssue){
+                    $selectedPlace = 'selected';
+                }elseif($value->id == 9){
+                    $selectedPlace = 'selected';
+                }
+
                 echo '<option value="'.$value->id.'" '.$selectedPlace.'>'.$value->nombre.'</option>';
             }
             ?>
