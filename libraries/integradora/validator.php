@@ -19,17 +19,19 @@ class validador{
         foreach ($this->dataPost as $key => $value) {
             $this->currentKey = $key;
 
-            foreach ( $diccionario[ $key ] as $method => $this->diccionario_value ) {
+            if ( isset( $diccionario[ $key ] ) ) {
+                foreach ( $diccionario[ $key ] as $method => $this->diccionario_value ) {
 
-                if (method_exists ('validador',$method)) {
-                    $respuestas[$method] = call_user_func (array ('validador', $method));
-                    if (!$respuestas[$method]) {
-                        $errors[$key] = $this->salir ();
+                    if (method_exists ('validador',$method)) {
+                        $respuestas[$method] = call_user_func (array ('validador', $method));
+                        if (!$respuestas[$method]) {
+                            $errors[$key] = $this->salir ();
+                        }
                     }
                 }
+                $respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
             }
 
-            $respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
 
         }
 
