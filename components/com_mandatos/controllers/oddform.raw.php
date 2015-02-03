@@ -8,6 +8,8 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOddform extends JControllerLegacy {
 
+    protected $integradoId;
+
     function saveODD() {
         $this->app 			= JFactory::getApplication();
         $this->parametros	= $this->app->input->getArray();
@@ -91,6 +93,8 @@ class MandatosControllerOddform extends JControllerLegacy {
         $send                   = new Send_email();
         $info = $send->notification($dato);
 
+        $this->logEvent($info, $dato);
+
         $integradoAdmin     = new IntegradoSimple(93);
 
         $titulo = JText::_('TITULO_19A');
@@ -103,9 +107,19 @@ class MandatosControllerOddform extends JControllerLegacy {
         $send                   = new Send_email();
         $infoAdmin = $send->notification($datoAdmin);
 
+        $this->logEvent($infoAdmin, $dato);
     }
 
-    protected $integradoId;
+    private function logEvent( $info, $dato ) {
+        $logdata = $logdata = implode( ', ', array (
+            JFactory::getUser()->id,
+            $this->integradoId,
+            __METHOD__,
+            json_encode( array ( $info, $dato  ) )
+        ) );
+        JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
+
+    }
 
 
 }

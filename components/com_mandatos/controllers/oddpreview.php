@@ -19,6 +19,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
     function authorize() {
         $this->app 			= JFactory::getApplication();
         $this->parametros['idOrden']	= $this->app->input->get('idOrden', null, 'INT');
+        $this->sendNotifications($this->parametros );
 
         $session = JFactory::getSession();
         $this->integradoId = $session->get('integradoId', null,'integrado');
@@ -54,7 +55,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 	            if ($statusChange){
 		            $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-                    $this->sendNotifications( );
+                    $this->sendNotifications($this->parametros );
 
                 }
 
@@ -68,21 +69,45 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         }
     }
 
-    /**
-     * @param $dato
-     */
-    private function sendNotifications( ) {
-        /*NOTIFICACIONES 19*/
-        $titulo = JText::_( 'TITULO_19' );
+    private function sendNotifications( $datos) {
+        var_dump($datos);
+        $data[0] = '<table>';
+        $data[2] = '</table>';
+        foreach ( $datos as $key => $value ) {
+            $data[] = '<tr><td>'.$key.'</td><td>'.$value.'</td></tr>';
+        }
 
-        $contenido = JText::_( 'NOTIFICACIONES_19' );
+        $integrado = new IntegradoSimple($this->integradoId);
+        $nombreIntegrado = $integrado->getDisplayName();
 
-        $dato['titulo'] = $titulo;
-        $dato['body']   = $contenido;
-        $dato['email']  = JFactory::getUser()->email;
-        $send           = new Send_email();
-        $info           = $send->notification( $dato );
+        $titulo = JText::_('TITULO_29');
 
+        $contenido = JText::sprintf('NOTIFICACIONES_`29', $nombreIntegrado, JFactory::getUser()->username, implode($data) );
+
+        $dato['titulo']         = $titulo;
+        $dato['body']           = $contenido;
+        $dato['email']          = JFactory::getUser()->email;
+        $send                   = new Send_email();
+        $info = $send->notification($dato);
+
+        $this->logEvent($info, $dato);
+
+        $integradoAdmin     = new IntegradoSimple(93);
+
+        $titulo = JText::_('TITULO_30');
+
+        $contenido = JText::sprintf('NOTIFICACIONES_30', $nombreIntegrado, implode($data));
+
+        $datoAdmin['titulo']         = $titulo;
+        $datoAdmin['body']           = $contenido;
+        $datoAdmin['email']          = $integradoAdmin->user->email;
+        $send                   = new Send_email();
+        $infoAdmin = $send->notification($datoAdmin);
+
+        $this->logEvent($infoAdmin, $dato);
+    }
+
+    private function logEvent( $info, $dato ) {
         $logdata = $logdata = implode( ', ', array (
             JFactory::getUser()->id,
             $this->integradoId,
@@ -90,5 +115,6 @@ class MandatosControllerOddpreview extends JControllerAdmin {
             json_encode( array ( $info, $dato  ) )
         ) );
         JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
+
     }
 }
