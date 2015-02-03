@@ -24,9 +24,9 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
         $validacion     = new validador();
-        $diccionario    = array('integradoId'   => array('tipo'=>'number', 'length' => '1'),
-            'monto'         => array('tipo'=>'float', 'length' => '15'),
-            'saldo'         => array('tipo'=>'float', 'length' => '15'));
+        $diccionario    = array('integradoId'   => array('number' => true, 'length' => '1'),
+            'monto'         => array('float' => true, 'length' => '15'),
+            'saldo'         => array('float' => true, 'length' => '15'));
         $valida = $validacion->procesamiento($data, $diccionario);
         $document->setMimeEncoding('application/json');
 

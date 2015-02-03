@@ -80,11 +80,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function fecha () {
-        $fecha = $this->dataPost[$this->currentKey];
-        $regex = '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/';
+    protected  function date () {
+        $regex = '/^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/';
 
-        if (preg_match ($regex,$fecha) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -244,18 +243,6 @@ class validador{
 
     protected function text(){
         $regex = '/[A-Za-z0-9_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
-
-        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
-            $respuesta = true;
-        } else {
-            $respuesta = false;
-        }
-
-        return $respuesta;
-    }
-
-    protected  function date () {
-        $regex = '/^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;

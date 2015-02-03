@@ -38,13 +38,13 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 				// Limpieza de valores que no aplican al type
 				$this->envio['rate'] = 0;
 
-				$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum',  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255,    'notNull' => true),
-				                      'type' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
-				                      'monto' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10,     'notNull' => true),
-				                      'rate' 			=> array ('tipo' => 'float',    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 5),
-				                      'frequencyTimes' 	=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
-				                      'trigger'	        => array ('tipo' => 'string',   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
-				                      'status' 	        => array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
+				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255,    'notNull' => true),
+				                      'type' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
+				                      'monto' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10,     'notNull' => true),
+				                      'rate' 			=> array ('float' => true,    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 5),
+				                      'frequencyTimes' 	=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
+				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
+				                      'status' 	        => array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
 				);
 				break;
 			case '1':
@@ -52,13 +52,13 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 				$this->envio['monto'] = 0;
 				$this->envio['frequencyTimes'] = 0;
 
-				$diccionario = array ('description' 	=> array ('tipo' => 'alfaNum',  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255,    'notNull' => true),
-				                      'type' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
-				                      'monto' 			=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10),
-				                      'rate' 			=> array ('tipo' => 'float',    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 5,      'notNull' => true),
-				                      'frequencyTimes' 	=> array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
-				                      'trigger'	        => array ('tipo' => 'string',   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
-				                      'status' 	        => array ('tipo' => 'number',   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
+				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'length' => 255,    'notNull' => true),
+				                      'type' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'length' => 10),
+				                      'monto' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'length' => 10),
+				                      'rate' 			=> array ('float' => true,    'label' => JText::_ ('ERROR_COMISION_RATE'),            'length' => 5,      'notNull' => true),
+				                      'frequencyTimes' 	=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'length' => 10),
+				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'length' => 255,    'notNull' => true),
+				                      'status' 	        => array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'length' => 1)
 				);
 				break;
 		}

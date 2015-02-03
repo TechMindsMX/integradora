@@ -28,9 +28,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $this->parametros['integradoId'] = $this->integradoId;
 
         $this->diccionario = array(
-            'totalAmount'   => array('tipo' => 'float',  'length' => 10,    'notNull' => true),
-            'paymentDate'   => array('tipo' => 'date',   'length' => 10,    'notNull' => true),
-            'paymentMethod' => array('tipo' => 'number', 'length' => 1,     'notNull' => true)
+            'totalAmount'   => array('float' => true,  'length' => 10,    'notNull' => true),
+            'paymentDate'   => array('date' => true,   'length' => 10,    'notNull' => true),
+            'paymentMethod' => array('number' => true, 'length' => 1,     'notNull' => true)
         );
 
         parent::__construct();

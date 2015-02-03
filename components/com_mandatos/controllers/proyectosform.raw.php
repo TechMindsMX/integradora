@@ -11,17 +11,17 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 
 	function saveProject() {
 		$diccionario = array (
-			'name'        => array ( 'tipo' => 'alphaNum', 'length' => 100, 'notNull' => true ),
-			'description' => array ( 'tipo' => 'alphaNum', 'length' => 1000, 'notNull' => true ),
+			'name'        => array ( 'alphaNum' => true, 'length' => 100, 'notNull' => true ),
+			'description' => array ( 'alphaNum' => true, 'length' => 1000, 'notNull' => true ),
 		);
 		$this->validateAndSave($diccionario);
 	}
 
 	function saveSubProject() {
 		$diccionario = array (
-			'parentId'    => array ( 'tipo' => 'number',   'length' => 10, 'notNull' => true ),
-			'name'        => array ( 'tipo' => 'alphaNum', 'length' => 100, 'notNull' => true ),
-			'description' => array ( 'tipo' => 'alphaNum', 'length' => 1000, 'notNull' => true ),
+			'parentId'    => array ( 'number' => true,   'length' => 10, 'notNull' => true ),
+			'name'        => array ( 'alphaNum' => true, 'length' => 100, 'notNull' => true ),
+			'description' => array ( 'alphaNum' => true, 'length' => 1000, 'notNull' => true ),
 		);
 		$this->validateAndSave($diccionario);
 	}
