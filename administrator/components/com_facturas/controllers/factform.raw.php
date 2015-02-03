@@ -24,12 +24,12 @@ class FacturasControllerFactform extends JControllerAdmin {
     function safeForm () {
         $this->document->setMimeEncoding('application/json');
         $validador = new validador();
-        $diccionario = array('banco'       => array('number' => true,             'length' => '2',  'notNull' => 'true'),
-                             'cuenta'      => array('number' => true,             'length' => '2',  'notNull' => 'true'),
-                             'ordenPagada' => array('number' => true,             'length' => '2',  'notNull' => 'true'),
-                             'reference'   => array('referenciaBancaria' => true, 'length' => '21', 'notNull' => 'true'),
-                             'amount'      => array('float' => true,              'length' => '15', 'notNull' => 'true'),
-                             'paymentDay'  => array('date' => true,               'length' => '10', 'notNull' => 'true'));
+        $diccionario = array('banco'       => array('number' => true,             'maxlength' => '2',  'notNull' => 'true'),
+                             'cuenta'      => array('number' => true,             'maxlength' => '2',  'notNull' => 'true'),
+                             'ordenPagada' => array('number' => true,             'maxlength' => '2',  'notNull' => 'true'),
+                             'reference'   => array('referenciaBancaria' => true, 'maxlength' => '21', 'notNull' => 'true'),
+                             'amount'      => array('float' => true,              'maxlength' => '15', 'notNull' => 'true'),
+                             'paymentDay'  => array('date' => true,               'maxlength' => '10', 'notNull' => 'true'));
 
         $respuesta = $validador->procesamiento($this->data,$diccionario);
 

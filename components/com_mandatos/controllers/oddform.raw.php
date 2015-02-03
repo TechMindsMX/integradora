@@ -63,9 +63,9 @@ class MandatosControllerOddform extends JControllerLegacy {
         $document = JFactory::getDocument();
         $parametros = JFactory::getApplication()->input->getArray();
         $diccionario = array(
-            'paymentMethod' => array('number' => true,  'length' => 10 ,    'notNull' => true),
-            'paymentDate'   => array('date' => true,   'length' => 10,     'notNull' => true),
-            'totalAmount'   => array('float' => true,   'length' => 10,     'notNull' => true)
+            'paymentMethod' => array('number' => true,  'maxlength' => 10 ,    'notNull' => true),
+            'paymentDate'   => array('date' => true,   'maxlength' => 10,     'notNull' => true),
+            'totalAmount'   => array('float' => true,   'maxlength' => 10,     'notNull' => true)
         );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);

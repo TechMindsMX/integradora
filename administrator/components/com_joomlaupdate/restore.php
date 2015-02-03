@@ -2661,7 +2661,7 @@ class AKUnarchiverJPA extends AKAbstractUnarchiver
 		// Temporary array with all the data we read
 		$temp = array(
 			'signature' => 			$sig,
-			'length' => 			$header_length,
+			'maxlength' => 			$header_length,
 			'major' => 				$header_data['major'],
 			'minor' => 				$header_data['minor'],
 			'filecount' => 			$header_data['count'],

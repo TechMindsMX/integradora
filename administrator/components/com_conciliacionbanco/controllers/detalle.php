@@ -29,11 +29,11 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
         $data = JFactory::getApplication()->input->getArray($post);
 
         $diccionario = array(
-            'integradoId' => array('number' => true, 'length'=>10),
-            'cuenta'     => array('number' => true,    'length'=>3),
-            'referencia' => array('string' => true, 'length'=>21),
-            'date'       => array('fecha' => true,  'length'=>10),
-            'amount'     => array('float' => true,  'length'=>20)
+            'integradoId' => array('number' => true, 'maxlength' => 10),
+            'cuenta'     => array('number' => true,    'maxlength' => 3),
+            'referencia' => array('string' => true, 'maxlength' => 21),
+            'date'       => array('fecha' => true,  'maxlength' => 10),
+            'amount'     => array('float' => true,  'maxlength' => 20)
         );
         $resultadovalidacion = $validaciones->procesamiento($data,$diccionario);
 
