@@ -503,8 +503,6 @@ class MandatosController extends JControllerLegacy {
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
-        $save = array();
-        $db 	= JFactory::getDbo();
 
         $idCliPro	= JFactory::getApplication()->input->get('idCliPro', null, 'INT');
         $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'id = '.$idCliPro);

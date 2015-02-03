@@ -1720,7 +1720,6 @@ class sendToTimOne {
 
             if ($result != 'verificar') {
                 $fileinfo = pathinfo( $value['name'] );
-                var_dump( $fileinfo, $result );
 
                 $columna = substr( $key, 3 );
                 $clave   = substr( $key, 0, 3 );
