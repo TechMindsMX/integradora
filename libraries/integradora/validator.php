@@ -5,58 +5,41 @@
 include_once 'catalogos.php';
 
 class validador{
-    public $dataPost;
+    protected $dataPost;
+    protected $diccionario;
+    protected $currentKey;
+    protected $diccionario_value;
+    private $errorMsg;
 
     public function  procesamiento ($data,$diccionario) {
         $respuesta = array();
-        $this->dataPost = $data;
-        foreach ($data as $key => $value) {
+        $this->dataPost = (array)$data;
+        $this->diccionario = $diccionario;
 
-            if ($value != '') {
-                if (isset($diccionario[$key]['length'])) {
-                    $minlength = isset($diccionario[$key]['minlength']) ? $diccionario[$key]['minlength'] : null;
+        foreach ($this->dataPost as $key => $value) {
+            $this->currentKey = $key;
 
-                    $respuesta[$key] = self::validalength ($value, $diccionario[$key]['length'], $minlength);
+            foreach ( $diccionario[ $key ] as $method => $this->diccionario_value ) {
 
-                    if (!$respuesta[$key]) {
-                        $respuesta[$key] = self::salir (JText::_('ERROR_LONGITUD_INCORRECTA'));
+                if (method_exists ('validador',$method)) {
+                    $respuestas[$method] = call_user_func (array ('validador', $method));
+                    if (!$respuestas[$method]) {
+                        $errors[$key] = $this->salir ();
                     }
-                }
-
-                if (isset($diccionario[$key]['tipo']) && $respuesta[$key] === true) {
-                    $method = 'valida_' . $diccionario[$key]['tipo'];
-
-                    if (method_exists ('validador',$method) && ($value != '')) {
-                        $respuesta[$key] = call_user_func (array ('validador', $method), $value);
-                        if (!$respuesta[$key]) {
-                            $respuesta[$key] = self::salir (JText::_('ERROR_TIPO_DATOS_INCORRECTO'));
-                        }
-                    }
-
-                }
-
-                if ( isset($diccionario[$key]['notNull']) && !is_array($respuesta) ) {
-                    $respuesta[$key] = self::valida_notNull($value);
-
-                    if (!$respuesta[$key]) {
-                        $respuesta[$key] = self::salir (JText::_('CAMPO_OBLIGATORIO'));
-                    }
-                }
-
-            }elseif ( isset($diccionario[$key]['notNull']) ) {
-                $respuesta[$key] = self::valida_notNull($value);
-
-                if (!$respuesta[$key]) {
-                    $respuesta[$key] = self::salir (JText::_('CAMPO_OBLIGATORIO'));
                 }
             }
+
+            $respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
 
         }
 
         return $respuesta;
     }
 
-    protected static function salir ($msg) {
+    protected function salir () {
+        $msg = isset($this->errorMsg) ? $this->errorMsg : JText::_('ERROR_TIPO_DATOS_INCORRECTO');
+        unset($this->errorMsg);
+
         $response = array ('success' => false, 'msg' => $msg);
 
         return $response;
@@ -66,17 +49,8 @@ class validador{
         $tipos = array('Longitud');
     }
 
-    public static function noErrors ($array) {
-        foreach($array as $value){
-            if(is_array($value)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected function valida_email ($data) {
-        $email = $data;
+    protected function email () {
+        $email = $this->dataPost[$this->currentKey];
         $regex = '/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/';
 
         if (preg_match ($regex,
@@ -90,8 +64,8 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_curp ($data) {
-        $curp = strtoupper($data);
+    protected function curp () {
+        $curp = strtoupper($this->dataPost[$this->currentKey]);
         $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([H M]{1})([A-Z]{2})([A-Z]{3})([A-Z0-9]{2})$/';
 
         if (preg_match ($regex,
@@ -106,8 +80,8 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_fecha ($data) {
-        $fecha = $data;
+    protected function fecha () {
+        $fecha = $this->dataPost[$this->currentKey];
         $regex = '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/';
 
         if (preg_match ($regex,$fecha) == 1) {
@@ -119,8 +93,8 @@ class validador{
         return $respuesta;
     }
 
-    public function valida_rfc ($data) {
-        $rfc = strtoupper($data);
+    public function rfc () {
+        $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
         $regex = '/^[A-Z]{3,4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 
@@ -133,8 +107,8 @@ class validador{
         return $respuesta;
     }
 
-    public function valida_rfc_fisica ($data) {
-        $rfc = strtoupper($data);
+    public function rfc_fisica () {
+        $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
         $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 
@@ -147,8 +121,8 @@ class validador{
         return $respuesta;
     }
 
-    public function valida_rfc_moral ($data) {
-        $rfc = strtoupper($data);
+    public function rfc_moral () {
+        $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
         $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
 
@@ -161,25 +135,34 @@ class validador{
         return $respuesta;
     }
 
-    protected function validalength ($valor, $length, $minlength = null) {
-        if (is_null ($minlength)) {
-            if (strlen ($valor) <= $length) {
-                $respuesta = true;
-            } else {
-                $respuesta = false;
-            }
+    protected function length () {
+        if (strlen ($this->dataPost[$this->currentKey]) == $this->diccionario_value) {
+            $respuesta = true;
         } else {
-            if ((strlen ($valor) <= $length) && (strlen ($valor) >= $minlength)) {
-                $respuesta = true;
-            } else {
-                $respuesta = false;
-            }
+            $respuesta = false;
         }
-
         return $respuesta;
     }
 
-    public function valida_banco_clabe ($data, $codigoBanco = null) {
+    protected function maxlength () {
+        if (strlen ($this->dataPost[$this->currentKey]) <= $this->diccionario_value) {
+            $respuesta = true;
+        } else {
+            $respuesta = false;
+        }
+        return $respuesta;
+    }
+
+    protected function minlenght () {
+        if (strlen ($this->dataPost[$this->currentKey]) >= $this->diccionario_value) {
+            $respuesta = true;
+        } else {
+        $respuesta = false;
+        }
+        return $respuesta;
+    }
+
+    public function banco_clabe ($data, $codigoBanco = null) {
         $clabe = $data;
         $paso3 = 0;
         $clabeTmp = str_split ($clabe,17);
@@ -213,9 +196,9 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_number ($valor) {
+    protected function number () {
         $regex = '/^[0-9\ ]+$/';
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -224,9 +207,9 @@ class validador{
         return $respuesta;
     }
 
-    protected static function valida_float ($valor) {
+    protected function float () {
         $regex  = '/^-?(?:\d+|\d*\.\d+)$/';
-        if(preg_match($regex, $valor) == 1){
+        if(preg_match($regex, $this->dataPost[$this->currentKey]) == 1){
             $respuesta = true;
         }else{
             $respuesta = false;
@@ -235,10 +218,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_string ($valor) {
+    protected function string () {
         $regex = '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
 
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -247,10 +230,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_alphaNumber ($valor) {
+    protected function alphaNumber () {
         $regex = '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . \- \_]+$/';
 
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -259,10 +242,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_text($valor){
+    protected function text(){
         $regex = '/[A-Za-z0-9_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
 
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -271,10 +254,10 @@ class validador{
         return $respuesta;
     }
 
-    protected  function valida_date ($valor) {
+    protected  function date () {
         $regex = '/^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/';
 
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -283,10 +266,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_referenciaBancaria ($valor) {
+    protected function referenciaBancaria () {
         $regex = '/^[0-9a-zA-Z\-]{21}+$/';
 
-        if (preg_match ($regex, $valor) == 1) {
+        if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -295,8 +278,8 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_notNull ($valor){
-        if($valor != '' && $valor != 0){
+    protected function notNull (){
+        if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' ){
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -305,10 +288,10 @@ class validador{
         return $respuesta;
     }
 
-    protected function valida_phone($valor){
+    protected function phone(){
         $regex =   '/^[1-9]{1}?[0-9]{9}$/';
 
-        if(preg_match($regex, $valor)){
+        if(preg_match($regex, $this->dataPost[$this->currentKey])){
             $respuesta = true;
         } else {
             $respuesta = false;
@@ -316,4 +299,17 @@ class validador{
 
         return $respuesta;
     }
+
+    protected function min()
+    {
+        $this->errorMsg = JText::sprintf('VALIDATION_MIN_VALUE', $this->diccionario_value);
+        return floatval($this->dataPost[$this->currentKey]) >= $this->diccionario_value;
+    }
+
+    protected function max()
+    {
+        $this->errorMsg = JText::sprintf('VALIDATION_MAX_VALUE', $this->diccionario_value);
+        return floatval($this->dataPost[$this->currentKey]) <= $this->diccionario_value;
+    }
+
 }

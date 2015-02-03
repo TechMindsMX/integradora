@@ -32,13 +32,13 @@ class MandatosControllerProductosform extends JControllerLegacy {
         $validacion  = new validador();
         $parametros  = $this->parametros;
         $diccionario = array(
-            'productName' => array('tipo' => 'alphaNumber', 'length' => '100',  'notNull' => true),
-            'measure'     => array('tipo' => 'string',      'length' => '100',  'notNull' => true),
-            'price'       => array('tipo' => 'float',       'length' => '10',   'notNull' => true),
-            'iva'         => array('tipo' => 'number',      'length' => '10',   'notNull' => true),
-            'ieps'        => array('tipo' => 'float',       'length' => '5',    'minlength' => '1'),
-            'currency'    => array('tipo' => 'string',      'length' => '100',  'notNull' => true),
-            'description' => array('tipo' => 'text',        'length' => '1000', 'notNull' => true)
+            'productName' => array('alphaNumber'    => true,    'maxlength' => '100',  'notNull' => true),
+            'measure'     => array('string'         => true,    'maxlength' => '100',  'notNull' => true),
+            'price'       => array('float'          => true,    'maxlength' => '10',   'notNull' => true),
+            'iva'         => array('number'         => true,    'maxlength' => '10',   'notNull' => true),
+            'ieps'        => array('float'          => true,    'maxlength' => '5',    'minlength' => '1', 'max' => '100', 'min' => '0'),
+            'currency'    => array('string'         => true,    'maxlength' => '100',  'notNull' => true),
+            'description' => array('text'           => true,    'maxlength' => '1000', 'notNull' => true)
         );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
