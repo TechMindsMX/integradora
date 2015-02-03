@@ -695,10 +695,6 @@ if(!empty($datos->integrado)){
         </div>
 
         <div id="registro-propiedad">
-            <div class="checkbox">
-                <label><input type="checkbox" id="tramiteRegistro"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
-            </div>
-
             <h3><?php echo JText::_('LBL_RPP'); ?></h3>
             <div class="form-group">
                 <label for="rp_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
@@ -721,6 +717,10 @@ if(!empty($datos->integrado)){
                     }
                     ?>
                 </select>
+            </div>
+
+            <div class="checkbox">
+                <label><input type="checkbox" id="tramiteRegistro"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
             </div>
         </div>
 
