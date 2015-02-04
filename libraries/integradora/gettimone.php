@@ -3380,7 +3380,7 @@ class Cashout extends makeTx{
      * @param $idPagador
      * @param $idBeneficiario
      * @param $totalAmount
-     * @param $options array(accountId =>, paymentMethod => )
+     * @param $options array(accountId => (INT), paymentMethod => (INT) )
      */
     function __construct($orden, $idPagador, $idBeneficiario, $totalAmount, $options)
     {

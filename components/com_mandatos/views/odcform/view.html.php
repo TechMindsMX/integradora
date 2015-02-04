@@ -22,12 +22,11 @@ class MandatosViewOdcform extends JViewLegacy {
             'observaciones' => 'STRING'
         );
         $data	            = $app->input->getArray($post);
-
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
         $this->proyectos 	= $this->get('proyectos');
         $this->proveedores	= $this->get('providers');
+        $this->bancos       = $this->get('CatalogoBancos');
 
         //si la confirmacion es diferente de nulo se hace el parseo del XML
         if(!is_null($data['confirmacion'])){

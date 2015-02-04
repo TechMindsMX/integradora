@@ -9,18 +9,19 @@ class validador{
     protected $diccionario;
     protected $currentKey;
     protected $diccionario_value;
+    protected $respuesta;
     private $errorMsg;
 
     public function  procesamiento ($data,$diccionario) {
-        $respuesta = array();
+        $this->respuesta = array();
         $this->dataPost = (array)$data;
         $this->diccionario = $diccionario;
 
-        foreach ($this->dataPost as $key => $value) {
+        foreach ($this->diccionario as $key => $value) {
             $this->currentKey = $key;
 
-            if ( isset( $diccionario[ $key ] ) ) {
-                foreach ( $diccionario[ $key ] as $method => $this->diccionario_value ) {
+            if ( isset( $this->dataPost[ $key ] ) ) {
+                foreach ( $value as $method => $this->diccionario_value ) {
 
                     if (method_exists ('validador',$method)) {
                         $respuestas[$method] = call_user_func (array ('validador', $method));
@@ -29,13 +30,12 @@ class validador{
                         }
                     }
                 }
-                $respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
+                $this->respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
+
             }
-
-
         }
 
-        return $respuesta;
+        return $this->respuesta;
     }
 
     protected function salir () {
@@ -45,6 +45,18 @@ class validador{
         $response = array ('success' => false, 'msg' => $msg);
 
         return $response;
+    }
+
+    public function allPassed(){
+        $return = true;
+        foreach ($this->respuesta as $value) {
+            if(is_array($value)){
+                $return = false;
+            }
+        }
+
+        return $return;
+
     }
 
     protected function diccionaroErrores($tipo,$campo){

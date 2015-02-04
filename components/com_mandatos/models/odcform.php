@@ -49,16 +49,13 @@ class MandatosModelOdcform extends JModelItem {
 
     public function getProviders(){
         $proveedores = getFromTimOne::getClientes($this->integradoId,1);
-
         //TODO: traer siempre los clientes/proveedores como objetos integrado
-
         foreach ( $proveedores as $key =>$value ) {
             $integ = new IntegradoSimple($value->id);
             $integ->displayName = $integ->getDisplayName();
 
             $proveedores[$key] = $integ;
         }
-
         return $proveedores;
     }
 
@@ -73,6 +70,12 @@ class MandatosModelOdcform extends JModelItem {
         $datos->urlXML = $urlFile;
 
         return $datos;
+    }
+
+    public function getCatalogoBancos(){
+        $catalogo = new Catalogos();
+
+        return $catalogo->getBancos();
     }
 }
 
