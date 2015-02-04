@@ -580,6 +580,10 @@ class getFromTimOne{
         return $catalog;
     }
 
+    private static function getClientProviderName($clientProvider){
+        $clientProvider->frontName = $clientProvider->corporateName == ''?$clientProvider->tradeName:$clientProvider->corporateName;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -1113,6 +1117,7 @@ class getFromTimOne{
 
         foreach ($clientes as $key => $value) {
             if ( in_array($value->type, $catalogo->clientTypes()) ) {
+                self::getClientProviderName($value);
                 $proveedores[ $value->id ] = $value;
             }
         }
@@ -1129,6 +1134,7 @@ class getFromTimOne{
 
         foreach ($clientes as $key => $value) {
             if ( in_array($value->type,$catalogo->providerTypes()) ) {
+                self::getClientProviderName($value);
                 $proveedores[ $value->id ] = $value;
             }
         }
