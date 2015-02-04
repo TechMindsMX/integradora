@@ -334,6 +334,15 @@ class IntegradoSimple extends Integrado {
 		}
     }
 
+	public function getUserPrincipal() {
+		foreach ( $this->usuarios as $user ) {
+			if($user->integrado_principal == 1) {
+				$response = $user;
+			}
+		}
+		return $response;
+	}
+
 }
 
 class integrado_datos_personales {

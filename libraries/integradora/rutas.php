@@ -107,8 +107,14 @@ class servicesUrls extends timOneControllers
 
 	public function factura() {
 		$this->create->url = 'create';
-		$this->disable->url = 'cancel';
-		$this->disable->url = 'cancel';
+	}
+
+	public function facturaCancel() {
+		$this->create->url = 'cancel';
+	}
+
+	public function facturaValidate() {
+		$this->create->url = 'validate';
 	}
 
 	public function validateXml() {

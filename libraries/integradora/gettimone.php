@@ -3235,7 +3235,7 @@ class UUID
 // $v4uuid = UUID::v4();
 
 
-class Factura {
+class Factura extends makeTx {
     public $emisor;
     public $receptor;
     public $datosDeFacturacion;
@@ -3269,6 +3269,13 @@ class Factura {
 
         return $name;
     }
+
+    public function sendCreateFactura()
+    {
+        $rutas = new servicesRoute();
+        parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+    }
+
 }
 
 class Conceptos
@@ -3350,7 +3357,6 @@ class datosDeFacturacion {
 
 
 }
-
 
 class UserTimone {
     public $uuid  = '';
@@ -3449,7 +3455,7 @@ class transferFunds extends makeTx {
 }
 
 class makeTx {
-    public function create($datosEnvio){
+    protected function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();

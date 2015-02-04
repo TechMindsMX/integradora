@@ -19,7 +19,6 @@ class Send_email{
 
         $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
 
-
         $int = new IntegradoSimple($currentIntegradoId);
 
         array_push($int->usuarios, JFactory::getUser(93));
@@ -52,7 +51,19 @@ class Send_email{
         $mailer->setSubject($title);
         $mailer->setBody($body);
         $send = $mailer->Send();
+
+        $this->logEvent( $mailer, $send );
+
         return $send;
+    }
+
+    private function logEvent( $info, $dato ) {
+        $logdata = $logdata = implode( ', ', array (
+            JFactory::getUser()->id,
+            JFactory::getSession()->get('integradoId', null, 'integrado'),
+            json_encode( array ( var_export($info), $dato  ) )
+        ) );
+        JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 
     }
 
