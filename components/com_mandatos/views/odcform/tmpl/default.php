@@ -112,7 +112,7 @@ if(!isset($this->datos['confirmacion'])){
             <select id="proveedor" name="proveedor">
                 <?php
                 foreach ($this->proveedores as $key => $value) {
-                    $selected = $datos->proveedor == $value->id?'selected':'';
+                    $selected = $datos->proveedor->id == $value->id?'selected':'';
                     echo '<option value="'.$value->id.'" '.$selected.'>'.$value->displayName.'</option>';
                 }
                 ?>
