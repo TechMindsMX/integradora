@@ -234,7 +234,7 @@ class IntegradoController extends JControllerLegacy {
             'db_banco_codigo'            => array('alphaNumber' => true,	    'maxlength' => 3),
             'db_banco_cuenta'            => array('alphaNumber' => true,        'maxlength' => 10,   'minlength'=>10),
             'db_banco_sucursal'          => array('alphaNumber' => true,	    'maxlength' => 10),
-            'db_banco_clabe'             => array('banco_clabe' => true,	    'maxlength' => 18,   'minlength'=>18),
+            'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],	    'maxlength' => 18,   'minlength'=>18),
             'tab'                        => array('string' => true,   	    	'maxlength' => 18),
             'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10),
             't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10),

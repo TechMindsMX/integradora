@@ -56,7 +56,7 @@ class validador{
         $regex = '/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/';
 
         if (preg_match ($regex,
-                $email) == 1
+                        $email) == 1
         ) {
             $respuesta = true;
         } else {
@@ -71,8 +71,8 @@ class validador{
         $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([H M]{1})([A-Z]{2})([A-Z]{3})([A-Z0-9]{2})$/';
 
         if (preg_match ($regex,
-                $curp,
-                $coicidencias) == 1
+                        $curp,
+                        $coicidencias) == 1
         ) {
             $respuesta = true;
         } else {
@@ -158,40 +158,42 @@ class validador{
         if (strlen ($this->dataPost[$this->currentKey]) >= $this->diccionario_value) {
             $respuesta = true;
         } else {
-        $respuesta = false;
+            $respuesta = false;
         }
         return $respuesta;
     }
 
-    public function banco_clabe ($data, $codigoBanco = null) {
-        $clabe = $data;
-        $paso3 = 0;
-        $clabeTmp = str_split ($clabe,17);
+    public function banco_clabe () {
+        $respuesta = false;
 
-        $codigoVerificador = intval ($clabeTmp[1]);
-        $clabesepa = str_split ($clabeTmp[0]);
-        $ponderaciones = array (3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7);
-        $claveBanco = isset($this->dataPost['db_banco_codigo'])?$this->dataPost['db_banco_codigo']:$codigoBanco;
-        $claveBancoClabe = $clabesepa[0] . $clabesepa[1] . $clabesepa[2];
+        if ( ! empty( $this->dataPost[ $this->currentKey ] ) ) {
+            $clabe = $this->dataPost[$this->currentKey];
+            $paso3 = 0;
+            $clabeTmp = str_split ($clabe,17);
 
-        foreach ($clabesepa as $key => $value) {
-            $paso1[] = intval ($value) * $ponderaciones[$key];
+            $codigoVerificador = intval ($clabeTmp[1]);
+            $clabesepa = str_split ($clabeTmp[0]);
+            $ponderaciones = array (3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7);
+            $claveBanco = isset($this->dataPost['db_banco_codigo']) ? $this->dataPost['db_banco_codigo'] : $this->diccionario_value;
+            $claveBancoClabe = $clabesepa[0] . $clabesepa[1] . $clabesepa[2];
 
-            $paso2[] = $paso1[$key] % 10;
+            foreach ($clabesepa as $key => $value) {
+                $paso1[] = intval ($value) * $ponderaciones[$key];
 
-            $paso3 = $paso3 + $paso2[$key];
-        }
+                $paso2[] = $paso1[$key] % 10;
 
-        $paso4 = $paso3 % 10;
-        $paso5 = 10 - $paso4;
-        $paso6 = $paso5 % 10;
-        $verificacion = $paso6 == $codigoVerificador;
-        $verificabanco = $claveBanco == $claveBancoClabe;
+                $paso3 = $paso3 + $paso2[$key];
+            }
 
-        if ($verificacion && $verificabanco) {
-            $respuesta = true;
-        } else {
-            $respuesta = false;
+            $paso4 = $paso3 % 10;
+            $paso5 = 10 - $paso4;
+            $paso6 = $paso5 % 10;
+            $verificacion = $paso6 == $codigoVerificador;
+            $verificabanco = $claveBanco == $claveBancoClabe;
+
+            if ($verificacion && $verificabanco) {
+                $respuesta = true;
+            }
         }
 
         return $respuesta;
