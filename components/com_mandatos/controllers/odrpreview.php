@@ -21,6 +21,12 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     protected $currentIntegrado;
     protected $txsToDo;
 
+    function __construct( ) {
+        $this->integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+
+        parent::__construct(array());
+    }
+
     function authorize() {
         $post               = array( 'idOrden' => 'INT' );
         $this->app 			= JFactory::getApplication();
@@ -118,9 +124,12 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         }
     }
 
-    private function sendNotifications() {
+    public function sendNotifications() {
         /*NOTIFICACIONES 23*/
-        $getCurrUser         = new Integrado($this->integradoId);
+        $getCurrUser         = new IntegradoSimple($this->integradoId);
+
+        $emails = array($getCurrUser->getUserPrincipal()->email, JFactory::getUser()->email, 'ricardolyon@gmail.com');
+        $emails = array_unique($emails);
 
         $titulo = JText::_('TITULO_23');
 
@@ -128,7 +137,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
+        $dato['email']          = $emails;
         $send                   = new Send_email();
         $info = $send->notification($dato);
 
