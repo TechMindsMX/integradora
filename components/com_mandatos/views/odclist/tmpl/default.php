@@ -42,19 +42,20 @@ jQuery(document).ready(function(){
 
 function filtro(){
 	var valor	= parseInt( jQuery(this).val() );
-
+	var columnaT0 = jQuery('.type_0');
+	var columnaT1 = jQuery('.type_1');
 	switch(valor){
 		case 0:
-			jQuery('.type_0').show();
-			jQuery('.type_1').hide();
+			columnaT1.show();
+			columnaT0.hide();
 			break;
 		case 1:
-			jQuery('.type_1').show();
-			jQuery('.type_0').hide();
+			columnaT0.show();
+			columnaT1.hide();
 			break;
 		case 3:
-			jQuery('.type_0').show();
-			jQuery('.type_1').show();
+			columnaT0.show();
+			columnaT1.show();
 			break;
 	}
 }

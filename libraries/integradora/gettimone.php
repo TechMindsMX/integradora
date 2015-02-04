@@ -774,9 +774,7 @@ class getFromTimOne{
             }
             $response = $listAllCliPro;
         }
-
-        $tiposClientes = array(0,2);
-        $tiposProveedores = array(1,2);
+        $catalogo = new Catalogos();
 
         $clientes = array();
         $proveedores = array();
@@ -784,11 +782,10 @@ class getFromTimOne{
         if(!empty($response)){
             foreach ($response as $value) {
 
-                if( in_array($value->type, $tiposClientes) && in_array($type, $tiposClientes) ){
+                if( in_array($value->type, $catalogo->clientTypes()) && in_array($type, $catalogo->clientTypes()) ){
                     $clientes[] = $value;
                 }
-                if( in_array($value->type, $tiposProveedores) && in_array($type, $tiposProveedores) ){
-                    echo 'aqui';
+                if( in_array($value->type, $catalogo->providerTypes()) && in_array($type, $catalogo->providerTypes()) ){
                     $proveedores[] = $value;
                 }
 
@@ -962,7 +959,7 @@ class getFromTimOne{
             $value->observaciones   = (STRING)$value->observaciones;
 
             $value = self::getProyectFromId($value);
-            $value = self::getClientFromID($value);
+            $value = self::getProviderFromID($value);
             $value->status = self::getOrderStatusName($value->status);
 
             $xmlFileData            = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$value->urlXML);
@@ -1112,10 +1109,26 @@ class getFromTimOne{
 
         $clientes = self::getClientes($orden->integradoId);
 
+        $catalogo = new Catalogos();
+
         foreach ($clientes as $key => $value) {
-            if ( $value->type == 0 ) {
+            if ( in_array($value->type, $catalogo->clientTypes()) ) {
                 $proveedores[ $value->id ] = $value;
-            } elseif ( $value->type == 1 ) {
+            }
+        }
+
+        $orden->proveedor = $proveedores[$orden->clientId];
+
+        return $orden;
+    }
+
+    public static function getProviderFromID($orden){
+        $proveedores = array();
+        $catalogo = new Catalogos();
+        $clientes = self::getClientes($orden->integradoId);
+
+        foreach ($clientes as $key => $value) {
+            if ( in_array($value->type,$catalogo->providerTypes()) ) {
                 $proveedores[ $value->id ] = $value;
             }
         }
@@ -3431,7 +3444,7 @@ class transferFunds extends makeTx {
     public function sendCreateTx()
     {
         $rutas = new servicesRoute();
-        parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+        return parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
     }
 
 }

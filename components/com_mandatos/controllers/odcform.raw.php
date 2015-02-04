@@ -76,37 +76,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 'redireccion' => true
             );
 
-
-            /*NOTIFICACIONES 11*/
-
-            /*$currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
-            $int = new IntegradoSimple($currentIntegradoId);
-
-            $titulo = JText::_('TITULO_11');
-            $titulo = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
-
-            $contenido = JText::_('NOTIFICACIONES_11');
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
-            $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$data['cliente'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$data['odv'].'</strong>',$contenido);
-
-            $data['titulo']         = $titulo;
-            $data['body']           = $contenido;
-
-            $send                   = new Send_email();
-            $send->notification($data);
-
-
-            /*if ($send->isError()){
-                $resp = $send->getErrorMsg();
-                $this->app->enqueueMessage($send->getErrorMsg());
-            }else{
-                $resp = 'enviado';
-                $this->app->enqueueMessage('Correos enviados');
-            }*/
+//            $this->sendNotifications($datos);
         }else{
             $respuesta = array('redireccion' => false);
         }
@@ -138,5 +108,38 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
+    }
+
+    private function sendNotifications($data){
+        /*NOTIFICACIONES 11*/
+
+        $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
+        $int = new IntegradoSimple($currentIntegradoId);
+
+        $titulo = JText::_('TITULO_11');
+        $titulo = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
+
+        $contenido = JText::_('NOTIFICACIONES_11');
+        $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
+        $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$int->user->username.'</strong>',$contenido);
+        $contenido = str_replace('$idOrden', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
+        $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$data['cliente'].'</strong>',$contenido);
+        $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
+        $contenido = str_replace('$odv', '<strong style="color: #000000">'.$data['odv'].'</strong>',$contenido);
+
+        $data['titulo']         = $titulo;
+        $data['body']           = $contenido;
+
+        $send                   = new Send_email();
+        $send->notification($data);
+
+
+        if ($send->isError()){
+            $resp = $send->getErrorMsg();
+            $this->app->enqueueMessage($send->getErrorMsg());
+        }else{
+            $resp = 'enviado';
+            $this->app->enqueueMessage('Correos enviados');
+        }
     }
 }

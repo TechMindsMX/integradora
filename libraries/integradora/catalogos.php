@@ -134,5 +134,13 @@ class Catalogos {
 
 		return $this->pers_juridica;
 	}
+
+	public function clientTypes(){
+		return array(0,2);
+	}
+
+	public function providerTypes(){
+		return array(1,2);
+	}
 }
 	

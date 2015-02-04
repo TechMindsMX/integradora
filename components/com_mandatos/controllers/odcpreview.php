@@ -31,116 +31,113 @@ class MandatosControllerOdcpreview extends JControllerAdmin
      *
      */
     function authorize(){
-        $TxOdc = $this->realizaTx();
-        exit;
+        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
+        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
-//        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
-//        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
-//
-//        if ($this->permisos['canAuth']) {
-//            $integradoSimple = new IntegradoSimple($this->integradoId);
-//            $integradoSimple->getTimOneData();
-//            $integradoSimple->timoneData->balance = (float)10000000;
-//
-//            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
-//
-//            // acciones cuando tiene permisos para autorizar
-//            $user = JFactory::getUser();
-//            $save = new sendToTimOne();
-//
-//            $this->parametros['userId'] = (INT)$user->id;
-//            $this->parametros['authDate'] = time();
-//            unset($this->parametros['integradoId']);
-//
-//            $save->formatData($this->parametros);
-//
-//            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'], 'odc_auth');
-//
-//            $check = getFromTimOne::checkUserAuth($auths);
-//
-//            if ($check) {
-//                $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
-//            }
-//            $resultado = $save->insertDB('auth_odc');
-//
-//            if ($resultado) {
-//
-//                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-//                $newStatusId = 5;
-//                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
-//                if ($statusChange) {
-//
-//                    $TxOdc = $this->realizaTx();
-//                    if($TxOdc){
-//                        $cobroComision = $this->txComision();
-//
-//                        if($cobroComision) {
-//                            $newStatusId = 13;
-//                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
-//
-//                            if($statusChange){
-//                                $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
-//                            }
-//                        }else{
-//                            //mensaje no se cobro la comision;
-//                        }
-//                    }else{
-////                        no se hizo el pago al proveedor;
-//                    }
-//
-//                    if (isset($this->integradoId)) {
-//                        $getCurrUser = new Integrado($this->integradoId);
-//                        $integradoAdmin = new IntegradoSimple(93);
-//
-//                        $titulo = JText::_('TITULO_13');
-//                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
-//
-//                        $contenido = JText::_('NOTIFICACIONES_13');
-//
-//                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoSimple->user->username . '</strong>', $contenido);
-//                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
-//                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . $getCurrUser->user->username . '</strong>', $contenido);
-//                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
-//
-//                        $data['titulo'] = $titulo;
-//                        $data['body'] = $contenido;
-//                        $data['email'] = JFactory::getUser()->email;
-//
-//                        $send = new Send_email();
-//                        $send->notification($data);
-//
-//
-//                        $titulo = JText::_('TITULO_14');
-//                        $titulo = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $titulo);
-//                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
-//
-//                        $contenido = JText::_('NOTIFICACIONES_14');
-//
-//                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $contenido);
-//                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
-//                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . $getCurrUser->user->username . '</strong>', $contenido);
-//                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
-//
-//                        $data['titulo'] = $titulo;
-//                        $data['body'] = $contenido;
-//                        $data['email'] = $integradoAdmin->user->email;
-//
-//                        $send = new Send_email();
-//                        $send->notification($data);
-//                    }
-//
-//                }
-//                //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
-//
-//
-//                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
-//            } else {
-//                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
-//            }
-//        } else {
-//            // acciones cuando NO tiene permisos para autorizar
-//            $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
-//        }
+        if ($this->permisos['canAuth']) {
+            $integradoSimple = new IntegradoSimple($this->integradoId);
+            $integradoSimple->getTimOneData();
+            $integradoSimple->timoneData->balance = (float)10000000;
+
+            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
+
+            // acciones cuando tiene permisos para autorizar
+            $user = JFactory::getUser();
+            $save = new sendToTimOne();
+
+            $this->parametros['userId'] = (INT)$user->id;
+            $this->parametros['authDate'] = time();
+            unset($this->parametros['integradoId']);
+
+            $save->formatData($this->parametros);
+
+            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'], 'odc_auth');
+
+            $check = getFromTimOne::checkUserAuth($auths);
+
+            if ($check) {
+                $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
+            }
+            $resultado = $save->insertDB('auth_odc');
+
+            if ($resultado) {
+
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                $newStatusId = 5;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+                if ($statusChange) {
+
+                    $TxOdc = $this->realizaTx();
+
+                    if($TxOdc){
+                        $cobroComision = $this->txComision();
+
+                        if($cobroComision) {
+                            $newStatusId = 13;
+                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+
+                            if($statusChange){
+                                $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+                            }
+                        }else{
+                            //mensaje no se cobro la comision;
+                        }
+                    }else{
+//                        no se hizo el pago al proveedor;
+                    }
+
+                    if (isset($this->integradoId)) {
+                        $integradoAdmin = new IntegradoSimple(93);
+
+                        $titulo = JText::_('TITULO_13');
+                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
+
+                        $contenido = JText::_('NOTIFICACIONES_13');
+
+                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoSimple->user->username . '</strong>', $contenido);
+                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
+                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . JFactory::getUser()->username . '</strong>', $contenido);
+                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
+
+                        $data['titulo'] = $titulo;
+                        $data['body'] = $contenido;
+                        $data['email'] = JFactory::getUser()->email;
+
+                        $send = new Send_email();
+                        $send->notification($data);
+
+
+                        $titulo = JText::_('TITULO_14');
+                        $titulo = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $titulo);
+                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
+
+                        $contenido = JText::_('NOTIFICACIONES_14');
+
+                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $contenido);
+                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
+                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . JFactory::getUser()->username . '</strong>', $contenido);
+                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
+
+                        $data['titulo'] = $titulo;
+                        $data['body'] = $contenido;
+                        $data['email'] = $integradoAdmin->user->email;
+
+                        $send = new Send_email();
+                        $send->notification($data);
+                    }
+
+                }
+                //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
+
+
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
+            } else {
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+            }
+        } else {
+            // acciones cuando NO tiene permisos para autorizar
+            $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
+        }
     }
 
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple){
@@ -175,30 +172,13 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
 
         if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden->integradoId, $orden->proveedor, $orden->totalAmount);
-            $txData->sendTx();
-            exit;
-
-            $retorno = $rutas->getUrlService('timone', 'transferFunds', 'create');
-
-            $resultadoTX = $this->enviotxTimone($retorno, $txData);
+            $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor, $orden->totalAmount);
+            $txData->sendCreateTx();
         }else{
             //TODO cashout a la cuenta del cliente
         }
 
-        return $resultadoTX;
-    }
 
-    private function enviotxTimone($datosEnvio, $txData){
-
-        $request = new sendToTimOne();
-        $request->setServiceUrl($datosEnvio->url);
-        $request->setJsonData(json_encode($txData));
-        $request->setHttpType($datosEnvio->type);
-
-        //$resultado = $request->to_timone();
-
-        return $resultado->code == 200;
     }
 
     private function txComision(){
@@ -206,14 +186,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $orden = $this->getOrden();
         $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
-        $dataTransfer = new stdClass();
-        $dataTransfer->integradoId = $orden->integradoId;
-        $dataTransfer->proveedor = 1;
-        $dataTransfer->totalAmount = $montoComision;
+        $txComision = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 
-        $txComision = new transferFunds($dataTransfer);
-
-        return $txComision;
+        return $txComision->sendCreateTx();;
     }
 
     private function getOrden(){
