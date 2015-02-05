@@ -20,7 +20,7 @@ class validador{
         foreach ($this->diccionario as $key => $value) {
             $this->currentKey = $key;
 
-            if ( isset( $this->dataPost[ $key ] ) ) {
+            if ( array_key_exists($key, $this->dataPost) ) {
                 foreach ( $value as $method => $this->diccionario_value ) {
 
                     if (method_exists ('validador',$method)) {

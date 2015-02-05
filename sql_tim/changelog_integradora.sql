@@ -264,3 +264,7 @@ ALTER TABLE `flpmu_integrado_verificacion_solicitud` ADD COLUMN `params` varchar
 --changeset ricardolyon:29
 ALTER TABLE `flpmu_ordenes_deposito` CHANGE `totalAmount` `totalAmount` FLOAT (11) NOT NULL;
 --rollback ALTER TABLE `flpmu_ordenes_deposito` CHANGE `totalAmount` `totalAmount` INT;
+
+--changeset lutek:30
+ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `bankId` INT (11);
+--rollback ALTER TABLE `flpmu_ordenes_compra` DROP COLUMN `bankId`;

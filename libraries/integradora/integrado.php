@@ -12,7 +12,7 @@ jimport('integradora.gettimone');
  */
 class Integrado {
 	public $integrados;
-	
+
 	function __construct($integ_id = null) {
 //		$this->user = JFactory::getUser();
 //		unset($this->user->password);
@@ -56,6 +56,20 @@ class Integrado {
 			return $sesionIntegradoId;
 		}
 
+	}
+
+	public function getBankName($datos_bancarios){
+		$catalogos = new Catalogos();
+		$bancos    = $catalogos->getBancos();
+		foreach($datos_bancarios as $bancoData){
+			foreach ($bancos as $banco) {
+				if($banco->claveClabe == $bancoData->banco_codigo){
+					$bancoData->bankName = $banco->banco;
+				}
+			}
+		}
+
+		return $datos_bancarios;
 	}
 
 	function getIntegrados (){
@@ -126,6 +140,8 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
             $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integrado_id', $integrado_id);
             $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
+
+			$this->integrados[$key]->datos_bancarios 	= $this->getBankName($this->integrados[$key]->datos_bancarios);
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales ) ) {
 				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));

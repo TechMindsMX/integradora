@@ -20,20 +20,17 @@ $sesion->clear('datos','misdatos');
 
 $number2word    = new AifLibNumber;
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-
-foreach ($this->proveedores as $providerData) {
-    $bancos = $providerData->integrados[0]->datos_bancarios;
-    $integradoBanco[$providerData->integrados[0]->integrado->integrado_id] = $bancos;
-}
 ?>
     <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
     <script>
         jQuery(document).ready(function(){
+            var selectProveedor = jQuery('#proveedor');
 
-            jQuery('#proveedor').on('change', muestraboton);
             jQuery('#agregarProveedor').on('click', agregaProveedor);
             jQuery('input:button').on('click',envio);
-            jQuery('#proveedor').on('change',showSelectBanco);
+            selectProveedor.on('change',showSelectBanco);
+
+            selectProveedor.trigger('change');
         });
 
         function envio (){
@@ -81,25 +78,41 @@ foreach ($this->proveedores as $providerData) {
             });
         }
 
-        function muestraboton(){
-            var valorCampo = jQuery(this).val();
-
-            if(valorCampo == 'other'){
-                jQuery('#agregarProveedor').show();
-            }else{
-                jQuery('#agregarProveedor').hide();
-            }
-        }
-
         function agregaProveedor(){
             window.location = 'index.php?option=com_mandatos&view=clientesform';
         }
 
         function showSelectBanco() {
+            var arregloIntegrado = new Array;
             var integradoId = jQuery(this).val();
+            var selectBancos = jQuery('#bancos');
+            var optionSelected = '';
+            <?php
+            foreach ($this->proveedores as $providerData) {
+                $bancos = $providerData->integrados[0]->datos_bancarios;
+                echo 'arregloIntegrado['.$providerData->integrados[0]->integrado->integrado_id.'] = '.json_encode($bancos).';'."\n";
+                if(isset($this->orden->bankId)){
+                    echo 'var optionSelected = '.$this->orden->bankId.';'."\n";
+                }
+            }
+            ?>
+
+            selectBancos.find('option').remove();
 
             if(integradoId != 'other'){
+                jQuery('#agregarProveedor').hide();
 
+                var options = '<option>Seleccion la cuenta</option>';
+                jQuery.each(arregloIntegrado[integradoId],function(key,value){
+                    if(optionSelected != value.datosBan_id) {
+                        options += '<option value="' + value.datosBan_id + '">' + value.bankName + ' - ' + value.banco_clabe + '</option>';
+                    }else{
+                        options +='<option value="'+value.datosBan_id+'" selected="selected">'+value.bankName+' - '+value.banco_clabe+'</option>';
+                    }
+                });
+                selectBancos.append(options);
+            }else{
+                jQuery('#agregarProveedor').show();
             }
         }
     </script>
@@ -144,20 +157,10 @@ if(!isset($this->datos['confirmacion'])){
         </div>
 
         <div class="form-group">
-        <?php
-
-        foreach ($integradoBanco as $key => $value) {
-            echo '<select id="integrado_'.$key.'">';
-            foreach ($value as $dataBanco) {
-                foreach($this->bancos as $banco){
-                    var_dump($dataBanco->banco_codigo);
-                }
-                echo '<option value="'.$dataBanco->datosBan_id.'"> - '.$dataBanco->banco_clabe.'</option>';
-            }
-            echo '</select>';
-
-        }
-        ?>
+            <label for="bancos">Cuenta para pago</label>
+            <select id="bancos" name="bankId">
+                <option value="0">Seleccione el integrado</option>
+            </select>
         </div>
 
         <div class="form-group">
@@ -344,15 +347,17 @@ if(!isset($this->datos['confirmacion'])){
         <input type="hidden" name="numOrden"      value="<?php echo $datos['numOrden'] ?>" />
         <input type="hidden" name="proyecto"      value="<?php echo $datos['proyecto']; ?>" />
         <input type="hidden" name="proveedor"     value="<?php echo $datos['proveedor']; ?>" />
+        <input type="hidden" name="bankId" value="<?php echo $datos['bankId']; ?>" />
         <input type="hidden" name="paymentDate"   value="<?php echo $datos['paymentDate']; ?>" />
         <input type="hidden" name="paymentMethod" value="<?php echo $datos['paymentMethod']; ?>" />
         <input type="hidden" name="totalAmount"   value="<?php echo $comprobante['TOTAL']; ?>" />
         <input type="hidden" name="urlXML"        value="<?php echo $this->dataXML->urlXML; ?>" />
         <input type="hidden" name="observaciones" value="<?php echo $datos['observaciones']; ?>" />
 
+
         <div class="form-group">
             <input type="button" id="enviar" class="btn btn-primary" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />
-            <a class="btn btn-danger span3" id="cancel" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist'); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+            <a class="btn btn-danger" id="cancel" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=odclist'); ?>"><?php echo JText::_('LBL_CANCELAR'); ?></a>
         </div>
     </form>
 <?php
