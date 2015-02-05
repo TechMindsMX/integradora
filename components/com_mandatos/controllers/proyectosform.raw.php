@@ -105,7 +105,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 			date( 'd-m-Y' )
 		);
 
-		$sendEmail = new Send_email(array('ricardolyon@gmail.com', 'liusmagana@gmail.com'));
+		$sendEmail = new Send_email();
 
 		$sendEmail->setIntegradoEmailsArray( $getCurrInteg );
 		$reportEmail = $sendEmail->sendNotifications( '2', $array );

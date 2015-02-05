@@ -4,6 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 jimport('integradora.validator');
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -114,6 +115,10 @@ class MandatosControllerOdvform extends JControllerAdmin {
             $save->insertDB('ordenes_venta');
 
             $id = $db->insertid();
+            $this->sendMail($data);
+
+
+
         }else{
             $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
         }
@@ -129,5 +134,51 @@ class MandatosControllerOdvform extends JControllerAdmin {
         $respuesta['redirect'] = $url;
 
         echo json_encode($respuesta);
+    }
+
+    public function getTotalAmount($productos){
+        $totalAmount = 0;
+
+        foreach ($productos as $producto) {
+            if($producto->iva == 1){
+                $producto->iva = 0;
+            }
+            if($producto->iva == 2){
+                $producto->iva =11;
+            }
+            if($producto->iva == 3){
+                $producto->iva = 16;
+            }
+
+            $total = ($producto->cantidad*$producto->p_unitario);
+            $montoIva = $total*($producto->iva/100);
+            $montoIeps = $total*($producto->ieps/100);
+
+            $totalAmount = $total+$montoIva+$montoIeps+$totalAmount;
+        }
+
+        return $totalAmount;
+    }
+
+    /**
+     * @param $data
+     */
+    public function sendMail($data)
+    {
+        /*
+         * Notificaciones 6
+         */
+        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
+
+        $totalAmount = self::getTotalAmount(json_decode($data['productos']));
+        $getCurrUser = new IntegradoSimple($this->integradoId);
+
+        $array = array($getCurrUser->getUserPrincipal()->name, $data['numOrden'], JFactory::getUser()->name, date('d-m-Y'), $totalAmount, $clientes[3]->tradeName);
+
+        $sendEmail = new Send_email();
+        $sendEmail->setIntegradoEmailsArray($getCurrUser);
+
+        $reportEmail = $sendEmail->sendNotifications('2', $array);
+
     }
 }
