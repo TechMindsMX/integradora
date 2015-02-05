@@ -33,7 +33,9 @@ class validador{
                         }
                     }
                 }
-                $errors[$key]['msg'] = implode('. ', $this->getMessages($failedValidations) );
+                if (!empty($failedValidations)) {
+                    $errors[$key]['msg'] = implode('. ', $this->getMessages($failedValidations) );
+                }
                 $this->respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
 
             }

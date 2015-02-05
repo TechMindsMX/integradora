@@ -27,7 +27,6 @@ function mensajes($obj){
 
         if(v != true && k != 'integradoId' && k != 'safeComplete'){
             var spanError = jQuery('#' + k);
-            var divMsg = jQuery('.msgs_plataforma');
 
             spanError.siblings('.error').remove();
 
@@ -44,16 +43,19 @@ function mensajes($obj){
                         jQuery('.error').remove();
                     });
                     break;
-                case 'msg':
-                    divMsg.fadeIn();
-                    divMsg.prop('class', 'msgs_plataforma alert alert-warning');
-                    divMsg.html('Datos Almacenados');
-                    divMsg.delay(3500).fadeOut(400).prop('class', 'msgs_plataforma alert alert-warning');
-                    break;
                 default :
                     break;
             }
-
         }
     });
+}
+
+function messageInfo(msg, tipo) {
+    var divMsg = jQuery('.msgs_plataforma');
+
+    divMsg.fadeIn();
+    divMsg.prop('class', 'msgs_plataforma alert alert-'+tipo);
+    divMsg.html(msg);
+    divMsg.delay(3500).fadeOut(400).prop('class', 'msgs_plataforma alert alert-'+tipo);
+
 }

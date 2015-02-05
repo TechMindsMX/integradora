@@ -217,7 +217,7 @@ class IntegradoController extends JControllerLegacy {
         switch ($data['tab']) {
             case 'juridica':
                 $diccionario = array(
-                    'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 10),
+                    'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
 
@@ -408,24 +408,6 @@ class IntegradoController extends JControllerLegacy {
         }else{
             $condicion 	= array($db->quoteName('integrado_id').' = '.$integrado_id );
             $respuesta = self::updateData($table, $updateSet, $condicion);
-        }
-
-        switch($data['tab']){
-            case 'juridica':
-                $resultado['nextTab'] = 'basic-details';
-                break;
-            case 'personales':
-                $resultado['nextTab'] = 'empresa';
-                break;
-            case 'empresa':
-                $resultado['nextTab'] = 'params';
-                break;
-            case 'params':
-                $resultado['nextTab'] = 'banco';
-                break;
-            case 'bancos':
-                $resultado['nextTab'] = 'files';
-                break;
         }
 
         $resultado['safeComplete']  = true;

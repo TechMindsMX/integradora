@@ -119,16 +119,10 @@ $token = JSession::getFormToken();
                     }
 
                     if(obj.safeComplete){
-                        mensajes('Datos Almacenados','msg', 'msgs_plataforma');
+                        messageInfo('Datos Almacenados', 'info');
                         nextTab();
                     }
 
-
-//                        }
-//                    jQuery.each(obj, function(k,v){
-//                        if(v != true && k != 'integradoId' && k != 'safeComplete'){
-//                            mensajes(v.msg,'error',k);
-//                    });
                     mensajes(obj);
 
                     jQuery('#integradoId').val(obj.integradoId);
