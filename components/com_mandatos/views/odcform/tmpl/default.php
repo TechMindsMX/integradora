@@ -30,7 +30,11 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
             jQuery('input:button').on('click',envio);
             selectProveedor.on('change',showSelectBanco);
 
-            selectProveedor.trigger('change');
+            <?php
+            if( isset($this->orden->bankId) ){
+                echo 'selectProveedor.trigger("change");';
+            }
+            ?>
         });
 
         function envio (){
