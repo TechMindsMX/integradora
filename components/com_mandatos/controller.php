@@ -454,24 +454,11 @@ class MandatosController extends JControllerLegacy {
 
         if(empty($existe)) {
             $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
+
             if( $table == 'integrado_datos_personales'){
 
-                if($this->dataCliente->tp_tipo_alta==0){
-                    $alta = 'Cliente';
-                }
-                if($this->dataCliente->tp_tipo_alta==1){
-                    $alta = 'Proveedor';
-                }
-                if($this->dataCliente->tp_tipo_alta==2){
-                    $alta = 'Cliente/Proveedor';
-                }
+                $this->sendEmail();
 
-                $getCurrUser         = new IntegradoSimple($this->integradoId);
-                $array = array($getCurrUser->user->name,$alta, $this->producto->productName, $getCurrUser->user->username, date( 'd-m-Y' ));
-
-                $sendEmail = new Send_email();
-
-                $infoEmail = $sendEmail->sendNotifications('5', $array, $getCurrUser->getUserPrincipal()->email );
             }
 
         }else{
@@ -689,6 +676,33 @@ class MandatosController extends JControllerLegacy {
 
         $test = $factura->getFacturaComision($integradoId);
         exit;
+    }
+
+    public function sendEmail()
+    {
+        /*
+         * Notificaciones 5
+         */
+        $tipo = '';
+        if ($this->dataCliente->tp_tipo_alta == 0) {
+            $tipo = 'Cliente';
+        }
+        if ($this->dataCliente->tp_tipo_alta == 1) {
+            $tipo = 'Proveedor';
+        }
+        if ($this->dataCliente->tp_tipo_alta == 2) {
+            $tipo = 'Cliente/Proveedor';
+        }
+
+        $getCurrUser = new IntegradoSimple($this->integradoId);
+
+        $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
+
+        $sendEmail = new Send_email();
+        $sendEmail->setIntegradoEmailsArray($getCurrUser);
+
+        $infoEmail = $sendEmail->sendNotifications('5', $array);
+        return $infoEmail;
     }
 
 
