@@ -58,6 +58,20 @@ class Integrado {
 
 	}
 
+	public function getBankName($datos_bancarios){
+		$catalogos = new Catalogos();
+		$bancos    = $catalogos->getBancos();
+		foreach($datos_bancarios as $bancoData){
+			foreach ($bancos as $banco) {
+				if($banco->claveClabe == $bancoData->banco_codigo){
+					$bancoData->bankName = $banco->banco;
+				}
+			}
+		}
+
+		return $datos_bancarios;
+	}
+
 	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
