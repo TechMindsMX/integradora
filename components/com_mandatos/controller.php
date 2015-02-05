@@ -290,19 +290,8 @@ class MandatosController extends JControllerLegacy {
         }else{
             $save->updateProduct($data, $id_producto);
         }
-        if(isset($this->integradoId)){
-            $contenido = JText::_('NOTIFICACIONES_4');
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$data['nameIntegrado'].'</strong>',$contenido);
-            $contenido = str_replace('$producto', '<strong style="color: #000000">'.$data['productName'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$data['corrUser'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
 
-            $data['titulo']         = JText::_('TITULO_4');
-            $data['body']           = $contenido;
 
-            $send                   = new Send_email();
-            $send->notification($data);
-        }
 
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
     }
@@ -385,6 +374,9 @@ class MandatosController extends JControllerLegacy {
         $idCliPro   = $data['idCliPro'];
         $datosQuery['setUpdate'] = array();
 
+        $this->dataCliente  = (object) $data;
+
+
         // verificación que no sea el mismo integrado
         $currentIntegrado = new IntegradoSimple($this->integradoId);
 
@@ -462,6 +454,26 @@ class MandatosController extends JControllerLegacy {
 
         if(empty($existe)) {
             $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
+            if( $table == 'integrado_datos_personales'){
+
+                if($this->dataCliente->tp_tipo_alta==0){
+                    $alta = 'Cliente';
+                }
+                if($this->dataCliente->tp_tipo_alta==1){
+                    $alta = 'Proveedor';
+                }
+                if($this->dataCliente->tp_tipo_alta==2){
+                    $alta = 'Cliente/Proveedor';
+                }
+
+                $getCurrUser         = new IntegradoSimple($this->integradoId);
+                $array = array($getCurrUser->user->name,$alta, $this->producto->productName, $getCurrUser->user->username, date( 'd-m-Y' ));
+
+                $sendEmail = new Send_email();
+
+                $infoEmail = $sendEmail->sendNotifications('5', $array, $getCurrUser->getUserPrincipal()->email );
+            }
+
         }else{
             $save->updateDB($table,$datosQuery['setUpdate'],$where);
         }
@@ -470,41 +482,11 @@ class MandatosController extends JControllerLegacy {
         $response['success'] = true;
         $response['nextTab'] = $tab;
 
-       /* if(isset($this->integradoId)){
-
-            if($data['tp_tipo_alta']==0){
-                $alta = 'Cliente';
-            }
-            if($data['tp_tipo_alta']==1){
-                $alta = 'Proveedor';
-            }
-            if($data['tp_tipo_alta']==2){
-                $alta = 'Cliente/Proveedor';
-            }
-
-
-            $getCurrUser         = new Integrado($this->integradoId);
-
-            $titulo = JText::_('TITULO_5');
-            $titulo = str_replace('$tipo', '<strong style="color: #000000">'.$alta.'</strong>',$titulo);
-
-            $contenido = JText::_('NOTIFICACIONES_5');
-            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$tipo', '<strong style="color: #000000">'.$alta.'</strong>',$contenido);
-            $contenido = str_replace('$nombre_cliente', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">$'.$getCurrUser->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $dato['titulo']         = $titulo;
-            $dato['body']           = $contenido;
-            $dato['email']          = JFactory::getUser()->email;
-            $send                   = new Send_email();
-            $send->notification($dato);
-        }*/
-
         $this->document->setMimeEncoding('application/json');
+
         echo json_encode($response);
     }
+
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
