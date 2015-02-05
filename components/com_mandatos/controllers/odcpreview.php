@@ -31,8 +31,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
      *
      */
     function authorize(){
-        $this->realizaTx();exit;
-       /* $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
+        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if ($this->permisos['canAuth']) {
@@ -48,6 +47,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $this->parametros['userId'] = (INT)$user->id;
             $this->parametros['authDate'] = time();
+
             unset($this->parametros['integradoId']);
 
             $save->formatData($this->parametros);
@@ -62,7 +62,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $resultado = $save->insertDB('auth_odc');
 
             if ($resultado) {
-
+                $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
@@ -84,10 +84,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                             //mensaje no se cobro la comision;
                         }
                     }else{
-//                        no se hizo el pago al proveedor;
+
+                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 3);
+
+                        if($statusChange) {
+                            $save->deleteDB('auth_odc', 'idOrden = ' . $this->parametros['idOrden']);
+                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                        }
                     }
 
-                    if (isset($this->integradoId)) {
+                    /*if (isset($this->integradoId)) {
                         $integradoAdmin = new IntegradoSimple(93);
 
                         $titulo = JText::_('TITULO_13');
@@ -125,11 +131,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                         $send = new Send_email();
                         $send->notification($data);
-                    }
+                    }*/
 
                 }
-                //TODO Ingresar el llamado al servicio de cashout para efectuar los pagos
-
 
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             } else {
@@ -138,7 +142,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         } else {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
-        }*/
+        }
     }
 
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple){
@@ -174,13 +178,13 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
         if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor, $orden->totalAmount);
-            $txData->sendCreateTx();
+            $txDone = $txData->sendCreateTx();
         }else{
-            var_dump($orden);exit;
-            $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor,$orden->totalAmount, array('accountId' => 1));
+            $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor,$orden->totalAmount, array('accountId' => $orden->bankId));
+            $txDone = $txData->sendCreateTx();
         }
 
-
+        return $txDone;
     }
 
     private function txComision(){
@@ -190,7 +194,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
         $txComision = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 
-        return $txComision->sendCreateTx();;
+        return $txComision->sendCreateTx();
     }
 
     private function getOrden(){
@@ -198,5 +202,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $orden = $orden[0];
 
         return $orden;
+    }
+
+    function logEvents($metodo, $info, $data){
+        $logdata = $logdata = implode(', ',array(
+            JFactory::getUser()->id,
+            JFactory::getSession()->get('integradoId', null, 'integrado'),
+            $metodo,
+            json_encode( array($info, $data) )
+            )
+        );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora_auth');
     }
 }

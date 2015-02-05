@@ -140,7 +140,10 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
             $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integrado_id', $integrado_id);
             $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
-			$this->integrados[$key]->datos_bancarios 	= $this->getBankName($this->integrados[$key]->datos_bancarios);
+
+			if( !empty($this->integrados[$key]->datos_bancarios) ) {
+				$this->integrados[$key]->datos_bancarios = $this->getBankName($this->integrados[$key]->datos_bancarios);
+			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
 				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
