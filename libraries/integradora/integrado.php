@@ -12,7 +12,7 @@ jimport('integradora.gettimone');
  */
 class Integrado {
 	public $integrados;
-
+	
 	function __construct($integ_id = null) {
 //		$this->user = JFactory::getUser();
 //		unset($this->user->password);
@@ -56,20 +56,6 @@ class Integrado {
 			return $sesionIntegradoId;
 		}
 
-	}
-
-	public function getBankName($datos_bancarios){
-		$catalogos = new Catalogos();
-		$bancos    = $catalogos->getBancos();
-		foreach($datos_bancarios as $bancoData){
-			foreach ($bancos as $banco) {
-				if($banco->claveClabe == $bancoData->banco_codigo){
-					$bancoData->bankName = $banco->banco;
-				}
-			}
-		}
-
-		return $datos_bancarios;
 	}
 
 	function getIntegrados (){
@@ -140,10 +126,9 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
             $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integrado_id', $integrado_id);
             $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
-
 			$this->integrados[$key]->datos_bancarios 	= $this->getBankName($this->integrados[$key]->datos_bancarios);
 
-			if ( ! empty( $this->integrados[ $key ]->datos_personales ) ) {
+			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
 				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
 			}
 
@@ -305,7 +290,18 @@ class IntegradoSimple extends Integrado {
 
 	public function getDisplayName() {
 
-		@$name = isset($this->integrados[0]->datos_empresa->razon_social) ? $this->integrados[0]->datos_empresa->razon_social : $this->integrados[0]->datos_personales->nombre_represenante;
+		if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
+			$name = $this->integrados[0]->datos_empresa->razon_social;
+		}
+		elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
+			$name = $this->integrados[0]->datos_personales->nom_comercial;
+		}
+		elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
+			$name = $this->integrados[0]->datos_personales->nombre_represenante;
+		}
+		else {
+			$name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
+		}
 
 		return $name;
 	}
@@ -315,12 +311,12 @@ class IntegradoSimple extends Integrado {
 		$address = null;
 
 		if ( isset( $this->integrados[0]->integrado->pers_juridica ) ) {
-			if ($this->integrados[0]->integrado->pers_juridica === '1') {
+			if ($this->integrados[0]->integrado->pers_juridica === '1' && isset($this->integrados[0]->datos_empresa->direccion_CP) ) {
 				$postalData     = $this->integrados[0]->datos_empresa->direccion_CP;
 				$calle          = $this->integrados[0]->datos_empresa->calle;
 				$num_interior   = $this->integrados[0]->datos_empresa->num_interior;
 				$num_exterior   = $this->integrados[0]->datos_empresa->num_exterior;
-			} elseif ($this->integrados[0]->integrado->pers_juridica === '2') {
+			} elseif ($this->integrados[0]->integrado->pers_juridica === '2' && isset($this->integrados[0]->datos_personales->direccion_CP) ) {
 				$postalData     = $this->integrados[0]->datos_personales->direccion_CP;
 				$calle          = $this->integrados[0]->datos_personales->calle;
 				$num_interior   = $this->integrados[0]->datos_personales->num_interior;
@@ -330,7 +326,7 @@ class IntegradoSimple extends Integrado {
 			$coloniaId     = 0; // TODO: quitar mock al traer campo de db
 
 			$postalAddress = @$postalData->dTipoAsenta.' '.@$postalData->dAsenta[$coloniaId].', '.@$postalData->dMnpio.', '.@$postalData->dCiudad.', '.@$postalData->dEstado;
-			$address = $calle.' '.$num_exterior.' No. Int: '.$num_interior.', '.$postalAddress;
+			$address = @$calle.' '.@$num_exterior.' No. Int: '.@$num_interior.', '.@$postalAddress;
 
 		}
 

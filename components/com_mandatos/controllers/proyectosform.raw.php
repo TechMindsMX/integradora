@@ -37,7 +37,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		                  'id_proyecto' => 'INT'
 		);
 
-		$data = JFactory::getApplication()->input->getArray( $campos );
+		$data 			= JFactory::getApplication()->input->getArray( $campos );
 
 // validacion
 
@@ -67,21 +67,21 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		unset( $data['id_proyecto'] );
 		if ( $id_proyecto == 0 ) {
 			$save->saveProject( $data );
+
+			/*
+			 * Envio de correo electronico;
+			 */
+
+
+			$getCurrUser         = new IntegradoSimple($this->integradoId);
+			$array = array ($getCurrUser->getUserPrincipal()->name, $data['name'], JFactory::getUser()->name, date( 'd-m-Y' ));
+
+			$sendEmail	=new Send_email();
+
+			$reportEmail	= $sendEmail->sendNotifications('2', $array, $getCurrUser->getUserPrincipal()->email);
+
 		} else {
 			$save->updateProject( $data, $id_proyecto );
-		}
-
-		if ( isset( $this->integradoId ) ) {
-			$integradoSimple = new IntegradoSimple( $this->integradoId );
-
-			$contenido = JText::sprintf( 'NOTIFICACIONES_2', $integradoSimple->user->username, $data['name'], $integradoSimple->user->username, date( 'd-m-Y' ) );
-
-			$data['titulo'] = JText::_( 'TITULO_2' );
-			$data['body']   = $contenido;
-			$data['email']  = JFactory::getUser()->email;
-
-			$send = new Send_email();
-			$send->notification( $data );
 		}
 
 		$sesion = JFactory::getSession();
@@ -89,6 +89,9 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 
 		echo json_encode(array('redirect' => 'index.php?option=com_mandatos&task=proyectosform.redirectUrl&format=raw'));
 	}
+
+
+
 
 	public function redirectUrl(){
 
