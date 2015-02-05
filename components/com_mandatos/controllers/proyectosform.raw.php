@@ -9,6 +9,8 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerProyectosform extends JControllerLegacy {
 
+	protected $integradoId;
+
 	function saveProject() {
 		$diccionario = array (
 			'name'        => array ( 'alphaNum' => true, 'maxlength' => 100, 'notNull' => true ),
@@ -68,18 +70,7 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		if ( $id_proyecto == 0 ) {
 			$save->saveProject( $data );
 
-			/*
-			 * Envio de correo electronico;
-			 */
-
-
-			$getCurrUser         = new IntegradoSimple($this->integradoId);
-			$array = array ($getCurrUser->getUserPrincipal()->name, $data['name'], JFactory::getUser()->name, date( 'd-m-Y' ));
-
-			$sendEmail	=new Send_email();
-
-			$reportEmail	= $sendEmail->sendNotifications('2', $array, $getCurrUser->getUserPrincipal()->email);
-
+			$this->sendEmails( $data );
 		} else {
 			$save->updateProject( $data, $id_proyecto );
 		}
@@ -90,9 +81,6 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		echo json_encode(array('redirect' => 'index.php?option=com_mandatos&task=proyectosform.redirectUrl&format=raw'));
 	}
 
-
-
-
 	public function redirectUrl(){
 
 		$sesion = JFactory::getSession();
@@ -100,6 +88,29 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 		$sesion->clear('mensajes');
 		JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=proyectoslist', JText::sprintf('LBL_PROJECT_SAVED', $projectName));
 
+	}
+
+	/**
+	 * @param $data
+	 */
+	private function sendEmails( $data ) {
+		/*
+					 * Envio de correo electronico;
+					 */
+		$getCurrInteg = new IntegradoSimple( $this->integradoId );
+		$array        = array (
+			$getCurrInteg->getUserPrincipal()->name,
+			$data['name'],
+			JFactory::getUser()->name,
+			date( 'd-m-Y' )
+		);
+
+		$sendEmail = new Send_email(array('ricardolyon@gmail.com', 'liusmagana@gmail.com'));
+
+		$sendEmail->setIntegradoEmailsArray( $getCurrInteg );
+		$reportEmail = $sendEmail->sendNotifications( '2', $array );
+
+		return $reportEmail;
 	}
 
 }

@@ -10,23 +10,30 @@ jimport('joomla.factory');
 
 class Send_email{
 
-    public $responses;
-    protected $recipient;
-    /*
-     * Esta funcion espera recibir tres parametros
-     * $notificaciones       = el numero de la notificacion que se llamara
-     * $data                 = Un arreglo de datos que contiene la informacion a cambiar en el texto
-     * $emailUserPrincipal   = Es el correo del usuario principal del integrado
-     * Retorna boolean true  = email enviado
-     *                 falce = error en envio y su descripcion;
+    protected $data;
+    protected $recipients;
+
+    function __construct( $customEmails = null) {
+        if ( isset( $customEmails ) && !is_array($customEmails) ) {
+            $this->customEmail = array($customEmails) ;
+        }
+        elseif ( is_array( $customEmails ) ) {
+            $this->customEmail = $customEmails;
+        }
+        else {
+            $this->customEmail = array();
+        }
+    }
+	/**
+     * @param $notificationNumber
+     * @param $data                 array  Un arreglo de datos indexado que contiene la informacion a sustituir en el contenido
+     *
+     * @return mixed
      */
-    public function sendNotifications($notification, $data, $emailUserPrincipal) {
+    public function sendNotifications($notificationNumber, $data) {
 
-        $title  = 'TITLE_'.$notification;
-        $text   = 'NOTIFICACIONES_'.$notification;
-
-        $emails = array($emailUserPrincipal, JFactory::getUser()->email, 'aguilar_2001@hotmail.com');
-        $emails = array_unique($emails);
+        $title  = 'TITLE_'.$notificationNumber;
+        $text   = 'NOTIFICACIONES_'.$notificationNumber;
 
         $titulo = JText::_($title);
 
@@ -35,34 +42,15 @@ class Send_email{
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
-        $dato['email']          = $emails;
-        $send                   = new Send_email();
-        $info = $send->notification($dato);
+        $this->data = (object)$dato;
+
+        $info = $this->envia();
+
         return $info;
-    }
-
-    public function notification($data){
-
-        $this->data = (object)$data;
-
-        $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
-
-        $int = new IntegradoSimple($currentIntegradoId);
-
-        array_push($int->usuarios, JFactory::getUser(93));
-
-        foreach ($int->usuarios as $key => $val) {
-            if(isset($val->permission_level)) {
-                if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id || $val->authorise('core.admin')) {
-                    return  $this->envia();
-                }
-            }
-        }
     }
 
     private function envia()
     {
-
         $mailer = JFactory :: getMailer ();
         $Config = JFactory :: getConfig ();
 
@@ -71,7 +59,8 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $mailer->addRecipient($this->data->email);
+        $this->setFinalRecipients();
+        $mailer->addRecipient( $this->recipients ) ;
         $body   = $this->data->body;
         $title  = $this->data->titulo;
         $mailer->isHTML(true);
@@ -95,5 +84,29 @@ class Send_email{
 
     }
 
+    public function setIntegradoEmailsArray(IntegradoSimple $getCurrInteg) {
+
+        $emailsInteg = array();
+
+        foreach ($getCurrInteg->usuarios as $key => $val) {
+            if(isset($val->permission_level)) {
+                if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id) {
+                    $emailsInteg[] = $val->email;
+                }
+            }
+        }
+        array_push($emailsInteg, JFactory::getUser()->email);
+        $this->recipients = $emailsInteg;
+    }
+
+    public function setAdminEmails() {
+        $this->recipients = JFactory::getUser(93)->email;
+    }
+
+    private function setFinalRecipients() {
+        if ( isset($this->customEmail) ) {
+            $this->recipients = array_unique( array_merge($this->recipients, $this->customEmail) );
+        }
+    }
 
 }
