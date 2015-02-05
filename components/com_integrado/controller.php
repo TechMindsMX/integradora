@@ -223,21 +223,21 @@ class IntegradoController extends JControllerLegacy {
 
             case 'personales':
                 $diccionario = array(
+                    'dp_tel_fijo'                => array('phone' => true,            	'maxlength' => 10,  'minlength'=>10,    'required' => true),
+                    'dp_tel_movil'               => array('number' => true,     	    'maxlength' => 13,  'minlength'=>13,    'required' => true),
                     'dp_nacionalidad'            => array('alphaNumber' => true,      	'maxlength' => 45,  'required' => true),
                     'dp_sexo'                    => array('alphaNumber' => true,	   	'maxlength' => 45,  'required' => true),
                     'dp_rfc'                     => array('rfc_fisica' => true,      	'maxlength' => 13,  'required' => true),
                     'dp_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100, 'required' => true),
                     'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
-                    'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
                     'dp_cod_postal'              => array('number' => true,		        'maxlength' => 13,  'required' => true),
-                    'dp_tel_fijo'                => array('phone' => true,            	'maxlength' => 10,   'minlength'=>10,   'required' => true),
-                    'dp_tel_fijo_extension'      => array('alphaNumber' => true,	    'maxlength' => 5),
-                    'dp_tel_movil'               => array('number' => true,     	    'maxlength' => 13,   'minlength'=>13,       'required' => true),
-                    'dp_email'                   => array('email' => true,		    	'maxlength' => 100,     'required' => true),
-                    'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
-                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150,     'required' => true),
+                    'dp_email'                   => array('email' => true,		    	'maxlength' => 100, 'required' => true),
+                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150, 'required' => true),
                     'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10,  'required' => true),
-                    'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,      'required' => true),
+                    'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,  'required' => true),
+                    'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10),
+                    'dp_tel_fijo_extension'      => array('alphaNumber' => true,	    'maxlength' => 5),
+                    'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
                 );
                 break;
 
@@ -247,13 +247,13 @@ class IntegradoController extends JControllerLegacy {
                     'de_rfc'                     => array('rfc_moral' => true,	    	'maxlength' => 12,      'required' => true),
                     'de_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
-                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      'required' => true),
                     't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
+                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,),
                     't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
                     't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
@@ -278,10 +278,10 @@ class IntegradoController extends JControllerLegacy {
 
             case 'banco':
                 $diccionario = array(
-                    'db_banco_codigo'            => array('alphaNumber' => true,	    'maxlength' => 3,   'required' => true),
-                    'db_banco_cuenta'            => array('alphaNumber' => true,        'maxlength' => 10,   'minlength'=>10,   'required' => true),
-                    'db_banco_sucursal'          => array('alphaNumber' => true,	    'maxlength' => 10,  'required' => true),
-                    'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],	    'maxlength' => 18,   'minlength'=>18,   'required' => true),
+                    'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
+                    'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 10,  'minlength'=>10,   'required' => true),
+                    'db_banco_codigo'            => array('alphaNumber' => true,	                    'maxlength' => 3,   'required' => true),
+                    'db_banco_sucursal'          => array('alphaNumber' => true,	                    'maxlength' => 10,  'required' => true),
                 );
                 break;
             }
