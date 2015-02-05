@@ -17,6 +17,7 @@ class MandatosViewOdcform extends JViewLegacy {
             'numOrden'      => 'INT',
             'proyecto'      => 'INT',
             'proveedor'     => 'INT',
+            'bankId'        => 'INT',
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
             'observaciones' => 'STRING'

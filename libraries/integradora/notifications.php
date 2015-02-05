@@ -12,6 +12,19 @@ class Send_email{
 
     public $responses;
     protected $recipient;
+    protected $data;
+
+    function __construct( $customEmails = null) {
+        if ( isset( $customEmails ) && !is_array($customEmails) ) {
+            $this->data->customEmail = array($customEmails) ;
+        }
+        elseif ( is_array( $customEmails ) ) {
+            $this->data->customEmail = $customEmails;
+        }
+        else {
+            $this->data->customEmail = array();
+        }
+    }
     /*
      * Esta funcion espera recibir tres parametros
      * $notificaciones       = el numero de la notificacion que se llamara
@@ -20,13 +33,16 @@ class Send_email{
      * Retorna boolean true  = email enviado
      *                 falce = error en envio y su descripcion;
      */
-    public function sendNotifications($notification, $data, $emailUserPrincipal) {
+	/**
+     * @param $notificationNumber
+     * @param $data                 array  Un arreglo de datos indexado que contiene la informacion a sustituir en el contenido
+     *
+     * @return mixed
+     */
+    public function sendNotifications($notificationNumber, $data) {
 
-        $title  = 'TITLE_'.$notification;
-        $text   = 'NOTIFICACIONES_'.$notification;
-
-        $emails = array($emailUserPrincipal, JFactory::getUser()->email, 'aguilar_2001@hotmail.com');
-        $emails = array_unique($emails);
+        $title  = 'TITLE_'.$notificationNumber;
+        $text   = 'NOTIFICACIONES_'.$notificationNumber;
 
         $titulo = JText::_($title);
 
@@ -35,29 +51,11 @@ class Send_email{
 
         $dato['titulo']         = $titulo;
         $dato['body']           = $contenido;
-        $dato['email']          = $emails;
-        $send                   = new Send_email();
-        $info = $send->notification($dato);
+        $this->data = (object)$dato;
+
+        $info = $this->envia();
+
         return $info;
-    }
-
-    public function notification($data){
-
-        $this->data = (object)$data;
-
-        $currentIntegradoId= JFactory::getSession()->get('integradoId', null, 'integrado');
-
-        $int = new IntegradoSimple($currentIntegradoId);
-
-        array_push($int->usuarios, JFactory::getUser(93));
-
-        foreach ($int->usuarios as $key => $val) {
-            if(isset($val->permission_level)) {
-                if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id || $val->authorise('core.admin')) {
-                    return  $this->envia();
-                }
-            }
-        }
     }
 
     private function envia()
@@ -71,7 +69,7 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $mailer->addRecipient($this->data->email);
+        $mailer->addRecipient( array_unique(array_merge($this->data->email, $this->data->customEmail)) ) ;
         $body   = $this->data->body;
         $title  = $this->data->titulo;
         $mailer->isHTML(true);
@@ -79,7 +77,7 @@ class Send_email{
         $mailer->setSubject($title);
         $mailer->setBody($body);
         $send = $mailer->Send();
-        var_dump($send);exit;
+
         $this->logEvent( $mailer, $send );
 
         return $send;
@@ -89,10 +87,29 @@ class Send_email{
         $logdata = $logdata = implode( ', ', array (
             JFactory::getUser()->id,
             JFactory::getSession()->get('integradoId', null, 'integrado'),
-            json_encode( array ( var_export($info), $dato  ) )
+            json_encode( array ( $info, $dato  ) )
         ) );
         JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 
+    }
+
+    public function setIntegradoEmailsArray(IntegradoSimple $getCurrInteg) {
+
+        $emailsInteg = array();
+
+        foreach ($getCurrInteg->usuarios as $key => $val) {
+            if(isset($val->permission_level)) {
+                if ($val->permission_level >= '3' || $val->id == JFactory::getUser()->id) {
+                    $emailsInteg[] = $val->email;
+                }
+            }
+        }
+
+        $this->data->email = array_push($emailsInteg, JFactory::getUser()->email);
+    }
+
+    public function setAdminEmails() {
+        $this->data->email = JFactory::getUser(93)->email;
     }
 
 

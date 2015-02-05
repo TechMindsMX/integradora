@@ -1713,11 +1713,14 @@ class sendToTimOne {
     protected $httpType;
     protected $serviceUrl;
     protected $jsonData;
+    protected $integradoId;
 
     function __construct () {
         $this->serviceUrl   = null;
         $this->jsonData     = null;
         $this->setHttpType('GET');
+        $session = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
     }
 
     public static function uploadFiles($integradoId = null) {

@@ -20,7 +20,7 @@ class validador{
         foreach ($this->diccionario as $key => $value) {
             $this->currentKey = $key;
 
-            if ( isset( $this->dataPost[ $key ] ) ) {
+            if ( !empty( $this->dataPost[ $key ] ) || array_key_exists('required', $value) ) {  // prueba si el campo esta vacio y no es requerido
                 foreach ( $value as $method => $this->diccionario_value ) {
 
                     if (method_exists ('validador',$method)) {
@@ -281,6 +281,10 @@ class validador{
         return $respuesta;
     }
 
+    protected function required( ){
+        return $this->notNull();
+    }
+
     protected function notNull (){
         if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' ){
             $respuesta = true;
@@ -288,6 +292,7 @@ class validador{
             $respuesta = false;
         }
 
+        $this->errorMsg = JText::sprintf('VALIDATION_FIELD_IS_REQUIRED', $this->diccionario_value);
         return $respuesta;
     }
 
