@@ -84,31 +84,13 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
             $sendEmail  = new Send_email();
             $array = array($getCurrUser->user->name, $this->producto->productName, $getCurrUser->user->username, date( 'd-m-Y' ));
+
             $reportEmail	= $sendEmail->sendNotifications('4', $array, $getCurrUser->getUserPrincipal()->email);
 
-
-            $this->sendNotifications();
         }else{
             $save->updateProduct($data, $id_producto);
         }
 
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
-    }
-
-    public function sendNotifications() {
-        $getCurrUser         = new IntegradoSimple($this->producto->integradoId);
-
-        $emails = array($getCurrUser->getUserPrincipal()->email, JFactory::getUser()->email, 'aguilar_2001@hotmail.com');
-        $emails = array_unique($emails);
-
-        $titulo = JText::_('TITULO_4');
-
-        $contenido = JText::sprintf( 'NOTIFICACIONES_4', $getCurrUser->user->name, $this->producto->productName, $getCurrUser->user->username, date( 'd-m-Y' ) );
-
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = $emails;
-        $send                   = new Send_email();
-        $info = $send->notification($dato);
     }
 }
