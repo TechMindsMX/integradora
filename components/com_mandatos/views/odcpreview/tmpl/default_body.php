@@ -14,6 +14,7 @@ $orden       = $this->odc;
 $msg         = $sesion->get('msg',null,'odcCorrecta');
 $sesion->clear('msg','odcCorrecta');
 $app->enqueueMessage($msg,'MESSAGE');
+
 ?>
 
 <div id="odc_preview">
@@ -96,7 +97,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_BANCOS'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($orden->banco)) { echo $orden->banco; } ?>
+				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->bankName; } ?>
 			</div>
 		</div>
 		<div>
@@ -110,7 +111,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($orden->cuenta)) { echo $orden->cuenta; } ?>
+				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_cuenta; } ?>
 			</div>
 		</div>
 		<div>
@@ -124,7 +125,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($orden->clabe)) { echo $orden->clabe; } ?>
+				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_clabe; } ?>
 			</div>
 		</div>
 		<div class="clearfix">

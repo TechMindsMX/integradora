@@ -16,7 +16,7 @@ $msg    = $sesion->get('msg',null,'misdatos');
 
 JFactory::getApplication()->enqueueMessage($msg,'ERROR');
 $sesion->clear('msg','misdatos');
-$sesion->clear('datos','misdatos');
+//$sesion->clear('datos','misdatos');
 
 $number2word    = new AifLibNumber;
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
@@ -91,7 +91,7 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
         function showSelectBanco() {
             var arregloIntegrado = new Array;
             var integradoId = jQuery(this).val();
-            var selectBancos = jQuery('#bancos');
+            var selectBancos = jQuery('#bankId');
             var optionSelected = '';
             <?php
             foreach ($this->proveedores as $providerData) {
@@ -163,8 +163,8 @@ if(!isset($this->datos['confirmacion'])){
         </div>
 
         <div class="form-group">
-            <label for="bancos">Cuenta para pago</label>
-            <select id="bancos" name="bankId">
+            <label for="bankId">Cuenta para pago</label>
+            <select id="bankId" name="bankId">
                 <option value="0">Seleccione el integrado</option>
             </select>
         </div>

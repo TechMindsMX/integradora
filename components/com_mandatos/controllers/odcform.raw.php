@@ -98,10 +98,11 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $diccionario = array(
             'integradoId'   => array('number' => true,  'maxlength' => 10),
             'numOrden'      => array('number' => true,  'maxlength' => 10),
-            'proveedor'     => array('number' => true,  'maxlength' => 10, 'notNull' => true),
-            'proyecto'      => array('number' => true,  'maxlength' => 10),
-            'paymentDate'   => array('date'   => true,  'maxlength' => 10),
-            'paymentMethod' => array('number' => true,  'maxlength' => 10),
+            'proveedor'     => array('number' => true,  'maxlength' => 10, 'required' => true),
+            'proyecto'      => array('number' => true,  'maxlength' => 10, 'required' => true),
+            'paymentDate'   => array('date'   => true,  'maxlength' => 10, 'required' => true),
+            'paymentMethod' => array('number' => true,  'maxlength' => 10, 'required' => true),
+            'bankId'        => array('number' => true,  'required' => true),
             'observaciones' => array('text'   => true,  'maxlength' => 1000));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
