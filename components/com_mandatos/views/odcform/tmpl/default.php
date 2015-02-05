@@ -62,10 +62,12 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
             });
 
             request.done(function(result){
+                mensajes(result);
+
                 var enviar = true;
+
                 jQuery.each(result, function(k, v){
                     if(v != true){
-                        mensajes(v.msg,'error',k);
                         enviar = false;
                     }
                 });

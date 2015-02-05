@@ -123,12 +123,13 @@ $token = JSession::getFormToken();
                         nextTab();
                     }
 
-                    jQuery.each(obj, function(k,v){
-                        if(v != true && k != 'integradoId' && k != 'safeComplete'){
-                            mensajes(v.msg,'error',k);
-                        }
 
-                    });
+//                        }
+//                    jQuery.each(obj, function(k,v){
+//                        if(v != true && k != 'integradoId' && k != 'safeComplete'){
+//                            mensajes(v.msg,'error',k);
+//                    });
+                    mensajes(obj);
 
                     jQuery('#integradoId').val(obj.integradoId);
                 });

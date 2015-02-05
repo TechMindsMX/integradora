@@ -10,7 +10,7 @@ class validador{
     protected $currentKey;
     protected $diccionario_value;
     protected $respuesta;
-    private $errorMsg;
+    private $errorMsg = array();
 
     public function  procesamiento ($data,$diccionario) {
         $this->respuesta = array();
@@ -21,15 +21,19 @@ class validador{
             $this->currentKey = $key;
 
             if ( !empty( $this->dataPost[ $key ] ) || array_key_exists('required', $value) ) {  // prueba si el campo esta vacio y no es requerido
+                $failedValidations = array();
                 foreach ( $value as $method => $this->diccionario_value ) {
 
                     if (method_exists ('validador',$method)) {
                         $respuestas[$method] = call_user_func (array ('validador', $method));
                         if (!$respuestas[$method]) {
-                            $errors[$key] = $this->salir ();
+                            // fallo de vlaidacion
+                            $errors[$key]['success'] = false;
+                            array_push( $failedValidations, $method );
                         }
                     }
                 }
+                $errors[$key]['msg'] = implode('. ', $this->getMessages($failedValidations) );
                 $this->respuesta[$key] = isset($errors[$key]) ? $errors[$key] : true;
 
             }
@@ -38,13 +42,14 @@ class validador{
         return $this->respuesta;
     }
 
-    protected function salir () {
-        $msg = isset($this->errorMsg) ? $this->errorMsg : JText::_('ERROR_TIPO_DATOS_INCORRECTO');
-        unset($this->errorMsg);
+    protected function getMessages ($methods) {
 
-        $response = array ('success' => false, 'msg' => $msg);
+        $msg = array();
+        foreach ( $methods as $method ) {
+            $msg[] = isset($this->errorMsg[$method]) ? $this->errorMsg[$method] : JText::_('ERROR_TIPO_DATOS_INCORRECTO');
+        }
 
-        return $response;
+        return $msg;
     }
 
     public function allPassed(){
@@ -115,6 +120,7 @@ class validador{
             $respuesta = true;
         } else {
             $respuesta = false;
+            $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_RFC_INVALID', $this->diccionario_value);
         }
 
         return $respuesta;
@@ -149,6 +155,8 @@ class validador{
     }
 
     protected function length () {
+        $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_LENGTH', $this->diccionario_value);
+
         if (strlen ($this->dataPost[$this->currentKey]) == $this->diccionario_value) {
             $respuesta = true;
         } else {
@@ -282,17 +290,19 @@ class validador{
     }
 
     protected function required( ){
+        $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
         return $this->notNull();
     }
 
     protected function notNull (){
+        $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
+
         if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' ){
             $respuesta = true;
         } else {
             $respuesta = false;
         }
 
-        $this->errorMsg = JText::sprintf('VALIDATION_FIELD_IS_REQUIRED', $this->diccionario_value);
         return $respuesta;
     }
 
@@ -310,13 +320,13 @@ class validador{
 
     protected function min()
     {
-        $this->errorMsg = JText::sprintf('VALIDATION_MIN_VALUE', $this->diccionario_value);
+        $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MIN_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) >= $this->diccionario_value;
     }
 
     protected function max()
     {
-        $this->errorMsg = JText::sprintf('VALIDATION_MAX_VALUE', $this->diccionario_value);
+        $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MAX_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) <= $this->diccionario_value;
     }
 
