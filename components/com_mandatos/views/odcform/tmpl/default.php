@@ -20,13 +20,20 @@ $sesion->clear('datos','misdatos');
 
 $number2word    = new AifLibNumber;
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
+foreach ($this->proveedores as $providerData) {
+    $bancos = $providerData->integrados[0]->datos_bancarios;
+    $integradoBanco[$providerData->integrados[0]->integrado->integrado_id] = $bancos;
+}
 ?>
     <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
     <script>
         jQuery(document).ready(function(){
+
             jQuery('#proveedor').on('change', muestraboton);
             jQuery('#agregarProveedor').on('click', agregaProveedor);
             jQuery('input:button').on('click',envio);
+            jQuery('#proveedor').on('change',showSelectBanco);
         });
 
         function envio (){
@@ -87,6 +94,14 @@ $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlengt
         function agregaProveedor(){
             window.location = 'index.php?option=com_mandatos&view=clientesform';
         }
+
+        function showSelectBanco() {
+            var integradoId = jQuery(this).val();
+
+            if(integradoId != 'other'){
+
+            }
+        }
     </script>
 
 <?php
@@ -110,9 +125,13 @@ if(!isset($this->datos['confirmacion'])){
         <div class="form-group">
             <label for="proveedor"><?php echo JText::_('LBL_PROVEEDOR') ?></label>
             <select id="proveedor" name="proveedor">
+                <option>Seleccione el Proveedor</option>
                 <?php
                 foreach ($this->proveedores as $key => $value) {
-                    $selected = $datos->proveedor->id == $value->id?'selected':'';
+                    $selected = '';
+                    if($datos->proveedor  != '') {
+                        $selected = $datos->proveedor->id == $value->id ? 'selected' : '';
+                    }
                     echo '<option value="'.$value->id.'" '.$selected.'>'.$value->displayName.'</option>';
                 }
                 ?>
@@ -122,6 +141,23 @@ if(!isset($this->datos['confirmacion'])){
             <div class="form-group" id="agregarProveedor" style="display: none;">
                 <input type="button" class="btn btn-primary" value="<?php echo JText::_('LBL_CARGAR') ?>" />
             </div>
+        </div>
+
+        <div class="form-group">
+        <?php
+
+        foreach ($integradoBanco as $key => $value) {
+            echo '<select id="integrado_'.$key.'">';
+            foreach ($value as $dataBanco) {
+                foreach($this->bancos as $banco){
+                    var_dump($dataBanco->banco_codigo);
+                }
+                echo '<option value="'.$dataBanco->datosBan_id.'"> - '.$dataBanco->banco_clabe.'</option>';
+            }
+            echo '</select>';
+
+        }
+        ?>
         </div>
 
         <div class="form-group">

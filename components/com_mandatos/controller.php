@@ -156,6 +156,7 @@ class MandatosController extends JControllerLegacy {
             'db_banco_sucursal' => 'STRING',
             'db_banco_clabe' => 'STRING',
         );
+
         $data 		= $this->input_data->getArray($post);
 
         // busca los datos bancario por la CLABE
@@ -176,9 +177,13 @@ class MandatosController extends JControllerLegacy {
             $datosQuery = self::limpiarPost($data, 'db_',$datosQuery);
 
             $validator = new validador();
-            $validacion = $validator->valida_banco_clabe($data['db_banco_clabe'], $data['db_banco_codigo']);
+            $diccionario = array(
+                'db_banco_codigo'            => array('alphaNumber' => true,	                        'maxlength' => 3),
+                'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],	    'maxlength' => 18,   'minlength'=>18),
+            );
+            $validacion = $validator->procesamiento($data, $diccionario);
 
-            if(!$validacion){
+            if(!$validator->allPassed()){
 
                 $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( array($validacion, $data['db_banco_clabe'], $data['db_banco_codigo'] ) ) ) );
                 JLog::add($logdata, JLog::DEBUG, 'bitacora');

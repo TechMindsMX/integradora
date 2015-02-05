@@ -31,7 +31,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
      *
      */
     function authorize(){
-        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
+        $this->realizaTx();exit;
+       /* $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if ($this->permisos['canAuth']) {
@@ -137,7 +138,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         } else {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
-        }
+        }*/
     }
 
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple){
@@ -175,7 +176,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor, $orden->totalAmount);
             $txData->sendCreateTx();
         }else{
-            //TODO cashout a la cuenta del cliente
+            var_dump($orden);exit;
+            $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor,$orden->totalAmount, array('accountId' => 1));
         }
 
 
