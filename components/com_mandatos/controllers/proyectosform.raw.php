@@ -71,7 +71,6 @@ class MandatosControllerProyectosform extends JControllerLegacy {
 			$save->saveProject( $data );
 
 			$this->sendEmails( $data );
-
 		} else {
 			$save->updateProject( $data, $id_proyecto );
 		}

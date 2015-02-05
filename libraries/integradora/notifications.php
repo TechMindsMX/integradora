@@ -10,29 +10,20 @@ jimport('joomla.factory');
 
 class Send_email{
 
-    public $responses;
-    protected $recipient;
     protected $data;
+    protected $recipients;
 
     function __construct( $customEmails = null) {
         if ( isset( $customEmails ) && !is_array($customEmails) ) {
-            $this->data->customEmail = array($customEmails) ;
+            $this->customEmail = array($customEmails) ;
         }
         elseif ( is_array( $customEmails ) ) {
-            $this->data->customEmail = $customEmails;
+            $this->customEmail = $customEmails;
         }
         else {
-            $this->data->customEmail = array();
+            $this->customEmail = array();
         }
     }
-    /*
-     * Esta funcion espera recibir tres parametros
-     * $notificaciones       = el numero de la notificacion que se llamara
-     * $data                 = Un arreglo de datos que contiene la informacion a cambiar en el texto
-     * $emailUserPrincipal   = Es el correo del usuario principal del integrado
-     * Retorna boolean true  = email enviado
-     *                 falce = error en envio y su descripcion;
-     */
 	/**
      * @param $notificationNumber
      * @param $data                 array  Un arreglo de datos indexado que contiene la informacion a sustituir en el contenido
@@ -60,7 +51,6 @@ class Send_email{
 
     private function envia()
     {
-
         $mailer = JFactory :: getMailer ();
         $Config = JFactory :: getConfig ();
 
@@ -69,7 +59,8 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $mailer->addRecipient( array_unique(array_merge($this->data->email, $this->data->customEmail)) ) ;
+        $this->setFinalRecipients();
+        $mailer->addRecipient( $this->recipients ) ;
         $body   = $this->data->body;
         $title  = $this->data->titulo;
         $mailer->isHTML(true);
@@ -104,13 +95,18 @@ class Send_email{
                 }
             }
         }
-
-        $this->data->email = array_push($emailsInteg, JFactory::getUser()->email);
+        array_push($emailsInteg, JFactory::getUser()->email);
+        $this->recipients = $emailsInteg;
     }
 
     public function setAdminEmails() {
-        $this->data->email = JFactory::getUser(93)->email;
+        $this->recipients = JFactory::getUser(93)->email;
     }
 
+    private function setFinalRecipients() {
+        if ( isset($this->customEmail) ) {
+            $this->recipients = array_unique( array_merge($this->recipients, $this->customEmail) );
+        }
+    }
 
 }
