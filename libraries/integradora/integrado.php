@@ -44,7 +44,7 @@ class Integrado {
         return $result;
     }
 
-	public static function getSessionIntegradoIdOrRedirectWtihError( $instance ) {
+	public static function getSessionIntegradoIdOrRedirectWithError( $instance ) {
 		$sesionIntegradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
 
 		$vars = $instance->getQuery( true );
