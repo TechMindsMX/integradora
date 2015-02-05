@@ -142,7 +142,7 @@ class Integrado {
             $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
 
 			if( !empty($this->integrados[$key]->datos_bancarios) ) {
-				$this->integrados[$key]->datos_bancarios = $this->getBankName($this->integrados[$key]->datos_bancarios);
+				$this->integrados[$key]->datos_bancarios = getFromTimOne::getBankName($this->integrados[$key]->datos_bancarios);
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {

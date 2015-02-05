@@ -21,7 +21,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $post = array('idOrden' => 'INT');
         $this->app = JFactory::getApplication();
         $this->parametros = $this->app->input->getArray($post);
-        $this->integradoId = Integrado::getSessionIntegradoIdOrRedirectWtihError(JUri::getInstance());
+        $this->integradoId = Integrado::getSessionIntegradoIdOrRedirectWithError(JUri::getInstance());
         $this->comisiones = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
 
         parent::__construct();

@@ -584,6 +584,26 @@ class getFromTimOne{
         $clientProvider->frontName = $clientProvider->corporateName == ''?$clientProvider->tradeName:$clientProvider->corporateName;
     }
 
+    public static function getBankName($arrayBancos){
+        $catalogos = new Catalogos();
+        $bancos    = $catalogos->getBancos();
+        foreach($arrayBancos as $bancoData){
+            foreach ($bancos as $banco) {
+                if($banco->claveClabe == $bancoData->banco_codigo){
+                    $bancoData->bankName = $banco->banco;
+                }
+            }
+        }
+
+        return $arrayBancos;
+    }
+    private static function getDataBankByBankId($bankId){
+        $banco = self::selectDB('integrado_datos_bancarios', 'datosBan_id = '.$bankId);
+        $banco = self::getBankName($banco);
+
+        return $banco;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -962,6 +982,8 @@ class getFromTimOne{
             $value->urlXML          = (STRING)$value->urlXML;
             $value->observaciones   = (STRING)$value->observaciones;
 
+            $value->bankId          = (INT)$value->bankId;
+            $value->dataBank        = self::getDataBankByBankId($value->bankId);
             $value = self::getProyectFromId($value);
             $value = self::getProviderFromID($value);
             $value->status = self::getOrderStatusName($value->status);

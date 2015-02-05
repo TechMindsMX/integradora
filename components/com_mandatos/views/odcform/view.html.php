@@ -36,7 +36,7 @@ class MandatosViewOdcform extends JViewLegacy {
                 $sesion = JFactory::getSession();
                 $objeto = (object)$data;
 	            $objeto->id = $objeto->idOrden;
-                $sesion->set('datos',$objeto, 'misdatos');
+                //$sesion->set('datos',$objeto, 'misdatos');
                 $sesion->set('msg','Falta el Archivo XML', 'misdatos');
 
                 JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden='.$data['idOrden']);
