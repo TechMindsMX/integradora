@@ -3440,7 +3440,7 @@ class Cashout extends makeTx{
 
     public function sendCreateTx() {
         $rutas = new servicesRoute();
-        parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+        return parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
     }
 }
 
@@ -3477,7 +3477,7 @@ class makeTx {
         jimport('joomla.log.log');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
+        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $this->resultado) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
         if ($this->resultado->code == 200) {
