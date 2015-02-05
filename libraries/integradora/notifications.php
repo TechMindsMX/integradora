@@ -89,7 +89,7 @@ class Send_email{
         $logdata = $logdata = implode( ', ', array (
             JFactory::getUser()->id,
             JFactory::getSession()->get('integradoId', null, 'integrado'),
-            json_encode( array ( var_export($info), $dato  ) )
+            json_encode( array ( $info, $dato  ) )
         ) );
         JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 

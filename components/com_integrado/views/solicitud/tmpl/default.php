@@ -33,6 +33,8 @@ if(!empty($datos->integrado)){
     $moral = '';
 }
 
+$token = JSession::getFormToken();
+
 ?>
     <script>
     var catalogoBancos = new Array();
@@ -58,36 +60,49 @@ if(!empty($datos->integrado)){
             }
         });
     }
+    function activeTab(tab) {
+        var tabs = jQuery('#tabs-solicitudTabs li');
+        tab.removeClass('disabled');
+        tab.find('a').attr("data-toggle", "tab").trigger('click');
+    }
+
+    function nextTab() {
+        var tabs = jQuery('#tabs-solicitudTabs li');
+        tabs.each(function (key, val) {
+            var check = jQuery(val).hasClass('active');
+            if( check == true) {
+                nextTabObj = jQuery(tabs[key]).next();
+            }
+
+        });
+        activeTab(nextTabObj);
+    }
     jQuery(document).ready(function(){
 
         var tabs = jQuery('#tabs-solicitudTabs li');
         var integradoIdModel = '<?php if (isset($this->data->integrados->integrado->integrado_id)) : echo $this->data->integrados->integrado->integrado_id; endif; ?>';
         if (integradoIdModel == '') {
-            jQuery(tabs).each(function () {
-                jQuery(this).addClass('disabled');
-                jQuery(this).find('a').attr("data-toggle", "disabled");
-            });
+            tabs.addClass('disabled').find('a').attr("data-toggle", "disabled");
+            activeTab( tabs.first() );
         }
 
-        var habilitaTabs = function () {
-            var tabs = jQuery('#tabs-solicitudTabs li');
-            jQuery(tabs).each(function () {
-                jQuery(this).removeClass('disabled');
-                jQuery(this).find('a').attr("data-toggle", "tab");
-            });
-        };
         jQuery('button').click(function(){
             var boton = jQuery(this).prop('id');
 
             if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params')){
-                var serializado = jQuery('form#solicitud').serialize();
+                var serializado = jQuery('.tab-pane.active :input').serialize();
                 datos = serializado
                 datos += '&tab='+boton
-                datos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
-                datos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
-                datos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
-                datos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
-                datos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+                if( boton == 'personales' ) {
+                    datos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+                }
+                if (boton == 'empresa'){
+                    datos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
+                    datos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
+                    datos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
+                    datos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+                }
+                datos += '&<?php echo $token; ?>=1';
 
                 var request = jQuery.ajax({
                     url: "index.php?option=com_integrado&task=saveform&format=raw",
@@ -105,8 +120,7 @@ if(!empty($datos->integrado)){
 
                     if(obj.safeComplete){
                         mensajes('Datos Almacenados','msg', 'msgs_plataforma');
-                        habilitaTabs();
-                        jQuery('#tabs-solicitudTabs').find('a[href="#'+obj.nextTab+'"]').trigger('click');
+                        nextTab();
                     }
 
                     jQuery.each(obj, function(k,v){
@@ -843,9 +857,9 @@ if(!empty($datos->integrado)){
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.endTabSet');
 
-    echo JHtml::_('form.token');
     ?>
 
+        <input type="hidden" name="<?php echo $token; ?>" value="1" />
     </form>
 <?php
 
