@@ -79,7 +79,7 @@ class Send_email{
         $mailer->setSubject($title);
         $mailer->setBody($body);
         $send = $mailer->Send();
-        var_dump($send);exit;
+
         $this->logEvent( $mailer, $send );
 
         return $send;
