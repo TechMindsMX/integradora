@@ -604,6 +604,40 @@ class getFromTimOne{
         return $banco;
     }
 
+    /**
+     * @param $tipoOrden
+     * @param $comisiones
+     * @return mixed
+     */
+    public static function getAplicableComision($tipoOrden, $comisiones){
+        $comision = null;
+
+        switch ( strtoupper($tipoOrden) ) {
+            case 'FACTURA':
+                $triggerSearch = 'factpagada';
+                break;
+            case 'ODC':
+                $triggerSearch = 'odcpagada';
+                break;
+            case 'ODD':
+                $triggerSearch = 'oddpagada';
+                break;
+            case 'ODR':
+                $triggerSearch = 'odrpagada';
+                break;
+        }
+
+        if (!empty($comisiones) && isset($triggerSearch)) {
+            foreach ($comisiones as $key => $com) {
+                if ($com->trigger == $triggerSearch) {
+                    $comision = $com;
+                }
+            }
+        }
+
+        return $comision;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -984,9 +1018,9 @@ class getFromTimOne{
 
             $value->bankId          = (INT)$value->bankId;
             $value->dataBank        = self::getDataBankByBankId($value->bankId);
-            $value = self::getProyectFromId($value);
-            $value = self::getProviderFromID($value);
-            $value->status = self::getOrderStatusName($value->status);
+            $value                  = self::getProyectFromId($value);
+            $value                  = self::getProviderFromID($value);
+            $value->status          = self::getOrderStatusName($value->status);
 
             $xmlFileData            = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$value->urlXML);
             $data 			        = new xml2Array();
@@ -1671,28 +1705,7 @@ class getFromTimOne{
 
     public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
 
-        switch ($tipoOrden) {
-            case 'FACTURA':
-                $triggerSearch = 'factpagada';
-                break;
-            case 'ODC':
-                $triggerSearch = 'odcpagada';
-                break;
-            case 'ODD':
-                $triggerSearch = 'oddpagada';
-                break;
-            case 'ODR':
-                $triggerSearch = 'odrpagada';
-                break;
-        }
-
-        if ( ! empty( $comisiones ) && isset($triggerSearch) ) {
-            foreach ( $comisiones as $key => $com ) {
-                if($com->trigger == $triggerSearch) {
-                    $comision = $com;
-                }
-            }
-        }
+        $comision = self::getAplicableComision($tipoOrden, $comisiones);
 
         // TODO: verificar $orden->totalAmount con el comprobante del xml
         $montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
@@ -2244,9 +2257,15 @@ class sendToTimOne {
                 if($orderNewStatus < $order->status){
                     $return = $orderNewStatus == 3 && $order->hasAllAuths;
                 }else {
-                    $return = $orderNewStatus == 8 && $order->hasAllAuths;
+                    $return = $orderNewStatus == 13 && $order->hasAllAuths;
                 }
                 break;
+            case 8:
+                if($orderNewStatus < $order->status){
+                    $return = $orderNewStatus == 5 && $order->hasAllAuths;
+                }else {
+                    $return = $orderNewStatus == 13 && $order->hasAllAuths;
+                }
         }
 
         return $return;
@@ -3495,8 +3514,6 @@ class makeTx {
         $request->setHttpType($datosEnvio->type);
 
         $this->resultado = $request->to_timone();
-var_dump($this->resultado);
-        echo $this->resultado->data;
 
         jimport('joomla.log.log');
 
@@ -3513,8 +3530,17 @@ var_dump($this->resultado);
 
     public function saveTxOrderRelationship() {
         $request = new sendToTimOne();
+        $comisionesOfIntegrado = getFromTimOne::getComisionesOfIntegrado($this->orden->integradoId);
+        $comisionAplicable = getFromTimOne::getAplicableComision($this->orden->orderType,$comisionesOfIntegrado);
 
-        $request->formatData(array('idTx' => $this->resultado->data, 'idOrden' => $this->orden->id, 'idIntegrado' => $this->orden->id, 'tipoOrden' => $this->orden->OrderType) );
+        $request->formatData(
+            array('idTx' => $this->resultado->data,
+                  'idOrden' => $this->orden->id,
+                  'date' => time(),
+                  'idIntegrado' => $this->orden->integradoId,
+                  'tipoOrden' => $this->orden->orderType,
+                  'idComision' => $comisionAplicable->id)
+        );
         $resultado = $request->insertDB('txs_timone_mandato');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');

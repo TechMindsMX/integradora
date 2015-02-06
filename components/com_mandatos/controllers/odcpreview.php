@@ -69,7 +69,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
-var_dump($TxOdc);exit;
+
                     if($TxOdc){
                         $cobroComision = $this->txComision();
 
@@ -172,19 +172,14 @@ var_dump($TxOdc);exit;
     private function realizaTx(){
         $orden = $this->getOrden();
 
-        $proveedor = new IntegradoSimple($orden->proveedor);
-        $rutas = new servicesRoute();
+        $proveedor = new IntegradoSimple($orden->proveedor->id);
 
         if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor, $orden->totalAmount);
-            var_dump($txData);
+            $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount);
             $txDone = $txData->sendCreateTx();
-            echo 'transferfunds';
         }else{
-            $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor,$orden->totalAmount, array('accountId' => $orden->bankId));
-            var_dump($txData);
+            $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor->id,$orden->totalAmount, array('accountId' => $orden->bankId));
             $txDone = $txData->sendCreateTx();
-            echo 'cahsout';
         }
 
         return $txDone;
@@ -192,16 +187,18 @@ var_dump($TxOdc);exit;
 
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
-        $orden = $this->getOrden();
-        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
+        $orden          = $this->getOrden();
+        $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
-        $txComision = new transferFunds($orden,$orden->integradoId,1,$montoComision);
+        $orden->orderType = 'Cobro Comisión';
+
+        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 
         return $txComision->sendCreateTx();
     }
 
     private function getOrden(){
-        $orden = getFromTimOne::getOrdenes(null, $this->parametros['idOrden'], 'ordenes_compra');
+        $orden = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
         $orden = $orden[0];
 
         return $orden;
