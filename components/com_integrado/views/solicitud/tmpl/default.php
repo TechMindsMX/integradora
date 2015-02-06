@@ -127,7 +127,7 @@ $token = JSession::getFormToken();
                         }
                     }
 
-                    mensajes(obj);
+                    mensajesValidaciones(obj);
 
                     jQuery('#integradoId').val(obj.integradoId);
                 });

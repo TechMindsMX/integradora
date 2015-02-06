@@ -42,7 +42,7 @@ $proyecto = $this->proyecto;
 		});
 
 		request.done(function (result) {
-			var envio = mensajesError(result);
+			var envio = mensajesValidaciones(result);
 
 			if(envio === true){
 				document.location.href=result.redirect;

@@ -1,21 +1,12 @@
-function mensajesError($result){
+
+function mensajesValidaciones($obj){
     var $enviar = true;
-    jQuery('span.error').remove();
-
-    if (typeof ($result.redirect) == 'undefined') {
-        jQuery.each($result, function(k, v){
-            if(v != true){
-                mensajes(v.msg,'error',k);
-                $enviar = false;
-            }
-        });
-    }
-    return $enviar;
-}
-
-function mensajes($obj){
     // reset accordions errors
     jQuery('.accordion-toggle').removeClass('alert-danger');
+
+    if (typeof $obj === "string") {
+        $obj = JSON.parse($obj);
+    }
 
     jQuery.each($obj, function(k,v) {
 
@@ -32,6 +23,8 @@ function mensajes($obj){
 
             switch (v.success) {
                 case false:
+                    $enviar = false;
+
                     spanError.css('border-color', '#FF0000');
                     var $errMsg = '<span class="error">' + v.msg + '</span>';
                     spanError.after($errMsg);
@@ -48,6 +41,8 @@ function mensajes($obj){
             }
         }
     });
+
+    return $enviar;
 }
 
 function messageInfo(msg, tipo) {

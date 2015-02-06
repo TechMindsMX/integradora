@@ -70,7 +70,7 @@ $amount     = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
 			});
 
 			request.done(function(result){
-				mensajes(result);
+				mensajesValidaciones(result);
 
 				var enviar = true;
 

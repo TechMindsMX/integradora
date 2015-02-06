@@ -38,7 +38,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             });
 
             request.done(function(result){
-                mensajes(result);
+                mensajesValidaciones(result);
 
                 var enviar = true;
 

@@ -34,7 +34,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
         });
 
         request.done(function(result){
-            mensajes(result);
+            mensajesValidaciones(result);
             divEnviar.show();
             divConfirmacion.hide();
         });

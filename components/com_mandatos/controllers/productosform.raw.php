@@ -31,7 +31,6 @@ class MandatosControllerProductosform extends JControllerLegacy {
     function valida(){
         $respuesta = $this->makeValidations();
 
-        var_dump($respuesta);
         foreach ($respuesta as $key => $value) {
             if($value !== true){
                 echo json_encode($respuesta);
