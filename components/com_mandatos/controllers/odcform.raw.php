@@ -114,28 +114,43 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
     private function sendNotifications($data)
     {
+        $info = array();
         /*
          * NOTIFICACIONES 12
          */
 
+        $nameProveedor = $this->getNameProveedor();
         $getIntegradoSimple = new IntegradoSimple($this->integradoId);
 
         $arrayTitle = array($this->parametros['numOrden']);
-        $array = array($getIntegradoSimple->user->username, $this->parametros['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], ); // $this->parametros['numOrden'],  $data['cliente'],  $data['odv']);
+        $array = array($getIntegradoSimple->user->username, $this->parametros['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
 
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegradoSimple);
 
-        $info = $send->sendNotifications('12', $array, $arrayTitle);
+        $info[] = $send->sendNotifications('12', $array, $arrayTitle);
 
         /*
          * Notificaciones 13
          */
-        $arrayTitleAdmin = array($this->parametros['numOrden'], date('d-m-Y'), $data['cliente'], $getIntegradoSimple->user->username, $this->parametros['numOrden']);
-        $arrayAdmin      = array();
+        $arrayTitleAdmin = array($this->parametros['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
 
         $send->setAdminEmails();
-        #$info=[] = $send->sendNotifications('13', )
+        $info[] = $send->sendNotifications('13', $array, $arrayTitleAdmin);
+    }
 
+    /**
+     * @return $nameProveedor
+     */
+    private function getNameProveedor()
+    {
+        $proveedores = getFromTimOne::getClientes($this->integradoId, 1);
+
+        foreach ($proveedores as $key => $value) {
+            if ($value->id == $this->parametros['proveedor']) {
+                $nameProveedor = $value->corporateName;
+            }
+        }
+        return $nameProveedor;
     }
 }
