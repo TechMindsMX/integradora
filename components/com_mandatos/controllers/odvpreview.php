@@ -61,54 +61,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-
                             $file = $save->saveXMLFile( $xmlFactura );
-                            /*NOTIFICACIONES 7*/
-                            $integradoSimple     = new IntegradoSimple($this->integradoId);
-                            $getCurrUser         = new Integrado($this->integradoId);
-
-                            $titulo = JText::_('TITULO_7');
-                            $titulo = str_replace('$num_factura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
-
-                            $contenido = JText::_('NOTIFICACIONES_7');
-
-                            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
-                            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
-                            $contenido = str_replace('$numfactura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
-                            $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$factObj->receptor->datosFiscales->razonSocial.'</strong>',$contenido);
-                            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-                            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$factObj->conceptos['valorUnitario'].'</strong>',$contenido);
-                            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$this->parametros['idOrde'].'</strong>',$contenido);
-
-
-                            $dato['titulo']         = $titulo;
-                            $dato['body']           = $contenido;
-                            $dato['email']          = JFactory::getUser()->email;
-                            $send                   = new Send_email();
-                            $info = $send->notification($dato);
-
-
-                            $titulo = JText::_('TITULO_8');
-                            $titulo = str_replace('$integrado', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$titulo);
-                            $titulo = str_replace('$num_factura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$titulo);
-
-
-                            $contenido = JText::_('NOTIFICACIONES_8');
-
-                            $contenido = str_replace('$integrado', '<strong style="color: #000000">'.$integradoSimple->user->username.'</strong>',$contenido);
-                            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$getCurrUser->user->username.'</strong>',$contenido);
-                            $contenido = str_replace('$numfactura', '<strong style="color: #000000">'.$this->parametros['idOrden'].'</strong>',$contenido);
-                            $contenido = str_replace('$cliente', '<strong style="color: #000000">'.$factObj->receptor->datosFiscales->razonSocial.'</strong>',$contenido);
-                            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-                            $contenido = str_replace('$monto', '<strong style="color: #000000">'.$factObj->conceptos['valorUnitario'].'</strong>',$contenido);
-                            $contenido = str_replace('$odv', '<strong style="color: #000000">'.$this->parametros['idOrde'].'</strong>',$contenido);
-
-
-                            $datoAdmin['titulo']         = $titulo;
-                            $datoAdmin['body']           = $contenido;
-                            $datoAdmin['email']          = JFactory::getUser()->email;
-                            $send                   = new Send_email();
-                            $infoAdmin = $send->notification($datoAdmin);
+                            $info = $this->sendEmail($newOrden);
                         }
 
                         if ( isset( $file ) ) {
@@ -130,5 +84,62 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             $this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
 	}
+
+    /**
+     * @param $factObj
+     * @return array
+     */
+    public function sendEmail($factObj)
+    {
+        /*
+         *  NOTIFICACIONES 7
+         */
+        $info = array();
+
+        $getCurrUser     = new IntegradoSimple($this->integradoId);
+        $titleArray      = array( $factObj->numOrden);
+
+        $array           = array($getCurrUser->user->name, $factObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $factObj->totalAmount, $factObj->integradoName,  $factObj->numOrden);
+        $send            = new Send_email();
+
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[]            = $send->sendNotifications('7', $array, $titleArray);
+
+        /*
+         * Notificaciones 8
+         */
+
+        $titleArrayAdmin = array( $getCurrUser->user->username, $factObj->numOrden );
+        $arrayAdmin      = array( $getCurrUser->user->username, $factObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $factObj->totalAmount, $factObj->integradoName,  $factObj->numOrden );
+
+        $send->setAdminEmails();
+        $info[] = $send->sendNotifications('8', $arrayAdmin, $titleArrayAdmin);
+
+        return $info;
+    }
+
+    public function getTotalAmount($productos){
+        $totalAmount = 0;
+
+        foreach ($productos as $producto) {
+            if($producto->iva == 1){
+                $producto->iva = 0;
+            }
+            if($producto->iva == 2){
+                $producto->iva =11;
+            }
+            if($producto->iva == 3){
+                $producto->iva = 16;
+            }
+
+            $total = ($producto->cantidad*$producto->p_unitario);
+            $montoIva = $total*($producto->iva/100);
+            $montoIeps = $total*($producto->ieps/100);
+
+            $totalAmount = $total+$montoIva+$montoIeps+$totalAmount;
+        }
+
+        return $totalAmount;
+    }
 
 }

@@ -30,12 +30,18 @@ class Send_email{
      *
      * @return mixed
      */
-    public function sendNotifications($notificationNumber, $data) {
+    public function sendNotifications($notificationNumber, $data, $editTitle = null) {
 
         $title  = 'TITLE_'.$notificationNumber;
+        $titulo = JText::_($title);
+
+        if(isset($editTitle)){
+            $titulo = vsprintf($titulo, $editTitle);
+        }
+
         $text   = 'NOTIFICACIONES_'.$notificationNumber;
 
-        $titulo = JText::_($title);
+
 
         $conten = JText::_($text);
         $contenido = vsprintf($conten, $data);
@@ -100,7 +106,7 @@ class Send_email{
     }
 
     public function setAdminEmails() {
-        $this->recipients = JFactory::getUser(93)->email;
+        $this->recipients = array(JFactory::getUser(93)->email);
     }
 
     private function setFinalRecipients() {
