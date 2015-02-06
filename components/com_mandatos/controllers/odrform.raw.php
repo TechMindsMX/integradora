@@ -102,15 +102,15 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }
         /*NOTIFICACIONES 17*/
 
-        $titulo = JText::_('TITULO_17');
-
-        $contenido = JText::_('NOTIFICACIONES_17');
-
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
-        $send                   = new Send_email();
-        //$info = // $send->notification($dato);
+//        $titulo = JText::_('TITULO_17');
+//
+//        $contenido = JText::_('NOTIFICACIONES_17');
+//
+//        $dato['titulo']         = $titulo;
+//        $dato['body']           = $contenido;
+//        $dato['email']          = JFactory::getUser()->email;
+//        $send                   = new Send_email();
+//        $info = $send->notification($dato);
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
