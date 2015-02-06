@@ -29,21 +29,7 @@ class MandatosControllerProductosform extends JControllerLegacy {
     }
 
     function valida(){
-        $document    = JFactory::getDocument();
-        $document->setMimeEncoding('application/json');
-        $validacion  = new validador();
-        $parametros  = $this->parametros;
-        $diccionario = array(
-            'productName' => array('alphaNumber'    => true,    'maxlength' => '100',  'notNull' => true),
-            'measure'     => array('string'         => true,    'maxlength' => '100',  'notNull' => true),
-            'price'       => array('float'          => true,    'maxlength' => '10',   'notNull' => true),
-            'iva'         => array('number'         => true,    'maxlength' => '10',   'notNull' => true),
-            'ieps'        => array('float'          => true,    'maxlength' => '5',    'minlength' => '1', 'max' => '100', 'min' => '0'),
-            'currency'    => array('string'         => true,    'maxlength' => '100',  'notNull' => true),
-            'description' => array('text'           => true,    'maxlength' => '1000', 'notNull' => true)
-        );
-
-        $respuesta = $validacion->procesamiento($parametros,$diccionario);
+        $respuesta = $this->makeValidations();
 
         foreach ($respuesta as $key => $value) {
             if($value !== true){
@@ -52,6 +38,8 @@ class MandatosControllerProductosform extends JControllerLegacy {
             }
         }
 
+        $document = JFactory::getDocument();
+        $document->setMimeEncoding( 'application/json' );
         echo json_encode(array('redirect' =>'index.php?option=com_mandatos&view=productosform&id_producto=1'));
     }
 
@@ -77,13 +65,17 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
         unset($data['id_producto']);
 
-        if($id_producto == 0){
-            $save->saveProduct($data);
-            $this->sendEmail();
+var_dump($this->makeValidations());exit;
+        if($this->makeValidations()) {
+            if($id_producto == 0){
+                $save->saveProduct($data);
+                $this->sendEmail();
 
 
-        }else{
-            $save->updateProduct($data, $id_producto);
+            }else{
+                $save->updateProduct($data, $id_producto);
+            }
+
         }
 
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=productoslist');
@@ -101,6 +93,32 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
         $reportEmail = $sendEmail->sendNotifications('4', $array);
 
+    }
+
+    /**
+     * @return array
+     */
+    private function makeValidations() {
+        $validacion  = new validador();
+        $parametros  = $this->parametros;
+        $diccionario = array (
+            'productName' => array ( 'alphaNumber' => true, 'maxlength' => '100', 'required' => true ),
+            'measure'     => array ( 'string' => true, 'maxlength' => '100', 'required' => true ),
+            'price'       => array ( 'float' => true, 'maxlength' => '10', 'required' => true ),
+            'iva'         => array ( 'number' => true, 'maxlength' => '10', 'required' => true ),
+            'ieps'        => array ( 'float'     => true,
+                                     'maxlength' => '5',
+                                     'minlength' => '1',
+                                     'max'       => '100',
+                                     'min'       => '0'
+            ),
+            'currency'    => array ( 'string' => true, 'maxlength' => '100', 'required' => true ),
+            'description' => array ( 'text' => true, 'maxlength' => '1000', 'required' => true )
+        );
+
+        $respuesta = $validacion->procesamiento( $parametros, $diccionario );
+
+        return $respuesta;
     }
 
 }

@@ -26,7 +26,7 @@ $producto 	= $this->producto;
         });
 
         request.done(function(response){
-            var envio = mensajesError(response);
+            var envio = mensajesValidaciones(response);
 
             if(envio === true){
                 var formulario = jQuery('#formProduct');
@@ -74,7 +74,7 @@ $producto 	= $this->producto;
 </script>
 <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
 
-<form id="formProduct" class="form-inline" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw">
+<form id="formProduct" class="form col-lg-6 col-md-12" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw">
     <div id="formulario">
         <h1><?php echo ucwords(JText::_($this->titulo)); ?></h1>
 
@@ -97,6 +97,7 @@ $producto 	= $this->producto;
             <div class="col-md-6">
                 <label for="currency"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MONEDA'); ?></label>
                 <select name="currency"
+                        class="form-control"
                         id="currency">
                     <option><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
                     <?php
@@ -171,6 +172,7 @@ $producto 	= $this->producto;
                       rows="7"
                       style="width: 304px;"
                       maxlength="100"
+                      class="form-control"
                       placeholder="<?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_NAME').JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION'); ?>"><?php echo $producto->description;?></textarea>
             </div>
         </div>
