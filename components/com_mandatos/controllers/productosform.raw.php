@@ -65,7 +65,6 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
         unset($data['id_producto']);
 
-var_dump($this->makeValidations());exit;
         if($this->makeValidations()) {
             if($id_producto == 0){
                 $save->saveProduct($data);
