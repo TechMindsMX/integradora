@@ -123,7 +123,9 @@ $token = JSession::getFormToken();
                         nextTab();
                         if(boton == 'juridica') {
                             juridica = jQuery.unserialize(serializado);
-                            if(juridica.pj_pers_juridica == 1)
+                            if(juridica.pj_pers_juridica == 1) {
+
+                            }
                         }
                     }
 
