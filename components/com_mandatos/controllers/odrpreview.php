@@ -139,7 +139,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $dato['body']           = $contenido;
         $dato['email']          = $emails;
         $send                   = new Send_email();
-        $info = $send->notification($dato);
+        //$info = // $send->notification($dato);
 
         $integradoAdmin     = new IntegradoSimple(93);
 
@@ -151,7 +151,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $datoAdmin['body']           = $contenido;
         $datoAdmin['email']          = $integradoAdmin->user->email;
         $send                   = new Send_email();
-        $infoAdmin = $send->notification($datoAdmin);
+        //$infoAdmin = // $send->notification($datoAdmin);
 
     }
 

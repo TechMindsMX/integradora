@@ -33,7 +33,7 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 			$dato['body']           = $contenido;
 			$dato['email']          = JFactory::getUser()->email;
 			$send                   = new Send_email();
-			$info = $send->notification($dato);
+			$info = // $send->notification($dato);
 
 			$titulo = JText::_('TITULO_22');
 
@@ -43,7 +43,7 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 			$dato['body']           = $contenido;
 			$dato['email']          = JFactory::getUser()->email;
 			$send                   = new Send_email();
-			$info = $send->notification($dato);
+			//$info = // $send->notification($dato);
 
 			$this->app->redirect('index.php?option=com_mandatos&view=facturalist' ,'aqui enviamos a timone la autorizacion y redireccion con mensaje');
 		} else {

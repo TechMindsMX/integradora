@@ -4,6 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 jimport('integradora.validator');
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -52,22 +53,8 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
         $respuesta['idTx']           = (INT) $idTX;
         $respuesta['success']        = true;
 
+        $this->sendEmail($respuesta, $data);
 
-        if($respuesta['success']==true){
-            $integrado              = new IntegradoSimple($this->integradoId);
-
-            $contenido = JText::_('NOTIFICACIONES_9');
-            $contenido = str_replace('$nombreIntegrado', '<strong style="color: #000000">'.$integrado->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$saldo', '<strong style="color: #000000">'.$respuesta['nuevoSaldo'].'</strong>',$contenido);
-            $contenido = str_replace('$usuario', '<strong style="color: #000000">'.$integrado->user->username.'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $data['titulo']         = JText::_('TITULO_9');
-            $data['body']           = $contenido;
-
-            $send                   = new Send_email();
-            $send->notification($data);
-        }
         echo json_encode($respuesta);
     }
 
@@ -258,5 +245,20 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
         }
 
         return $orden[0]->numOrden;
+    }
+
+    /**
+     * @param $respuesta
+     * @param $data
+     */
+    public function sendEmail($respuesta, $data)
+    {
+        $getIntegrado = new IntegradoSimple($this->integradoId);
+
+        $array = array($getIntegrado->user->username, $respuesta['nuevoSaldo'], $getIntegrado->user->username, date('d-m-Y'));
+
+        $send = new Send_email();
+        $send->setIntegradoEmailsArray($getIntegrado);
+        $info = $send->sendNotifications('9', $array);
     }
 }

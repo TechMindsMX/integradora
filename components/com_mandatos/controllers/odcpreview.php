@@ -111,7 +111,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                         $data['email'] = JFactory::getUser()->email;
 
                         $send = new Send_email();
-                        $send->notification($data);
+                        // $send->notification($data);
 
 
                         $titulo = JText::_('TITULO_14');
@@ -130,7 +130,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                         $data['email'] = $integradoAdmin->user->email;
 
                         $send = new Send_email();
-                        $send->notification($data);
+                        // $send->notification($data);
                     }*/
 
                 }

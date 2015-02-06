@@ -65,9 +65,9 @@ class MandatosControllerOddform extends JControllerLegacy {
         $document = JFactory::getDocument();
         $parametros = JFactory::getApplication()->input->getArray();
         $diccionario = array(
-            'paymentMethod' => array('number' => true,  'maxlength' => 10 ,    'notNull' => true),
-            'paymentDate'   => array('date' => true,   'maxlength' => 10,     'notNull' => true),
-            'totalAmount'   => array('float' => true,   'maxlength' => 10,     'notNull' => true)
+            'paymentMethod' => array('number' => true,  'maxlength' => 10 ,    'required' => true),
+            'paymentDate'   => array('date' => true,   'maxlength' => 10,     'required' => true),
+            'totalAmount'   => array('float' => true,   'maxlength' => 10,     'required' => true)
         );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
@@ -91,7 +91,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         $dato['body']           = $contenido;
         $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
-        $info = $send->notification($dato);
+        //$info = // $send->notification($dato);
 
         $this->logEvent($info, $dato);
 
@@ -105,7 +105,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         $datoAdmin['body']           = $contenido;
         $datoAdmin['email']          = $integradoAdmin->user->email;
         $send                   = new Send_email();
-        $infoAdmin = $send->notification($datoAdmin);
+        //$infoAdmin = // $send->notification($datoAdmin);
 
         $this->logEvent($infoAdmin, $dato);
     }

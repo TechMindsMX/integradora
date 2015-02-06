@@ -44,7 +44,7 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
         });
 
         request.done(function(result){
-            mensajes(result);
+            mensajesValidaciones(result);
 
             if(result.success){
                 jQuery('#saldoNuevo').text(result.nuevoSaldoText);

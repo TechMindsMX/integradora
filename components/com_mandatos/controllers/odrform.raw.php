@@ -26,9 +26,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $this->parametros   = $this->inputVars->getArray($post);
 
         $this->diccionario = array(
-            'totalAmount'   => array('float' => true,  'maxlength' => 10,    'notNull' => true),
-            'paymentDate'   => array('date' => true,   'maxlength' => 10,    'notNull' => true),
-            'paymentMethod' => array('number' => true, 'maxlength' => 1,     'notNull' => true)
+            'totalAmount'   => array('float' => true,  'maxlength' => 10,    'required' => true),
+            'paymentDate'   => array('date' => true,   'maxlength' => 10,    'required' => true),
+            'paymentMethod' => array('number' => true, 'maxlength' => 1,     'required' => true)
         );
 
         parent::__construct();
@@ -102,15 +102,15 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }
         /*NOTIFICACIONES 17*/
 
-        $titulo = JText::_('TITULO_17');
-
-        $contenido = JText::_('NOTIFICACIONES_17');
-
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
-        $send                   = new Send_email();
-        $info = $send->notification($dato);
+//        $titulo = JText::_('TITULO_17');
+//
+//        $contenido = JText::_('NOTIFICACIONES_17');
+//
+//        $dato['titulo']         = $titulo;
+//        $dato['body']           = $contenido;
+//        $dato['email']          = JFactory::getUser()->email;
+//        $send                   = new Send_email();
+//        $info = $send->notification($dato);
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');

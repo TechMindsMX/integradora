@@ -86,7 +86,7 @@ $token = JSession::getFormToken();
             activeTab( tabs.first() );
         }
 
-        jQuery('button').click(function(){
+        jQuery('form#solicitud button.btn-primary').click(function(){
             var boton = jQuery(this).prop('id');
 
             if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params')){
@@ -121,9 +121,13 @@ $token = JSession::getFormToken();
                     if(obj.safeComplete){
                         messageInfo('Datos Almacenados', 'info');
                         nextTab();
+                        if(boton == 'juridica') {
+                            juridica = jQuery.unserialize(serializado);
+                            if(juridica.pj_pers_juridica == 1)
+                        }
                     }
 
-                    mensajes(obj);
+                    mensajesValidaciones(obj);
 
                     jQuery('#integradoId').val(obj.integradoId);
                 });

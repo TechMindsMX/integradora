@@ -159,11 +159,7 @@ $accion = 'index.php?option=com_adminintegradora';
 					if (response.redirect === true) {
 						window.location = 'index.php?option=com_adminintegradora&view=comisions';
 					} else {
-						jQuery.each(response, function (i, v) {
-							if (v !== true) {
-								mensajes(v.msg, 'error', i)
-							}
-						});
+						mensajesValidaciones(response);
 					}
 				});
 			});

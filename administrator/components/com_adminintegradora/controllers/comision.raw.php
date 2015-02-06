@@ -38,12 +38,12 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 				// Limpieza de valores que no aplican al type
 				$this->envio['rate'] = 0;
 
-				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'maxlength' => 255,    'notNull' => true),
+				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'maxlength' => 255,    'required' => true),
 				                      'type' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'maxlength' => 10),
-				                      'monto' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'maxlength' => 10,     'notNull' => true),
+				                      'monto' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'maxlength' => 10,     'required' => true),
 				                      'rate' 			=> array ('float' => true,    'label' => JText::_ ('ERROR_COMISION_RATE'),            'maxlength' => 5),
 				                      'frequencyTimes' 	=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'maxlength' => 10),
-				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'maxlength' => 255,    'notNull' => true),
+				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'maxlength' => 255,    'required' => true),
 				                      'status' 	        => array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'maxlength' => 1)
 				);
 				break;
@@ -52,12 +52,12 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 				$this->envio['monto'] = 0;
 				$this->envio['frequencyTimes'] = 0;
 
-				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'maxlength' => 255,    'notNull' => true),
+				$diccionario = array ('description' 	=> array ('alfaNum' => true,  'label' => JText::_ ('ERROR_COMISION_DESCRIPTION'),     'maxlength' => 255,    'required' => true),
 				                      'type' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_TYPE'),            'maxlength' => 10),
 				                      'monto' 			=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_MONTO'),           'maxlength' => 10),
-				                      'rate' 			=> array ('float' => true,    'label' => JText::_ ('ERROR_COMISION_RATE'),            'maxlength' => 5,      'notNull' => true),
+				                      'rate' 			=> array ('float' => true,    'label' => JText::_ ('ERROR_COMISION_RATE'),            'maxlength' => 5,      'required' => true),
 				                      'frequencyTimes' 	=> array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_FREQUENCYTIME'),   'maxlength' => 10),
-				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'maxlength' => 255,    'notNull' => true),
+				                      'trigger'	        => array ('string' => true,   'label' => JText::_ ('ERROR_COMISION_TRIGGER'),         'maxlength' => 255,    'required' => true),
 				                      'status' 	        => array ('number' => true,   'label' => JText::_ ('ERROR_COMISION_STATUS'),          'maxlength' => 1)
 				);
 				break;
@@ -149,7 +149,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		$dato['body']           = $contenido;
 		$dato['email']          = JFactory::getUser()->email;
 		$send                   = new Send_email();
-		$info = $send->notification($dato);
+		//$info = // // $send->notification($dato);
 
 		$integradoAdmin     = new IntegradoSimple(93);
 
@@ -161,7 +161,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		$datoAdmin['body']           = $contenido;
 		$datoAdmin['email']          = $integradoAdmin->user->email;
 		$send                   = new Send_email();
-		$infoAdmin = $send->notification($datoAdmin);
+		//$infoAdmin = // // $send->notification($datoAdmin);
 
 	}
 
