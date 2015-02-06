@@ -45,12 +45,12 @@ if(is_null($ordenes) || empty($ordenes)){
 
         switch(valor){
             case 0:
-                jQuery('.type_0').show();
-                jQuery('.type_1').hide();
-                break;
-            case 1:
                 jQuery('.type_1').show();
                 jQuery('.type_0').hide();
+                break;
+            case 1:
+                jQuery('.type_0').show();
+                jQuery('.type_1').hide();
                 break;
             case 3:
                 jQuery('.type_0').show();

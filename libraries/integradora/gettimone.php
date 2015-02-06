@@ -3495,6 +3495,8 @@ class makeTx {
         $request->setHttpType($datosEnvio->type);
 
         $this->resultado = $request->to_timone();
+var_dump($this->resultado);
+        echo $this->resultado->data;
 
         jimport('joomla.log.log');
 

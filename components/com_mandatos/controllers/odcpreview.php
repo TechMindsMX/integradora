@@ -69,7 +69,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
-
+var_dump($TxOdc);exit;
                     if($TxOdc){
                         $cobroComision = $this->txComision();
 
@@ -175,13 +175,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $proveedor = new IntegradoSimple($orden->proveedor);
         $rutas = new servicesRoute();
 
-
         if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor, $orden->totalAmount);
+            var_dump($txData);
             $txDone = $txData->sendCreateTx();
+            echo 'transferfunds';
         }else{
             $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor,$orden->totalAmount, array('accountId' => $orden->bankId));
+            var_dump($txData);
             $txDone = $txData->sendCreateTx();
+            echo 'cahsout';
         }
 
         return $txDone;
