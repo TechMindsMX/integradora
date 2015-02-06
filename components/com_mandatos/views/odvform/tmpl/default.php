@@ -36,9 +36,20 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         minLength:3
     };
 
+    function muestraBotonOtro() {
+        var select = jQuery(this).val();
+
+        if(select == 'other'){
+            jQuery('#spanBoton').show();
+        }else{
+            jQuery('#spanBoton').hide();
+        }
+    }
+
     jQuery(document).ready(function() {
         jQuery('.typeahead').typeahead(typeaheadSettings); /* init first input */
 
+        jQuery('#clientId').on('change',muestraBotonOtro)
         jQuery('#project').on('change', llenasubproject);
         jQuery('.productos').on('change', llenatabla);
         jQuery('#button').on('click', addrow);
@@ -241,7 +252,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
             <option value="0">Subproyecto</option>
         </select>
 
-        <select name="clientId">
+        <select name="clientId" id="clientId">
             <option value="0">Cliente</option>
             <?php
             foreach ($this->clientes as $key => $value) {
@@ -249,7 +260,11 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$value->tradeName.'</option>';
             }
             ?>
+            <option value="other">Otro</option>
         </select>
+        <span id="spanBoton" style="display: none;">
+            <a href="index.php?option=com_mandatos&view=clientesform" class="btn btn-primary">Crear Cliente nuevo</a>
+        </span>
     </fieldset>
     <div class="form-actions" style="max-width: 30%">
         <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
