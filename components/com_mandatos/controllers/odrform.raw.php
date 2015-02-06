@@ -69,12 +69,10 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $this->app->enqueueMessage('aqui enviamos a timone la autorizacion y redireccion con mensaje');
         } else {
             // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
+            $this->app->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('NO_TIENE_PERMISOS'), 'error');
         }
 
-        if( $datos['idOrden'] == 0) {
-            $idOrden = $datos['idOrden'];
-            unset($datos['idOrden']);
+        if( !isset($datos['idOrden']) ) {
 
             $datos['createdDate'] = time();
             $datos['numOrden'] = $save->getNextOrderNumber('odr',  $this->integradoId);
@@ -102,15 +100,15 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }
         /*NOTIFICACIONES 17*/
 
-        $titulo = JText::_('TITULO_17');
-
-        $contenido = JText::_('NOTIFICACIONES_17');
-
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
-        $send                   = new Send_email();
-        $info = $send->notification($dato);
+//        $titulo = JText::_('TITULO_17');
+//
+//        $contenido = JText::_('NOTIFICACIONES_17');
+//
+//        $dato['titulo']         = $titulo;
+//        $dato['body']           = $contenido;
+//        $dato['email']          = JFactory::getUser()->email;
+//        $send                   = new Send_email();
+//        $info = $send->notification($dato);
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
