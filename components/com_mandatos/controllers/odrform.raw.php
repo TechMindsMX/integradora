@@ -110,7 +110,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $dato['body']           = $contenido;
         $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
-        $info = $send->notification($dato);
+        //$info = // $send->notification($dato);
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');

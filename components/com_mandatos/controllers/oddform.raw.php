@@ -91,7 +91,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         $dato['body']           = $contenido;
         $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
-        $info = $send->notification($dato);
+        //$info = // $send->notification($dato);
 
         $this->logEvent($info, $dato);
 
@@ -105,7 +105,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         $datoAdmin['body']           = $contenido;
         $datoAdmin['email']          = $integradoAdmin->user->email;
         $send                   = new Send_email();
-        $infoAdmin = $send->notification($datoAdmin);
+        //$infoAdmin = // $send->notification($datoAdmin);
 
         $this->logEvent($infoAdmin, $dato);
     }

@@ -423,7 +423,7 @@ class IntegradoController extends JControllerLegacy {
             $dato['body']           = $contenido;
 
             $send                   = new Send_email();
-            $send->notification($dato);
+            // $send->notification($dato);
         }
 */
 
