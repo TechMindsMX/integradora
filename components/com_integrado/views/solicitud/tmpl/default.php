@@ -551,7 +551,7 @@ $token = JSession::getFormToken();
     <fieldset>
         <div class="form-group">
             <label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
-            <input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" />
+            <input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" placeholder="5512345678" />
         </div>
         <div class="form-group">
             <label for="dp_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
@@ -559,7 +559,7 @@ $token = JSession::getFormToken();
         </div>
         <div class="form-group">
             <label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?> *</label>
-            <input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" />
+            <input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" placeholder="0445512345678" />
         </div>
         <div class="form-group">
             <label for="email"><?php echo JText::_('LBL_CORREO'); ?> *</label>
