@@ -188,7 +188,7 @@ class validador{
     public function banco_clabe () {
         $respuesta = false;
 
-        if ( ! empty( $this->dataPost[ $this->currentKey ] ) ) {
+        if ( ! empty( $this->dataPost[ $this->currentKey ]  ) && strlen($this->dataPost[ $this->currentKey ])==18 ) {
             $clabe = $this->dataPost[$this->currentKey];
             $paso3 = 0;
             $clabeTmp = str_split ($clabe,17);

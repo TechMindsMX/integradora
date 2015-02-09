@@ -266,6 +266,12 @@ class Integrado {
 		}
 		return $isValid;
 	}
+
+	public function belongsToIntegrado( $integrado_id ) {
+		$integrados = $this->getIntegradosCurrUser();
+
+		return in_array($integrado_id, $integrados);
+	}
 }
 
 /**

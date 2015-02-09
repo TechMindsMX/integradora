@@ -33,7 +33,7 @@ function mensajesValidaciones($obj){
 
                     spanError.focus(function () {
                         spanError.css('border-color', '');
-                        jQuery('.error').remove();
+                        spanError.siblings('.error').remove();
                     });
                     break;
                 default :

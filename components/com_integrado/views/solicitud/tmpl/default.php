@@ -91,8 +91,8 @@ $token = JSession::getFormToken();
 
             if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params')){
                 var serializado = jQuery('.tab-pane.active :input').serialize();
-                datos = serializado
-                datos += '&tab='+boton
+                datos = serializado;
+                datos += '&tab='+boton;
                 if( boton == 'personales' ) {
                     datos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
                 }
@@ -124,8 +124,12 @@ $token = JSession::getFormToken();
                         if(boton == 'juridica') {
                             juridica = jQuery.unserialize(serializado);
                             if(juridica.pj_pers_juridica == 1) {
-
+                                jQuery('#de_rfc').val( jQuery('#busqueda_rfc').val() ).attr('readonly', 'readonly');
                             }
+                            else if (juridica.pj_pers_juridica == 2) {
+                                jQuery('#dp_rfc').val( jQuery('#busqueda_rfc').val() ).attr('readonly', 'readonly');
+                            }
+                            jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
                         }
                     }
 
@@ -232,96 +236,163 @@ $token = JSession::getFormToken();
         <?php
         }
         ?>
-        jQuery('#agregarBanco').on('click', AltaBanco);
-        jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
-        jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp)
-    });
 
-    function ajax(parametros){
-
-        var request = jQuery.ajax({
-            url: parametros.link,
-            data: parametros.datos,
-            type: 'post',
-            async: false
-        });
-
-        return request;
-    }
-
-    function llenatablabancos(obj) {
-        var fieldset = jQuery('fieldset#datosBancarios');
-        fieldset.find('input').val('');
-        fieldset.find('select').val(0);
-        html = '<tr id="' + obj.datosBan_id + '">';
-        html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
-        html += '<td>' + obj.banco_cuenta + '</td>';
-        html += '<td>' + obj.banco_sucursal + '</td>';
-        html += '<td>' + obj.banco_clabe + '</td>';
-        html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
-        html += '</tr>';
-
-        jQuery('#banco').find('table.tableBancos tbody').append(html);
-    }
-
-    function AltaBanco(){
-        var idIntegradoAlta = jQuery('#idCliPro').val();
-        var data = jQuery('#banco').find('select, input').serialize();
-        var idIntegradoAlta = jQuery('#integradoId').val();
-
-        data +='&integradoId='+idIntegradoAlta;
-
-        var parametros = {
-            'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBanco&format=raw',
-            'datos' : data
-        };
-
-        var resultado = ajax(parametros);
-
-        resultado.done(function(response){
-            var obj = response;
-
-            if(obj.success === true) {
-                llenatablabancos(obj);
-            }else{
-                alert('No se pudo agregar la cuenta revisa los datos');
+        <?php
+        if(!empty($datos->integrado)) {
+            if ($datos->integrado->pers_juridica == 1) {
+                $readonlyRfc = '#de_rfc';
+            } elseif ($datos->integrado->pers_juridica == 2) {
+                $readonlyRfc = '#dp_rfc';
             }
-        });
+            ?>
+            var $rfc_not_editable = jQuery('<?php echo $readonlyRfc; ?>');
+            var $value_rfc_not_editable = $rfc_not_editable.val();
+            $rfc_not_editable.after('<p>'+ $value_rfc_not_editable +'</p>').remove();
+            nextTab();
+            jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
 
-    }
+        <?php
+        }
+        ?>
 
-    function bajaBanco(campo){
-        var id		 = jQuery(campo).prop('id');
-        var idCliPro = jQuery('#integradoId').val();
-        var parametros = {
-            'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
-            'datos' : {
-                'datosBan_id' : id,
-                'integradoId' : idCliPro
-            }
-        };
-        var envioajax = ajax(parametros);
+			jQuery('#agregarBanco').on('click', AltaBanco);
+			jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
+			jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
+			jQuery('#busqueda_rfc_btn').on('click', busqueda_rfc);
 
-        envioajax.done(function(response){
-            if(response.success) {
-                jQuery('#' + id).remove();
-            }else{
-                alert(response.msg);
-            }
-        });
-    }
-    </script>
 
-    <div class="msgs_plataforma" id="msgs_plataforma"></div>
+		});
 
-    <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
-    <input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
-    <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
+		function busqueda_rfc() {
+			var integradoId = jQuery('#integradoId').val();
+			var rfcBusqueda	=  jQuery('#busqueda_rfc').val();
 
-    <?php
-    echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
-    echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
-    ?>
+			var envio = {
+				'link'			:'index.php?option=com_integrado&task=search_rfc_solicitud&format=raw',
+				'datos'			:{'rfc': rfcBusqueda, 'integradoId': integradoId}
+			};
+
+			var resultado = ajax(envio);
+
+			resultado.done(function(response){
+				mensajesValidaciones(response);
+
+				console.log(typeof response.busqueda_rfc);
+				if(typeof response.busqueda_rfc === 'number') {
+					jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
+				}
+
+	/*
+				if(response.success){
+					mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
+
+	//				jQuery('#altaC_P').clearForm();
+	//                llenaForm(response);
+
+				}else{
+	//				jQuery('#altaC_P').clearForm();
+	//                jQuery('input, select, textarea').prop("readonly", false);
+
+					mensajes(response.msg, 'error');
+	//				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
+				}
+	*/
+			});
+		}
+
+		function ajax(parametros){
+
+			var request = jQuery.ajax({
+				url: parametros.link,
+				data: parametros.datos,
+				type: 'post',
+				async: false
+			});
+
+			return request;
+		}
+
+		function llenatablabancos(obj) {
+			var fieldset = jQuery('fieldset#datosBancarios');
+			fieldset.find('input').val('');
+			fieldset.find('select').val(0);
+			html = '<tr id="' + obj.datosBan_id + '">';
+			html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
+			html += '<td>' + obj.banco_cuenta + '</td>';
+			html += '<td>' + obj.banco_sucursal + '</td>';
+			html += '<td>' + obj.banco_clabe + '</td>';
+			html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
+			html += '</tr>';
+
+			jQuery('#banco').find('table.tableBancos tbody').append(html);
+		}
+
+		function AltaBanco(){
+			var idIntegradoAlta = jQuery('#idCliPro').val();
+			var data = jQuery('#banco').find('select, input').serialize();
+			var idIntegradoAlta = jQuery('#integradoId').val();
+
+			data +='&integradoId='+idIntegradoAlta;
+
+			var parametros = {
+				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoSolicitud&format=raw',
+				'datos' : data
+			};
+
+			var resultado = ajax(parametros);
+
+			resultado.done(function(response){
+				var obj = response;
+
+				if(obj.success === true) {
+					llenatablabancos(obj);
+				}else{
+                    if (obj.msg.db_banco_codigo !== true) {
+                        obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+                    }
+                    mensajesValidaciones(obj.msg);
+				}
+			});
+
+		}
+
+		function bajaBanco(campo){
+			var id		 = jQuery(campo).prop('id');
+			var idCliPro = jQuery('#integradoId').val();
+			var parametros = {
+				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
+				'datos' : {
+					'datosBan_id' : id,
+					'integradoId' : idCliPro
+				}
+			};
+			var envioajax = ajax(parametros);
+
+			envioajax.done(function(response){
+				if(response.success) {
+					jQuery('#' + id).remove();
+				}else{
+					alert(response.msg);
+				}
+			});
+		}
+		</script>
+
+		<div class="msgs_plataforma" id="msgs_plataforma"></div>
+
+		<form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
+		<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
+		<input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
+
+		<?php
+		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
+		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
+		?>
+        <label class="busqueda_rfc" for="busqueda_rfc">RFC:</label>
+        <div class="form-group form-inline">
+            <input class="busqueda_rfc form-control" id="busqueda_rfc" name="busqueda_rfc" type="text" placeholder="RFC"/>
+            <a class="btn btn-primary" type="button" id="busqueda_rfc_btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></a>
+        </div>
     <fieldset>
         <div class="radio">
             <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
@@ -398,7 +469,7 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="dp_num_exterior"><?php echo JText::_('NUM_EXT'); ?>*:</label>
+            <label for="dp_num_exterior"><?php echo JText::_('NUM_EXT'); ?> *:</label>
             <input
                 name		="dp_num_exterior"
                 class		="validate[required,custom[onlyLetterNumber]]"
@@ -470,7 +541,7 @@ $token = JSession::getFormToken();
     ?>
     <fieldset>
         <div class="form-group">
-            <label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?></label>
+            <label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
             <input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" />
         </div>
         <div class="form-group">
@@ -478,15 +549,15 @@ $token = JSession::getFormToken();
             <input name="dp_tel_fijo_extension" id="dp_tel_fijo_extension" type="text" maxlength="5" />
         </div>
         <div class="form-group">
-            <label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?></label>
+            <label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?> *</label>
             <input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" />
         </div>
         <div class="form-group">
-            <label for="email"><?php echo JText::_('LBL_CORREO'); ?>*</label>
+            <label for="email"><?php echo JText::_('LBL_CORREO'); ?> *</label>
             <input name="dp_email" id="dp_email" type="email" maxlength="100" required />
         </div>
         <div class="form-group">
-            <label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
+            <label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?> *</label>
             <input name="dp_curp" id="dp_curp" type="text" maxlength="18" />
         </div>
     </fieldset>
@@ -864,4 +935,3 @@ $token = JSession::getFormToken();
     </form>
 <?php
 
-?>
