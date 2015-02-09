@@ -46,7 +46,6 @@ class MandatosControllerOddform extends JControllerLegacy {
             $save->formatData($datos);
             $save->updateDB('ordenes_deposito', null,'id = '.$datos->id);
             $salvado = $datos->id;
-            $this->sendNotifications('actualizado', $datos);
         }
 
         if($salvado) {
@@ -77,37 +76,34 @@ class MandatosControllerOddform extends JControllerLegacy {
     }
 
     private function sendNotifications($accion, $datos) {
-        $data[0] = '<table>';
-        $data[2] = '</table>';
-        foreach ( $datos as $key => $value ) {
-            $data[] = '<tr><td>'.$key.'</td><td>'.$value.'</td></tr>';
+        /*
+         * Notificacion 20
+         */
+        $info = array();
+        if($datos->paymentMethod==0){
+            $metodoPago = JText::_('LBL_SPEI');
+        }
+        if($datos->paymentMethod) {
+            $metodoPago = JText::_('LBL_CHEQUE');
         }
 
-        $titulo = JText::_('TITULO_19');
+        $getCurrUser = new IntegradoSimple($this->integradoId);
 
-        $contenido = JText::sprintf('NOTIFICACIONES_19', $accion, implode($data) );
+        $arrayTitle = array($datos->numOrden);
+        $array      = array($getCurrUser->getUsuarioPrincipal($this->integradoId)->name, $datos->numOrden, JFactory::getUser()->username, date('d-m-Y'),$datos->totalAmount, $metodoPago);
 
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
         $send                   = new Send_email();
-        //$info = // $send->notification($dato);
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[] = $send->sendNotifications('20', $array, $arrayTitle);
 
-        $this->logEvent($info, $dato);
+        /*
+         * Notificaciones 21
+         */
+        $titleAdmin = array($getCurrUser->getUsuarioPrincipal($this->integradoId), $datos->numOrden);
 
-        $integradoAdmin     = new IntegradoSimple(93);
-
-        $titulo = JText::_('TITULO_19A');
-
-        $contenido = JText::sprintf('NOTIFICACIONES_19A', $accion, implode($data) , JFactory::getUser()->username);
-
-        $datoAdmin['titulo']         = $titulo;
-        $datoAdmin['body']           = $contenido;
-        $datoAdmin['email']          = $integradoAdmin->user->email;
         $send                   = new Send_email();
-        //$infoAdmin = // $send->notification($datoAdmin);
-
-        $this->logEvent($infoAdmin, $dato);
+        $send->setAdminEmails();
+        $info[] = $send->sendNotifications('21', $array, $titleAdmin);
     }
 
     private function logEvent( $info, $dato ) {
