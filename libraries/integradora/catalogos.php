@@ -11,18 +11,28 @@ class Catalogos {
 	public $basic;
 
 	function __construct() {
-		$this->basic = $this->getBasicStatus();
+		$this->basic    = $this->getBasicStatus();
+		$this->db       = JFactory::getDbo();
+	}
+
+	public function getCurrencies() {
+		$query = $this->db->getQuery(true)
+			->select('*')
+			->from( $this->db->quoteName('#__catalog_currencies') )
+			->order( $this->db->quoteName('money_name').' ASC')
+			->where( $this->db->quoteName('code'). ' IN (' . getFromTimOne::acceptedCurrenciesList() . ')' );
+		$currencies = $this->db->setQuery($query)->loadObjectList();
+
+		return $currencies;
 	}
 
 	public function getNacionalidades()
 	{
-		$db = JFactory::getDbo();
-		
-		$query = $db->getQuery(true)
+		$query = $this->db->getQuery(true)
 			->select('*')
-			->from($db->quoteName('#__catalog_paises'))
+			->from($this->db->quoteName('#__catalog_paises'))
 			->order('nombre ASC');
-		$result = $db->setQuery($query)->loadObjectList();
+		$result = $this->db->setQuery($query)->loadObjectList();
 		
 		$this->nacionalidades = $result;
 	}
@@ -31,11 +41,11 @@ class Catalogos {
 	{
 		$db = JFactory::getDbo();
 		
-		$query = $db->getQuery(true)
+		$query = $this->db->getQuery(true)
 			->select('*')
-			->from($db->quoteName('#__catalog_estados'))
+			->from($this->db->quoteName('#__catalog_estados'))
 			->order('nombre ASC');
-		$result = $db->setQuery($query)->loadObjectList();
+		$result = $this->db->setQuery($query)->loadObjectList();
 
 		$this->estados = $result;
 
@@ -44,12 +54,12 @@ class Catalogos {
 
 	public function permisionLevels()
 	{
-		$db = JFactory::getDbo();
+		
 
-		$query = $db->getQuery(true)
-			->select(array($db->quoteName('id'),$db->quoteName('name')))
-			->from($db->quoteName('#__catalog_permission_levels'));
-		$result = $db->setQuery($query)->loadObjectList('id');
+		$query = $this->db->getQuery(true)
+			->select(array($this->db->quoteName('id'),$this->db->quoteName('name')))
+			->from($this->db->quoteName('#__catalog_permission_levels'));
+		$result = $this->db->setQuery($query)->loadObjectList('id');
 
 		$this->permissionLevels = $result;
 
@@ -81,12 +91,12 @@ class Catalogos {
 	
 	public function getStatusSolicitud()
 	{
-		$db = JFactory::getDbo();
 		
-		$query = $db->getQuery(true)
+		
+		$query = $this->db->getQuery(true)
 			->select('*')
-			->from($db->quoteName('#__integrado_status_catalog'));
-		$status = $db->setQuery($query)->loadObjectList(); 
+			->from($this->db->quoteName('#__integrado_status_catalog'));
+		$status = $this->db->setQuery($query)->loadObjectList(); 
 
 		$this->statusSolicitud = $status;
 
@@ -106,25 +116,25 @@ class Catalogos {
 	}
 
     public function getTiposPeriodos(){
-        $db = JFactory::getDbo();
+        
 
-        $query = $db->getQuery(true)
+        $query = $this->db->getQuery(true)
             ->select('*')
-            ->from($db->quoteName('#__catalog_tipoperiodos'));
+            ->from($this->db->quoteName('#__catalog_tipoperiodos'));
 
-        $tipos = $db->setQuery($query)->loadObjectList('IdTipo');
+        $tipos = $this->db->setQuery($query)->loadObjectList('IdTipo');
 
         return $tipos;
     }
 
 	public function getCatalogoIVA(){
-		$db = JFactory::getDbo();
+		
 
-		$query = $db->getQuery(true)
+		$query = $this->db->getQuery(true)
 			->select('*')
-			->from($db->quoteName('#__catalogo_ivas'));
+			->from($this->db->quoteName('#__catalogo_ivas'));
 
-		$catIva = $db->setQuery($query)->loadObjectList('valor');
+		$catIva = $this->db->setQuery($query)->loadObjectList('valor');
 
 		return $catIva;
 	}

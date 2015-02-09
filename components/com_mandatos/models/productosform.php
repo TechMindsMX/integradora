@@ -14,7 +14,14 @@ jimport('integradora.gettimone');
 class MandatosModelProductosform extends JModelItem {
 	
 	protected $dataModelo;
-	
+	protected $catalogos;
+
+	public function __construct() {
+		$this->catalogos = new Catalogos();
+
+		parent::__construct();
+	}
+
 	public function getProducto(){
         $post           = array('id_producto' => 'INT');
         $app            = JFactory::getApplication();
@@ -40,9 +47,11 @@ class MandatosModelProductosform extends JModelItem {
 	}
 
 	public function getCatalogoIva(){
-		$catalogos = new Catalogos();
+		return $this->catalogos->getCatalogoIVA();
+	}
 
-		return $catalogos->getCatalogoIVA();
+	public function getCatalogoCurrencies() {
+		return $this->catalogos->getCurrencies();
 	}
 }
 
