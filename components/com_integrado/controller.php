@@ -24,7 +24,97 @@ class IntegradoController extends JControllerLegacy {
         $this->sesion = JFactory::getSession();
         $this->integradoId = $this->sesion->get('integradoId', null, 'integrado');
 
+        $this->document = JFactory::getDocument();
+        $this->input = JFactory::getApplication()->input;
+
         parent::__construct();
+    }
+
+    public function search_rfc_solicitud() {
+        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
+
+        $respuesta = $this->rfc_type($data['rfc']);
+
+        $ex = $this->search_rfc_exists( $data['rfc'] );
+        if ( is_numeric($respuesta) && isset($ex) ) {
+            $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+        }
+
+        $this->document->setMimeEncoding( 'application/json' );
+        echo json_encode( array('busqueda_rfc' => $respuesta) );
+    }
+
+    public function search_rfc_cliente() {
+        $this->document->setMimeEncoding( 'application/json' );
+        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
+        $tipo_rfc = $this->rfc_type($data['rfc']);
+
+        list( $respuesta, $existe ) = $this->search_rfc_exists( $data );
+
+        if(!empty($existe)){
+            // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
+            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe[0]->integrado_id );
+
+            $datos = new IntegradoSimple($existe[0]->integrado_id);
+            $datos->integrados[0]->success = true;
+
+            $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
+
+            echo json_encode($datos->integrados[0]);
+        }else{
+            $respuesta['success'] = false;
+            $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
+            $respuesta['pj_pers_juridica'] = $tipo_rfc;
+
+            echo json_encode($respuesta);
+        }
+    }
+
+    public function rfc_type($rfc) {
+
+        $diccionarioFisica = array( 'rfc' => array( 'rfc_fisica' => true, 'required' => true ) );
+        $diccionarioMoral  = array( 'rfc' => array( 'rfc_moral' => true, 'required' => true ) );
+        $validator         = new validador();
+        $is_validFisica    = $validator->procesamiento( array('rfc' => $rfc), $diccionarioFisica );
+        $is_validMoral     = $validator->procesamiento( array('rfc' => $rfc), $diccionarioMoral );
+
+        $respuesta = '';
+
+        if ( ! is_array($is_validMoral['rfc']) ) {
+            $respuesta = 1;
+        } elseif ( ! is_array($is_validFisica['rfc']) ) {
+            $respuesta = 2;
+        } else {
+            $respuesta['success'] = false;
+            $respuesta['msg']     = JText::_( 'MSG_RFC_INVALID' );
+        }
+
+        return $respuesta;
+    }
+
+    /**
+     * @param $rfc
+     *
+     * @return array
+     * @internal param $data
+     *
+     */
+    public function search_rfc_exists( $rfc ) {
+        $db        = JFactory::getDbo();
+
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $db->setQuery($query);
+        $personales = $db->loadResult();
+
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $db->setQuery($query);
+        $empresa = $db->loadResult();
+
+        $integradoId = (!is_null($personales)) ? $personales : $empresa;
+
+        return $integradoId;
     }
 
     function checkUser(){
@@ -45,8 +135,8 @@ class IntegradoController extends JControllerLegacy {
 
         echo json_encode($response);
     }
-
     //Salva la alta de usuarios a un integrado
+
     function saveAltaNewUserOfInteg(){
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
@@ -67,8 +157,8 @@ class IntegradoController extends JControllerLegacy {
 
         JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
     }
-
     //elimina la relacion entre el integrado y el usuario dado de alta
+
     function deleteUser(){
         $db			= JFactory::getDbo();
         $document	= JFactory::getDocument();
@@ -86,8 +176,8 @@ class IntegradoController extends JControllerLegacy {
 
         echo json_encode($response);
     }
-
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
+
     function uploadFiles(){
 
         sendToTimOne::uploadFiles();
@@ -101,9 +191,26 @@ class IntegradoController extends JControllerLegacy {
         JFactory::getApplication()->redirect($url, false);
 
     }
-
     //Recibe el post y lo envia a procesar y guardar
+
     function saveform(){
+        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
+
+        if($data['busqueda_rfc']) {
+            $respuesta = $this->rfc_type($data['busqueda_rfc']);
+            $ex = $this->search_rfc_exists( $data['busqueda_rfc'] );
+        }
+
+        if ( isset( $respuesta ) ) {
+            if ( is_array($respuesta) || isset($ex) ) {
+                if (isset($ex)) {
+                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+                }
+                echo json_encode($respuesta);
+                return true;
+            }
+        }
+
         if (JSession::checkToken() === false) {
             $response = array('success' => false, 'msg'=>'Token Invalido' );
             echo json_encode($response);
@@ -115,50 +222,51 @@ class IntegradoController extends JControllerLegacy {
         switch ($input->get('tab', null, 'STRING')) {
             case 'juridica':
                 $arrayPost = array(
-            'pj_pers_juridica'            => 'STRING',
+                    'pj_pers_juridica'          => 'STRING',
+                    'busqueda_rfc'              => 'STRING',
                 );
                 break;
             case 'personales':
                 $arrayPost = array(
-            'dp_nacionalidad'             => 'STRING',
-            'dp_sexo'                     => 'STRING',
-            'dp_rfc'                      => 'STRING',
-            'dp_calle'                    => 'STRING',
-            'dp_num_exterior'             => 'STRING',
-            'dp_num_interior'             => 'STRING',
-            'dp_cod_postal'               => 'STRING',
-            'dp_tel_fijo'                 => 'STRING',
-            'dp_tel_fijo_extension'       => 'STRING',
-            'dp_tel_movil'                => 'STRING',
-            'dp_email'                    => 'STRING',
-            'dp_nom_comercial'            => 'STRING',
-            'dp_curp'                     => 'STRING',
+                    'dp_nacionalidad'             => 'STRING',
+                    'dp_sexo'                     => 'STRING',
+                    'dp_rfc'                      => 'STRING',
+                    'dp_calle'                    => 'STRING',
+                    'dp_num_exterior'             => 'STRING',
+                    'dp_num_interior'             => 'STRING',
+                    'dp_cod_postal'               => 'STRING',
+                    'dp_tel_fijo'                 => 'STRING',
+                    'dp_tel_fijo_extension'       => 'STRING',
+                    'dp_tel_movil'                => 'STRING',
+                    'dp_email'                    => 'STRING',
+                    'dp_nom_comercial'            => 'STRING',
+                    'dp_curp'                     => 'STRING',
                     'dp_fecha_nacimiento'         => 'STRING',
                     'dp_nombre_representante'     => 'STRING',
                 );
                  break;
             case 'empresa':
                 $arrayPost = array(
-            'de_razon_social'             => 'STRING',
-            'de_rfc'                      => 'STRING',
-            'de_calle'                    => 'STRING',
-            'de_num_exterior'             => 'STRING',
-            'de_num_interior'             => 'STRING',
-            'de_cod_postal'               => 'STRING',
-            't1_instrum_notaria'          => 'STRING',
-            't1_instrum_estado'           => 'STRING',
-            't1_instrum_nom_notario'      => 'STRING',
-            't1_instrum_num_instrumento'  => 'STRING',
-            't2_instrum_notaria'          => 'STRING',
-            't2_instrum_estado'           => 'STRING',
-            't2_instrum_nom_notario'      => 'STRING',
-            't2_instrum_num_instrumento'  => 'STRING',
-            'pn_instrum_notaria'          => 'STRING',
-            'pn_instrum_estado'           => 'STRING',
-            'pn_instrum_nom_notario'      => 'STRING',
-            'pn_instrum_num_instrumento'  => 'STRING',
-            'rp_instrum_num_instrumento'  => 'STRING',
-            'rp_instrum_estado'           => 'STRING',
+                    'de_razon_social'             => 'STRING',
+                    'de_rfc'                      => 'STRING',
+                    'de_calle'                    => 'STRING',
+                    'de_num_exterior'             => 'STRING',
+                    'de_num_interior'             => 'STRING',
+                    'de_cod_postal'               => 'STRING',
+                    't1_instrum_notaria'          => 'STRING',
+                    't1_instrum_estado'           => 'STRING',
+                    't1_instrum_nom_notario'      => 'STRING',
+                    't1_instrum_num_instrumento'  => 'STRING',
+                    't2_instrum_notaria'          => 'STRING',
+                    't2_instrum_estado'           => 'STRING',
+                    't2_instrum_nom_notario'      => 'STRING',
+                    't2_instrum_num_instrumento'  => 'STRING',
+                    'pn_instrum_notaria'          => 'STRING',
+                    'pn_instrum_estado'           => 'STRING',
+                    'pn_instrum_nom_notario'      => 'STRING',
+                    'pn_instrum_num_instrumento'  => 'STRING',
+                    'rp_instrum_num_instrumento'  => 'STRING',
+                    'rp_instrum_estado'           => 'STRING',
                     't1_instrum_fecha'            => 'STRING',
                     't2_instrum_fecha'            => 'STRING',
                     'pn_instrum_fecha'            => 'STRING',
@@ -167,15 +275,15 @@ class IntegradoController extends JControllerLegacy {
                 break;
             case 'params':
                 $arrayPost = array(
-            'au_params'                   => 'STRING',
+                    'au_params'                   => 'STRING',
                 );
                 break;
             case 'bancos':
                 $arrayPost = array(
-            'db_banco_codigo'             => 'STRING',
-            'db_banco_cuenta'             => 'STRING',
-            'db_banco_sucursal'           => 'STRING',
-            'db_banco_clabe'              => 'STRING',
+                    'db_banco_codigo'             => 'STRING',
+                    'db_banco_cuenta'             => 'STRING',
+                    'db_banco_sucursal'           => 'STRING',
+                    'db_banco_clabe'              => 'STRING',
                 );
                 break;
         }
@@ -188,6 +296,7 @@ class IntegradoController extends JControllerLegacy {
 
         $post['integradoId'] = $this->integradoId;
 
+//var_dump($post); exit;
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
 

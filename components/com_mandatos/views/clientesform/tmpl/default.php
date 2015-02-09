@@ -30,7 +30,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 
 	jQuery(document).ready(function(){
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-		jQuery('#search').on('click', busqueda);
+		jQuery('#search').on('click', busqueda_rfc);
         jQuery('#agregarBanco').on('click', AltaBanco);
         jQuery('#altaC_P input:radio').on('click', tipoAlta);
         jQuery('button.envio').on('click', saveCliente);
@@ -144,7 +144,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		});
 	}
 	
-	function busqueda(){
+	function busqueda_rfc(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
 			
 		var envio = {
