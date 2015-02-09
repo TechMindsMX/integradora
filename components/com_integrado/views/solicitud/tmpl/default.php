@@ -277,9 +277,10 @@ $token = JSession::getFormToken();
 			resultado.done(function(response){
 				mensajesValidaciones(response);
 
-				console.log(typeof response.busqueda_rfc);
 				if(typeof response.busqueda_rfc === 'number') {
 					jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
+                    jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success">El RFC es correcto puede continuar hancdo click en el botón envíar.</span>');
+                    jQuery('#juridica').prop('disabled', false).removeClass('disabled');
 				}
 
 	/*
@@ -394,16 +395,18 @@ $token = JSession::getFormToken();
             <a class="btn btn-primary" type="button" id="busqueda_rfc_btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></a>
         </div>
     <fieldset>
-        <div class="radio">
-            <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" <?php echo $fisica; ?> /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+        <div class="hidden">
+            <div class="radio">
+                <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" <?php echo $fisica; ?> /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+            </div>
         </div>
     </fieldset>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+        <button type="button" class="btn btn-primary span3 disabled" id="juridica" disabled><?php echo JText::_('LBL_ENVIAR'); ?></button>
     </div>
 
     <?php
