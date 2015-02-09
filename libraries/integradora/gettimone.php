@@ -638,6 +638,30 @@ class getFromTimOne{
         return $comision;
     }
 
+    public static function limpiarPostPrefix( $data, $prefijo, $columnasValoresArray ) {
+        $db        = JFactory::getDbo();
+        $columnas  = $columnasValoresArray['columnas'];
+        $valores   = $columnasValoresArray['valores'];
+        $setUpdate = $columnasValoresArray['setUpdate'];
+
+        foreach ( $data as $key => $value ) {
+            $columna = substr( $key, 3 );
+            $clave   = substr( $key, 0, 3 );
+
+            if ( $clave == $prefijo ) {
+                $columnas[]  = $columna;
+                $valores[]   = $db->quote( $value );
+                $setUpdate[] = $db->quoteName( $columna ) . ' = ' . $db->quote( $value );
+            }
+        }
+
+        $columnasValoresArray['columnas']  = $columnas;
+        $columnasValoresArray['valores']   = $valores;
+        $columnasValoresArray['setUpdate'] = $setUpdate;
+
+        return $columnasValoresArray;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 

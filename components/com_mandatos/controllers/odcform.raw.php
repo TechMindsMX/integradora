@@ -116,7 +116,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
     {
         $info = array();
         /*
-         * NOTIFICACIONES 12
+         * NOTIFICACIONES 11
          */
 
         $nameProveedor = $this->getNameProveedor();
@@ -128,15 +128,15 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegradoSimple);
 
-        $info[] = $send->sendNotifications('12', $array, $arrayTitle);
+        $info[] = $send->sendNotifications('11', $array, $arrayTitle);
 
         /*
-         * Notificaciones 13
+         * Notificaciones 12
          */
         $arrayTitleAdmin = array($this->parametros['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
 
         $send->setAdminEmails();
-        $info[] = $send->sendNotifications('13', $array, $arrayTitleAdmin);
+        $info[] = $send->sendNotifications('12', $array, $arrayTitleAdmin);
     }
 
     /**
