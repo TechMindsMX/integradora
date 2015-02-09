@@ -16,7 +16,6 @@ class MandatosController extends JControllerLegacy {
 
     public function __construct(){
         parent::__construct();
-        $integrado	 		= new Integrado;
         $this->app			= JFactory::getApplication();
         $this->document     = JFactory::getDocument();
         $this->currUser	 	= JFactory::getUser();
@@ -30,11 +29,19 @@ class MandatosController extends JControllerLegacy {
 
         // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
 
+        var_dump($this->integradoId);
         if($this->currUser->guest){
             $this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
         if(is_null($this->integradoId)){
             $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO'), 'Warning');
+        }
+        else {
+            $integrado	    = new IntegradoSimple($this->integradoId);
+            $canOperate     = $integrado->canOperate();
+            if(!$canOperate){
+                $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
+            }
         }
     }
 

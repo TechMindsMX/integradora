@@ -378,6 +378,10 @@ class IntegradoSimple extends Integrado {
 		return $response;
 	}
 
+	public function canOperate() {
+		return $this->integrados[0]->integrado->status == 50;
+	}
+
 }
 
 class integrado_datos_personales {
