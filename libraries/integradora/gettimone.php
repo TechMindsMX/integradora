@@ -662,6 +662,16 @@ class getFromTimOne{
         return $columnasValoresArray;
     }
 
+	/**
+     * @return string separado por comas
+     */
+    public static function acceptedCurrenciesList() {
+        /** @var string $acceptedCurrenciesList se traerá como parametro en futura versión */
+        $acceptedCurrenciesList = '"MXN"';
+
+        return $acceptedCurrenciesList;
+    }
+
     public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -1677,12 +1687,6 @@ class getFromTimOne{
     public static function getFacturasVenta($integradoId)
     {
         return self::getOrdenesVenta($integradoId);
-    }
-
-    public static function getCurrencies(){
-        $currencies = self::selectDB('catalog_currencies',null);
-
-        return $currencies;
     }
 
     public static function getComisiones($id = null) {

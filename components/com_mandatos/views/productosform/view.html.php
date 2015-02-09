@@ -15,7 +15,8 @@ class MandatosViewProductosform extends JViewLegacy {
         $data               = $app->input->getArray($post);
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-		$this->currencies   = getFromTimOne::getCurrencies();
+
+		$this->currencies   = $this->get('CatalogoCurrencies');
 		$this->catalogoIva  = $this->get('CatalogoIva');
 
         if( $data['id_producto'] != 0 ){

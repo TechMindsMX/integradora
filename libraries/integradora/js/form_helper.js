@@ -27,4 +27,8 @@ jQuery(document).ready( function() {
         .ajaxStop(function () {
             $loading.hide();
         });
+
+    jQuery('input[type="submit"], input.submit, button[type="submit"], button.submit, a.submit').click( function() {
+        $loading.show();
+    });
 });
