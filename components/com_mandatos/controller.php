@@ -20,7 +20,7 @@ class MandatosController extends JControllerLegacy {
         $this->document     = JFactory::getDocument();
         $this->currUser	 	= JFactory::getUser();
         $this->input_data	= $this->app->input;
-        $data		 		= $this->input_data->getArray();
+        $this->post		 	= $this->input_data->getArray();
 
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
@@ -101,44 +101,47 @@ class MandatosController extends JControllerLegacy {
     }
 
     function agregarBanco(){
-        list( $respuesta, $existe, $newId, $db, $data, $save ) = $this->saveBankIfNew();
+        list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
 
-        $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
-        $respuesta['datosBan_id'] = $idClipro;
+        if($respuesta['success'] == true) {
 
-        $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
-        $existe     = getFromTimOne::selectDB($table,$where);
-        $existe     = $existe[0];
-
-        // se busca la relacion del cliente y el integrado
-        $tableRelacion 		= 'integrado_clientes_proveedor';
-        $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
-        $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
-        if ( ! empty( $relacion[0] ) ) {
-            $relacion           = $relacion[0];
-        }
-
-        // Si no existe la relacion la creamos
-        $bancos = isset($relacion->bancos) ? json_decode($relacion->bancos, true) : array();
-
-        if( !in_array( $existe->datosBan_id, $bancos) && $this->integradoId != $data['integradoId'] ) {
-            array_push($bancos, $existe->datosBan_id);
-
-            $datos   = array('bancos' => json_encode($bancos));
-
-            $save->formatData($datos);
-            $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
-            $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
-
-            $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
-            $respuesta['success'] = $update;
-            $respuesta['banco_codigo'] = $data['db_banco_codigo'];
-            $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];
-            $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
-            $respuesta['banco_clabe'] = $data['db_banco_clabe'];
+            $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
             $respuesta['datosBan_id'] = $idClipro;
 
+            $table 		= 'integrado_datos_bancarios';
+            $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
+            $existe     = getFromTimOne::selectDB($table,$where);
+            $existe     = $existe[0];
+
+            // se busca la relacion del cliente y el integrado
+            $tableRelacion 		= 'integrado_clientes_proveedor';
+            $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
+            $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
+            if ( ! empty( $relacion[0] ) ) {
+                $relacion           = $relacion[0];
+            }
+
+            // Si no existe la relacion la creamos
+            $bancos = isset($relacion->bancos) ? json_decode($relacion->bancos, true) : array();
+
+            if( !in_array( $existe->datosBan_id, $bancos) && $this->integradoId != $data['integradoId'] ) {
+                array_push($bancos, $existe->datosBan_id);
+
+                $datos   = array('bancos' => json_encode($bancos));
+
+                $save->formatData($datos);
+                $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
+                $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
+
+                $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
+                $respuesta['success'] = $update;
+                $respuesta['banco_codigo'] = $data['db_banco_codigo'];
+                $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];
+                $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
+                $respuesta['banco_clabe'] = $data['db_banco_clabe'];
+                $respuesta['datosBan_id'] = $idClipro;
+
+            }
         }
 
         $this->document->setMimeEncoding('application/json');

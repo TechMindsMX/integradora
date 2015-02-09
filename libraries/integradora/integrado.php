@@ -58,6 +58,92 @@ class Integrado {
 
 	}
 
+	public static function saveBankIfNew( $integradoId ) {
+		$respuesta['success'] = false;
+
+		$db   = JFactory::getDbo();
+		$save = new sendToTimOne();
+
+		$datosQuery = array ( 'setUpdate' => array () );
+		$post       = array (
+			'integradoId'       => 'INT',
+			'datosBan_id'       => 'INT',
+			'db_banco_codigo'   => 'STRING',
+			'db_banco_cuenta'   => 'STRING',
+			'db_banco_sucursal' => 'STRING',
+			'db_banco_clabe'    => 'STRING',
+		);
+
+		$data = JFactory::getApplication()->input->getArray( $post );
+
+		// busca los datos bancario por la CLABE
+		$table = 'integrado_datos_bancarios';
+		if ( empty( $data['db_banco_clabe'] ) ) {
+			$data['db_banco_clabe'] = '0000000';
+		}
+		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $data['db_banco_clabe'];
+		$existe = getFromTimOne::selectDB( $table, $where );
+
+		$logdata = implode( ', ', array (
+			JFactory::getUser()->id,
+			$integradoId,
+			__METHOD__ . ':' . __LINE__,
+			json_encode( $existe )
+		) );
+		JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
+
+		if ( empty( $existe ) ) {
+			$columnas[] = 'integrado_id';
+			$valores[]  = $integradoId;
+
+			$datosQuery['columnas'] = $columnas;
+			$datosQuery['valores']  = $valores;
+
+			$datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'db_', $datosQuery );
+
+			$validator   = new validador();
+			$diccionario = array (
+				'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
+				'db_banco_cuenta'   => array ( 'required' => true ),
+				'db_banco_sucursal' => array ( 'required' => true ),
+				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18 )
+			);
+			$validacion  = $validator->procesamiento( $data, $diccionario );
+
+			if ( $validator->allPassed() ) {
+				if ( empty( $existe ) ) {
+					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
+					$newId = $db->insertid();
+				} else {
+					$save->updateDB( $table, $datosQuery['setUpdate'], $where );
+				}
+
+				$respuesta['success']        = true;
+				$respuesta['banco_codigo']   = $data['db_banco_codigo'];
+				$respuesta['banco_cuenta']   = $data['db_banco_cuenta'];
+				$respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
+				$respuesta['banco_clabe']    = $data['db_banco_clabe'];
+
+				return array ( $respuesta, $existe, $newId, $db, $data, $save );
+			} else {
+				$logdata = implode( ', ', array (
+					JFactory::getUser()->id,
+					$integradoId,
+					__METHOD__ . ':' . __LINE__,
+					json_encode( array ( $validacion, $data['db_banco_clabe'], $data['db_banco_codigo'] ) )
+				) );
+				JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
+
+				$respuesta['success'] = false;
+				$respuesta['msg']     = $validacion;
+
+				return array ( $respuesta, $existe, null, $db, $data, $save );
+			}
+		}
+
+		return array ( $respuesta, $existe, null, $db, $data, $save );
+	}
+
 	public function getBankName($datos_bancarios){
 		$catalogos = new Catalogos();
 		$bancos    = $catalogos->getBancos();

@@ -16,6 +16,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
+echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
 ?>
 <script>
     var catalogoBancos = new Array();
@@ -34,20 +35,27 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
         jQuery('#agregarBanco').on('click', AltaBanco);
         jQuery('#altaC_P input:radio').on('click', tipoAlta);
         jQuery('button.envio').on('click', saveCliente);
+		tabs = jQuery('#tabs-clientesTabs li');
 
-        <?php
-        if(!is_null($datos->rfc)){
-            echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
-            echo 'jQuery("#search").trigger("click");'."\n";
+		<?php
+		if(!is_null($datos->rfc)){
+			echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
+			echo 'jQuery("#search").trigger("click");'."\n";
 
-        }
-        if(!empty($datos->bancos)){
-            echo "var objeto = ".json_encode($datos->bancos).';';
-            echo "jQuery.each(objeto, function(key, value){
-                llenatablabancos(value);
-            })";
-        }
-        ?>
+		} else {
+		?>
+			tabs.addClass('disabled').find('a').attr("data-toggle", "disabled");
+			activeTab( tabs.first() );
+
+		<?php
+		}
+		if(!empty($datos->bancos)){
+			echo "var objeto = ".json_encode($datos->bancos).';';
+			echo "jQuery.each(objeto, function(key, value){
+				llenatablabancos(value);
+			})";
+		}
+		?>
 
 		jQuery('#files').change( function(event) {
 			jQuery('.errormsg').remove();
@@ -148,7 +156,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
 			
 		var envio = {
-			'link'			:'index.php?option=com_mandatos&view=clientesform&task=searchrfc&format=raw',
+			'link'			:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
 			'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
 		};
 		
@@ -156,17 +164,17 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		
 		resultado.done(function(response){
 			if(response.success){
-				mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
-
+//				mensaje = mensajes('<?php //echo JText::_('MSG_FILL_FORM'); ?>//', 'msg');
 
 //				jQuery('#altaC_P').clearForm();
 				llenaForm(response);
+				nextTab();
 
 			}else{
 //				jQuery('#altaC_P').clearForm();
 				jQuery('input, select, textarea').prop("readonly", false);
 
-				mensajes(response.msg, 'error');
+				mensajesValidaciones(response);
 //				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
 			}
 		});
@@ -206,7 +214,10 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
             if(obj.success === true) {
                 llenatablabancos(obj);
             }else{
-                alert('no se pudo agregar la cuenta');
+	            if (obj.msg.db_banco_codigo !== true) {
+		            obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+	            }
+	            mensajesValidaciones(obj.msg);
             }
 		});
 		
@@ -309,13 +320,29 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
                if(response.success){
                    var spanMsg = jQuery('#msg')
                    jQuery('#idCliPro').val(response.idCliPro);
-                   jQuery('a[href*="'+response.nextTab+'"]').trigger('click');
+                   nextTab();
                    spanMsg.text('Datos Almacenados');
                    spanMsg.fadeIn();
                    spanMsg.fadeOut(8000);
                }
             });
         }
+    }
+
+    function activeTab(tab) {
+	    tab.removeClass('disabled');
+	    tab.find('a').attr("data-toggle", "tab").trigger('click');
+    }
+
+    function nextTab() {
+	    tabs.each(function (key, val) {
+		    var check = jQuery(val).hasClass('active');
+		    if( check == true) {
+			    nextTabObj = jQuery(tabs[key]).next();
+		    }
+
+	    });
+	    activeTab(nextTabObj);
     }
 
 </script>
@@ -356,7 +383,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		</div>
 		
 		<div id="monto" class="form-inline" >
-			<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label>
+			<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?> *</label>
 			<input type="text" name="tp_monto" id="tp_monto" />
 		</div>
 	</fieldset>
@@ -395,7 +422,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			<input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="50" value="" />
 		</div>
 		<div class="form-group">
-			<label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
+			<label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?> *</label>
 			<select name="dp_nacionalidad" id="dp_nacionalidad">
 				<?php 
 				foreach ($this->catalogos->nacionalidades as $key => $value) {
@@ -406,21 +433,21 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			</select>
 		</div>
 		<div class="form-group">
-			<label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?></label>
+			<label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?> *</label>
 			<select name="dp_sexo" id="dp_sexo">
 				<option value="masculino" ><?php echo JText::_('SEXO_MASCULINO'); ?></option>
 				<option value="femenino" ><?php echo JText::_('SEXO_FEMENINO'); ?></option>
 			</select>
 		</div>
 		<div class="form-group">
-			<label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?></label>
+			<label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
 			<?php 
 			$default = date('Y-m-d');
 			echo JHTML::_('calendar',$default,'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
 			?>
 		</div>
 		<div class="form-group">
-			<label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
+			<label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
 			<input name="dp_rfc" id="dp_rfc" type="text" maxlength="18" />
 		</div>
 	</fieldset>	
@@ -512,11 +539,11 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	?>
 	<fieldset>
 		<div class="form-group">
-			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOMBRE_COMPLETO'); ?></label>
+			<label for="dp_nom_comercial"><?php echo JText::_('LBL_NOMBRE_COMPLETO'); ?> *</label>
 			<input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
-			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?></label>
+			<label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?> *</label>
 			<input name="dp_curp" id="dp_curp" type="text" maxlength="18" />
 		</div>
 		
@@ -588,11 +615,11 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	?>
 	<fieldset>
 		<div class="form-group">
-			<label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?></label>
+			<label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?> *</label>
 			<input name="de_razon_social" id="de_razon_social" type="text" maxlength="100" />
 		</div>
 		<div class="form-group">
-			<label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
+			<label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
 			<input name="de_rfc" id="de_rfc" type="text" maxlength="18" />
 		</div>
 	</fieldset>
@@ -836,7 +863,7 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 	<fieldset id="datosBancarios">
         <div class="form-group">
             <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
-           	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
+           	<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *</label>
            	<select name="db_banco_codigo" id="db_banco_codigo">
            		<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 				<?php 
@@ -845,15 +872,15 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 			</select>
         </div>
 		<div class="form-group">
-			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
+			<label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?> *</label>
 			<input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
 		</div>
 		<div class="form-group">
-			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
+			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?> *</label>
 			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
 		</div>
 		<div class="form-group">
-			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
+			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?> *</label>
 			<input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
 		</div>
 		
@@ -887,21 +914,21 @@ echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>'
 		<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
 
 		<div class="form-group">
-			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?></label>
+			<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?> *</label>
 			<input name="dp_url_identificacion" type="file" maxlength="" />
 		</div>
 		<div class="form-group">
-			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+			<label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?> *</label>
 			<input name="dp_url_rfc" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?></label>
+			<label for="dp_url_comprobante_domicilio"><?php echo JText::_('LBL_COMP_DOMICILIO_FILE'); ?> *</label>
 			<input name="dp_url_comprobante_domicilio" type="file" maxlength="" />
 		</div>
 		
 		<div class="form-group">
-			<label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?></label>
+			<label for="de_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?> *</label>
 			<input name="de_url_rfc" type="file" maxlength="" />
 		</div>
 		

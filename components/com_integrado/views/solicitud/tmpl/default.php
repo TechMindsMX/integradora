@@ -128,6 +128,11 @@ $token = JSession::getFormToken();
                             }
                             else if (juridica.pj_pers_juridica == 2) {
                                 jQuery('#dp_rfc').val( jQuery('#busqueda_rfc').val() ).attr('readonly', 'readonly');
+//                                a_empresa = jQuery('a[href="#empresa"]').parent().detach();
+//
+//                                nextTab();
+//
+//                                a_empresa.insertAfter(jQuery('a[href="#basic-details"]').parent())
                             }
                             jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
                         }
