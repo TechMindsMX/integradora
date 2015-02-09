@@ -259,11 +259,17 @@ $token = JSession::getFormToken();
 			jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
 			jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
 			jQuery('#busqueda_rfc_btn').on('click', busqueda_rfc);
+            jQuery('#busqueda_rfc').change( function() {
+                jQuery('#busqueda_rfc_btn').siblings('span.alert').remove();
+                jQuery('#juridica').prop('disabled', true).addClass('disabled');
+            });
 
 
 		});
 
 		function busqueda_rfc() {
+
+            jQuery('#busqueda_rfc_btn').siblings('span.alert').remove();
 			var integradoId = jQuery('#integradoId').val();
 			var rfcBusqueda	=  jQuery('#busqueda_rfc').val();
 
