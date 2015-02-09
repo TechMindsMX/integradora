@@ -20,7 +20,7 @@ class MandatosHelper {
 
 		// datos del proyecto y subproyecto involucrrado
 		foreach ( $proyectos as $key => $proy) {
-			$proyKeyId[$proy->id] = $proy;
+			$proyKeyId[$proy->id_proyecto] = $proy;
 		}
 			
 		if(array_key_exists($proyId, $proyKeyId)) {

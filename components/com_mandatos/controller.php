@@ -556,7 +556,7 @@ class MandatosController extends JControllerLegacy {
     public function sendEmail()
     {
         /*
-         * Notificaciones 5
+         * Notificaciones 6
          */
         $tipo = '';
         if ($this->dataCliente->tp_tipo_alta == 0) {
@@ -576,7 +576,7 @@ class MandatosController extends JControllerLegacy {
         $sendEmail = new Send_email();
         $sendEmail->setIntegradoEmailsArray($getCurrUser);
 
-        $infoEmail = $sendEmail->sendNotifications('5', $array);
+        $infoEmail = $sendEmail->sendNotifications('6', $array);
         return $infoEmail;
     }
 

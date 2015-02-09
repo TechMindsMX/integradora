@@ -29,7 +29,7 @@ class MandatosViewFacturapreview extends JViewLegacy {
         }
 
 		$this->loadHelper('Mandatos');
-		$this->factura->proyecto    = MandatosHelper::getProyectFromId($this->factura->proyectId, $this->integradoId);
+		$this->factura->proyecto    = MandatosHelper::getProyectFromId($this->factura->projectId, $this->integradoId);
 		$this->factura->proveedor   = MandatosHelper::getClientsFromID($this->factura->clientId, $this->integradoId);
 
 		// Boton de impresion

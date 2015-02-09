@@ -16,39 +16,56 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 
 		$session            = JFactory::getSession();
 		$integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
+		$this->integradoId = $integradoId;
 		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
 
 		if($this->permisos['canAuth']) {
 			// acciones cuando tiene permisos para autorizar
-			/*NOTIFICACIONES 21*/
-			$integradoSimple     = new IntegradoSimple($this->integradoId);
-			$getCurrUser         = new Integrado($this->integradoId);
+			$this->sendEmail();
 
-			$titulo = JText::_('TITULO_21');
-
-			$contenido = JText::_('NOTIFICACIONES_21');
-
-			$dato['titulo']         = $titulo;
-			$dato['body']           = $contenido;
-			$dato['email']          = JFactory::getUser()->email;
-			$send                   = new Send_email();
-			$info = // $send->notification($dato);
-
-			$titulo = JText::_('TITULO_22');
-
-			$contenido = JText::_('NOTIFICACIONES_22');
-
-			$dato['titulo']         = $titulo;
-			$dato['body']           = $contenido;
-			$dato['email']          = JFactory::getUser()->email;
-			$send                   = new Send_email();
-			//$info = // $send->notification($dato);
 
 			$this->app->redirect('index.php?option=com_mandatos&view=facturalist' ,'aqui enviamos a timone la autorizacion y redireccion con mensaje');
 		} else {
 			// acciones cuando NO tiene permisos para autorizar
 			$this->app->redirect(JRoute::_(''), JText::_(''), 'error');
 		}
+	}
+
+	/**
+	 * @param $dato
+	 */
+	private function sendEmail()
+	{
+		/*
+		 * NOTIFICACIONES 23
+		 */
+		$getCurrUser 		= new IntegradoSimple($this->integradoId);
+		$info 				= array();
+		$facturaNum 		= $this->app->input->getArray();
+		$facturas 			= getFromTimOne::getFacturasVenta($this->integradoId);
+
+		foreach ($facturas as $key => $value) {
+
+			if($value->id == $facturaNum['facturanum']){
+				$dataFactura = $value;
+			}
+		}
+		$arrayTitle 		= array($dataFactura->numOrden);
+		$array				= array($getCurrUser->getUserPrincipal()->name, $dataFactura->numOrden, JFactory::getUser()->username, date('d-m-Y'), $dataFactura->totalAmount, $dataFactura->proveedor->tradeName, $dataFactura->createdDate, $dataFactura->numOrden);
+
+		$send = new Send_email();
+		$send->setIntegradoEmailsArray($getCurrUser);
+
+		$info[] = $send->sendNotifications('23', $array, $arrayTitle);
+
+		/*
+		 * Notificaciones 24
+		 */
+
+		$arrayTitleAdmin 	= array($getCurrUser->getUserPrincipal()->name, $dataFactura->numOrden);
+
+		$send = new Send_email();
+		$send->setAdminEmails();
+		$info[] 			= $send->sendNotifications('24', $array, $arrayTitleAdmin);
 	}
 }

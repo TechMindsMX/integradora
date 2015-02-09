@@ -24,7 +24,7 @@ $comision = $this->comision;
     function cobrar() {
 
         jQuery("input[type=checkbox]:checked").each(function(){
-                var id=jQuery(this).val()
+                var id=jQuery(this).val();
             jQuery.ajax({
                 type: "POST",
                 url: "index.php?option=com_facturasporcobrar&task=factdata.updatefact&format=raw&id="+id,
