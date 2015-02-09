@@ -29,7 +29,7 @@ class MandatosModelProyectosform extends JModelItem {
 		$isValid		= $integrado->isValidPrincipal($this->integradoId, $currUser->id);
 		
 		if($currUser->guest){
-			$app->redirect('index.php/login');
+			$app->redirect('index.php?option=com_users&view=login');
 		}elseif(!$isValid){
 			$app->redirect('index.php', 'necesita ser integrado principal');
 		}

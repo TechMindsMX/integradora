@@ -12,7 +12,7 @@ $app = JFactory::getApplication();
 $currUser	= JFactory::getUser();
 
 if($currUser->guest){
-    $app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+    $app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
 }
 
 class IntegradoController extends JControllerLegacy {

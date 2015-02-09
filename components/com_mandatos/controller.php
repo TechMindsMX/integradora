@@ -30,7 +30,7 @@ class MandatosController extends JControllerLegacy {
         // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
 
         if($this->currUser->guest){
-            $this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+            $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
         if(is_null($this->integradoId)){
             $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO'), 'Warning');
@@ -51,7 +51,7 @@ class MandatosController extends JControllerLegacy {
         $count          = 0;
 
         if($this->currUser->guest){
-            $this->app->redirect('index.php/login');
+            $this->app->redirect('index.php?option=com_users&view=login');
         }
 
         foreach ($proyectos as $key => $value) {
@@ -79,7 +79,7 @@ class MandatosController extends JControllerLegacy {
         $count          = 0;
 
         if($this->currUser->guest){
-            $this->app->redirect('index.php/login');
+            $this->app->redirect('index.php?option=com_users&view=login');
         }
 
         foreach ($productos as $key => $value) {

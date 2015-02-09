@@ -24,7 +24,7 @@ class MandatosModelClientesform extends JModelItem {
         $return         = '';
 
         if($currUser->guest){
-            $app->redirect('index.php/login');
+            $app->redirect('index.php?option=com_users&view=login');
         }
 
         $clientes = getFromTimOne::getClientes($integradoId);

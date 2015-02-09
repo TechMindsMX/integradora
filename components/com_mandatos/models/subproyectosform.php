@@ -38,7 +38,7 @@ class MandatosModelSubproyectosform extends JModelItem {
         $data			= $app->input->getArray($post);
 
         if($currUser->guest){
-			$app->redirect('index.php/login');
+			$app->redirect('index.php?option=com_users&view=login');
 		}
 		
 		$proyecto = getFromTimOne::getProyects(null, $data['id_proyecto']);

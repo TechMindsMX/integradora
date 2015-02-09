@@ -22,7 +22,7 @@ class MandatosModelProductosform extends JModelItem {
 		$currUser		= JFactory::getUser();
 
         if($currUser->guest){
-			$app->redirect('index.php/login');
+			$app->redirect('index.php?option=com_users&view=login');
 		}
 
 		if( $data['id_producto'] != 0 ){
