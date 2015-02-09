@@ -342,7 +342,7 @@ $token = JSession::getFormToken();
 			data +='&integradoId='+idIntegradoAlta;
 
 			var parametros = {
-				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoSolicitud&format=raw',
+				'link'  : 'index.php?option=com_integrado&view=clientesform&task=agregarBancoSolicitud&format=raw',
 				'datos' : data
 			};
 
@@ -367,7 +367,7 @@ $token = JSession::getFormToken();
 			var id		 = jQuery(campo).prop('id');
 			var idCliPro = jQuery('#integradoId').val();
 			var parametros = {
-				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
+				'link'  : 'index.php?option=com_integrado&view=clientesform&task=deleteBanco&format=raw',
 				'datos' : {
 					'datosBan_id' : id,
 					'integradoId' : idCliPro
