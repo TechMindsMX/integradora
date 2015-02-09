@@ -415,16 +415,16 @@ $token = JSession::getFormToken();
     ?>
     <fieldset>
         <div class="form-group">
-            <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE_COMPLETO_REPRESENTANTE'); ?></label>
+            <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE_COMPLETO_REPRESENTANTE'); ?> *</label>
             <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" value="<?php echo $user->name ?>" />
         </div>
         <div class="form-group">
-            <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
+            <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?> *</label>
             <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="100" />
         </div>
 
         <div class="form-group">
-            <label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?></label>
+            <label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?> *</label>
             <select name="dp_nacionalidad" id="dp_nacionalidad">
                 <?php
                 foreach ($this->catalogos->nacionalidades as $key => $value) {
@@ -435,21 +435,21 @@ $token = JSession::getFormToken();
             </select>
         </div>
         <div class="form-group">
-            <label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?></label>
+            <label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?> *</label>
             <select name="dp_sexo" id="dp_sexo">
                 <option value="masculino" ><?php echo JText::_('SEXO_MASCULINO'); ?></option>
                 <option value="femenino" ><?php echo JText::_('SEXO_FEMENINO'); ?></option>
             </select>
         </div>
         <div class="form-group">
-            <label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?></label>
+            <label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
             <?php
             $default = date('Y-m-d');
             echo JHTML::_('calendar',$default,'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
             ?>
         </div>
         <div class="form-group">
-            <label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
+            <label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
             <input name="dp_rfc" id="dp_rfc" type="text" maxlength="13" />
         </div>
     </fieldset>
@@ -522,7 +522,7 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
+            <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *</label>
             <select name="pais" id="pais" >
                 <?php
                 foreach ($this->catalogos->nacionalidades as $key => $value) {
@@ -578,11 +578,11 @@ $token = JSession::getFormToken();
     ?>
     <fieldset>
         <div class="form-group">
-            <label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?></label>
+            <label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?> *</label>
             <input name="de_razon_social" id="de_razon_social" type="text" maxlength="100" />
         </div>
         <div class="form-group">
-            <label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?></label>
+            <label for="de_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
             <input name="de_rfc" id="de_rfc" type="text" maxlength="12" />
         </div>
     </fieldset>
@@ -592,7 +592,7 @@ $token = JSession::getFormToken();
     ?>
     <fieldset>
         <div class="form-group">
-            <label for="de_calle"><?php echo JText::_('LBL_CALLE'); ?> *:</label>
+            <label for="de_calle"><?php echo JText::_('LBL_CALLE'); ?> *</label>
             <input
                 name		="de_calle"
                 class		="validate[required,custom[onlyLetterNumber]]"
@@ -624,7 +624,7 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="de_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
+            <label for="de_cod_postal"><?php echo JText::_('LBL_CP'); ?> *</label>
             <input
                 type		= "text"
                 name		= "de_cod_postal"
@@ -635,12 +635,12 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="de_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
+            <label for="de_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *</label>
             <select name="colonia" id="de_colonia" ></select>
         </div>
 
         <div class="form-group">
-            <label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
+            <label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *</label>
             <input
                 type	= "text"
                 name	= "delegacion"
@@ -648,7 +648,7 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="de_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+            <label for="de_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
             <input
                 type	= "text"
                 name	= "estado"
@@ -656,7 +656,7 @@ $token = JSession::getFormToken();
         </div>
 
         <div class="form-group">
-            <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
+            <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *</label>
             <select name="pais" id="de_pais" >
                 <?php
                 foreach ($this->catalogos->nacionalidades as $key => $value) {
@@ -677,18 +677,18 @@ $token = JSession::getFormToken();
         <div id="testimonio1">
             <h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
             <div class="form-group">
-                <label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?></label>
+                <label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?> *</label>
                 <?php
                 echo JHTML::_('calendar',date('Y-m-d'),'t1_instrum_fecha', 't1_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
                 ?>
             </div>
             <div class="form-group">
-                <label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
+                <label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
                 <input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
             </div>
 
             <div class="form-group">
-                <label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+                <label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
                 <select name="t1_instrum_estado" id="t1_instrum_estado">
                     <?php
                     foreach ($this->catalogos->estados as $key => $value) {
@@ -724,7 +724,7 @@ $token = JSession::getFormToken();
             </div>
 
             <div class="form-group">
-                <label for="t2_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+                <label for="t2_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
                 <select name="t2_instrum_estado" id="t2_instrum_estado">
                     <?php
                     foreach ($this->catalogos->estados as $key => $value) {
@@ -759,7 +759,7 @@ $token = JSession::getFormToken();
             </div>
 
             <div class="form-group">
-                <label for="pn_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+                <label for="pn_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
                 <select name="pn_instrum_estado" id="pn_instrum_estado">
                     <?php
                     foreach ($this->catalogos->estados as $key => $value) {
@@ -794,7 +794,7 @@ $token = JSession::getFormToken();
             </div>
 
             <div class="form-group">
-                <label for="rp_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+                <label for="rp_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
                 <select name="rp_instrum_estado" id="rp_instrum_estado">
                     <?php
                     foreach ($this->catalogos->estados as $key => $value) {
@@ -825,7 +825,7 @@ $token = JSession::getFormToken();
     ?>
     <fieldset>
         <div class="form-group">
-            <label for="au_params"><?php echo JText::_('LBL_NUM_AUTHORIZATIONS'); ?></label>
+            <label for="au_params"><?php echo JText::_('LBL_NUM_AUTHORIZATIONS'); ?> *</label>
             <input type="text" name="au_params" id="au_params" class="au_params" maxlength="2" />
         </div>
 
@@ -840,7 +840,7 @@ $token = JSession::getFormToken();
     <fieldset>
         <div class="form-group">
             <input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
-            <label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *:</label>
+            <label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *</label>
             <select name="db_banco_codigo" id="db_banco_codigo">
                 <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
                 <?php
@@ -849,15 +849,15 @@ $token = JSession::getFormToken();
             </select>
         </div>
         <div class="form-group">
-            <label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
+            <label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?> *</label>
             <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
         </div>
         <div class="form-group">
-            <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
+            <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?> *</label>
             <input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="10" />
         </div>
         <div class="form-group">
-            <label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></label>
+            <label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?> *</label>
             <input name="db_banco_clabe" id="db_banco_clabe" type="text" maxlength="18" />
         </div>
 
@@ -905,7 +905,12 @@ $token = JSession::getFormToken();
         foreach ( $archivos as $key => $value ) {
         ?>
         <div class="form-group">
-            <label for="<?php echo $key; ?>" class="head" ><?php echo JText::_($value[1]); ?></label>
+            <?php
+            $noObligatorios = array('LBL_TESTIMONIO2_FILE','LBL_TESTIMONIO3_FILE','Archivo','LBL_PODER_FILE','LBL_RPP_FILE');
+            $obligatorio = !in_array($value[1], $noObligatorios) ? ' *':'';
+
+            ?>
+            <label for="<?php echo $key; ?>" class="head" ><?php echo JText::_($value[1]); ?><?php echo $obligatorio; ?></label>
             <input class="btn btn-default" name="<?php echo $key; ?>" type="file" maxlength="" />
             <?php
             if( isset($value[0]) ){
