@@ -29,7 +29,6 @@ class MandatosController extends JControllerLegacy {
 
         // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
 
-        var_dump($this->integradoId);
         if($this->currUser->guest){
             $this->app->redirect('index.php/login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
