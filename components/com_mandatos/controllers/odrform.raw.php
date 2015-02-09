@@ -103,17 +103,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }else{
             $respuesta = array('redireccion' => false);
         }
-        /*NOTIFICACIONES 17*/
-
-//        $titulo = JText::_('TITULO_17');
-//
-//        $contenido = JText::_('NOTIFICACIONES_17');
-//
-//        $dato['titulo']         = $titulo;
-//        $dato['body']           = $contenido;
-//        $dato['email']          = JFactory::getUser()->email;
-//        $send                   = new Send_email();
-//        $info = $send->notification($dato);
+        $this->sendEmail($datos);
 
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
@@ -168,6 +158,20 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
     public function redirectWithMsg() {
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odrlist', 'LBL_ERROR' ,'error');
+    }
+
+    private function sendEmail($datos)
+    {
+        /*
+         * NOTIFICACIONES 18
+         */
+        $getCurrUser    = new IntegradoSimple($this->integradoId);
+        $titleArray     = array($datos['numOrden']);
+        $array          = array($getCurrUser->getUserPrincipal()->name, $datos['numOrden'], JFactory::getUser()->username, date('d-m-Y'), $datos['totalAmount'], 'Cuenta' );
+
+        $send                   = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info           = $send->sendNotifications('18', $array, $titleArray);
     }
 
 }

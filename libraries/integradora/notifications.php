@@ -32,13 +32,12 @@ class Send_email{
      */
     public function sendNotifications($notificationNumber, $data, $editTitle = null) {
 
-        $title  = 'TITLE_'.$notificationNumber;
+        $title  = 'TITULO_'.$notificationNumber;
         $titulo = JText::_($title);
 
         if(isset($editTitle)){
             $titulo = vsprintf($titulo, $editTitle);
         }
-
         $text   = 'NOTIFICACIONES_'.$notificationNumber;
 
 

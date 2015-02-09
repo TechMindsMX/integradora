@@ -57,7 +57,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
                     $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
                     $this->orden = $orden[0];
-                    $this->sendNotifications( );
+                    $this->sendNotifications();
 
                 }
 
@@ -72,34 +72,29 @@ class MandatosControllerOddpreview extends JControllerAdmin {
     }
 
     private function sendNotifications( ) {
-        $integrado = new IntegradoSimple($this->integradoId);
-        $nombreIntegrado = $integrado->getDisplayName();
 
-        $titulo = JText::_('TITULO_29');
+        $info           = array();
+        /*
+         * NOTIFICACIONES 31
+         */
 
-        $contenido = JText::sprintf('NOTIFICACIONES_29', $nombreIntegrado, $this->orden->numOrden, JFactory::getUser()->username, $this->orden->paymentDate, $this->orden->totalAmount, $this->orden->paymentMethod->name );
+        $getCurrUser         = new IntegradoSimple($this->integradoId);
 
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = JFactory::getUser()->email;
-        $send                   = new Send_email();
-        //$info = // $send->notification($dato);
+        $titleArray          = array($this->orden->numOrden);
+        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden,  JFactory::getUser()->username, date('d-m-Y'), $this->orden->totalAmount, $this->orden->paymentMethod->name);
 
-        $this->logEvent($info, $dato);
+        $send                = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[]              = $send->sendNotifications('31', $array, $titleArray);
 
-        $integradoAdmin     = new IntegradoSimple(93);
+        /*
+         * NOTIFICACIONES 32
+         */
 
-        $titulo = JText::_('TITULO_30');
+        $titleArrayAdmin     = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden);
 
-        $contenido = JText::sprintf('NOTIFICACIONES_30', $nombreIntegrado, $this->orden->numOrden, JFactory::getUser()->username, $this->orden->paymentDate, $this->orden->totalAmount, $this->orden->paymentMethod->name);
-
-        $datoAdmin['titulo']         = $titulo;
-        $datoAdmin['body']           = $contenido;
-        $datoAdmin['email']          = $integradoAdmin->user->email;
-        $send                   = new Send_email();
-        //$infoAdmin = // $send->notification($datoAdmin);
-
-        $this->logEvent($infoAdmin, $datoAdmin);
+        $send->setAdminEmails();
+        $info[]             = $send->sendNotifications('32', $array, $titleArrayAdmin);
     }
 
     private function logEvent( $info, $dato ) {

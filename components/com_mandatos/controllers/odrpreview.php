@@ -39,7 +39,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $this->currentIntegrado = $currentIntegrado;
 
         $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
-
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
 
@@ -84,6 +83,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 // autorización guardada
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
                 if ($statusChange){
+                    $this->sendNotifications();
                     $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
                 }
 
@@ -93,7 +93,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                     if ($statusChange){
                         $this->app->enqueueMessage(JText::_('ORDER_PAID'));
 
-                        $this->sendNotifications();
                     }
                 }
 
@@ -114,7 +113,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $result = $this->cashoutObj->sendCreateTx();
 
             foreach ( $this->txsToDo as $txAmount ) {
-                // TODO: traer el id de integradora de la db
                 $tranfer = new transferFunds($this->orden, $this->orden->integradoId, 1, $txAmount);
                 $tranfer->sendCreateTx();
             }
@@ -125,33 +123,30 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     }
 
     public function sendNotifications() {
-        /*NOTIFICACIONES 23*/
+
+        /*
+         * NOTIFICACIONES 25
+         */
+
+
+        var_dump($this);exit;
         $getCurrUser         = new IntegradoSimple($this->integradoId);
+        $titleArray          = array($this->orden->numOrden);
+        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), $this->orden->totalAmount, $this->cuenta->banco_cuenta, $this->orden->numOrden);
 
-        $emails = array($getCurrUser->getUserPrincipal()->email, JFactory::getUser()->email, 'ricardolyon@gmail.com');
-        $emails = array_unique($emails);
-
-        $titulo = JText::_('TITULO_23');
-
-        $contenido = JText::_('NOTIFICACIONES_23');
-
-        $dato['titulo']         = $titulo;
-        $dato['body']           = $contenido;
-        $dato['email']          = $emails;
         $send                   = new Send_email();
-        //$info = // $send->notification($dato);
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[] = $send->sendNotifications('25', $array, $titleArray);
 
-        $integradoAdmin     = new IntegradoSimple(93);
+        /*
+         * Notifications 26
+         */
 
-        $titulo = JText::_('TITULO_24');
+        $titleArrayAdmin        = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden);
 
-        $contenido = JText::_('NOTIFICACIONES_24');
-
-        $datoAdmin['titulo']         = $titulo;
-        $datoAdmin['body']           = $contenido;
-        $datoAdmin['email']          = $integradoAdmin->user->email;
         $send                   = new Send_email();
-        //$infoAdmin = // $send->notification($datoAdmin);
+        $send->setAdminEmails();
+        $info[]                 = $send->sendNotifications('26', $array, $titleArrayAdmin);
 
     }
 
