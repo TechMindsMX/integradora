@@ -21,6 +21,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',
             'totalAmount'   => 'FLOAT',
+            'idOrden'       => 'INT'
 	    );
 
         $this->parametros   = $this->inputVars->getArray($post);
@@ -72,6 +73,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
 
+        $datos['integradoId'] = $this->integradoId;
+
         if( $datos['idOrden'] == 0) {
             $idOrden = $datos['idOrden'];
             unset($datos['idOrden']);
@@ -111,7 +114,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
 //        $dato['email']          = JFactory::getUser()->email;
 //        $send                   = new Send_email();
 //        $info = $send->notification($dato);
-
 
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
