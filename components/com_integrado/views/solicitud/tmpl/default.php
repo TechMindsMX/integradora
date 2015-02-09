@@ -259,11 +259,17 @@ $token = JSession::getFormToken();
 			jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
 			jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
 			jQuery('#busqueda_rfc_btn').on('click', busqueda_rfc);
+            jQuery('#busqueda_rfc').change( function() {
+                jQuery('#busqueda_rfc_btn').siblings('span.alert').remove();
+                jQuery('#juridica').prop('disabled', true).addClass('disabled');
+            });
 
 
 		});
 
 		function busqueda_rfc() {
+
+            jQuery('#busqueda_rfc_btn').siblings('span.alert').remove();
 			var integradoId = jQuery('#integradoId').val();
 			var rfcBusqueda	=  jQuery('#busqueda_rfc').val();
 
@@ -277,9 +283,10 @@ $token = JSession::getFormToken();
 			resultado.done(function(response){
 				mensajesValidaciones(response);
 
-				console.log(typeof response.busqueda_rfc);
 				if(typeof response.busqueda_rfc === 'number') {
 					jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
+                    jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success">El RFC es correcto puede continuar hancdo click en el botón envíar.</span>');
+                    jQuery('#juridica').prop('disabled', false).removeClass('disabled');
 				}
 
 	/*
@@ -335,7 +342,7 @@ $token = JSession::getFormToken();
 			data +='&integradoId='+idIntegradoAlta;
 
 			var parametros = {
-				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoSolicitud&format=raw',
+				'link'  : 'index.php?option=com_integrado&view=clientesform&task=agregarBancoSolicitud&format=raw',
 				'datos' : data
 			};
 
@@ -360,7 +367,7 @@ $token = JSession::getFormToken();
 			var id		 = jQuery(campo).prop('id');
 			var idCliPro = jQuery('#integradoId').val();
 			var parametros = {
-				'link'  : 'index.php?option=com_mandatos&view=clientesform&task=deleteBanco&format=raw',
+				'link'  : 'index.php?option=com_integrado&view=clientesform&task=deleteBanco&format=raw',
 				'datos' : {
 					'datosBan_id' : id,
 					'integradoId' : idCliPro
@@ -394,16 +401,18 @@ $token = JSession::getFormToken();
             <a class="btn btn-primary" type="button" id="busqueda_rfc_btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></a>
         </div>
     <fieldset>
-        <div class="radio">
-            <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" <?php echo $fisica; ?> /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+        <div class="hidden">
+            <div class="radio">
+                <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" <?php echo $moral; ?> /><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" <?php echo $fisica; ?> /><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+            </div>
         </div>
     </fieldset>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-primary span3" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+        <button type="button" class="btn btn-primary span3 disabled" id="juridica" disabled><?php echo JText::_('LBL_ENVIAR'); ?></button>
     </div>
 
     <?php
@@ -542,7 +551,7 @@ $token = JSession::getFormToken();
     <fieldset>
         <div class="form-group">
             <label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
-            <input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" />
+            <input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" placeholder="5512345678" />
         </div>
         <div class="form-group">
             <label for="dp_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
@@ -550,7 +559,7 @@ $token = JSession::getFormToken();
         </div>
         <div class="form-group">
             <label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?> *</label>
-            <input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" />
+            <input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" placeholder="0445512345678" />
         </div>
         <div class="form-group">
             <label for="email"><?php echo JText::_('LBL_CORREO'); ?> *</label>
@@ -939,4 +948,4 @@ $token = JSession::getFormToken();
         <input type="hidden" name="<?php echo $token; ?>" value="1" />
     </form>
 <?php
-
+    echo '<div class="alert alert-dismissable alert-info"><h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS_TITLE').'</h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS').'</div>';
