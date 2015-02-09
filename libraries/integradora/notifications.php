@@ -38,9 +38,8 @@ class Send_email{
         if(isset($editTitle)){
             $titulo = vsprintf($titulo, $editTitle);
         }
+
         $text   = 'NOTIFICACIONES_'.$notificationNumber;
-
-
 
         $conten = JText::_($text);
         $contenido = vsprintf($conten, $data);
