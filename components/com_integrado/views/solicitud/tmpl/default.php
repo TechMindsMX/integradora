@@ -948,4 +948,4 @@ $token = JSession::getFormToken();
         <input type="hidden" name="<?php echo $token; ?>" value="1" />
     </form>
 <?php
-
+    echo '<div class="alert alert-dismissable alert-info"><h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS_TITLE').'</h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS').'</div>';
