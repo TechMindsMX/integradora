@@ -776,7 +776,7 @@ class getFromTimOne{
             foreach ($response as $value) {
                 if(!is_null($value->bancoIds)) {
                     $arrayBancoIds = array_filter(json_decode($value->bancoIds, true));
-                    $bancoIds = isset($value->bancoIds) ? ' IN (' . implode(',', $arrayBancoIds) . ')' : null;
+                    $bancoIds = !empty($arrayBancoIds) ? ' IN (' . implode(',', $arrayBancoIds) . ')' : null;
 
                     if (!is_null($bancoIds)) {
                         $db = JFactory::getDbo();
