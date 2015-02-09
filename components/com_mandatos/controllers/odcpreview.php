@@ -183,7 +183,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     public function sendEmail()
     {
         /*
-         *  NOTIFICACIONES 13
+         *  NOTIFICACIONES 14
          */
 
         $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->parametros['idOrden']);
@@ -198,16 +198,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $send            = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
-        $info[]            = $send->sendNotifications('13', $array, $titleArray);
+        $info[]            = $send->sendNotifications('14', $array, $titleArray);
 
         /*
-         * Notificaciones 14
+         * Notificaciones 15
          */
 
         $titleArrayAdmin = array( $getCurrUser->user->username, $this->parametros['idOrden'] );
 
         $send->setAdminEmails();
-        $info[] = $send->sendNotifications('14', $array, $titleArrayAdmin);
+        $info[] = $send->sendNotifications('15', $array, $titleArrayAdmin);
 
         return $info;
     }
