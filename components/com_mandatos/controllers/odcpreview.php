@@ -31,6 +31,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
      *
      */
     function authorize(){
+
         $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
@@ -65,10 +66,14 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
+
+
+
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
+
 
                     if($TxOdc){
                         $cobroComision = $this->txComision();
@@ -92,49 +97,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                             $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                         }
                     }
-
-                    /*if (isset($this->integradoId)) {
-                        $integradoAdmin = new IntegradoSimple(93);
-
-                        $titulo = JText::_('TITULO_13');
-                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
-
-                        $contenido = JText::_('NOTIFICACIONES_13');
-
-                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoSimple->user->username . '</strong>', $contenido);
-                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
-                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . JFactory::getUser()->username . '</strong>', $contenido);
-                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
-
-                        $data['titulo'] = $titulo;
-                        $data['body'] = $contenido;
-                        $data['email'] = JFactory::getUser()->email;
-
-                        $send = new Send_email();
-                        // $send->notification($data);
-
-
-                        $titulo = JText::_('TITULO_14');
-                        $titulo = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $titulo);
-                        $titulo = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $titulo);
-
-                        $contenido = JText::_('NOTIFICACIONES_14');
-
-                        $contenido = str_replace('$integrado', '<strong style="color: #000000">' . $integradoAdmin->user->username . '</strong>', $contenido);
-                        $contenido = str_replace('$idOrden', '<strong style="color: #000000">' . $this->parametros['idOrden'] . '</strong>', $contenido);
-                        $contenido = str_replace('$usuario', '<strong style="color: #000000">$' . JFactory::getUser()->username . '</strong>', $contenido);
-                        $contenido = str_replace('$fecha', '<strong style="color: #000000">' . date('d-m-Y') . '</strong>', $contenido);
-
-                        $data['titulo'] = $titulo;
-                        $data['body'] = $contenido;
-                        $data['email'] = $integradoAdmin->user->email;
-
-                        $send = new Send_email();
-                        // $send->notification($data);
-                    }*/
-
                 }
 
+                $this->sendEmail();
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             } else {
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
@@ -213,5 +178,37 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             )
         );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_auth');
+    }
+
+    public function sendEmail()
+    {
+        /*
+         *  NOTIFICACIONES 13
+         */
+
+        $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->parametros['idOrden']);
+
+        $info = array();
+
+        $getCurrUser     = new IntegradoSimple($this->integradoId);
+        $titleArray      = array( $this->parametros['idOrden']);
+
+        $array           = array($getCurrUser->user->name, $this->parametros['idOrden'], JFactory::getUser()->username, date('d-m-Y'), $odc[0]->totalAmount, $odc[0]->proveedor->corporateName);
+
+        $send            = new Send_email();
+
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[]            = $send->sendNotifications('13', $array, $titleArray);
+
+        /*
+         * Notificaciones 14
+         */
+
+        $titleArrayAdmin = array( $getCurrUser->user->username, $this->parametros['idOrden'] );
+
+        $send->setAdminEmails();
+        $info[] = $send->sendNotifications('14', $array, $titleArrayAdmin);
+
+        return $info;
     }
 }
