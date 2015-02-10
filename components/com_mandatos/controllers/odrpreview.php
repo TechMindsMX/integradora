@@ -168,6 +168,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         return $respuesta;
     }
 
+
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden          = $this->orden;
