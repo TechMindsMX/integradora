@@ -23,6 +23,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     function __construct( ) {
         $this->integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
+        $this->comisiones = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
 
         parent::__construct(array());
     }
@@ -44,10 +45,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
             $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
             $this->orden = $orden[0];
-
-            $this->cashoutObj =  new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('paymentMethod' => $this->orden->paymentMethod, 'accountId' => $this->orden->cuentaId  ));
-
-            $this->txsToDo = $this->calculoComisionesOrdenRetiro();
 
             $enoughBalance = $this->enoughBalance();
 
@@ -83,17 +80,25 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 // autorización guardada
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
                 if ($statusChange){
-                    $this->sendNotifications();
                     $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
                 }
+
+                $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
+                $this->orden = $orden[0];
 
                 $cashOut = $this->cashout();
                 if($cashOut){
                     $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
-                    if ($statusChange){
+                    $comision = $this->txComision();
+
+                    if ($statusChange && $comision){
                         $this->app->enqueueMessage(JText::_('ORDER_PAID'));
 
+                        $this->sendNotifications();
                     }
+                }else{
+                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
+                    $save->deleteDB('flpmu_auth_odr', 'idOrden = '.$this->parametros['idOrden'],' AND userId = '.JFactory::getUser()->id);
                 }
 
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
@@ -110,15 +115,13 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         //cashOut si cambia al 5
 
         if($this->orden->status->id == 5){
-            $result = $this->cashoutObj->sendCreateTx();
 
-            foreach ( $this->txsToDo as $txAmount ) {
-                $tranfer = new transferFunds($this->orden, $this->orden->integradoId, 1, $txAmount);
-                $tranfer->sendCreateTx();
-            }
+            // TODO: traer el id de integradora de la db
 
+            $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
+            $tranfer->sendCreateTx();
 
-            return $result;
+            return $tranfer;
         }
     }
 
@@ -167,4 +170,17 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         return $balance >= $totalOrden;
     }
+
+    private function txComision(){
+        //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
+        $orden          = $this->orden;
+        $montoComision  = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
+
+        $orden->orderType = 'Cobro Comisión';
+
+        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
+
+        return $txComision->sendCreateTx();
+    }
+
 }

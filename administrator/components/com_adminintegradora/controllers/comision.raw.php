@@ -69,7 +69,7 @@ class AdminintegradoraControllerComision extends JControllerAdmin
 		$document = JFactory::getDocument();
 		$document->setMimeEncoding('application/json');
 
-		if (validador::noErrors($validaResult)) {
+		if ($validator->allPassed()) {
 
 			$request = new sendToTimOne();
 			$request->formatData($this->envio);  // Se envian los datos al objeto de ingreso en DB
