@@ -235,7 +235,7 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+				$this->integrados[$key]->datos_personales->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
 			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
@@ -246,7 +246,7 @@ class Integrado {
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$this->integrados[ $key ]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
 				}
