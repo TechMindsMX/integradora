@@ -211,7 +211,7 @@ class MandatosController extends JControllerLegacy {
         echo json_encode($producto);
     }
 
-    function saveCliPro(){
+    public function saveCliPro(){
         $db	        = JFactory::getDbo();
         $save       = new sendToTimOne();
         $datosQuery = array();
@@ -251,20 +251,24 @@ class MandatosController extends JControllerLegacy {
             'dp_rfc'                        => 'STRING',
             'dp_sexo'                       => 'STRING',
             'pj_pers_juridica'              => 'STRING',
-            'pn_instrum_estado'             => 'STRING',
-            'pn_instrum_nom_notario'        => 'STRING',
-            'pn_instrum_notaria'            => 'STRING',
-            'pn_instrum_num_instrumento'    => 'STRING',
-            'rp_instrum_estado'             => 'STRING',
-            'rp_instrum_num_instrumento'    => 'STRING',
+            't1_instrum_fecha'              => 'STRING',
             't1_instrum_estado'             => 'STRING',
             't1_instrum_nom_notario'        => 'STRING',
             't1_instrum_notaria'            => 'STRING',
             't1_instrum_num_instrumento'    => 'STRING',
+            't2_instrum_fecha'              => 'STRING',
             't2_instrum_estado'             => 'STRING',
             't2_instrum_nom_notario'        => 'STRING',
             't2_instrum_notaria'            => 'STRING',
             't2_instrum_num_instrumento'    => 'STRING',
+            'pn_instrum_fecha'              => 'STRING',
+            'pn_instrum_estado'             => 'STRING',
+            'pn_instrum_nom_notario'        => 'STRING',
+            'pn_instrum_notaria'            => 'STRING',
+            'pn_instrum_num_instrumento'    => 'STRING',
+            'rp_instrum_fecha'              => 'STRING',
+            'rp_instrum_estado'             => 'STRING',
+            'rp_instrum_num_instrumento'    => 'STRING',
             'tab'                           => 'STRING',
             'tp_tipo_alta'                  => 'INT',
             'tp_status'                     => 'INT',
@@ -278,98 +282,104 @@ class MandatosController extends JControllerLegacy {
 
         $this->dataCliente  = (object) $data;
 
+        $validations = $this->validatePost($data);
+        if($validations->allPassed()) {
 
-        // verificación que no sea el mismo integrado
-        $currentIntegrado = new IntegradoSimple($this->integradoId);
+            // verificación que no sea el mismo integrado
+            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
-        if($idCliPro == 0){
-            $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
-            $data['idCliPro'] = $idCliPro;
-        }
-
-        switch($data['tab']){
-            case 'tipoAlta':
-                $table 		= 'integrado_clientes_proveedor';
-                $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
-                $existe     = getFromTimOne::selectDB($table,$where);
-
-                $columnas[] = 'integrado_id';
-                $valores[]	= $this->integradoId;
-                $columnas[] = 'integradoIdCliente';
-                $valores[]	= $idCliPro;
-
-                $datosQuery['columnas']  = $columnas;
-                $datosQuery['valores']   = $valores;
-
-                $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'tp_', $datosQuery );
-                $tab = 'juridica';
-                break;
-            case 'juridica':
-                $table 		= 'integrado';
-                $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
-                $existe     = getFromTimOne::selectDB($table, $where);
-
-                $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
-                $tab = 'basic-details';
-                break;
-            case 'personales':
-                $table 		= 'integrado_datos_personales';
-                $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
-                $existe     = getFromTimOne::selectDB($table, $where);
-
-                $columnas[] = 'integrado_id';
-                $valores[]	= $idCliPro;
-
-                $datosQuery['columnas'] = $columnas;
-                $datosQuery['valores']  = $valores;
-
-                $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'dp_', $datosQuery );
-                if(empty($existe)){
-                    self::safeContacto($data, $idCliPro);
-                }
-                if($data['pj_pers_juridica'] == 2 ){
-                    $tab = 'files';
-                }elseif($data['pj_pers_juridica'] == 1){
-                    $tab = 'empresa';
-                }
-                break;
-            case 'empresa':
-                $table = 'integrado_datos_empresa';
-                $where = $db->quoteName('integrado_id').' = '.$idCliPro;
-                $existe = getFromTimOne::selectDB($table, $where);
-                $columnas[] = 'integrado_id';
-                $valores[]	= $idCliPro;
-
-                //self::saveInstrumentos($data);
-
-                $datosQuery['columnas'] = $columnas;
-                $datosQuery['valores']  = $valores;
-
-                $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'de_', $datosQuery );
-                if($data['tp_tipo_alta'] == 1 || $data['tp_tipo_alta'] == 2) {
-                    $tab = 'banco';
-                }else {
-                    $tab = 'files';
-                }
-                break;
-        }
-
-        if(empty($existe)) {
-            $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
-
-            if( $table == 'integrado_datos_personales'){
-
-                $this->sendEmail();
-
+            if($idCliPro == 0){
+                $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
+                $data['idCliPro'] = $idCliPro;
             }
 
-        }else{
-            $save->updateDB($table,$datosQuery['setUpdate'],$where);
-        }
+            switch($data['tab']){
+                case 'tipoAlta':
+                    $table 		= 'integrado_clientes_proveedor';
+                    $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
+                    $existe     = getFromTimOne::selectDB($table,$where);
 
-        $response['idCliPro'] = $idCliPro;
-        $response['success'] = true;
-        $response['nextTab'] = $tab;
+                    $columnas[] = 'integrado_id';
+                    $valores[]	= $this->integradoId;
+                    $columnas[] = 'integradoIdCliente';
+                    $valores[]	= $idCliPro;
+
+                    $datosQuery['columnas']  = $columnas;
+                    $datosQuery['valores']   = $valores;
+
+                    $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'tp_', $datosQuery );
+                    $tab = 'juridica';
+                    break;
+                case 'juridica':
+                    $table 		= 'integrado';
+                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $existe     = getFromTimOne::selectDB($table, $where);
+
+                    $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
+                    $tab = 'basic-details';
+                    break;
+                case 'personales':
+                    $table 		= 'integrado_datos_personales';
+                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $existe     = getFromTimOne::selectDB($table, $where);
+
+                    $columnas[] = 'integrado_id';
+                    $valores[]	= $idCliPro;
+
+                    $datosQuery['columnas'] = $columnas;
+                    $datosQuery['valores']  = $valores;
+
+                    $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'dp_', $datosQuery );
+                    if(empty($existe)){
+                        self::safeContacto($data, $idCliPro);
+                    }
+                    if($data['pj_pers_juridica'] == 2 ){
+                        $tab = 'files';
+                    }elseif($data['pj_pers_juridica'] == 1){
+                        $tab = 'empresa';
+                    }
+                    break;
+                case 'empresa':
+                    $table = 'integrado_datos_empresa';
+                    $where = $db->quoteName('integrado_id').' = '.$idCliPro;
+                    $existe = getFromTimOne::selectDB($table, $where);
+                    $columnas[] = 'integrado_id';
+                    $valores[]	= $idCliPro;
+
+                    //self::saveInstrumentos($data);
+
+                    $datosQuery['columnas'] = $columnas;
+                    $datosQuery['valores']  = $valores;
+
+                    $datosQuery = getFromTimOne::limpiarPostPrefix( $data, 'de_', $datosQuery );
+                    if($data['tp_tipo_alta'] == 1 || $data['tp_tipo_alta'] == 2) {
+                        $tab = 'banco';
+                    }else {
+                        $tab = 'files';
+                    }
+                    break;
+            }
+
+            if(empty($existe)) {
+                $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
+
+                if( $table == 'integrado_datos_personales'){
+
+                    $this->sendEmail();
+
+                }
+
+            }else{
+                $save->updateDB($table,$datosQuery['setUpdate'],$where);
+            }
+
+            $response['idCliPro'] = $idCliPro;
+            $response['success'] = true;
+            $response['nextTab'] = $tab;
+
+        } else {
+            $response = $validations->getRespuestas();
+        }
 
         $this->document->setMimeEncoding('application/json');
 
@@ -381,7 +391,7 @@ class MandatosController extends JControllerLegacy {
     function uploadFiles(){
 
         $idCliPro	= JFactory::getApplication()->input->get('idCliPro', null, 'INT');
-        $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'id = '.$idCliPro);
+        $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoIdCliente = '.$idCliPro);
         $integrado_id = $result[0]->integradoIdCliente;
 
         $resultado = sendToTimOne::uploadFiles($integrado_id);
@@ -581,6 +591,94 @@ class MandatosController extends JControllerLegacy {
 
         $infoEmail = $sendEmail->sendNotifications('6', $array);
         return $infoEmail;
+    }
+
+    public function validatePost($data) {
+        switch ($data['tab']) {
+            case 'juridica':
+                $diccionario = array(
+                    'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
+                );
+                break;
+
+            case 'personales':
+                $diccionario = array(
+                    'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
+                    'dp_nacionalidad'            => array('alphaNumber' => true,      	'maxlength' => 45,  'required' => true),
+                    'dp_sexo'                    => array('alphaNumber' => true,	   	'maxlength' => 45,  'required' => true),
+                    'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10,  'required' => true),
+                    'dp_rfc'                     => array('rfc_fisica' => true,      	'maxlength' => 13,  'required' => true),
+                    'dp_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100, 'required' => true),
+                    'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
+                    'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10),
+                    'dp_cod_postal'              => array('number' => true,		        'maxlength' => 13,  'required' => true),
+                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150, 'required' => true),
+                    'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,  'required' => true),
+                    'co_email1'                  => array('email' => true,		    	'maxlength' => 100, 'required' => true),
+                    'co_email2'                  => array('email' => true,		    	'maxlength' => 100),
+                    'co_email3'                  => array('email' => true,		    	'maxlength' => 100),
+                    'co_tel_fijo1'               => array('phone' => true,            	'minlength'=>10,    'maxlength' => 10,      'required' => true),
+                    'co_tel_fijo2'               => array('phone' => true,            	'minlength'=>10,    'maxlength' => 10),
+                    'co_tel_fijo3'               => array('phone' => true,            	'minlength'=>10,    'maxlength' => 10),
+                    'co_tel_fijo_extension1'     => array('number' => true,     	    'minlength' => 0,   'maxlength' => 5),
+                    'co_tel_fijo_extension2'     => array('number' => true,     	    'minlength' => 0,   'maxlength' => 5),
+                    'co_tel_fijo_extension3'     => array('number' => true,     	    'minlength' => 0,   'maxlength' => 5),
+                    'co_tel_movil1'              => array('number' => true,     	    'minlength' => 13,  'maxlength' => 13),
+                    'co_tel_movil2'              => array('number' => true,     	    'minlength' => 13,  'maxlength' => 13),
+                    'co_tel_movil3'              => array('number' => true,     	    'minlength' => 13,  'maxlength' => 13),
+                );
+                break;
+
+            case 'empresa':
+                $diccionario = array(
+                    'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
+                    'de_rfc'                     => array('rfc_moral' => true,	    	'maxlength' => 12,      'required' => true),
+                    'de_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
+                    'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
+                    'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
+                    't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      'required' => true),
+                    't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
+                    't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
+                    't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
+                    't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
+                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,),
+                    't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
+                    't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
+                    't2_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
+                    't2_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 18,      ),
+                    'pn_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'pn_instrum_notaria'         => array('alphaNumber' => true, 	    'maxlength' => 18,      ),
+                    'pn_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 255,     ),
+                    'pn_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
+                    'pn_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
+                    'rp_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'rp_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
+                    'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
+                );
+                break;
+
+          case 'banco':
+                $diccionario = array(
+                    'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
+                    'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 10,  'minlength'=>10,   'required' => true),
+                    'db_banco_codigo'            => array('alphaNumber' => true,	                    'maxlength' => 3,   'required' => true),
+                    'db_banco_sucursal'          => array('alphaNumber' => true,	                    'maxlength' => 10,  'required' => true),
+                );
+                break;
+        }
+
+        $diccionarioDefault  = array(
+            'integradoId'                => array('number' => true,		    	'maxlength' => 10),
+            'tab'                        => array('string' => true,   	    	'maxlength' => 18),
+        );
+        $diccionario = array_merge($diccionario, $diccionarioDefault);
+
+        //envia la data a validacion y regresa un arreglo con los resultados para cada uno de los campos que esten llenados
+        $validador = new validador();
+        $resultado = $validador->procesamiento($data, $diccionario);
+
+        return $validador;
     }
 
 //    public function agregarBancoSolicitud() {

@@ -294,22 +294,6 @@ $token = JSession::getFormToken();
                     jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success">El RFC es correcto puede continuar hancdo click en el botón envíar.</span>');
                     jQuery('#juridica').prop('disabled', false).removeClass('disabled');
 				}
-
-	/*
-				if(response.success){
-					mensaje = mensajes('<?php echo JText::_('MSG_FILL_FORM'); ?>', 'msg');
-
-	//				jQuery('#altaC_P').clearForm();
-	//                llenaForm(response);
-
-				}else{
-	//				jQuery('#altaC_P').clearForm();
-	//                jQuery('input, select, textarea').prop("readonly", false);
-
-					mensajes(response.msg, 'error');
-	//				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
-				}
-	*/
 			});
 		}
 

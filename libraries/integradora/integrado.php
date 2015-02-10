@@ -139,6 +139,9 @@ class Integrado {
 
 				return array ( $respuesta, $existe, null, $db, $data, $save );
 			}
+		} else {
+			$respuesta['success'] = false;
+			$respuesta['msg'] = array('db_banco_clabe' => array('success' => false,'msg' => 'Esta cuenta ya fue dada de alta') );
 		}
 
 		return array ( $respuesta, $existe, null, $db, $data, $save );

@@ -66,6 +66,10 @@ class validador{
 
     }
 
+    public function getRespuestas() {
+        return $this->respuesta;
+    }
+
     protected function diccionaroErrores($tipo,$campo){
         $tipos = array('Longitud');
     }

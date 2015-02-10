@@ -14,6 +14,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
+$token = JSession::getFormToken();
 
 echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
@@ -168,18 +169,21 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 				nextTab();
 				jQuery()
 
-			}else{
+			}else {
 //				jQuery('#altaC_P').clearForm();
 				jQuery('input, select, textarea').prop("readonly", false);
 
 				mensajesValidaciones(response);
-				nextTab();nextTab();
+				nextTab();
 				var radio = response.bu_rfc.pj_pers_juridica;
-				jQuery('#perFisicaMoral'+radio).trigger('click');
-				if (response.bu_rfc.pj_pers_juridica == 1)
+				jQuery('#perFisicaMoral' + radio).trigger('click');
+				if (response.bu_rfc.pj_pers_juridica == 1) {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
+					jQuery('#de_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
+				}
 				else {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
+					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
 				}
 			}
 		});
@@ -219,8 +223,10 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             if(obj.success === true) {
                 llenatablabancos(obj);
             }else{
-	            if (obj.msg.db_banco_codigo !== true) {
-		            obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+	            if (typeof obj.msg.db_banco_codigo !== 'undefined'){
+		            if (obj.msg.db_banco_codigo !== true) {
+			            obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+		            }
 	            }
 	            mensajesValidaciones(obj.msg);
             }
@@ -313,6 +319,11 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             campos += '&tab='+tab;
             campos += '&integradoId='+integradoId;
             campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+	        campos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
+	        campos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
+	        campos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
+	        campos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+	        campos += '&<?php echo $token; ?>=1';
 
             var parametros = {
                 'link'  : 'index.php?option=com_mandatos&view=clientesform&task=saveCliPro&format=raw',
@@ -322,13 +333,15 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
             var resultado = ajax(parametros);
 
             resultado.done(function(response){
-               if(response.success){
+               if(response.success === true){
                    var spanMsg = jQuery('#msg')
                    jQuery('#idCliPro').val(response.idCliPro);
                    nextTab();
                    spanMsg.text('Datos Almacenados');
                    spanMsg.fadeIn();
                    spanMsg.fadeOut(8000);
+               } else {
+	               mensajesValidaciones(response);
                }
             });
         }
