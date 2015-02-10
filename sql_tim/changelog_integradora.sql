@@ -230,7 +230,7 @@ CREATE TABLE `flpmu_catalogo_ivas` (
   `valor` int(11) NOT NULL,
   `leyenda` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO  `integradb`.`flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
+INSERT INTO  `flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
 
 --rollback DROP TABLE `flpmu_catalogo_ivas`;
 
@@ -243,11 +243,11 @@ ALTER TABLE `flpmu_catalogo_ivas` ADD PRIMARY KEY (`valor`), ADD UNIQUE INDEX `v
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0', `valor` = 1  WHERE `valor` = 0;
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11', `valor` = 2 WHERE `valor` = 11;
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16', `valor` = 3 WHERE `valor` = 16;
-ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
+ALTER TABLE `flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0%', `valor` = 0 WHERE `valor` = 1;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11%', `valor` = 11 WHERE `valor` = 2;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%', `valor` = 16 WHERE `valor` = 3;
---rollback ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
+--rollback ALTER TABLE `flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
 
 --changeset ricardolyon:26
 ALTER TABLE `flpmu_integrado_clientes_proveedor` ADD COLUMN `bancos` VARCHAR(255);

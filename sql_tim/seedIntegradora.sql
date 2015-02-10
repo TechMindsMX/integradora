@@ -6,4 +6,4 @@ INSERT INTO `flpmu_integrado_datos_personales` (`integrado_id`, `nombre_represen
 
 INSERT INTO `flpmu_integrado_datos_empresa` (`integrado_id`, `razon_social`, `rfc`, `calle`, `num_exterior`, `num_interior`, `cod_postal`, `tel_fijo`, `tel_fijo_extension`, `tel_fax`, `sitio_web`, `testimonio_1`, `testimonio_2`, `poder`, `reg_propiedad`, `url_rfc`) VALUES ('1', 'Integradora de Emprendimientos Culturales S.A. de C.V.', 'IEC121203FV8', 'Tiburcio Montiel', '80', 'B3', '11850', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO `integradb`.`flpmu_integrado_timone` (`integradoId`, `timoneUuid`, `stpClabe`) VALUES ('1', '323aa2e071234d5f9f09c5f1325fb8fe', '646180111901200059');
+INSERT INTO `flpmu_integrado_timone` (`integradoId`, `timoneUuid`, `stpClabe`) VALUES ('1', '1d9abea6361040678db1bdfd5903438f', '646180111901200017');
