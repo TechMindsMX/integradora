@@ -22,35 +22,30 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     protected $txsToDo;
 
     function __construct( ) {
-        $this->integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
-        $this->comisiones = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
+        $post                   = array( 'idOrden' => 'INT' );
+        $this->app 			    = JFactory::getApplication();
+        $this->parametros	    = $this->app->input->getArray($post);
+        $this->integradoId      = JFactory::getSession()->get('integradoId', null, 'integrado');
+        $this->comisiones       = getFromTimOne::getComisionesOfIntegrado($this->integradoId);
+        $this->permisos         = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+        $currentIntegrado       = new IntegradoSimple($this->integradoId);
+        $currentIntegrado->getTimOneData();
+        $this->currentIntegrado = $currentIntegrado;
+
+        $orden                  = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
+        $this->orden            = $orden[0];
 
         parent::__construct(array());
     }
 
     function authorize() {
-        $post               = array( 'idOrden' => 'INT' );
-        $this->app 			= JFactory::getApplication();
-        $this->parametros	= $this->app->input->getArray($post);
-
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-        $currentIntegrado = new IntegradoSimple($this->integradoId);
-        $currentIntegrado->getTimOneData();
-        $this->currentIntegrado = $currentIntegrado;
-
-        $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
         if($this->permisos['canAuth']) {
-            // acciones cuando tiene permisos para autorizar
-
-            $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
-            $this->orden = $orden[0];
-
             $enoughBalance = $this->enoughBalance();
 
             $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->orden->id, $enoughBalance) ) ) );
             JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
+            //Si no tiene Fondos se redirecciona.
             if (!$enoughBalance) {
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_INSUFFIENT_FUND'), 'error');
             }
@@ -64,7 +59,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $save->formatData($this->parametros);
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
-
             $check = getFromTimOne::checkUserAuth($auths);
 
             if($check){
@@ -79,29 +73,35 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             if($resultado) {
                 // autorización guardada
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
-                if ($statusChange){
-                    $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
-                }
 
-                $orden = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
-                $this->orden = $orden[0];
+                if($statusChange) {
+                    $cashOut = $this->cashout();
 
-                $cashOut = $this->cashout();
-                if($cashOut){
-                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
-                    $comision = $this->txComision();
+                    if ($cashOut) {
+                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
+                        $comision = $this->txComision();
 
-                    if ($statusChange && $comision){
-                        $this->app->enqueueMessage(JText::_('ORDER_PAID'));
+                        if ($statusChange && $comision) {
+                            $this->app->enqueueMessage(JText::_('ORDER_PAID'));
 
-                        $this->sendNotifications();
+                            //TODO: Quitar el comentario para realizar el envio de la notificación
+                            //$this->sendNotifications();
+                        }
+                    } else {
+                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
+                        if($statusChange) {
+                            $save->deleteDB('flpmu_auth_odr', 'idOrden = ' . $this->parametros['idOrden'], ' AND userId = ' . JFactory::getUser()->id);
+                        }else{
+                            $this->app->enqueueMessage(JText::_('ERROR_PLATAFORM_CONTACT_ADMIN'));
+                        }
+                        $this->app->enqueueMessage(JText::_('ORDER_NO_PAID'));
                     }
-                }else{
-                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
-                    $save->deleteDB('flpmu_auth_odr', 'idOrden = '.$this->parametros['idOrden'],' AND userId = '.JFactory::getUser()->id);
-                }
 
-                $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                }else{
+                    $this->app->enqueueMessage(JText::_('ORDER_NOT_STATUS_CHANGED'));
+                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                }
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
             }
@@ -112,17 +112,11 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
     }
 
     private function cashout(){
-        //cashOut si cambia al 5
-
         if($this->orden->status->id == 5){
-
-            // TODO: traer el id de integradora de la db
-
             $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
             $tranfer->sendCreateTx();
-
-            return $tranfer;
         }
+        return $tranfer;
     }
 
     public function sendNotifications() {
@@ -131,8 +125,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
          * NOTIFICACIONES 25
          */
 
-
-        var_dump($this);exit;
         $getCurrUser         = new IntegradoSimple($this->integradoId);
         $titleArray          = array($this->orden->numOrden);
         $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), $this->orden->totalAmount, $this->cuenta->banco_cuenta, $this->orden->numOrden);
@@ -153,22 +145,27 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     }
 
-    private function calculoComisionesOrdenRetiro() {
-        $comisiones = getFromTimOne::getComisionesOfIntegrado( $this->integradoId );
-
-        $txs['montoComisionOrden'] = getFromTimOne::calculaComision( $this->orden, 'ODR', $comisiones );
-
-        $txs['montoComisionFijaTx'] = $this->cashoutObj->getComisionFijaTx();
-
-        return $txs;
-    }
-
     private function enoughBalance() {
 
         $balance = $this->currentIntegrado->timoneData->balance;
-        $totalOrden = $this->orden->totalAmount + array_sum($this->txsToDo);
 
-        return $balance >= $totalOrden;
+        $orden = getFromTimOne::getOrdenesRetiro(null, $this->parametros['idOrden']);
+        $orden = $orden[0];
+
+        $montoComision = 0;
+        if (isset($this->comisiones)) {
+            $montoComision = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
+        }
+
+        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
+
+        if($balance >= $totalOperacion){
+            $respuesta = true;
+        }else{
+            $respuesta = false;
+        }
+
+        return $respuesta;
     }
 
     private function txComision(){
@@ -182,5 +179,4 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         return $txComision->sendCreateTx();
     }
-
 }
