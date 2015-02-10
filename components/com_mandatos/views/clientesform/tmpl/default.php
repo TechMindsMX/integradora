@@ -164,18 +164,23 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		
 		resultado.done(function(response){
 			if(response.success){
-//				mensaje = mensajes('<?php //echo JText::_('MSG_FILL_FORM'); ?>//', 'msg');
-
-//				jQuery('#altaC_P').clearForm();
 				llenaForm(response);
 				nextTab();
+				jQuery()
 
 			}else{
 //				jQuery('#altaC_P').clearForm();
 				jQuery('input, select, textarea').prop("readonly", false);
 
 				mensajesValidaciones(response);
-//				jQuery('a[href="#tipo_alta"]').delay(9000).trigger('click');
+				nextTab();nextTab();
+				var radio = response.bu_rfc.pj_pers_juridica;
+				jQuery('#perFisicaMoral'+radio).trigger('click');
+				if (response.bu_rfc.pj_pers_juridica == 1)
+					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
+				else {
+					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
+				}
 			}
 		});
 	}
@@ -397,11 +402,16 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'pers-juridica', JText::_('COM_INTEG_PERS_JURIDICA'));
 	?>
 	<fieldset>
-		<div class="radio">
-			<label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" ><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+		<div>
+			<p id="tipo_pers_juridica"></p>
 		</div>
-		<div class="radio">
-			<label><input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" ><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+		<div class="hidden">
+			<div class="radio">
+				<input type="radio" name="pj_pers_juridica" id="perFisicaMoral1" value="1" ><label><?php echo JText::_('LBL_PER_MORAL'); ?></label>
+			</div>
+			<div class="radio">
+				<input type="radio" name="pj_pers_juridica" id="perFisicaMoral2" value="2" ><label><?php echo JText::_('LBL_PER_FISICA'); ?></label>
+			</div>
 		</div>
 	</fieldset>
 	

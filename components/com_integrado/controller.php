@@ -66,7 +66,7 @@ class IntegradoController extends JControllerLegacy {
             $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
             $respuesta['pj_pers_juridica'] = $tipo_rfc;
 
-            echo json_encode($respuesta);
+            echo json_encode( array('bu_rfc' => $respuesta) );
         }
     }
 
@@ -772,7 +772,8 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public function agregarBancoSolicitud() {
-        $integradoId = JFactory::getSession('integradoId', null, 'integrado');
+        $sesion = JFactory::getSession();
+        $integradoId = $sesion->get('integradoId', null, 'integrado');
 
         list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew( $integradoId );
         $this->document->setMimeEncoding('application/json');
