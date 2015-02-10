@@ -595,6 +595,12 @@ class MandatosController extends JControllerLegacy {
 
     public function validatePost($data) {
         switch ($data['tab']) {
+            case 'tipoAlta':
+                $diccionario = array(
+                    'tp_monto'           => array('float' => true,  'maxlength' => 15),
+                    'tp_tipo_alta'       => array('number' => true, 'requered' => true, 'maxlength' => 1)
+                );
+                break;
             case 'juridica':
                 $diccionario = array(
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
@@ -658,7 +664,7 @@ class MandatosController extends JControllerLegacy {
                 );
                 break;
 
-          case 'banco':
+            case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
                     'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 10,  'minlength'=>10,   'required' => true),

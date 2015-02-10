@@ -67,13 +67,10 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
 
-
-
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
-
 
                     if($TxOdc){
                         $cobroComision = $this->txComision();
