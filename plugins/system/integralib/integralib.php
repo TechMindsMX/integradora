@@ -10,17 +10,17 @@ defined('_JEXEC') or die;
 class plgSystemIntegralib extends JPlugin {
 
 	public function onAfterInitialise() {
-		$middle = "demo.trama.mx";
+		define("MEDIA_FILES", "media/archivosJoomla/");
+
+		$middle = "api-stage.timone.mx";
 		$puertoTimOne =  "";
 		$controllerTimOne =  "/timone/services/";
-		$hostname = $middle.$puertoTimOne.$controllerTimOne;
 
 		define("MIDDLE", 'http://'.$middle);
 		define("PUERTO", $puertoTimOne);
 		define("TIMONE", $controllerTimOne);
-		define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
-//define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
-		define("MEDIA_FILES", "media/archivosJoomla/");
+//define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+		define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 
 		JLoader::registerNamespace('Integralib', JPATH_LIBRARIES);
 	}
