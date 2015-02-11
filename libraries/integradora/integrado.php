@@ -217,10 +217,10 @@ class Integrado {
 	}
 	
 	function getSolicitud($integ_id = null, $key){
-		echo '<pre>';
-		debug_print_backtrace();
-		echo '</pre>';
-		$profiler = new JProfiler();
+//		echo '<pre>';
+//		debug_print_backtrace();
+//		echo '</pre>';
+//		$profiler = new JProfiler();
 
 		if ($integ_id == null){
 			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
@@ -268,7 +268,7 @@ class Integrado {
 			$this->integrados[$key]->poder				= null;
 			$this->integrados[$key]->reg_propiedad		= null;
 		}
-		echo $profiler->mark(' segundos '.__METHOD__);
+//		echo $profiler->mark(' segundos '.__METHOD__);
 
 	}
 
