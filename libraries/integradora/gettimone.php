@@ -772,8 +772,8 @@ class getFromTimOne{
 
                 $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
                     ->from('#__integrado_datos_personales AS DP')
-                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quote($value->id) . ')')
-                    ->where('DE.integrado_id = ' . $value->id);
+                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
+                    ->where('DP.integrado_id = ' . $value->id);
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
