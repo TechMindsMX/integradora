@@ -7,8 +7,8 @@ jimport('joomla.html.html.bootstrap');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-$btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').'">'.JText::_('ODV_DESCRIPTION').'</a>';
-$btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').'">'.JText::_('ODD_DESCRIPTION').'</a>';
+$btn_nuevo_odv = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odvform">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').' '.JText::_('ODV_DESCRIPTION').'</a>';
+$btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform">'.JText::_('COM_MANDATOS_LIST_TX_BTN_NUEVO_MANDATO').' '.JText::_('ODD_DESCRIPTION').'</a>';
 
 ?>
 
