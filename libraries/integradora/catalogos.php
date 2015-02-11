@@ -67,7 +67,9 @@ class Catalogos {
 	}
 
 	public function getBancos(){
-		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes'));
+		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
+
+		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));
 
         foreach ($catalogo as $indice => $objeto) {
             $catalogo2[$objeto->bankCode] = $objeto->name;

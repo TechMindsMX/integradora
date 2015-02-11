@@ -315,7 +315,9 @@ class IntegradoController extends JControllerLegacy {
 
         $url = SEPOMEX_SERVICE.$cp['cp'];
 
-        echo file_get_contents($url);
+        $context = stream_context_create(array('http' => array('header'=>'Connection: close')));
+
+        echo file_get_contents($url,false,$context);
     }
 
     public static function manejoDatos($data){

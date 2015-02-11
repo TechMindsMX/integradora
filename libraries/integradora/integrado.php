@@ -18,10 +18,10 @@ class Integrado {
 //		unset($this->user->password);
 		$this->integrados = $this->getIntegradosCurrUser();
 
-		foreach ($this->integrados as $key => $value) {
-			$id = $value->integrado_id;
-			$this->getSolicitud($id, $key);
-		}
+//		foreach ($this->integrados as $key => $value) {
+//			$id = $value->integrado_id;
+//			$this->getSolicitud($id, $key);
+//		}
 	}
 
     /**
@@ -217,6 +217,11 @@ class Integrado {
 	}
 	
 	function getSolicitud($integ_id = null, $key){
+		echo '<pre>';
+		debug_print_backtrace();
+		echo '</pre>';
+		$profiler = new JProfiler();
+
 		if ($integ_id == null){
 			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
@@ -263,6 +268,8 @@ class Integrado {
 			$this->integrados[$key]->poder				= null;
 			$this->integrados[$key]->reg_propiedad		= null;
 		}
+		echo $profiler->mark(' segundos '.__METHOD__);
+
 	}
 
 	function selectDataSolicitud($table, $where, $id){
@@ -376,7 +383,7 @@ class IntegradoSimple extends Integrado {
         $this->id = $integ_id;
         $this->usuarios = parent::getUsersOfIntegrado($integ_id);
 
-        parent::getSolicitud($integ_id, 0);
+		parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
 
