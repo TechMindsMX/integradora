@@ -102,7 +102,7 @@ if(!$this->confirmacion){
 <div style="margin-bottom: 10px;">
 	<h4>
 		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
-		<span>$<?php echo number_format($this->integrado->balance); ?></span>
+		<span>$<?php echo number_format($this->integrado->balance,2); ?></span>
 	</h4>
 </div>
 

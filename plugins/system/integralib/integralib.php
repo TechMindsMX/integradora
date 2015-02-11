@@ -15,6 +15,6 @@ class plgSystemIntegralib extends JPlugin {
 //		echo '<pre>';
 //		var_dump( JLoader::getNamespaces() );
 		$integralib = new Integralib\Enviroment();
-//		$integralib->setEnvVariables();
+		$integralib->setEnvVariables();
 	}
 }

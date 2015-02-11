@@ -3532,6 +3532,9 @@ class transferFunds extends makeTx {
 
 }
 
+/**
+ * @property  resultado
+ */
 class makeTx {
     protected function create($datosEnvio){
         unset($this->options);
