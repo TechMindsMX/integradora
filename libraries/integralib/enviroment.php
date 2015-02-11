@@ -16,6 +16,7 @@ class Enviroment {
 		define( "MEDIA_FILES", "media/archivosJoomla/" );
 
 		$enviroment = $this->readEnviromentFile();
+
 		if ( method_exists($this, $enviroment['AMBIENTE']) ) {
 			call_user_func( array($this, strtolower( $enviroment['AMBIENTE'] ) ) );
 		} else {
@@ -30,11 +31,11 @@ class Enviroment {
 		$source_file = fopen( $filename, "r" ) or die("Couldn't open $filename");
 
 		$file = fread($source_file, 4096);
-			$tmp = explode( "\n" , $file);
-			foreach ( $tmp as $lineNum => $line ) {
-				$line = explode('=', $line);
-				$buffer[$line[0]] = $line[1];
-			}
+		$tmp = array_filter( explode( "\n" , $file) );
+		foreach ( $tmp as $lineNum => $line ) {
+			$line = explode('=', $line);
+			$buffer[$line[0]] = trim($line[1]);
+		}
 
 		return $buffer;
 	}
