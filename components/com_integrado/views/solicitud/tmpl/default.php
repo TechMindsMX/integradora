@@ -60,6 +60,7 @@ $token = JSession::getFormToken();
                 }
             });
         }
+
         function activeTab(tab) {
             var tabs = jQuery('#tabs-solicitudTabs li');
             tab.removeClass('disabled');
@@ -77,6 +78,7 @@ $token = JSession::getFormToken();
             });
             activeTab(nextTabObj);
         }
+
         jQuery(document).ready(function(){
 
             var tabs = jQuery('#tabs-solicitudTabs li');
@@ -157,7 +159,12 @@ $token = JSession::getFormToken();
             datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
             <?php
             if(!empty($datos->datos_personales)){
-            ?>
+                if($datos->integrado->pers_juridica == 2){
+                ?>
+                    a_empresa = jQuery('a[href="#empresa"]').parent().detach();
+                <?php
+                }
+                ?>
             var datos_personales = '<?php echo json_encode($datos->datos_personales); ?>';
             var datos_personales = eval ("(" + datos_personales + ")");
 
