@@ -64,6 +64,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             if ($resultado) {
                 $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
+
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
 
@@ -83,7 +84,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                 $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                             }
                         }else{
-                            //mensaje no se cobro la comision;
+                            $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
                         }
                     }else{
 
