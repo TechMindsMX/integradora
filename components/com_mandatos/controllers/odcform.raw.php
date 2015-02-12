@@ -61,13 +61,13 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
 
-            $datos['numOrden'] = $db->insertid();
+            $this->parametros['numOrden'] = $db->insertid();
 
-            $this->sendNotifications($datos);
+            $this->sendNotifications();
         }else{
             unset($datos['idOrden']);
             $save->formatData($datos);
-            $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$datos['numOrden']);
+            $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$this->parametros['numOrden']);
         }
 
         if($salvado) {
@@ -75,7 +75,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
 
             $respuesta = array(
-                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $datos['numOrden'] .'&success=true',
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $this->parametros['numOrden'] .'&success=true',
                 'redireccion' => true
             );
         }else{
@@ -84,7 +84,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
-        $respuesta['idOrden'] = $datos['numOrden'];
+        $respuesta['idOrden'] = $this->parametros['numOrden'];
 
         echo json_encode($respuesta);
     }
@@ -112,7 +112,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         echo json_encode($respuesta);
     }
 
-    private function sendNotifications($data)
+    private function sendNotifications()
     {
         $info = array();
         /*
