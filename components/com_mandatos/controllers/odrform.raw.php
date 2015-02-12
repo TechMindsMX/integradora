@@ -65,12 +65,10 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $datos['paymentDate'] = $date->getTimestamp();
         $this->permisos  = MandatosHelper::checkPermisos(__CLASS__,  $this->integradoId);
 
-        if($this->permisos['canAuth']) {
-            // acciones cuando tiene permisos para autorizar
-            $this->app->enqueueMessage('aqui enviamos a timone la autorizacion y redireccion con mensaje');
-        } else {
-            // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
+        if(!$this->permisos['canEdit']) {
+            // acciones cuando NO tiene permisos para Editar/Crear
+            $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=odrlist'), JText::_('LBL_CANT_EDIT'), 'error');
+            die;
         }
 
         $datos['integradoId'] = $this->integradoId;
