@@ -13,7 +13,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 $default    = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
 $amount     = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
 ?>
-	<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+	<script src="libraries/integradora/js/tim-validation.js"> </script>
 	<script>
 		jQuery(document).ready(function(){
 			jQuery('#amount').on('change', validaSaldo);

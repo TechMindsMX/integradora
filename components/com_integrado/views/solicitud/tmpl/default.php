@@ -14,8 +14,8 @@ $user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $optionBancos = '';
 
-echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 
 if(!empty($datos->integrado)){
     if($datos->integrado->pers_juridica == 1){

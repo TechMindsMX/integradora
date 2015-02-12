@@ -16,8 +16,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
 $token = JSession::getFormToken();
 
-echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 ?>
 <script>
     var catalogoBancos = new Array();

@@ -13,7 +13,7 @@ $orden = $this->orden;
 $productosOrden = json_decode($orden->productos);
 $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subproyectos'] : '';
 ?>
-<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+<script src="libraries/integradora/js/tim-validation.js"> </script>
 
 <script>
     var productsTypeahead   = new Array();

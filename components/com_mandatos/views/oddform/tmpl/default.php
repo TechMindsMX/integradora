@@ -10,7 +10,7 @@ $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 ?>
-    <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+    <script src="libraries/integradora/js/tim-validation.js"> </script>
     <script>
         jQuery(document).ready(function(){
             jQuery('input:button').on('click', envioAjax);

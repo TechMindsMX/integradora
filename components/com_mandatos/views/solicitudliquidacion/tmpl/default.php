@@ -12,7 +12,7 @@ $nuevoSaldo = $sesion->set('nuevoSaldo',0, 'solicitudliquidacion');
 $sesion->clear('nuevoSaldo','solicitudliquidacion');
 $sesion->clear('idTx','solicitudliquidacion');
 
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 
 $operaciones = $this->operaciones;
 $saldo = $this->saldo;

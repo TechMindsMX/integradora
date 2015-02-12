@@ -72,7 +72,7 @@ $producto 	= $this->producto;
         window.location = 'index.php?option=com_mandatos&view=productosList';
     }
 </script>
-<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+<script src="libraries/integradora/js/tim-validation.js"> </script>
 
 <form id="formProduct" class="form col-lg-6 col-md-12" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw">
     <div id="formulario">
