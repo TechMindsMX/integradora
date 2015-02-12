@@ -272,3 +272,8 @@ ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `bankId` INT (11);
 --changeset ricardolyon:31
 INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES (10082, 'System - Integralib', 'plugin', 'integralib', 'system', 0, 1, 1, 0, '{"name":"System - Integralib","type":"plugin","creationDate":"February 2015","author":"Ricardo Lyon","copyright":"","authorEmail":"ricardolyon@gmail.com","authorUrl":"","version":"1.0.0","description":"Simple plugin to register custom library.","group":""}', '{}', '', '', 0, '2015-02-10', 0, 0);
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 10082;
+
+--changeset lutek:32
+ALTER TABLE `flpmu_integrado_comisiones` ADD INDEX `integradoId` (`integradoId` ASC);
+--rollback ALTER TABLE `flpmu_integrado_comisiones` DROP INDEX `integradoId` (`integradoId` ASC);
+
