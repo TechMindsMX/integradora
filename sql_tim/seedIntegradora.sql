@@ -1,9 +1,7 @@
-INSERT INTO `flpmu_integrado` (`integrado_id`, `status`, `pers_juridica`) VALUES ('1', '0', '1');
+INSERT INTO `flpmu_integrado` (`integrado_id`, `status`, `pers_juridica`) VALUES ('1', '50', '1');
 
 INSERT INTO `flpmu_integrado_users` (`integrado_id`, `user_id`, `integrado_principal`, `integrado_permission_level`) VALUES ('1', '93', b'1', '3');
 
 INSERT INTO `flpmu_integrado_datos_personales` (`integrado_id`, `nombre_representante`, `nacionalidad`, `sexo`, `fecha_nacimiento`, `rfc`, `calle`, `num_exterior`, `num_interior`, `cod_postal`, `curp`, `email`, `tel_fijo`, `tel_fijo_extension`, `tel_movil`, `nom_comercial`, `url_identificacion`, `url_rfc`, `url_comprobante_domicilio`) VALUES ('1', 'Integradora', NULL, NULL, NULL, NULL, 'Tiburcio Montiel', '80', 'B3', '11810', NULL, NULL, NULL, NULL, NULL, 'Integradora de Emprendimiento culturales S.A. de C.V.', NULL, NULL, NULL);
 
 INSERT INTO `flpmu_integrado_datos_empresa` (`integrado_id`, `razon_social`, `rfc`, `calle`, `num_exterior`, `num_interior`, `cod_postal`, `tel_fijo`, `tel_fijo_extension`, `tel_fax`, `sitio_web`, `testimonio_1`, `testimonio_2`, `poder`, `reg_propiedad`, `url_rfc`) VALUES ('1', 'Integradora de Emprendimientos Culturales S.A. de C.V.', 'IEC121203FV8', 'Tiburcio Montiel', '80', 'B3', '11850', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
-INSERT INTO `flpmu_integrado_timone` (`integradoId`, `timoneUuid`, `stpClabe`) VALUES ('1', '1d9abea6361040678db1bdfd5903438f', '646180111901200017');
