@@ -61,7 +61,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
 
-            $id = $db->insertid();
+            $datos['numOrden'] = $db->insertid();
 
             $this->sendNotifications($datos);
         }else{
@@ -75,7 +75,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
 
             $respuesta = array(
-                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $datos['numOrden'] .'&success=true',
                 'redireccion' => true
             );
         }else{
@@ -84,7 +84,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
-        $respuesta['idOrden']= $id;
+        $respuesta['idOrden'] = $datos['numOrden'];
 
         echo json_encode($respuesta);
     }
