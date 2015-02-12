@@ -574,6 +574,20 @@ class getFromTimOne{
         return $client;
     }
 
+    public static function getClientProviderFromIntegradoId( $integrado_id ) {
+        $client = array();
+
+        $clientes = self::getClientes();
+
+        foreach ( $clientes as $key => $value ) {
+            if ( $integrado_id == $value->idCliPro ) {
+                $client = $value;
+            }
+        }
+
+        return $client;
+    }
+
     public static function getBasicStatusCatalog() {
         $catalog = new Catalogos();
 
@@ -581,7 +595,7 @@ class getFromTimOne{
     }
 
     private static function getClientProviderName($clientProvider){
-        $clientProvider->frontName = $clientProvider->corporateName == ''?$clientProvider->tradeName:$clientProvider->corporateName;
+        $clientProvider->frontName = $clientProvider->corporateName == '' ? $clientProvider->tradeName : $clientProvider->corporateName;
     }
 
     public static function getBankName($arrayBancos){
