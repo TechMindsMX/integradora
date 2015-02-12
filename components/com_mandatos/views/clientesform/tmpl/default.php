@@ -358,7 +358,6 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		    if( check == true) {
 			    nextTabObj = jQuery(tabs[key]).next();
 		    }
-
 	    });
 	    activeTab(nextTabObj);
     }

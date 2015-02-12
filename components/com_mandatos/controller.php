@@ -386,7 +386,6 @@ class MandatosController extends JControllerLegacy {
         echo json_encode($response);
     }
 
-
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
 
