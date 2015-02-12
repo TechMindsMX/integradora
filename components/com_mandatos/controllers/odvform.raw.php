@@ -171,19 +171,19 @@ class MandatosControllerOdvform extends JControllerAdmin {
     public function sendMail($data)
     {
         /*
-//         * Notificaciones 6
-//         */
-//        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
-//
-//        $totalAmount = self::getTotalAmount(json_decode($data['productos']));
-//        $getCurrUser = new IntegradoSimple($this->integradoId);
-//
-//        $array = array($getCurrUser->getUserPrincipal()->name, $data['numOrden'], JFactory::getUser()->name, date('d-m-Y'), $totalAmount, $clientes[3]->tradeName);
-//
-//        $sendEmail = new Send_email();
-//        $sendEmail->setIntegradoEmailsArray($getCurrUser);
-//
-//        $reportEmail = $sendEmail->sendNotifications('2', $array);
+         * Notificaciones 6
+         */
+        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
+
+        $totalAmount = self::getTotalAmount(json_decode($data['productos']));
+        $getCurrUser = new IntegradoSimple($this->integradoId);
+
+        $array = array($getCurrUser->getUserPrincipal()->name, $data['numOrden'], JFactory::getUser()->name, date('d-m-Y'), $totalAmount, $clientes[3]->tradeName);
+
+        $sendEmail = new Send_email();
+        $sendEmail->setIntegradoEmailsArray($getCurrUser);
+
+        $reportEmail = $sendEmail->sendNotifications('2', $array);
 
     }
 
