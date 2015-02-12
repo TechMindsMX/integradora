@@ -51,7 +51,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 
         jQuery('#clientId').on('change',muestraBotonOtro)
         jQuery('#project').on('change', llenasubproject);
-        jQuery('.productos').on('change', llenatabla);
+        jQuery('.productos').on('focusout', llenatabla);
         jQuery('#button').on('click', addrow);
         jQuery(document).on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
         jQuery('button').on('click', envio);
@@ -103,15 +103,15 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         nextinput++;
         jQuery("#contenidos" ).attr('id','content'+nextinput+'');
 
-        jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
-        jQuery("#content"+nextinput+"").attr('id','contenidos');
-        jQuery("#content"+nextinput+"").find("input:text").val("");
-        jQuery("#content"+nextinput+"").find("#subtotal").html("");
-        jQuery("#content"+nextinput+"").find("#total").html("");
+        var cloned_input = jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
+        cloned_input.attr('id','contenidos');
+        cloned_input.find("input:text").val("");
+        cloned_input.find("#subtotal").html("");
+        cloned_input.find("#total").html("");
 
 
-        var select = jQuery("#content"+nextinput+"").find('select');
-        var inputs = jQuery("#content"+nextinput+"").find('input');
+        var select = cloned_input.find('select');
+        var inputs = cloned_input.find('input');
         var nameCampoS = select.prop('name');
         var nameCampoI = '';
 
@@ -124,7 +124,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 
         jQuery('.typeahead').trigger('added');
         jQuery('.typeahead').typeahead(typeaheadSettings);
-        jQuery('.productos').on('focusout', llenatabla);
+        cloned_input.find('.productos').on('focusout', llenatabla);
         jQuery('.cantidad').on('change', sum);
         jQuery('.iva').on('change',sum);
         jQuery('.ieps').on('change',sum);
@@ -187,6 +187,9 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         });
 
         request.done(function(result){
+            if(typeof result === 'string') {
+                result = jQuery.parseJSON(result);
+            }
             if(result.success){
                 jQuery('#idOrden').val(result.id);
                 jQuery('#numOrden').html(result.numOrden);
@@ -197,7 +200,8 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                     window.location = result.redirect;
                 }
             } else if (!result.success) {
-                jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>')
+//                jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>');
+                mensajesValidaciones(result);
             }
         });
 

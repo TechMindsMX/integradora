@@ -33,15 +33,20 @@ class MandatosControllerOdvform extends JControllerAdmin {
             'iva'           => 'ARRAY',
             'ieps'          => 'ARRAY');
         $db	        = JFactory::getDbo();
-        $document   = JFactory::getDocument();
+
         $this->app  = JFactory::getApplication();
         $data       = $this->app->input->getArray($post);
         $id         = $data['idOrden'];
-        $save       = new sendToTimOne();
         $tab        = $data['tab'];
         $numOrden   = $data['numOrden'];
 
-        $document->setMimeEncoding('application/json');
+        $valida = $this->validate($data);
+        if(!$valida['success']) {
+            $this->jsonReturn($valida);
+        }
+
+        $save       = new sendToTimOne();
+
 
         if($data['tab'] == 'seleccion'){
             $respuesta['tab'] = 'ordenventa';
@@ -180,5 +185,34 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $reportEmail = $sendEmail->sendNotifications('2', $array);
 
+    }
+
+    private function validate( $data ) {
+
+        $diccionario = array(
+                'idOrden'       => array('number' => true, 'required' => true),
+                'projectId'     => array('number' => true),
+                'projectId2'    => array('number' => true),
+                'clientId'      => array('number' => true, 'required' => true),
+                'numOrden'      => array('number' => true, 'required' => true),
+                'account'       => array('number' => true, 'required' => true),
+                'paymentMethod' => array('number' => true, 'required' => true),
+                'conditions'    => array('number' => true, 'required' => true),
+                'placeIssue'    => array('number' => true, 'required' => true),
+        );
+
+        $validator = new validador();
+        $respuesta = $validator->procesamiento($data, $diccionario);
+
+        $respuesta['success'] = $validator->allPassed();
+
+        return $respuesta;
+    }
+
+    private function jsonReturn( $respuesta ) {
+        $document   = JFactory::getDocument();
+        $document->setMimeEncoding('application/json');
+
+        die( json_encode($respuesta) );
     }
 }

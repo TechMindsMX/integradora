@@ -5,7 +5,7 @@ function mensajesValidaciones($obj){
     jQuery('.accordion-toggle').removeClass('alert-danger');
 
     if (typeof $obj === "string") {
-        $obj = JSON.parse($obj);
+        $obj = jQuery.parseJSON($obj);
     }
 
     jQuery.each($obj, function(k,v) {
@@ -17,7 +17,7 @@ function mensajesValidaciones($obj){
         }
 
         if(v != true && k != 'integradoId' && k != 'safeComplete'){
-            var spanError = jQuery('#' + k);
+            var spanError = jQuery('#' + k +', [name="'+ k +'"]');
 
             spanError.siblings('.error').remove();
 

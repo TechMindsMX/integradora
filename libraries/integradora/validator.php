@@ -303,7 +303,7 @@ class validador{
     protected function notNull (){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
 
-        if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' ){
+        if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' && $this->dataPost[$this->currentKey] != 0 ){
             $respuesta = true;
         } else {
             $respuesta = false;
