@@ -20,7 +20,6 @@ class ReportesModelBalance extends JModelItem {
 
 		$rtxs = new ReportBalanceTxs( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
 		$rtxs->generateBalance($vars['year']);
-		var_dump($report, $rtxs);exit;
 		return $report;
 	}
 }

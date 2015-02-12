@@ -24,7 +24,7 @@ class ReportesModelReporteslistados extends JModelItem {
     public function getSolicitud()
     {
         if (!isset($this->dataModelo)) {
-            $this->dataModelo = new Integrado;
+            $this->dataModelo = new IntegradoSimple($this->integradoId);
         }
         return $this->dataModelo;
     }
