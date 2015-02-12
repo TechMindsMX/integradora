@@ -61,13 +61,13 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $save->formatData($datos);
             $salvado = $save->insertDB('ordenes_compra');
 
-            $this->parametros['numOrden'] = $db->insertid();
+            $id = $db->insertid();
 
-            $this->sendNotifications();
+            $this->sendNotifications($datos);
         }else{
             unset($datos['idOrden']);
             $save->formatData($datos);
-            $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$this->parametros['numOrden']);
+            $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$datos['numOrden']);
         }
 
         if($salvado) {
@@ -75,7 +75,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
 
             $respuesta = array(
-                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $this->parametros['numOrden'] .'&success=true',
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
                 'redireccion' => true
             );
         }else{
@@ -84,7 +84,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
 
         JFactory::getDocument()->setMimeEncoding('application/json');
-        $respuesta['idOrden'] = $this->parametros['numOrden'];
+        $respuesta['idOrden']= $id;
 
         echo json_encode($respuesta);
     }
@@ -112,7 +112,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         echo json_encode($respuesta);
     }
 
-    private function sendNotifications()
+    private function sendNotifications($datos)
     {
         $info = array();
         /*
@@ -122,8 +122,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $nameProveedor = $this->getNameProveedor();
         $getIntegradoSimple = new IntegradoSimple($this->integradoId);
 
-        $arrayTitle = array($this->parametros['numOrden']);
-        $array = array($getIntegradoSimple->user->username, $this->parametros['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
+        $arrayTitle = array($datos['numOrden']);
+        $array = array($getIntegradoSimple->user->username, $datos['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
 
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegradoSimple);
@@ -133,7 +133,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         /*
          * Notificaciones 12
          */
-        $arrayTitleAdmin = array($this->parametros['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
+        $arrayTitleAdmin = array($datos['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('12', $array, $arrayTitleAdmin);
