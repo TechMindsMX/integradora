@@ -115,11 +115,11 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         var nameCampoS = select.prop('name');
         var nameCampoI = '';
 
-        select.prop('id',nameCampoS+nextinput);
+        select.prop('id',nameCampoS.replace( '[]', nextinput) );
 
         jQuery.each(inputs, function(k,v){
             nameCampoI = jQuery(v).prop('name');
-            jQuery(v).prop('id', nameCampoI+nextinput);
+            jQuery(v).prop('id', nameCampoI.replace( '[]', nextinput ));
         });
 
         jQuery('.typeahead').trigger('added');
@@ -353,34 +353,34 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                     <div class="contenidos" id="content<?php echo $key + 1000; ?>">
                         <div id="columna2">
                             <input type="text" name="producto[]"
-                                   id="producto[]<?php echo $key + 1000; ?>"
+                                   id="producto<?php echo $key + 1000; ?>"
                                    placeholder="Ingrese el nombre del producto"
                                    class="typeahead productos"
                                    data-items="3"
                                    value="<?php echo $value->name; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="cantidad[]<?php echo $key + 1000; ?>"
+                            <input id="cantidad<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="cantidad[]"
                                    class="cantidad cantidades"
                                    value="<?php echo $value->cantidad; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="descripcion[]<?php echo $key + 1000; ?>"
+                            <input id="descripcion<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="descripcion[]"
                                    value="<?php echo $value->descripcion; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="unidad[]<?php echo $key + 1000; ?>"
+                            <input id="unidad<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="unidad[]"
                                    class="cantidades"
                                    value="<?php echo $value->unidad; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="p_unitario[]<?php echo $key + 1000; ?>"
+                            <input id="p_unitario<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="p_unitario[]"
                                    class="p_unit cantidades"
@@ -390,12 +390,12 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                             <div id="subtotal"></div>
                         </div>
                         <div id="columna2">
-                            <select id="iva[]<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                            <select id="iva<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
                             <?php echo $options; ?>
                             </select>
                         </div>
                         <div id="columna2">
-                            <input id="ieps[]<?php echo $key + 1000; ?>"
+                            <input id="ieps<?php echo $key + 1000; ?>"
                                    type="text"
                                    name="ieps[]"
                                    class="ieps cantidades"
@@ -413,19 +413,19 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 <div id="columna2">
                     <input type="text" name="producto[]" id="field" placeholder="Ingrese el nombre del producto" class="typeahead productos" data-items="3">
                 </div>
-                <div id="columna2"><input id="cantidad" type="text" name="cantidad[]" value="0" class="cantidad cantidades" ></div>
-                <div id="columna2"><input id="descripcion" type="text" name="descripcion[]"></div>
-                <div id="columna2"><input id="unidad" type="text" name="unidad[]" class="cantidades"></div>
-                <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" value="0" class="p_unit cantidades" ></div>
+                <div id="columna2"><input id="cantidad" type="text" name="cantidad[]" value="0" class="cantidad cantidades" /></div>
+                <div id="columna2"><input id="descripcion" type="text" name="descripcion[]" /></div>
+                <div id="columna2"><input id="unidad" type="text" name="unidad[]" class="cantidades" /></div>
+                <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" value="0" class="p_unit cantidades" /></div>
                 <div id="columna2"><div id="subtotal"></div></div>
                 <!--                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>-->
-                <div id="columna2"><select id="iva[]<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                <div id="columna2"><select id="iva<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
                     <?php foreach ($this->catalogoIva as $indice => $valor) {?>
                         <option value="<?php echo $indice; ?>" ><?php echo $valor->leyenda; ?></option>
                     <?php } ?>
                     </select>
                 </div>
-                <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="0" class="ieps cantidades"></div>
+                <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="0" class="ieps cantidades" /></div>
                 <div id="columna2"><div id="total"></div> </div>
             </div>
         </div>
