@@ -784,15 +784,17 @@ class getFromTimOne{
                 $db = JFactory::getDbo();
                 $querygral = $db->getQuery(true);
 
-                $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
+                $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
                     ->from('#__integrado_datos_personales AS DP')
                     ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
                     ->where('DP.integrado_id = ' . $value->id);
+
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
 
                     $value->rfc = @$general->rfc;
+                    $value->pRFC = @$general->pRFC;
                     $value->tradeName = @$general->tradeName;
                     $value->corporateName = @$general->corporateName;
                     $value->contact = @$general->contact;
