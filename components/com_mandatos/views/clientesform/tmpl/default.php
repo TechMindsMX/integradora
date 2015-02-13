@@ -31,6 +31,8 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
     ?>
 
 	jQuery(document).ready(function(){
+		jQuery('#nextTab').click('click', nextTab);
+
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		jQuery('#search').on('click', busqueda_rfc);
         jQuery('#agregarBanco').on('click', AltaBanco);
@@ -361,7 +363,6 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 	    });
 	    activeTab(nextTabObj);
     }
-
 </script>
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
@@ -908,6 +909,7 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 		
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+			<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_NEXTTAB'); ?></button>
 		</div>
 		
 		<div>

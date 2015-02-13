@@ -42,7 +42,11 @@ class MandatosModelOddpreview extends JModelItem {
 	}
 
 	public function getIntegrado()	{
-		return new IntegradoSimple($this->integradoId);
+		$integrado = new IntegradoSimple($this->integradoId);
+
+        $integrado->getTimOneData();
+
+        return $integrado;
 	}
 	
 }

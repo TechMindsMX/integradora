@@ -223,7 +223,7 @@ class Integrado {
 //		$profiler = new JProfiler();
 
 		if ($integ_id == null){
-			@$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
+			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
 		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
 

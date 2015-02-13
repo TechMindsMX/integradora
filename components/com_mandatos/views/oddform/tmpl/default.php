@@ -77,7 +77,7 @@ if(!$this->confirmacion){
         <div class="form-group">
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
-                <option value="0" <?php echo $datos->paymentMethod->id == 0 ? 'selected' : ''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
+                <option value="0" <?php echo $datos->paymentMethod->id == 2 ? 'selected' : ''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
                 <option value="1" <?php echo $datos->paymentMethod->id == 1 ? 'selected' : ''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
             </select>
         </div>

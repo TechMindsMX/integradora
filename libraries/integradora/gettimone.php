@@ -1012,7 +1012,7 @@ class getFromTimOne{
             $value->attachment      = (STRING)$value->attachment;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
-            $receptor    = new IntegradoSimple($value->integradoId);
+            $receptor               = new IntegradoSimple($value->integradoId);
             $value->recepror        = $receptor->getDisplayName();
 
             $value->status = self::getOrderStatusName($value->status);
