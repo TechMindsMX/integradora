@@ -46,30 +46,6 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         }
     }
 
-    jQuery(document).ready(function() {
-        jQuery('.typeahead').typeahead(typeaheadSettings); /* init first input */
-
-        jQuery('#clientId').on('change',muestraBotonOtro)
-        jQuery('#project').on('change', llenasubproject);
-        jQuery('.productos').on('focusout', llenatabla);
-        jQuery('#button').on('click', addrow);
-        jQuery(document).on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
-        jQuery('button').on('click', envio);
-        jQuery.each(arrayProd, function (key, value) {
-            jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
-        });
-
-        <?php
-       if($orden->projectId != ''){
-       ?>
-        jQuery('#project').trigger('change');
-        jQuery('.cantidad').trigger('change');
-        jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
-        <?php
-        }
-        ?>
-    });
-
     function sum(){
         //Columna es en la que se esta llenando los datos
         var columna    = jQuery(this).parent().parent();
@@ -101,33 +77,14 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
     function addrow(){
 
         nextinput++;
-        jQuery("#contenidos" ).attr('id','content'+nextinput+'');
+	    $insertedRow = $inputRow.attr('id', 'content'+nextinput+'').clone().appendTo('#odv');
+	    $insertedRow.find('input').each(function () {
+		    var $input = jQuery(this);
+		    var $id = $input.attr('id');
+		    $input.attr('id', $id + nextinput);
+	    });
 
-        var cloned_input = jQuery("#content"+nextinput+"").clone().appendTo( "#odv");
-        cloned_input.attr('id','contenidos');
-        cloned_input.find("input:text").val("");
-        cloned_input.find("#subtotal").html("");
-        cloned_input.find("#total").html("");
-
-
-        var select = cloned_input.find('select');
-        var inputs = cloned_input.find('input');
-        var nameCampoS = select.prop('name');
-        var nameCampoI = '';
-
-        select.prop('id',nameCampoS.replace( '[]', nextinput) );
-
-        jQuery.each(inputs, function(k,v){
-            nameCampoI = jQuery(v).prop('name');
-            jQuery(v).prop('id', nameCampoI.replace( '[]', nextinput ));
-        });
-
-        jQuery('.typeahead').trigger('added');
-        jQuery('.typeahead').typeahead(typeaheadSettings);
-        cloned_input.find('.productos').on('focusout', llenatabla);
-        jQuery('.cantidad').on('change', sum);
-        jQuery('.iva').on('change',sum);
-        jQuery('.ieps').on('change',sum);
+	    triggersProductsTable();
     }
 
     function llenasubproject() {
@@ -135,15 +92,17 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         var selectSPro = jQuery('#subproject')
         var subprojectos = subprojects[select];
 
-        jQuery.each(jQuery('#subproject').find('option'), function () {
+        jQuery.each(selectSPro.find('option'), function () {
             jQuery(this).remove();
         });
 
         selectSPro.append('<option value="0">Subproyecto</option>');
 
-        jQuery.each(subprojectos, function (key, value) {
-            selectSPro.append('<option value="' + value.id_proyecto + '">' + value.name + '</option>');
-        });
+        if (typeof subprojectos != 'undefined') {
+            jQuery.each(subprojectos, function (key, value) {
+                selectSPro.append('<option value="' + value.id_proyecto + '">' + value.name + '</option>');
+            });
+        }
     }
 
     function llenatabla() {
@@ -162,7 +121,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 'productName': valorCampo,
                 'integradoId': <?php echo $this->integradoId; ?>
             },
-            type: 'post',
+            type: 'get',
             async: false
         });
 
@@ -174,13 +133,15 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 campoP_unit.val(datos.price);
                 campoIva.val(datos.iva);
                 campoIeps.val(datos.ieps);
+
+	            jQuery(this).parents('.contenidos').find('#cantidad1');
             }
         });
     }
 
     function envioAjax(data) {
         var request = jQuery.ajax({
-            url: "index.php?option=com_mandatos&task=odvform.safeform&format=raw",
+            url: "index.php?option=com_mandatos&task=odvform.sendform&format=raw",
             data: data,
             type: 'post',
             async: false
@@ -225,8 +186,47 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 break;
         }
     }
+
+    function triggersProductsTable() {
+	    jQuery('#altaODV').on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
+
+	    var tahead = jQuery('input.typeahead');
+        tahead.typeahead(typeaheadSettings);
+	    tahead.on('custom', llenatabla);
+	    tahead.change(function(){
+		    if(jQuery(this).val().length > 2) {
+			    tahead.delay(1000).trigger('custom');
+		    }
+	    });
+    }
+
+    jQuery(document).ready(function() {
+	    jQuery('#clientId').on('change',muestraBotonOtro);
+
+	    jQuery('#project').on('change', llenasubproject);
+	    jQuery('#button').on('click', addrow);
+	    jQuery('button').on('click', envio);
+
+	    jQuery.each(arrayProd, function (key, value) {
+		    jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
+	    });
+
+	    $inputRow = jQuery('#contenidos').detach();
+
+	    <?php
+   if($orden->projectId != ''){
+   ?>
+	    jQuery('#project').trigger('change');
+	    jQuery('.cantidad').trigger('change');
+	    jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
+	    <?php
+	}
+	?>
+    });
+
 </script>
 
+<input class="typeahead" type="text"/>
 <form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data" >
     <h1>Generación de Orden de Venta</h1>
     <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
@@ -350,37 +350,37 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                         $options .= '<option value="'.$valor->valor.'" '.$selected.'>'.$valor->leyenda.'</option>';
                     }
                     ?>
-                    <div class="contenidos" id="content<?php echo $key + 1000; ?>">
+                    <div class="contenidos" id="content<?php echo $key; ?>">
                         <div id="columna2">
                             <input type="text" name="producto[]"
-                                   id="producto<?php echo $key + 1000; ?>"
+                                   id="producto<?php echo $key; ?>"
                                    placeholder="Ingrese el nombre del producto"
                                    class="typeahead productos"
                                    data-items="3"
                                    value="<?php echo $value->name; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="cantidad<?php echo $key + 1000; ?>"
+                            <input id="cantidad<?php echo $key; ?>"
                                    type="text"
                                    name="cantidad[]"
                                    class="cantidad cantidades"
                                    value="<?php echo $value->cantidad; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="descripcion<?php echo $key + 1000; ?>"
+                            <input id="descripcion<?php echo $key; ?>"
                                    type="text"
                                    name="descripcion[]"
                                    value="<?php echo $value->descripcion; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="unidad<?php echo $key + 1000; ?>"
+                            <input id="unidad<?php echo $key; ?>"
                                    type="text"
                                    name="unidad[]"
                                    class="cantidades"
                                    value="<?php echo $value->unidad; ?>">
                         </div>
                         <div id="columna2">
-                            <input id="p_unitario<?php echo $key + 1000; ?>"
+                            <input id="p_unitario<?php echo $key; ?>"
                                    type="text"
                                    name="p_unitario[]"
                                    class="p_unit cantidades"
@@ -390,12 +390,12 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                             <div id="subtotal"></div>
                         </div>
                         <div id="columna2">
-                            <select id="iva<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                            <select id="iva<?php echo $key; ?>" name="iva[]" class="iva cantidades">
                             <?php echo $options; ?>
                             </select>
                         </div>
                         <div id="columna2">
-                            <input id="ieps<?php echo $key + 1000; ?>"
+                            <input id="ieps<?php echo $key; ?>"
                                    type="text"
                                    name="ieps[]"
                                    class="ieps cantidades"
@@ -419,7 +419,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 <div id="columna2"><input id="p_unitario" type="text" name="p_unitario[]" value="0" class="p_unit cantidades" /></div>
                 <div id="columna2"><div id="subtotal"></div></div>
                 <!--                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>-->
-                <div id="columna2"><select id="iva<?php echo $key + 1000; ?>" name="iva[]" class="iva cantidades">
+                <div id="columna2"><select id="iva<?php echo $key; ?>" name="iva[]" class="iva cantidades">
                     <?php foreach ($this->catalogoIva as $indice => $valor) {?>
                         <option value="<?php echo $indice; ?>" ><?php echo $valor->leyenda; ?></option>
                     <?php } ?>
