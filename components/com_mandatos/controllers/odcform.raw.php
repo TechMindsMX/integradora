@@ -101,7 +101,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             'proveedor'     => array('number' => true,  'maxlength' => 10, 'required' => true),
             'proyecto'      => array('number' => true,  'maxlength' => 10, 'required' => true),
             'paymentDate'   => array('date'   => true,  'maxlength' => 10, 'required' => true),
-            'paymentMethod' => array('number' => true,  'maxlength' => 10, 'required' => true),
+            'paymentMethod' => array('number' => true,  'maxlength' => 10),
             'bankId'        => array('number' => true,  'required' => true),
             'observaciones' => array('text'   => true,  'maxlength' => 1000));
 
