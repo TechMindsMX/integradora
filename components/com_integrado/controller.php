@@ -179,8 +179,7 @@ class IntegradoController extends JControllerLegacy {
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
 
     function uploadFiles(){
-
-        sendToTimOne::uploadFiles();
+        $algo = sendToTimOne::uploadFiles();
 
         if($this->integradoId ==''){
             $url = 'index.php?option=com_integrado&view=solicitud';

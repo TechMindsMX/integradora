@@ -1860,8 +1860,60 @@ class sendToTimOne {
                 $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . $fileinfo['extension'] ) );
 
                 $save[] = self::updateDB( $table, $updateSet, $where );
+            }else {
+                $campos[] = $key;
             }
         }
+
+        $integrado = new IntegradoSimple($integrado_id);
+        $integrado = $integrado->integrados[0];
+
+        if($integrado->integrado->pers_juridica == 2){
+            $evaluacion['dp_url_identificacion'] = $integrado->datos_personales->url_identificacion;
+            $evaluacion['dp_url_rfc'] = $integrado->datos_personales->url_rfc;
+            $evaluacion['dp_url_comprobante_domicilio'] = $integrado->datos_personales->url_comprobante_domicilio;
+
+
+        }
+
+        foreach($campos as $value){
+            $clave   = substr( $value, 0, 3 );
+            $columna = substr( $value, 3 );
+
+            switch($clave){
+                case 'dp_':
+                    is_null($integrado->datos_personales->$columna)?JFactory::getApplication()->enqueueMessage('Falta '.$columna.' o el formato del archivo es incorrecto'):'';
+                    break;
+                case 'de_':
+                    if($integrado->integrado->pers_juridica == 1){
+                        is_null($integrado->datos_empresa->url_rfc)?JFactory::getApplication()->enqueueMessage('Falta comprobante de RFC de Empresa o el formato del archivo es incorrecto'):'';
+                    }
+                    break;
+                case 't1_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta compribante del testimonio 1 o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 't2_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->testimonio2->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 2 o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 'pn_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->poder->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del poder notarial o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 'rp_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->reg_propiedad->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del Registro publico de propiedad o el formato del archivo es incorrecto ') : '';
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return !in_array(false, $save);
 
     }
