@@ -10,7 +10,109 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdvform extends JControllerAdmin {
 
-    function safeform(){
+	protected $data;
+
+	function saveODV () {
+		$db	        = JFactory::getDbo();
+		$save       = new sendToTimOne();
+
+
+		if($this->data['tab'] == 'seleccion'){
+			$respuesta['tab'] = 'ordenventa';
+		}
+		unset($this->data['numOrden']);
+		unset($this->data['tab']);
+		unset($this->data['idOrden']);
+
+//		if($tab != 'seleccion') {
+//			if ( ! empty( $data['producto'][0] ) ) {
+//				foreach ($data['producto'] as $indice => $valor) {
+//					if ($data['producto'][$indice] != '') {
+//						$productos = new stdClass();
+//
+//						$productos->name = $data['producto'][$indice];
+//						$productos->descripcion = $data['descripcion'][$indice];
+//						$productos->cantidad = $data['cantidad'][$indice];
+//						$productos->unidad = $data['unidad'][$indice];
+//						$productos->p_unitario = $data['p_unitario'][$indice];
+//						$productos->iva = $data['iva'][$indice];
+//						$productos->ieps = $data['ieps'][$indice];
+//
+//						$productosArray[] = $productos;
+//					}
+//				}
+//			} else {
+//				$respuesta['success']  = false;
+//				$respuesta['id']       = $id;
+//				$respuesta['numOrden'] = $numOrden;
+//				$respuesta['redirect'] = null;
+//
+//				echo json_encode($respuesta);
+//				exit;
+//			}
+//		}else{
+//			$productosArray = array();
+//		}
+
+		$productosArray = array();
+
+		foreach ($this->data as $key => $value) {
+			if( gettype($value) === 'array' ){
+				unset($this->data[$key]);
+			}
+		}
+
+		$this->data['productos'] = json_encode($productosArray);
+
+		$this->data['integradoId'] = $this->integradoId;
+		$save->formatData($this->data);
+
+		if($id === 0){
+			$query 	= $db->getQuery(true);
+			$query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
+
+			try {
+				$db->setQuery($query);
+				$results = $db->loadColumn();
+			}catch (Exception $e){
+				var_dump($e->getMessage());
+				exit;
+			}
+
+			$numOrden = $save->getNextOrderNumber('odv', $this->integradoId);
+
+			$this->data['numOrden'] = $numOrden;
+			$this->data['createdDate'] = $results[0];
+			$this->data['status'] = 1;
+
+			$save->formatData($this->data);
+
+			$this->data['id'] = $id;
+			$save->insertDB('ordenes_venta');
+
+			$id = $db->insertid();
+			$this->sendMail($this->data);
+
+
+
+		}else{
+			$save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
+		}
+
+		$url = null;
+		if($tab == 'ordenVenta'){
+			$url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$id.'&layout=confirmOdv';
+		}
+
+		$respuesta['success']  = true;
+		$respuesta['id']       = $id;
+		$respuesta['numOrden'] = $numOrden;
+		$respuesta['redirect'] = $url;
+
+		echo json_encode($respuesta);
+	}
+
+    function sendform(){
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
@@ -32,113 +134,20 @@ class MandatosControllerOdvform extends JControllerAdmin {
             'p_unitario'    => 'ARRAY',
             'iva'           => 'ARRAY',
             'ieps'          => 'ARRAY');
-        $db	        = JFactory::getDbo();
+
 
         $this->app  = JFactory::getApplication();
-        $data       = $this->app->input->getArray($post);
-        $id         = $data['idOrden'];
-        $tab        = $data['tab'];
-        $numOrden   = $data['numOrden'];
+        $this->data       = $this->app->input->getArray($post);
+        $id         = $this->data['idOrden'];
+        $tab        = $this->data['tab'];
+        $numOrden   = $this->data['numOrden'];
 
-        $valida = $this->validate($data);
+        $valida = $this->validate($this->data);
         if(!$valida['success']) {
             $this->jsonReturn($valida);
         }
 
-        $save       = new sendToTimOne();
 
-
-        if($data['tab'] == 'seleccion'){
-            $respuesta['tab'] = 'ordenventa';
-        }
-        unset($data['numOrden']);
-        unset($data['tab']);
-        unset($data['idOrden']);
-
-        if($tab != 'seleccion') {
-	        if ( ! empty( $data['producto'][0] ) ) {
-		        foreach ($data['producto'] as $indice => $valor) {
-			        if ($data['producto'][$indice] != '') {
-				        $productos = new stdClass();
-
-				        $productos->name = $data['producto'][$indice];
-				        $productos->descripcion = $data['descripcion'][$indice];
-				        $productos->cantidad = $data['cantidad'][$indice];
-				        $productos->unidad = $data['unidad'][$indice];
-				        $productos->p_unitario = $data['p_unitario'][$indice];
-				        $productos->iva = $data['iva'][$indice];
-				        $productos->ieps = $data['ieps'][$indice];
-
-				        $productosArray[] = $productos;
-			        }
-		        }
-	        } else {
-		        $respuesta['success']  = false;
-		        $respuesta['id']       = $id;
-		        $respuesta['numOrden'] = $numOrden;
-		        $respuesta['redirect'] = null;
-
-		        echo json_encode($respuesta);
-		        exit;
-	        }
-        }else{
-            $productosArray = array();
-        }
-
-        foreach ($data as $key => $value) {
-            if( gettype($value) === 'array' ){
-                unset($data[$key]);
-            }
-        }
-
-        $data['productos'] = json_encode($productosArray);
-
-        $data['integradoId'] = $this->integradoId;
-        $save->formatData($data);
-
-        if($id === 0){
-            $query 	= $db->getQuery(true);
-            $query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
-
-            try {
-                $db->setQuery($query);
-                $results = $db->loadColumn();
-            }catch (Exception $e){
-                var_dump($e->getMessage());
-                exit;
-            }
-
-            $numOrden = $save->getNextOrderNumber('odv', $this->integradoId);
-
-            $data['numOrden'] = $numOrden;
-            $data['createdDate'] = $results[0];
-            $data['status'] = 1;
-
-            $save->formatData($data);
-
-            $data['id'] = $id;
-            $save->insertDB('ordenes_venta');
-
-            $id = $db->insertid();
-            $this->sendMail($data);
-
-
-
-        }else{
-            $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
-        }
-
-        $url = null;
-        if($tab == 'ordenVenta'){
-            $url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$id.'&layout=confirmOdv';
-        }
-
-        $respuesta['success']  = true;
-        $respuesta['id']       = $id;
-        $respuesta['numOrden'] = $numOrden;
-        $respuesta['redirect'] = $url;
-
-        echo json_encode($respuesta);
     }
 
     public function getTotalAmount($productos){
@@ -166,7 +175,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
     }
 
     /**
-     * @param $data
+     * @param array $data
      */
     public function sendMail($data)
     {
@@ -188,7 +197,12 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
     }
 
-    private function validate( $data ) {
+	/**
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function validate( $data ) {
 
         $diccionario = array(
                 'projectId'     => array('number' => true),
@@ -243,4 +257,11 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         die( json_encode($respuesta) );
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getData() {
+		return $this->data;
+	}
 }
