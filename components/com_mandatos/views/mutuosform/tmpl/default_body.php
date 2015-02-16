@@ -52,7 +52,7 @@ $optionBancos = '';
         var integradoId =  jQuery('#integradoIdE').val();
 
         var envio = {
-            'link'	:'index.php?option=com_mandatos&view=mutuosform&task=searchrfc&format=raw',
+            'link'	:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
             'datos'	:{'rfc': rfcBusqueda, 'integradoId':integradoId}
         };
 

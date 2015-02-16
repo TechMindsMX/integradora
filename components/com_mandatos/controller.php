@@ -373,6 +373,10 @@ class MandatosController extends JControllerLegacy {
                 $save->updateDB($table,$datosQuery['setUpdate'],$where);
             }
 
+            if($data['pj_pers_juridica'] == 2){
+                $tab = 'banco';
+            }
+
             $response['idCliPro'] = $idCliPro;
             $response['success'] = true;
             $response['nextTab'] = $tab;
