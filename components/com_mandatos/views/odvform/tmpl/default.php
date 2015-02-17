@@ -206,6 +206,9 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 	    jQuery('#project').on('change', llenasubproject);
 	    jQuery('#button').on('click', addrow);
 	    jQuery('button').on('click', envio);
+	    jQuery('#clear_form').on('click', function(){
+		    jQuery('#altaODV').clearForm();
+	    });
 
 	    jQuery.each(arrayProd, function (key, value) {
 		    jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
@@ -226,7 +229,6 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 
 </script>
 
-<input class="typeahead" type="text"/>
 <form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data" >
     <h1>Generación de Orden de Venta</h1>
     <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
@@ -234,10 +236,6 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
     <input type="hidden" name="numOrden" value="<?php echo $orden->numOrden; ?>">
     <input type="hidden" name="integradoId" id="IntegradoId" value="<?php echo $this->integradoId; ?>" />
     <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id ?>" />
-    <?php
-    echo JHtml::_('bootstrap.startTabSet', 'tabs-odv', array('active' => 'seleccion'));
-    echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'seleccion', JText::_('COM_MANDATOS_ODV_SELECCION'));
-    ?>
 
     <fieldset>
         <select name="projectId" id="project">
@@ -270,16 +268,6 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
             <a href="index.php?option=com_mandatos&view=clientesform" class="btn btn-primary">Crear Cliente nuevo</a>
         </span>
     </fieldset>
-    <div class="form-actions" style="max-width: 30%">
-        <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
-        <button type="button" class="btn btn-primary span3" id="seleccion"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <a href="index.php?option=com_mandatos&view=odvlist" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></a>
-    </div>
-
-    <?php
-    echo JHtml::_('bootstrap.endTab');
-    echo JHtml::_('bootstrap.addTab', 'tabs-odv', 'ordenventa', JText::_('COM_MANDATOS_ODV_ODV'));
-    ?>
 
     <fieldset>
         <?php
@@ -441,9 +429,4 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
     </div>
 
-    <?php
-    echo JHtml::_('bootstrap.endTab');
-    echo JHtml::_('bootstrap.endTabSet');
-    echo JHtml::_('form.token');
-    ?>
 </form>
