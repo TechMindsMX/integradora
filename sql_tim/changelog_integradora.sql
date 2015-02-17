@@ -278,13 +278,13 @@ ALTER TABLE `flpmu_integrado_comisiones` ADD INDEX `integradoId` (`integradoId` 
 --rollback ALTER TABLE `flpmu_integrado_comisiones` DROP INDEX `integradoId` (`integradoId` ASC);
 
 --changeset ricardolyon:33
-ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` BIGINT;
+ALTER TABLE `flpmu_ordenes_compra` CHANGE `numOrden` `numOrden` INT;
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE `numOrden` `numOrden` BIGINT;
 
 --changeset ricardolyon:34
-ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `numOrden` `numOrden` VARCHAR(50);
+ALTER TABLE `flpmu_ordenes_prestamo` CHANGE `numOrden` `numOrden` INT;
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE `numOrden` `numOrden` VARCHAR(50);
 
 --changeset ricardolyon:35
-ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` VARCHAR(255);
+ALTER TABLE `flpmu_ordenes_venta` CHANGE `numOrden` `numOrden` INT;
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE `numOrden` `numOrden` VARCHAR(255);
