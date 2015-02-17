@@ -275,16 +275,11 @@ INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_
 
 --changeset lutek:32
 ALTER TABLE `flpmu_integrado_comisiones` ADD INDEX `integradoId` (`integradoId` ASC);
---rollback ALTER TABLE `flpmu_integrado_comisiones` DROP INDEX `integradoId` (`integradoId` ASC);
+--rollback ALTER TABLE `flpmu_integrado_comisiones` DROP INDEX `integradoId`;
 
 --changeset ricardolyon:33
-ALTER TABLE `flpmu_ordenes_compra` CHANGE `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE `numOrden` `numOrden` BIGINT;
+ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` INT (11);
+ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` INT (11);
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` BIGINT(20);
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` VARCHAR(255);
 
---changeset ricardolyon:34
-ALTER TABLE `flpmu_ordenes_prestamo` CHANGE `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE `numOrden` `numOrden` VARCHAR(50);
-
---changeset ricardolyon:35
-ALTER TABLE `flpmu_ordenes_venta` CHANGE `numOrden` `numOrden` INT;
---rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE `numOrden` `numOrden` VARCHAR(255);
