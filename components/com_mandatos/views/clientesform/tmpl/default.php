@@ -39,6 +39,7 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
         jQuery('#altaC_P input:radio').on('click', tipoAlta);
         jQuery('button.envio').on('click', saveCliente);
 		tabs = jQuery('#tabs-clientesTabs li');
+		detached = [];
 
 		<?php
 		if(!is_null($datos->rfc)){
@@ -118,10 +119,30 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 		
 		return request;
 	}
-	
-	function tipoAlta(){
+
+    function attachTab(campo) {
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if ((li_href == campo)) {
+			    if (campo == '#banco') {
+				    jQuery(tabs[key + 1]).before(detached[key]);
+			    }
+			    if (campo == '#empresa') {
+				    jQuery(tabs[key - 1]).after(detached[key]);
+			    }
+		    }
+	    });
+    }
+    function extractTab(campo) {
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if (li_href == campo) {
+			    detached[key] = jQuery(value).detach();
+		    }
+	    });
+    }
+    function tipoAlta(){
 		var campo 		= '';
-		var display 	= '';
 		var campoMonto 	= jQuery('#monto');
 		var nombreCampo = jQuery(this).prop('name');
 
@@ -129,31 +150,27 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 			case 'tp_tipo_alta':
 				if( jQuery(this).val() == 0){
 					campo = '#banco';
-					display = 'none';
+					extractTab(campo);
 					campoMonto.children().remove();
 				}else{
 					campo = '#banco';
+					attachTab(campo);
 					campoMonto.html('<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label><input type="text" name="tp_monto" id="tp_monto" />');
 				}
 				break;
 			case 'pj_pers_juridica':
 				if( jQuery(this).val() == 2 ){
 					campo = '#empresa';
-					display = 'none';
+					extractTab(campo);
 				}else{
 					campo = '#empresa';
+					attachTab(campo);
 				}
 				break;
             default :
                 break;
 		}
-		
-		jQuery.each( jQuery('#altaC_P').find('a'), function(key, value){
-		  if( jQuery(value).attr('href') == campo ){
-		    jQuery(value).css('display',display);
-		  }
-		});
-	}
+    }
 	
 	function busqueda_rfc(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
@@ -166,20 +183,25 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 		var resultado = ajax(envio);
 		
 		resultado.done(function(response){
-			if(response.success){
+			if(response.success == true){
 				llenaForm(response);
+				var campo = ['#pers-juridica', '#basic-details', '#empresa', '#files'];
+				jQuery.each(campo, function(k,v) {
+					extractTab(v);
+				});
 				nextTab();
-				jQuery()
 
-			}else {
-//				jQuery('#altaC_P').clearForm();
+			} else if (response.success == 'invalid') {
 				jQuery('input, select, textarea').prop("readonly", false);
 
+				<?php /* override para la fincion de mensajes de validacion */ ?>
+				response.success = false;
 				mensajesValidaciones(response);
-				nextTab();
-				var radio = response.bu_rfc.pj_pers_juridica;
+
+			} else {
+				var radio = response.bu_rfc;
 				jQuery('#perFisicaMoral' + radio).trigger('click');
-				if (response.bu_rfc.pj_pers_juridica == 1) {
+				if (response.bu_rfc == 1) {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
 					jQuery('#de_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
 				}
@@ -187,6 +209,9 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
 					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
 				}
+				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
+				jQuery('#tipo_alta').prepend(msg);
+				nextTab();
 			}
 		});
 	}

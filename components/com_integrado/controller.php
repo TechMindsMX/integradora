@@ -49,25 +49,27 @@ class IntegradoController extends JControllerLegacy {
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
         $tipo_rfc = $this->rfc_type($data['rfc']);
 
-        $existe = $this->search_rfc_exists( $data['rfc'] );
+	    if ($tipo_rfc['success'] == false) {
+		    $respuesta = array ( 'success' => 'invalid', 'bu_rfc' => $tipo_rfc );
+	    } else {
+		    $existe = $this->search_rfc_exists( $data['rfc'] );
 
-        if(!empty($existe)){
-            // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
-            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe );
+		    if ( ! empty( $existe ) ) {
+			    // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
+			    $relation = getFromTimOne::selectDB( 'integrado_clientes_proveedor',
+			                                         'integrado_id = ' . $this->integradoId . ' AND integradoIdCliente = ' . $existe );
 
-            $datos = new IntegradoSimple($existe);
-            $datos->integrados[0]->success = true;
+			    $datos                         = new IntegradoSimple( $existe );
+			    $datos->integrados[0]->success = true;
 
-            $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
+			    $datos->integrados[0]->tipo_alta = isset( $relation[0]->tipo_alta ) ? $relation[0]->tipo_alta : '';
 
-            echo json_encode($datos->integrados[0]);
-        }else{
-            $respuesta['success'] = false;
-            $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
-            $respuesta['pj_pers_juridica'] = $tipo_rfc;
-
-            echo json_encode( array('bu_rfc' => $respuesta) );
-        }
+			    $respuesta =  $datos->integrados[0];
+		    } else {
+			    $respuesta = array ('success' => false, 'bu_rfc' => $tipo_rfc['msg'] );
+		    }
+	    }
+	    echo json_encode($respuesta);
     }
 
     public function rfc_type($rfc) {
@@ -78,12 +80,12 @@ class IntegradoController extends JControllerLegacy {
         $is_validFisica    = $validator->procesamiento( array('rfc' => $rfc), $diccionarioFisica );
         $is_validMoral     = $validator->procesamiento( array('rfc' => $rfc), $diccionarioMoral );
 
-        $respuesta = '';
+	    $respuesta['success'] = true;
 
         if ( ! is_array($is_validMoral['rfc']) ) {
-            $respuesta = 1;
+            $respuesta['msg'] = 1;
         } elseif ( ! is_array($is_validFisica['rfc']) ) {
-            $respuesta = 2;
+            $respuesta['msg'] = 2;
         } else {
             $respuesta['success'] = false;
             $respuesta['msg']     = JText::_( 'MSG_RFC_INVALID' );
