@@ -1972,7 +1972,7 @@ class sendToTimOne {
         $db->setQuery($query);
         $resultado = $db->loadObject();
 
-        $respuesta = is_null($resultado->lastOrderNum)?1:$resultado->lastOrderNum+1;
+        $respuesta = is_null($resultado->lastOrderNum) ? 1 : $resultado->lastOrderNum + 1;
 
         return $respuesta;
     }
