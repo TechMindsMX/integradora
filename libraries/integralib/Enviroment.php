@@ -69,8 +69,17 @@ class Enviroment {
 	}
 
 	public function produccion() {
+		$middle           = "integra.trama.mx";
+		$puertoTimOne     = "";
+		$controllerTimOne = "/timone/services/";
+
+		define( "MIDDLE", 'http://' . $middle );
+		define( "PUERTO", $puertoTimOne );
+		define( "TIMONE", $controllerTimOne );
+		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+		define( "FACTURA_ROUTE", 'factura.trama.mx/factura/' );
+
 		define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
-		//TODO: colocar las variables de produccion
 	}
 
 	public function localhost() {
