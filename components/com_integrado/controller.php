@@ -200,19 +200,21 @@ class IntegradoController extends JControllerLegacy {
         if($data['busqueda_rfc']) {
             $respuesta = $this->rfc_type($data['busqueda_rfc']);
             $ex = $this->search_rfc_exists( $data['busqueda_rfc'] );
+
+	        if ( isset( $respuesta ) ) {
+		        if ( is_array($respuesta) || isset($ex) ) {
+			        if (isset($ex)) {
+				        $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+				        echo json_encode($respuesta);
+				        return true;
+			        } elseif (is_array($respuesta)) {
+				        $respuesta['safeComplete'] = true;
+			        }
+		        }
+	        }
         }
 
-        if ( isset( $respuesta ) ) {
-            if ( is_array($respuesta) || isset($ex) ) {
-                if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
-                }
-                echo json_encode($respuesta);
-                return true;
-            }
-        }
-
-        if (JSession::checkToken() === false) {
+	    if (JSession::checkToken() === false) {
             $response = array('success' => false, 'msg'=>'Token Invalido' );
             echo json_encode($response);
             return true;

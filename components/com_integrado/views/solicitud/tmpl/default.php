@@ -97,6 +97,7 @@ $token = JSession::getFormToken();
                     datos += '&tab='+boton;
                     if( boton == 'personales' ) {
                         datos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+                        datos += '&pj_personalida='+jQuery('#dp_fecha_nacimiento').val();
                     }
                     if (boton == 'empresa'){
                         datos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
@@ -252,21 +253,22 @@ $token = JSession::getFormToken();
 
             <?php
             if(!empty($datos->integrado)) {
-                if ($datos->integrado->pers_juridica == 1) {
-                    $readonlyRfc = '#de_rfc';
-                } elseif ($datos->integrado->pers_juridica == 2) {
-                    $readonlyRfc = '#dp_rfc';
-                }
-                ?>
-            var $rfc_not_editable = jQuery('<?php echo $readonlyRfc; ?>');
-            var $value_rfc_not_editable = $rfc_not_editable.val();
-            $rfc_not_editable.after('<p>'+ $value_rfc_not_editable +'</p>').remove();
-            nextTab();
-            jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
-
-            <?php
-            }
-            ?>
+                if (isset($datos->integrado->pers_juridica)) {
+	                if ($datos->integrado->pers_juridica == 1) {
+	                    $readonlyRfc = '#de_rfc';
+	                } elseif ($datos->integrado->pers_juridica == 2) {
+	                    $readonlyRfc = '#dp_rfc';
+	                }
+	                ?>
+			        var $rfc_not_editable = jQuery('<?php echo $readonlyRfc; ?>');
+			        var $value_rfc_not_editable = $rfc_not_editable.val();
+			        $rfc_not_editable.after('<p>' + $value_rfc_not_editable + '</p>').remove();
+			        nextTab();
+			        jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
+	        <?php
+				}
+			}
+			?>
 
             jQuery('#agregarBanco').on('click', AltaBanco);
             jQuery('#dp_rfc, #de_rfc').on('change',toUpper);
