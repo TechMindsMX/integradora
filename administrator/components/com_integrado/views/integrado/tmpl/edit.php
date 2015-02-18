@@ -106,7 +106,7 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $k
                     if ( in_array( $label, $attachments ) ) {
                         echo '<div class="control-group">';
                         if ( isset( $field ) ) {
-                            echo '<a class="label label-success" target="_blank" href="' . '../' . MEDIA_FILES . $field . '">' . JText::_( $label ) . '</a>';
+                            echo '<a class="label label-success" target="_blank" href="' . '../' . $field . '">' . JText::_( $label ) . '</a>';
                         } else {
                             echo '<p class="label label-important">' . JText::_( $label ) . '</p>';
                         }
