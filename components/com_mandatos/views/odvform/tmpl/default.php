@@ -14,6 +14,8 @@ $productosOrden = json_decode($orden->productos);
 $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subproyectos'] : '';
 ?>
 <script src="libraries/integradora/js/tim-validation.js"> </script>
+<script src="libraries/integradora/js/typeahead.bundle.js"> </script>
+<script src="libraries/integradora/js/typeahead.matcher.js"> </script>
 
 <script>
     var productsTypeahead   = new Array();
@@ -84,7 +86,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 		    $input.attr('id', $id + nextinput);
 	    });
 
-	    triggersProductsTable();
+	    triggersProductsTable($insertedRow);
     }
 
     function llenasubproject() {
@@ -187,16 +189,23 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         }
     }
 
-    function triggersProductsTable() {
+
+    function triggersProductsTable($insertedRow) {
 	    jQuery('#altaODV').on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
 
-	    var tahead = jQuery('input.typeahead');
-        tahead.typeahead(typeaheadSettings);
-	    tahead.on('custom', llenatabla);
-	    tahead.change(function(){
-		    if(jQuery(this).val().length > 2) {
-			    tahead.delay(1000).trigger('custom');
-		    }
+	    var tahead = $insertedRow.find('input.typeahead');
+        tahead.typeahead({
+			    minLength: 3,
+			    highlight: true
+		    },
+		    {
+			    name: 'productsTypeahead',
+			    displayKey: 'value',
+			    source: substringMatcher(productsTypeahead)
+		    });
+	    tahead.on('typeahead:selected', llenatabla);
+	    tahead.on('typeahead:opened', function() {
+		    jQuery('.typeahead').css('z-index', 99);
 	    });
     }
 
