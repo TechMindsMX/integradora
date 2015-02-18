@@ -752,6 +752,7 @@ class IntegradoController extends JControllerLegacy {
 
                 $sesion = JFactory::getSession();
                 $sesion->set('integradoId', $this->id, 'integrado');
+                $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
 
                 $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
             }
