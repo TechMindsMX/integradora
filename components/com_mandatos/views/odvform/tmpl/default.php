@@ -31,12 +31,6 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
     var pre             = "";
     var precio          = 0;
     var total           = 0;
-    var typeaheadSettings = {
-        source: function () {
-            return productsTypeahead;
-        },
-        minLength:3
-    };
 
     function muestraBotonOtro() {
         var select = jQuery(this).val();
@@ -154,16 +148,9 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 result = jQuery.parseJSON(result);
             }
             if(result.success){
-                jQuery('#idOrden').val(result.id);
-                jQuery('#numOrden').html(result.numOrden);
-                jQuery('input[name="numOrden"]').val(result.numOrden);
-                jQuery('a[href="#'+result.tab+'"]').trigger('click');
+	            jQuery('#altaODV').prop('action', 'index.php?option=com_mandatos&task=odvform.saveODV').submit();
 
-                if(result.redirect != null){
-                    window.location = result.redirect;
-                }
-            } else if (!result.success) {
-//                jQuery('#altaODV').prepend('<div class="alert alert-error"><a data-dismiss="alert" class="close">×</a><h4 class="alert-heading">Error</h4><div><p>Faltan los productos</p></div></div>');
+           } else if (!result.success) {
                 mensajesValidaciones(result);
             }
         });
@@ -213,8 +200,8 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 	    jQuery('#clientId').on('change',muestraBotonOtro);
 
 	    jQuery('#project').on('change', llenasubproject);
-	    jQuery('#button').on('click', addrow);
-	    jQuery('button').on('click', envio);
+	    jQuery('#add_row').on('click', addrow);
+	    jQuery('#ordenVenta').on('click', envio);
 	    jQuery('#clear_form').on('click', function(){
 		    jQuery('#altaODV').clearForm();
 	    });
@@ -428,7 +415,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         </div>
 
         <div class="clearfix">
-            <button type="button" id="button" class="btn btn-success" name="button"> + </button>
+            <button type="button" id="add_row" class="btn btn-success" name="button"> + <?php echo JText::_('LBL_ADD_ROW'); ?></button>
         </div>
 
     </fieldset>

@@ -100,7 +100,7 @@ if ($this->API->modules('sidebar')) {
 		<?php if((($userID == 0) || $this->API->modules('login')) && !GK_COM_USERS) : ?>
 		<div id="gk-user-area">
 			<?php if($this->API->modules('login')) :
-				$name = JFactory::getSession()->get('integradoId', '', 'integradoDisplayName');
+				$name = JFactory::getSession()->get('integradoDisplayName', '', 'integrado');
 				$name = htmlspecialchars( '- '.$name );
 				?>
 			<a href="#loginModal" role="button" data-toggle="modal"><?php echo ($userID == 0) ? JText::_('TPL_GK_LANG_LOGIN').$name : $user->get('username').$name; ?></a>
