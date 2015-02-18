@@ -400,10 +400,9 @@ class IntegradoSimple extends Integrado {
 	/**
 	 * @param mixed $ordersAtuhorizationParams
 	 */
-    //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
-		getFromTimOne::selectDB('integrado_params', 'integrado_id');
-		$this->ordersAtuhorizationParams = 1;
+		$result = getFromTimOne::selectDB('integrado_params', 'integrado_id');
+		$this->ordersAtuhorizationParams = $result[0]->params;
 	}
 
 

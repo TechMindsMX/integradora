@@ -38,9 +38,6 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $this->app  = JFactory::getApplication();
         $this->data       = $this->app->input->getArray($post);
-        $id         = $this->data['idOrden'];
-        $tab        = $this->data['tab'];
-        $numOrden   = $this->data['numOrden'];
 
         $valida = $this->validate($this->data);
 
@@ -67,10 +64,6 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         $dataDiccionario = array_diff_key($data, $diccionario);
 
-//        foreach ( $dataDiccionario as $key => $val ) {
-//            $typeValidation        = array('required' => true);
-//            $diccionario[$key] = $typeValidation;
-//        }
         $validator = new validador();
         $respuesta = $validator->procesamiento($data, $diccionario);
 

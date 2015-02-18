@@ -2305,7 +2305,6 @@ class sendToTimOne {
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
 
-        //simulado
         $integrado->cantidadAuthNecesarias = $integrado->getOrdersAtuhorizationParams();
 
         $tableAuth = $orderType.'_auth';
