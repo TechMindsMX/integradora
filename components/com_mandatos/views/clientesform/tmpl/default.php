@@ -90,12 +90,12 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 							case 'application/pdf':
 								break;
 							default:
-								$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+								$error_span = '<span class="errormsg warning alert alert-danger"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
 								jQuery($fileInput).val('').after($error_span);
 						}
 
-						if (fsize >= 1000000) {
-							$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
+						if (fsize >= 10000000) {
+							$error_span = '<span class="errormsg warning alert alert-danger"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
 							jQuery($fileInput).val('').after($error_span);
 						}
 					}
