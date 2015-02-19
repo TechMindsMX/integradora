@@ -11,10 +11,12 @@ class validador{
     protected $diccionario_value;
     protected $respuesta;
     private $errorMsg = array();
+    protected $catalogos;
 
     public function  procesamiento ($data,$diccionario) {
-        $this->respuesta = array();
-        $this->dataPost = (array)$data;
+        $this->catalogos   = new Catalogos();
+        $this->respuesta   = array();
+        $this->dataPost    = (array)$data;
         $this->diccionario = $diccionario;
 
         foreach ($this->diccionario as $key => $value) {
@@ -341,4 +343,31 @@ class validador{
         return floatval($this->dataPost[$this->currentKey]) <= $this->diccionario_value;
     }
 
+    protected function plazoMaximo(){
+        $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_TIMEFRAME_BAD');
+        $tipos                = $this->catalogos->getTiposPeriodos();
+        $tipoPagoSeleccionado = $this->dataPost['paymentPeriod'];
+        $plazoMaximo          = (FLOAT) $tipos[$tipoPagoSeleccionado]->periodosAnio * 3;
+        $tiempoPlazo          = $this->dataPost['quantityPayments'];
+
+        if($tiempoPlazo <= $plazoMaximo){
+            $respuesta = true;
+        }else{
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    protected function tipoPlazo(){
+        $tipos = $this->catalogos->getTiposPeriodos();
+
+        if( isset($tipos[$this->dataPost['paymentPeriod']]) ){
+            $respuesta = true;
+        }else{
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
 }
