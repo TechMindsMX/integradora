@@ -80,6 +80,13 @@ $token = JSession::getFormToken();
         }
 
         jQuery(document).ready(function(){
+            jQuery('#solicitud').on("keyup keypress", function(e) {
+                var code = e.keyCode || e.which;
+                if (code  == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
 
             var tabs = jQuery('#tabs-solicitudTabs li');
             var integradoIdModel = '<?php if (isset($this->data->integrados->integrado->integrado_id)) : echo $this->data->integrados->integrado->integrado_id; endif; ?>';
