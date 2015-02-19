@@ -18,6 +18,7 @@ $token = JSession::getFormToken();
 
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 ?>
 <script>
     var catalogoBancos = new Array();
@@ -31,6 +32,11 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
     ?>
 
 	jQuery(document).ready(function(){
+
+		jQuery('input[type="file"]').on('change' ,{
+			msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
+		} , file_validation );
+
 		jQuery('#nextTab').click('click', nextTab);
 
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
@@ -60,53 +66,6 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 			})";
 		}
 		?>
-
-		jQuery('#files').change( function(event) {
-			jQuery('.errormsg').remove();
-
-			//check whether browser fully supports all File API
-			if (window.File && window.FileReader && window.FileList && window.Blob)
-			{
-
-				//get the file size and file type from file input field
-				var $files = jQuery('input[type="file"]');
-				var $loop = jQuery.each($files, function(k, $fileInput){
-
-					var $error_span = '';
-
-					if ($fileInput.files[0]) {
-
-						var fsize = $fileInput.files[0].size;
-						var ftype = $fileInput.files[0].type;
-						var fname = $fileInput.files[0].name;
-						var $error = Array();
-
-						switch(ftype)
-						{
-							case 'image/png':
-							case 'image/gif':
-							case 'image/jpeg':
-							case 'image/pjpeg':
-							case 'application/pdf':
-								break;
-							default:
-								$error_span = '<span class="errormsg warning alert alert-danger"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
-								jQuery($fileInput).val('').after($error_span);
-						}
-
-						if (fsize >= 10000000) {
-							$error_span = '<span class="errormsg warning alert alert-danger"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
-							jQuery($fileInput).val('').after($error_span);
-						}
-					}
-					return $fileInput;
-				});
-
-			}else{
-				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
-			}
-		});
-
     });
 
 	function ajax(parametros){
