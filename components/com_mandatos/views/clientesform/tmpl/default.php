@@ -336,6 +336,10 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 		if(objeto.tipo_alta != null) {
 			jQuery("#tipoAlta"+objeto.tipo_alta).trigger("click");
 		}
+
+		if(objeto.monto != null) {
+			jQuery("#tp_monto").val(objeto.monto);
+		}
 	}
 
     function saveCliente(){

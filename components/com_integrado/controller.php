@@ -60,9 +60,11 @@ class IntegradoController extends JControllerLegacy {
 			                                         'integrado_id = ' . $this->integradoId . ' AND integradoIdCliente = ' . $existe );
 
 			    $datos                         = new IntegradoSimple( $existe );
+			    $datosCli                         = getFromTimOne::getClientProviderFromIntegradoId( $existe );
 			    $datos->integrados[0]->success = true;
 
 			    $datos->integrados[0]->tipo_alta = isset( $relation[0]->tipo_alta ) ? $relation[0]->tipo_alta : '';
+			    $datos->integrados[0]->monto     = isset( $datosCli->monto ) ? $datosCli->monto : '';
 
 			    $respuesta =  $datos->integrados[0];
 		    } else {
