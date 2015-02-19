@@ -2417,23 +2417,15 @@ class sendToTimOne {
     }
 
     public function generateFacturaFromTimone( $factura ) {
+
         // TODO: quitar mocks de sandbox
 //mocks sandbox
-        $serviceUrl = 'http://api.timone-factura.mx/facturacion/create';
         $rfcTest = 'AAD990814BP7';
         $factura->emisor->datosFiscales->rfc = $rfcTest;
         $factura->receptor->datosFiscales->rfc = $rfcTest;
 //fin mocks sandbox
 
-        $jsonData   = json_encode( $factura );
-        $httpType   = 'POST';
-
-        $request = new sendToTimOne();
-        $request->setServiceUrl( $serviceUrl );
-        $request->setJsonData( $jsonData );
-        $request->setHttpType( $httpType );
-
-        $result = $request->to_timone(); // realiza el envio
+        $result = $factura->sendCreateFactura(); // realiza el envio
 
         return $result->data;
     }
