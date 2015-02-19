@@ -16,6 +16,7 @@ $optionBancos = '';
 
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 if(!empty($datos->integrado)){
     if($datos->integrado->pers_juridica == 1){
@@ -79,7 +80,13 @@ $token = JSession::getFormToken();
             activeTab(nextTabObj);
         }
 
+
         jQuery(document).ready(function(){
+
+	        jQuery('input[type="file"]').on('change' ,{
+		        msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
+	        } , file_validation );
+
             jQuery('#solicitud').on("keyup keypress", function(e) {
                 var code = e.keyCode || e.which;
                 if (code  == 13) {
@@ -904,8 +911,10 @@ $token = JSession::getFormToken();
         echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'files', JText::_('LBL_TAB_ARCHIVOS'));
         ?>
         <fieldset>
+	        <p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
+	        <p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
 
-            <?php
+	        <?php
             $archivos = array(
                 'dp_url_identificacion'         => array(@$datos->datos_personales->url_identificacion, 'LBL_ID_FILE'),
                 'dp_url_rfc'                    => array(@$datos->datos_personales->url_rfc, 'LBL_RFC_FILE'),
