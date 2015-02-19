@@ -90,6 +90,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 			$id = $db->insertid();
 
 		} else {
+			$id = JFactory::getApplication()->input->get('id', null, 'INT');
 			$saved = $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
 		}
 

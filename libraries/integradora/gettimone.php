@@ -1259,7 +1259,7 @@ class getFromTimOne{
 
         //Temporal en lo que se crean las facturas.
         foreach ($allOrdenes as $orden) {
-            if($orden->status === 4){
+            if($orden->status->id === Order::getStatusIdByName('pagada')){
                 $orden->productos = json_decode($orden->productos);
 
                 foreach ($orden->productos  as $producto ) {
@@ -1284,8 +1284,12 @@ class getFromTimOne{
         return $odvs;
     }
 
-    public static function getSaldoOperacionesPorLiquidar($integardoId){
-        $allOdv = self::getOperacionesPorLiquidar($integardoId);
+	/**
+	 * @param $allOdv array getFromTimone::getOperacionesPorLiquidar(integ_id)
+	 *
+	 * @return stdClass
+	 */
+	public static function getSaldoOperacionesPorLiquidar($allOdv){
         $montoOperaciones   = new stdClass();
 
         $montoOperaciones->subtotalTotalOperaciones = 0;
@@ -3646,4 +3650,13 @@ class makeTx {
     }
 
 
+}
+
+class Order {
+
+	public static function getStatusIdByName( $string ) {
+		$statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
+
+		return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
+	}
 }
