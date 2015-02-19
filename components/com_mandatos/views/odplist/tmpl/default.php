@@ -30,13 +30,19 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach($ordenes as $key => $value){
-                $btnOrden = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odppreview&id='.$value->id.'">'.JText::_('ODPS_LBL_IR_ORDEN').'</a> ';
+                if( $value->status == Order::getStatusIdByName('pagada') ) {
+                    $classStatus = 'color:#FF0000;';
+                    $btnOrden = JText::_('LBL_PAID');
+                }else{
+                    $classStatus = '';
+                    $btnOrden = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=odppreview&id=' . $value->id . '">' . JText::_('ODPS_LBL_IR_ORDEN') . '</a> ';
+                }
                 ?>
                 <tr class="row">
-                    <td style="text-align: center; vertical-align: middle;"><?php echo $value->numOrden; ?></td>
-                    <td style="text-align: center; vertical-align: middle;"><?php echo date('d-m-Y',$value->fecha_deposito); ?></td>
-                    <td style="text-align: right; vertical-align: middle;">$<?php echo number_format($value->capital,2); ?></td>
-                    <td style="text-align: center; vertical-align: middle;"><?php echo $btnOrden; ?></td>
+                    <td style="text-align: center; vertical-align: middle; <?php echo $classStatus; ?>"><?php echo $value->numOrden; ?></td>
+                    <td style="text-align: center; vertical-align: middle; <?php echo $classStatus; ?>"><?php echo date('d-m-Y',$value->fecha_deposito); ?></td>
+                    <td style="text-align: right; vertical-align: middle; <?php echo $classStatus; ?>">$<?php echo number_format($value->capital,2); ?></td>
+                    <td style="text-align: center; vertical-align: middle; <?php echo $classStatus; ?>"><?php echo $btnOrden; ?></td>
                 </tr>
             <?php
             }
