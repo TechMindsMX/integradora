@@ -303,15 +303,17 @@ class validador{
 	protected function notEmpty (){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
 
-	    $input = $this->dataPost[$this->currentKey];
-	    if(is_string($input)) {
-	        $input = trim($input);
-	    }
+		$input = $this->dataPost[$this->currentKey];
+		if(is_string($input)) {
+			$input = trim($input);
+		}
 
-        return ($input ==="0"|| $input);
-    }
+		return ($input ==="0"|| $input);
+	}
 
 	public function notNull() {
+		$this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
+
 		return !is_null($this->dataPost[$this->currentKey]) && $this->notEmpty();
 	}
 
