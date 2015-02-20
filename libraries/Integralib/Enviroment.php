@@ -18,7 +18,8 @@ class Enviroment {
 		$enviroment = $this->readEnviromentFile();
 
 		if ( method_exists($this, $enviroment['AMBIENTE']) ) {
-			call_user_func( array($this, strtolower( $enviroment['AMBIENTE'] ) ) );
+			define('ENVIROMENT_NAME', $enviroment['AMBIENTE_TIMONE'] );
+			call_user_func( array($this, strtolower( $enviroment['AMBIENTE']) ) );
 		} else {
 			$this->produccion();
 		}
@@ -49,7 +50,7 @@ class Enviroment {
 		define( "PUERTO", $puertoTimOne );
 		define( "TIMONE", $controllerTimOne );
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
-		define( "FACTURA_ROUTE", 'api.timone-factura.mx/factura/' );
+		define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
 
 		define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 	}
@@ -63,7 +64,7 @@ class Enviroment {
 		define( "PUERTO", $puertoTimOne);
 		define( "TIMONE", $controllerTimOne);
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
-		define( "FACTURA_ROUTE", 'api.timone-factura.mx/factura/' );
+		define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
 
 		define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 	}
@@ -77,7 +78,7 @@ class Enviroment {
 		define( "PUERTO", $puertoTimOne );
 		define( "TIMONE", $controllerTimOne );
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
-		define( "FACTURA_ROUTE", 'factura.trama.mx/factura/' );
+		define( "FACTURA_ROUTE", 'factura.trama.mx/facturacion/' );
 
 		define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 	}
@@ -91,7 +92,7 @@ class Enviroment {
 		define( "PUERTO", $puertoTimOne );
 		define( "TIMONE", $controllerTimOne );
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
-		define( "FACTURA_ROUTE", 'api.timone-factura.mx/factura/' );
+		define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
 
 		define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 	}
