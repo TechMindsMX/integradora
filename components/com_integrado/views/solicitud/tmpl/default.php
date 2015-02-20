@@ -694,6 +694,28 @@ $token = JSession::getFormToken();
 
         <?php
         echo JHtml::_('bootstrap.endSlide');
+        echo JHtml::_('bootstrap.addSlide', 'empresa', JText::_('LBL_SLIDE_EXTRAS'), 'empresa-contact');
+        ?>
+        <fieldset>
+            <div class="form-group">
+                <label for="de_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
+                <input name="de_tel_fijo" id ="de_tel_fijo" type="text" maxlength="10" placeholder="5512345678" />
+            </div>
+            <div class="form-group">
+                <label for="de_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
+                <input name="de_tel_fijo_extension" id="de_tel_fijo_extension" type="text" maxlength="5" />
+            </div>
+            <div class="form-group">
+                <label for="de_tel_fax"><?php echo JText::_('LBL_TEL_FAX'); ?> *</label>
+                <input name="de_tel_fax" id ="de_tel_fax" type="text" maxlength="10" placeholder="5512345678" />
+            </div>
+            <div class="form-group">
+                <label for="de_sitio_web"><?php echo JText::_('LBL_SITIO_WEB'); ?> *</label>
+                <input name="de_sitio_web" id="de_sitio_web"  maxlength="100" />
+            </div>
+        </fieldset>
+        <?php
+        echo JHtml::_('bootstrap.endSlide');
         echo JHtml::_('bootstrap.addSlide', 'empresa', JText::_('LBL_SLIDE_TESTIMONIOS'), 'empresa-testimonios');
         ?>
         <fieldset>
