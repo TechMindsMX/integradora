@@ -18,7 +18,7 @@ class Enviroment {
 		$enviroment = $this->readEnviromentFile();
 
 		if ( method_exists($this, $enviroment['AMBIENTE']) ) {
-			define('TIMONE_ENVIROMENT', $enviroment['AMBIENTE_TIMONE'] );
+			define('ENVIROMENT_NAME', $enviroment['AMBIENTE_TIMONE'] );
 			call_user_func( array($this, strtolower( $enviroment['AMBIENTE']) ) );
 		} else {
 			$this->produccion();
