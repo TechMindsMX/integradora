@@ -2415,7 +2415,7 @@ class sendToTimOne {
         $datosDeFacturacion = new datosDeFacturacion( $newOrden );
 
         foreach ( $newOrden->productosData as $key => $concepto ) {
-            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
+            $conceptos[$key] = new Concepto( $newOrden->productosData[$key] );
         }
 
         $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
@@ -3416,13 +3416,19 @@ class Factura extends makeTx {
 
     public function sendCreateFactura()
     {
+	    $this->objEnvio = $this->setObjEnvio();
+
         $rutas = new servicesRoute();
         parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
     }
 
+	private function setObjEnvio() {
+		return $this;
+	}
+
 }
 
-class Conceptos
+class Concepto
 {
 
     public $valorUnitario = '100.00';
@@ -3602,7 +3608,9 @@ class transferFunds extends makeTx {
  * @property  resultado
  */
 class makeTx {
-    protected function create($datosEnvio){
+	protected $objEnvio;
+
+	protected function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();
@@ -3615,7 +3623,7 @@ class makeTx {
         jimport('joomla.log.log');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $this->resultado) ) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
         if ($this->resultado->code == 200) {
