@@ -2412,7 +2412,7 @@ class sendToTimOne {
         $datosDeFacturacion = new datosDeFacturacion( $newOrden );
 
         foreach ( $newOrden->productosData as $key => $concepto ) {
-            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
+            $conceptos[$key] = new Concepto( $newOrden->productosData[$key] );
         }
 
         $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
@@ -3413,13 +3413,19 @@ class Factura extends makeTx {
 
     public function sendCreateFactura()
     {
+	    $this->objEnvio = $this->setObjEnvio();
+
         $rutas = new servicesRoute();
         parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
     }
 
+	private function setObjEnvio() {
+		return $this;
+	}
+
 }
 
-class Conceptos
+class Concepto
 {
 
     public $valorUnitario = '100.00';
@@ -3599,7 +3605,9 @@ class transferFunds extends makeTx {
  * @property  resultado
  */
 class makeTx {
-    protected function create($datosEnvio){
+	protected $objEnvio;
+
+	protected function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();

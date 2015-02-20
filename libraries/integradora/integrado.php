@@ -14,14 +14,7 @@ class Integrado {
 	public $integrados;
 	
 	function __construct($integ_id = null) {
-//		$this->user = JFactory::getUser();
-//		unset($this->user->password);
 		$this->integrados = $this->getIntegradosCurrUser();
-
-//		foreach ($this->integrados as $key => $value) {
-//			$id = $value->integrado_id;
-//			$this->getSolicitud($id, $key);
-//		}
 	}
 
     /**
@@ -217,10 +210,6 @@ class Integrado {
 	}
 	
 	function getSolicitud($integ_id = null, $key){
-//		echo '<pre>';
-//		debug_print_backtrace();
-//		echo '</pre>';
-//		$profiler = new JProfiler();
 
 		if ($integ_id == null){
 			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
@@ -240,7 +229,7 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$this->integrados[$key]->datos_personales->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
 			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
@@ -251,7 +240,7 @@ class Integrado {
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$this->integrados[ $key ]->datos_empresa->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
 				}
@@ -268,7 +257,6 @@ class Integrado {
 			$this->integrados[$key]->poder				= null;
 			$this->integrados[$key]->reg_propiedad		= null;
 		}
-//		echo $profiler->mark(' segundos '.__METHOD__);
 
 	}
 
