@@ -79,7 +79,7 @@ class Send_email{
     }
 
     private function logEvent( $info, $dato ) {
-        $logdata = $logdata = implode( ', ', array (
+        $logdata = implode( ' | ', array (
             JFactory::getUser()->id,
             JFactory::getSession()->get('integradoId', null, 'integrado'),
             json_encode( array ( $info, $dato  ) )

@@ -119,7 +119,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $validacion = array_merge($validacionFunds, $validaDatos);
         }
 
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode($validacion) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode($validacion) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
         $document = JFactory::getDocument();
