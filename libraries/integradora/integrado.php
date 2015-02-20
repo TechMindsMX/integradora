@@ -84,7 +84,7 @@ class Integrado {
 		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $data['db_banco_clabe'];
 		$existe = getFromTimOne::selectDB( $table, $where );
 
-		$logdata = implode( ', ', array (
+		$logdata = implode( ' | ', array (
 			JFactory::getUser()->id,
 			$integradoId,
 			__METHOD__ . ':' . __LINE__,
@@ -126,7 +126,7 @@ class Integrado {
 
 				return array ( $respuesta, $existe, $newId, $db, $data, $save );
 			} else {
-				$logdata = implode( ', ', array (
+				$logdata = implode( ' | ', array (
 					JFactory::getUser()->id,
 					$integradoId,
 					__METHOD__ . ':' . __LINE__,

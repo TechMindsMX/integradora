@@ -50,7 +50,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $check                        = getFromTimOne::checkUserAuth($auths);
 
             $logdata = implode(
-                ', ',
+                ' | ',
                 array(
                     JFactory::getUser()->id,
                     JFactory::getSession()->get('integradoId', null, 'integrado'),
@@ -72,7 +72,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($check, $this->parametros) ) ) );
+            $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($check, $this->parametros) ) ) );
             JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
             $resultado = $save->insertDB('auth_odr');

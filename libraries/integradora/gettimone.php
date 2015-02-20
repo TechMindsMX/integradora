@@ -2086,7 +2086,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
@@ -2116,7 +2116,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
@@ -3612,7 +3612,7 @@ class makeTx {
         jimport('joomla.log.log');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $this->resultado) ) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $this->resultado) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
         if ($this->resultado->code == 200) {
@@ -3638,7 +3638,7 @@ class makeTx {
         $resultado = $request->insertDB('txs_timone_mandato');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
     }
 
