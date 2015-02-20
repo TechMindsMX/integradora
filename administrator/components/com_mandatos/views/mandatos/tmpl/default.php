@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 JHtml::_('behavior.tooltip');
 $mutuos = $this->mutuos;
+var_dump($mutuos[1]);
 JFactory::getDocument()->addScript('/integradora/libraries/integradora/js/jquery.tablesorter.min.js');
 ?>
 <script>
@@ -19,6 +20,8 @@ JFactory::getDocument()->addScript('/integradora/libraries/integradora/js/jquery
                 7: {sorter: false}
             }
         });
+
+        jQuery('#tabla th').removeClass('header');
     });
 </script>
 
@@ -29,7 +32,7 @@ JFactory::getDocument()->addScript('/integradora/libraries/integradora/js/jquery
 <table id="tabla" class="table table-bordered tablesorter" style="width: 100%; text-align: center;">
     <thead>
     <tr class="row">
-        <th class="header-admin-mandatos">Acreedor</th>
+        <th>Acreedor</th>
         <th>Deudor</th>
         <th>Monto</th>
         <th>Tipo de pago</th>
