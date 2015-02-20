@@ -163,6 +163,10 @@ $optionBancos = '';
 </script>
 
 <h1><?php echo JText::_('COM_MANDATOS_MUTUOS_FORM_TITULO'); ?></h1>
+<div>
+    <div class="span6"><h4>MONTO EN PRESTAMOS: $<?php echo number_format($this->montoSaldo->montoPrestamos,2); ?></h4></div>
+    <div class="span6"><h4>SALDO EN CUENTA: $<?php echo number_format($this->montoSaldo->saldoDisponible,2); ?></h4></div>
+</div>
 <div class="clearfix">&nbsp;</div>
 <form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
     <div>

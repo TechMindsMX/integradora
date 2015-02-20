@@ -99,4 +99,23 @@ class MandatosModelMutuosform extends JModelItem {
 
         return $mutuo;
     }
+
+    public function getMontoSaldo(){
+        $integradoId = $this->inputData->integradoId;
+        $mutuos      = getFromTimOne::getMutuos($integradoId);
+        $montoPrestamos = 0;
+
+        foreach ($mutuos as $key => $value) {
+            $montoPrestamos = $montoPrestamos + $value->saldo;
+        }
+
+        $integrado = new IntegradoSimple($integradoId);
+        $integrado->getTimOneData();
+
+        $datos = new stdClass();
+        $datos->montoPrestamos  = $montoPrestamos;
+        $datos->saldoDisponible = $integrado->timoneData->balance;
+
+        return $datos;
+    }
 }

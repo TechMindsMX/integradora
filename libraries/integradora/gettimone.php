@@ -10,6 +10,7 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 jimport('integradora.xmlparser');
 jimport('integradora.integrado');
+jimport('integradora.mutuo');
 
 class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
@@ -261,6 +262,7 @@ class getFromTimOne{
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
+        $dataFormater = new mutuo();
         $tipos = getFromTimOne::getTiposPago();
         $integradoAcredor = new stdClass();
         $integradoDeudor  = new stdClass();
@@ -297,6 +299,7 @@ class getFromTimOne{
             $data->integradoAcredor = $integradoAcredor;
             $data->integradoDeudor = $integradoDeudor;
         }
+        $mutuos = $dataFormater->formatData($mutuos);
 
         return $mutuos;
     }
