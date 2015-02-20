@@ -2420,21 +2420,17 @@ class sendToTimOne {
 
         $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
 
+	    //TODO: qutar el mock cuando sea produccion
+	    if( ENVIROMENT_NAME == 'sandbox') {
+		    $data->setTestRFC();
+	    }
+
         return $data;
     }
 
     public function generateFacturaFromTimone( $factura ) {
 
-        // TODO: quitar mocks de sandbox
-//mocks sandbox
-        $rfcTest = 'AAD990814BP7';
-        $factura->emisor->datosFiscales->rfc = $rfcTest;
-        $factura->receptor->datosFiscales->rfc = $rfcTest;
-//fin mocks sandbox
-
-        $result = $factura->sendCreateFactura(); // realiza el envio
-
-        return $result->data;
+        return $factura->sendCreateFactura(); // realiza el envio
     }
 
     /**
@@ -3398,6 +3394,11 @@ class Factura extends makeTx {
         $this->format = 'Xml';
     }
 
+	public function setTestRFC() {
+		$this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+		$this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+	}
+
     /**
      * @param $string
      */
@@ -3414,14 +3415,30 @@ class Factura extends makeTx {
         return $name;
     }
 
-    public function sendCreateFactura()
+	/**
+	 * @return bool
+	 */
+	public function sendCreateFactura()
     {
 	    $this->objEnvio = $this->setObjEnvio();
 
         $rutas = new servicesRoute();
-        parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+
+	    $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+
+	    if ($result === true) {
+		    $result = $this->returnXML();
+	    }
+	    return $result;
     }
 
+	public function returnXML() {
+		return $this->resultado->data;
+	}
+
+	/**
+	 * @return $this
+	 */
 	private function setObjEnvio() {
 		return $this;
 	}
@@ -3581,7 +3598,13 @@ class Cashout extends makeTx{
 
     public function sendCreateTx() {
         $rutas = new servicesRoute();
-        return parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+	    $result = parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+
+	    if ( $result === true ) {
+		    $this->saveTxOrderRelationship();
+	    }
+
+        return $result;
     }
 }
 
@@ -3599,7 +3622,13 @@ class transferFunds extends makeTx {
     public function sendCreateTx()
     {
         $rutas = new servicesRoute();
-        return parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+        $result = parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+
+	    if ( $result === true ) {
+		    $this->saveTxOrderRelationship();
+	    }
+
+	    return $result;
     }
 
 }
@@ -3609,6 +3638,7 @@ class transferFunds extends makeTx {
  */
 class makeTx {
 	protected $objEnvio;
+	protected $resultado;
 
 	protected function create($datosEnvio){
         unset($this->options);
@@ -3625,10 +3655,6 @@ class makeTx {
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
-
-        if ($this->resultado->code == 200) {
-            $this->saveTxOrderRelationship();
-        }
 
         return $this->resultado->code == 200;
     }
