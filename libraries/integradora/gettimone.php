@@ -540,6 +540,8 @@ class getFromTimOne{
             $orden->iva_intereses     = (FLOAT)$value->iva_intereses;
             $orden->status            = (INT)$value->status;
 
+            $orden->statusName = getFromTimOne::getOrderStatusName($orden->status);
+
             $odps[] = $orden;
         }
 
