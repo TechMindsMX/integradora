@@ -196,7 +196,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			data +='&integradoId='+idIntegradoAlta;
 			
 		var parametros = {
-			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBanco&format=raw',
+			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoCliente&format=raw',
 			'datos' : data
 
 		};

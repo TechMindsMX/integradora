@@ -69,13 +69,7 @@ class Integrado {
 
 		$data = JFactory::getApplication()->input->getArray( $post );
 
-		// busca los datos bancario por la CLABE
-		$table = 'integrado_datos_bancarios';
-		if ( empty( $data['db_banco_clabe'] ) ) {
-			$data['db_banco_clabe'] = '0000000';
-		}
-		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $data['db_banco_clabe'];
-		$existe = getFromTimOne::selectDB( $table, $where );
+		$existe = getFromTimOne::searchBancoByClabe($data['banco_clabe']);
 
 		$logdata = implode( ' | ', array (
 			JFactory::getUser()->id,
@@ -99,11 +93,14 @@ class Integrado {
 				'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
 				'db_banco_cuenta'   => array ( 'required' => true ),
 				'db_banco_sucursal' => array ( 'required' => true ),
-				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18 )
+				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18, 'required' => true )
 			);
 			$validacion  = $validator->procesamiento( $data, $diccionario );
 
 			if ( $validator->allPassed() ) {
+				$table = 'integrado_datos_bancarios';
+				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $existe['banco_clabe'];
+
 				if ( empty( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
 					$newId = $db->insertid();

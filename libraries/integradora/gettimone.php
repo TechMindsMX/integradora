@@ -691,7 +691,21 @@ class getFromTimOne{
         return $acceptedCurrenciesList;
     }
 
-    public function createNewProject($envio, $integradoId){
+	public static function searchBancoByClabe( $banco_clabe ) {
+		$db = JFactory::getDbo();
+
+		// busca los datos bancario por la CLABE
+		$table = 'integrado_datos_bancarios';
+		if ( empty( $banco_clabe ) ) {
+			$banco_clabe = '0000000';
+		}
+		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
+		$existe = getFromTimOne::selectDB( $table, $where );
+
+		return $existe[0];
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();

@@ -706,11 +706,11 @@ $token = JSession::getFormToken();
                 <input name="de_tel_fijo_extension" id="de_tel_fijo_extension" type="text" maxlength="5" />
             </div>
             <div class="form-group">
-                <label for="de_tel_fax"><?php echo JText::_('LBL_TEL_FAX'); ?> *</label>
+                <label for="de_tel_fax"><?php echo JText::_('LBL_TEL_FAX'); ?></label>
                 <input name="de_tel_fax" id ="de_tel_fax" type="text" maxlength="10" placeholder="5512345678" />
             </div>
             <div class="form-group">
-                <label for="de_sitio_web"><?php echo JText::_('LBL_SITIO_WEB'); ?> *</label>
+                <label for="de_sitio_web"><?php echo JText::_('LBL_SITIO_WEB'); ?></label>
                 <input name="de_sitio_web" id="de_sitio_web"  maxlength="100" />
             </div>
         </fieldset>
@@ -745,11 +745,11 @@ $token = JSession::getFormToken();
                 </div>
 
                 <div class="form-group">
-                    <label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
+                    <label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?> *</label>
                     <input name="t1_instrum_nom_notario" id="t1_instrum_nom_notario" type="text" />
                 </div>
                 <div class="form-group">
-                    <label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+                    <label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?> *</label>
                     <input name="t1_instrum_num_instrumento" id="t1_instrum_num_instrumento" type="text" maxlength="10"/>
                 </div>
 
