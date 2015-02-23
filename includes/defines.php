@@ -23,14 +23,3 @@ define('JPATH_THEMES',        JPATH_BASE . '/templates');
 define('JPATH_CACHE',         JPATH_BASE . '/cache');
 define('JPATH_MANIFESTS',     JPATH_ADMINISTRATOR . '/manifests');
 
-$middle = "demo.trama.mx";
-$puertoTimOne =  "";
-$controllerTimOne =  "/timone/services/";
-$hostname = $middle.$puertoTimOne.$controllerTimOne;
-
-define("MIDDLE", 'http://'.$middle);
-define("PUERTO", $puertoTimOne);
-define("TIMONE", $controllerTimOne);
-//define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
-define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
-define("MEDIA_FILES", "media/archivosJoomla/");

@@ -8,7 +8,7 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $attsCal2        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $attsCal3        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');

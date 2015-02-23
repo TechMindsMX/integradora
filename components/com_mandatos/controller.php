@@ -100,52 +100,74 @@ class MandatosController extends JControllerLegacy {
         $this->app->redirect(JRoute::_('index.php?option=com_mandatos&view=clientes'), 'Por el momento no es posible crear ni editar');
     }
 
-    function agregarBanco(){
-        list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
+    function agregarBancoCliente(){
 
-        if($respuesta['success'] == true) {
+	    $validator   = new validador();
+	    $diccionario = array (
+		    'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
+		    'db_banco_cuenta'   => array ( 'required' => true ),
+		    'db_banco_sucursal' => array ( 'required' => true ),
+		    'db_banco_clabe'    => array ( 'banco_clabe' => $this->post['db_banco_codigo'], 'length' => 18, 'required' => true )
+	    );
+	    $validacion  = $validator->procesamiento( $this->post, $diccionario );
 
-            $idClipro = isset($newId) ? $newId : $existe[0]->datosBan_id;
-            $respuesta['datosBan_id'] = $idClipro;
+	    if ( $validator->allPassed() ) {
 
-            $table 		= 'integrado_datos_bancarios';
-            $where      = $db->quoteName('banco_clabe').' = '.$data['db_banco_clabe'];
-            $existe     = getFromTimOne::selectDB($table,$where);
-            $existe     = $existe[0];
+		    $existe = getFromTimOne::searchBancoByClabe($this->post['db_banco_clabe']);
 
-            // se busca la relacion del cliente y el integrado
-            $tableRelacion 		= 'integrado_clientes_proveedor';
-            $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
-            $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
-            if ( ! empty( $relacion[0] ) ) {
-                $relacion           = $relacion[0];
-            }
+		    // guarda la cuenta si no existe
+		    if (is_null($existe)) {
+			    list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
+		    } else {
+			    $respuesta['success'] = true;
+			    $respuesta = array_merge( $respuesta, (array)$existe );
+		    }
 
-            // Si no existe la relacion la creamos
-            $bancos = isset($relacion->bancos) ? json_decode($relacion->bancos, true) : array();
+		    if($respuesta['success'] == true) {
 
-            if( !in_array( $existe->datosBan_id, $bancos) && $this->integradoId != $data['integradoId'] ) {
-                array_push($bancos, $existe->datosBan_id);
+			    $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
+			    $respuesta['datosBan_id'] = $idClipro;
 
-                $datos   = array('bancos' => json_encode($bancos));
+			    // se busca la relacion del cliente y el integrado
+			    $tableRelacion 		= 'integrado_clientes_proveedor';
+			    $db = JFactory::getDbo();
+			    $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+			    $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
 
-                $save->formatData($datos);
-                $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$data['integradoId'];
-                $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
+			    if ( ! empty( $relacion[0] ) ) {
+				    $relacion           = $relacion[0];
+			    }
 
-                $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
-                $respuesta['success'] = $update;
-                $respuesta['banco_codigo'] = $data['db_banco_codigo'];
-                $respuesta['banco_cuenta'] = $data['db_banco_cuenta'];
-                $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
-                $respuesta['banco_clabe'] = $data['db_banco_clabe'];
-                $respuesta['datosBan_id'] = $idClipro;
+			    // Si no existe la relacion la creamos
+			    $bancos = isset($relacion->bancos) ? json_decode($relacion->bancos, true) : array();
 
-            }
-        }
+			    if( !in_array( $existe->datosBan_id, $bancos) && $this->integradoId != $this->post['integradoId'] ) {
+				    array_push($bancos, $existe->datosBan_id);
 
-        $this->document->setMimeEncoding('application/json');
-        echo json_encode($respuesta);
+				    $datos   = array('bancos' => json_encode($bancos));
+
+				    $save = new sendToTimOne();
+				    $save->formatData($datos);
+				    $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+				    $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
+
+				    $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
+				    $respuesta['success'] = $update;
+				    $respuesta['banco_codigo'] = $this->post['db_banco_codigo'];
+				    $respuesta['banco_cuenta'] = $this->post['db_banco_cuenta'];
+				    $respuesta['banco_sucursal'] = $this->post['db_banco_sucursal'];
+				    $respuesta['banco_clabe'] = $this->post['db_banco_clabe'];
+				    $respuesta['datosBan_id'] = $idClipro;
+
+			    }
+		    }
+	    } else {
+		    $respuesta['success'] = false;
+		    $respuesta['msg'] = $validacion;
+	    }
+
+	    $this->document->setMimeEncoding('application/json');
+	    echo json_encode($respuesta);
     }
 
     function deleteBanco(){
@@ -286,7 +308,7 @@ class MandatosController extends JControllerLegacy {
         if($validations->allPassed()) {
 
             // verificación que no sea el mismo integrado
-            $currentIntegrado = new IntegradoSimple($this->integradoId);
+//            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
             if($idCliPro == 0){
                 $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
@@ -373,6 +395,10 @@ class MandatosController extends JControllerLegacy {
                 $save->updateDB($table,$datosQuery['setUpdate'],$where);
             }
 
+            if($data['pj_pers_juridica'] == 2){
+                $tab = 'banco';
+            }
+
             $response['idCliPro'] = $idCliPro;
             $response['success'] = true;
             $response['nextTab'] = $tab;
@@ -385,7 +411,6 @@ class MandatosController extends JControllerLegacy {
 
         echo json_encode($response);
     }
-
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
@@ -455,10 +480,7 @@ class MandatosController extends JControllerLegacy {
     }
 
     function searchProducts(){
-        $document = JFactory::getDocument();
-        $document->setMimeEncoding('application/json');
-        $catalogos = new Catalogos();
-        $catalogoIva = $catalogos->getCatalogoIVA();
+        $this->document->setMimeEncoding('application/json');
 
         $respuesta = array();
         $db     = JFactory::getDbo();
@@ -478,7 +500,6 @@ class MandatosController extends JControllerLegacy {
         }
 
         echo json_encode($respuesta);
-
     }
 
     public function envioTimOne($envio)
@@ -545,16 +566,34 @@ class MandatosController extends JControllerLegacy {
         $this->document->setMimeEncoding('application/json');
         $input  = $this->input;
         $post   = array(
-            'tiempoplazo' => 'FLOAT',
-            'tipoPlazo'   => 'FLOAT',
-            'capital'     => 'FLOAT',
-            'interes'     => 'FLOAT'
+            'quantityPayments' => 'FLOAT',
+            'paymentPeriod'    => 'FLOAT',
+            'totalAmount'      => 'FLOAT',
+            'interes'          => 'FLOAT'
         );
+
         $data   = (object) $input->getArray($post);
 
-        $tabla = getFromTimOne::getTablaAmotizacion($data);
-        echo json_encode($tabla);
+        $validacion = new validador();
 
+        $diccionario = array(
+            'quantityPayments' => array('float' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
+            'paymentPeriod'    => array('int'   => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
+            'totalAmount'      => array('float' => true, 'maxlength' => '100', 'required' => true),
+            'interes'          => array('float' => true, 'maxlength' => '100', 'required' => true));
+
+        $respuesta = $validacion->procesamiento($data,$diccionario);
+
+        foreach($respuesta as $key => $campo){
+            if(is_array($campo)){
+                echo json_encode($respuesta);
+                return false;
+            }
+        }
+
+        $tabla  = getFromTimOne::getTablaAmotizacion($data);
+
+        echo json_encode($tabla);
     }
 
     public function getFacturasCom(){
@@ -595,6 +634,12 @@ class MandatosController extends JControllerLegacy {
 
     public function validatePost($data) {
         switch ($data['tab']) {
+            case 'tipoAlta':
+                $diccionario = array(
+                    'tp_monto'           => array('float' => true,  'maxlength' => 15),
+                    'tp_tipo_alta'       => array('number' => true, 'requered' => true, 'maxlength' => 1)
+                );
+                break;
             case 'juridica':
                 $diccionario = array(
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
@@ -658,7 +703,7 @@ class MandatosController extends JControllerLegacy {
                 );
                 break;
 
-          case 'banco':
+            case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
                     'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 10,  'minlength'=>10,   'required' => true),
@@ -680,105 +725,5 @@ class MandatosController extends JControllerLegacy {
 
         return $validador;
     }
-
-//    public function agregarBancoSolicitud() {
-//        list( $respuesta, $existe, $newId, $db, $data, $save ) = $this->saveBankIfNew();
-//        $this->document->setMimeEncoding('application/json');
-//        echo json_encode($respuesta);
-//
-//    }
-
-    /**
-     * @return array
-     * @internal param $respuesta
-     * @internal param $columnas
-     * @internal param $valores
-     *
-     */
-//    public function saveBankIfNew() {
-//        $respuesta['success'] = false;
-//
-//        $db         = JFactory::getDbo();
-//        $save       = new sendToTimOne();
-//        $datosQuery = array( 'setUpdate' => array() );
-//        $post       = array(
-//            'integradoId'       => 'INT',
-//            'datosBan_id'       => 'INT',
-//            'db_banco_codigo'   => 'STRING',
-//            'db_banco_cuenta'   => 'STRING',
-//            'db_banco_sucursal' => 'STRING',
-//            'db_banco_clabe'    => 'STRING',
-//        );
-//
-//        $data = $this->input_data->getArray( $post );
-//
-//        // busca los datos bancario por la CLABE
-//        $table  = 'integrado_datos_bancarios';
-//        if ( empty( $data['db_banco_clabe'] ) ) {
-//            $data['db_banco_clabe'] = '0000000';
-//        }
-//        $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $data['db_banco_clabe'];
-//        $existe = getFromTimOne::selectDB( $table, $where );
-//
-//        $logdata = implode( ', ', array(
-//            JFactory::getUser()->id,
-//            $this->integradoId,
-//            __METHOD__ . ':' . __LINE__,
-//            json_encode( $existe )
-//        ) );
-//        JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
-//
-//        if ( empty( $existe ) ) {
-//            $columnas[] = 'integrado_id';
-//            $valores[]  = $this->integradoId;
-//
-//            $datosQuery['columnas'] = $columnas;
-//            $datosQuery['valores']  = $valores;
-//
-//            $datosQuery = self::limpiarPost( $data, 'db_', $datosQuery );
-//
-//            $validator   = new validador();
-//            $diccionario = array(
-//                'db_banco_codigo' => array( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
-//                'db_banco_cuenta'=> array( 'required' => true),
-//                'db_banco_sucursal'=> array( 'required' => true),
-//                'db_banco_clabe' => array( 'banco_clabe' => $data['db_banco_codigo'], 'length'   => 18 )
-//            );
-//            $validacion  = $validator->procesamiento( $data, $diccionario );
-//
-//            if ( $validator->allPassed() ) {
-//                if ( empty( $existe ) ) {
-//                    $save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
-//                    $newId = $db->insertid();
-//                } else {
-//                    $save->updateDB( $table, $datosQuery['setUpdate'], $where );
-//                }
-//
-//                $respuesta['success']        = true;
-//                $respuesta['banco_codigo']   = $data['db_banco_codigo'];
-//                $respuesta['banco_cuenta']   = $data['db_banco_cuenta'];
-//                $respuesta['banco_sucursal'] = $data['db_banco_sucursal'];
-//                $respuesta['banco_clabe']    = $data['db_banco_clabe'];
-//
-//                return array($respuesta, $existe, $newId, $db, $data, $save);
-//            } else {
-//                $logdata = implode( ', ', array(
-//                    JFactory::getUser()->id,
-//                    $this->integradoId,
-//                    __METHOD__ . ':' . __LINE__,
-//                    json_encode( array( $validacion, $data['db_banco_clabe'], $data['db_banco_codigo'] ) )
-//                ) );
-//                JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
-//
-//                $respuesta['success'] = false;
-//                $respuesta['msg'] = $validacion;
-//
-//                return array($respuesta, $existe, null, $db, $data, $save);
-//            }
-//        }
-//
-//        return array($respuesta, $existe, null, $db, $data, $save);
-//    }
-
 
 }

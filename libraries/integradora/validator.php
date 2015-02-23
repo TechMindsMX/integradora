@@ -11,10 +11,12 @@ class validador{
     protected $diccionario_value;
     protected $respuesta;
     private $errorMsg = array();
+    protected $catalogos;
 
     public function  procesamiento ($data,$diccionario) {
-        $this->respuesta = array();
-        $this->dataPost = (array)$data;
+        $this->catalogos   = new Catalogos();
+        $this->respuesta   = array();
+        $this->dataPost    = (array)$data;
         $this->diccionario = $diccionario;
 
         foreach ($this->diccionario as $key => $value) {
@@ -132,7 +134,7 @@ class validador{
         return $respuesta;
     }
 
-    public function rfc_fisica () {
+	public function rfc_fisica () {
         $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
         $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
@@ -146,7 +148,7 @@ class validador{
         return $respuesta;
     }
 
-    public function rfc_moral () {
+	public function rfc_moral () {
         $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
         $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
@@ -160,7 +162,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function length () {
+	protected function length () {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_LENGTH', $this->diccionario_value);
 
         if (strlen ($this->dataPost[$this->currentKey]) == $this->diccionario_value) {
@@ -171,7 +173,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function maxlength () {
+	protected function maxlength () {
         if (strlen ($this->dataPost[$this->currentKey]) <= $this->diccionario_value) {
             $respuesta = true;
         } else {
@@ -180,7 +182,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function minlenght () {
+	protected function minlenght () {
         if (strlen ($this->dataPost[$this->currentKey]) >= $this->diccionario_value) {
             $respuesta = true;
         } else {
@@ -189,7 +191,7 @@ class validador{
         return $respuesta;
     }
 
-    public function banco_clabe () {
+	public function banco_clabe () {
         $respuesta = false;
 
         if ( ! empty( $this->dataPost[ $this->currentKey ]  ) && strlen($this->dataPost[ $this->currentKey ])==18 ) {
@@ -225,7 +227,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function number () {
+	protected function number () {
         $regex = '/^[0-9\ ]+$/';
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
@@ -236,7 +238,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function float () {
+	protected function float () {
         $regex  = '/^-?(?:\d+|\d*\.\d+)$/';
         if(preg_match($regex, $this->dataPost[$this->currentKey]) == 1){
             $respuesta = true;
@@ -247,7 +249,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function string () {
+	protected function string () {
         $regex = '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -259,7 +261,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function alphaNumber () {
+	protected function alphaNumber () {
         $regex = '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . \- \_]+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -271,7 +273,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function text(){
+	protected function text(){
         $regex = '/[A-Za-z0-9_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -283,7 +285,7 @@ class validador{
         return $respuesta;
     }
 
-    protected function referenciaBancaria () {
+	protected function referenciaBancaria () {
         $regex = '/^[0-9a-zA-Z\-]{21}+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -295,24 +297,29 @@ class validador{
         return $respuesta;
     }
 
-    protected function required( ){
+	protected function required( ){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
         return $this->notNull();
     }
 
-    protected function notNull (){
+	protected function notEmpty (){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
 
-        if( !is_null($this->dataPost[$this->currentKey]) && $this->dataPost[$this->currentKey] != '' ){
-            $respuesta = true;
-        } else {
-            $respuesta = false;
-        }
+		$input = $this->dataPost[$this->currentKey];
+		if(is_string($input)) {
+			$input = trim($input);
+		}
 
-        return $respuesta;
-    }
+		return ($input ==="0"|| $input);
+	}
 
-    protected function phone(){
+	public function notNull() {
+		$this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
+
+		return !is_null($this->dataPost[$this->currentKey]) && $this->notEmpty();
+	}
+
+	protected function phone(){
         $regex =   '/^[1-9]{1}?[0-9]{9}$/';
 
         if(preg_match($regex, $this->dataPost[$this->currentKey])){
@@ -324,16 +331,43 @@ class validador{
         return $respuesta;
     }
 
-    protected function min()
+	protected function min()
     {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MIN_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) >= $this->diccionario_value;
     }
 
-    protected function max()
+	protected function max()
     {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MAX_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) <= $this->diccionario_value;
     }
 
+    protected function plazoMaximo(){
+        $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_TIMEFRAME_BAD');
+        $tipos                = $this->catalogos->getTiposPeriodos();
+        $tipoPagoSeleccionado = $this->dataPost['paymentPeriod'];
+        $plazoMaximo          = (FLOAT) $tipos[$tipoPagoSeleccionado]->periodosAnio * 3;
+        $tiempoPlazo          = $this->dataPost['quantityPayments'];
+
+        if($tiempoPlazo <= $plazoMaximo){
+            $respuesta = true;
+        }else{
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
+
+    protected function tipoPlazo(){
+        $tipos = $this->catalogos->getTiposPeriodos();
+
+        if( isset($tipos[$this->dataPost['paymentPeriod']]) ){
+            $respuesta = true;
+        }else{
+            $respuesta = false;
+        }
+
+        return $respuesta;
+    }
 }

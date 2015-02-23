@@ -10,7 +10,7 @@ JHTML::_('behavior.calendar');
 
 $proyecto = $this->proyecto;
 ?>
-<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+<script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
 	function limpiar() {
 		jQuery('input[name*="confirm"]').val(1);

@@ -49,25 +49,29 @@ class IntegradoController extends JControllerLegacy {
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
         $tipo_rfc = $this->rfc_type($data['rfc']);
 
-        $existe = $this->search_rfc_exists( $data['rfc'] );
+	    if ($tipo_rfc['success'] == false) {
+		    $respuesta = array ( 'success' => 'invalid', 'bu_rfc' => $tipo_rfc );
+	    } else {
+		    $existe = $this->search_rfc_exists( $data['rfc'] );
 
-        if(!empty($existe)){
-            // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
-            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe );
+		    if ( ! empty( $existe ) ) {
+			    // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
+			    $relation = getFromTimOne::selectDB( 'integrado_clientes_proveedor',
+			                                         'integrado_id = ' . $this->integradoId . ' AND integradoIdCliente = ' . $existe );
 
-            $datos = new IntegradoSimple($existe);
-            $datos->integrados[0]->success = true;
+			    $datos                         = new IntegradoSimple( $existe );
+			    $datosCli                         = getFromTimOne::getClientProviderFromIntegradoId( $existe );
+			    $datos->integrados[0]->success = true;
 
-            $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
+			    $datos->integrados[0]->tipo_alta = isset( $relation[0]->tipo_alta ) ? $relation[0]->tipo_alta : '';
+			    $datos->integrados[0]->monto     = isset( $datosCli->monto ) ? $datosCli->monto : '';
 
-            echo json_encode($datos->integrados[0]);
-        }else{
-            $respuesta['success'] = false;
-            $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
-            $respuesta['pj_pers_juridica'] = $tipo_rfc;
-
-            echo json_encode( array('bu_rfc' => $respuesta) );
-        }
+			    $respuesta =  $datos->integrados[0];
+		    } else {
+			    $respuesta = array ('success' => false, 'bu_rfc' => $tipo_rfc['msg'] );
+		    }
+	    }
+	    echo json_encode($respuesta);
     }
 
     public function rfc_type($rfc) {
@@ -78,12 +82,12 @@ class IntegradoController extends JControllerLegacy {
         $is_validFisica    = $validator->procesamiento( array('rfc' => $rfc), $diccionarioFisica );
         $is_validMoral     = $validator->procesamiento( array('rfc' => $rfc), $diccionarioMoral );
 
-        $respuesta = '';
+	    $respuesta['success'] = true;
 
         if ( ! is_array($is_validMoral['rfc']) ) {
-            $respuesta = 1;
+            $respuesta['msg'] = 1;
         } elseif ( ! is_array($is_validFisica['rfc']) ) {
-            $respuesta = 2;
+            $respuesta['msg'] = 2;
         } else {
             $respuesta['success'] = false;
             $respuesta['msg']     = JText::_( 'MSG_RFC_INVALID' );
@@ -179,8 +183,7 @@ class IntegradoController extends JControllerLegacy {
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
 
     function uploadFiles(){
-
-        sendToTimOne::uploadFiles();
+        $algo = sendToTimOne::uploadFiles();
 
         if($this->integradoId ==''){
             $url = 'index.php?option=com_integrado&view=solicitud';
@@ -199,19 +202,21 @@ class IntegradoController extends JControllerLegacy {
         if($data['busqueda_rfc']) {
             $respuesta = $this->rfc_type($data['busqueda_rfc']);
             $ex = $this->search_rfc_exists( $data['busqueda_rfc'] );
+
+	        if ( isset( $respuesta ) ) {
+		        if ( is_array($respuesta) || isset($ex) ) {
+			        if (isset($ex)) {
+				        $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+				        echo json_encode($respuesta);
+				        return true;
+			        } elseif (is_array($respuesta)) {
+				        $respuesta['safeComplete'] = true;
+			        }
+		        }
+	        }
         }
 
-        if ( isset( $respuesta ) ) {
-            if ( is_array($respuesta) || isset($ex) ) {
-                if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
-                }
-                echo json_encode($respuesta);
-                return true;
-            }
-        }
-
-        if (JSession::checkToken() === false) {
+	    if (JSession::checkToken() === false) {
             $response = array('success' => false, 'msg'=>'Token Invalido' );
             echo json_encode($response);
             return true;
@@ -253,6 +258,10 @@ class IntegradoController extends JControllerLegacy {
                     'de_num_exterior'             => 'STRING',
                     'de_num_interior'             => 'STRING',
                     'de_cod_postal'               => 'STRING',
+                    'de_tel_fijo'                 => 'STRING',
+                    'de_tel_fijo_extension'       => 'STRING',
+                    'de_tel_fax'                  => 'STRING',
+                    'de_sitio_web'                => 'STRING',
                     't1_instrum_notaria'          => 'STRING',
                     't1_instrum_estado'           => 'STRING',
                     't1_instrum_nom_notario'      => 'STRING',
@@ -315,7 +324,9 @@ class IntegradoController extends JControllerLegacy {
 
         $url = SEPOMEX_SERVICE.$cp['cp'];
 
-        echo file_get_contents($url);
+        $context = stream_context_create(array('http' => array('header'=>'Connection: close')));
+
+        echo file_get_contents($url,false,$context);
     }
 
     public static function manejoDatos($data){
@@ -356,12 +367,16 @@ class IntegradoController extends JControllerLegacy {
                     'de_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
-                    't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      'required' => true),
+                    'de_tel_fijo'                => array('alphaNumber' => true,        'maxlength' => 10,      'required' => true),
+                    'de_tel_fijo_extension'      => array('alphaNumber' => true,        'maxlength' => 10,      ),
+                    'de_tel_fax'                 => array('alphaNumber' => true,        'maxlength' => 10,      ),
+                    'de_sitio_web'               => array(/*'string'      => true*/     'maxlength' => 150,     ),
+                    't1_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      'required' => true),
                     't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
-                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,),
+                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       ),
                     't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
                     't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
@@ -749,6 +764,7 @@ class IntegradoController extends JControllerLegacy {
 
                 $sesion = JFactory::getSession();
                 $sesion->set('integradoId', $this->id, 'integrado');
+                $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
 
                 $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
             }

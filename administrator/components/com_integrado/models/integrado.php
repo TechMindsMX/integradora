@@ -99,8 +99,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 		return Integrado::getNationalityNameFromId($id);
 	}
 
-	function getCampos()
-	{
+	function getCampos(){
 		$campos = new stdClass();
 
 		$campos->LBL_SLIDE_BASIC = array(

@@ -7,7 +7,7 @@ JHTML::_('behavior.calendar');
 $factura   = $this->factura;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 ?>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 <script>

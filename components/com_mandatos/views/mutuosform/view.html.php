@@ -19,6 +19,7 @@ class MandatosViewMutuosform extends JViewLegacy {
         $this->idMutuo      = $this->data->id;
         $this->tipoPago     = $this->get('TiposPago');
         $this->catalogos    = $this->get('catalogos');
+        $this->montoSaldo   = $this->get('MontoSaldo');
 
         if( ($this->idMutuo != 0) and ($this->data->layout != 'confirm') ){
             $this->data = $model->getMutuo($this->idMutuo);

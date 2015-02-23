@@ -12,7 +12,7 @@ $nuevoSaldo = $sesion->set('nuevoSaldo',0, 'solicitudliquidacion');
 $sesion->clear('nuevoSaldo','solicitudliquidacion');
 $sesion->clear('idTx','solicitudliquidacion');
 
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 
 $operaciones = $this->operaciones;
 $saldo = $this->saldo;
@@ -80,7 +80,7 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
     }
 
     function cancel() {
-        window.location = 'index.php?option_com_mandatos&view=solicitudliquidacion';
+        window.location = 'index.php?option=com_mandatos';
     }
     jQuery(document).ready(function(){
         jQuery('#monto').on('change', validaMonto);

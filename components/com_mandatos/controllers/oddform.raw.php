@@ -107,7 +107,7 @@ class MandatosControllerOddform extends JControllerLegacy {
     }
 
     private function logEvent( $info, $dato ) {
-        $logdata = $logdata = implode( ', ', array (
+        $logdata = implode( ' | ', array (
             JFactory::getUser()->id,
             $this->integradoId,
             __METHOD__,

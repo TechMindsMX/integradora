@@ -13,7 +13,7 @@ $proyecto 	= $this->proyecto;
 $selected 	= '';
 ?>
 
-<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+<script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
 	function limpiar() {
 		jQuery('input[name*="id_proyecto"]').val('<?php echo $proyecto->id_proyecto; ?>');

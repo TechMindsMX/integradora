@@ -15,13 +15,23 @@ class MandatosViewfacturalist extends JViewLegacy {
 		$model = $this->getModel();
 		$this->data  = $model->getFacturas( $this->integradoId );
 
+		$this->clients = $this->clientList();
+
 		if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
                 return false;
         }
 
-
-
 		parent::display($tpl);
+	}
+
+	private function clientList() {
+		foreach ( $this->data as $factura ) {
+			if ( isset( $factura->clientName ) ) {
+				$clients[$factura->clientId] = $factura->clientName;
+			}
+		}
+
+		return array_unique($clients);
 	}
 }

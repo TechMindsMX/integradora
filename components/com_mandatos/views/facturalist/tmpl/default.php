@@ -62,7 +62,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <select name="beneficiarios" id="benef">
             <option value="0" selected="selected"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
             <?php
-            foreach ($facturas as $value) {
+            foreach ($this->clientes as $value) {
                 ?>
                 <option value="<?php echo $value->clientId;?>"><?php echo $value->clientName; ?></option>
             <?php
