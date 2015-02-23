@@ -422,7 +422,8 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
     <div class="form-actions" style="max-width: 30%">
         <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
         <button type="button" class="btn btn-primary span3" id="ordenVenta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button>
+        <!--button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button-->
+        <a href="index.php?option=com_mandatos" class="btn btn-danger"><?php echo JText::_('LBL_CANCELAR'); ?></a>
     </div>
 
 </form>
