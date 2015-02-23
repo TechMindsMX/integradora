@@ -37,6 +37,8 @@ class MandatosModelOdcpreview extends JModelItem {
             JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODC_INVALID'), 'error');
         }
 
+	    $this->odc->paymentMethod = getFromTimOne::getPaymentMethodName($this->odc->paymentMethod);
+
         $this->getDataFactura($this->odc);
 
         return $this->odc;

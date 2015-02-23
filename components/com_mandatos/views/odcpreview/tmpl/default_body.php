@@ -65,7 +65,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $orden->paymentMethod; ?>
+				<?php echo JText::_($orden->paymentMethod->name); ?>
 			</div>
 		</div>
 		<div>
@@ -78,65 +78,70 @@ $app->enqueueMessage($msg,'MESSAGE');
 		</div>
 	</div>
 	<div class="clearfix" id="cuerpo">
-		<div>
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
-			</div>
-			<div class="span10">
-				<?php echo $orden->proveedor->tradeName; ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_RFC'); ?>
-			</div>
-			<div class="span4">
-				<?php echo $orden->proveedor->rfc; ?>
-			</div>
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_BANCOS'); ?>
-			</div>
-			<div class="span4">
-				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->bankName; } ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
-				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
-			</div>
-			<div class="span4">
-				<?php echo $orden->proveedor->contact; ?>
-			</div>
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
-			</div>
-			<div class="span4">
-				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_cuenta; } ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
-				<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
-			</div>
-			<div class="span4">
-				<?php echo $orden->proveedor->phone; ?>
-			</div>
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
-			</div>
-			<div class="span4">
-				<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_clabe; } ?>
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="span2 text-right">
-				<?php echo JText::_('LBL_CORREO'); ?>
-			</div>
-			<div class="span4">
+		<div class="proveedor form-group">
 
+			<div>
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
+				</div>
+				<div class="span10">
+					<?php echo $orden->proveedor->tradeName; ?>
+				</div>
+			</div>
+			<div>
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_RFC'); ?>
+				</div>
+				<div class="span4">
+					<?php echo ($orden->proveedor->type = getFromTimOne::getPersJuridica('moral')) ? $orden->proveedor->rfc : $orden->proveedor->pRFC; ?>
+				</div>
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_BANCOS'); ?>
+				</div>
+				<div class="span4">
+					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->bankName; } ?>
+				</div>
+			</div>
+			<div>
+				<div class="span2 text-right">
+					<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
+				</div>
+				<div class="span4">
+					<?php echo $orden->proveedor->contact; ?>
+				</div>
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
+				</div>
+				<div class="span4">
+					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_cuenta; } ?>
+				</div>
+			</div>
+			<div>
+				<div class="span2 text-right">
+					<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
+				</div>
+				<div class="span4">
+					<?php echo $orden->proveedor->phone; ?>
+				</div>
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
+				</div>
+				<div class="span4">
+					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_clabe; } ?>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="span2 text-right">
+					<?php echo JText::_('LBL_CORREO'); ?>
+				</div>
+				<div class="span4">
+
+				</div>
 			</div>
 		</div>
+
 		<h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
+
 		<table class="table table-bordered">
 			<thead>
 				<tr>

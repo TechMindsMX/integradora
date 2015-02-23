@@ -29,6 +29,9 @@ class MandatosViewOdcform extends JViewLegacy {
         $this->proveedores	= $this->get('providers');
         $this->bancos       = $this->get('CatalogoBancos');
 
+	    $this->catalogos = new stdClass();
+	    $this->catalogos->paymentMethods    = $this->get('Catalogos');
+
         //si la confirmacion es diferente de nulo se hace el parseo del XML
         if(!is_null($data['confirmacion'])){
             $this->datos = $data;

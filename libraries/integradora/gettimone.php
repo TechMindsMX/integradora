@@ -705,6 +705,12 @@ class getFromTimOne{
 		return $existe[0];
 	}
 
+	public static function getPersJuridica( $string ) {
+		$persJuridicas = array('moral' => 1,'fisica' => 2);
+
+		return $persJuridicas[$string];
+	}
+
 	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
@@ -1203,11 +1209,18 @@ class getFromTimOne{
     }
 
     public static function getPaymentMethodName($paymentMethodId){
-        $payMethod = new stdClass();
-        $names = array('<span style="color: red">No Seleccionado</span>','Cheque','Tranferencia','Efectivo','No Definido');
+	    $cat = new Catalogos();
+	    $names = $cat->getPaymentMethods();
 
-        $payMethod->id = $paymentMethodId;
-        $payMethod->name = $names[$paymentMethodId];
+	    try {
+		    $payMethod = new stdClass();
+
+		    $payMethod->id   = $paymentMethodId;
+		    $payMethod->name = $names[ $paymentMethodId ];
+	    } catch ( Exception $e) {
+		    $payMethod = null;
+		    JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');
+	    }
 
         return $payMethod;
     }
