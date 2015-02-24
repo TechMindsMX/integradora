@@ -125,7 +125,7 @@ if(!$this->confirmacion){
 	        $cat = new Catalogos();
 	        foreach ( $cat->getPaymentMethods() as $key => $val ) {
 		        if ( isset( $this->odr->paymentMethod ) ) {
-			        $selected = ($this->odr->paymentMethod == $key) ? ' selected ' : '';
+			        $selected = ($this->odr->paymentMethod->id == $key) ? ' selected ' : '';
 		        }
 		        echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val).'</option>';
 	        }
