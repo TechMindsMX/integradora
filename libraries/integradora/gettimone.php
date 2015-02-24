@@ -706,9 +706,10 @@ class getFromTimOne{
 	}
 
 	public static function getPersJuridica( $string ) {
-		$persJuridicas = array('moral' => 1,'fisica' => 2);
+		$cat = new Catalogos();
+		$persJuridicas = array_flip( $cat->getPesonalidadesJuridicas() );
 
-		return $persJuridicas[$string];
+		return $persJuridicas[ucfirst($string)];
 	}
 
 	public function createNewProject($envio, $integradoId){
