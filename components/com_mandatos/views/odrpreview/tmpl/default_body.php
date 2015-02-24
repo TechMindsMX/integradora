@@ -70,7 +70,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odr->paymentMethod; ?>
+				<?php echo JText::_($this->odr->paymentMethod->name); ?>
 			</div>
 		</div>
 		<div>

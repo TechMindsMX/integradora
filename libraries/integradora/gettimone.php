@@ -1060,6 +1060,7 @@ class getFromTimOne{
             $value->orderType       = 'odr';
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = self::getOrderStatusName($value->status);
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
@@ -1085,6 +1086,7 @@ class getFromTimOne{
             $value->integradoId     = (INT)$value->integradoId;
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = (INT)$value->status;
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;

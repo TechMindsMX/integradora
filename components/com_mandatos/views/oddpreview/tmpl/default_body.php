@@ -68,7 +68,7 @@ $number2string  = new AifLibNumber();
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odd->paymentMethod->name; ?>
+				<?php echo JText::_($this->odd->paymentMethod->name); ?>
 			</div>
 		</div>
 		<div>

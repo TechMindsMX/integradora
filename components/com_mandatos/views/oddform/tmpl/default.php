@@ -77,8 +77,15 @@ if(!$this->confirmacion){
         <div class="form-group">
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
-                <option value="0" <?php echo $datos->paymentMethod->id == 2 ? 'selected' : ''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
-                <option value="1" <?php echo $datos->paymentMethod->id == 1 ? 'selected' : ''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
+	            <?php
+	            $cat = new Catalogos();
+	            foreach ( $cat->getPaymentMethods() as $key => $val ) {
+		            if ( isset( $datos->paymentMethod ) ) {
+			            $selected = ($datos->paymentMethod->id == $key) ? ' selected ' : '';
+		            }
+		            echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val).'</option>';
+	            }
+	            ?>
             </select>
         </div>
 
