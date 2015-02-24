@@ -14,7 +14,7 @@ $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
 ?>
-
+<script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
     var catalogoBancos = new Array();
     var integradoId	= <?php echo $this->integradoId; ?>;
@@ -52,7 +52,7 @@ $optionBancos = '';
         var integradoId =  jQuery('#integradoIdE').val();
 
         var envio = {
-            'link'	:'index.php?option=com_mandatos&view=mutuosform&task=searchrfc&format=raw',
+            'link'	:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
             'datos'	:{'rfc': rfcBusqueda, 'integradoId':integradoId}
         };
 
@@ -87,78 +87,86 @@ $optionBancos = '';
         var parametros = {
             'link'  : 'index.php?option=com_mandatos&view=mutuosform&task=tabla&format=raw',
             'datos' : {
-                'tiempoplazo' : vencimiento,
-                'tipoPlazo'   : tipoPlazo,
-                'capital'     : capital,
+                'quantityPayments' : vencimiento,
+                'paymentPeriod'   : tipoPlazo,
+                'totalAmount'     : capital,
                 'interes'     : interes
             }
         };
         var request = ajax(parametros);
 
         request.done(function(response){
-            var button            = jQuery('#amortizacion');
-            var tableCapitalFijo  = '';
-            var tableCuotaFija    = '';
-            var totalInteresCAF   = 0;
-            var totalIVACAF       = 0;
-            var totalInteresCUF   = 0;
-            var totalIVACUF       = 0;
 
-            jQuery.each(response.amortizacion_capital_fijo,function(k,v){
-                tableCapitalFijo += '<tr class="row">';
-                tableCapitalFijo += '<td>'+v.periodo+'</td>';
-                tableCapitalFijo += '<td>$'+v.inicial.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.cuota.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.intiva.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.intereses.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.iva.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.acapital.toFixed(2)+'</td>';
-                tableCapitalFijo += '<td>$'+v.final.toFixed(2)+'</td>';
-                tableCapitalFijo += '</tr>';
+            if(typeof response.tiempoplazo != 'undefined') {
+                var button = jQuery('#amortizacion');
+                var tableCapitalFijo = '';
+                var tableCuotaFija = '';
+                var totalInteresCAF = 0;
+                var totalIVACAF = 0;
+                var totalInteresCUF = 0;
+                var totalIVACUF = 0;
 
-                totalInteresCAF = totalInteresCAF + v.intereses;
-                totalIVACAF     = totalIVACAF + v.iva;
-            });
+                jQuery.each(response.amortizacion_capital_fijo, function (k, v) {
+                    tableCapitalFijo += '<tr class="row">';
+                    tableCapitalFijo += '<td>' + v.periodo + '</td>';
+                    tableCapitalFijo += '<td>$' + v.inicial.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.cuota.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.intiva.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.intereses.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.iva.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.acapital.toFixed(2) + '</td>';
+                    tableCapitalFijo += '<td>$' + v.final.toFixed(2) + '</td>';
+                    tableCapitalFijo += '</tr>';
 
-            jQuery.each(response.amortizacion_cuota_fija,function(key,value){
-                tableCuotaFija += '<tr class="row">';
-                tableCuotaFija += '<td>'+value.periodo+'</td>';
-                tableCuotaFija += '<td>$'+value.inicial.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.cuota.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.intiva.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.intereses.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.iva.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.acapital.toFixed(2)+'</td>';
-                tableCuotaFija += '<td>$'+value.final.toFixed(2)+'</td>';
-                tableCuotaFija += '</tr>';
+                    totalInteresCAF = totalInteresCAF + v.intereses;
+                    totalIVACAF = totalIVACAF + v.iva;
+                });
 
-                totalInteresCUF = totalInteresCUF + value.intereses;
-                totalIVACUF     = totalIVACUF + value.iva;
-            });
+                jQuery.each(response.amortizacion_cuota_fija, function (key, value) {
+                    tableCuotaFija += '<tr class="row">';
+                    tableCuotaFija += '<td>' + value.periodo + '</td>';
+                    tableCuotaFija += '<td>$' + value.inicial.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.cuota.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.intiva.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.intereses.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.iva.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.acapital.toFixed(2) + '</td>';
+                    tableCuotaFija += '<td>$' + value.final.toFixed(2) + '</td>';
+                    tableCuotaFija += '</tr>';
 
-            jQuery('#tablaCapitalCAF').html('$'+response.capital.toFixed(2));
-            jQuery('#totalInteresCAF').html('$'+totalInteresCAF.toFixed(2));
-            jQuery('#totalIVACAF').html('$'+totalIVACAF.toFixed(2));
+                    totalInteresCUF = totalInteresCUF + value.intereses;
+                    totalIVACUF = totalIVACUF + value.iva;
+                });
 
-            jQuery('#tablaCapitalCUF').html('$'+response.capital.toFixed(2));
-            jQuery('#totalInteresCUF').html('$'+totalInteresCUF.toFixed(2));
-            jQuery('#totalIVACUF').html('$'+totalIVACUF.toFixed(2));
+                jQuery('#tablaCapitalCAF').html('$' + response.capital.toFixed(2));
+                jQuery('#totalInteresCAF').html('$' + totalInteresCAF.toFixed(2));
+                jQuery('#totalIVACAF').html('$' + totalIVACAF.toFixed(2));
 
-            jQuery('.tablaAmortizacionCAF').html(tableCapitalFijo);
-            jQuery('.tablaAmortizacionCUF').html(tableCuotaFija);
+                jQuery('#tablaCapitalCUF').html('$' + response.capital.toFixed(2));
+                jQuery('#totalInteresCUF').html('$' + totalInteresCUF.toFixed(2));
+                jQuery('#totalIVACUF').html('$' + totalIVACUF.toFixed(2));
 
-            jQuery('#tables').show();
-            button.val('<?php echo jText::_('LBL_ENVIAR'); ?>');
-            button.prop('class', 'btn btn-primary');
-            button.prop('id', 'confirmarodc');
-            button.prop('type', 'submit');
+                jQuery('.tablaAmortizacionCAF').html(tableCapitalFijo);
+                jQuery('.tablaAmortizacionCUF').html(tableCuotaFija);
 
+                jQuery('#tables').show();
+                button.remove();
+
+                var buttonenviar = jQuery('#botones_envio');
+                buttonenviar.html('<input class="btn btn-primary" id="confirmarodc" type="submit" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />');
+            }else{
+                mensajesValidaciones(response);
+            }
         });
 
     }
 </script>
 
 <h1><?php echo JText::_('COM_MANDATOS_MUTUOS_FORM_TITULO'); ?></h1>
+<div>
+    <div class="span6"><h4>MONTO EN PRESTAMOS: $<?php echo number_format($this->montoSaldo->montoPrestamos,2); ?></h4></div>
+    <div class="span6"><h4>SALDO EN CUENTA: $<?php echo number_format($this->montoSaldo->saldoDisponible,2); ?></h4></div>
+</div>
 <div class="clearfix">&nbsp;</div>
 <form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
     <div>
@@ -231,8 +239,8 @@ $optionBancos = '';
         </div>
 
         <div class="form-group">
-            <!--input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" /-->
-            <input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" />
+            <span id="botones_envio"><input type="button" class="btn btn-default" id="amortizacion" value="<?php echo jText::_('LBL_AMORTIZACION'); ?>" /></span>
+
             <a href="index.php?option=com_mandatos&view=mutuoslist&integradoId" class="btn btn-danger" > <?php echo jText::_('LBL_CANCELAR'); ?></a>
         </div>
     </div>

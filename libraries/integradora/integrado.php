@@ -14,14 +14,7 @@ class Integrado {
 	public $integrados;
 	
 	function __construct($integ_id = null) {
-//		$this->user = JFactory::getUser();
-//		unset($this->user->password);
 		$this->integrados = $this->getIntegradosCurrUser();
-
-		foreach ($this->integrados as $key => $value) {
-			$id = $value->integrado_id;
-			$this->getSolicitud($id, $key);
-		}
 	}
 
     /**
@@ -76,15 +69,9 @@ class Integrado {
 
 		$data = JFactory::getApplication()->input->getArray( $post );
 
-		// busca los datos bancario por la CLABE
-		$table = 'integrado_datos_bancarios';
-		if ( empty( $data['db_banco_clabe'] ) ) {
-			$data['db_banco_clabe'] = '0000000';
-		}
-		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $data['db_banco_clabe'];
-		$existe = getFromTimOne::selectDB( $table, $where );
+		$existe = getFromTimOne::searchBancoByClabe($data['banco_clabe']);
 
-		$logdata = implode( ', ', array (
+		$logdata = implode( ' | ', array (
 			JFactory::getUser()->id,
 			$integradoId,
 			__METHOD__ . ':' . __LINE__,
@@ -106,11 +93,14 @@ class Integrado {
 				'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
 				'db_banco_cuenta'   => array ( 'required' => true ),
 				'db_banco_sucursal' => array ( 'required' => true ),
-				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18 )
+				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18, 'required' => true )
 			);
 			$validacion  = $validator->procesamiento( $data, $diccionario );
 
 			if ( $validator->allPassed() ) {
+				$table = 'integrado_datos_bancarios';
+				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $existe['banco_clabe'];
+
 				if ( empty( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
 					$newId = $db->insertid();
@@ -126,7 +116,7 @@ class Integrado {
 
 				return array ( $respuesta, $existe, $newId, $db, $data, $save );
 			} else {
-				$logdata = implode( ', ', array (
+				$logdata = implode( ' | ', array (
 					JFactory::getUser()->id,
 					$integradoId,
 					__METHOD__ . ':' . __LINE__,
@@ -217,6 +207,7 @@ class Integrado {
 	}
 	
 	function getSolicitud($integ_id = null, $key){
+
 		if ($integ_id == null){
 			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
@@ -235,7 +226,7 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$this->integrados[$key]->datos_personales->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
 			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
@@ -246,7 +237,7 @@ class Integrado {
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$this->integrados[ $key ]->datos_empresa->direccion_CP = @json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
 				}
@@ -263,6 +254,7 @@ class Integrado {
 			$this->integrados[$key]->poder				= null;
 			$this->integrados[$key]->reg_propiedad		= null;
 		}
+
 	}
 
 	function selectDataSolicitud($table, $where, $id){
@@ -376,7 +368,7 @@ class IntegradoSimple extends Integrado {
         $this->id = $integ_id;
         $this->usuarios = parent::getUsersOfIntegrado($integ_id);
 
-        parent::getSolicitud($integ_id, 0);
+		parent::getSolicitud($integ_id, 0);
 
 		$this->setOrdersAtuhorizationParams();
 
@@ -393,10 +385,9 @@ class IntegradoSimple extends Integrado {
 	/**
 	 * @param mixed $ordersAtuhorizationParams
 	 */
-    //TODO quitar simulación de datos.
 	public function setOrdersAtuhorizationParams( ) {
-		getFromTimOne::selectDB('integrado_params', 'integrado_id');
-		$this->ordersAtuhorizationParams = 1;
+		$result = getFromTimOne::selectDB('integrado_params', 'integrado_id');
+		$this->ordersAtuhorizationParams = $result[0]->params;
 	}
 
 
@@ -469,6 +460,23 @@ class IntegradoSimple extends Integrado {
 
 	public function canOperate() {
 		return $this->integrados[0]->integrado->status == 50;
+	}
+
+	public function getUrlsTestimonions() {
+		$integ = $this->integrados[0]->datos_empresa;
+		$loop = array('testimonio_1' => $integ->testimonio_1, 'testimonio_2' => $integ->testimonio_2, 'poder' => $integ->poder, 'reg_propiedad' => $integ->reg_propiedad);
+
+		$db = JFactory::getDbo();
+
+		foreach ( $loop as $key => $value ) {
+			$query = $db->getQuery(true);
+			$query->select( $db->quoteName('url_instrumento'))
+				->from( '#__integrado_instrumentos' )
+				->where( $db->quoteName('id') . '=' . $db->quote($value));
+			$db->setQuery($query);
+
+			$this->integrados[0]->datos_empresa->$key = $db->loadResult();
+		}
 	}
 
 }

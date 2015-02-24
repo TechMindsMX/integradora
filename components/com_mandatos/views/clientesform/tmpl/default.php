@@ -16,8 +16,9 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
 $token = JSession::getFormToken();
 
-echo '<script src="/integradora/libraries/integradora/js/sepomex.js"> </script>';
-echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
+echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 ?>
 <script>
     var catalogoBancos = new Array();
@@ -31,12 +32,20 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
     ?>
 
 	jQuery(document).ready(function(){
+
+		jQuery('input[type="file"]').on('change' ,{
+			msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
+		} , file_validation );
+
+		jQuery('#nextTab').click('click', nextTab);
+
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		jQuery('#search').on('click', busqueda_rfc);
         jQuery('#agregarBanco').on('click', AltaBanco);
         jQuery('#altaC_P input:radio').on('click', tipoAlta);
         jQuery('button.envio').on('click', saveCliente);
 		tabs = jQuery('#tabs-clientesTabs li');
+		detached = [];
 
 		<?php
 		if(!is_null($datos->rfc)){
@@ -57,53 +66,6 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 			})";
 		}
 		?>
-
-		jQuery('#files').change( function(event) {
-			jQuery('.errormsg').remove();
-
-			//check whether browser fully supports all File API
-			if (window.File && window.FileReader && window.FileList && window.Blob)
-			{
-
-				//get the file size and file type from file input field
-				var $files = jQuery('input[type="file"]');
-				var $loop = jQuery.each($files, function(k, $fileInput){
-
-					var $error_span = '';
-
-					if ($fileInput.files[0]) {
-
-						var fsize = $fileInput.files[0].size;
-						var ftype = $fileInput.files[0].type;
-						var fname = $fileInput.files[0].name;
-						var $error = Array();
-
-						switch(ftype)
-						{
-							case 'image/png':
-							case 'image/gif':
-							case 'image/jpeg':
-							case 'image/pjpeg':
-							case 'application/pdf':
-								break;
-							default:
-								$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
-								jQuery($fileInput).val('').after($error_span);
-						}
-
-						if (fsize >= 1000000) {
-							$error_span = '<span class="errormsg warning"><?php echo JText::_('UNSUPPORTED_FILE'); ?></span>';
-							jQuery($fileInput).val('').after($error_span);
-						}
-					}
-					return $fileInput;
-				});
-
-			}else{
-				alert("Please upgrade your browser, because your current browser lacks some new features we need!");
-			}
-		});
-
     });
 
 	function ajax(parametros){
@@ -116,10 +78,30 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		
 		return request;
 	}
-	
-	function tipoAlta(){
+
+    function attachTab(campo) {
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if ((li_href == campo)) {
+			    if (campo == '#banco') {
+				    jQuery(tabs[key + 1]).before(detached[key]);
+			    }
+			    if (campo == '#empresa') {
+				    jQuery(tabs[key - 1]).after(detached[key]);
+			    }
+		    }
+	    });
+    }
+    function extractTab(campo) {
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if (li_href == campo) {
+			    detached[key] = jQuery(value).detach();
+		    }
+	    });
+    }
+    function tipoAlta(){
 		var campo 		= '';
-		var display 	= '';
 		var campoMonto 	= jQuery('#monto');
 		var nombreCampo = jQuery(this).prop('name');
 
@@ -127,31 +109,27 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 			case 'tp_tipo_alta':
 				if( jQuery(this).val() == 0){
 					campo = '#banco';
-					display = 'none';
+					extractTab(campo);
 					campoMonto.children().remove();
 				}else{
 					campo = '#banco';
+					attachTab(campo);
 					campoMonto.html('<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label><input type="text" name="tp_monto" id="tp_monto" />');
 				}
 				break;
 			case 'pj_pers_juridica':
 				if( jQuery(this).val() == 2 ){
 					campo = '#empresa';
-					display = 'none';
+					extractTab(campo);
 				}else{
 					campo = '#empresa';
+					attachTab(campo);
 				}
 				break;
             default :
                 break;
 		}
-		
-		jQuery.each( jQuery('#altaC_P').find('a'), function(key, value){
-		  if( jQuery(value).attr('href') == campo ){
-		    jQuery(value).css('display',display);
-		  }
-		});
-	}
+    }
 	
 	function busqueda_rfc(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
@@ -164,20 +142,25 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		var resultado = ajax(envio);
 		
 		resultado.done(function(response){
-			if(response.success){
+			if(response.success == true){
 				llenaForm(response);
+				var campo = ['#pers-juridica', '#basic-details', '#empresa', '#files'];
+				jQuery.each(campo, function(k,v) {
+					extractTab(v);
+				});
 				nextTab();
-				jQuery()
 
-			}else {
-//				jQuery('#altaC_P').clearForm();
+			} else if (response.success == 'invalid') {
 				jQuery('input, select, textarea').prop("readonly", false);
 
+				<?php /* override para la fincion de mensajes de validacion */ ?>
+				response.success = false;
 				mensajesValidaciones(response);
-				nextTab();
-				var radio = response.bu_rfc.pj_pers_juridica;
+
+			} else {
+				var radio = response.bu_rfc;
 				jQuery('#perFisicaMoral' + radio).trigger('click');
-				if (response.bu_rfc.pj_pers_juridica == 1) {
+				if (response.bu_rfc == 1) {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
 					jQuery('#de_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
 				}
@@ -185,6 +168,9 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
 					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
 				}
+				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
+				jQuery('#tipo_alta').prepend(msg);
+				nextTab();
 			}
 		});
 	}
@@ -210,7 +196,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 			data +='&integradoId='+idIntegradoAlta;
 			
 		var parametros = {
-			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBanco&format=raw',
+			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoCliente&format=raw',
 			'datos' : data
 
 		};
@@ -309,6 +295,10 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		if(objeto.tipo_alta != null) {
 			jQuery("#tipoAlta"+objeto.tipo_alta).trigger("click");
 		}
+
+		if(objeto.monto != null) {
+			jQuery("#tp_monto").val(objeto.monto);
+		}
 	}
 
     function saveCliente(){
@@ -358,11 +348,9 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		    if( check == true) {
 			    nextTabObj = jQuery(tabs[key]).next();
 		    }
-
 	    });
 	    activeTab(nextTabObj);
     }
-
 </script>
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
@@ -900,7 +888,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		</div>
 		<div class="form-group">
 			<label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?> *</label>
-			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="3" />
+			<input name="db_banco_sucursal" id="db_banco_sucursal" type="text" maxlength="10" />
 		</div>
 		<div class="form-group">
 			<label for="db_banco_clabe"><?php echo JText::_('LBL_NUMERO_CLABE'); ?> *</label>
@@ -909,6 +897,7 @@ echo '<script src="/integradora/libraries/integradora/js/tim-validation.js"> </s
 		
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+			<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_NEXTTAB'); ?></button>
 		</div>
 		
 		<div>

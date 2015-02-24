@@ -13,8 +13,9 @@ jimport('integradora.xmlparser');
  */
 class MandatosModelOdcform extends JModelItem {
     protected $dataModelo;
+	protected $catalogos;
 
-    public function __construct(){
+	public function __construct(){
         $post              = array( 'idOrden' => 'INT');
         $this->inputVars   = JFactory::getApplication()->input->getArray($post);
         $this->id          = $this->inputVars['idOrden'];
@@ -74,9 +75,14 @@ class MandatosModelOdcform extends JModelItem {
     }
 
     public function getCatalogoBancos(){
-        $catalogo = new Catalogos();
+        $this->catalogos = new Catalogos();
 
-        return $catalogo->getBancos();
+        return $this->catalogos->getBancos();
     }
+
+	public function getCatalogos( ){
+		return $this->catalogos->getPaymentMethods();
+
+	}
 }
 

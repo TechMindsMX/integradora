@@ -130,10 +130,17 @@ class IntegradoControllerIntegrado extends JControllerForm {
         foreach ( $verificacionObj as $key => $val ) {
             $countVerifObj = count($val) + $countVerifObj;
         }
+        $model = $this->getModel('Integrado');
 
-        $camposVerify = $this->getModel('Integrado')->getCampos();
+        $tipoAlta = (INT) $model->getItem()->integrados[0]->integrado->pers_juridica;
 
-        $totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) +  count($camposVerify->LBL_TAB_EMPRESA) +  count($camposVerify->LBL_TAB_BANCO) + count($camposVerify->LBL_TAB_AUTHORIZATIONS);
+        $camposVerify = $model->getCampos();
+
+        if($tipoAlta == 1) {
+            $totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) + count($camposVerify->LBL_TAB_EMPRESA) + count($camposVerify->LBL_TAB_BANCO) + count($camposVerify->LBL_TAB_AUTHORIZATIONS);
+        }elseif($tipoAlta == 2){
+            $totalCamposVerify = count($camposVerify->LBL_SLIDE_BASIC) + count($camposVerify->LBL_TAB_BANCO) + count($camposVerify->LBL_TAB_AUTHORIZATIONS);
+        }
 
         return $countVerifObj == $totalCamposVerify;
 

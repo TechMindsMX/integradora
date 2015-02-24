@@ -101,7 +101,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             'proveedor'     => array('number' => true,  'maxlength' => 10, 'required' => true),
             'proyecto'      => array('number' => true,  'maxlength' => 10, 'required' => true),
             'paymentDate'   => array('date'   => true,  'maxlength' => 10, 'required' => true),
-            'paymentMethod' => array('number' => true,  'maxlength' => 10, 'required' => true),
+            'paymentMethod' => array('number' => true,  'maxlength' => 10),
             'bankId'        => array('number' => true,  'required' => true),
             'observaciones' => array('text'   => true,  'maxlength' => 1000));
 
@@ -112,7 +112,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         echo json_encode($respuesta);
     }
 
-    private function sendNotifications($data)
+    private function sendNotifications($datos)
     {
         $info = array();
         /*
@@ -122,8 +122,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $nameProveedor = $this->getNameProveedor();
         $getIntegradoSimple = new IntegradoSimple($this->integradoId);
 
-        $arrayTitle = array($this->parametros['numOrden']);
-        $array = array($getIntegradoSimple->user->username, $this->parametros['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
+        $arrayTitle = array($datos['numOrden']);
+        $array = array($getIntegradoSimple->user->username, $datos['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
 
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegradoSimple);
@@ -133,7 +133,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
         /*
          * Notificaciones 12
          */
-        $arrayTitleAdmin = array($this->parametros['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
+        $arrayTitleAdmin = array($datos['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('12', $array, $arrayTitleAdmin);

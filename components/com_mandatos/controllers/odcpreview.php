@@ -64,16 +64,14 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             if ($resultado) {
                 $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
+
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
-
-
 
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
-
 
                     if($TxOdc){
                         $cobroComision = $this->txComision();
@@ -86,7 +84,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                 $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                             }
                         }else{
-                            //mensaje no se cobro la comision;
+                            $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
                         }
                     }else{
 
@@ -170,7 +168,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     }
 
     function logEvents($metodo, $info, $data){
-        $logdata = $logdata = implode(', ',array(
+        $logdata = implode(' | ',array(
             JFactory::getUser()->id,
             JFactory::getSession()->get('integradoId', null, 'integrado'),
             $metodo,
@@ -183,7 +181,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     public function sendEmail()
     {
         /*
-         *  NOTIFICACIONES 14
+         *  NOTIFICACIONES 14&33
          */
 
         $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->parametros['idOrden']);
@@ -201,7 +199,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $info[]            = $send->sendNotifications('14', $array, $titleArray);
 
         /*
-         * Notificaciones 15
+         * Notificaciones 15&34
          */
 
         $titleArrayAdmin = array( $getCurrUser->user->username, $this->parametros['idOrden'] );

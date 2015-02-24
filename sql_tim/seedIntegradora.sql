@@ -1,4 +1,4 @@
-INSERT INTO `flpmu_integrado` (`integrado_id`, `status`, `pers_juridica`) VALUES ('1', '0', '1');
+INSERT INTO `flpmu_integrado` (`integrado_id`, `status`, `pers_juridica`) VALUES ('1', '50', '1');
 
 INSERT INTO `flpmu_integrado_users` (`integrado_id`, `user_id`, `integrado_principal`, `integrado_permission_level`) VALUES ('1', '93', b'1', '3');
 
