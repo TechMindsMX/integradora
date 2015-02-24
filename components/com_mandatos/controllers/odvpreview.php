@@ -72,6 +72,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                                 $save->updateDB('ordenes_venta', null, $where);
                             }
                         }
+
+                        //TODO tx con TIMone
                     }
 	            }
 
