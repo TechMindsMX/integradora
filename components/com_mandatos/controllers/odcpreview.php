@@ -152,17 +152,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden          = $this->getOrden();
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
-        $respuesta      = true;
 
-        if(!is_null($montoComision)) {
-            $orden->orderType = 'Cobro Comisión';
+        $orden->orderType = 'Cobro Comisión';
 
-            $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
-            $respuesta = $txComision->sendCreateTx();
-        }
+        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 
-
-        return $respuesta;
+        return $txComision->sendCreateTx();
     }
 
     private function getOrden(){
