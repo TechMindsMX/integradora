@@ -97,7 +97,7 @@ $optionBancos = '';
 
         request.done(function(response){
 
-            if(typeof response.tiempoplazo != 'undefined') {
+            if(typeof response.amortizacion_capital_fijo != 'undefined') {
                 var button = jQuery('#amortizacion');
                 var tableCapitalFijo = '';
                 var tableCuotaFija = '';

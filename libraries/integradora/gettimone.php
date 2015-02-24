@@ -138,17 +138,17 @@ class getFromTimOne{
          * */
 
         $tabla= new stdClass();
-        $tabla->intereses_con_iva      = $data->interes*1.16;
-        $tabla->capital       = $data->capital;
-        $tabla->tipoPeriodos  = $data->tiempoplazo;
-        switch($data->tipoPlazo){
+        $tabla->intereses_con_iva = $data->interes*1.16;
+        $tabla->capital           = $data->totalAmount;
+        $tabla->tipoPeriodos      = $data->quantityPayments;
+        switch($data->paymentPeriod){
             case 1:
                 $tabla->tperiodo        = 'Diaria';
                 $tabla->periodos_year   = '365';
                 break;
             case 2:
                 $tabla->tperiodo         = 'Quincenal';
-                $tabla->periodos_year    = '104';
+                $tabla->periodos_year    = '24';
                 break;
             case 3:
                 $tabla->tperiodo         = 'Mensual';
@@ -175,19 +175,19 @@ class getFromTimOne{
         }
 
         $temp           = (float) $tabla->intereses_con_iva/100;
-        $temp           = (float) $temp/$data->tiempoplazo;
+        $temp           = (float) $temp/$data->quantityPayments;
         $temp           = (float) $temp+1;
-        $temp           = (float) pow($temp, $data->tiempoplazo);
+        $temp           = (float) pow($temp, $data->quantityPayments);
         $temp           = (float) $temp-1;
-        $temp           = (float) $temp*$data->tiempoplazo;
+        $temp           = (float) $temp*$data->quantityPayments;
 
         $tabla->tasa_periodo           = (float) $tabla->intereses_con_iva;
         $tabla->tasa_efectiva_periodo  = (float) $temp*100;
-        $tabla->capital_fija           = (float) $data->capital/$data->tiempoplazo;
+        $tabla->capital_fija           = (float) $data->totalAmount/$data->quantityPayments;
         $final                         = (float) $tabla->capital;
         $capital                       = (float) $tabla->capital_fija;
 
-        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+        for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $inicial              = (float)$final;
             $intiva               = (float)$inicial*($tabla->intereses_con_iva/100);
 
@@ -209,14 +209,14 @@ class getFromTimOne{
         }
 
         $temp                           = (float) 1+($tabla->intereses_con_iva/100);
-        $temp                           = (float) pow($temp ,$data->tiempoplazo);
+        $temp                           = (float) pow($temp ,$data->quantityPayments);
         $number1                        = (float) $temp*($tabla->intereses_con_iva/100);
         $number2                        = (float) $temp-1;
         $tabla->factor                  = (float) $number1/$number2;
         $tabla->cuota_Fija              = (float) $tabla->factor*$tabla->capital;
         $saldo_final                    = (float) $tabla->capital;
 
-        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+        for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $saldo_inicial                    = (float)$saldo_final;
             $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
             $intereses                        = (float)$intiva/1.16;
@@ -2039,21 +2039,6 @@ class sendToTimOne {
         return $projectId;
     }
 
-    /* DATA PARA GUARDADO DE ORDEN DE PRESTAMO
-     * $data = new stdClass();
-     * $data->fecha_elaboracion=time();
-     * $data->fecha_deposito=time();
-     * $data->tasa=3;
-     * $data->tipo_movimiento='prestamo';
-     * $data->acreedor='1';
-     * $data->a_rfc='AUEN120101GA1';
-     * $data->deudor='2';
-     * $data->d_rfc='BAEM120101FE3';
-     * $data->capital=1230;
-     * $data->intereses=123;
-     * $data->iva_intereses=23;
-     * RETORNA ID DE PRESTAMO GUARDADO
-     */
     public function saveODP($data){
         $db		= JFactory::getDbo();
 

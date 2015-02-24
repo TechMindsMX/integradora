@@ -59,9 +59,9 @@ class MandatosModelMutuosform extends JModelItem {
         $respuesta = new stdClass();
 
         $dataTabla   = array(
-            'tiempoplazo' => $data->quantityPayments,
-            'tipoPlazo'   => $data->paymentPeriod,
-            'capital'     => $data->totalAmount,
+            'quantityPayments' => $data->quantityPayments,
+            'paymentPeriod'   => $data->paymentPeriod,
+            'totalAmount'     => $data->totalAmount,
             'interes'     => $data->interes
         );
         $tablas = getFromTimOne::getTablaAmotizacion((object)$dataTabla);
