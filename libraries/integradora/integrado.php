@@ -462,6 +462,23 @@ class IntegradoSimple extends Integrado {
 		return $this->integrados[0]->integrado->status == 50;
 	}
 
+	public function getUrlsTestimonions() {
+		$integ = $this->integrados[0]->datos_empresa;
+		$loop = array('testimonio_1' => $integ->testimonio_1, 'testimonio_2' => $integ->testimonio_2, 'poder' => $integ->poder, 'reg_propiedad' => $integ->reg_propiedad);
+
+		$db = JFactory::getDbo();
+
+		foreach ( $loop as $key => $value ) {
+			$query = $db->getQuery(true);
+			$query->select( $db->quoteName('url_instrumento'))
+				->from( '#__integrado_instrumentos' )
+				->where( $db->quoteName('id') . '=' . $db->quote($value));
+			$db->setQuery($query);
+
+			$this->integrados[0]->datos_empresa->$key = $db->loadResult();
+		}
+	}
+
 }
 
 class integrado_datos_personales {
