@@ -25,10 +25,6 @@ class MandatosController extends JControllerLegacy {
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
-//        $integradoId 		= isset($integrado->integrados[0]) ? $integrado->integrados[0]->integrado_id : $this->integradoId;
-
-        // $isValid 	 		= $integrado->isValidPrincipal($integradoId, $this->currUser->id);
-
         if($this->currUser->guest){
             $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
