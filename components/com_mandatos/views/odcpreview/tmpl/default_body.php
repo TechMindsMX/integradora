@@ -93,7 +93,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_RFC'); ?>
 				</div>
 				<div class="span4">
-					<?php echo ($orden->proveedor->type = getFromTimOne::getPersJuridica('moral')) ? $orden->proveedor->rfc : $orden->proveedor->pRFC; ?>
+					<?php echo ($orden->proveedor->type == getFromTimOne::getPersJuridica('moral')) ? $orden->proveedor->rfc : $orden->proveedor->pRFC; ?>
 				</div>
 				<div class="span2 text-right">
 					<?php echo JText::_('LBL_BANCOS'); ?>
