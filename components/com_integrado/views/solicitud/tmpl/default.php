@@ -313,8 +313,8 @@ $token = JSession::getFormToken();
             resultado.done(function(response){
                 mensajesValidaciones(response);
 
-                if(typeof response.busqueda_rfc.msg === 'number') {
-                    jQuery('#perFisicaMoral'+response.busqueda_rfc.msg).prop('checked', true);
+                if(typeof response.busqueda_rfc === 'number') {
+                    jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
                     jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success">El RFC es correcto puede continuar hancdo click en el botón envíar.</span>');
                     jQuery('#juridica').prop('disabled', false).removeClass('disabled');
                 }
