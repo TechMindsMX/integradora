@@ -19,7 +19,7 @@ class MandatosControllerClienteslist extends JControllerAdmin {
         $result = $save->changeClientOrProviderStatus($data);
 
         $respose['success'] = $result;
-        $respose['msg'] = ($result) ? JText::sprintf('COM_MANDATOS_PROJECTS_STATUS_UPDATED', $result['name'], $result['statusName']) : JText::_('LBL_ERROR');
+        $respose['msg'] = ($result) ? JText::sprintf('COM_MANDATOS_CLIENT_STATUS_UPDATED', $result['name'], $result['statusName']) : JText::_('LBL_ERROR');
 
         $document->setMimeEncoding('application/json');
 
