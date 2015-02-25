@@ -61,12 +61,15 @@ class IntegradoController extends JControllerLegacy {
             $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
 
             echo json_encode($datos->integrados[0]);
-        }else{
+        }elseif( is_numeric($tipo_rfc) ){
             $respuesta['success'] = false;
             $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
-            $respuesta['pj_pers_juridica'] = $tipo_rfc;
+            $respuesta['bu_rfc'] = $tipo_rfc;
 
-            echo json_encode( array('bu_rfc' => $respuesta) );
+            echo json_encode( $respuesta );
+        }else{
+            $tipo_rfc['success'] = 'invalid';
+            echo json_encode( array('bu_rfc' => $tipo_rfc) );
         }
     }
 

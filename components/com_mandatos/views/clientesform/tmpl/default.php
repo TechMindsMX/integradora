@@ -143,6 +143,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		
 		resultado.done(function(response){
 			if(response.success == true){
+                <?php //Existe el rfc y se llena el form ?>
 				llenaForm(response);
 				var campo = ['#pers-juridica', '#basic-details', '#empresa', '#files'];
 				jQuery.each(campo, function(k,v) {
@@ -150,14 +151,16 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				});
 				nextTab();
 
-			} else if (response.success == 'invalid') {
+			} else if (response.bu_rfc.success == 'invalid') {
+                <?php //RFC MAL ?>
 				jQuery('input, select, textarea').prop("readonly", false);
 
 				<?php /* override para la fincion de mensajes de validacion */ ?>
-				response.success = false;
+				response.bu_rfc.success = false;
 				mensajesValidaciones(response);
 
 			} else {
+                <?php //No existe el RFC DESEA DARLO DE ALTA? ?>
 				var radio = response.bu_rfc;
 				jQuery('#perFisicaMoral' + radio).trigger('click');
 				if (response.bu_rfc == 1) {
@@ -395,7 +398,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	</fieldset>
 	
 	<div class="form-actions">
-		<button type="button" class="btn btn-primary envio" id="tipoAlta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+		<button type="button" class="btn btn-primary envio" id="tipoAlta_btn"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 	</div>
 	<?php
 		echo JHtml::_('bootstrap.endTab');
