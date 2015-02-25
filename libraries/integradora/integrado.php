@@ -479,6 +479,10 @@ class IntegradoSimple extends Integrado {
 		}
 	}
 
+	public function getId() {
+		return $this->integrados[0]->integrado->integrado_id;
+	}
+
 }
 
 class integrado_datos_personales {
