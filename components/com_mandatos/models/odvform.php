@@ -1,4 +1,6 @@
 <?php
+use Integralib as v;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
@@ -28,9 +30,10 @@ class MandatosModelOdvform extends JModelItem {
     }
 
     public function getClientes(){
-        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
+	    $cliente = new v\Cliente();
+	    $clientes = $cliente->getAllActive($this->integradoId);
 
-        return $clientes;
+	    return $clientes;
     }
 
     public function getProyectos(){
