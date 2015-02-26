@@ -16,6 +16,12 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
 $token = JSession::getFormToken();
 
+if (isset($datos->rfc)) {
+	$rfcSearch = $datos->rfc;
+} elseif (isset($datos->pRFC)) {
+	$rfcSearch = $datos->pRFC;
+}
+
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
@@ -42,8 +48,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		formulario = jQuery('#container-form').clone().html();
 
 		<?php
-		if(!is_null($datos->rfc)){
-			echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
+		if(isset($rfcSearch) ){
+			echo 'jQuery("#bu_rfc").val("'.$rfcSearch.'");'."\n";
 			echo 'jQuery("#search").trigger("click");'."\n";
 
 		} else {
@@ -336,12 +342,14 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     }
 
     function attachTab(campo) {
-	    var tabs = jQuery('#tabs-clientesTabs li');
+	    var tabs = jQuery(formulario).find('#tabs-clientesTabs li');
+	    var lastTab = jQuery('#tabs-clientesTabs li:last-of-type');
+
 	    jQuery.each(tabs, function (key, value) {
 		    li_href = jQuery(value).find('a').attr('href');
 		    if ((li_href == campo)) {
 			    if (campo == '#banco') {
-				    jQuery(tabs[key + 1]).before(detached[key]);
+				    jQuery(lastTab).after(value);
 			    }
 			    if (campo == '#empresa') {
 				    jQuery(tabs[key - 1]).after(detached[key]);
