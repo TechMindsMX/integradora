@@ -118,6 +118,4 @@ class manejoImagenes {
 		clearstatcache();
 		imagejpeg($desired_gdim, $archivo, 90);
 	}
-
 }
-?>

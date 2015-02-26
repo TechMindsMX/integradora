@@ -1896,7 +1896,7 @@ class sendToTimOne {
 
                         break;
                 }
-                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . $fileinfo['extension'] ) );
+                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
 
                 $save[] = self::updateDB( $table, $updateSet, $where );
             }else {
