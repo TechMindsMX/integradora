@@ -933,8 +933,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'files', JText::_('LBL_TAB_ARCHIVOS'));
 		?>
 		<fieldset>
-			<p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
-			<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+			<blockquote>
+				<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+				<p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
+			</blockquote>
 
 			<div class="form-group">
 				<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?> *</label>
@@ -993,5 +995,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 	</form>
 </div>
-<a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
-<a class="btn btn-success disabled" id="btn_fin"><?php echo JText::_('LBL_FIN'); ?></a>
+<div class="form-actions">
+	<a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
+	<a class="btn btn-success disabled" id="btn_fin"><?php echo JText::_('LBL_FIN'); ?></a>
+</div>
+
+<?php
+echo '<div class="alert alert-dismissable alert-info"><h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS_TITLE').'</h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS').'</div>';
