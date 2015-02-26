@@ -20,8 +20,8 @@ echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 ?>
-<script>
-    var catalogoBancos = new Array();
+<script xmlns="http://www.w3.org/1999/html">
+    var catalogoBancos = [];
     var integradoId	= <?php echo $this->integradoId; ?>;
     var formulario = '';
 
@@ -45,11 +45,12 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         jQuery('#agregarBanco').on('click', AltaBanco);
         jQuery('#altaC_P input:radio').on('click', tipoAlta);
         jQuery('button.envio').on('click', saveCliente);
+
 		tabs = jQuery('#tabs-clientesTabs li');
 		detached = [];
 
 		form_attach = jQuery('#altaC_P').detach().prop('id', 'copia_form');
-		formulario = form_attach.clone();
+		formulario = form_attach.clone().html();
 
 		<?php
 		if(!is_null($datos->rfc)){
@@ -83,27 +84,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		return request;
 	}
 
-    function attachTab(campo) {
-	    jQuery.each(tabs, function (key, value) {
-		    li_href = jQuery(value).find('a').attr('href');
-		    if ((li_href == campo)) {
-			    if (campo == '#banco') {
-				    jQuery(tabs[key + 1]).before(detached[key]);
-			    }
-			    if (campo == '#empresa') {
-				    jQuery(tabs[key - 1]).after(detached[key]);
-			    }
-		    }
-	    });
-    }
-    function extractTab(campo) {
-	    jQuery.each(tabs, function (key, value) {
-		    li_href = jQuery(value).find('a').attr('href');
-		    if (li_href == campo) {
-			    detached[key] = jQuery(value).detach();
-		    }
-	    });
-    }
     function tipoAlta(){
 		var campo 		= '';
 		var campoMonto 	= jQuery('#monto');
@@ -134,22 +114,20 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 break;
 		}
     }
-	
-	function busqueda_rfc(){
+
+    function busqueda_rfc(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
-			
+
 		var envio = {
 			'link'			:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
 			'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
 		};
-		
+
 		var resultado = ajax(envio);
-		
+
 		resultado.done(function(response){
 
-			formulario.clearForm();
-			jQuery('#container-form').append(formulario);
-			jQuery('#container-form').find('#copia_form').prop('id', 'altaC_P');
+			jQuery('#container-form').empty().append(formulario);
 
 			if(response.success == true){
                 <?php //Existe el rfc y se llena el form ?>
@@ -158,7 +136,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				jQuery.each(campo, function(k,v) {
 					extractTab(v);
 				});
-//				nextTab();
+				activeTab( '#tipo_alta' );
 
 			} else if (response.bu_rfc.success == 'invalid') {
                 <?php //RFC MAL ?>
@@ -167,6 +145,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<?php /* override para la fincion de mensajes de validacion */ ?>
 				response.bu_rfc.success = false;
 				mensajesValidaciones(response);
+				jQuery('#container-form').empty();
 
 			} else {
                 <?php //No existe el RFC DESEA DARLO DE ALTA? ?>
@@ -182,11 +161,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				}
 				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
 				jQuery('#tipo_alta').prepend(msg);
-//				nextTab();
+				activeTab( '#tipo_alta' );
 			}
 		});
 	}
-
     function llenatablabancos(obj) {
         var fieldset = jQuery('fieldset#datosBancarios');
         fieldset.find('input:not(.eliminaBanco)').val('');
@@ -206,7 +184,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         var idIntegradoAlta = jQuery('#idCliPro').val();
 		var data = jQuery('#banco').find('select, input').serialize();
 			data +='&integradoId='+idIntegradoAlta;
-			
+
 		var parametros = {
 			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoCliente&format=raw',
 			'datos' : data
@@ -220,6 +198,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
             if(obj.success === true) {
                 llenatablabancos(obj);
+	            habilita_fin();
             }else{
 	            if (typeof obj.msg.db_banco_codigo !== 'undefined'){
 		            if (obj.msg.db_banco_codigo !== true) {
@@ -229,7 +208,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	            mensajesValidaciones(obj.msg);
             }
 		});
-		
+
 	}
 
     function bajaBanco(campo){
@@ -252,13 +231,14 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             }
         });
     }
-	
-	function mensajes(msg, tipo){
+
+
+    function mensajes(msg, tipo){
 		var spanError = jQuery('#errorRFC');
-		
+
 		spanError.text(msg);
 		spanError.fadeIn();
-		
+
 		switch(tipo){
 			case 'msg':
 				spanError.delay(800).fadeOut(4000);
@@ -272,8 +252,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				break;
 		}
 	}
-	
-	function llenaForm(objeto){
+
+    function llenaForm(objeto){
 
         if(objeto.integrado != null){
             jQuery('#idCliPro').val(objeto.integrado.integrado_id);
@@ -287,7 +267,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 jQuery('input[id*="perFisicaMoral"]').prop('disabled', true);
 			});
 		}
-		
+
 		if(objeto.datos_personales != null){
 			jQuery.each(objeto.datos_personales, function(key,value){
 				jQuery('#dp_'+key).val(value);
@@ -295,7 +275,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			});
 			jQuery('#dp_cod_postal').trigger('click');
 		}
-		
+
 		if(objeto.datos_empresa != null){
 			jQuery.each(objeto.datos_empresa, function(key,value){
 				jQuery('#de_'+key).val(value);
@@ -312,7 +292,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			jQuery("#tp_monto").val(objeto.monto);
 		}
 	}
-
     function saveCliente(){
         var tab = jQuery(this).prop('id');
 
@@ -349,9 +328,29 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         }
     }
 
-    function activeTab(tab) {
-	    tab.removeClass('disabled');
-	    tab.find('a').attr("data-toggle", "tab").trigger('click');
+    function attachTab(campo) {
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if ((li_href == campo)) {
+			    if (campo == '#banco') {
+				    jQuery(tabs[key + 1]).before(detached[key]);
+			    }
+			    if (campo == '#empresa') {
+				    jQuery(tabs[key - 1]).after(detached[key]);
+			    }
+		    }
+	    });
+    }
+
+    function extractTab(campo) {
+	    li_href = jQuery('a[href="'+campo+'"]').parent();
+	    detached[campo] = jQuery(li_href).detach();
+    }
+
+    function activeTab(campo) {
+	    var tab_li = jQuery('a[href="'+campo+'"]').parent();
+	    tab_li.removeClass('disabled');
+	    tab_li.find('a').attr("data-toggle", "tab").trigger('click');
     }
 
     function nextTab() {
@@ -363,21 +362,24 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    });
 	    activeTab(nextTabObj);
     }
+
+	function habilita_fin() {
+		jQuery('#btn_fin').prop('href', 'index.php?option=com_mandatos&view=clienteslist').removeClass('disabled');
+	}
+
+
 </script>
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
 <fieldset>
 	<div class="form-group">
-		<input type="text" id="bu_rfc" placeholder="Ingrese el RFC" maxlength="13" /> <span id="errorRFC" style="display: none;"></span>
-	</div>
-
-	<div class="form-group">
-		<input type="button" class="btn btn-primary" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
+		<input type="text" id="bu_rfc" class="form-control" placeholder="Ingrese el RFC" maxlength="13" /> <span id="errorRFC" style="display: none;"></span>
+		<input type="button" class="btn btn-primary form-control" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
 	</div>
 </fieldset>
 
-<div id="container-form">
+<div id="container-form" class="form-actions">
 	<form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 		<input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
@@ -992,3 +994,4 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	</form>
 </div>
 <a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
+<a class="btn btn-success disabled" id="btn_fin"><?php echo JText::_('LBL_FIN'); ?></a>
