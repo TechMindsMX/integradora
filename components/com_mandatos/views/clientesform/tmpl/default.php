@@ -36,13 +36,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 		jQuery('#search').on('click', busqueda_rfc);
 
-		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-
 		tabs = jQuery('#tabs-clientesTabs li');
 		detached = [];
 
-		form_attach = jQuery('#altaC_P').detach().prop('id', 'copia_form');
-		formulario = form_attach.clone().html();
+		formulario = jQuery('#container-form').clone().html();
 
 		<?php
 		if(!is_null($datos->rfc)){
@@ -71,8 +68,9 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    } , file_validation );
 	    jQuery('#nextTab').click('click', nextTab);
 	    jQuery('#agregarBanco').on('click', AltaBanco);
-	    jQuery('#altaC_P input:radio').on('click', tipoAlta);
+	    jQuery('#tipo_alta_cp input:radio').on('click', tipoAlta);
 	    jQuery('button.envio').on('click', saveCliente);
+	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
     }
 
     function ajax(parametros){
@@ -306,12 +304,13 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         if(tab != 'agregarBanco'){
             var campos = jQuery('#altaC_P').serialize();
             campos += '&tab='+tab;
-            campos += '&integradoId='+integradoId;
-            campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+	        campos += '&integradoId='+integradoId;
+	        campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
 	        campos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
 	        campos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
 	        campos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
 	        campos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+	        campos += '&'+jQuery('input[name="pj_pers_juridica"]').serialize();
 	        campos += '&<?php echo $token; ?>=1';
 
             var parametros = {
@@ -323,7 +322,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
             resultado.done(function(response){
                if(response.success === true){
-                   var spanMsg = jQuery('#msg')
+                   var spanMsg = jQuery('#msg');
                    jQuery('#idCliPro').val(response.idCliPro);
                    nextTab();
                    spanMsg.text('Datos Almacenados');
@@ -337,6 +336,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     }
 
     function attachTab(campo) {
+	    var tabs = jQuery('#tabs-clientesTabs li');
 	    jQuery.each(tabs, function (key, value) {
 		    li_href = jQuery(value).find('a').attr('href');
 		    if ((li_href == campo)) {
@@ -362,10 +362,12 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     }
 
     function nextTab() {
+	    var tabs = jQuery('#tabs-clientesTabs li');
+
 	    tabs.each(function (key, val) {
 		    var check = jQuery(val).hasClass('active');
 		    if( check == true) {
-			    nextTabObj = jQuery(tabs[key]).next();
+			    nextTabObj = jQuery(tabs[key]).next().find('a').attr('href');
 		    }
 	    });
 	    activeTab(nextTabObj);
@@ -395,7 +397,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-clientes', array('active' => JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') ));
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') );
 		?>
-		<fieldset id="altaC_P">
+		<fieldset id="tipo_alta_cp">
 			<input type="hidden" name="tp_status" id="tp_status" value="<?php echo $datos->status ?>">
 			<div class="radio">
 				<label><input type="radio" name="tp_tipo_alta" id="tipoAlta0" value="0" ><?php echo JText::_('LBL_CLIENTE'); ?></label>
