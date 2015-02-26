@@ -34,17 +34,9 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 	jQuery(document).ready(function(){
 
-		jQuery('input[type="file"]').on('change' ,{
-			msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
-		} , file_validation );
-
-		jQuery('#nextTab').click('click', nextTab);
+		jQuery('#search').on('click', busqueda_rfc);
 
 		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-		jQuery('#search').on('click', busqueda_rfc);
-        jQuery('#agregarBanco').on('click', AltaBanco);
-        jQuery('#altaC_P input:radio').on('click', tipoAlta);
-        jQuery('button.envio').on('click', saveCliente);
 
 		tabs = jQuery('#tabs-clientesTabs li');
 		detached = [];
@@ -73,7 +65,17 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		?>
     });
 
-	function ajax(parametros){
+    function makeBinds() {
+	    jQuery('input[type="file"]').on('change' ,{
+		    msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
+	    } , file_validation );
+	    jQuery('#nextTab').click('click', nextTab);
+	    jQuery('#agregarBanco').on('click', AltaBanco);
+	    jQuery('#altaC_P input:radio').on('click', tipoAlta);
+	    jQuery('button.envio').on('click', saveCliente);
+    }
+
+    function ajax(parametros){
 		
 		var request = jQuery.ajax({
 			url: parametros.link,
@@ -128,6 +130,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		resultado.done(function(response){
 
 			jQuery('#container-form').empty().append(formulario);
+			makeBinds();
 
 			if(response.success == true){
                 <?php //Existe el rfc y se llena el form ?>
@@ -158,9 +161,14 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				else {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
 					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
+					extractTab('#empresa');
 				}
 				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
 				jQuery('#tipo_alta').prepend(msg);
+
+				var the_tabs = jQuery('#tabs-clientesTabs');
+				the_tabs.find('li').addClass('disabled');
+				the_tabs.find('a').attr("data-toggle", "");
 				activeTab( '#tipo_alta' );
 			}
 		});
@@ -387,7 +395,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-clientes', array('active' => JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') ));
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') );
 		?>
-		<fieldset>
+		<fieldset id="altaC_P">
 			<input type="hidden" name="tp_status" id="tp_status" value="<?php echo $datos->status ?>">
 			<div class="radio">
 				<label><input type="radio" name="tp_tipo_alta" id="tipoAlta0" value="0" ><?php echo JText::_('LBL_CLIENTE'); ?></label>
