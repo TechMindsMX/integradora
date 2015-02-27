@@ -16,6 +16,7 @@ $status		= array('Activo', 'Inactivo');
 $document->addScript('libraries/integradora/js/jquery.number.min.js');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('libraries/integradora/js/tim-filtros.js');
 
 if(is_null($ordenes) || empty($ordenes)){
 	JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
@@ -25,7 +26,7 @@ if(is_null($ordenes) || empty($ordenes)){
 jQuery(document).ready(function(){
 	jQuery("span.number").number( true, 2 );
 	
-	jQuery('.filtro').on('click', filtro);
+	jQuery('.filtro').on('click', filtro_autorizadas);
 	
 	jQuery('.status1 input:button').prop('disabled', true);
 	
@@ -40,25 +41,6 @@ jQuery(document).ready(function(){
 	});
 });
 
-function filtro(){
-	var valor	= parseInt( jQuery(this).val() );
-    var type0   = jQuery('.type_0');
-    var type1   = jQuery('.type_1');
-	switch(valor){
-		case 0:
-            type0.show();
-            type1.hide();
-			break;
-		case 1:
-            type1.show();
-            type0.hide();
-			break;
-		case 3:
-            type0.show();
-            type1.show();
-			break;
-	}
-}
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_LISTADO'); ?></h1>
 
@@ -116,7 +98,7 @@ function filtro(){
 				}
 				$class = $value->status->id == 1?'':'status1';
 				
-				echo '<tr class="type_'.$value->status->id.'">';
+				echo '<tr class="type_'.$value->status->id.'" data-filtro="'.$value->status->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';

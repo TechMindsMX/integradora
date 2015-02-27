@@ -38,7 +38,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         if ($this->permisos['canAuth']) {
             $integradoSimple = new IntegradoSimple($this->integradoId);
             $integradoSimple->getTimOneData();
-            $integradoSimple->timoneData->balance = (float)10000000;
 
             $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
 
