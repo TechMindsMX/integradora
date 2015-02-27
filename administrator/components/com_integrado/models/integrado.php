@@ -48,7 +48,9 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 		$item->integrados[0]->datos_personales->nacionalidad = $this->getNacionalidad($item->integrados[0]->datos_personales->nacionalidad);
 
-		$item->getUrlsTestimonions();
+        if(!is_null($item->integrados[0]->datos_empresa)) {
+            $item->getUrlsTestimonions();
+        }
 
 		$item->campos = $this->getCampos();
 

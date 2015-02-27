@@ -69,7 +69,7 @@ class Integrado {
 
 		$data = JFactory::getApplication()->input->getArray( $post );
 
-		$existe = getFromTimOne::searchBancoByClabe($data['banco_clabe']);
+		$existe = getFromTimOne::searchBancoByClabe($data['db_banco_clabe']);
 
 		$logdata = implode( ' | ', array (
 			JFactory::getUser()->id,
@@ -387,7 +387,7 @@ class IntegradoSimple extends Integrado {
 	 */
 	public function setOrdersAtuhorizationParams( ) {
 		$result = getFromTimOne::selectDB('integrado_params', 'integrado_id');
-		$this->ordersAtuhorizationParams = $result[0]->params;
+		$this->ordersAtuhorizationParams = !empty($result)?$result[0]->params:array();
 	}
 
 

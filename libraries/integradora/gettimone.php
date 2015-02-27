@@ -702,7 +702,7 @@ class getFromTimOne{
 		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
 		$existe = getFromTimOne::selectDB( $table, $where );
 
-		return $existe[0];
+		return !empty($existe)?$existe[0]:null;
 	}
 
 	public static function getPersJuridica( $string ) {
