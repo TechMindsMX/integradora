@@ -12,32 +12,28 @@ JSubMenuHelper::addEntry(
     JText::_('Listado de Facturas por cobrar'),
     'index.php?option=com_facturas',
     $vName == 'facturas');
-
-
-$comision = $this->comision;
 ?>
 
 <script>
-
-
 
     function cobrar() {
 
         jQuery("input[type=checkbox]:checked").each(function(){
                 var id=jQuery(this).val();
+                var filaFactura=jQuery(this).parent().parent();
+                console.log(filaFactura);
             jQuery.ajax({
                 type: "POST",
                 url: "index.php?option=com_facturasporcobrar&task=factdata.updatefact&format=raw&id="+id,
-                success: function(response){
-                    jQuery('#ajax').html(response);
+                async:false,
+                    success: function(response){
+                        if(response == 'done'){
+                            filaFactura.hide();
+                        }
                 }
             });
         });
     }
-
-
-
-
 
     function filtroIntegrado() {
         var idIntegrado = jQuery(this).val();
@@ -119,31 +115,33 @@ $comision = $this->comision;
             </tr>
             </thead>
             <tbody class="tbody" id="tbody">
-            <?php foreach ($this->facturas as $value) {
-                ?>
-                <tr id="integrado_<?php echo $value->integradoId; ?>" class="row integrado_<?php echo $value->integradoId; ?>">
-                    <td><?php echo $value->integradoName; ?></td>
-                    <td>
-                        <?php echo $value->fecha; ?>
-                        <input type="hidden" class="fechaNumero" value="<?php echo $value->fechaNum; ?>" />
-                    </td>
-                    <td><?php echo $value->folio; ?></td>
-                    <td><?php echo $value->emisor; ?></td>
-                    <td>$<?php echo number_format($value->iva,2); ?></td>
-                    <td>$<?php echo number_format($value->subtotal,2); ?></td>
-                    <td>$<?php echo number_format($value->total,2); ?></td>
-                    <td>$<?php echo number_format($comision,2); ?></td>
-                    <td>$<?php echo number_format($value->total+$comision,2); ?></td>
-                    <td><input value="<?php echo $value->odv; ?>" type="checkbox" id=""></td>
-                    <?php
-
-                    $url_preview = JRoute::_('index.php?option=com_facturasporcobrar&view=facturapreview&integradoId='.$value->integradoId.'&facturanum='.$value->id);
-                    $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
-                    $btn = '<a class="btn btn-warning" href="index.php?option=com_mandatos&view=facturapreview&layout=confirmcancel&facturanum='.$value->id.'&integradoId='.$this->integradoId.'">'.JText::_('COM_MANDATOS_ORDENES_CANCEL_FACT').'</a>';
+            <?php if(is_array($this->facturas)) {
+                foreach ($this->facturas as $value) {
                     ?>
-                    <td><?php echo $preview_button.$value->id ?></td>
-                </tr>
-            <?php } ?>
+                    <tr id="integrado_<?php echo $value->integradoId; ?>"
+                        class="row integrado_<?php echo $value->integradoId; ?>">
+                        <td><?php echo $value->integradoName; ?></td>
+                        <td>
+                            <?php echo $value->createdDate; ?>
+                        </td>
+                        <td><?php echo $value->numOrden; ?></td>
+                        <td><?php echo $value->proveedor->frontName; ?></td>
+                        <td>$<?php echo number_format($value->iva, 2); ?></td>
+                        <td>$<?php echo number_format($value->subTotalAmount, 2); ?></td>
+                        <td>$<?php echo number_format($value->totalAmount, 2); ?></td>
+                        <td>$<?php echo number_format($value->comision, 2); ?></td>
+                        <td>$<?php echo number_format($value->totalAmount + $value->comision, 2); ?></td>
+                        <td><input value="<?php echo $value->id; ?>" type="checkbox" id=""></td>
+                        <?php
+
+                        $url_preview = JRoute::_('index.php?option=com_facturasporcobrar&view=facturapreview&integradoId=' . $value->integradoId . '&facturanum=' . $value->id);
+                        $preview_button = '<a href="' . $url_preview . '"><i class="icon-search"></i></a>';
+                        $btn = '<a class="btn btn-warning" href="index.php?option=com_mandatos&view=facturapreview&layout=confirmcancel&facturanum=' . $value->id . '&integradoId=' . $value->integradoId . '">' . JText::_('COM_MANDATOS_ORDENES_CANCEL_FACT') . '</a>';
+                        ?>
+                        <td><?php echo $preview_button . $value->id ?></td>
+                    </tr>
+                <?php }
+            }?>
             </tbody>
         </table>
     </div>

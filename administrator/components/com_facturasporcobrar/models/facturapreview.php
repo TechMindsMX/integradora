@@ -22,7 +22,6 @@ class FacturasporcobrarModelFacturapreview extends JModelItem {
 	}
 
 	public function getFacturas(){
-
 		if (!isset($facturas)) {
 			$facturas = getFromTimOne::getFacturasPorCobrar();
 		}

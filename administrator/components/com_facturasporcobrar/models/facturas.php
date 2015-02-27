@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
+jimport('joomla.application.component.view');
 jimport('integradora.integrado');
 jimport('integradora.catalogos');
 jimport('integradora.validator');
@@ -26,6 +27,9 @@ class FacturasporcobrarModelFacturas extends JModelList {
     public function __construct($config = array()) {
 
         parent::__construct($config);
+        $session            = JFactory::getSession();
+        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+
     }
 
     public function getUserIntegrado(){
@@ -45,55 +49,22 @@ class FacturasporcobrarModelFacturas extends JModelList {
         return $this->dataModelo;
     }
 
-    public function getFacturas(){
-        $data = getFromTimOne::getFacturasPorCobrar();
+    public function getFacturas($integradoId = null){
 
-        $dataFacturas = array();
-
-        foreach ($data as $factura) {
-            $factura->factura = getFromTimOne::getDataFactura($factura);
-            $fechaHr                 = explode('T',$factura->factura->comprobante['FECHA']);
-            $fechaHr[0]             = str_replace('-','/',$fechaHr[0]);
-            $fechaNumero = strtotime($fechaHr[0]);
-            $fecha = date('d-m-Y',$fechaNumero);
-
-            $integradoName            = $this->getIntegradoName($factura->integradoId);
-            $respuesta                = new stdClass();
-            $nombreEmisor             = $factura->factura->receptor['attrs']['NOMBRE'];
-            $iva                      = $factura->factura->impuestos->iva->importe;
-            $respuesta->id            = (INT) $factura->id;
-            $respuesta->integradoId   = (INT) $factura->integradoId;
-            $respuesta->integradoName = $integradoName;
-            $respuesta->status        = (INT) $factura->status;
-            $respuesta->fecha         = $fecha;
-            $respuesta->fechaNum      =
-            $respuesta->folio         = (INT) $factura->factura->comprobante['FOLIO'];
-            $respuesta->emisor        = $nombreEmisor;
-            $respuesta->iva           = $iva;
-            $respuesta->subtotal      = (FLOAT) $factura->factura->comprobante['SUBTOTAL'];
-            $respuesta->total         = (FLOAT) $factura->factura->comprobante['TOTAL'];
-            $respuesta->odv           = $factura->id_odv;
-            $dataFacturas[]           = $respuesta;
-
-        }
-
-        return $dataFacturas;
-    }
-
-    public  function getComision(){
-        $data = getFromTimOne::getComisiones();
-
-        foreach ($data as $comision) {
-            if($comision->description === 'Factura'){
-                $respuesta = $comision->monto;
+        $returnDataFactura = array();
+        $data = getFromTimOne::getOrdenesVenta($integradoId);
+        foreach ($data as $key => $value) {
+            if($value->status->id==5 || $value->status->id==8){
+                $comision =getFromTimOne::getComisionesOfIntegrado($value->integradoId);
+                $value->comision = $comision[0]->monto;
+                $returnDataFactura[] = $value;
             }
         }
-        return $respuesta;
+        return $returnDataFactura;
     }
 
     public function getIntegrados(){
         $integrados = getFromTimOne::getintegrados();
-
         return $integrados;
     }
 
