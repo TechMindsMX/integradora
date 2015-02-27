@@ -933,8 +933,10 @@ $token = JSession::getFormToken();
         echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'files', JText::_('LBL_TAB_ARCHIVOS'));
         ?>
         <fieldset>
-	        <p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
-	        <p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+	        <blockquote>
+		        <p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
+		        <p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+	        </blockquote>
 
 	        <?php
             $archivos = array(

@@ -16,12 +16,18 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $optionBancos = '';
 $token = JSession::getFormToken();
 
+if (isset($datos->rfc)) {
+	$rfcSearch = $datos->rfc;
+} elseif (isset($datos->pRFC)) {
+	$rfcSearch = $datos->pRFC;
+}
+
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 ?>
-<script>
-    var catalogoBancos = new Array();
+<script xmlns="http://www.w3.org/1999/html">
+    var catalogoBancos = [];
     var integradoId	= <?php echo $this->integradoId; ?>;
     var formulario = '';
 
@@ -34,26 +40,16 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 	jQuery(document).ready(function(){
 
-		jQuery('input[type="file"]').on('change' ,{
-			msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
-		} , file_validation );
-
-		jQuery('#nextTab').click('click', nextTab);
-
-		datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 		jQuery('#search').on('click', busqueda_rfc);
-        jQuery('#agregarBanco').on('click', AltaBanco);
-        jQuery('#altaC_P input:radio').on('click', tipoAlta);
-        jQuery('button.envio').on('click', saveCliente);
+
 		tabs = jQuery('#tabs-clientesTabs li');
 		detached = [];
 
-		form_attach = jQuery('#altaC_P').detach().prop('id', 'copia_form');
-		formulario = form_attach.clone();
+		formulario = jQuery('#container-form').clone().html();
 
 		<?php
-		if(!is_null($datos->rfc)){
-			echo 'jQuery("#bu_rfc").val("'.$datos->rfc.'");'."\n";
+		if(isset($rfcSearch) ){
+			echo 'jQuery("#bu_rfc").val("'.$rfcSearch.'");'."\n";
 			echo 'jQuery("#search").trigger("click");'."\n";
 
 		} else {
@@ -72,7 +68,18 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		?>
     });
 
-	function ajax(parametros){
+    function makeBinds() {
+	    jQuery('input[type="file"]').on('change' ,{
+		    msg: "<?php echo JText::_('UNSUPPORTED_FILE'); ?>"
+	    } , file_validation );
+	    jQuery('#nextTab').click('click', nextTab);
+	    jQuery('#agregarBanco').on('click', AltaBanco);
+	    jQuery('#tipo_alta_cp input:radio').on('click', tipoAlta);
+	    jQuery('button.envio').on('click', saveCliente);
+	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
+    }
+
+    function ajax(parametros){
 		
 		var request = jQuery.ajax({
 			url: parametros.link,
@@ -83,27 +90,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		return request;
 	}
 
-    function attachTab(campo) {
-	    jQuery.each(tabs, function (key, value) {
-		    li_href = jQuery(value).find('a').attr('href');
-		    if ((li_href == campo)) {
-			    if (campo == '#banco') {
-				    jQuery(tabs[key + 1]).before(detached[key]);
-			    }
-			    if (campo == '#empresa') {
-				    jQuery(tabs[key - 1]).after(detached[key]);
-			    }
-		    }
-	    });
-    }
-    function extractTab(campo) {
-	    jQuery.each(tabs, function (key, value) {
-		    li_href = jQuery(value).find('a').attr('href');
-		    if (li_href == campo) {
-			    detached[key] = jQuery(value).detach();
-		    }
-	    });
-    }
     function tipoAlta(){
 		var campo 		= '';
 		var campoMonto 	= jQuery('#monto');
@@ -134,22 +120,21 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 break;
 		}
     }
-	
-	function busqueda_rfc(){
+
+    function busqueda_rfc(){
 		var rfcBusqueda	=  jQuery('#bu_rfc').val();
-			
+
 		var envio = {
 			'link'			:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
 			'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
 		};
-		
+
 		var resultado = ajax(envio);
-		
+
 		resultado.done(function(response){
 
-			formulario.clearForm();
-			jQuery('#container-form').append(formulario);
-			jQuery('#container-form').find('#copia_form').prop('id', 'altaC_P');
+			jQuery('#container-form').empty().append(formulario);
+			makeBinds();
 
 			if(response.success == true){
                 <?php //Existe el rfc y se llena el form ?>
@@ -158,7 +143,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				jQuery.each(campo, function(k,v) {
 					extractTab(v);
 				});
-//				nextTab();
+				activeTab( '#tipo_alta' );
 
 			} else if (response.bu_rfc.success == 'invalid') {
                 <?php //RFC MAL ?>
@@ -167,6 +152,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<?php /* override para la fincion de mensajes de validacion */ ?>
 				response.bu_rfc.success = false;
 				mensajesValidaciones(response);
+				jQuery('#container-form').empty();
 
 			} else {
                 <?php //No existe el RFC DESEA DARLO DE ALTA? ?>
@@ -179,14 +165,18 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				else {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
 					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
+					extractTab('#empresa');
 				}
 				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
 				jQuery('#tipo_alta').prepend(msg);
-//				nextTab();
+
+				var the_tabs = jQuery('#tabs-clientesTabs');
+				the_tabs.find('li').addClass('disabled');
+				the_tabs.find('a').attr("data-toggle", "");
+				activeTab( '#tipo_alta' );
 			}
 		});
 	}
-
     function llenatablabancos(obj) {
         var fieldset = jQuery('fieldset#datosBancarios');
         fieldset.find('input:not(.eliminaBanco)').val('');
@@ -206,7 +196,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         var idIntegradoAlta = jQuery('#idCliPro').val();
 		var data = jQuery('#banco').find('select, input').serialize();
 			data +='&integradoId='+idIntegradoAlta;
-			
+
 		var parametros = {
 			'link'  : 'index.php?option=com_mandatos&view=clientesform&task=agregarBancoCliente&format=raw',
 			'datos' : data
@@ -220,6 +210,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
             if(obj.success === true) {
                 llenatablabancos(obj);
+	            habilita_fin();
             }else{
 	            if (typeof obj.msg.db_banco_codigo !== 'undefined'){
 		            if (obj.msg.db_banco_codigo !== true) {
@@ -229,7 +220,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	            mensajesValidaciones(obj.msg);
             }
 		});
-		
+
 	}
 
     function bajaBanco(campo){
@@ -252,13 +243,14 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             }
         });
     }
-	
-	function mensajes(msg, tipo){
+
+
+    function mensajes(msg, tipo){
 		var spanError = jQuery('#errorRFC');
-		
+
 		spanError.text(msg);
 		spanError.fadeIn();
-		
+
 		switch(tipo){
 			case 'msg':
 				spanError.delay(800).fadeOut(4000);
@@ -272,8 +264,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				break;
 		}
 	}
-	
-	function llenaForm(objeto){
+
+    function llenaForm(objeto){
 
         if(objeto.integrado != null){
             jQuery('#idCliPro').val(objeto.integrado.integrado_id);
@@ -287,7 +279,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 jQuery('input[id*="perFisicaMoral"]').prop('disabled', true);
 			});
 		}
-		
+
 		if(objeto.datos_personales != null){
 			jQuery.each(objeto.datos_personales, function(key,value){
 				jQuery('#dp_'+key).val(value);
@@ -295,7 +287,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			});
 			jQuery('#dp_cod_postal').trigger('click');
 		}
-		
+
 		if(objeto.datos_empresa != null){
 			jQuery.each(objeto.datos_empresa, function(key,value){
 				jQuery('#de_'+key).val(value);
@@ -312,19 +304,19 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			jQuery("#tp_monto").val(objeto.monto);
 		}
 	}
-
     function saveCliente(){
         var tab = jQuery(this).prop('id');
 
         if(tab != 'agregarBanco'){
             var campos = jQuery('#altaC_P').serialize();
             campos += '&tab='+tab;
-            campos += '&integradoId='+integradoId;
-            campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
+	        campos += '&integradoId='+integradoId;
+	        campos += '&dp_fecha_nacimiento='+jQuery('#dp_fecha_nacimiento').val();
 	        campos += '&t1_instrum_fecha='+jQuery('#t1_instrum_fecha').val();
 	        campos += '&t2_instrum_fecha='+jQuery('#t2_instrum_fecha').val();
 	        campos += '&pn_instrum_fecha='+jQuery('#pn_instrum_fecha').val();
 	        campos += '&rp_instrum_fecha='+jQuery('#rp_instrum_fecha').val();
+	        campos += '&'+jQuery('input[name="pj_pers_juridica"]').serialize();
 	        campos += '&<?php echo $token; ?>=1';
 
             var parametros = {
@@ -336,7 +328,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
             resultado.done(function(response){
                if(response.success === true){
-                   var spanMsg = jQuery('#msg')
+                   var spanMsg = jQuery('#msg');
                    jQuery('#idCliPro').val(response.idCliPro);
                    nextTab();
                    spanMsg.text('Datos Almacenados');
@@ -349,35 +341,63 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         }
     }
 
-    function activeTab(tab) {
-	    tab.removeClass('disabled');
-	    tab.find('a').attr("data-toggle", "tab").trigger('click');
+    function attachTab(campo) {
+	    var tabs = jQuery(formulario).find('#tabs-clientesTabs li');
+	    var lastTab = jQuery('#tabs-clientesTabs li:last-of-type');
+
+	    jQuery.each(tabs, function (key, value) {
+		    li_href = jQuery(value).find('a').attr('href');
+		    if ((li_href == campo)) {
+			    if (campo == '#banco') {
+				    jQuery(lastTab).after(value);
+			    }
+			    if (campo == '#empresa') {
+				    jQuery(tabs[key - 1]).after(detached[key]);
+			    }
+		    }
+	    });
+    }
+
+    function extractTab(campo) {
+	    li_href = jQuery('a[href="'+campo+'"]').parent();
+	    detached[campo] = jQuery(li_href).detach();
+    }
+
+    function activeTab(campo) {
+	    var tab_li = jQuery('a[href="'+campo+'"]').parent();
+	    tab_li.removeClass('disabled');
+	    tab_li.find('a').attr("data-toggle", "tab").trigger('click');
     }
 
     function nextTab() {
+	    var tabs = jQuery('#tabs-clientesTabs li');
+
 	    tabs.each(function (key, val) {
 		    var check = jQuery(val).hasClass('active');
 		    if( check == true) {
-			    nextTabObj = jQuery(tabs[key]).next();
+			    nextTabObj = jQuery(tabs[key]).next().find('a').attr('href');
 		    }
 	    });
 	    activeTab(nextTabObj);
     }
+
+	function habilita_fin() {
+		jQuery('#btn_fin').prop('href', 'index.php?option=com_mandatos&view=clienteslist').removeClass('disabled');
+	}
+
+
 </script>
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 
 <fieldset>
 	<div class="form-group">
-		<input type="text" id="bu_rfc" placeholder="Ingrese el RFC" maxlength="13" /> <span id="errorRFC" style="display: none;"></span>
-	</div>
-
-	<div class="form-group">
-		<input type="button" class="btn btn-primary" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
+		<input type="text" id="bu_rfc" class="form-control" placeholder="Ingrese el RFC" maxlength="13" /> <span id="errorRFC" style="display: none;"></span>
+		<input type="button" class="btn btn-primary form-control" id="search" value="<?php echo JText::_("LBL_SEARCH"); ?>" />
 	</div>
 </fieldset>
 
-<div id="container-form">
+<div id="container-form" class="form-actions">
 	<form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
 		<input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
@@ -385,7 +405,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-clientes', array('active' => JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') ));
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') );
 		?>
-		<fieldset>
+		<fieldset id="tipo_alta_cp">
 			<input type="hidden" name="tp_status" id="tp_status" value="<?php echo $datos->status ?>">
 			<div class="radio">
 				<label><input type="radio" name="tp_tipo_alta" id="tipoAlta0" value="0" ><?php echo JText::_('LBL_CLIENTE'); ?></label>
@@ -931,8 +951,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'files', JText::_('LBL_TAB_ARCHIVOS'));
 		?>
 		<fieldset>
-			<p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
-			<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+			<blockquote>
+				<p><?php echo JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, y PDF'); ?></p>
+				<p><?php echo JText::sprintf('LBL_MAX_FILE_SIZE', '10MB'); ?></p>
+			</blockquote>
 
 			<div class="form-group">
 				<label for="dp_url_identificacion"><?php echo JText::_('LBL_ID_FILE'); ?> *</label>
@@ -991,4 +1013,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
 	</form>
 </div>
-<a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
+<div class="form-actions">
+	<a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
+	<a class="btn btn-success disabled" id="btn_fin"><?php echo JText::_('LBL_FIN'); ?></a>
+</div>
+
+<?php
+echo '<div class="alert alert-dismissable alert-info"><h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS_TITLE').'</h4>'.JText::_('LBL_FORM_REQUEST_INTEGRADO_INSTRUCTIONS').'</div>';

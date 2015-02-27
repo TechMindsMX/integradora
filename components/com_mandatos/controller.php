@@ -288,8 +288,8 @@ class MandatosController extends JControllerLegacy {
             'rp_instrum_estado'             => 'STRING',
             'rp_instrum_num_instrumento'    => 'STRING',
             'tab'                           => 'STRING',
-            'tp_tipo_alta'                  => 'INT',
-            'tp_status'                     => 'INT',
+            'tp_tipo_alta'                  => 'STRING',
+            'tp_status'                     => 'STRING',
             'tp_monto'                      => 'FLOAT');
 
         $tab        = 'tipo_alta';
@@ -312,7 +312,7 @@ class MandatosController extends JControllerLegacy {
             }
 
             switch($data['tab']){
-                case 'tipoAlta':
+                case 'tipoAlta_btn':
                     $table 		= 'integrado_clientes_proveedor';
                     $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
                     $existe     = getFromTimOne::selectDB($table,$where);
@@ -630,10 +630,10 @@ class MandatosController extends JControllerLegacy {
 
     public function validatePost($data) {
         switch ($data['tab']) {
-            case 'tipoAlta':
+            case 'tipoAlta_btn':
                 $diccionario = array(
                     'tp_monto'           => array('float' => true,  'maxlength' => 15),
-                    'tp_tipo_alta'       => array('number' => true, 'requered' => true, 'maxlength' => 1)
+                    'tp_tipo_alta'       => array('number' => true, 'required' => true, 'maxlength' => 1)
                 );
                 break;
             case 'juridica':
@@ -711,7 +711,6 @@ class MandatosController extends JControllerLegacy {
 
         $diccionarioDefault  = array(
             'integradoId'                => array('number' => true,		    	'maxlength' => 10),
-            'tab'                        => array('string' => true,   	    	'maxlength' => 18),
         );
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 
