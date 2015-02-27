@@ -50,7 +50,7 @@ if(is_null($ordenes) || empty($ordenes)){
             case 0:
 	            allrows.each( function(k, v){
 		            v = jQuery(v);
-		            if (v.data('tipo') >= 5 && v.data('tipo') <= 21 ) {
+		            if (v.data('tipo') < 5 ) {
 			            v.show();
 		            }
 	            });
@@ -58,7 +58,7 @@ if(is_null($ordenes) || empty($ordenes)){
             case 1:
 	            allrows.each( function(k, v){
 		            v = jQuery(v);
-		            if (v.data('tipo') < 5 ) {
+		            if (v.data('tipo') >= 5 && v.data('tipo') <= 21 ) {
 			            v.show();
 		            }
 	            });
