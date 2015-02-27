@@ -43,18 +43,28 @@ if(is_null($ordenes) || empty($ordenes)){
     function filtro(){
         var valor	= parseInt( jQuery(this).val() );
 
+	    var allrows = jQuery('#myTable').find('tr[class*="type_"]');
+        allrows.hide();
+
         switch(valor){
             case 0:
-                jQuery('.type_1').show();
-                jQuery('.type_0').hide();
-                break;
+	            allrows.each( function(k, v){
+		            v = jQuery(v);
+		            if (v.data('tipo') < 5 ) {
+			            v.show();
+		            }
+	            });
+	            break;
             case 1:
-                jQuery('.type_0').show();
-                jQuery('.type_1').hide();
+	            allrows.each( function(k, v){
+		            v = jQuery(v);
+		            if (v.data('tipo') >= 5 && v.data('tipo') <= 21 ) {
+			            v.show();
+		            }
+	            });
                 break;
             case 3:
-                jQuery('.type_0').show();
-                jQuery('.type_1').show();
+	            allrows.show();
                 break;
         }
     }
@@ -112,7 +122,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 }
                 $class = $value->status->id == 1?'':'status1';
 
-                echo '<tr class="type_'.$value->status->id.'">';
+                echo '<tr class="type_'.$value->status->id.'" data-tipo="'.$value->status->id.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.' '.$value->numOrden.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.@$value->proveedor->tradeName.'</td>';

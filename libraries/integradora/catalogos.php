@@ -54,7 +54,7 @@ class Catalogos {
 
 	public function permisionLevels()
 	{
-		
+
 
 		$query = $this->db->getQuery(true)
 			->select(array($this->db->quoteName('id'),$this->db->quoteName('name')))
@@ -67,36 +67,46 @@ class Catalogos {
 	}
 
 	public function getBancos(){
-		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes'));
+		$cache = & JFactory::getCache();
 
-        foreach ($catalogo as $indice => $objeto) {
-            $catalogo2[$objeto->bankCode] = $objeto->name;
-        }
-        natsort($catalogo2);
+		$bancos  = $cache->call( array( 'Catalogos', 'getBancosFromTimOne' ) );
 
-        foreach ($catalogo2 as $key=>$value) {
+		$this->bancos = $bancos;
+
+		return $bancos;
+	}
+
+	public function getBancosFromTimOne() {
+		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
+
+		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));
+
+		foreach ($catalogo as $indice => $objeto) {
+			$catalogo2[$objeto->bankCode] = $objeto->name;
+		}
+		natsort($catalogo2);
+
+		foreach ($catalogo2 as $key=>$value) {
 			$objeto = new stdClass;
-			
+
 			$objeto->banco = $value;
 			$objeto->clave = $key;
 			$objeto->claveClabe = substr($key, -3);
-			
+
 			$cat[] = $objeto;
 		}
 
-		$this->bancos = $cat;
-
-        return $cat;
+		return $cat;
 	}
-	
+
 	public function getStatusSolicitud()
 	{
-		
-		
+
+
 		$query = $this->db->getQuery(true)
 			->select('*')
 			->from($this->db->quoteName('#__integrado_status_catalog'));
-		$status = $this->db->setQuery($query)->loadObjectList(); 
+		$status = $this->db->setQuery($query)->loadObjectList();
 
 		$this->statusSolicitud = $status;
 
@@ -115,8 +125,8 @@ class Catalogos {
 		return array(7,15,30,60,90,120,180,360);
 	}
 
-    public function getTiposPeriodos(){
-        
+	public function getTiposPeriodos(){
+
 
         $query = $this->db->getQuery(true)
             ->select('*')
@@ -128,7 +138,7 @@ class Catalogos {
     }
 
 	public function getCatalogoIVA(){
-		
+
 
 		$query = $this->db->getQuery(true)
 			->select('*')
@@ -151,6 +161,10 @@ class Catalogos {
 
 	public function providerTypes(){
 		return array(1,2);
+	}
+
+	public function getPaymentMethods() {
+		return array('LBL_SPEI', 'LBL_CHEQUE');
 	}
 }
 	

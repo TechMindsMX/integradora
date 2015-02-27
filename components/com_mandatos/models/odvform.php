@@ -1,4 +1,6 @@
 <?php
+use Integralib as v;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
@@ -13,9 +15,9 @@ class MandatosModelOdvform extends JModelItem {
 
     public function __construct(){
         $this->inputVars   = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
-        $session           = JFactory::getSession();
+        $this->session     = JFactory::getSession();
         $this->catalogos   = new Catalogos();
-        $this->integradoId = $session->get( 'integradoId', null, 'integrado' );
+        $this->integradoId = $this->session->get( 'integradoId', null, 'integrado' );
 
         parent::__construct();
     }
@@ -28,9 +30,10 @@ class MandatosModelOdvform extends JModelItem {
     }
 
     public function getClientes(){
-        $clientes = getFromTimOne::getClientes($this->integradoId, 0);
+	    $cliente = new v\Cliente();
+	    $clientes = $cliente->getAllActive($this->integradoId);
 
-        return $clientes;
+	    return $clientes;
     }
 
     public function getProyectos(){
@@ -66,7 +69,6 @@ class MandatosModelOdvform extends JModelItem {
 
     public function getProductos(){
         $respuesta = array();
-        $datos = new stdClass();
 
         $allproducts = getFromTimOne::getProducts($this->integradoId,null,1);
 

@@ -19,7 +19,7 @@ class MandatosViewMutuoslist extends JViewLegacy {
 			return false;
         }
 
-		$this->loadHelper('Mandatos');
+			$this->loadHelper('Mandatos');
 
 		// Verifica los permisos de edición y autorización
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->data->integradoId);

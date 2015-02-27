@@ -98,7 +98,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
     }
 
     private function logEvent( $info, $dato ) {
-        $logdata = $logdata = implode( ', ', array (
+        $logdata = implode( ' | ', array (
             JFactory::getUser()->id,
             $this->integradoId,
             __METHOD__.':'.__LINE__,

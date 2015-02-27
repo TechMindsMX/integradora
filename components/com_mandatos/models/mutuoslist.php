@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
 jimport('integradora.gettimone');
+jimport('integradora.mutuo');
 
 class MandatosModelMutuoslist extends JModelItem {
     public function __construct(){
@@ -43,10 +44,10 @@ class MandatosModelMutuoslist extends JModelItem {
                 $mutuosAcredor[] = $value;
             }
         }
-        $mutuosAcredor = self::formatData($mutuosAcredor);
-        $mutuos = $mutuosAcredor;
+        $classMutuo = new mutuo();
+        $mutuosAcredor = $classMutuo->formatData($mutuosAcredor);
 
-        return $mutuos;
+        return $mutuosAcredor;
     }
 
     public function getMutuosdeudor(){
@@ -58,13 +59,13 @@ class MandatosModelMutuoslist extends JModelItem {
                 $mutuosDeudor[] = $value;
             }
         }
-        $mutuosDeudor = self::formatData($mutuosDeudor);
-        $mutuos = $mutuosDeudor;
+        $classMutuo = new mutuo();
+        $mutuosDeudor = $classMutuo->formatData($mutuosDeudor);
 
-        return $mutuos;
+        return $mutuosDeudor;
     }
 
-    public static function formatData($AllData){
+    /*public static function formatData($AllData){
         $mutuos        = $AllData;
         $tiposPeriodos =  new Catalogos();
         $tipos = $tiposPeriodos->getTiposPeriodos();
@@ -102,7 +103,8 @@ class MandatosModelMutuoslist extends JModelItem {
             $integradoDeudor->banco  = $inDeudor->datos_bancarios;
             $value->integradoDeudor  = $integradoDeudor;
         }
+var_dump(json_decode($mutuos[0]->jsonTabla));
 
         return $mutuos;
-    }
+    }*/
 }

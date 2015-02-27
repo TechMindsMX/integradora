@@ -70,7 +70,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odr->paymentMethod; ?>
+				<?php echo JText::_($this->odr->paymentMethod->name); ?>
 			</div>
 		</div>
 		<div>
@@ -125,7 +125,7 @@ $number2word = new AifLibNumber();
 		</div>
 	</div>
 	<div class="clearfix" id="cuerpo">
-		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_RETIRAR'); ?></h3>Creo q
+		<h3><?php echo JText::_('LBL_DESCRIP_IMPORTE_RETIRAR'); ?></h3>
 		<table class="table table-bordered">
 			<thead>
 				<tr>

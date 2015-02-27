@@ -10,7 +10,7 @@ $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 ?>
-    <script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+    <script src="libraries/integradora/js/tim-validation.js"> </script>
     <script>
         jQuery(document).ready(function(){
             jQuery('input:button').on('click', envioAjax);
@@ -77,8 +77,15 @@ if(!$this->confirmacion){
         <div class="form-group">
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
-                <option value="0" <?php echo $datos->paymentMethod->id == 0 ? 'selected' : ''; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
-                <option value="1" <?php echo $datos->paymentMethod->id == 1 ? 'selected' : ''; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
+	            <?php
+	            $cat = new Catalogos();
+	            foreach ( $cat->getPaymentMethods() as $key => $val ) {
+		            if ( isset( $datos->paymentMethod ) ) {
+			            $selected = ($datos->paymentMethod->id == $key) ? ' selected ' : '';
+		            }
+		            echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val).'</option>';
+	            }
+	            ?>
             </select>
         </div>
 

@@ -48,6 +48,10 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 		$item->integrados[0]->datos_personales->nacionalidad = $this->getNacionalidad($item->integrados[0]->datos_personales->nacionalidad);
 
+        if(!is_null($item->integrados[0]->datos_empresa)) {
+            $item->getUrlsTestimonions();
+        }
+
 		$item->campos = $this->getCampos();
 
 		return $item;
@@ -99,8 +103,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 		return Integrado::getNationalityNameFromId($id);
 	}
 
-	function getCampos()
-	{
+	function getCampos(){
 		$campos = new stdClass();
 
 		$campos->LBL_SLIDE_BASIC = array(

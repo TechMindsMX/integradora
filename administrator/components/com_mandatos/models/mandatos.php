@@ -4,6 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.modellist');
 jimport('integradora.integrado');
 jimport('integradora.gettimone');
+//jimport('integradora.gettimone');
 
 class MandatosModelMandatos extends JModelList{
 	public function __construct($config = array()){
@@ -16,9 +17,8 @@ class MandatosModelMandatos extends JModelList{
 
     public function getMutuos(){
         $allMutuos = getFromTimOne::getParametrosMutuo();
-        $allMutuos = self::formatData($allMutuos);
-
-        $mutuos = $allMutuos;
+        $formatData = new mutuo();
+        $mutuos = $formatData->formatData($allMutuos);
 
         return $mutuos;
     }

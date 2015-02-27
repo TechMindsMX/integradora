@@ -53,7 +53,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     <thead>
     <tr class="row">
         <th>Deudor</th>
-        <th>Monto</th>
+        <th>Monto <span style="font-size:9px;">(Capital + Interes + IVA)</span></th>
+        <th>Saldo</th>
         <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
@@ -92,7 +93,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         ?>
         <tr class="row" <?php echo $style;?> >
             <td><?php echo $preview_button.' '.$value->integradoDeudor->nombre; ?></td>
-            <td>$<?php echo number_format($value->totalAmount,2); ?></td>
+            <td>$<?php echo number_format($value->totalCapital+$value->totalIva+$value->totalInteres,2); ?></td>
+            <td>$<?php echo number_format($value->saldo,2); ?></td>
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo round($value->duracion,2); ?> años</td>
@@ -110,7 +112,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     <thead>
     <tr class="row">
         <th>Acreedor</th>
-        <th>Monto</th>
+        <th>Monto <span style="font-size:9px;">(Capital + Interes + IVA)</span></th>
+        <th>Saldo</th>
         <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
@@ -123,14 +126,15 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 
         $url = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
         if($value->status == 1){
-            $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Generar ODP</a></td>';
+            $odp = '';// '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Generar ODP</a></td>';
         }else{
             $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
         <tr class="row">
             <td><?php echo $preview_button.' '.$value->integradoAcredor->nombre; ?></td>
-            <td>$<?php echo number_format($value->totalAmount,2); ?></td>
+            <td>$<?php echo number_format($value->totalCapital+$value->totalIva+$value->totalInteres,2); ?></td>
+            <td>$<?php echo number_format($value->saldo,2); ?></td>
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo $value->duracion; ?> años</td>

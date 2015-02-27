@@ -16,14 +16,11 @@ class MandatosModelOdrform extends JModelItem {
 
     function __construct(){
 
-	    $session            = JFactory::getSession();
-	    $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+	    $this->session      = JFactory::getSession();
+	    $this->integradoId  = $this->session->get( 'integradoId', null, 'integrado' );
 
 	    $this->data 		= JFactory::getApplication()->input->getArray();
-        //TODO revisar si se ocupan
 	    $this->idOrden      = isset($this->data['idOrden']) ? $this->data['idOrden'] : null;
-        //$this->integrado 	= new Integrado;
-        //$this->currUser	    = Jfactory::getUser();
 
         parent::__construct();
     }

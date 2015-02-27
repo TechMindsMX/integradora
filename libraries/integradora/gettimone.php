@@ -10,6 +10,7 @@ jimport('integradora.catalogos');
 jimport('integradora.rutas');
 jimport('integradora.xmlparser');
 jimport('integradora.integrado');
+jimport('integradora.mutuo');
 
 class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
@@ -137,17 +138,17 @@ class getFromTimOne{
          * */
 
         $tabla= new stdClass();
-        $tabla->intereses_con_iva      = $data->interes*1.16;
-        $tabla->capital       = $data->capital;
-        $tabla->tipoPeriodos  = $data->tiempoplazo;
-        switch($data->tipoPlazo){
+        $tabla->intereses_con_iva = $data->interes*1.16;
+        $tabla->capital           = $data->totalAmount;
+        $tabla->tipoPeriodos      = $data->quantityPayments;
+        switch($data->paymentPeriod){
             case 1:
                 $tabla->tperiodo        = 'Diaria';
                 $tabla->periodos_year   = '365';
                 break;
             case 2:
                 $tabla->tperiodo         = 'Quincenal';
-                $tabla->periodos_year    = '104';
+                $tabla->periodos_year    = '24';
                 break;
             case 3:
                 $tabla->tperiodo         = 'Mensual';
@@ -174,19 +175,19 @@ class getFromTimOne{
         }
 
         $temp           = (float) $tabla->intereses_con_iva/100;
-        $temp           = (float) $temp/$data->tiempoplazo;
+        $temp           = (float) $temp/$data->quantityPayments;
         $temp           = (float) $temp+1;
-        $temp           = (float) pow($temp, $data->tiempoplazo);
+        $temp           = (float) pow($temp, $data->quantityPayments);
         $temp           = (float) $temp-1;
-        $temp           = (float) $temp*$data->tiempoplazo;
+        $temp           = (float) $temp*$data->quantityPayments;
 
         $tabla->tasa_periodo           = (float) $tabla->intereses_con_iva;
         $tabla->tasa_efectiva_periodo  = (float) $temp*100;
-        $tabla->capital_fija           = (float) $data->capital/$data->tiempoplazo;
+        $tabla->capital_fija           = (float) $data->totalAmount/$data->quantityPayments;
         $final                         = (float) $tabla->capital;
         $capital                       = (float) $tabla->capital_fija;
 
-        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+        for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $inicial              = (float)$final;
             $intiva               = (float)$inicial*($tabla->intereses_con_iva/100);
 
@@ -208,14 +209,14 @@ class getFromTimOne{
         }
 
         $temp                           = (float) 1+($tabla->intereses_con_iva/100);
-        $temp                           = (float) pow($temp ,$data->tiempoplazo);
+        $temp                           = (float) pow($temp ,$data->quantityPayments);
         $number1                        = (float) $temp*($tabla->intereses_con_iva/100);
         $number2                        = (float) $temp-1;
         $tabla->factor                  = (float) $number1/$number2;
         $tabla->cuota_Fija              = (float) $tabla->factor*$tabla->capital;
         $saldo_final                    = (float) $tabla->capital;
 
-        for($i = 1; $i <= $data->tiempoplazo; $i++ ){
+        for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $saldo_inicial                    = (float)$saldo_final;
             $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
             $intereses                        = (float)$intiva/1.16;
@@ -261,6 +262,7 @@ class getFromTimOne{
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
+        $dataFormater = new mutuo();
         $tipos = getFromTimOne::getTiposPago();
         $integradoAcredor = new stdClass();
         $integradoDeudor  = new stdClass();
@@ -297,6 +299,7 @@ class getFromTimOne{
             $data->integradoAcredor = $integradoAcredor;
             $data->integradoDeudor = $integradoDeudor;
         }
+        $mutuos = $dataFormater->formatData($mutuos);
 
         return $mutuos;
     }
@@ -537,6 +540,8 @@ class getFromTimOne{
             $orden->iva_intereses     = (FLOAT)$value->iva_intereses;
             $orden->status            = (INT)$value->status;
 
+            $orden->statusName = getFromTimOne::getOrderStatusName($orden->status);
+
             $odps[] = $orden;
         }
 
@@ -574,6 +579,20 @@ class getFromTimOne{
         return $client;
     }
 
+    public static function getClientProviderFromIntegradoId( $integrado_id ) {
+        $client = array();
+
+        $clientes = self::getClientes();
+
+        foreach ( $clientes as $key => $value ) {
+            if ( $integrado_id == $value->idCliPro ) {
+                $client = $value;
+            }
+        }
+
+        return $client;
+    }
+
     public static function getBasicStatusCatalog() {
         $catalog = new Catalogos();
 
@@ -581,7 +600,7 @@ class getFromTimOne{
     }
 
     private static function getClientProviderName($clientProvider){
-        $clientProvider->frontName = $clientProvider->corporateName == ''?$clientProvider->tradeName:$clientProvider->corporateName;
+        $clientProvider->frontName = $clientProvider->corporateName == '' ? $clientProvider->tradeName : $clientProvider->corporateName;
     }
 
     public static function getBankName($arrayBancos){
@@ -672,7 +691,28 @@ class getFromTimOne{
         return $acceptedCurrenciesList;
     }
 
-    public function createNewProject($envio, $integradoId){
+	public static function searchBancoByClabe( $banco_clabe ) {
+		$db = JFactory::getDbo();
+
+		// busca los datos bancario por la CLABE
+		$table = 'integrado_datos_bancarios';
+		if ( empty( $banco_clabe ) ) {
+			$banco_clabe = '0000000';
+		}
+		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
+		$existe = getFromTimOne::selectDB( $table, $where );
+
+		return !empty($existe)?$existe[0]:null;
+	}
+
+	public static function getPersJuridica( $string ) {
+		$cat = new Catalogos();
+		$persJuridicas = array_flip( $cat->getPesonalidadesJuridicas() );
+
+		return $persJuridicas[ucfirst($string)];
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -755,7 +795,7 @@ class getFromTimOne{
 
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
-            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id AS integrado_id, status, bancos AS bancoIds')
+            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id, status, bancos AS bancoIds')
                 ->from('#__integrado_clientes_proveedor')
                 ->where('integrado_Id = ' . $userId);
             try {
@@ -770,15 +810,17 @@ class getFromTimOne{
                 $db = JFactory::getDbo();
                 $querygral = $db->getQuery(true);
 
-                $querygral->select('DE.rfc, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
+                $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
                     ->from('#__integrado_datos_personales AS DP')
-                    ->join('INNER', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quote($value->id) . ')')
-                    ->where('DE.integrado_id = ' . $value->id);
+                    ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
+                    ->where('DP.integrado_id = ' . $value->id);
+
                 try {
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
 
                     $value->rfc = @$general->rfc;
+                    $value->pRFC = @$general->pRFC;
                     $value->tradeName = @$general->tradeName;
                     $value->corporateName = @$general->corporateName;
                     $value->contact = @$general->contact;
@@ -841,7 +883,7 @@ class getFromTimOne{
             }
         }else{
             //Se regresan los datos de los clientes/proveedores dados de alta.
-            $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta, clientes.monto, clientes.status,
+            $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta AS type, clientes.monto, clientes.status,
                             DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
                             DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
                 ->from('#__integrado_clientes_proveedor AS clientes')
@@ -996,7 +1038,7 @@ class getFromTimOne{
             $value->attachment      = (STRING)$value->attachment;
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
-            $receptor    = new IntegradoSimple($value->integradoId);
+            $receptor               = new IntegradoSimple($value->integradoId);
             $value->recepror        = $receptor->getDisplayName();
 
             $value->status = self::getOrderStatusName($value->status);
@@ -1018,6 +1060,7 @@ class getFromTimOne{
             $value->orderType       = 'odr';
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = self::getOrderStatusName($value->status);
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
@@ -1043,6 +1086,7 @@ class getFromTimOne{
             $value->integradoId     = (INT)$value->integradoId;
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
+	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = (INT)$value->status;
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
@@ -1168,11 +1212,18 @@ class getFromTimOne{
     }
 
     public static function getPaymentMethodName($paymentMethodId){
-        $payMethod = new stdClass();
-        $names = array('<span style="color: red">No Seleccionado</span>','Cheque','Tranferencia','Efectivo','No Definido');
+	    $cat = new Catalogos();
+	    $names = $cat->getPaymentMethods();
 
-        $payMethod->id = $paymentMethodId;
-        $payMethod->name = $names[$paymentMethodId];
+	    try {
+		    $payMethod = new stdClass();
+
+		    $payMethod->id   = $paymentMethodId;
+		    $payMethod->name = $names[ $paymentMethodId ];
+	    } catch ( Exception $e) {
+		    $payMethod = null;
+		    JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');
+	    }
 
         return $payMethod;
     }
@@ -1243,7 +1294,7 @@ class getFromTimOne{
 
         //Temporal en lo que se crean las facturas.
         foreach ($allOrdenes as $orden) {
-            if($orden->status === 4){
+            if($orden->status->id === Order::getStatusIdByName('pagada')){
                 $orden->productos = json_decode($orden->productos);
 
                 foreach ($orden->productos  as $producto ) {
@@ -1268,8 +1319,12 @@ class getFromTimOne{
         return $odvs;
     }
 
-    public static function getSaldoOperacionesPorLiquidar($integardoId){
-        $allOdv = self::getOperacionesPorLiquidar($integardoId);
+	/**
+	 * @param $allOdv array getFromTimone::getOperacionesPorLiquidar(integ_id)
+	 *
+	 * @return stdClass
+	 */
+	public static function getSaldoOperacionesPorLiquidar($allOdv){
         $montoOperaciones   = new stdClass();
 
         $montoOperaciones->subtotalTotalOperaciones = 0;
@@ -1841,11 +1896,63 @@ class sendToTimOne {
 
                         break;
                 }
-                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . $fileinfo['extension'] ) );
+                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
 
                 $save[] = self::updateDB( $table, $updateSet, $where );
+            }else {
+                $campos[] = $key;
             }
         }
+
+        $integrado = new IntegradoSimple($integrado_id);
+        $integrado = $integrado->integrados[0];
+
+        if($integrado->integrado->pers_juridica == 2){
+            $evaluacion['dp_url_identificacion'] = $integrado->datos_personales->url_identificacion;
+            $evaluacion['dp_url_rfc'] = $integrado->datos_personales->url_rfc;
+            $evaluacion['dp_url_comprobante_domicilio'] = $integrado->datos_personales->url_comprobante_domicilio;
+
+
+        }
+
+        foreach($campos as $value){
+            $clave   = substr( $value, 0, 3 );
+            $columna = substr( $value, 3 );
+
+            switch($clave){
+                case 'dp_':
+                    is_null($integrado->datos_personales->$columna)?JFactory::getApplication()->enqueueMessage('Falta '.$columna.' o el formato del archivo es incorrecto'):'';
+                    break;
+                case 'de_':
+                    if($integrado->integrado->pers_juridica == 1){
+                        is_null($integrado->datos_empresa->url_rfc)?JFactory::getApplication()->enqueueMessage('Falta comprobante de RFC de Empresa o el formato del archivo es incorrecto'):'';
+                    }
+                    break;
+                case 't1_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta compribante del testimonio 1 o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 't2_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->testimonio2->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 2 o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 'pn_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->poder->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del poder notarial o el formato del archivo es incorrecto') : '';
+                    }
+                    break;
+                case 'rp_':
+                    if($integrado->integrado->pers_juridica == 1) {
+                        is_null($integrado->reg_propiedad->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del Registro publico de propiedad o el formato del archivo es incorrecto ') : '';
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return !in_array(false, $save);
 
     }
@@ -1904,7 +2011,7 @@ class sendToTimOne {
         $db->setQuery($query);
         $resultado = $db->loadObject();
 
-        $respuesta = is_null($resultado->lastOrderNum)?1:$resultado->lastOrderNum+1;
+        $respuesta = is_null($resultado->lastOrderNum) ? 1 : $resultado->lastOrderNum + 1;
 
         return $respuesta;
     }
@@ -1934,21 +2041,6 @@ class sendToTimOne {
         return $projectId;
     }
 
-    /* DATA PARA GUARDADO DE ORDEN DE PRESTAMO
-     * $data = new stdClass();
-     * $data->fecha_elaboracion=time();
-     * $data->fecha_deposito=time();
-     * $data->tasa=3;
-     * $data->tipo_movimiento='prestamo';
-     * $data->acreedor='1';
-     * $data->a_rfc='AUEN120101GA1';
-     * $data->deudor='2';
-     * $data->d_rfc='BAEM120101FE3';
-     * $data->capital=1230;
-     * $data->intereses=123;
-     * $data->iva_intereses=23;
-     * RETORNA ID DE PRESTAMO GUARDADO
-     */
     public function saveODP($data){
         $db		= JFactory::getDbo();
 
@@ -2014,7 +2106,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
@@ -2044,7 +2136,7 @@ class sendToTimOne {
             $db->execute();
             $return = true;
         }catch (Exception $e){
-            $logdata = implode(', ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
             $return = false;
         }
@@ -2237,7 +2329,6 @@ class sendToTimOne {
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
 
-        //simulado
         $integrado->cantidadAuthNecesarias = $integrado->getOrdersAtuhorizationParams();
 
         $tableAuth = $orderType.'_auth';
@@ -2341,34 +2432,22 @@ class sendToTimOne {
         $datosDeFacturacion = new datosDeFacturacion( $newOrden );
 
         foreach ( $newOrden->productosData as $key => $concepto ) {
-            $conceptos[$key] = new Conceptos( $newOrden->productosData[$key] );
+            $conceptos[$key] = new Concepto( $newOrden->productosData[$key] );
         }
 
         $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
+
+	    //TODO: qutar el mock cuando sea produccion
+	    if( ENVIROMENT_NAME == 'sandbox') {
+		    $data->setTestRFC();
+	    }
 
         return $data;
     }
 
     public function generateFacturaFromTimone( $factura ) {
-        // TODO: quitar mocks de sandbox
-//mocks sandbox
-        $serviceUrl = 'http://api.timone-factura.mx/facturacion/create';
-        $rfcTest = 'AAD990814BP7';
-        $factura->emisor->datosFiscales->rfc = $rfcTest;
-        $factura->receptor->datosFiscales->rfc = $rfcTest;
-//fin mocks sandbox
 
-        $jsonData   = json_encode( $factura );
-        $httpType   = 'POST';
-
-        $request = new sendToTimOne();
-        $request->setServiceUrl( $serviceUrl );
-        $request->setJsonData( $jsonData );
-        $request->setHttpType( $httpType );
-
-        $result = $request->to_timone(); // realiza el envio
-
-        return $result->data;
+        return $factura->sendCreateFactura(); // realiza el envio
     }
 
     /**
@@ -3332,6 +3411,11 @@ class Factura extends makeTx {
         $this->format = 'Xml';
     }
 
+	public function setTestRFC() {
+		$this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+		$this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+	}
+
     /**
      * @param $string
      */
@@ -3348,15 +3432,40 @@ class Factura extends makeTx {
         return $name;
     }
 
-    public function sendCreateFactura()
+	/**
+	 * @return bool
+	 */
+	public function sendCreateFactura()
     {
+	    $this->objEnvio = $this->setObjEnvio();
+
         $rutas = new servicesRoute();
-        parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+
+	    $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+
+	    if ($result === true) {
+		    $result = $this->returnXML();
+	    }
+	    return $result;
     }
+
+	public function returnXML() {
+		return $this->resultado->data;
+	}
+
+	/**
+	 * @return $this
+	 */
+	private function setObjEnvio() {
+		return $this;
+
+//TODO: quitar mock
+//  json_decode('{"emisor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"receptor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"datosDeFacturacion":{"moneda":"MXN","lugarDeExpedicion":"DF","numeroDeCuentaDePago":"DESCONOCIDO","formaDePago":"PAGO EN UNA SOLA EXHIBICION","metodoDePago":"TRANSFERENCIA ELECTRONICA","tipoDeComprobante":"ingreso"},"conceptos":[{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"},{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"}],"format":"Xml"}');
+	}
 
 }
 
-class Conceptos
+class Concepto
 {
 
     public $valorUnitario = '100.00';
@@ -3509,7 +3618,13 @@ class Cashout extends makeTx{
 
     public function sendCreateTx() {
         $rutas = new servicesRoute();
-        return parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+	    $result = parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+
+	    if ( $result === true ) {
+		    $this->saveTxOrderRelationship();
+	    }
+
+        return $result;
     }
 }
 
@@ -3527,13 +3642,25 @@ class transferFunds extends makeTx {
     public function sendCreateTx()
     {
         $rutas = new servicesRoute();
-        return parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+        $result = parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+
+	    if ( $result === true ) {
+		    $this->saveTxOrderRelationship();
+	    }
+
+	    return $result;
     }
 
 }
 
+/**
+ * @property  resultado
+ */
 class makeTx {
-    protected function create($datosEnvio){
+	protected $objEnvio;
+	protected $resultado;
+
+	protected function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();
@@ -3546,12 +3673,8 @@ class makeTx {
         jimport('joomla.log.log');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $this->resultado) ) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
-
-        if ($this->resultado->code == 200) {
-            $this->saveTxOrderRelationship();
-        }
 
         return $this->resultado->code == 200;
     }
@@ -3572,7 +3695,7 @@ class makeTx {
         $resultado = $request->insertDB('txs_timone_mandato');
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
-        $logdata = $logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
     }
 
@@ -3584,4 +3707,13 @@ class makeTx {
     }
 
 
+}
+
+class Order {
+
+	public static function getStatusIdByName( $string ) {
+		$statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
+
+		return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
+	}
 }

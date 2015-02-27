@@ -23,8 +23,8 @@ class MandatosModelSolicitudliquidacion extends JModelItem
         parent::__construct();
     }
 
-    public function getSaldo(){
-        $saldos = getFromTimOne::getSaldoOperacionesPorLiquidar($this->integradoId);
+    public function getSaldoOperaciones($operaciones){
+        $saldos = getFromTimOne::getSaldoOperacionesPorLiquidar($operaciones);
 
         return $saldos;
     }

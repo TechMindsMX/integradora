@@ -59,9 +59,9 @@ class MandatosModelMutuosform extends JModelItem {
         $respuesta = new stdClass();
 
         $dataTabla   = array(
-            'tiempoplazo' => $data->quantityPayments,
-            'tipoPlazo'   => $data->paymentPeriod,
-            'capital'     => $data->totalAmount,
+            'quantityPayments' => $data->quantityPayments,
+            'paymentPeriod'   => $data->paymentPeriod,
+            'totalAmount'     => $data->totalAmount,
             'interes'     => $data->interes
         );
         $tablas = getFromTimOne::getTablaAmotizacion((object)$dataTabla);
@@ -98,5 +98,24 @@ class MandatosModelMutuosform extends JModelItem {
         $mutuo = $mutuo[0];
 
         return $mutuo;
+    }
+
+    public function getMontoSaldo(){
+        $integradoId = $this->inputData->integradoId;
+        $mutuos      = getFromTimOne::getMutuos($integradoId);
+        $montoPrestamos = 0;
+
+        foreach ($mutuos as $key => $value) {
+            $montoPrestamos = $montoPrestamos + $value->saldo;
+        }
+
+        $integrado = new IntegradoSimple($integradoId);
+        $integrado->getTimOneData();
+
+        $datos = new stdClass();
+        $datos->montoPrestamos  = $montoPrestamos;
+        $datos->saldoDisponible = $integrado->timoneData->balance;
+
+        return $datos;
     }
 }

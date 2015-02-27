@@ -10,11 +10,9 @@ $document	= JFactory::getDocument();
 $app 		= JFactory::getApplication();
 
 // Datos
-$params 	= $app->input->getArray();
-
-$integrado 	= $this->integCurrent->integrados[0];
-
-$number2string = new AifLibNumber();
+$params 	    = $app->input->getArray();
+$integrado 	    = $this->integCurrent->integrados[0];
+$number2string  = new AifLibNumber();
 
 ?>
 
@@ -70,7 +68,7 @@ $number2string = new AifLibNumber();
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->odd->paymentMethod->name; ?>
+				<?php echo JText::_($this->odd->paymentMethod->name); ?>
 			</div>
 		</div>
 		<div>
@@ -78,7 +76,7 @@ $number2string = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->tel_fijo; ?>
+				<?php echo $integrado->datos_personales->tel_fijo; ?>
 			</div>
 			<div class="span2 text-right">
 			</div>
@@ -96,7 +94,7 @@ $number2string = new AifLibNumber();
 				<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odd->cuenta)) { echo $this->odd->cuenta; } ?>
+				<?php if (isset($integrado->datos_bancarios[0]->banco_cuenta)) { echo 'XXXXXX' . substr($integrado->datos_bancarios[0]->banco_cuenta, -4, 4); } ?>
 			</div>
 		</div>
 	</div>

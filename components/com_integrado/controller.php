@@ -61,12 +61,15 @@ class IntegradoController extends JControllerLegacy {
             $datos->integrados[0]->tipo_alta = isset($relation[0]->tipo_alta) ? $relation[0]->tipo_alta : '';
 
             echo json_encode($datos->integrados[0]);
-        }else{
+        }elseif( is_numeric($tipo_rfc) ){
             $respuesta['success'] = false;
             $respuesta['msg'] = JText::_('MSG_RFC_NO_EXIST');
-            $respuesta['pj_pers_juridica'] = $tipo_rfc;
+            $respuesta['bu_rfc'] = $tipo_rfc;
 
-            echo json_encode( array('bu_rfc' => $respuesta) );
+            echo json_encode( $respuesta );
+        }else{
+            $tipo_rfc['success'] = 'invalid';
+            echo json_encode( array('bu_rfc' => $tipo_rfc) );
         }
     }
 
@@ -253,6 +256,10 @@ class IntegradoController extends JControllerLegacy {
                     'de_num_exterior'             => 'STRING',
                     'de_num_interior'             => 'STRING',
                     'de_cod_postal'               => 'STRING',
+                    'de_tel_fijo'                 => 'STRING',
+                    'de_tel_fijo_extension'       => 'STRING',
+                    'de_tel_fax'                  => 'STRING',
+                    'de_sitio_web'                => 'STRING',
                     't1_instrum_notaria'          => 'STRING',
                     't1_instrum_estado'           => 'STRING',
                     't1_instrum_nom_notario'      => 'STRING',
@@ -356,12 +363,16 @@ class IntegradoController extends JControllerLegacy {
                     'de_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
-                    't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      'required' => true),
+                    'de_tel_fijo'                => array('alphaNumber' => true,        'maxlength' => 10,      'required' => true),
+                    'de_tel_fijo_extension'      => array('alphaNumber' => true,        'maxlength' => 10,      ),
+                    'de_tel_fax'                 => array('alphaNumber' => true,        'maxlength' => 10,      ),
+                    'de_sitio_web'               => array(/*'string'      => true*/     'maxlength' => 150,     ),
+                    't1_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      'required' => true),
                     't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
-                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,),
+                    'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       ),
                     't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
                     't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),

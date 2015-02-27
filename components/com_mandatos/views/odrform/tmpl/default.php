@@ -13,7 +13,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 $default    = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
 $amount     = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
 ?>
-	<script src="/integradora/libraries/integradora/js/tim-validation.js"> </script>
+	<script src="libraries/integradora/js/tim-validation.js"> </script>
 	<script>
 		jQuery(document).ready(function(){
 			jQuery('#amount').on('change', validaSaldo);
@@ -102,7 +102,7 @@ if(!$this->confirmacion){
 <div style="margin-bottom: 10px;">
 	<h4>
 		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
-		<span>$<?php echo number_format($this->integrado->balance); ?></span>
+		<span>$<?php echo number_format($this->integrado->balance,2); ?></span>
 	</h4>
 </div>
 
@@ -122,21 +122,14 @@ if(!$this->confirmacion){
         <label for="paymentMethod"><?php echo JText::_('LBL_FORMA_PAGO'); ?></label>
         <select id="paymentMethod" name="paymentMethod">
 	        <?php
-	        $select0 = '';
-	        $select1 = '';
-            if (isset($this->odr->paymentMethod)) {
-                switch ($this->odr->paymentMethod) {
-                    case 0:
-                        $select0 = 'selected';
-                        break;
-                    case 1:
-                        $select1 = 'selected';
-                        break;
-                }
-            }
+	        $cat = new Catalogos();
+	        foreach ( $cat->getPaymentMethods() as $key => $val ) {
+		        if ( isset( $this->odr->paymentMethod ) ) {
+			        $selected = ($this->odr->paymentMethod->id == $key) ? ' selected ' : '';
+		        }
+		        echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val).'</option>';
+	        }
 	        ?>
-            <option value="0" <?php echo $select0; ?>><?php echo JText::_('LBL_SPEI'); ?></option>
-            <option value="1" <?php echo $select1; ?>><?php echo JText::_('LBL_CHEQUE'); ?></option>
         </select>
     </div>
 

@@ -50,7 +50,9 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_PROY'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->proyecto->name; ?>
+			<?php if ( isset( $this->odv->proyecto->name ) ) {
+				echo $this->odv->proyecto->name;
+			} ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
@@ -70,7 +72,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->paymentMethod->name; ?>
+			<?php echo JText::_($this->odv->paymentMethod->name); ?>
 		</div>
 	</div>
 	<div>
@@ -154,7 +156,7 @@ $number2word = new AifLibNumber();
 						echo $prod->cantidad;
 					} ?></td>
 				<td><?php if ( ! empty( $prod->descripcion ) ) {
-						echo $prod->descripcion;
+						echo '<strong>'. $prod->producto .'</strong><br />'. $prod->descripcion;
 					} ?></td>
 				<td><?php if ( ! empty( $prod ) ) {
 						echo $prod->unidad;

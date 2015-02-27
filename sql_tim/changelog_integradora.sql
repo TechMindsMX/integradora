@@ -230,7 +230,7 @@ CREATE TABLE `flpmu_catalogo_ivas` (
   `valor` int(11) NOT NULL,
   `leyenda` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO  `integradb`.`flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
+INSERT INTO  `flpmu_catalogo_ivas` (`valor` ,`leyenda`) VALUES ('0', '0%'), ('11', '11%'), ('16', '16%');
 
 --rollback DROP TABLE `flpmu_catalogo_ivas`;
 
@@ -243,11 +243,11 @@ ALTER TABLE `flpmu_catalogo_ivas` ADD PRIMARY KEY (`valor`), ADD UNIQUE INDEX `v
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0', `valor` = 1  WHERE `valor` = 0;
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11', `valor` = 2 WHERE `valor` = 11;
 UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16', `valor` = 3 WHERE `valor` = 16;
-ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
+ALTER TABLE `flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` FLOAT (11) NOT NULL ;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '0%', `valor` = 0 WHERE `valor` = 1;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '11%', `valor` = 11 WHERE `valor` = 2;
 --rollback UPDATE `flpmu_catalogo_ivas` SET  `leyenda` = '16%', `valor` = 16 WHERE `valor` = 3;
---rollback ALTER TABLE `integradb`.`flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
+--rollback ALTER TABLE `flpmu_catalogo_ivas` CHANGE COLUMN `leyenda` `leyenda` VARCHAR(255) NOT NULL ;
 
 --changeset ricardolyon:26
 ALTER TABLE `flpmu_integrado_clientes_proveedor` ADD COLUMN `bancos` VARCHAR(255);
@@ -268,3 +268,18 @@ ALTER TABLE `flpmu_ordenes_deposito` CHANGE `totalAmount` `totalAmount` FLOAT (1
 --changeset lutek:30
 ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `bankId` INT (11);
 --rollback ALTER TABLE `flpmu_ordenes_compra` DROP COLUMN `bankId`;
+
+--changeset ricardolyon:31
+INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES (10082, 'System - Integralib', 'plugin', 'integralib', 'system', 0, 1, 1, 0, '{"name":"System - Integralib","type":"plugin","creationDate":"February 2015","author":"Ricardo Lyon","copyright":"","authorEmail":"ricardolyon@gmail.com","authorUrl":"","version":"1.0.0","description":"Simple plugin to register custom library.","group":""}', '{}', '', '', 0, '2015-02-10', 0, 0);
+--rollback DELETE FROM flpmu_extensions WHERE extension_id = 10082;
+
+--changeset lutek:32
+ALTER TABLE `flpmu_integrado_comisiones` ADD INDEX `integradoId` (`integradoId` ASC);
+--rollback ALTER TABLE `flpmu_integrado_comisiones` DROP INDEX `integradoId`;
+
+--changeset ricardolyon:33
+ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` INT (11);
+ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` INT (11);
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` BIGINT(20);
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` VARCHAR(255);
+

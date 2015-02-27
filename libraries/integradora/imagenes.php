@@ -12,14 +12,13 @@ class manejoImagenes {
 				move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".pdf");
                 $regreso = MEDIA_FILES . $usuario.'_'.$key . ".pdf";
 			} else{
-				echo 'no es imagen o el archivo esta corrupto <br />';
                 $regreso = 'verificar';
 			}
 
-		$logdata = implode(', ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__.':'.__LINE__, json_encode( array($tipo, $archivos, $validaciones, $regreso) ) ) );
+		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__.':'.__LINE__, json_encode( array($tipo, $archivos, $validaciones, $regreso) ) ) );
 		JLog::add($logdata,JLog::DEBUG, 'bitacora');
 
-		return $regreso;
+        return $regreso;
 	}
 
 	public static function resize($uploaded, $ruta, $tipo, $nombre, $max_ancho, $max_alto) {
@@ -119,6 +118,4 @@ class manejoImagenes {
 		clearstatcache();
 		imagejpeg($desired_gdim, $archivo, 90);
 	}
-
 }
-?>

@@ -49,7 +49,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             if($resultado) {
                 // autorización guardada
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-                $newStatusId  = 5;;
+                $newStatusId  = 5;
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
@@ -72,6 +72,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                                 $save->updateDB('ordenes_venta', null, $where);
                             }
                         }
+
+                        //TODO tx con TIMone
                     }
 	            }
 

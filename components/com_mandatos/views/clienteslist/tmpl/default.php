@@ -11,7 +11,7 @@ JHTML::_('behavior.calendar');
 $document	= JFactory::getDocument();
 $clientes	= $this->data;
 $type		= array('Cliente', 'Proveedor', 'Ambos');
-$status		= array('Activo', 'Inactivo');
+$status		= array('Inactivo', 'Activo');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 $document->addScript('libraries/integradora/js/form_helper.js');
@@ -196,13 +196,16 @@ function busquedapor(valor, campo){
 		<?php
 		if( !is_null($clientes) ){
 			foreach ($clientes as $key => $value) {
-				$selected = $value->status == 1 ? '' :'checked';
-				$class = $value->status == 0 ? '' :'status0';
+				$selected 		= $value->status == 0 ? '' :'checked';
+				$class 			= $value->status == 1 ? '' :'status0';
+				$rfc 			= is_null($value->rfc)?$value->pRFC:$value->rfc;
+				$corporateName 	= is_null($value->corporateName)?'Sin Denominación Social':$value->corporateName;
+
 				echo '<tr class="type_'.$value->type.' '.$class.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$type[$value->type].'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc" >'.$value->rfc.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc" >'.$rfc.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->tradeName.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rz" >'.$value->corporateName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="rz" >'.$corporateName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->contact.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->phone.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$status[$value->status];
