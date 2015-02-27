@@ -13,6 +13,9 @@ jimport('joomla.application.component.view');
 class FacturasporcobrarViewFacturapreview extends JViewLegacy {
 
 	function display($tpl = null){
+
+
+
 		$app 				= JFactory::getApplication();
 
        // echo '<pre>';
@@ -24,24 +27,21 @@ class FacturasporcobrarViewFacturapreview extends JViewLegacy {
 
 		$this->integCurrent = $this->get('integrado');
 
+
         if (count($errors = $this->get('Errors'))) {
-                JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
-                return false;
+            JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
+            return false;
         }
 
 		$this->loadHelper('Preview');
 
-		$this->factura->proyecto    = PreviewHelper::getProyectFromId($this->factura->proyectId, $this->integradoId);
+		$this->factura->proyecto    = PreviewHelper::getProyectFromId($this->factura->projectId, $this->integradoId);
 
 		$this->factura->proveedor   = PreviewHelper::getClientsFromID($this->factura->clientId, $this->integradoId);
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=facturapreview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
+		$url = 'index.php?option=com_facturasporcobrar&view=facturapreview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
 		$this->printBtn = PreviewHelper::getPrintButton($url);
-
-		// Verifica los permisos de edición y autorización
-		//$this->permisos = PreviewHelper::checkPermisos(__CLASS__, $this->integradoId);
-
 
 		parent::display($tpl);
 	}
