@@ -10,7 +10,6 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
-$productosOrden = json_decode($orden->productos);
 $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subproyectos'] : '';
 ?>
 <script src="libraries/integradora/js/tim-validation.js"> </script>
@@ -48,7 +47,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         //Tomo los valores de los campos.
         var cantidad    = columna.find('.cantidad').val();
         var precio      = columna.find('.p_unit').val();
-        var iva         = columna.find('select option:selected').html()
+        var iva         = columna.find('select option:selected').html();
         var ieps        = columna.find('.ieps').val();
         var subtotal    = 0;
         var total       = 0;
@@ -321,9 +320,9 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 <div id="columna1" ><?php echo JText::_('LBL_TOTAL'); ?></div>
             </div>
             <?php
-            if(is_array($productosOrden)) {
+            if(is_array($orden->productosData)) {
 
-                foreach ($productosOrden as $key => $value) {
+                foreach ($orden->productosData as $key => $value) {
                     $options = '';
 
                     foreach ($this->catalogoIva as $indice => $valor) {
@@ -341,7 +340,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                                    placeholder="Ingrese el nombre del producto"
                                    class="typeahead productos"
                                    data-items="3"
-                                   value="<?php echo $value->name; ?>">
+                                   value="<?php echo $value->producto; ?>">
                         </div>
                         <div id="columna2">
                             <input id="cantidad<?php echo $key; ?>"
@@ -371,7 +370,9 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                                    value="<?php echo $value->p_unitario; ?>">
                         </div>
                         <div id="columna2">
-                            <div id="subtotal"></div>
+                            <div id="subtotal">
+	                            <?php echo $value->subTotal; ?>
+                            </div>
                         </div>
                         <div id="columna2">
                             <select id="iva<?php echo $key; ?>" name="iva[]" class="iva cantidades">
@@ -386,7 +387,11 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                                    value="<?php echo $value->ieps; ?>">
                         </div>
                         <div id="columna2">
-                            <div id="total"></div>
+                            <div id="total">
+	                            <?php
+	                                echo $value->total;
+	                            ?>
+                            </div>
                         </div>
                     </div>
                 <?php
@@ -422,8 +427,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
     <div class="form-actions" style="max-width: 30%">
         <button type="button" class="btn btn-baja span3" id="clear_form"><?php echo JText::_('LBL_LIMPIAR'); ?></button>
         <button type="button" class="btn btn-primary span3" id="ordenVenta"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        <!--button type="button" class="btn btn-danger span3" id="cancel_form"><?php echo JText::_('LBL_CANCELAR'); ?></button-->
-        <a href="index.php?option=com_mandatos" class="btn btn-danger"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+        <a href="index.php?option=com_mandatos&view=odvlist" class="btn btn-danger"><?php echo JText::_('LBL_CANCELAR'); ?></a>
     </div>
 
 </form>
