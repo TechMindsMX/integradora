@@ -16,3 +16,34 @@ function filtro_fechas(){
         }
     });
 }
+
+function filtro_autorizadas(){
+    var valor	= parseInt( jQuery(this).val() );
+
+    var allrows = jQuery('#myTable').find('tr[class*="type_"]');
+    allrows.hide();
+
+    switch(valor){
+        case 0:
+            allrows.each( function(k, v){
+                v = jQuery(v);
+                var c = parseInt(v.data('filtro'));
+                if ( c < 5 ) {
+                    v.show();
+                }
+            });
+            break;
+        case 1:
+            allrows.each( function(k, v){
+                v = jQuery(v);
+                var c = parseInt(v.data('filtro'));
+                if ( c >= 5 && c <= 21 ) {
+                    v.show();
+                }
+            });
+            break;
+        case 3:
+            allrows.show();
+            break;
+    }
+}
