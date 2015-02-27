@@ -12,6 +12,7 @@ $document = JFactory::getDocument();
 $document->addScript('libraries/integradora/js/jquery.number.min.js');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('libraries/integradora/js/tim-filtros.js');
 
 $ordenes = $this->data;
 if(is_null($ordenes) || empty($ordenes)){
@@ -22,7 +23,7 @@ if(is_null($ordenes) || empty($ordenes)){
 <script>
     jQuery(document).ready(function(){
 
-        jQuery('.filtro').on('click', filtro);
+        jQuery('.filtro').on('click', filtro_autorizadas);
 
         jQuery("#myTable").tablesorter({
             sortList: [[0,0]],
@@ -35,24 +36,6 @@ if(is_null($ordenes) || empty($ordenes)){
         });
     });
 
-    function filtro(){
-        var valor	= parseInt( jQuery(this).val() );
-
-        switch(valor){
-            case 0:
-                jQuery('.type_0').show();
-                jQuery('.type_1').hide();
-                break;
-            case 1:
-                jQuery('.type_1').show();
-                jQuery('.type_0').hide();
-                break;
-            case 3:
-                jQuery('.type_0').show();
-                jQuery('.type_1').show();
-                break;
-        }
-    }
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_TITULO'); ?></h1>
 
@@ -107,7 +90,7 @@ if(is_null($ordenes) || empty($ordenes)){
                     $class = $value->status->id == 1 ? '' : 'status1';
                     $typeId = $value->status->id == 5 ? 1 : 0;
 
-                    echo '<tr class="type_' . $typeId . '">';
+                    echo '<tr class="type_' . $typeId . '"  data-tipo="'.$value->status->id.'">';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $preview_button . '' . $value->numOrden . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->createdDate . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >$' . number_format($value->totalAmount, 2) . '</td>';

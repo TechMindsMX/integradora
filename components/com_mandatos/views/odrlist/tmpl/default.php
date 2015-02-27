@@ -41,25 +41,6 @@ jQuery(document).ready(function(){
 	});
 });
 
-function filtro(){
-	var valor	= parseInt( jQuery(this).val() );
-    var type0   = jQuery('.type_0');
-    var type1   = jQuery('.type_1');
-	switch(valor){
-		case 0:
-            type0.show();
-            type1.hide();
-			break;
-		case 1:
-            type1.show();
-            type0.hide();
-			break;
-		case 3:
-            type0.show();
-            type1.show();
-			break;
-	}
-}
 </script>
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_LISTADO'); ?></h1>
 
