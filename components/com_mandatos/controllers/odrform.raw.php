@@ -13,8 +13,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
     private $integradoId;
 
     public function __construct(){
-        $session = JFactory::getSession();
-        $this->integradoId = $session->get('integradoId', null, 'integrado');
+        $this->session = JFactory::getSession();
+        $this->integradoId = $this->session->get('integradoId', null, 'integrado');
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
         $post = array(
@@ -93,8 +93,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }
 
         if($salvado) {
-            $sesion = JFactory::getSession();
-            $sesion->set('msg','Datos Almacenados', 'odrCorrecta');
+            $this->session->set('msg','Datos Almacenados', 'odr');
+	        $this->session->clear('data', 'odr');
 
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $idOrden.'&success=true',
                 'redireccion' => true);
@@ -118,6 +118,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
             unset($validaDatos['totalAmount']);
             $validacion = array_merge($validacionFunds, $validaDatos);
         }
+
+	    $this->session->set('data',json_encode($this->parametros), 'odr');
 
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode($validacion) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora');

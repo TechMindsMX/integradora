@@ -17,11 +17,16 @@ class MandatosViewOdrform extends JViewLegacy {
 
         if( isset($data['idOrden']) && $data['idOrden'] != '' ) {
             $this->odr = $this->get('ordenes');
+        } else {
+	        $sesData = json_decode( $session->get('data', null, 'odr'), true );
+	        if ( $sesData['idOrden'] == $data['idOrden'] && $data['confirmacion'] == 1 ) {
+		        $data = array_replace_recursive($data, $sesData);
+	        }
         }
 
         $this->integrado = new stdClass();
 		$this->integrado->balance   = $this->get('balance');
-        $this->actionUrl            = !isset($data['confirmacion'])?JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1'):'#';
+        $this->actionUrl            = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1') : '#';
         $this->datos                = $data;
 
         if(isset($data['confirmacion'])){
