@@ -86,7 +86,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->odv->account->banco_cuenta)) { echo $this->odv->account->banco_cuenta; } ?>
+			<?php if (isset($this->odv->account[0]->banco_cuenta)) { echo 'XXXXXX' . substr($this->odv->account[0]->banco_cuenta, -4, 4); } ?>
 		</div>
 	</div>
 </div>

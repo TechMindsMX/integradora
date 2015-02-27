@@ -327,7 +327,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
 
                     foreach ($this->catalogoIva as $indice => $valor) {
                         $selected = '';
-                        if($value->iva == $indice){
+                        if($value->iva == $valor->leyenda){
                             $selected = 'selected="selected"';
                         }
                         $options .= '<option value="'.$valor->valor.'" '.$selected.'>'.$valor->leyenda.'</option>';
