@@ -26,17 +26,28 @@ class MandatosModelOdvform extends JModelItem {
 
         $orden = getFromTimOne::getOrdenesVenta($this->integradoId, $this->inputVars['idOrden']);
 
-        return $orden[0];
+	    $orden = $this->calculateProductTotals($orden[0]);
+
+        return $orden;
     }
 
-    public function getClientes(){
+	private function calculateProductTotals( $orden ) {
+		foreach ( $orden->productosData as $key => $prod ) {
+			$orden->productosData[$key]->subTotal = (float)$prod->cantidad * (float)$prod->p_unitario;
+			$orden->productosData[$key]->total = $orden->productosData[$key]->subTotal * (1+( (float)$prod->iva /100 )) * (1+( (float)$prod->ieps /100 ));
+		}
+
+		return $orden;
+	}
+
+	public function getClientes(){
 	    $cliente = new v\Cliente();
 	    $clientes = $cliente->getAllActive($this->integradoId);
 
 	    return $clientes;
     }
 
-    public function getProyectos(){
+	public function getProyectos(){
         $proyectos = getFromTimOne::getProyects($this->integradoId);
         $data = array();
 
@@ -51,23 +62,23 @@ class MandatosModelOdvform extends JModelItem {
         return $data;
     }
 
-    public function getestados(){
+	public function getestados(){
         $estados    = $this->catalogos->getEstados();
 
         return $estados;
     }
 
-    public function getCatalogoIva(){
+	public function getCatalogoIva(){
         return $this->catalogos->getCatalogoIVA();
 
     }
 
-    public function getDatosSolicitud(){
+	public function getDatosSolicitud(){
 
         return new IntegradoSimple($this->integradoId);
     }
 
-    public function getProductos(){
+	public function getProductos(){
         $respuesta = array();
 
         $allproducts = getFromTimOne::getProducts($this->integradoId,null,1);
@@ -82,7 +93,7 @@ class MandatosModelOdvform extends JModelItem {
         return $respuesta;
     }
 
-    public function getCuentas(){
+	public function getCuentas(){
         $cuentas = getFromTimOne::selectDB('integrado_datos_bancarios', 'integrado_id = '.$this->integradoId);
         foreach ($cuentas as $objeto) {
             $objeto->banco_cuenta_xxx = 'XXXXXX' . substr($objeto->banco_cuenta, -4, 4);
