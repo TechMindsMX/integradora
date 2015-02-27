@@ -1501,12 +1501,10 @@ class getFromTimOne{
 
         $query
             ->select('*')
-            ->from($db->quoteName('#__ordenes_venta', 'a'))
-            ->join('INNER', $db->quoteName('#__facturasxcobrar', 'b') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('b.id_odv') . ')')
-            ->where($db->quoteName('a.status') . ' =28');
+            ->from($db->quoteName('#__ordenes_venta'))
+            ->where($db->quoteName('status') . ' =13');
         $db->setQuery($query);
         $results= $db->loadObjectList();
-
         return $results;
     }
 
