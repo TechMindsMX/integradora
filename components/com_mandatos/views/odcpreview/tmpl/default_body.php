@@ -59,7 +59,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_SUBPROY'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($orden->sub_proyecto->name)) { echo $orden->sub_proyecto->name; } ?>
+				<?php if (isset($orden->subproyecto->name)) { echo $orden->subproyecto->name; } ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
