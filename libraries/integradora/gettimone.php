@@ -783,7 +783,7 @@ class getFromTimOne{
 
         try{
             $db->setQuery($query);
-            $result = $db->loadObjectList('');
+            $result = $db->loadObjectList();
         }catch (Exception $e){
             var_dump($e);
         }
