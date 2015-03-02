@@ -20,6 +20,26 @@ $sesion->clear('msg','misdatos');
 
 $number2word    = new AifLibNumber;
 $attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
+//pintar los proyectos
+$optionsProyectos = '';
+foreach ($this->proyectos as $key => $proyecto) {
+    if(isset($datos->proyecto)) {
+        $selected = $datos->proyecto == $proyecto->id_proyecto ? 'selected' : '';
+    }else{
+        $selected = '';
+    }
+    $optionsProyectos .= '<option value="' . $proyecto->id_proyecto . '" ' . $selected . '>' . $proyecto->name . '</option>';
+
+    foreach($proyecto->subproyectos as $subProyecto){
+        if(isset($datos->proyecto)) {
+            $selected = $datos->proyecto == $proyecto->id_proyecto ? 'selected' : '';
+        }else{
+            $selected = '';
+        }
+        $optionsProyectos .= '<option value="' . $subProyecto->id_proyecto . '" ' . $selected . '> -- ' . $subProyecto->name . '</option>';
+    }
+}
 ?>
     <script src="libraries/integradora/js/tim-validation.js"> </script>
     <script>
@@ -173,14 +193,7 @@ if(!isset($this->datos['confirmacion'])){
             <label for="proyecto"><?php echo JText::_('COM_MANDATOS_PROYECTOS_LISTADO_TH_NAME_PROYECTO') ?></label>
             <select id="proyecto" name="proyecto">
                 <?php
-                foreach ($this->proyectos as $key => $value) {
-                    $selected = $datos->proyecto == $value->id_proyecto ? 'selected' : '';
-                    if($value->parentId == 0) {
-                        echo '<option value="' . $value->id_proyecto . '" ' . $selected . '>' . $value->name . '</option>';
-                    }else{
-                        echo '<option value="' . $value->id_proyecto . '" ' . $selected . '> - ' . $value->name . '</option>';
-                    }
-                }
+                echo $optionsProyectos;
                 ?>
             </select>
         </div>
