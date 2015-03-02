@@ -1,13 +1,6 @@
 <?php
 defined('_JEXEC') or die;
-jimport('joomla.application.component.modellist');
-jimport('integradora.integrado');
-jimport('integradora.catalogos');
-jimport('integradora.validator');
-jimport('integradora.integrado');
-jimport('integradora.imagenes');
 jimport('integradora.gettimone');
-jimport('integradora.classDB');
 
 /**
  * Methods supporting a list of Facturas records.
@@ -28,7 +21,7 @@ class conciliacionadminModelOdcform extends JModelList
 
         $data = getFromTimOne::getOrdenesCompra(null, $odcNum);
         $data = $data[0];
-        $data->factura = getFromTimOne::getDataFactura($data);
+//        $data->factura = getFromTimOne::getDataFactura($data);
         $data->integradoName = $this->getIntegradoName($data->integradoId);
 
         return $data;
@@ -52,13 +45,17 @@ class conciliacionadminModelOdcform extends JModelList
     }
 
     public function getTransacciones(){
+	    $return = '';
         $orden = $this->getOrden();
         $respuesta = getFromTimOne::getTxIntegradoSinMandato();
-        foreach ($respuesta as $tx) {
-            if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) && $tx->conciliacionMandato == 0 ) {
-                $return[] = $tx;
-            }
-        }
+
+	    if (!empty($respuesta)) {
+		    foreach ($respuesta as $tx) {
+			    if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) && $tx->conciliacionMandato == 0 ) {
+				    $return[] = $tx;
+			    }
+		    }
+	    }
 
         return $return;
     }

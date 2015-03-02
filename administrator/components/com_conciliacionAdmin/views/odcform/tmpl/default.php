@@ -9,9 +9,11 @@ $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 $option = '';
-foreach ($this->txs as $txs) {
-    $txs->dateJavascript = date('Y-m-d', ($txs->fechaTimestamp) );
-    $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.number_format($txs->amount,2).'</option>';
+if ( ! empty( $this->txs ) ) {
+	foreach ($this->txs as $txs) {
+	    $txs->dateJavascript = date('Y-m-d', ($txs->fechaTimestamp) );
+	    $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.number_format($txs->amount,2).'</option>';
+	}
 }
 ?>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">

@@ -56,6 +56,12 @@ class conciliacionAdminController extends JControllerLegacy {
         );
         $data = (object) JFactory::getApplication()->input->getArray($post);
 
+	    $valida = $this->validatePost( $data );
+
+	    if (!$valida) {
+		    JFactory::getApplication()->redirect('index.php?option=com_conciliacionadmin&view=odcform&idOrden='.$data->idOrden);
+	    }
+
         $changeDateType = new DateTime($data->date);
         $fecha = $changeDateType->getTimestamp();
 
@@ -122,4 +128,29 @@ class conciliacionAdminController extends JControllerLegacy {
             JFactory::getApplication()->enqueueMessage(JText::_('com_comciliacionadmin_error_save'),'error');
         }
     }
+
+	private function validatePost( $data ) {
+		$diccionario = array(
+			'idTx'          => array('number' => true,   'required' => true),
+			'type'          => array('alphaNum' => true,   'required' => true),
+			'idOrden'       => array('number' => true,   'required' => true),
+			'integradoId'   => array('number' => true,   'required' => true),
+			'ordenPagada'   => array('number' => true,   'required' => true),
+			'referencia'    => array('alphaNum' => true,   'required' => true),
+			'cuenta'        => array('alphaNum' => true,   'required' => true),
+			'date'          => array('alphaNum' => true,   'required' => true),
+			'amount'        => array('float' => true,   'required' => true)
+		);
+
+		$validador = new validador();
+
+		$respuesta = $validador->procesamiento($data, $diccionario);
+		$passed = $validador->allPassed();
+
+		if (!$passed) {
+			JFactory::getApplication()->enqueueMessage(JText::_('ERR_DATA_INCORRECT'), 'error');
+		}
+
+		return $passed;
+	}
 }
