@@ -146,7 +146,8 @@ if(!$this->confirmacion){
     </div>
 </form>
 <?php
-}else{
+	// confirmación de orden
+} else {
     $datos = $this->datos;
     $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
 ?>
