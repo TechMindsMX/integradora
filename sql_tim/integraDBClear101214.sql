@@ -3532,7 +3532,7 @@ CREATE TABLE `flpmu_users` (
 
 LOCK TABLES `flpmu_users` WRITE;
 /*!40000 ALTER TABLE `flpmu_users` DISABLE KEYS */;
-INSERT INTO `flpmu_users` VALUES (93,'Super User','Thor','ricardo.lyon@trama.mx','$2y$10$VBlMvxBwmAmYQBlKny7FW.2TKEK9O.ikKqjdHgNpGYN9hmQ8p1IAq',0,1,'2014-07-10 16:39:29','2014-12-09 21:28:06','0','{}','0000-00-00 00:00:00',0,'','',0);
+INSERT INTO `flpmu_users` VALUES (93,'Super User','Thor','administrator@trama.mx','$2y$10$VBlMvxBwmAmYQBlKny7FW.2TKEK9O.ikKqjdHgNpGYN9hmQ8p1IAq',0,1,'2014-07-10 16:39:29','2014-12-09 21:28:06','0','{}','0000-00-00 00:00:00',0,'','',0);
 /*!40000 ALTER TABLE `flpmu_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
