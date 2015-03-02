@@ -1,8 +1,6 @@
 <?php
 defined('JPATH_PLATFORM') or die;
 
-define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
-
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('joomla.log.log');
@@ -764,6 +762,29 @@ class getFromTimOne{
         }elseif(!is_null($projectId) && is_null($integradoId)){
             $where = 'id_proyecto = '.$projectId;
         }
+
+//        $db = JFactory::getDbo();
+//        $query = $db->getQuery(true);
+//        $query->select( $db->quoteName('t2.parentId', 'parent').', '.$db->quoteName('t2.name', 'lev2') )
+//            ->from($db->quoteName('#__integrado_proyectos', 't1'))
+//            ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')');
+//
+//        try{
+//            $db->setQuery($query);
+//            $result = $db->loadObjectList();
+//        }catch (Exception $e){
+//            var_dump($e);
+//        }
+//
+//
+//        foreach ($result as $value) {
+//            if(!is_null($value->lev2)){
+//                $respuesta1[] = $value;
+//            }
+//        }
+//
+//        var_dump($respuesta1);
+//        exit;
         $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
 
         return $respuesta;
@@ -1100,7 +1121,7 @@ class getFromTimOne{
             $value                  = self::getProviderFromID($value);
             $value->status          = self::getOrderStatusName($value->status);
 
-            $xmlFileData            = file_get_contents(JPATH_BASE.DIRECTORY_SEPARATOR.$value->urlXML);
+            $xmlFileData            = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$value->urlXML);
             $data 			        = new xml2Array();
             $value->factura         = $data->manejaXML($xmlFileData);
 

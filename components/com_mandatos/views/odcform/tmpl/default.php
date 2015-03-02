@@ -165,7 +165,7 @@ if(!isset($this->datos['confirmacion'])){
         <div class="form-group">
             <label for="bankId">Cuenta para pago</label>
             <select id="bankId" name="bankId">
-                <option value="0">Seleccione el integrado</option>
+                <option value="0">Seleccione el Proveedor</option>
             </select>
         </div>
 
@@ -174,8 +174,12 @@ if(!isset($this->datos['confirmacion'])){
             <select id="proyecto" name="proyecto">
                 <?php
                 foreach ($this->proyectos as $key => $value) {
-                    $selected = $datos->proyecto == $value->id_proyecto?'selected':'';
-                    echo '<option value="'.$value->id_proyecto.'" '.$selected.'>'.$value->name.'</option>';
+                    $selected = $datos->proyecto == $value->id_proyecto ? 'selected' : '';
+                    if($value->parentId == 0) {
+                        echo '<option value="' . $value->id_proyecto . '" ' . $selected . '>' . $value->name . '</option>';
+                    }else{
+                        echo '<option value="' . $value->id_proyecto . '" ' . $selected . '> - ' . $value->name . '</option>';
+                    }
                 }
                 ?>
             </select>
