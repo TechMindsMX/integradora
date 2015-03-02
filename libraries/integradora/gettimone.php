@@ -3709,9 +3709,15 @@ class makeTx {
 
 class Order {
 
+	protected $minAmount;
+
 	public static function getStatusIdByName( $string ) {
 		$statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
 
 		return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
+	}
+
+	public static function getMinAmount() {
+		return 10;
 	}
 }

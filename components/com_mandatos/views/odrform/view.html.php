@@ -19,8 +19,10 @@ class MandatosViewOdrform extends JViewLegacy {
             $this->odr = $this->get('ordenes');
         } else {
 	        $sesData = json_decode( $session->get('data', null, 'odr'), true );
-	        if ( $sesData['idOrden'] == $data['idOrden'] && $data['confirmacion'] == 1 ) {
-		        $data = array_replace_recursive($data, $sesData);
+	        if ( isset( $data['idOrden'] ) ) {
+		        if ( $sesData['idOrden'] == $data['idOrden'] && $data['confirmacion'] == 1 ) {
+			        $data = array_replace_recursive($data, $sesData);
+		        }
 	        }
         }
 
