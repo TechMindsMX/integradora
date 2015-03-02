@@ -767,6 +767,8 @@ class getFromTimOne{
     }
 
     public static function getAllSubProyects($idProy = null){
+	    $respuesta = null;
+
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         if( is_null($idProy) ){

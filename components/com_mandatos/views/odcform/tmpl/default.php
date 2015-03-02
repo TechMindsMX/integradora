@@ -31,14 +31,16 @@ foreach ($this->proyectos as $key => $proyecto) {
     }
     $optionsProyectos .= '<option value="' . $proyecto->id_proyecto . '" ' . $selected . '>' . $proyecto->name . '</option>';
 
-    foreach($proyecto->subproyectos as $subProyecto){
-        if(isset($datos->proyecto)) {
-            $selected = $datos->proyecto == $proyecto->id_proyecto ? 'selected' : '';
-        }else{
-            $selected = '';
-        }
-        $optionsProyectos .= '<option value="' . $subProyecto->id_proyecto . '" ' . $selected . '> -- ' . $subProyecto->name . '</option>';
-    }
+	if ( isset( $proyecto->subproyectos ) ) {
+		foreach($proyecto->subproyectos as $subProyecto){
+		    if(isset($datos->proyecto)) {
+		        $selected = $datos->proyecto == $proyecto->id_proyecto ? 'selected' : '';
+		    }else{
+		        $selected = '';
+		    }
+		    $optionsProyectos .= '<option value="' . $subProyecto->id_proyecto . '" ' . $selected . '> -- ' . $subProyecto->name . '</option>';
+		}
+	}
 }
 ?>
     <script src="libraries/integradora/js/tim-validation.js"> </script>
