@@ -1125,7 +1125,6 @@ class getFromTimOne{
 
             $value->bankId          = (INT)$value->bankId;
             $value->dataBank        = self::getDataBankByBankId($value->bankId);
-            $value                  = self::getProyectFromId($value);
             $value                  = self::getProviderFromID($value);
             $value->status          = self::getOrderStatusName($value->status);
 
@@ -1137,8 +1136,18 @@ class getFromTimOne{
             $value->totalAmount     = $value->factura->comprobante['TOTAL'];
             $value->iva             = $value->factura->impuestos->iva->importe;
             $value->ieps            = $value->factura->impuestos->ieps->importe;
-        }
 
+            $proyectos = self::getProyects(null, $value->proyecto);
+
+            if($proyectos[$value->proyecto]->parentId != 0){
+                $value->subproyecto = $proyectos[$value->proyecto];
+                $proyecto = self::getProyects(null, $proyectos[$value->proyecto]->parentId);
+                $value->proyecto = $proyecto[$value->subproyecto->parentId];
+            }else{
+                $value->proyecto = $proyectos[$value->proyecto];
+                $value->subproyecto = '';
+            }
+        }
 
         return $orden;
     }
