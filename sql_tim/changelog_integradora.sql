@@ -283,3 +283,6 @@ ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` INT (11);
 --rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `numOrden` `numOrden` BIGINT(20);
 --rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` VARCHAR(255);
 
+--changeset ricardolyon:34
+INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES (10085, 'Conciliacion', 'component', 'com_conciliacionadmin', '', 1, 1, 1, 0, '{"name":"Conciliacion Admiin","type":"component","creationDate":"2014-10-17","author":"ismael","copyright":"Copyright (C) 2014. Todos los derechos reservados.","authorEmail":"aguilar_2001@hotmail.com","authorUrl":"http:\\/\\/","version":"1.0.0","description":"Movimientos registrados por STP","group":""}', '{}', '', '', 0, now(), 0, 0);
+--rollback DELETE FROM flpmu_extensions WHERE extension_id = 10085;
