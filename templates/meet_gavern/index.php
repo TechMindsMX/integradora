@@ -25,5 +25,6 @@ require_once('lib/gk.framework.php');
 JFactory::getDocument()->addScript('libraries/integradora/js/form_helper.js');
 $tpl = new GKTemplate($this);
 
+echo "BLA";
 // EOF
 
