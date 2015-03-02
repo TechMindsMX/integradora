@@ -19,7 +19,15 @@ class MandatosModelOdrform extends JModelItem {
 	    $this->session      = JFactory::getSession();
 	    $this->integradoId  = $this->session->get( 'integradoId', null, 'integrado' );
 
-	    $this->data 		= JFactory::getApplication()->input->getArray();
+	    $array = array(
+		    'paymentDate'   => 'STRING',
+		    'integradoId'   => 'INT',
+		    'idOrden'       => 'INT',
+		    'paymentMethod' => 'INT',
+		    'totalAmount'   => 'FLOAT'
+	    );
+
+	    $this->data 		= JFactory::getApplication()->input->getArray($array);
 	    $this->idOrden      = isset($this->data['idOrden']) ? $this->data['idOrden'] : null;
 
         parent::__construct();
