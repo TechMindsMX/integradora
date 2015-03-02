@@ -1137,6 +1137,9 @@ class getFromTimOne{
             $value->iva             = $value->factura->impuestos->iva->importe;
             $value->ieps            = $value->factura->impuestos->ieps->importe;
 
+            $emisor = new IntegradoSimple($value->integradoId);
+            $value->emisor = $emisor->getDisplayName();
+
             $proyectos = self::getProyects(null, $value->proyecto);
 
             if($proyectos[$value->proyecto]->parentId != 0){
@@ -1148,7 +1151,6 @@ class getFromTimOne{
                 $value->subproyecto = '';
             }
         }
-
         return $orden;
     }
 

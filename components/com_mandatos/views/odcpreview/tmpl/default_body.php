@@ -31,7 +31,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->integCurrent->integrados[0]->datos_empresa->razon_social; ?>
+				<?php echo $orden->emisor; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -85,7 +85,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 				</div>
 				<div class="span10">
-					<?php echo $orden->proveedor->tradeName; ?>
+					<?php echo $orden->proveedor->frontName; ?>
 				</div>
 			</div>
 			<div>
