@@ -679,7 +679,7 @@ class getFromTimOne{
         return $columnasValoresArray;
     }
 
-	/**
+    /**
      * @return string separado por comas
      */
     public static function acceptedCurrenciesList() {
@@ -689,28 +689,28 @@ class getFromTimOne{
         return $acceptedCurrenciesList;
     }
 
-	public static function searchBancoByClabe( $banco_clabe ) {
-		$db = JFactory::getDbo();
+    public static function searchBancoByClabe( $banco_clabe ) {
+        $db = JFactory::getDbo();
 
-		// busca los datos bancario por la CLABE
-		$table = 'integrado_datos_bancarios';
-		if ( empty( $banco_clabe ) ) {
-			$banco_clabe = '0000000';
-		}
-		$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
-		$existe = getFromTimOne::selectDB( $table, $where );
+        // busca los datos bancario por la CLABE
+        $table = 'integrado_datos_bancarios';
+        if ( empty( $banco_clabe ) ) {
+            $banco_clabe = '0000000';
+        }
+        $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
+        $existe = getFromTimOne::selectDB( $table, $where );
 
-		return !empty($existe)?$existe[0]:null;
-	}
+        return !empty($existe)?$existe[0]:null;
+    }
 
-	public static function getPersJuridica( $string ) {
-		$cat = new Catalogos();
-		$persJuridicas = array_flip( $cat->getPesonalidadesJuridicas() );
+    public static function getPersJuridica( $string ) {
+        $cat = new Catalogos();
+        $persJuridicas = array_flip( $cat->getPesonalidadesJuridicas() );
 
-		return $persJuridicas[ucfirst($string)];
-	}
+        return $persJuridicas[ucfirst($string)];
+    }
 
-	public function createNewProject($envio, $integradoId){
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -755,37 +755,45 @@ class getFromTimOne{
     public static function getProyects($integradoId = null, $projectId = null){
         $where = null;
 
-        if(!is_null($integradoId) && !is_null($projectId)){
-            $where = 'id_proyecto = '.$projectId;
-        }elseif(!is_null($integradoId) && is_null($projectId)){
-            $where = 'integradoId = '.$integradoId;
-        }elseif(!is_null($projectId) && is_null($integradoId)){
+        if(!is_null($integradoId)){
+            $where = 'parentId = 0 AND integradoId = '.$integradoId;
+        }elseif(!is_null($projectId)){
             $where = 'id_proyecto = '.$projectId;
         }
 
-//        $db = JFactory::getDbo();
-//        $query = $db->getQuery(true);
-//        $query->select( $db->quoteName('t2.parentId', 'parent').', '.$db->quoteName('t2.name', 'lev2') )
-//            ->from($db->quoteName('#__integrado_proyectos', 't1'))
-//            ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')');
-//
-//        try{
-//            $db->setQuery($query);
-//            $result = $db->loadObjectList();
-//        }catch (Exception $e){
-//            var_dump($e);
-//        }
-//
-//
-//        foreach ($result as $value) {
-//            if(!is_null($value->lev2)){
-//                $respuesta1[] = $value;
-//            }
-//        }
-//
-//        var_dump($respuesta1);
-//        exit;
         $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
+
+        return $respuesta;
+    }
+
+    public static function getAllSubProyects($idProy = null){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        if( is_null($idProy) ){
+            $query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
+                ->from($db->quoteName('#__integrado_proyectos', 't1'))
+                ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')');
+        }else{
+            $query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
+                ->from($db->quoteName('#__integrado_proyectos', 't1'))
+                ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')')
+            ->where($db->quoteName('t2.parentId').' = '.$db->quote($idProy));
+        }
+
+
+        try{
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+        }catch (Exception $e){
+            var_dump($e);
+        }
+
+
+        foreach ($result as $value) {
+            if(!is_null($value->parentId)){
+                $respuesta[] = $value;
+            }
+        }
 
         return $respuesta;
     }
@@ -1081,7 +1089,7 @@ class getFromTimOne{
             $value->orderType       = 'odr';
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
-	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
+            $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = self::getOrderStatusName($value->status);
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
@@ -1107,7 +1115,7 @@ class getFromTimOne{
             $value->integradoId     = (INT)$value->integradoId;
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
-	        $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
+            $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->status          = (INT)$value->status;
             $value->totalAmount     = (FLOAT)$value->totalAmount;
             $value->createdDate     = (STRING)$value->createdDate;
@@ -1233,18 +1241,18 @@ class getFromTimOne{
     }
 
     public static function getPaymentMethodName($paymentMethodId){
-	    $cat = new Catalogos();
-	    $names = $cat->getPaymentMethods();
+        $cat = new Catalogos();
+        $names = $cat->getPaymentMethods();
 
-	    try {
-		    $payMethod = new stdClass();
+        try {
+            $payMethod = new stdClass();
 
-		    $payMethod->id   = $paymentMethodId;
-		    $payMethod->name = $names[ $paymentMethodId ];
-	    } catch ( Exception $e) {
-		    $payMethod = null;
-		    JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');
-	    }
+            $payMethod->id   = $paymentMethodId;
+            $payMethod->name = $names[ $paymentMethodId ];
+        } catch ( Exception $e) {
+            $payMethod = null;
+            JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');
+        }
 
         return $payMethod;
     }
@@ -1340,12 +1348,12 @@ class getFromTimOne{
         return $odvs;
     }
 
-	/**
-	 * @param $allOdv array getFromTimone::getOperacionesPorLiquidar(integ_id)
-	 *
-	 * @return stdClass
-	 */
-	public static function getSaldoOperacionesPorLiquidar($allOdv){
+    /**
+     * @param $allOdv array getFromTimone::getOperacionesPorLiquidar(integ_id)
+     *
+     * @return stdClass
+     */
+    public static function getSaldoOperacionesPorLiquidar($allOdv){
         $montoOperaciones   = new stdClass();
 
         $montoOperaciones->subtotalTotalOperaciones = 0;
@@ -2456,10 +2464,10 @@ class sendToTimOne {
 
         $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
 
-	    //TODO: qutar el mock cuando sea produccion
-	    if( ENVIROMENT_NAME == 'sandbox') {
-		    $data->setTestRFC();
-	    }
+        //TODO: qutar el mock cuando sea produccion
+        if( ENVIROMENT_NAME == 'sandbox') {
+            $data->setTestRFC();
+        }
 
         return $data;
     }
@@ -3430,10 +3438,10 @@ class Factura extends makeTx {
         $this->format = 'Xml';
     }
 
-	public function setTestRFC() {
-		$this->emisor->datosFiscales->rfc = 'AAD990814BP7';
-		$this->receptor->datosFiscales->rfc = 'AAD990814BP7';
-	}
+    public function setTestRFC() {
+        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+    }
 
     /**
      * @param $string
@@ -3451,36 +3459,36 @@ class Factura extends makeTx {
         return $name;
     }
 
-	/**
-	 * @return bool
-	 */
-	public function sendCreateFactura()
+    /**
+     * @return bool
+     */
+    public function sendCreateFactura()
     {
-	    $this->objEnvio = $this->setObjEnvio();
+        $this->objEnvio = $this->setObjEnvio();
 
         $rutas = new servicesRoute();
 
-	    $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+        $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
 
-	    if ($result === true) {
-		    $result = $this->returnXML();
-	    }
-	    return $result;
+        if ($result === true) {
+            $result = $this->returnXML();
+        }
+        return $result;
     }
 
-	public function returnXML() {
-		return $this->resultado->data;
-	}
+    public function returnXML() {
+        return $this->resultado->data;
+    }
 
-	/**
-	 * @return $this
-	 */
-	private function setObjEnvio() {
-		return $this;
+    /**
+     * @return $this
+     */
+    private function setObjEnvio() {
+        return $this;
 
 //TODO: quitar mock
 //  json_decode('{"emisor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"receptor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"datosDeFacturacion":{"moneda":"MXN","lugarDeExpedicion":"DF","numeroDeCuentaDePago":"DESCONOCIDO","formaDePago":"PAGO EN UNA SOLA EXHIBICION","metodoDePago":"TRANSFERENCIA ELECTRONICA","tipoDeComprobante":"ingreso"},"conceptos":[{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"},{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"}],"format":"Xml"}');
-	}
+    }
 
 }
 
@@ -3581,7 +3589,7 @@ class UserTimone {
 class Cashout extends makeTx{
     protected $objEnvio;
 
-	/**
+    /**
      * @param $orden
      * @param $idPagador
      * @param $idBeneficiario
@@ -3637,11 +3645,11 @@ class Cashout extends makeTx{
 
     public function sendCreateTx() {
         $rutas = new servicesRoute();
-	    $result = parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
+        $result = parent::create($rutas->getUrlService('timone', 'cashOut', 'create'));
 
-	    if ( $result === true ) {
-		    $this->saveTxOrderRelationship();
-	    }
+        if ( $result === true ) {
+            $this->saveTxOrderRelationship();
+        }
 
         return $result;
     }
@@ -3663,11 +3671,11 @@ class transferFunds extends makeTx {
         $rutas = new servicesRoute();
         $result = parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
 
-	    if ( $result === true ) {
-		    $this->saveTxOrderRelationship();
-	    }
+        if ( $result === true ) {
+            $this->saveTxOrderRelationship();
+        }
 
-	    return $result;
+        return $result;
     }
 
 }
@@ -3676,10 +3684,10 @@ class transferFunds extends makeTx {
  * @property  resultado
  */
 class makeTx {
-	protected $objEnvio;
-	protected $resultado;
+    protected $objEnvio;
+    protected $resultado;
 
-	protected function create($datosEnvio){
+    protected function create($datosEnvio){
         unset($this->options);
 
         $request = new sendToTimOne();
@@ -3705,11 +3713,11 @@ class makeTx {
 
         $request->formatData(
             array('idTx' => $this->resultado->data,
-                  'idOrden' => $this->orden->id,
-                  'date' => time(),
-                  'idIntegrado' => $this->orden->integradoId,
-                  'tipoOrden' => $this->orden->orderType,
-                  'idComision' => $comisionAplicable->id)
+                'idOrden' => $this->orden->id,
+                'date' => time(),
+                'idIntegrado' => $this->orden->integradoId,
+                'tipoOrden' => $this->orden->orderType,
+                'idComision' => $comisionAplicable->id)
         );
         $resultado = $request->insertDB('txs_timone_mandato');
 
@@ -3730,15 +3738,15 @@ class makeTx {
 
 class Order {
 
-	protected $minAmount;
+    protected $minAmount;
 
-	public static function getStatusIdByName( $string ) {
-		$statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
+    public static function getStatusIdByName( $string ) {
+        $statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
 
-		return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
-	}
+        return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
+    }
 
-	public static function getMinAmount() {
-		return 10;
-	}
+    public static function getMinAmount() {
+        return 10;
+    }
 }
