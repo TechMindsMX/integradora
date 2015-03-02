@@ -2367,12 +2367,13 @@ class sendToTimOne {
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
 
-        $integrado->cantidadAuthNecesarias = $integrado->getOrdersAtuhorizationParams();
+      $order->cantidadAuthNecesarias = Order::getCantidadAutRequeridas(new IntegradoSimple($order->integradoIdE), new IntegradoSimple($order->integradoIdR));
+
 
         $tableAuth = $orderType.'_auth';
         $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
-        $order->hasAllAuths = $integrado->cantidadAuthNecesarias == count($order->auths);
+        $order->hasAllAuths = $order->cantidadAuthNecesarias == count($order->auths);
         $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
         if ( $order->status == 1 && !$order->canChangeStatus && $orderNewStatus == 5 ) {
@@ -3759,5 +3760,18 @@ class Order {
 
     public static function getMinAmount() {
         return 10;
+    }
+
+    public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
+        $auth = 0;
+
+        if( $emisor->isIntegrado() ){
+            $auth = $auth+$emisor->getOrdersAtuhorizationParams();
+        }
+        if( $receptor->isIntegrado() ){
+            $auth = $auth+$receptor->getOrdersAtuhorizationParams();
+        }
+
+        return $auth;
     }
 }

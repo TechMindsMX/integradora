@@ -483,6 +483,11 @@ class IntegradoSimple extends Integrado {
 		return $this->integrados[0]->integrado->integrado_id;
 	}
 
+    public function isIntegrado(){
+        return !empty($this->usuarios);
+
+    }
+
 }
 
 class integrado_datos_personales {
