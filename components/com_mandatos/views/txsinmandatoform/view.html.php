@@ -30,7 +30,13 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 			$model = $this->getModel();
 			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_FORM_TITLE';
 			$this->data     = $model->getItem($data['txnum']);
-			$this->orders   = $model->getOrders($this->integradoId);
+			$this->orders   = $model->getOrdersCxC($this->integradoId);
+		}
+
+		if (empty($this->orders->odv) && empty($this->orders->odd)) {
+			$url = 'index.php?option=com_mandatos&view=txsinmandatolist';
+			$msg = JText::_('MSG_NO_ORDERS');
+			$app->redirect(JRoute::_($url), $msg, 'error');
 		}
 
 		// Check for errors.
@@ -45,7 +51,7 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
 		if (!$this->permisos['canEdit']) {
-			$url = 'index.php?option=com_mandatos&view=txsinmandatolist&';
+			$url = 'index.php?option=com_mandatos&view=txsinmandatolist';
 			$msg = JText::_('JERROR_ALERTNOAUTHOR');
 			$app->redirect(JRoute::_($url), $msg, 'error');
 		}

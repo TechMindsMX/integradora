@@ -17,15 +17,21 @@ class ConciliacionBancoModelDetalle extends JModelLegacy {
         return $integradosArray;
     }
 
-    public function getcatalogoBancos(){
-        $catalogos = new Catalogos();
+    public function getcatalogoBancos() {
+	    $catalogos = new Catalogos();
 
-        $bancos = $catalogos->getBancos();
+	    $bancos = $catalogos->getBancos();
 
-        foreach ($bancos as $objBanco) {
-            $bancoArray[$objBanco->claveClabe] = $objBanco->banco;
-        }
+	    foreach ( $bancos as $objBanco ) {
+		    $bancoArray[ $objBanco->claveClabe ] = $objBanco->banco;
+	    }
 
-        return $bancoArray;
+	    return $bancoArray;
+    }
+
+    public function getBancosIntegradora(){
+	    $integradora = new IntegradoSimple(1);
+
+	    return $integradora->integrados[0]->datos_bancarios;
     }
 }

@@ -2370,7 +2370,7 @@ class sendToTimOne {
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
 
-      $order->cantidadAuthNecesarias = Order::getCantidadAutRequeridas(new IntegradoSimple($order->integradoIdE), new IntegradoSimple($order->integradoIdR));
+	    $order->cantidadAuthNecesarias = Order::getCantidadAutRequeridas(new IntegradoSimple( Order::getIdEmisor($order, $orderType) ), new IntegradoSimple( Order::getIdReceptor($order, $orderType) ));
 
 
         $tableAuth = $orderType.'_auth';
@@ -3777,4 +3777,54 @@ class Order {
 
         return $auth;
     }
+
+	public static function getIdEmisor($order, $orderType) {
+		switch ($orderType){
+			case 'odv':
+				$return = $order->integradoId;
+				break;
+			case 'odc':
+				$return = $order->integradoId;
+				break;
+			case 'odd':
+				$return = $order->integradoId;
+				break;
+			case 'odr':
+				$return = null;
+				break;
+			case 'mutuo':
+				$return = $order->integradoIdE;
+				break;
+			case 'odp':
+				$return = $order->acreedor;
+				break;
+		}
+
+		return $return;
+	}
+
+	public static function getIdReceptor($order, $orderType) {
+		switch ($orderType){
+			case 'odv':
+				$return = $order->clientId;
+				break;
+			case 'odc':
+				$return = $order->proveedor;
+				break;
+			case 'odd':
+				$return = null;
+				break;
+			case 'odr':
+				$return = $order->integradoId;
+				break;
+			case 'mutuo':
+				$return = $order->integradoIdR;
+				break;
+			case 'odp':
+				$return = $order->deudor;
+				break;
+		}
+
+		return $return;
+	}
 }
