@@ -48,16 +48,15 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
             if($resultado) {
                 // autorización guardada
-                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId  = 5;
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', $newStatusId);
 
                 if ($statusChange) {
-                    //$this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+                    $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
-                    $odps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
+                    if ($generateOdps) {
 
-                    if ($odps) {
+                        $tx = $this->paymentFirstOdp();
                         $msgOdps = JText::_('LBL_ODPS_GENERATED');
                         $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED').'<br />'.$msgOdps, 'notice');
                     } else {
@@ -78,7 +77,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $timezone  = new DateTimeZone('America/Mexico_City');
         $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
         $mutuo     = $mutuos[0];
-
+var_dump($mutuo);exit;
         if($mutuo->status == 5) {
             $jsontabla = json_decode($mutuo->jsonTabla);
             $save = new sendToTimOne();
@@ -88,6 +87,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             } else {
                 $tabla = $jsontabla->amortizacion_cuota_fija;
             }
+
             $elemento0 = new stdClass();
 
             $elemento0->periodo = 0;
@@ -105,21 +105,21 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 $odp = new stdClass();
                 $fecha = new DateTime('now', $timezone);
 
-                $odp->idMutuo = $idMutuo;
-                $odp->numOrden = $idMutuo . '-' . ($key);
+                $odp->idMutuo           = $idMutuo;
+                $odp->numOrden          = $idMutuo . '-' . ($key);
                 $odp->fecha_elaboracion = $fecha->getTimestamp();
-                $fechaDeposito = $this->calcFechaDeposito($fecha, $mutuo->paymentPeriod, $key);
-                $odp->fecha_deposito = $fechaDeposito->getTimestamp();
-                $odp->tasa = $jsontabla->tasa_periodo;
-                $odp->tipo_movimiento = 'Integrado a Integrado';
-                $odp->acreedor = $mutuo->integradoAcredor->nombre;
-                $odp->a_rfc = $mutuo->integradoAcredor->rfc;
-                $odp->deudor = $mutuo->integradoDeudor->nombre;
-                $odp->d_rfc = $mutuo->integradoDeudor->rfc;
-                $odp->capital = $objeto->cuota;
-                $odp->intereses = $objeto->intereses;
-                $odp->iva_intereses = $objeto->iva;
-                $odp->status = 1;
+                $fechaDeposito          = $this->calcFechaDeposito($fecha, $mutuo->paymentPeriod, $key);
+                $odp->fecha_deposito    = $fechaDeposito->getTimestamp();
+                $odp->tasa              = $jsontabla->tasa_periodo;
+                $odp->tipo_movimiento   = 'Integrado a Integrado';
+                $odp->acreedor          = $mutuo->integradoAcredor->nombre;
+                $odp->a_rfc             = $mutuo->integradoAcredor->rfc;
+                $odp->deudor            = $mutuo->integradoDeudor->nombre;
+                $odp->d_rfc             = $mutuo->integradoDeudor->rfc;
+                $odp->capital           = $objeto->cuota;
+                $odp->intereses         = $objeto->intereses;
+                $odp->iva_intereses     = $objeto->iva;
+                $odp->status            = 1;
 
                 $save->formatData($odp);
 
@@ -129,7 +129,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
                     $save->deleteDB('ordenes_prestamo', 'idMutuo=' . $idMutuo);
                     $save->changeOrderStatus($idMutuo, 'mutuo', '3');
-                    $save->deleteDB('auth_mutuo', 'idOrden = ' . $idMutuo . ' && userId = ' . $userId);
+                    $save->deleteDB('auth_mutuo', 'idOrden = ' . $idMutuo . ' && userId = ' . $userId.' && integradoId = '.JFactory::getSession()->get('integradoId',null,'integrado'));
 
                     $resultado = false;
                     break;
@@ -153,5 +153,11 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $fechaAutorizacionMutuo->add($interval);
 
         return $fechaAutorizacionMutuo;
+    }
+
+    private function paymentFirstOdp(){
+        $odpsGenerated = getFromTimOne::getOrdenesPrestamo($this->parametros['idOrden']);
+
+        $orden = $odpsGenerated[0];
     }
 }

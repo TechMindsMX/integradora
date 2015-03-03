@@ -299,3 +299,9 @@ ALTER TABLE flpmu_auth_odr ADD COLUMN integradoId INT (11) AFTER idOrden;
 --rollback ALTER TABLE flpmu_auth_odd DROP COLUMN integradoId;
 --rollback ALTER TABLE flpmu_auth_odv DROP COLUMN integradoId;
 --rollback ALTER TABLE flpmu_auth_odr DROP COLUMN integradoId;
+
+--changeset lutek:36
+ALTER TABLE flpmu_ordenes_prestamo ADD COLUMN integradoIdA INT (11) AFTER tipo_movimiento;
+ALTER TABLE flpmu_ordenes_prestamo ADD COLUMN integradoIdD INT (11) AFTER a_rfc;
+--rollback ALTER TABLE flpmu_ordenes_prestamo DROP COLUMN integradoIdA;
+--rollback ALTER TABLE flpmu_ordenes_prestamo DROP COLUMN integradoIdD;
