@@ -6,7 +6,7 @@ jimport( 'joomla.application.component.view' );
 class ConciliacionbancoViewDetalle extends JViewLegacy {
 	public function display( $tpl = null ) {
         $post = array(
-            'id'            => 'int',
+            'id'            => 'INT',
             'confirmacion'  => 'INT',
             'integradoId'   => 'INT',
             'cuenta'        => 'STRING',
@@ -15,9 +15,15 @@ class ConciliacionbancoViewDetalle extends JViewLegacy {
             'amount'        => 'FLOAT'
         );
         $data = JFactory::getApplication()->input->getArray($post);
-        $this->integrados   = $this->get('integrados');
-        $this->bancos       = $this->get('catalogoBancos');
-        $this->data         = (object) $data;
+        $this->integrados           = $this->get('integrados');
+        $this->bancos               = $this->get('catalogoBancos');
+        $this->bancosIntegradora    = $this->get('BancosIntegradora');
+        $this->data                 = (object) $data;
+
+		if (is_numeric($data['integradoId'])) {
+			$integ = new IntegradoSimple($data['integradoId']);
+			$this->nombreIntegrado = $integ->getDisplayName();
+		}
 
         $this->addToolbar();
 		parent::display( $tpl );

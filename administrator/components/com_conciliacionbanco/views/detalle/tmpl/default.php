@@ -46,7 +46,8 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
             jQuery('.cancel').on('click', cancelar);
         });
     </script>
-<?php if(is_null($data->confirmacion)) { ?>
+<?php if(is_null($data->confirmacion)) {
+	?>
 
 	<div class="form-group">
 		<p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
@@ -58,12 +59,12 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
             <label for="cuenta"><?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_BANCO'); ?></label>
             <select name="cuenta" id="cuenta">
                 <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
-                <?php foreach ($integrados as $key => $value) {
-                    $nombreBanco = $bancos[$value->datos_bancarios->banco_codigo];
-                    $cuenta = substr($value->datos_bancarios->banco_cuenta, -4, 4);
+                <?php foreach ($this->bancosIntegradora as $key => $value) {
+                    $nombreBanco = $bancos[$value->banco_codigo];
+                    $cuenta = substr($value->banco_clabe, -4, 4);
                     ?>
                     <option
-                        value="<?php echo $value->datos_bancarios->datosBan_id; ?>"><?php echo $nombreBanco . ' - ' . $cuenta; ?></option>
+                        value="<?php echo $value->datosBan_id; ?>"><?php echo $nombreBanco . ' - ' . $cuenta; ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -118,7 +119,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         <div>Fecha : <?php echo $data->date ?></div>
         <div>Monto: $<?php echo number_format($data->amount,2); ?></div>
         <?php if($data->integradoId != 0){ ?>
-            <div>Integrado:</div>
+            <div>Integrado: <?php echo $this->nombreIntegrado; ?></div>
         <?php }else{ ?>
             <div>Transaccion no Identificada.</div>
         <?php } ?>

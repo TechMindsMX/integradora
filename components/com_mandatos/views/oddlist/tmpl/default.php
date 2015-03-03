@@ -64,6 +64,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?></span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
         </tr>
         </thead>
@@ -94,6 +95,7 @@ if(is_null($ordenes) || empty($ordenes)){
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $preview_button . '' . $value->numOrden . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->createdDate . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >$' . number_format($value->totalAmount, 2) . '</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->status->name . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $auth_button . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $edit_button . '</td>';
                     echo '</tr>';

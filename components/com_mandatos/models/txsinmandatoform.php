@@ -27,8 +27,9 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 		return $this->txs;
 	}
 
-	public function getOrders() {
-		$this->orders = getFromTimOne::getOrdersCxP($this->integradoId);
+	public function getOrdersCxC() {
+		$this->orders = getFromTimOne::getOrdersCxC($this->integradoId);
+		$this->orders = $this->getUnpaidODDs($this->integradoId);
 
 		if(isset($this->vars['numOrden']) && isset($this->vars['orderType']) && JSession::checkToken( 'get' )) {
 			$this->orders = $this->getOrderByIdAndType($this->orders, $this->vars['numOrden'], $this->vars['orderType']);
@@ -49,6 +50,19 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 		}
 
 		return $order;
+	}
+
+	public static function getUnpaidODDs( $intergradoId ){
+		$orders = new stdClass();
+		$orders->odd = getFromTimOne::getOrdenesDeposito($intergradoId);
+
+		if ( ! empty( $orders->odd ) ) {
+			foreach ( $orders as $key => $values ) {
+				$orders->$key = getFromTimOne::filterOrdersByStatus($values, array(5,8));
+			}
+		}
+
+		return $orders;
 	}
 
 }
