@@ -22,7 +22,12 @@ class MandatosModelProyectoslist extends JModelItem {
 
 		$this->dataModelo = getFromTimOne::getProyects($this->integradoId);
 
-		return $this->dataModelo;
+        foreach ($this->dataModelo as $proyecto) {
+            $proyecto->subproyectos = getFromTimOne::getAllSubProyects($proyecto->id_proyecto);
+        }
+
+
+        return $this->dataModelo;
 	}
 }
 

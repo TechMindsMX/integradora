@@ -8,31 +8,49 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
-function proyectos ($parent, $proys){
-    echo "<ul class='listaproyectos'>";
-    foreach ($proys as $key => $value) {
+function proyectos($proyectos){
+    $retorno = '<ul class="listaproyectos">';
 
-        if($value->parentId == $parent){
-
-            if($value->status == 1){
-                $checked = 'checked';
-            }else{
-                $checked = '';
+    foreach ($proyectos as $proyecto) {
+        $retorno .= '<li>';
+        $retorno .= filaDatos($proyecto);
+        if (!empty($proyecto->subproyectos)) {
+            $retorno .= '<ul>';
+            foreach ($proyecto->subproyectos as $subproyecto) {
+                $retorno .= '<li class="proyectoslist">';
+                $retorno .= filaDatos($subproyecto);
+                $retorno .= '</li>';
             }
-
-            echo '<li class="proyectoslist">'.
-                '<div class="filas status'.$value->status.'">'.
-                '<div class="columnas"><span>'.$value->name.'</span></div>'.
-                '<div class="columnas"><a class="btn btn-primary editar" id="'.$value->id_proyecto.'" href="index.php?option=com_mandatos&task=editarproyecto&id_proyecto='.$value->id_proyecto.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></div>'.
-                '<div class="columnas"><input type="checkbox" class="deshabilitar" data-id="'.$value->id_proyecto.'" id="'.$value->id_proyecto.'" '.$checked.' /></div>'.
-                '</div>';
-
-            proyectos($value->id_proyecto, $proys);
-        }else{
-            echo '</li>';
+            $retorno .= '</ul>';
         }
+
+        $retorno .= '</li>';
     }
-    echo "</ul>";
+    $retorno .= '</ul>';
+
+    return $retorno;
+}
+
+function checked($proyecto){
+    if($proyecto->status == 1){
+        $checked = 'checked';
+    }else{
+        $checked = '';
+    }
+
+    return $checked;
+}
+
+function filaDatos($proyecto){
+    $checked = checked($proyecto);
+
+    $respuesta = '<div class="filas status'.$proyecto->status.'">'.
+    '<div class="columnas"><span>'.$proyecto->name.'</span></div>'.
+    '<div class="columnas"><a class="btn btn-primary editar" id="'.$proyecto->id_proyecto.'" href="index.php?option=com_mandatos&task=editarproyecto&id_proyecto='.$proyecto->id_proyecto.'">'.JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO').'</a></div>'.
+    '<div class="columnas"><input type="checkbox" class="deshabilitar" data-id="'.$proyecto->id_proyecto.'" id="'.$proyecto->id_proyecto.'" '.$checked.' /></div>'.
+    '</div>';
+
+    return $respuesta;
 }
 
 $proyectos = $this->data;
@@ -98,7 +116,10 @@ if( !is_null($proyectos) ){
         <div class="columnas">&nbsp;</div>
         <div class="columnas"><?php echo JText::_('LBL_PUBLISHED'); ?></div>
     </div>
-    <?php !is_null($proyectos)?proyectos(0, $proyectos):''; ?>
+    <?php
+    $lista = !is_null($proyectos) ? proyectos($proyectos) : '';
+    echo $lista;
+    ?>
 </div>
 
 <div style="margin-top: 20px;">
