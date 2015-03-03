@@ -58,6 +58,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
+        <th>Estatus</th>
         <th></th>
     </tr>
     </thead>
@@ -67,7 +68,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
 
         $url = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
-        if($value->status == 1){
+        if($value->status->id == 1){
             $style  = '';
             $edit   = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Editar</a>';
             if ($this->permisos['canAuth']){
@@ -76,7 +77,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             }else{
                 $odp = '';
             }
-        }elseif($value->status == 3){
+        }elseif($value->status->id == 3){
             $style  = 'style="color: #FFBB00;"';
             $edit   = '<a class="btn btn-primary disabled">Editar</a>';
             if ($this->permisos['canAuth']){
@@ -98,6 +99,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo round($value->duracion,2); ?> años</td>
+            <td><?php echo $value->status->name; ?></td>
             <td><?php echo $edit; ?></td>
             <?php echo $odp; ?>
         </tr>
@@ -117,6 +119,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Tipo de pago</th>
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
+        <th>Estatus</th>
     </tr>
     </thead>
     <tbody>
@@ -126,9 +129,9 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         $url            = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
         $odp            = '';
 
-        if($value->status == 3){
+        if($value->status->id == 3){
 
-        }elseif($value->status == 5){
+        }elseif($value->status->id == 5){
             $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
@@ -139,6 +142,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo $value->tipoPeriodo; ?></td>
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo $value->duracion; ?> años</td>
+            <td><?php echo $value->status->name; ?></td>
             <?php echo $odp; ?>
         </tr>
     <?php }?>
