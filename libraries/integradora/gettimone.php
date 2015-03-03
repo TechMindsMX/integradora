@@ -18,9 +18,10 @@ class getFromTimOne{
 
         if (isset($authorizations)) {
             foreach($authorizations as $key => $value){
-                $value->idOrden  = (INT)$value->idOrden;
-                $value->userId   = (INT)$value->userId;
-                $value->authDate = (STRING)$value->authDate;
+                $value->idOrden     = (INT)$value->idOrden;
+                $value->userId      = (INT)$value->userId;
+                $value->integradoId = (INT)$value->integradoId;
+                $value->authDate    = (STRING)$value->authDate;
             }
         }
 
@@ -28,11 +29,11 @@ class getFromTimOne{
     }
 
     public static function checkUserAuth($auths){
-        $userId = JFactory::getUser()->id;
+        $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
         $userAsAuth = false;
 
         foreach ($auths as $auth) {
-            if($auth->userId === (INT)$userId) {
+            if($auth->integradoId === (INT)$integradoId) {
                 $userAsAuth = true;
             }
         }

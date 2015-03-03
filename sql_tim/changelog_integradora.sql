@@ -286,3 +286,16 @@ ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `numOrden` `numOrden` INT (11);
 --changeset ricardolyon:34
 INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES (10085, 'Conciliacion', 'component', 'com_conciliacionadmin', '', 1, 1, 1, 0, '{"name":"Conciliacion Admiin","type":"component","creationDate":"2014-10-17","author":"ismael","copyright":"Copyright (C) 2014. Todos los derechos reservados.","authorEmail":"aguilar_2001@hotmail.com","authorUrl":"http:\\/\\/","version":"1.0.0","description":"Movimientos registrados por STP","group":""}', '{}', '', '', 0, now(), 0, 0);
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 10085;
+
+
+--changeset lutek:35
+ALTER TABLE flpmu_auth_mutuo ADD COLUMN integradoId INT (11) AFTER idOrden;
+ALTER TABLE flpmu_auth_odc ADD COLUMN integradoId INT (11) AFTER idOrden;
+ALTER TABLE flpmu_auth_odd ADD COLUMN integradoId INT (11) AFTER idOrden;
+ALTER TABLE flpmu_auth_odv ADD COLUMN integradoId INT (11) AFTER idOrden;
+ALTER TABLE flpmu_auth_odr ADD COLUMN integradoId INT (11) AFTER idOrden;
+--rollback ALTER TABLE flpmu_auth_mutuo DROP COLUMN integradoId;
+--rollback ALTER TABLE flpmu_auth_odc DROP COLUMN integradoId;
+--rollback ALTER TABLE flpmu_auth_odd DROP COLUMN integradoId;
+--rollback ALTER TABLE flpmu_auth_odv DROP COLUMN integradoId;
+--rollback ALTER TABLE flpmu_auth_odr DROP COLUMN integradoId;

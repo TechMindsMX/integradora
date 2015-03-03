@@ -121,13 +121,14 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </thead>
     <tbody>
     <?php foreach ($datosDeudor as $value) {
-        $url_preview = 'index.php?option=com_mandatos&view=mutuospreview&idMutuo='.$value->id;
+        $url_preview    = 'index.php?option=com_mandatos&view=mutuospreview&idMutuo='.$value->id;
         $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
+        $url            = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
+        $odp            = '';
 
-        $url = 'index.php?option=com_mandatos&view=mutuosform&idMutuo='.$value->id;
-        if($value->status == 1){
-            $odp = '';// '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=mutuosform&id='.$value->id.'">Generar ODP</a></td>';
-        }else{
+        if($value->status == 3){
+
+        }elseif($value->status == 5){
             $odp = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
         ?>
