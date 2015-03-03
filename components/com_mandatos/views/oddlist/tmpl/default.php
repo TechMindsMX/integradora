@@ -91,7 +91,7 @@ if(is_null($ordenes) || empty($ordenes)){
                     $class = $value->status->id == 1 ? '' : 'status1';
                     $typeId = $value->status->id == 5 ? 1 : 0;
 
-                    echo '<tr class="type_' . $typeId . '"  data-tipo="'.$value->status->id.'">';
+                    echo '<tr class="type_' . $typeId . '"  data-filtro="'.$value->status->id.'">';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $preview_button . '' . $value->numOrden . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->createdDate . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >$' . number_format($value->totalAmount, 2) . '</td>';
