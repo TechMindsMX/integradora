@@ -309,3 +309,12 @@ ALTER TABLE flpmu_ordenes_prestamo ADD COLUMN integradoIdD INT (11) AFTER a_rfc;
 --changeset lutek:37
 UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = 24, multiplicador = 15, nombreCiclo = 'D' WHERE IdTipo = 2;
 --rollback UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = 104, multiplicador = NULL, nombreCiclo = NULL WHERE IdTipo=2;
+
+--changeset ricardolyon:38
+CREATE TABLE `flpmu_txs_banco_timone_relation` (
+  `id_txs_banco` INT,
+  `id_txs_timone` INT,
+  FOREIGN KEY (`id_txs_banco`) REFERENCES `flpmu_txs_banco_integrado`(id),
+  FOREIGN KEY (`id_txs_timone`) REFERENCES `flpmu_txs_timone_mandato`(id)
+);
+--rollback DROP TABLE `flpmu_txs_banco_timone_relation`;

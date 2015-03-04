@@ -22,7 +22,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 
 	public function save( ) {
 		JSession::checkToken() or die( 'Invalid Token' );
-		$post               = array ( 'numOrden' => 'INT', 'orderType' => 'STRING', 'idTx' => 'INT' );
+		$post               = array ( 'idOrden' => 'INT', 'orderType' => 'STRING', 'idTx' => 'INT' );
 		$this->app          = JFactory::getApplication();
 		$this->vars         = $this->app->input->getArray( $post );
 
@@ -41,10 +41,10 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$model          = $this->getModel('txsinmandatoform');
 		$this->tx       = $model->getItem($this->vars['idTx']);
 
-		$unpaidOrders = getFromTimOne::getOrdersCxP($this->integradoId);
+		$unpaidOrders   = $model->getOrdersCxC($this->integradoId);
 
-		if(isset($this->vars['numOrden']) && isset($this->vars['orderType'])) {
-			$this->order = $model->getOrderByIdAndType($unpaidOrders, $this->vars['numOrden'], $this->vars['orderType']);
+		if(isset($this->vars['idOrden']) && isset($this->vars['orderType'])) {
+			$this->order = $model->getOrderByIdAndType($unpaidOrders, $this->vars['idOrden'], $this->vars['orderType']);
 		} else {
 			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');
 		}

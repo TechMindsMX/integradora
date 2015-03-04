@@ -15,8 +15,10 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         var integradoNon_id   = new Array();
         <?php
                 foreach ($integrados as $key => $value) {
-                    echo 'integradosArray['.$key.'] = "'.$value->datos_personales->nom_comercial.'";'."\n";
-                    echo 'integradoNon_id["'.$value->datos_personales->nom_comercial.'"] = '.$value->integrado->integrado_id.';'."\n";
+                    if ($value->integrado->status == 50 ) {
+	                    echo 'integradosArray['.$key.'] = "'.$value->displayName.'";'."\n";
+	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integrado_id.';'."\n";
+                    }
                 }
             ?>
         var typeaheadSettings = {

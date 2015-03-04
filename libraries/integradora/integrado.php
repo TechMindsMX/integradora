@@ -137,6 +137,18 @@ class Integrado {
 		return array ( $respuesta, $existe, null, $db, $data, $save );
 	}
 
+	public static function getAllIds() {
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+		$query->select('integrado_id')
+			->from('#__integrado')
+			->where('status ='. 50);
+		$db->setQuery($query);
+
+		return $db->loadAssocList('integrado_id');
+	}
+
 	public function getBankName($datos_bancarios){
 		$catalogos = new Catalogos();
 		$bancos    = $catalogos->getBancos();

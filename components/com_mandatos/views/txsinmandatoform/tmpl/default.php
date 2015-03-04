@@ -9,8 +9,6 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $tx      	= $this->data[0];
-$odds       = $this->orders->odd;
-$odvs       = $this->orders->odv;
 $selected 	= '';
 ?>
 
@@ -27,9 +25,13 @@ $selected 	= '';
 
 	<?php
 
-	echo showTableOrders($odvs, 'COM_MANDATOS_ODV_LIST', $tx);
+if ( ! empty( $this->orders->odv ) ) {
+	echo showTableOrders($this->orders->odv, 'COM_MANDATOS_ODV_LIST', $tx);
+}
 
-	echo showTableOrders($odds, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx);
+if ( ! empty( $this->orders->odd ) ) {
+	echo showTableOrders($this->orders->odd, 'COM_MANDATOS_LISTAD_ORDENES_DEPOSITO', $tx);
+}
 
 ?>
 
@@ -65,7 +67,7 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 					$btn_asoociar = JText::_('COM_MANDATOS_ORDERS_MONTO_SUPERIOR_A_TX');
 
 					if($tx->amount > ($value->totalAmount - $value->partialPaymentsTotal)) {
-						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&numOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType);
+						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&idOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType);
 						$btn_asoociar = '<a class="btn btn-success" id="asociar" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 					}
 
@@ -74,7 +76,7 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 					$html .= '	<td>'.$value->paymentDate.'</td>';
 					$html .= '	<td>$'.number_format($value->totalAmount,2).'</td>';
 					$html .= '	<td class="margen-fila" >'.$value->numOrden.'</td>';
-					$html .= '	<td>'.$value->paymentMethod->name.'</td>';
+					$html .= '	<td>'.JText::_($value->paymentMethod->name).'</td>';
 					$html .= '	<td>'.$value->status->name.'</td>';
 					$html .= '	<td>'.$btn_asoociar.'</td>';
 					$html .= '</tr>';
@@ -83,7 +85,7 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 				JFactory::getApplication()->enqueueMessage(JText::_('COM_MANDATOS_LIST_TX_NO_TXLIST'));
 			}
 
-	$html = '</tbody>
+	$html .= '</tbody>
 		</table>
 	</div>
 	';

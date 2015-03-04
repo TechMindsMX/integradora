@@ -59,6 +59,7 @@ class getFromTimOne{
 
         foreach ($results as $value) {
             $integrado = new IntegradoSimple($value->integrado_id);
+	        $integrado->integrados[0]->displayName = $integrado->getDisplayName();
             $integradosArray[] = $integrado->integrados[0];
         }
 

@@ -16,7 +16,11 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
-        $post               = array('txnum'=>'INT');
+        $post               = array(
+	        'txnum'=>'INT',
+	        'idOrden'=>'INT',
+	        'orderType'=>'STRING'
+        );
         $data				= $app->input->getArray($post);
 
 		$sesion             = JFactory::getSession();
@@ -26,11 +30,15 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		$this->integrado->displayName = $integ->getDisplayName();
 
 		// get the model
-		if( !is_null($data['txnum']) ){
+		if ( !is_null($data['txnum']) ){
 			$model = $this->getModel();
 			$this->titulo = 'COM_MANDATOS_TXSINMANDTO_FORM_TITLE';
 			$this->data     = $model->getItem($data['txnum']);
 			$this->orders   = $model->getOrdersCxC($this->integradoId);
+
+			if ( isset( $model->vars['layout'] ) && $model->vars['layout'] == 'confirm') {
+				$this->orders->order = $model->getOrderByIdAndType($this->orders, $data['idOrden'], $data['orderType'] );
+			}
 		}
 
 		if (empty($this->orders->odv) && empty($this->orders->odd)) {
