@@ -155,7 +155,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $catalogos = new Catalogos();
         $catalogoPeriodos = $catalogos->getTiposPeriodos();
 
-        $strInterval = 'P'.$catalogoPeriodos[$periodoPagos]->multiplicador*$orderKey.$catalogoPeriodos[$periodoPagos]->nombreCiclo;
+        $strInterval = 'P' . $catalogoPeriodos[$periodoPagos]->multiplicador * $orderKey . $catalogoPeriodos[$periodoPagos]->nombreCiclo;
         $interval = new DateInterval($strInterval);
         $fechaAutorizacionMutuo->add($interval);
 

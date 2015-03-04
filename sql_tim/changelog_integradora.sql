@@ -305,3 +305,7 @@ ALTER TABLE flpmu_ordenes_prestamo ADD COLUMN integradoIdA INT (11) AFTER tipo_m
 ALTER TABLE flpmu_ordenes_prestamo ADD COLUMN integradoIdD INT (11) AFTER a_rfc;
 --rollback ALTER TABLE flpmu_ordenes_prestamo DROP COLUMN integradoIdA;
 --rollback ALTER TABLE flpmu_ordenes_prestamo DROP COLUMN integradoIdD;
+
+--changeset lutek:37
+UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = '24', multiplicador = 1, nombreCiclo = 'Q' WHERE IdTipo = 2;
+--rollback UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = '104', multiplicador = NULL, nombreCiclo = NULL WHERE IdTipo=2;
