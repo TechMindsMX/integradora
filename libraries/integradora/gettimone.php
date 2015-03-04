@@ -262,42 +262,7 @@ class getFromTimOne{
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
         $dataFormater = new mutuo();
-        $tipos = getFromTimOne::getTiposPago();
-        $integradoAcredor = new stdClass();
-        $integradoDeudor  = new stdClass();
 
-
-        foreach ($mutuos as $key => $data) {
-            $integradoEmisor = new IntegradoSimple($data->integradoIdE);
-            $integradoReceptor = new IntegradoSimple($data->integradoIdR);
-
-            if (is_null($integradoEmisor->integrados[0]->datos_empresa)) {
-                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_personales->nom_comercial;
-                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_personales->rfc;
-            } else {
-                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_empresa->razon_social;
-                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_empresa->rfc;
-            }
-
-            if (is_null($integradoReceptor->integrados[0]->datos_empresa)) {
-                if (is_null($integradoReceptor->integrados[0]->datos_personales->nom_comercial)) {
-                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nombre_representante;
-                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
-                } else {
-                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nom_comercial;
-                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
-                }
-            } else {
-                $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_empresa->razon_social;
-                $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_empresa->rfc;
-            }
-
-            $integradoAcredor->datosBancarios = $integradoEmisor->integrados[0]->datos_bancarios;
-            $integradoDeudor->datosBancarios = $integradoReceptor->integrados[0]->datos_bancarios;
-
-            $data->integradoAcredor = $integradoAcredor;
-            $data->integradoDeudor = $integradoDeudor;
-        }
         $mutuos = $dataFormater->formatData($mutuos);
 
         return $mutuos;
@@ -530,10 +495,19 @@ class getFromTimOne{
             $orden->fecha_deposito    = (INT)$value->fecha_deposito;
             $orden->tasa              = (FLOAT)$value->tasa;
             $orden->tipo_movimiento   = (STRING)$value->tipo_movimiento;
+
+            $orden->integradoIdA      = (INT)$value->integradoIdA;
+            $integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
             $orden->acreedor          = (STRING)$value->acreedor;
             $orden->a_rfc             = (STRING)$value->a_rfc;
+            $orden->acreedorDataBank  = $integradoAcreedor->integrados[0]->datos_bancarios[0];
+
+            $orden->integradoIdD      = (INT)$value->integradoIdD;
+            $integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
             $orden->deudor            = (STRING)$value->deudor;
             $orden->d_rfc             = (STRING)$value->d_rfc;
+            $orden->deudorDataBank    = $integradoDeudor->integrados[0]->datos_bancarios[0];
+
             $orden->capital           = (FLOAT)$value->capital;
             $orden->intereses         = (FLOAT)$value->intereses;
             $orden->iva_intereses     = (FLOAT)$value->iva_intereses;
@@ -2409,7 +2383,7 @@ class sendToTimOne {
 
         switch ((INT)$order->status) {
             case 1:
-                $return = in_array($orderNewStatus, array(3,5)) && $order->hasAllAuths;
+                $return = in_array($orderNewStatus, array(3,5,8)) && $order->hasAllAuths;
                 break;
             case 3:
                 $return = in_array($orderNewStatus, array(5,55)) && $order->hasAllAuths;

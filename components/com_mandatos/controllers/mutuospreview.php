@@ -55,10 +55,15 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
                     if ($generateOdps) {
-
                         $tx = $this->paymentFirstOdp();
-                        $msgOdps = JText::_('LBL_ODPS_GENERATED');
-                        $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED').'<br />'.$msgOdps, 'notice');
+
+                        if($tx) {
+                            $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                            $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
+                        }else{
+                            $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                            $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
+                        }
                     } else {
                         $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
                         $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY').'<br />'.$msgOdps, 'notice');
@@ -77,7 +82,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $timezone  = new DateTimeZone('America/Mexico_City');
         $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
         $mutuo     = $mutuos[0];
-var_dump($mutuo);exit;
+
         if($mutuo->status == 5) {
             $jsontabla = json_decode($mutuo->jsonTabla);
             $save = new sendToTimOne();
@@ -112,8 +117,10 @@ var_dump($mutuo);exit;
                 $odp->fecha_deposito    = $fechaDeposito->getTimestamp();
                 $odp->tasa              = $jsontabla->tasa_periodo;
                 $odp->tipo_movimiento   = 'Integrado a Integrado';
+                $odp->integradoIdA      = $mutuo->integradoIdE;
                 $odp->acreedor          = $mutuo->integradoAcredor->nombre;
                 $odp->a_rfc             = $mutuo->integradoAcredor->rfc;
+                $odp->integradoIdD      = $mutuo->integradoIdR;
                 $odp->deudor            = $mutuo->integradoDeudor->nombre;
                 $odp->d_rfc             = $mutuo->integradoDeudor->rfc;
                 $odp->capital           = $objeto->cuota;
@@ -157,7 +164,17 @@ var_dump($mutuo);exit;
 
     private function paymentFirstOdp(){
         $odpsGenerated = getFromTimOne::getOrdenesPrestamo($this->parametros['idOrden']);
+        $orden         = $odpsGenerated[0];
+        $deudor        = new IntegradoSimple($orden->integradoIdD);
 
-        $orden = $odpsGenerated[0];
+        if( !empty($deudor->usuarios) ) { //operacion de transfer entre integrados
+            $txData = new transferFunds($orden, $orden->integradoIdA, $orden->integradoIdD, $orden->capital);
+            $txDone = $txData->sendCreateTx();
+        }else{
+            $txData = new Cashout($orden,$orden->integradoIdA,$orden->integradoIdD,$orden->capital, array('accountId' => $orden->deudorDataBank->datosBan_id));
+            $txDone = $txData->sendCreateTx();
+        }
+
+        return $txDone;
     }
 }

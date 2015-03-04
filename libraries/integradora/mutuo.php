@@ -18,41 +18,45 @@ class mutuo {
         $tiposPeriodos =  new Catalogos();
         $tipos = $tiposPeriodos->getTiposPeriodos();
 
-        foreach ($mutuos as $key => $value) {
-            $this->mutuo = $value;
+        foreach ($mutuos as $key => $mutuo) {
+            $integradoAcredor = new stdClass();
+            $integradoDeudor  = new stdClass();
 
-            $tipo = $tipos[$value->paymentPeriod];
-            $value->tipoPeriodo = $tipo->nombre;
-            $value->duracion    = $value->quantityPayments/$tipo->periodosAnio;
+            $this->mutuo = $mutuo;
 
-            $integradoAcredor   = new stdClass();
-            $integradoDeudor    = new stdClass();
+            $tipo = $tipos[$mutuo->paymentPeriod];
+            $mutuo->tipoPeriodo = $tipo->nombre;
+            $mutuo->duracion    = $mutuo->quantityPayments/$tipo->periodosAnio;
 
-            $inAcredor = new IntegradoSimple($value->integradoIdE);
-            $inDeudor  = new IntegradoSimple($value->integradoIdR);
+            $integradoEmisor = new IntegradoSimple($mutuo->integradoIdE);
+            $integradoReceptor = new IntegradoSimple($mutuo->integradoIdR);
 
-            $inAcredor = $inAcredor->integrados[0];
-            $inDeudor  = $inDeudor->integrados[0];
-
-            if( is_null($inAcredor->datos_empresa) ){
-                $datos_personales = $inAcredor->datos_personales;
-                $integradoAcredor->nombre = is_null($datos_personales->nom_comercial)?$datos_personales->nombre_representante:$datos_personales->nom_comercial;
-            }else{
-                $integradoAcredor->nombre = $inAcredor->datos_empresa->razon_social;
+            if (is_null($integradoEmisor->integrados[0]->datos_empresa)) {
+                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_personales->nom_comercial;
+                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_personales->rfc;
+            } else {
+                $integradoAcredor->nombre = $integradoEmisor->integrados[0]->datos_empresa->razon_social;
+                $integradoAcredor->rfc = $integradoEmisor->integrados[0]->datos_empresa->rfc;
             }
 
-            $integradoAcredor->banco = $inAcredor->datos_bancarios;
-            $value->integradoAcredor = $integradoAcredor;
-
-            if( is_null($inDeudor->datos_empresa) ){
-                $datos_personalesD = $inDeudor->datos_personales;
-                $integradoDeudor->nombre = is_null($datos_personalesD->nom_comercial)?$datos_personalesD->nombre_representante:$datos_personalesD->nom_comercial;
-            }else{
-                $integradoDeudor->nombre = $inDeudor->datos_empresa->razon_social;
+            if (is_null($integradoReceptor->integrados[0]->datos_empresa)) {
+                if (is_null($integradoReceptor->integrados[0]->datos_personales->nom_comercial)) {
+                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nombre_representante;
+                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
+                } else {
+                    $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_personales->nom_comercial;
+                    $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_personales->rfc;
+                }
+            } else {
+                $integradoDeudor->nombre = $integradoReceptor->integrados[0]->datos_empresa->razon_social;
+                $integradoDeudor->rfc = $integradoReceptor->integrados[0]->datos_empresa->rfc;
             }
 
-            $integradoDeudor->banco  = $inDeudor->datos_bancarios;
-            $value->integradoDeudor  = $integradoDeudor;
+            $integradoAcredor->datosBancarios = $integradoEmisor->integrados[0]->datos_bancarios;
+            $integradoDeudor->datosBancarios = $integradoReceptor->integrados[0]->datos_bancarios;
+
+            $mutuo->integradoAcredor = $integradoAcredor;
+            $mutuo->integradoDeudor = $integradoDeudor;
 
             $this->operaciones();
             $this->getSaldoMutuo();
