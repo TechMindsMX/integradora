@@ -1988,6 +1988,9 @@ class sendToTimOne {
             case 'odr':
                 $table = 'ordenes_retiro';
                 break;
+            case 'odp':
+                $table = 'ordenes_prestamo';
+                break;
             case 'mutuo':
                 $table = 'mandatos_mutuos';
                 break;
@@ -2002,6 +2005,9 @@ class sendToTimOne {
                 break;
             case 'odr_auth':
                 $table = 'auth_odr';
+                break;
+            case 'odp_auth':
+                $table = 'auth_odp';
                 break;
             case 'mutuo_auth':
                 $table = 'auth_mutuo';
@@ -3764,8 +3770,11 @@ class Order {
 			case 'odd':
 				$return = $order->integradoId;
 				break;
-			case 'odr':
-				$return = null;
+            case 'odr':
+                $return = null;
+                break;
+			case 'odp':
+				$return = $order->integradoIdA;
 				break;
 			case 'mutuo':
 				$return = $order->integradoIdE;
@@ -3792,6 +3801,9 @@ class Order {
 			case 'odr':
 				$return = $order->integradoId;
 				break;
+            case 'odp':
+                $return = $order->integradoIdD;
+                break;
 			case 'mutuo':
 				$return = $order->integradoIdR;
 				break;

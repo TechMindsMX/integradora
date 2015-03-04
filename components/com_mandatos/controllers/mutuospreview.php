@@ -62,6 +62,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                             $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                         }else{
                             $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', 3);
                             $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                         }
                     } else {
@@ -163,9 +164,11 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
     }
 
     private function paymentFirstOdp(){
-        $odpsGenerated = getFromTimOne::getOrdenesPrestamo($this->parametros['idOrden']);
-        $orden         = $odpsGenerated[0];
-        $deudor        = new IntegradoSimple($orden->integradoIdD);
+        $odpsGenerated     = getFromTimOne::getOrdenesPrestamo($this->parametros['idOrden']);
+        $orden             = $odpsGenerated[0];
+        $deudor            = new IntegradoSimple($orden->integradoIdD);
+        $save              = new sendToTimOne();
+        $orden->orderType  = 'odp';
 
         if( !empty($deudor->usuarios) ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoIdA, $orden->integradoIdD, $orden->capital);
@@ -173,6 +176,10 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         }else{
             $txData = new Cashout($orden,$orden->integradoIdA,$orden->integradoIdD,$orden->capital, array('accountId' => $orden->deudorDataBank->datosBan_id));
             $txDone = $txData->sendCreateTx();
+        }
+
+        if($txDone){
+            $save->updateDB('ordenes_prestamo',array('status = 13'),'id = '.$orden->id);
         }
 
         return $txDone;
