@@ -31,8 +31,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             $user = JFactory::getUser();
             $save = new sendToTimOne();
 
-            $this->parametros['userId']   = (INT)$user->id;
-            $this->parametros['authDate'] = time();
+            $this->parametros['userId']         = (INT)$user->id;
+            $this->parametros['integradoId']    = $this->integradoId;
+            $this->parametros['authDate']       = time();
 
             $save->formatData($this->parametros);
 
