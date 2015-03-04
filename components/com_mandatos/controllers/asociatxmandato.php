@@ -38,8 +38,9 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		}
 
 
-		$model          = $this->getModel('txsinmandatoform');
-		$this->tx       = $model->getItem($this->vars['idTx']);
+		$model    = $this->getModel('txsinmandatoform');
+		$tx       = $model->getItem($this->vars['idTx']);
+		$this->tx = $tx[0];
 
 		$unpaidOrders   = $model->getOrdersCxC($this->integradoId);
 
