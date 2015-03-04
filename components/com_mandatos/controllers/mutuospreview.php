@@ -126,7 +126,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 $odp->capital           = $objeto->cuota;
                 $odp->intereses         = $objeto->intereses;
                 $odp->iva_intereses     = $objeto->iva;
-                $odp->status            = 1;
+                $odp->status            = 5;
 
                 $save->formatData($odp);
 
