@@ -32,5 +32,11 @@ class MandatosModelOdplist extends JModelItem {
 
         return $listado;
 	}
+
+    public function getDataMutuo(){
+        $mutuo = getFromTimOne::getMutuos(null,$this->data->id);
+
+        return $mutuo[0];
+    }
 }
 

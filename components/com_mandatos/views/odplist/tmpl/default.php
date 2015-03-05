@@ -9,6 +9,7 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $ordenes = $this->ordenes;
+$mutuo = $this->mutuo;
 
 if(is_null($ordenes) || empty($ordenes)){
     JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_ORDERS'), 'Message');
@@ -16,7 +17,23 @@ if(is_null($ordenes) || empty($ordenes)){
 ?>
 <h1><?php echo JText::_('TITULO_LISTADO_ODP').$ordenes[0]->idMutuo; ?></h1>
 
-<div>
+<div class="clearfix">&nbsp;</div>
+
+<div class="span5"><strong>Acreedor:</strong> <?php echo $mutuo->integradoAcredor->nombre; ?></div>
+<div class="span5"><strong>Deudor:</strong> <?php echo $mutuo->integradoDeudor->nombre; ?></div>
+
+<div class="clearfix">&nbsp;</div>
+
+<div class="span3"><strong>Monto:</strong> $<?php echo number_format($mutuo->totalAmount, 2); ?></div>
+<div class="span3"><strong>Interes:</strong> $<?php echo number_format($mutuo->totalInteres, 2); ?></div>
+<div class="span3"><strong>Tasa Interes:</strong> <?php echo $mutuo->interes; ?>%</div>
+<div class="span3"><strong>IVA:</strong> $<?php echo number_format($mutuo->totalIva, 2); ?></div>
+<div class="span3"><strong>Monto Total del prestamo:</strong> $<?php echo number_format($mutuo->realTotalAmount, 2); ?></div>
+<div class="span3"><strong>Saldo:</strong> <?php echo number_format($mutuo->saldo,2); ?></div>
+
+<div class="clearfix">&nbsp;</div>
+
+<div style="margin-top: 20px;">
     <table class="table table-bordered">
         <thead>
         <tr class="row">
