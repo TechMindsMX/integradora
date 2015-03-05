@@ -43,7 +43,6 @@ class FacturasporcobrarControllerFactdata extends JControllerAdmin{
             }else{
                 $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
             }
-
         echo $return;
     }
 
