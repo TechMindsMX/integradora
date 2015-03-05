@@ -80,6 +80,9 @@ class Catalogos {
 		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
 
 		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));
+		if(empty($catalogo)) {
+			JFactory::getApplication()->enqueueMessage('El servicio '.MIDDLE.TIMONE.'stp/listBankCodes NO esta funcionando', 'error');
+		}
 
 		foreach ($catalogo as $indice => $objeto) {
 			$catalogo2[$objeto->bankCode] = $objeto->name;
