@@ -68,6 +68,169 @@ if($params->cuotaOcapital == 0){
 }
 
 ?>
+<style>
+    .form-group {
+        margin-bottom: 1em;
+    }
+    #gk-logo img {
+        height: 70px;
+    }
+    .esconder {
+        display: none;
+    }
+    .forceinline {
+        display: inline-block !important;
+    }
+    .proyectos{
+        width: 100%;
+        display: inline-table;
+        margin-top: 50px;
+    }
+    li.proyectoslist {
+        list-style-type: disc;
+    }
+    .columnas:nth-of-type(2) {
+        position: absolute;
+        left: 700px;
+    }
+    .columnas:nth-of-type(3) {
+        position: absolute;
+        left: 820px;
+    }
+    .filas {
+        display: inline-flex;
+        height: 30px;
+    }
+    .status0 {
+        color:#FF0000;
+    }
+    .etiqueta{
+        font-weight: bolder;
+        color: #000000;
+    }
+    .btn-baja{
+        border-radius: 15px;
+    }
+    table.tablesorter thead tr .header {
+        background-image: url('../../../libraries/integradora/js/themes/blue/bg.gif');
+        background-repeat: no-repeat;
+        background-position: center right;
+        cursor: pointer;
+    }
+    table.tablesorter thead tr .headerSortUp {
+        background-image: url('../../../libraries/integradora/js/themes/blue/asc.gif');
+    }
+    table.tablesorter thead tr .headerSortDown {
+        background-image: url('../../../libraries/integradora/js/themes/blue/desc.gif');
+    }
+    .tableOrders th, .tableOrders td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .alto{
+        height: 34px !important;
+    }
+    .col-md-4 {
+        float: left;
+        margin: 15px 20px;
+    }
+    #msg_busqueda{
+        display: none;
+    }
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+    .bordes-box {
+        border: 1px solid #ccc;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.024) inset;
+        color: #999;
+    }
+    .factura{
+        margin-left: 37px;
+    }
+
+    .margen-fila {
+        margin: 20px 0;
+    }
+    #odv {
+        display: table;
+        border: 1px solid #000;
+        width: 95%;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .contenidos, .head, #content {
+        display: table-row;
+    }
+    #columna1, #columna2{
+        display: table-cell;
+        border: 1px solid #000;
+        vertical-align: middle;
+        padding: 5px;
+    }
+    .cantidades{
+        width: 70px;
+    }
+    input.cantidad, input.iva, input.ieps{
+        width: 38px;
+    }
+    select.productos{
+        width: 80px;
+    }
+
+
+    @media print {
+        #system-message-container, #gk-print-top, .btn {
+            display: none;
+        }
+    }
+    #gk-print-top {
+        display: none;
+    }
+
+    .divdetalleODC {
+    }
+    .tt-dropdown-menu{
+        position: absolute;
+        top: 100%;
+        left: 0px;
+        z-index: 1000048;
+        right: auto;
+        display: none;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .contenedor_mutuo{
+        margin: 0 auto;
+        text-align: justify;
+    }
+    .cabeceras_mutuo, .t-center{
+        text-align: center;
+    }
+
+    .table-mutuo {
+        width: 100%;
+        text-align: center;
+        margin-top: 50px;
+    }
+    .expiration{
+        text-align: center;
+        font-size: 14px;
+        font-weight: bolder;
+    }
+    .num {
+        text-align: right;
+    }
+    .row-separator {
+        padding: 1em 0;
+    }
+
+    /* Fix para los inputs de fecha */
+    select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+        box-sizing: initial;
+    }
+</style>
 
 <div class="row1 clearfix">
     <div class="span3">
