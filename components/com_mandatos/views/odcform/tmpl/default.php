@@ -106,7 +106,6 @@ foreach ($this->proyectos as $key => $proyecto) {
                 default :
                     break;
             }
-console.log(datos);
             var request = jQuery.ajax({
                 url: 'index.php?option=com_mandatos&task='+task+'&format=raw',
                 data: datos,
