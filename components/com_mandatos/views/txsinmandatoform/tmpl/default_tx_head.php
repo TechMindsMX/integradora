@@ -24,4 +24,8 @@ $tx      	= $this->data[0];
 		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT') ?></label>
 		<span id="name"><?php echo number_format($tx->amount,2); ?></span>
 	</div>
+	<div class="form-group">
+		<label for="name"><?php echo JText::_('LBL_BALANCE') ?></label>
+		<span id="name"><?php echo number_format($tx->balance,2); ?></span>
+	</div>
 </div>

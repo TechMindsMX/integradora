@@ -52,6 +52,7 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN') .'</span> </th>
 				<th><span class="etiqueta">'. JText::_('LBL_PAYMENT_DATE') .'</span> </th>
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_LIST_TX_AMOUNT') .' </span> </th>
+				<th><span class="etiqueta">'. JText::_('LBL_BALANCE') .' </span> </th>
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN') .'</span> </th>
 				<th><span class="etiqueta">'. JText::_('COM_MANDATOS_ODC_PAYMENTFORM') .' </span> </th>
 				<th><span class="etiqueta">'. JText::_('JSTATUS') .'</span> </th>
@@ -64,17 +65,14 @@ function showTableOrders($orderArray, $tableTitle, $tx){
 			if( !is_null($orderArray) ){
 				foreach ($orderArray as $key => $value) {
 
-					$btn_asoociar = JText::_('COM_MANDATOS_ORDERS_MONTO_SUPERIOR_A_TX');
-
-					if($tx->amount > ($value->totalAmount - $value->partialPaymentsTotal)) {
-						$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&idOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType);
-						$btn_asoociar = '<a class="btn btn-success" id="asociar" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
-					}
+					$url = JRoute::_( 'index.php?option=com_mandatos&view=txsinmandatoform&layout=confirm&txnum='.$tx->id.'&idOrden='.$value->id.'&'. JSession::getFormToken() .'=1&orderType='.$value->orderType);
+					$btn_asoociar = '<a class="btn btn-success" id="asociar" href="'.$url.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 
 					$html .= '<tr class="row_'.$value->id.'">';
 					$html .= '	<td>'.$value->createdDate.'</td>';
 					$html .= '	<td>'.$value->paymentDate.'</td>';
 					$html .= '	<td>$'.number_format($value->totalAmount,2).'</td>';
+					$html .= '	<td>$'.number_format($value->balance,2).'</td>';
 					$html .= '	<td class="margen-fila" >'.$value->numOrden.'</td>';
 					$html .= '	<td>'.JText::_($value->paymentMethod->name).'</td>';
 					$html .= '	<td>'.$value->status->name.'</td>';

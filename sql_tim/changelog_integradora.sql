@@ -318,3 +318,14 @@ CREATE TABLE `flpmu_txs_banco_timone_relation` (
   FOREIGN KEY (`id_txs_timone`) REFERENCES `flpmu_txs_timone_mandato`(id)
 );
 --rollback DROP TABLE `flpmu_txs_banco_timone_relation`;
+
+--changeset ricardolyon:39
+CREATE TABLE `flpmu_txs_mandatos` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `idTx` INT,
+  `idOrden` INT,
+  `orderType` VARCHAR(25),
+  `amount` FLOAT
+);
+--rollback DROP TABLE `flpmu_txs_mandatos`;
+

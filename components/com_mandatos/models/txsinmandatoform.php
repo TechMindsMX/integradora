@@ -1,4 +1,6 @@
 <?php
+use Integralib\Txs;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
@@ -23,6 +25,10 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 
 	public function getItem( $idTX ){
 		$this->txs = getFromTimOne::getTxIntegradoSinMandato($this->integradoId, $idTX);
+
+		foreach ( $this->txs as $trans ) {
+			$trans->balance = $this->getTxBalance($trans);
+		}
 
 		return $this->txs;
 	}
@@ -59,6 +65,12 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 		}
 
 		return $orders;
+	}
+
+	private function getTxBalance( $trans ) {
+		$txs = new Txs();
+
+		return $txs->calculateBalance($trans);
 	}
 
 }
