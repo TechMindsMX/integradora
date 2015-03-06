@@ -32,6 +32,7 @@ foreach ($this->proyectos as $key => $proyecto) {
     $optionsProyectos .= '<option value="' . $proyecto->id_proyecto . '" ' . $selected . '>' . $proyecto->name . '</option>';
 
 	if ( isset( $proyecto->subproyectos ) ) {
+
 		foreach($proyecto->subproyectos as $subProyecto){
 		    if(isset($datos->proyecto)) {
 		        $selected = $datos->proyecto == $proyecto->id_proyecto ? 'selected' : '';
@@ -42,9 +43,38 @@ foreach ($this->proyectos as $key => $proyecto) {
 		}
 	}
 }
+
 ?>
     <script src="libraries/integradora/js/tim-validation.js"> </script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+
     <script>
+        jQuery.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '<Ant',
+            nextText: 'Sig>',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+            weekHeader: 'Sm',
+            dateFormat: "yy-mm-dd",
+            minDate: 0,
+            firstDay: 0,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        jQuery.datepicker.setDefaults(jQuery.datepicker.regional['es']);
+
+        jQuery(function() {
+            jQuery( "#paymentDate" ).datepicker({
+            });
+        });
+
         jQuery(document).ready(function(){
             var selectProveedor = jQuery('#proveedor');
 
@@ -76,7 +106,7 @@ foreach ($this->proyectos as $key => $proyecto) {
                 default :
                     break;
             }
-
+console.log(datos);
             var request = jQuery.ajax({
                 url: 'index.php?option=com_mandatos&task='+task+'&format=raw',
                 data: datos,
@@ -202,10 +232,7 @@ if(!isset($this->datos['confirmacion'])){
 
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
-            <?php
-            $default = $datos->paymentDate != '' ? $datos->paymentDate : date('Y-m-d');
-            echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
-            ?>
+            <input type="text" id="paymentDate" name="paymentDate">
         </div>
 
         <div class="form-group">

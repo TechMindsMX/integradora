@@ -29,8 +29,6 @@ class FacturasporcobrarControllerFactdata extends JControllerAdmin{
 
         $save = new sendToTimOne();
 
-        $this->returnUrl = 'index.php?option=com_mandatos&view=odclist';;
-
         $TxOdc = $this->txComision();
 
         if($TxOdc){
