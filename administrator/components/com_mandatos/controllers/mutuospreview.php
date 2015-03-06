@@ -180,6 +180,8 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
         if($txDone){
             $save->updateDB('ordenes_prestamo',array('status = 13'),'id = '.$orden->id);
+        }else{
+            $save->updateDB('ordenes_prestamo',array('status = 1'),'id = '.$orden->id);
         }
 
         return $txDone;
