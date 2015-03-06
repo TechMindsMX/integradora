@@ -27,7 +27,7 @@ class MandatosController extends JControllerLegacy {
 	
 	function display($cacheable = false, $urlparams = false) {
 		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->get('view', 'Mandatos'));
+		$input->set('view', $input->get('view', 'Mutuoslist'));
 		
 		parent::display($cacheable);
 		
