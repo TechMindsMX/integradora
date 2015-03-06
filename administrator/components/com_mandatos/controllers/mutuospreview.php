@@ -19,7 +19,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $post                            = array('idOrden' => 'INT');
         $this->app 			             = JFactory::getApplication();
         $this->parametros	             = $this->app->input->getArray($post);
-        $this->parametros['integradoId'] = $session->get('integradoId', null, 'integrado');
+        $this->parametros['integradoId'] = $session->get('integradoId', 1, 'integrado');
         $this->permisos                  = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
         $this->integradoId               = JFactory::getSession()->get('integradoId', null,'integrado');
         $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
@@ -180,6 +180,8 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
         if($txDone){
             $save->updateDB('ordenes_prestamo',array('status = 13'),'id = '.$orden->id);
+        }else{
+            $save->updateDB('ordenes_prestamo',array('status = 1'),'id = '.$orden->id);
         }
 
         return $txDone;

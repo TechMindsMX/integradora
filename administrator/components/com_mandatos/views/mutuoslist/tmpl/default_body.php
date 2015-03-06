@@ -152,7 +152,3 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
     </tbody>
 </table>
 <div class="clearfix">&nbsp;</div>
-
-<div>
-    <a class="btn btn-primary" href="index.php?option=com_mandatos">Mandatos</a>
-</div>
