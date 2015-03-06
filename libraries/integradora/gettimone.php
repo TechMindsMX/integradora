@@ -1033,7 +1033,7 @@ class getFromTimOne{
 
         if (!empty($ordenes)) {
             foreach ($ordenes as $orden) {
-                self::convierteFechas($orden);
+	            self::convierteFechas($orden);
             }
         }
         return $ordenes;
@@ -1060,7 +1060,8 @@ class getFromTimOne{
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
 
             // TODO: Cambiar por metodo que busca los pagos asociados a la orden
-            $value->partialPaymentsTotal = 350.21;
+	        $o = new Order();
+	        $value->balance = $o->calculateBalance($value);
         }
 
         return $orden;
@@ -1084,6 +1085,9 @@ class getFromTimOne{
 
             $integCurrent = new IntegradoSimple(JFactory::getSession()->get('integradoId',null,'integrado'));
             $value->cuenta = $integCurrent->integrados[0]->datos_bancarios[$value->cuentaId];
+
+	        $o = new Order();
+	        $value->balance = $o->calculateBalance($value);
         }
 
         return $orden;
@@ -1123,7 +1127,10 @@ class getFromTimOne{
             $value->iva             = $value->factura->impuestos->iva->importe;
             $value->ieps            = $value->factura->impuestos->ieps->importe;
 
-            $emisor = new IntegradoSimple($value->integradoId);
+	        $o = new Order();
+	        $value->balance = $o->calculateBalance($value);
+
+	        $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
             $proyectos = self::getProyects(null, $value->proyecto);
@@ -1181,7 +1188,10 @@ class getFromTimOne{
             $value->iva      = $subTotalIva;
             $value->ieps     = $subTotalIeps;
 
-            $value = self::getProyectFromId($value);
+	        $o = new Order();
+	        $value->balance = $o->calculateBalance($value);
+
+	        $value = self::getProyectFromId($value);
             $value = self::getClientFromID($value);
             $value->status = self::getOrderStatusName($value->status);
         }
@@ -3743,15 +3753,16 @@ class makeTx {
 class Order {
 
     protected $minAmount;
+	protected $order;
 
-    public static function getStatusIdByName( $string ) {
+	public static function getStatusIdByName( $string ) {
         $statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
 
         return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
     }
 
     public static function getMinAmount() {
-        return 10;
+        return 0;
     }
 
     public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
@@ -3821,5 +3832,30 @@ class Order {
 		}
 
 		return $return;
+	}
+
+	public function calculateBalance( $order ) {
+		$this->order = $order;
+
+		$this->order->sumOrderTxs = 0;
+		$this->order->txs = $this->getOrderTxs();
+		foreach ( $this->order->txs as $tx ) {
+			$this->order->sumOrderTxs = $this->order->sumOrderTxs + $tx->amount;
+		}
+
+		return $this->order->totalAmount - $this->order->sumOrderTxs;
+	}
+
+	private function getOrderTxs() {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('*')
+			->from('#__txs_mandatos')
+			->where('idOrden = '.$db->quote($this->order->id).' AND orderType = '.$db->quote($this->order->orderType));
+		$db->setQuery($query);
+		$resutls = $db->loadObjectList();
+
+		return $resutls;
 	}
 }
