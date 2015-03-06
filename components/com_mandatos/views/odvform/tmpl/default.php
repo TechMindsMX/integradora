@@ -10,7 +10,7 @@ JHtml::_('behavior.formvalidation');
 JHTML::_('behavior.calendar');
 
 $orden = $this->orden;
-$subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subproyectos'] : '';
+$subProyects = $this->subprojects;
 ?>
 <script src="libraries/integradora/js/tim-validation.js"> </script>
 <script src="libraries/integradora/js/typeahead.bundle.js"> </script>
@@ -236,8 +236,8 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
         <select name="projectId" id="project">
             <option value="0">Proyecto</option>
             <?php
-            if ( isset( $this->proyectos['proyectos'] ) ) {
-                foreach ($this->proyectos['proyectos'] as $key => $value) {
+            if ( isset( $this->proyectos) ) {
+                foreach ($this->proyectos as $key => $value) {
                     $selected = $value->id_proyecto == $orden->projectId ? 'selected' : '';
                     echo '<option value="'.$value->id_proyecto.'" '.$selected.'>'.$value->name.'</option>';
                 }
@@ -320,7 +320,7 @@ $subProyects = isset($this->proyectos['subproyectos']) ? $this->proyectos['subpr
                 <div id="columna1" ><?php echo JText::_('LBL_TOTAL'); ?></div>
             </div>
             <?php
-            if(is_array($orden->productosData)) {
+            if(isset($orden->productosData)) {
 
                 foreach ($orden->productosData as $key => $value) {
                     $options = '';

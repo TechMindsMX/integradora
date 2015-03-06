@@ -49,17 +49,18 @@ class MandatosModelOdvform extends JModelItem {
 
 	public function getProyectos(){
         $proyectos = getFromTimOne::getProyects($this->integradoId);
-        $data = array();
 
-        foreach($proyectos as $key => $value){
-            if($value->parentId == 0){
-                $data['proyectos'][] = $value;
-                $parent = $value->name;
-            }else{
-                $data['subproyectos'][$value->parentId][]= $value;
-            }
+        return $proyectos;
+    }
+
+    public function getSubprojects(){
+        $projects = $this->getProyectos();
+
+        foreach ($projects as $proyect) {
+            $subprojects[$proyect->id_proyecto] = getFromTimOne::getAllSubProyects($proyect->id_proyecto);
         }
-        return $data;
+
+        return $subprojects;
     }
 
 	public function getestados(){

@@ -66,6 +66,7 @@ class Enviroment {
 		define( "TIMONE", $controllerTimOne);
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
 		define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
+        define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
 		define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 	}
@@ -80,6 +81,7 @@ class Enviroment {
 		define( "TIMONE", $controllerTimOne );
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
 		define( "FACTURA_ROUTE", 'factura.trama.mx/facturacion/' );
+        define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
 		define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 	}
@@ -94,6 +96,7 @@ class Enviroment {
 		define( "TIMONE", $controllerTimOne );
 		define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
 		define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
+        define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
 		define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 	}

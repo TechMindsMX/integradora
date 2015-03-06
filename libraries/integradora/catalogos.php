@@ -167,7 +167,7 @@ class Catalogos {
 	}
 
 	public function getPaymentMethods() {
-		return array('LBL_SPEI', 'LBL_CHEQUE');
+		return array('algo','LBL_SPEI', 'LBL_CHEQUE');
 	}
 }
 	

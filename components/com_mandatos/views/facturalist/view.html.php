@@ -26,6 +26,8 @@ class MandatosViewfacturalist extends JViewLegacy {
 	}
 
 	private function clientList() {
+        $clients = array();
+
 		foreach ( $this->data as $factura ) {
 			if ( isset( $factura->clientName ) ) {
 				$clients[$factura->clientId] = $factura->clientName;

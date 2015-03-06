@@ -1755,9 +1755,17 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getFacturasVenta($integradoId)
-    {
-        return self::getOrdenesVenta($integradoId);
+    public static function getFacturasVenta($integradoId){
+        $odvs = self::getOrdenesVenta($integradoId);
+        $facturas = array();
+
+        foreach ($odvs as $odv) {
+            if($odv->status->name === 'Autorizada'){
+                $facturas[] = $odv;
+            }
+        }
+
+        return $facturas;
     }
 
     public static function getComisiones($id = null) {

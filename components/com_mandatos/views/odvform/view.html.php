@@ -14,6 +14,7 @@ class MandatosViewOdvform extends JViewLegacy {
         $inputVars 		    = JFactory::getApplication()->input->getArray();
         $this->clientes     = $this->get('clientes');
         $this->proyectos    = $this->get('proyectos');
+        $this->subprojects  = $this->get('Subprojects');
         $this->estados      = $this->get('estados');
         $this->solicitud    = $this->get('datosSolicitud');
         $this->products     = $this->get('productos');

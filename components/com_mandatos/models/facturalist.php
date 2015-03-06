@@ -16,7 +16,6 @@ class MandatosModelFacturalist extends JModelItem {
 	public function getFacturas( $integradoId = null ){
 
 		$listado = getFromTimOne::getFacturasVenta($integradoId);
-
         $clientes = getFromTimOne::getClientes($integradoId);
 
         foreach ($listado as $k => $v) {
