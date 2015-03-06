@@ -94,11 +94,11 @@ class servicesUrls extends timOneControllers
     }
 
 	public function userTxs( ){
-		$this->list->url = 'tx/{uuid}';
+		$this->list->url = 'tx/getTransaction/{uuid}';
 	}
 
 	public function txDetails() {
-		$this->details->url = 'tx/getTransaction/{uuid}';
+		$this->details->url = 'tx/{uuid}';
 	}
 
 	public function txByDateRange() {

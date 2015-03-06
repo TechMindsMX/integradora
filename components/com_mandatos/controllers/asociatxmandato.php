@@ -41,6 +41,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$model    = $this->getModel('txsinmandatoform');
 		$tx       = $model->getItem($this->vars['idTx']);
 		$this->tx = $tx[0];
+		$this->tx->relations = getFromTimOne::selectDB('txs_banco_timone_relation','id_txs_banco = '.$this->tx->id);
 
 		$unpaidOrders   = $model->getOrdersCxC($this->integradoId);
 
@@ -61,10 +62,13 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$update->formatData($arrayToSave);
 
 		// TODO: tabla pivot de asociación de tx y saldo parcial de una orden
-		$where = 'id = '.$this->tx[0]->id;
+		$where = 'id = '.$this->tx->relations[0]->id_txs_timone;
 		$result = $update->updateDB('txs_timone_mandato', null, $where);
 
 		if($result) {
+			$order = new Order();
+
+
 			$this->exitWithRedirect($redirectUrl, 'COM_MANDATOS_LBL_SUCCESS');
 		} else {
 			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');

@@ -1,4 +1,6 @@
 <?php
+use Integralib\TimOneRequest;
+
 defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.user.user');
@@ -686,7 +688,13 @@ class getFromTimOne{
         return $persJuridicas[ucfirst($string)];
     }
 
-    public function createNewProject($envio, $integradoId){
+	private static function getTxUUID( $txId ) {
+		$result = self::selectDB('txs_timone_mandatos', 'id = '.$txId);
+
+		return $result[0]->idTx;
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -1626,33 +1634,25 @@ class getFromTimOne{
         $txs = getFromTimOne::selectDB( 'txs_timone_mandato', $where );
 
         foreach ( $txs as $transaction ) {
-            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
+            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->idTx);
         }
 
         return $txs;
     }
 
-    public static function getTxDataByTxId($txId) {
+	/**
+	 * @param $txUUID
+	 *
+	 * @return mixed
+	 */
+	public static function getTxDataByTxId($txUUID) {
 
         // TODO: traer los datos de la Tx desde TimOne
+	    $timone = new TimOneRequest();
 
-        $intId = JFactory::getSession()->get('integradoId', null, 'integrado');
-        $where = JFactory::getDbo()->quoteName('idIntegrado') . ' = '. $intId;
-        $results = getFromTimOne::selectDB('txs_timone_mandato', $where, 'idTx');
+	    $results = $timone->getTxDetails($txUUID);
 
-        foreach ( $results as $key => $val ) {
-            $txstp = new stdClass;
-            $txstp->referencia = 'A458455A554SJHS445AA2'.$key;
-            $txstp->integradoId = $results[$txId]->idIntegrado;
-            $txstp->date = $results[$txId]->date;
-            $txstp->amount = 10.10 * ($key+1);
-
-            $array[$key] = $txstp;
-        }
-
-        $txId = (int)$txId;
-
-        return @$array[$txId];
+        return $results;
     }
 
     public static function getMedidas(){
@@ -1700,7 +1700,7 @@ class getFromTimOne{
         $txs = getFromTimOne::selectDB( 'txs_timone_mandato', 'id = '.(int)$id );
 
         foreach ( $txs as $transaction ) {
-            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->id);
+            $transaction->data = getFromTimOne::getTxDataByTxId($transaction->idTx);
         }
 
         return $txs[0];
