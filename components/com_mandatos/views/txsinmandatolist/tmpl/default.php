@@ -20,7 +20,6 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 		<thead>
 		<tr>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_REF'); ?></span> </th>
-			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_ACCOUNT'); ?> </span> </th>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_DATE'); ?> </span> </th>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT'); ?> </span> </th>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BALANCE'); ?> </span> </th>
@@ -35,10 +34,9 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 				$btn_asoociar = '<a class="btn btn-success" href="index.php?option=com_mandatos&view=txsinmandatoform&txnum='.$value->id.'">'.JText::_('COM_MANDATOS_LIST_TX_BTN_ASOCIAR').'</a>';
 
 				echo '<tr class="row_'.$value->id.'">';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->referencia.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->cuenta.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->date.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->amount,2).'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->idTx.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.date('d-m-Y', $value->date).'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->details->amount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->balance,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$btn_asoociar.'</td>';
 				echo '</tr>';

@@ -37,7 +37,6 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 			$this->exitWithRedirect($redirectUrl,'LBL_DOES_NOT_HAVE_PERMISSIONS');
 		}
 
-
 		$model    = $this->getModel('txsinmandatoform');
 		$tx       = $model->getItem($this->vars['idTx']);
 		$this->tx = $tx[0];
@@ -55,19 +54,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');
 		}
 
-		$update = new sendToTimOne();
-
-		$arrayToSave['idOrden'] = $this->order->id;
-		$arrayToSave['tipoOrden'] = $this->order->orderType;
-		$update->formatData($arrayToSave);
-
-		// TODO: tabla pivot de asociación de tx y saldo parcial de una orden
-		$where = 'id = '.$this->tx->relations[0]->id_txs_timone;
-		$result = $update->updateDB('txs_timone_mandato', null, $where);
-
-		if($result) {
-			$order = new Order();
-
+		if($this->saveRelations()) {
 
 			$this->exitWithRedirect($redirectUrl, 'COM_MANDATOS_LBL_SUCCESS');
 		} else {
@@ -76,11 +63,58 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 	}
 
 	private function doValidations() {
-		// TODO: Validar que pertenezcan al mismo integrado, que el monto ea suficiente y el estatus de la orden
-		return true;
+		$return = true;
+		if ($this->order->balance <= 0 || $this->tx->balance <= 0 ) {
+			$return = false;
+		}
+
+		return $return;
 	}
 
 	public function exitWithRedirect($url, $msg, $msgType = 'message') {
 		$this->app->redirect($url, JText::_($msg), $msgType);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function saveRelations() {
+		$objToInsert            = new stdClass();
+		$objToInsert->id        = $this->tx->id;
+		$objToInsert->amount    = $this->setAmountTxToAssign();
+		$objToInsert->idOrden   = $this->order->id;
+		$objToInsert->orderType = $this->order->orderType;
+
+		$where = 'id = ' . $this->tx->id;
+
+		$db = JFactory::getDbo();
+		$db->transactionStart();
+
+		try {
+			$db->insertObject( '#__txs_mandatos', $objToInsert );
+
+			if ( ($this->order->balance - $objToInsert->amount) === 0.0 ) {
+				$ststus = new sendToTimOne;
+				if (!$ststus->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
+					throw new Exception('LBL_CHANGE_STATUS_FAILED');
+				}
+			}
+
+			$db->transactionCommit();
+
+			$result = true;
+
+		}
+		catch ( Exception $e ) {
+			$db->transactionRollback();
+
+			$result = false;
+		}
+
+		return $result;
+	}
+
+	private function setAmountTxToAssign() {
+		return $this->tx->balance > $this->order->balance ? $this->order->balance : $this->tx->balance;
 	}
 }
