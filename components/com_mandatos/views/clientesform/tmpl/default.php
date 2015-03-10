@@ -589,7 +589,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			</div>
 
 			<div class="form-group">
-				<label for="co_tel_fijo1"><?php echo JText::_('LBL_TEL_FIJO'); ?> 1</label>
+				<label for="co_tel_fijo1"><?php echo JText::_('LBL_TEL_FIJO'); ?> 1 *</label>
 				<input name="co_tel_fijo1" id ="co_tel_fijo1" type="text" maxlength="10" />
 			</div>
 			<div class="form-group">
@@ -601,7 +601,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<input name="co_tel_movil1" id ="co_tel_movil1" type="text" maxlength="13" />
 			</div>
 			<div class="form-group">
-				<label for="co_email1"><?php echo JText::_('LBL_CORREO'); ?> 1</label>
+				<label for="co_email1"><?php echo JText::_('LBL_CORREO'); ?> 1 *</label>
 				<input name="co_email1" id="co_email1" type="email" maxlength="100" />
 			</div>
 
@@ -755,18 +755,18 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			<div id="testimonio1">
 				<h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
 				<div class="form-group">
-					<label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?></label>
+					<label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?> *</label>
 					<?php
 					echo JHTML::_('calendar',date('Y-m-d'),'t1_instrum_fecha', 't1_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
 					?>
 				</div>
 				<div class="form-group">
-					<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
+					<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
 					<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
 				</div>
 
 				<div class="form-group">
-					<label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+					<label for="t1_instrum_estado"><?php echo JText::_('LBL_ESTADO'); ?> *</label>
 					<select name="t1_instrum_estado" id="t1_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
@@ -778,11 +778,11 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 
 				<div class="form-group">
-					<label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?></label>
+					<label for="t1_instrum_nom_notario"><?php echo JText::_('LBL_NOTARIO'); ?> *</label>
 					<input name="t1_instrum_nom_notario" id="t1_instrum_nom_notario" type="text" />
 				</div>
 				<div class="form-group">
-					<label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
+					<label for="t1_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?> *</label>
 					<input name="t1_instrum_num_instrumento" id="t1_instrum_num_instrumento" type="text" maxlength="10"/>
 				</div>
 

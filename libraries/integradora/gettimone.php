@@ -582,13 +582,18 @@ class getFromTimOne{
     public static function getBankName($arrayBancos){
         $catalogos = new Catalogos();
         $bancos    = $catalogos->getBancos();
-        foreach($arrayBancos as $bancoData){
-            foreach ($bancos as $banco) {
-                if($banco->claveClabe == $bancoData->banco_codigo){
-                    $bancoData->bankName = $banco->banco;
-                }
-            }
-        }
+	    if ( ! empty( $bancos ) ) {
+		    foreach($arrayBancos as $bancoData){
+		        foreach ($bancos as $banco) {
+		            if($banco->claveClabe == $bancoData->banco_codigo){
+		                $bancoData->bankName = $banco->banco;
+		            }
+		        }
+		    }
+	    } else {
+		    $logdata = implode(' | ',array(JFactory::getUser()->id, '', __METHOD__.':'.__LINE__, 'BANCOS VACIO' ) );
+		    JLog::add($logdata,JLog::ERROR,'Error SERVICIOS');
+	    }
 
         return $arrayBancos;
     }
@@ -2485,7 +2490,7 @@ class sendToTimOne {
         return $data;
     }
 
-    public function generateFacturaFromTimone( $factura ) {
+    public function generateFacturaFromTimone(Factura $factura ) {
 
         return $factura->sendCreateFactura(); // realiza el envio
     }
@@ -3437,17 +3442,25 @@ class Factura extends makeTx {
     public $receptor;
     public $datosDeFacturacion;
     public $conceptos;
-    public $format;
+    public $timbra;
+	public $format;
 
-    function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos) {
+	function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos, $timbra = true ) {
         $this->emisor = $emisor;
         $this->receptor = $receptor;
         $this->datosDeFacturacion = $datosDeFacturacion;
         $this->conceptos = $conceptos;
+		$this->setTimbra($timbra);
         $this->setFormat();
     }
+	/**
+	 * @param bool $timbra
+	 */
+	public function setTimbra( $timbra ) {
+		$this->timbra = isset($timbra) ? true : false;
+	}
 
-    public function setFormat() {
+	public function setFormat() {
         $this->format = 'Xml';
     }
 

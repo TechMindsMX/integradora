@@ -149,6 +149,14 @@ class Integrado {
 		return $db->loadAssocList('integrado_id');
 	}
 
+	public static function getSTPaccount( $integradoId ) {
+		$cuentas = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$integradoId);
+
+		$cuenta = !empty($cuentas) ? $cuentas[0] : null;
+
+		return $cuenta;
+	}
+
 	public function getBankName($datos_bancarios){
 		$catalogos = new Catalogos();
 		$bancos    = $catalogos->getBancos();
@@ -238,7 +246,8 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$this->integrados[$key]->datos_personales->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+				$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+				$this->integrados[$key]->datos_personales->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
@@ -249,7 +258,8 @@ class Integrado {
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$this->integrados[ $key ]->datos_empresa->direccion_CP = json_decode(file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+					$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+					$this->integrados[ $key ]->datos_empresa->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
 				}

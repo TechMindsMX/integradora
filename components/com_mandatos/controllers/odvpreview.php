@@ -62,19 +62,20 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-                            $file = $save->saveXMLFile( $xmlFactura );
+                            $newOrden->urlXML = $save->saveXMLFile( $xmlFactura );
                             $info = $this->sendEmail($newOrden);
                         }
 
-                        if ( isset( $file ) ) {
-                            if ( $file != false ) {
-                                $save->formatData(array('urlXML' => $file ));
+                        if ( isset( $newOrden->urlXML ) ) {
+                            if ( $newOrden->urlXML != false ) {
+                                $save->formatData(array('urlXML' => $newOrden->urlXML ));
                                 $where = 'id = '.$newOrden->id;
                                 $save->updateDB('ordenes_venta', null, $where);
+
+								$this->createOpposingODC($newOrden);
                             }
                         }
 
-                        //TODO tx con TIMone
                     }
 	            }
 
@@ -145,4 +146,75 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         return $totalAmount;
     }
 
+	private function createOpposingODC($odv) {
+
+		$save   = new sendToTimOne();
+		$db     = JFactory::getDbo();
+
+		$datos['integradoId'] = $this->integradoId;
+
+		$odc = new Order();
+		$odc->createdDate   = time();
+		$odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
+		$odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
+		$odc->status        = 1;
+		$odc->proyecto      = $odv->proyectId2 !== "0" ? $odv->proyectId2 : $odv->proyectId;
+		$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
+		$odc->paymentDate   = $odv->paymentDate;
+		$odc->paymentMethod = $odv->paymentMethod->id;
+		$odc->totalAmount   = $odv->totalAmount;
+		$odc->urlXML        = $odv->urlXML;
+		$odc->observaciones = '';
+		$odc->bankId        = $odv->account;
+
+		$db->transactionStart();
+
+		try {
+			$db->insertObject('#__ordenes_compra', $odc);
+
+			$relation = new stdClass();
+			$relation->id_odv = $odv->id;
+			$relation->id_odc = $db->insertid();
+
+			$db->insertObject('#__ordenes_odv_odc_relation', $relation);
+
+			$db->transactionCommit();
+		} catch (Exception $e) {
+			$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($e, $this->parametros) ) ) );
+			JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
+			$this->app->enquemessage('LBL_ERROR_CREATING_ODC');
+		}
+
+		return isset($relation->id_odc);
+	}
+
+	public function sendEmailODC($odcObj)
+	{
+		/*
+		 *  NOTIFICACIONES
+		 */
+		$info = array();
+
+		$getCurrUser     = new IntegradoSimple($odcObj->integradoId);
+		$titleArray      = array( $odcObj->numOrden);
+
+		$array           = array($getCurrUser->user->name, $odcObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $odcObj->totalAmount, $odcObj->integradoName,  $odcObj->numOrden);
+		$send            = new Send_email();
+
+		$send->setIntegradoEmailsArray($getCurrUser);
+		$info[]            = $send->sendNotifications('7', $array, $titleArray);
+
+		/*
+		 * Notificaciones
+		 */
+
+		$titleArrayAdmin = array( $getCurrUser->user->username, $odcObj->numOrden );
+		$arrayAdmin      = array( $getCurrUser->user->username, $odcObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $odcObj->totalAmount, $odcObj->integradoName,  $odcObj->numOrden );
+
+		$send->setAdminEmails();
+		$info[] = $send->sendNotifications('8', $arrayAdmin, $titleArrayAdmin);
+
+		return $info;
+	}
 }
