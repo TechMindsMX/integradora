@@ -106,14 +106,15 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 
         if($parametros->existe === 'false') {
             $diccionario = array(
+                'rfc'               => array('alphaNumber'  => true, 'maxlength' => '100',  'required' => true),
                 'integradoIdE'      => array('string'       => true, 'maxlength' => '100'),
                 'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
-                'beneficiario'      => array('alphaNumber'  => true, 'maxlength' => '100'),
+                'beneficiario'      => array('alphaNumber'  => true, 'maxlength' => '100',  'required' => true),
                 'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
                 'payments'          => array('string'       => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
-                'interes'           => array('float'        => true, 'maxlength' => '100', 'required' => true),
-                'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3, 'required' => true),
+                'interes'           => array('float'        => true, 'maxlength' => '100',  'required' => true),
+                'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3,      'required' => true),
                 'banco_cuenta'      => array('required'     => true),
                 'banco_sucursal'    => array('required'     => true),
                 'banco_clabe'       => array('banco_clabe'  => $parametros->banco_codigo, 'length' => 18, 'required' => true));

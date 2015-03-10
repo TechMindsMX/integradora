@@ -106,9 +106,10 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 
         if($parametros->existe === 'false') {
             $diccionario = array(
+                'rfc'               => array('alphaNumber'  => true, 'maxlength' => '100',  'required' => true),
                 'integradoIdE'      => array('string'       => true, 'maxlength' => '100'),
                 'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
-                'beneficiario'      => array('alphaNumber'  => true, 'maxlength' => '100'),
+                'beneficiario'      => array('alphaNumber'  => true, 'maxlength' => '100',  'required' => true),
                 'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
                 'payments'          => array('string'       => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
