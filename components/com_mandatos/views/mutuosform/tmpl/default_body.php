@@ -32,6 +32,7 @@ $optionBancos = '';
     jQuery(document).ready(function(){
         jQuery('#rfc').on('change',searchrfc);
         jQuery('#amortizacion').on('click',getTable);
+        jQuery('#confirmarodc').on('click',beforeSubmit);
 
         <?php echo (!is_null($datos->integradoDeudor->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
     });
@@ -68,12 +69,14 @@ $optionBancos = '';
 
                 jQuery('#integradoIdR').val(data.integrado_id);
                 jQuery('#dataBanco').hide();
+                jQuery('#existe').val(true);
             }else{
                 beneficiario.val('');
                 beneficiario.prop('readOnly', false);
 
                 jQuery('#integradoIdR').val('');
                 jQuery('#dataBanco').show();
+                jQuery('#existe').val(false);
             }
         });
     }
@@ -153,12 +156,33 @@ $optionBancos = '';
                 button.remove();
 
                 var buttonenviar = jQuery('#botones_envio');
-                buttonenviar.html('<input class="btn btn-primary" id="confirmarodc" type="submit" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />');
+                buttonenviar.html('<input class="btn btn-primary" id="confirmarodc" type="button" value="<?php echo jText::_('LBL_ENVIAR'); ?>" />');
+                jQuery('#confirmarodc').on('click',beforeSubmit);
             }else{
                 mensajesValidaciones(response);
             }
         });
 
+    }
+
+    function beforeSubmit() {
+        var form        = jQuery('#generaODC');
+        var data        = form.serialize();
+        var url         = 'index.php?option=com_mandatos&task=mutuosform.valida&format=raw';
+        var parameters  = {'datos': data, 'link':url};
+        var request     = ajax(parameters);
+
+        request.done(function(result){
+            if(typeof(result) == 'string'){
+                result = jQuery.parseJSON(result);
+            }
+
+            if(result.success && result.redirect){
+               form.submit();
+            }else{
+                mensajesValidaciones(result);
+            }
+        });
     }
 </script>
 
@@ -170,10 +194,11 @@ $optionBancos = '';
 <div class="clearfix">&nbsp;</div>
 <form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
     <div>
-        <input type="hidden" name="id" id="id" value="<?php echo $datos->id; ?>" />
-        <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->integradoId; ?>" />
+        <input type="hidden" name="existe"       id="existe"       value="false">
+        <input type="hidden" name="id"           id="id"           value="<?php echo $datos->id; ?>" />
+        <input type="hidden" name="integradoId"  id="integradoId"  value="<?php echo $this->integradoId; ?>" />
         <input type="hidden" name="integradoIdR" id="integradoIdR" value="<?php echo $datos->integradoIdR; ?>" />
-        <input type="hidden" name="jsonTabla" id="jsonTabla" />
+        <input type="hidden" name="jsonTabla"    id="jsonTabla" />
 
         <div class="form-group">
             <label for="rfc"><?php echo JText::_('COM_MANDATOS_MUTUOS_LBL_RFC'); ?></label>

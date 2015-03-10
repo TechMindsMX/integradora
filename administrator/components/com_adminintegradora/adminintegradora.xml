@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="1.6.0" method="upgrade">
 
-	<name>AdminIntegradora</name>
+	<name>Administracion</name>
 	<!-- The following elements are optional and free of formatting conttraints -->
 	<creationDate>Septiembre 2014</creationDate>
 	<author>Ricardo Lyon</author>
@@ -24,7 +24,7 @@
 	</files>
 	<administration>
 		<!-- Administration Menu Section -->
-		<menu>Administracion Integradora</menu>
+		<menu>Administracion</menu>
 		<!-- Administration Main File Copy Section -->
 		<!-- Note the folder attribute: This attribute describes the folder
 		to copy FROM in the package to install therefore files copied

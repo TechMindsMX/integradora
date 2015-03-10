@@ -41,7 +41,7 @@ foreach ($bancos as $value) {
 
         request.done(function(result){
             if(result.success && result.redirect){
-               window.location = result.urlRedirect
+               window.location = result.urlRedirect;
             }
         });
     }

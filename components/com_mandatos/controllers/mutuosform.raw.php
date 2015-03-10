@@ -28,7 +28,8 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             'banco_codigo'      => 'STRING',
             'banco_cuenta'      => 'STRING',
             'banco_sucursal'    => 'STRING',
-            'banco_clabe'       => 'STRING'
+            'banco_clabe'       => 'STRING',
+            'existe'            => 'STRING'
         );
 
         $this->parametros   = (object) $this->inputVars->getArray($post);
@@ -100,21 +101,44 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 
     function valida(){
         $validacion = new validador();
-        $document = JFactory::getDocument();
-
         $parametros = $this->parametros;
+        $this->document->setMimeEncoding();
 
-        $diccionario = array(
-            'integradoIdE'   => array('string' => true, 'maxlength' => '100'),
-            'integradoIdR'   => array('string' => true, 'maxlength' => '100'),
-            'expirationDate' => array('date' => true, 'maxlength' => '10'),
-            'payments'       => array('string' => true, 'maxlength' => '10'),
-            'totalAmount'    => array('float' => true, 'maxlength' => '100'),
-            'interes'        => array('string' => true, 'maxlength' => '100'));
+        if(!$parametros->existe) {
+            $diccionario = array(
+                'integradoIdE'      => array('string'       => true, 'maxlength' => '100'),
+                'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
+                'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
+                'payments'          => array('string'       => true, 'maxlength' => '10'),
+                'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
+                'interes'           => array('float'        => true, 'maxlength' => '100', 'required' => true),
+                'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3, 'required' => true),
+                'banco_cuenta'      => array('required'     => true),
+                'banco_sucursal'    => array('required'     => true),
+                'banco_clabe'       => array('banco_clabe'  => $parametros->banco_codigo, 'length' => 18, 'required' => true));
+        }else{
+            $diccionario = array(
+                'integradoIdE'      => array('string' => true, 'maxlength' => '100'),
+                'expirationDate'    => array('date'   => true, 'maxlength' => '10'),
+                'payments'          => array('string' => true, 'maxlength' => '10'),
+                'totalAmount'       => array('float'  => true, 'maxlength' => '100'),
+                'interes'           => array('float'  => true, 'maxlength' => '100', 'required' => true));
+        }
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
 
-        $document->setMimeEncoding('application/json');
+        foreach ($respuesta as $campo) {
+            if(is_array($campo)){
+                $respuesta['success'] = false;
+                $respuesta['redirect'] = true;
+                $respuesta['urlRedirect'] = 'index.php?option=com_mandatos';
+
+                echo json_encode($respuesta);
+                exit;
+            }
+        }
+        $respuesta['success'] = true;
+        $respuesta['redirect'] = true;
         echo json_encode($respuesta);
     }
 }
