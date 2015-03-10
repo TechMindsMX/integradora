@@ -23,7 +23,7 @@ echo $this->loadTemplate('tx_head');
 </div>
 <div class="form-group">
 	<label for="name"><?php echo JText::_('LBL_PAYMENT_DATE') ?></label>
-	<span id="name"><?php echo $order->createdDate; ?></span>
+	<span id="name">este <?php echo $order->createdDate; ?></span>
 </div>
 <div class="form-group">
 	<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT') ?></label>

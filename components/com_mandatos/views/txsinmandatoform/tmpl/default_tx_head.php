@@ -14,15 +14,15 @@ $tx      	= $this->data[0];
 	<h3><?php echo JText::_('COM_MANDATOS_LIST_TX_DATA'); ?></h3>
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_REF') ?></label>
-		<span id="name"><?php echo $tx->referencia; ?></span>
+		<span id="name"><?php echo $tx->idTx; ?></span>
 	</div>
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_DATE') ?></label>
-		<span id="name"><?php echo $tx->date; ?></span>
+		<span id="name"><?php echo date('d-m-Y', $tx->details->timestamp/1000); ?></span>
 	</div>
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT') ?></label>
-		<span id="name"><?php echo number_format($tx->amount,2); ?></span>
+		<span id="name"><?php echo number_format($tx->details->amount,2); ?></span>
 	</div>
 	<div class="form-group">
 		<label for="name"><?php echo JText::_('LBL_BALANCE') ?></label>

@@ -99,16 +99,16 @@ class getFromTimOne{
         if (!is_null($idTX)) {
             $where = 'id = ' . $idTX;
         } elseif (!is_null($integradoId)) {
-            $where = 'integradoId = ' . $integradoId;
+            $where = 'idIntegrado = ' . $integradoId;
         }
 
-        $txs = self::getTxConciliaciones($where);
+	    $txs = self::selectDB('txs_timone_mandato',$where);
 
         return $txs;
     }
 
     // TODO: Este metodo se elimina, sirve como modelo del objeto de datos
-    public static function getTxConciliaciones($where){
+    public static function getTxConciliacionesBanco($where){
 
         $txs = self::selectDB('txs_banco_integrado',$where,'','getFromTimOne');
 
@@ -1054,7 +1054,7 @@ class getFromTimOne{
             $value->createdDate     = (STRING)$value->createdDate;
             $value->paymentDate     = (STRING)$value->paymentDate;
             $receptor               = new IntegradoSimple($value->integradoId);
-            $value->recepror        = $receptor->getDisplayName();
+            $value->receptor        = $receptor->getDisplayName();
 
             $value->status = self::getOrderStatusName($value->status);
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
@@ -2364,7 +2364,6 @@ class sendToTimOne {
         $return = false;
 
         $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
-        $integrado = new IntegradoSimple($integradoId);
 
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
@@ -3839,8 +3838,10 @@ class Order {
 
 		$this->order->sumOrderTxs = 0;
 		$this->order->txs = $this->getOrderTxs();
-		foreach ( $this->order->txs as $tx ) {
-			$this->order->sumOrderTxs = $this->order->sumOrderTxs + $tx->amount;
+		if ( !empty( $this->order->txs ) ) {
+			foreach ( $this->order->txs as $tx ) {
+				$this->order->sumOrderTxs = $this->order->sumOrderTxs + $tx->totalAmountTxs;
+			}
 		}
 
 		return $this->order->totalAmount - $this->order->sumOrderTxs;
@@ -3850,12 +3851,13 @@ class Order {
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('*')
-			->from('#__txs_mandatos')
-			->where('idOrden = '.$db->quote($this->order->id).' AND orderType = '.$db->quote($this->order->orderType));
+		$query->select('txs.id, txs.idTx, txs.idIntegrado, txs.date, txs.idComision, SUM(piv.amount) AS totalAmountTxs, piv.idOrden, piv.orderType')
+			->from($db->quoteName('#__txs_timone_mandato', 'txs') )
+			->join('left', $db->quoteName('#__txs_mandatos', 'piv') . ' ON ( txs.id = piv.id )' )
+			->where('piv.idOrden = '.$db->quote($this->order->id).' AND piv.orderType = '.$db->quote($this->order->orderType));
 		$db->setQuery($query);
-		$resutls = $db->loadObjectList();
+		$results = $db->loadObjectList();
 
-		return $resutls;
+		return $results;
 	}
 }

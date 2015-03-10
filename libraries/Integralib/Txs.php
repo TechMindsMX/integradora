@@ -22,7 +22,11 @@ class Txs {
 			$this->tx->sumOrderTxs = $this->tx->sumOrderTxs + $tx->amount;
 		}
 
-		return $this->tx->amount - $this->tx->sumOrderTxs;
+		$txDetails = \getFromTimOne::getTxDataByTxId($this->tx->idTx);
+
+		$this->tx->details = json_decode( $txDetails->data );
+
+		return $this->tx->details->amount - $this->tx->sumOrderTxs;
 	}
 
 	private function getTxOrders() {
@@ -31,7 +35,7 @@ class Txs {
 
 		$query->select( '*' )
 		      ->from( '#__txs_mandatos' )
-		      ->where( 'idTx = ' . $db->quote( $this->tx->id ) );
+		      ->where( 'id = ' . $db->quote( $this->tx->id ) );
 		$db->setQuery( $query );
 		$resutls = $db->loadObjectList();
 

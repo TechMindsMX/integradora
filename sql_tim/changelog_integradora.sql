@@ -321,11 +321,16 @@ CREATE TABLE `flpmu_txs_banco_timone_relation` (
 
 --changeset ricardolyon:39
 CREATE TABLE `flpmu_txs_mandatos` (
-  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `idTx` INT,
-  `idOrden` INT,
-  `orderType` VARCHAR(25),
-  `amount` FLOAT
+  `id` INT NOT NULL,
+  `amount` FLOAT,
+  `orderType` VARCHAR(10),
+  `idOrden` INT(11),
+  FOREIGN KEY (`id`) REFERENCES `flpmu_txs_timone_mandato`(id)
 );
 --rollback DROP TABLE `flpmu_txs_mandatos`;
 
+--changeset ricardolyon:40
+ALTER TABLE `flpmu_txs_timone_mandato` DROP COLUMN idOrden;
+ALTER TABLE `flpmu_txs_timone_mandato` DROP COLUMN tipoOrden;
+--rollback ALTER TABLE `flpmu_txs_timone_mandato` ADD COLUMN idOrden INT;
+--rollback ALTER TABLE `flpmu_txs_timone_mandato` ADD COLUMN tipoOrden VARCHAR(45);

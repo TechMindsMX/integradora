@@ -66,7 +66,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         $diccionario = array(
             'paymentMethod' => array('number' => true,  'maxlength' => 10 ,    'required' => true),
             'paymentDate'   => array('date' => true,   'maxlength' => 10,     'required' => true),
-            'totalAmount'   => array('float' => true,   'maxlength' => 10,     'required' => true)
+            'totalAmount'   => array('float' => true,   'maxlength' => 10,     'required' => true,  'min' => 0.01)
         );
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
