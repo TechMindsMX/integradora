@@ -71,7 +71,7 @@ if($params->cuotaOcapital == 0){
 
 <div class="row1 clearfix">
     <div class="span3">
-        <img src="/integradora/images/logo_iecce.png" alt="Integradora - ">
+        <img src="images/logo_iecce.png" alt="Integradora - ">
     </div>
     <div class="span7" style="text-align: right; font-size: 18px; padding-top: 30px; font-weight: bolder;">
         No. Orden <?php echo $params->id; ?>
