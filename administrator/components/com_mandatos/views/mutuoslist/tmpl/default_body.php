@@ -12,7 +12,7 @@ $document        = JFactory::getDocument();
 $datosAcreedor   = $this->mutuosAcreedor;
 $datosDeudor     = $this->mutuosDeudor;
 
-$document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+$document->addScript('../libraries/integradora/js/jquery.tablesorter.min.js');
 ?>
 <script>
     jQuery(document).ready(function(){

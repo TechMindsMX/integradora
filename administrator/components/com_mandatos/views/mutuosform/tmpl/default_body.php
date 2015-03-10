@@ -14,7 +14,7 @@ $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
 ?>
-<script src="libraries/integradora/js/tim-validation.js"> </script>
+<script src="../libraries/integradora/js/tim-validation.js"> </script>
 <script>
     var catalogoBancos = new Array();
     var integradoId	= <?php echo $this->integradoId; ?>;
@@ -53,7 +53,7 @@ $optionBancos = '';
         var integradoId =  jQuery('#integradoIdE').val();
 
         var envio = {
-            'link'	:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
+            'link'	:'index.php?option=com_mandatos&task=search_rfc_cliente&format=raw',
             'datos'	:{'rfc': rfcBusqueda, 'integradoId':integradoId}
         };
 
