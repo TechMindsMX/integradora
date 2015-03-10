@@ -103,6 +103,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 					campoMonto.children().remove();
 				}else{
 					campo = '#banco';
+					extractTab(campo);
 					attachTab(campo);
 					campoMonto.html('<label for="tp_monto"><?php echo JText::_('LBL_MONTO'); ?></label><input type="text" name="tp_monto" id="tp_monto" />');
 				}
