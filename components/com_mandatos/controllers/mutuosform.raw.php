@@ -108,6 +108,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             $diccionario = array(
                 'integradoIdE'      => array('string'       => true, 'maxlength' => '100'),
                 'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
+                'beneficiario'      => array('string'       => true, 'maxlength' => '100'),
                 'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
                 'payments'          => array('string'       => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
