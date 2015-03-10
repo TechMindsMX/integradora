@@ -104,7 +104,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $parametros = $this->parametros;
         $this->document->setMimeEncoding();
 
-        if(!$parametros->existe) {
+        if($parametros->existe === 'false') {
             $diccionario = array(
                 'integradoIdE'      => array('string'       => true, 'maxlength' => '100'),
                 'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
@@ -116,7 +116,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'banco_cuenta'      => array('required'     => true),
                 'banco_sucursal'    => array('required'     => true),
                 'banco_clabe'       => array('banco_clabe'  => $parametros->banco_codigo, 'length' => 18, 'required' => true));
-        }else{
+        }elseif($parametros->existe === 'true'){
             $diccionario = array(
                 'integradoIdE'      => array('string' => true, 'maxlength' => '100'),
                 'expirationDate'    => array('date'   => true, 'maxlength' => '10'),
