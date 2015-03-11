@@ -1319,6 +1319,17 @@ class getFromTimOne{
             }
         }
 
+	   if ( !isset($proveedores[$orden->clientId]) ) {
+		   $integ = new IntegradoSimple($orden->clientId);
+		   $proveedores[$orden->clientId] = $integ->integrados[0];
+		   $proveedores[$orden->clientId]->frontName = $integ->getDisplayName();
+		   $types = $catalogo->providerTypes();
+		   $proveedores[$orden->clientId]->type = $types[0];
+		   $proveedores[$orden->clientId]->contact = $integ->integrados[0]->datos_personales->nombre_representante;
+		   $proveedores[$orden->clientId]->pRFC = $integ->integrados[0]->datos_personales->rfc;
+		   $proveedores[$orden->clientId]->rfc = $integ->integrados[0]->datos_empresa->rfc;
+		   $proveedores[$orden->clientId]->phone = $integ->integrados[0]->datos_empresa->tel_fijo;
+	   }
         $orden->proveedor = $proveedores[$orden->clientId];
 
         return $orden;
@@ -2510,6 +2521,11 @@ class sendToTimOne {
      */
     public function saveXMLFile( $data ) {
         $xmlpath = XML_FILES_PATH;
+
+	    if( !is_object(json_decode($data) ) ) {
+		    throw new Exception('Error creando factura');
+	    }
+
         $uuid = Factura::getXmlUUID($data);
 
         $filename = $xmlpath.$uuid.'.xml';

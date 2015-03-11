@@ -72,7 +72,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
         //validacion de los datos de los productos
         foreach ( $dataDiccionario as $key => $val ) {
             $diccionarioProd = array(
-                'cantidad'      => array('number' => true,  'required'=> true),
+                'cantidad'      => array('number' => true,  'required'=> true   ,'min' => 0.01),
                 'descripcion'   => array('alphaNum' => true,  'required'=> true),
                 'ieps'          => array('float' => true),
                 'iva'           => array('float' => true,  'required'=> true),
@@ -86,6 +86,9 @@ class MandatosControllerOdvform extends JControllerAdmin {
                     $field = $validator->procesamiento(array($key => $data), array( $key => $diccionarioProd[$key]) );
                     if ( isset( $field[$key] ) ) {
                         $respuesta[$key.$id] = $field[$key];
+	                    if (is_array($field[$key]) ) {
+		                    $respuesta['success'] = false;
+	                    }
                     }
                 }
             }
