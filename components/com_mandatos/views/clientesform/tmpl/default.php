@@ -386,8 +386,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		jQuery('#btn_fin').prop('href', 'index.php?option=com_mandatos&view=clienteslist').removeClass('disabled');
 	}
 
-
 </script>
+
 <span id="msg" style="display: none;"></span>
 <h1><?php echo JText::_($this->titulo); ?></h1>
 

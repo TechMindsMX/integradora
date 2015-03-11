@@ -1,4 +1,6 @@
 <?php
+use Integralib\OrderFactory;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -75,7 +77,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 								$this->createOpposingODC($newOrden);
                             }
                         }
-
                     }
 	            }
 
@@ -146,44 +147,55 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         return $totalAmount;
     }
 
+	/**
+	 * @param $odv
+	 *  Create ODC from ODV in case bith parties are Integrado
+	 * @return bool
+	 */
 	private function createOpposingODC($odv) {
 
-		$save   = new sendToTimOne();
-		$db     = JFactory::getDbo();
+		$odvObj = new \Integralib\OdVenta();
+		$odvObj->setOrderFromId($odv->id);
 
-		$datos['integradoId'] = $this->integradoId;
+		if($odvObj->getReceptor()->isIntegrado()) {
 
-		$odc = new Order();
-		$odc->createdDate   = time();
-		$odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
-		$odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
-		$odc->status        = 1;
-		$odc->proyecto      = $odv->proyectId2 !== "0" ? $odv->proyectId2 : $odv->proyectId;
-		$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
-		$odc->paymentDate   = $odv->paymentDate;
-		$odc->paymentMethod = $odv->paymentMethod->id;
-		$odc->totalAmount   = $odv->totalAmount;
-		$odc->urlXML        = $odv->urlXML;
-		$odc->observaciones = '';
-		$odc->bankId        = $odv->account;
+			$save   = new sendToTimOne();
+			$db     = JFactory::getDbo();
 
-		$db->transactionStart();
+			$datos['integradoId'] = $this->integradoId;
 
-		try {
-			$db->insertObject('#__ordenes_compra', $odc);
+			$odc = new OrdenFn();
+			$odc->createdDate   = time();
+			$odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
+			$odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
+			$odc->status        = 1;
+			$odc->proyecto      = $odv->projectId2 !== "0" ? $odv->projectId2 : $odv->projectId;
+			$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
+			$odc->paymentDate   = $odv->paymentDate;
+			$odc->paymentMethod = $odv->paymentMethod->id;
+			$odc->totalAmount   = $odvObj->getTotalAmount();
+			$odc->urlXML        = $odv->urlXML;
+			$odc->observaciones = '';
+			$odc->bankId        = $odv->account;
 
-			$relation = new stdClass();
-			$relation->id_odv = $odv->id;
-			$relation->id_odc = $db->insertid();
+			$db->transactionStart();
 
-			$db->insertObject('#__ordenes_odv_odc_relation', $relation);
+			try {
+				$db->insertObject('#__ordenes_compra', $odc);
 
-			$db->transactionCommit();
-		} catch (Exception $e) {
-			$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($e, $this->parametros) ) ) );
-			JLog::add($logdata, JLog::DEBUG, 'bitacora');
+				$relation = new stdClass();
+				$relation->id_odv = $odv->id;
+				$relation->id_odc = $db->insertid();
 
-			$this->app->enquemessage('LBL_ERROR_CREATING_ODC');
+				$db->insertObject('#__ordenes_odv_odc_relation', $relation);
+
+				$db->transactionCommit();
+			} catch (Exception $e) {
+				$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($e, $this->parametros) ) ) );
+				JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
+				$this->app->enquemessage('LBL_ERROR_CREATING_ODC');
+			}
 		}
 
 		return isset($relation->id_odc);
