@@ -16,7 +16,7 @@ class MandatosModelOdplist extends JModelItem {
         $app 				     = JFactory::getApplication();
         $post                    = array('id' => 'INT');
         $this->data			     = (object) $app->input->getArray($post);
-        $this->data->integradoId = $session->get('integradoId',null,'integrado');
+        $this->data->integradoId = $session->get('integradoId',1,'integrado');
 
         parent::__construct();
     }
