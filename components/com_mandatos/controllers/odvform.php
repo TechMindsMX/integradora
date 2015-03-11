@@ -64,7 +64,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 		$this->data['integradoId'] = $this->integradoId;
 		$save->formatData($this->data);
 
-		if ( !isset($this->data['id']) ){
+		if ( !isset($this->data['idOrden']) ){
 			$query 	= $db->getQuery(true);
 			$query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
 
@@ -90,15 +90,18 @@ class MandatosControllerOdvform extends JControllerAdmin {
 			$id = $db->insertid();
 
 		} else {
-			$id = JFactory::getApplication()->input->get('id', null, 'INT');
-			$saved = $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($id));
+			$this->data['id'] = JFactory::getApplication()->input->get('idOrden', null, 'INT');
+			unset($this->data['idOrden']);
+
+			$save->formatData($this->data);
+			$saved = $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($this->data['id']));
 		}
 
 		if ($saved) {
 			$this->sendMail($this->data);
 		}
 
-		$url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$id;
+		$url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$this->data['id'];
 
 		JFactory::getApplication()->redirect($url);
 

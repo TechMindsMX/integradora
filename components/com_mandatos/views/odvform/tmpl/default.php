@@ -93,7 +93,7 @@ $subProyects = $this->subprojects;
 
         selectSPro.append('<option value="0">Subproyecto</option>');
 
-        if (typeof subprojectos != 'undefined') {
+        if (typeof subprojectos != 'undefined' && subprojectos != null) {
             jQuery.each(subprojectos, function (key, value) {
                 selectSPro.append('<option value="' + value.id_proyecto + '">' + value.name + '</option>');
             });
@@ -217,6 +217,12 @@ $subProyects = $this->subprojects;
 	    jQuery('#project').trigger('change');
 	    jQuery('.cantidad').trigger('change');
 	    jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
+	    <?php
+	   }
+
+		if ($orden->id > 0) {
+		?>
+	    jQuery('#odv .contenidos').each(function() { triggersProductsTable(jQuery(this)); });
 	    <?php
 	}
 	?>
