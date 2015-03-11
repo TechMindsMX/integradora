@@ -36,7 +36,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->integCurrent->integrados[0]->datos_empresa->razon_social; ?>
+			<?php echo $this->integCurrent->getDisplayName(); ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -99,7 +99,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 		</div>
 		<div class="span10">
-			<?php echo $this->odv->proveedor->tradeName; ?>
+			<?php echo $this->odv->proveedor->frontName; ?>
 		</div>
 	</div>
 	<div>

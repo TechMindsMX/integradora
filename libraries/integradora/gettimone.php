@@ -2521,6 +2521,11 @@ class sendToTimOne {
      */
     public function saveXMLFile( $data ) {
         $xmlpath = XML_FILES_PATH;
+
+	    if( !is_object(json_decode($data) ) ) {
+		    throw new Exception($data);
+	    }
+
         $uuid = Factura::getXmlUUID($data);
 
         $filename = $xmlpath.$uuid.'.xml';

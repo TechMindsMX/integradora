@@ -64,7 +64,13 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-                            $newOrden->urlXML = $save->saveXMLFile( $xmlFactura );
+	                        try {
+		                        $newOrden->urlXML = $save->saveXMLFile( $xmlFactura );
+	                        } catch (Exception $e) {
+		                        $msg = $e->getMessage();
+		                        JLog::add($msg, JLog::ERROR, 'error');
+		                        $this->app->enqueueMessage($msg, 'error');
+	                        }
                             $info = $this->sendEmail($newOrden);
                         }
 

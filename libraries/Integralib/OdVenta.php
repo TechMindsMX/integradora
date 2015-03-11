@@ -49,7 +49,7 @@ class OdVenta extends Order {
 		$ivas = $catalogo->getCatalogoIVA();
 
 		foreach ( json_decode($this->productos) as $prod ) {
-			$this->totalAmount += ((float)$prod->p_unitario * (float)$prod->cantidad) * (1 + ((float)$ivas[$prod->iva]->leyenda/100));
+			$this->totalAmount += ((float)$prod->p_unitario * (float)$prod->cantidad) * (1 + ((float)$ivas[$prod->iva]->leyenda/100)) * (1 + (float)$prod->ieps);
 		}
 	}
 
