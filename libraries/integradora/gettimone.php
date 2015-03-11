@@ -2523,7 +2523,7 @@ class sendToTimOne {
         $xmlpath = XML_FILES_PATH;
 
 	    if( !is_object(json_decode($data) ) ) {
-		    throw new Exception($data);
+		    throw new Exception('Error creando factura');
 	    }
 
         $uuid = Factura::getXmlUUID($data);
