@@ -533,7 +533,6 @@ class UsuarioIntegradora {
 		$this->arrayIntIds = $this->setIntegradoIdsCurrentUser();
 
 		$this->user = JFactory::getUser();
-
 	}
 
 	public function isValidIntegradoIdOfCurrentUser( $integ_id ) {

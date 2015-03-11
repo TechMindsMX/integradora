@@ -70,7 +70,6 @@ class MandatosControllerProductosform extends JControllerLegacy {
                 $save->saveProduct($data);
                 $this->sendEmail();
 
-
             }else{
                 $save->updateProduct($data, $id_producto);
             }

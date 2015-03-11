@@ -47,7 +47,7 @@ if(is_null($ordenes) || empty($ordenes)){
         <?php
         if( !is_null($ordenes) ){
             foreach($ordenes as $key => $value){
-                if( $value->status == Order::getStatusIdByName('pagada') ) {
+                if( $value->status == OrdenFn::getStatusIdByName('pagada') ) {
                     $classStatus = 'color:#FF0000;';
                     $btnOrden = JText::_('LBL_PAID');
                 }else{

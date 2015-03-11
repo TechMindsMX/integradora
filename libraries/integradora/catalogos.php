@@ -39,8 +39,6 @@ class Catalogos {
 	
 	public function getEstados()
 	{
-		$db = JFactory::getDbo();
-		
 		$query = $this->db->getQuery(true)
 			->select('*')
 			->from($this->db->quoteName('#__catalog_estados'))
@@ -132,7 +130,6 @@ class Catalogos {
 
 	public function getTiposPeriodos(){
 
-
         $query = $this->db->getQuery(true)
             ->select('*')
             ->from($this->db->quoteName('#__catalog_tipoperiodos'));
@@ -143,7 +140,6 @@ class Catalogos {
     }
 
 	public function getCatalogoIVA(){
-
 
 		$query = $this->db->getQuery(true)
 			->select('*')

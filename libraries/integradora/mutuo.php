@@ -96,7 +96,7 @@ class mutuo {
 
         foreach ($odps as $key => $odp) {
             if($key != 0) {
-                if ($odp->status == Order::getStatusIdByName('Pagada')) {
+                if ($odp->status == OrdenFn::getStatusIdByName('Pagada')) {
                     $mutuo->saldo = $mutuo->saldo - $odp->intereses - $odp->iva_intereses - $odp->capital;
                 }
             }

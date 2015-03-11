@@ -212,7 +212,6 @@ class IntegradoControllerIntegrado extends JControllerForm {
                 $retorno = false;
             }
             JLog::add(var_export($retorno),JLog::INFO, 'Error INTEGRADORA'.__METHOD__);
-
         }
 
         return $retorno;

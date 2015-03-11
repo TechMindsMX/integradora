@@ -92,7 +92,6 @@ class getFromTimOne{
         return $orden;
     }
 
-    // TODO: Este metodo se elimina y se piden las Txs a TimOne
     public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
     {
         $where = null;
@@ -107,7 +106,6 @@ class getFromTimOne{
         return $txs;
     }
 
-    // TODO: Este metodo se elimina, sirve como modelo del objeto de datos
     public static function getTxConciliacionesBanco($where){
 
         $txs = self::selectDB('txs_banco_integrado',$where,'','getFromTimOne');
@@ -1065,7 +1063,7 @@ class getFromTimOne{
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
 
             // TODO: Cambiar por metodo que busca los pagos asociados a la orden
-	        $o = new Order();
+	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
         }
 
@@ -1091,7 +1089,7 @@ class getFromTimOne{
             $integCurrent = new IntegradoSimple(JFactory::getSession()->get('integradoId',null,'integrado'));
             $value->cuenta = $integCurrent->integrados[0]->datos_bancarios[$value->cuentaId];
 
-	        $o = new Order();
+	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
         }
 
@@ -1132,7 +1130,7 @@ class getFromTimOne{
             $value->iva             = $value->factura->impuestos->iva->importe;
             $value->ieps            = $value->factura->impuestos->ieps->importe;
 
-	        $o = new Order();
+	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
 
 	        $emisor = new IntegradoSimple($value->integradoId);
@@ -1193,7 +1191,7 @@ class getFromTimOne{
             $value->iva      = $subTotalIva;
             $value->ieps     = $subTotalIeps;
 
-	        $o = new Order();
+	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
 
 	        $value = self::getProyectFromId($value);
@@ -1335,7 +1333,7 @@ class getFromTimOne{
 
         //Temporal en lo que se crean las facturas.
         foreach ($allOrdenes as $orden) {
-            if($orden->status->id === Order::getStatusIdByName('pagada')){
+            if($orden->status->id === OrdenFn::getStatusIdByName('pagada')){
                 $orden->productos = json_decode($orden->productos);
 
                 foreach ($orden->productos  as $producto ) {
@@ -2373,10 +2371,20 @@ class sendToTimOne {
         $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
         $order = $order[0];
 
-	    $order->cantidadAuthNecesarias = Order::getCantidadAutRequeridas(new IntegradoSimple( Order::getIdEmisor($order, $orderType) ), new IntegradoSimple( Order::getIdReceptor($order, $orderType) ));
+	    $auths = OrdenFn::getCantidadAutRequeridas(new IntegradoSimple( OrdenFn::getIdEmisor($order, $orderType) ), new IntegradoSimple( OrdenFn::getIdReceptor($order, $orderType) ));
+	    switch ($orderType) {
+		    case 'odv':
+			    $order->cantidadAuthNecesarias = $auths->emisor;
+			    break;
+		    case 'odc':
+			    $order->cantidadAuthNecesarias = $auths->receptor;
+			    break;
+		    default:
+			    $order->cantidadAuthNecesarias = $auths->totales;
+			    break;
+	    }
 
-
-        $tableAuth = $orderType.'_auth';
+	    $tableAuth = $orderType.'_auth';
         $order->auths = getFromTimOne::getOrdenAuths($order->id, $tableAuth);
 
         $order->hasAllAuths = $order->cantidadAuthNecesarias == count($order->auths);
@@ -3762,7 +3770,7 @@ class makeTx {
 
 }
 
-class Order {
+class OrdenFn {
 
     protected $minAmount;
 	protected $order;
@@ -3779,15 +3787,18 @@ class Order {
 
     public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
         $auth = 0;
+	    $cant_auths = new stdClass();
 
         if( $emisor->isIntegrado() ){
-            $auth = $auth+$emisor->getOrdersAtuhorizationParams();
+            $cant_auths->emisor = $auth+$emisor->getOrdersAtuhorizationParams();
         }
         if( $receptor->isIntegrado() ){
-            $auth = $auth+$receptor->getOrdersAtuhorizationParams();
+            $cant_auths->receptor = $auth+$receptor->getOrdersAtuhorizationParams();
         }
 
-        return $auth;
+	    $cant_auths->totales = array_sum((array)$cant_auths);
+
+        return $cant_auths;
     }
 
 	public static function getIdEmisor($order, $orderType) {
