@@ -80,23 +80,25 @@ class Catalogos {
 		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
 
 		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));
+
 		if(empty($catalogo)) {
 			JFactory::getApplication()->enqueueMessage('El servicio '.MIDDLE.TIMONE.'stp/listBankCodes NO esta funcionando', 'error');
-		}
+			$cat = null;
+		} else {
+			foreach ($catalogo as $indice => $objeto) {
+				$catalogo2[$objeto->bankCode] = $objeto->name;
+			}
+			natsort($catalogo2);
 
-		foreach ($catalogo as $indice => $objeto) {
-			$catalogo2[$objeto->bankCode] = $objeto->name;
-		}
-		natsort($catalogo2);
+			foreach ($catalogo2 as $key=>$value) {
+				$objeto = new stdClass;
 
-		foreach ($catalogo2 as $key=>$value) {
-			$objeto = new stdClass;
+				$objeto->banco = $value;
+				$objeto->clave = $key;
+				$objeto->claveClabe = substr($key, -3);
 
-			$objeto->banco = $value;
-			$objeto->clave = $key;
-			$objeto->claveClabe = substr($key, -3);
-
-			$cat[] = $objeto;
+				$cat[] = $objeto;
+			}
 		}
 
 		return $cat;

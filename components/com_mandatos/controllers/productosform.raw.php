@@ -56,7 +56,7 @@ class MandatosControllerProductosform extends JControllerLegacy {
             'description'=>'STRING');
 
         $data                = $this->inputVars->getArray($campos);
-        $data['price']       = round( (float)$data['price'] );
+        $data['price']       = round( (float)$data['price'], 2 );
         $data['integradoId'] = JFactory::getSession()->get('integradoId',null,'integrado');
 
         $this->producto      = (object) $data;

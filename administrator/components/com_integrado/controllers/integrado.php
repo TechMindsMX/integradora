@@ -251,8 +251,27 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         if($resultado->code == 200) {
             $result->integradoId = $result->integraUuid;
-            unset($result->id, $result->integraUuid, $result->name, $result->email, $result->balance);
-            $update = $db->insertObject('#__integrado_timone', $result, array('integradoId' => $result->integradoId));
+
+	        $banco = new stdClass();
+	        $banco->stpClabe = $result->stpClabe;
+	        $banco->integradoId = $result->integradoId;
+
+	        $db->transactionStart();
+
+	        try {
+		        $db->insertObject( '#__integrado_datos_bancarios', $banco );
+
+		        unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance, $result->stpClabe );
+		        $db->insertObject( '#__integrado_timone', $result );
+
+	        } catch (Exception $e) {
+		        $db->transactionRollback();
+
+		        $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+		        JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
+
+	        }
+
         }
 
         if ( isset( $resultado ) ) {

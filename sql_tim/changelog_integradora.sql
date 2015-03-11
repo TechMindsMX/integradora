@@ -334,3 +334,12 @@ ALTER TABLE `flpmu_txs_timone_mandato` DROP COLUMN idOrden;
 ALTER TABLE `flpmu_txs_timone_mandato` DROP COLUMN tipoOrden;
 --rollback ALTER TABLE `flpmu_txs_timone_mandato` ADD COLUMN idOrden INT;
 --rollback ALTER TABLE `flpmu_txs_timone_mandato` ADD COLUMN tipoOrden VARCHAR(45);
+
+--changeset ricardolyon:41
+CREATE TABLE `flpmu_ordenes_odv_odc_relation` (
+  `id_odv` INT,
+  `id_odc` INT,
+  FOREIGN KEY (`id_odv`) REFERENCES `flpmu_ordenes_venta`(id),
+  FOREIGN KEY (`id_odc`) REFERENCES `flpmu_ordenes_compra`(id)
+);
+--rollback DROP TABLE `flpmu_ordenes_odv_odc_relation`;
