@@ -62,9 +62,8 @@ class MandatosControllerOdvform extends JControllerAdmin {
 		$this->data['productos'] = json_encode($productosArray);
 
 		$this->data['integradoId'] = $this->integradoId;
-		$save->formatData($this->data);
 
-		if ( !isset($this->data['idOrden']) ){
+		if ( $this->data['idOrden'] === 0 ){
 			$query 	= $db->getQuery(true);
 			$query->select('UNIX_TIMESTAMP(CURRENT_TIMESTAMP)');
 
@@ -87,7 +86,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
 			$saved = $save->insertDB('ordenes_venta');
 
-			$id = $db->insertid();
+			$this->data['id'] = $db->insertid();
 
 		} else {
 			$this->data['id'] = JFactory::getApplication()->input->get('idOrden', null, 'INT');

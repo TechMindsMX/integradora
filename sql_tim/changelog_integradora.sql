@@ -348,3 +348,14 @@ CREATE TABLE `flpmu_ordenes_odv_odc_relation` (
 INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES ('10088', 'Integradoraservices', 'component', 'com_integradoraservices', '', '0', '1', '1', '0', '{\"name\":\"Integradoraservices\",\"type\":\"component\",\"creationDate\":\"Enero 2015\",\"author\":\"Ricardo Lyon\",\"copyright\":\"\",\"authorEmail\":\"ricardolyon@gmail.com\",\"authorUrl\":\"\",\"version\":\"0.0.1\",\"description\":\"Componente de servicios para Integradora\",\"group\":\"\",\"filename\":\"integradoraservices\"}', '{}', '', '', '0', now(), '0', '0');
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 10088;
 
+--changeset ricardolyon:43
+UPDATE `integradb`.`flpmu_modules` SET `published`='0' WHERE `id`='101';
+CREATE TABLE `flpmu_catalog_payment_methods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  `tag` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'algo';
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_SPEI';
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE';
+--rollback UPDATE `integradb`.`flpmu_methods` SET `published`='1' WHERE `id`='101';
+--rollback DROP TABLE `flpmu_catalog_payment_methods`;
