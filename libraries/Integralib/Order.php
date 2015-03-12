@@ -16,4 +16,32 @@ abstract class Order {
 	protected $receptor;
 	protected $createdDate;
 
+	/**
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getEmisor() {
+		return $this->emisor;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getReceptor() {
+		return $this->receptor;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCreatedDate() {
+		return $this->createdDate;
+	}
+
 }

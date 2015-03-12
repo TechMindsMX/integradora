@@ -1,6 +1,8 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
+use \Integralib\OdVenta;
+
 class MandatosModelFacturapreview extends JModelItem {
 
 	public $factura;
@@ -18,14 +20,12 @@ class MandatosModelFacturapreview extends JModelItem {
 
 	public function getFacturas(){
 
-		if (!isset($facturas)) {
-			$facturas = getFromTimOne::getFacturasVenta($this->integradoId);
-		}
+		$cats = $this->getCatalogos();
 
-		foreach ($facturas as $key => $value) {
-			if ($value->id == $this->inputVars['facturanum'] ) {
-				$this->factura = $value;
-			}
+		if (!isset($facturas)) {
+			$this->factura = new OdVenta();
+			$this->factura->setOrderFromId($this->inputVars['facturanum']);
+			$this->factura->currency = $cats[0]->code;
 		}
 
 		// Verifica si la FACTURA exite para el integrado o redirecciona
@@ -38,6 +38,12 @@ class MandatosModelFacturapreview extends JModelItem {
 
 	public function getIntegrado()	{
 		return new IntegradoSimple($this->integradoId);
+	}
+
+	private function getCatalogos() {
+		$cat = new Catalogos();
+
+		return $cat->getCurrencies();
 	}
 
 }

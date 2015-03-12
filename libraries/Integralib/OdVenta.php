@@ -34,7 +34,7 @@ class OdVenta extends Order {
 
 	/**
 	 * @return object IntegradoSimple
-	 */
+ */
 	public function getReceptor() {
 		return $this->receptor;
 	}

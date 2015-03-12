@@ -28,7 +28,7 @@ $number2word = new AifLibNumber();
 		<div class="span6"><img width="200" src="<?php echo JUri::base() . 'images/logo_iecce.png'; ?>"/></div>
 		<h3 class="span2 text-right">No. Orden</h3>
 
-		<h3 class="span2 bordes-box text-center"><?php echo $this->factura->id; ?></h3>
+		<h3 class="span2 bordes-box text-center"><?php echo $this->factura->getId(); ?></h3>
 	</div>
 
 	<h1><?php echo JText::_('LBL_FACTURA_DE_VENTA'); ?></h1>
@@ -39,13 +39,13 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->integCurrent->integrados[0]->datos_empresa->razon_social; ?>
+			<?php echo $this->integCurrent->getDisplayName(); ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->created; ?>
+			<?php echo $this->factura->getCreatedDate(); ?>
 		</div>
 	</div>
 	<div>
@@ -59,7 +59,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->payment; ?>
+			<?php echo $this->factura->paymentDate; ?>
 		</div>
 	</div>
 	<div>
@@ -75,7 +75,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->paymentType; ?>
+			<?php echo JText::_($this->factura->paymentMethod->name); ?>
 		</div>
 	</div>
 	<div>
@@ -108,9 +108,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_BANCOS'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->banco)) {
-				echo $this->factura->banco;
-			} ?>
+			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->bankName; ?>
 		</div>
 	</div>
 	<div>
@@ -124,9 +122,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->cuenta)) {
-				echo $this->factura->cuenta;
-			} ?>
+			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->banco_cuenta; ?>
 		</div>
 	</div>
 	<div>
@@ -140,9 +136,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->clabe)) {
-				echo $this->factura->clabe;
-			} ?>
+			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->banco_clabe; ?>
 		</div>
 	</div>
 	<div class="clearfix">
@@ -167,21 +161,23 @@ $number2word = new AifLibNumber();
 		</thead>
 		<tbody>
 		<?php
-		foreach ($this->factura->productos as $key => $prod) :
+		foreach ($this->factura->productosData as $key => $prod) :
+			$ivasProd = array();
+			array_push($ivasProd, floatval($prod->iva) );
 			?>
 			<tr>
 				<td><?php echo $key; ?></td>
-				<td><?php echo $prod['cantidad']; ?></td>
-				<td><?php echo $prod['descripcion']; ?></td>
-				<td><?php echo $prod['unidad']; ?></td>
+				<td><?php echo $prod->cantidad; ?></td>
+				<td><?php echo $prod->descripcion; ?></td>
+				<td><?php echo $prod->unidad; ?></td>
 				<td>
 					<div class="text-right">
-						<?php echo number_format($prod['pUnitario'], 2); ?>
+						<?php echo number_format($prod->p_unitario, 2); ?>
 					</div>
 				</td>
 				<td>
 					<div class="text-right">
-						<?php echo number_format(floatval($prod['cantidad']) * floatval($prod['pUnitario']), 2); ?>
+						<?php echo number_format(floatval($prod->cantidad) * floatval($prod->p_unitario), 2); ?>
 					</div>
 				</td>
 			</tr>
@@ -191,24 +187,24 @@ $number2word = new AifLibNumber();
 		<tr>
 			<td colspan="4" rowspan="3">
 				<?php echo JText::_('LBL_MONTO_LETRAS'); ?>
-				<span><?php echo $number2word->toCurrency('$' . number_format($this->factura->totalAmount + ($this->factura->totalAmount * $this->factura->iva), 2)); ?></span>
+				<span><?php echo $number2word->toCurrency('$' . number_format($this->factura->getTotalAmount() + ($this->factura->getTotalAmount() * $this->factura->iva), 2)); ?></span>
 			</td>
 			<td class="span2">
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
 			</td>
 			<td>
 				<div class="text-right">
-					<?php echo number_format($this->factura->totalAmount, 2); ?>
+					<?php echo number_format($this->factura->subTotalAmount, 2); ?>
 				</div>
 			</td>
 		</tr>
 		<tr>
 			<td class="span2">
-				<?php echo ($this->factura->iva * 100) . '% ' . JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
+				<?php echo array_sum($ivasProd)/count($ivasProd) . '% ' . JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 			</td>
 			<td>
 				<div class="text-right">
-					<?php echo number_format($this->factura->totalAmount * $this->factura->iva, 2); ?>
+					<?php echo number_format($this->factura->iva, 2); ?>
 				</div>
 			</td>
 		</tr>
@@ -218,20 +214,13 @@ $number2word = new AifLibNumber();
 			</td>
 			<td>
 				<div class="text-right">
-					<?php echo number_format($this->factura->totalAmount + ($this->factura->totalAmount * $this->factura->iva), 2); ?>
+					<?php echo number_format($this->factura->getTotalAmount(), 2); ?>
 				</div>
 			</td>
 		</tr>
 		</tbody>
 	</table>
-	<div class="control-group" id="tabla-bottom">
-		<div>
-			<?php echo JText::_('LBL_OBSERVACIONES'); ?>
-		</div>
-		<div>
-			<?php echo $this->factura->observaciones; ?>
-		</div>
-	</div>
+
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
@@ -249,4 +238,3 @@ $number2word = new AifLibNumber();
 	</div>
 </div>
 </div>
-
