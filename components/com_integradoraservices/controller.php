@@ -38,7 +38,8 @@ class IntegradoraservicesController extends JControllerLegacy {
             3 => array('HTTP Response' => 401, 'Message' => 'Authentication Required'),
             4 => array('HTTP Response' => 401, 'Message' => 'Authentication Failed'),
             5 => array('HTTP Response' => 404, 'Message' => 'Invalid Request'),
-            6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format')
+            6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format'),
+            7 => array('HTTP Response' => 405, 'Message' => 'No se guardo en Base de datos')
         );
 
         $response['code']   = 0;
@@ -101,7 +102,7 @@ class IntegradoraservicesController extends JControllerLegacy {
         $data_integrado = getFromTimOne::getIntegradoId($post->timoneUuid);
 
         $simula= new stdClass();
-        $simula->integradoId = 1;
+        $simula->integradoId = 4;
         $simula->timOneId = '2671T821TQWGHDBJF';
         $simula->account = '7364234298402';
         $data_integrado[0] = $simula;
@@ -110,13 +111,12 @@ class IntegradoraservicesController extends JControllerLegacy {
             $data_integrado = $data_integrado[0];
         } else {
             // error no existe el integrado
-            return array('code' => '5');
+            return array('code' => '2');
         }
 
 
         //TODO se deben traer solamente las ordenes no pagadas
         $odds           = getFromTimOne::getOrdenesDeposito($data_integrado->integradoId);
-
         getFromTimOne::convierteFechas($post);
 
         foreach ($odds as $value) {
@@ -132,11 +132,13 @@ class IntegradoraservicesController extends JControllerLegacy {
                 $save->formatData($dataTXMandato);
 
                 $salvado = $save->insertDB('txs_timone_mandato');
-
                 if($salvado){
                     //$cambioStatus = $save->changeOrderStatus($value->id,'odd',1);
                     $return = array('code' => '2');
+                }else{
+                    $return = array('code' => '7');
                 }
+
             }
         }
 
@@ -154,8 +156,7 @@ class IntegradoraservicesController extends JControllerLegacy {
             400 => 'Bad Request',
             401 => 'Unauthorized',
             403 => 'Forbidden',
-            404 => 'Not Found',
-            405 => 'UUID not found'
+            404 => 'Not Found'
         );
 
         header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);

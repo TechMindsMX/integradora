@@ -726,7 +726,7 @@ class getFromTimOne{
             $query->select('*')
                 ->from($db->quoteName('#__'.$table));
         }
-
+echo $query;
         try {
             $db->setQuery($query);
             $results = $db->loadObjectList($keyAssoc, $class);
@@ -1031,7 +1031,6 @@ class getFromTimOne{
         }elseif(isset($integradoId)){
             $where = 'integradoId = '.$integradoId;
         }
-
         $ordenes = self::selectDB($table, $where);
 
         if (!empty($ordenes)) {
