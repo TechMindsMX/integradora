@@ -344,3 +344,7 @@ CREATE TABLE `flpmu_ordenes_odv_odc_relation` (
 );
 --rollback DROP TABLE `flpmu_ordenes_odv_odc_relation`;
 
+--changeset ricardolyon:42
+INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES ('10088', 'Integradoraservices', 'component', 'com_integradoraservices', '', '0', '1', '1', '0', '{\"name\":\"Integradoraservices\",\"type\":\"component\",\"creationDate\":\"Enero 2015\",\"author\":\"Ricardo Lyon\",\"copyright\":\"\",\"authorEmail\":\"ricardolyon@gmail.com\",\"authorUrl\":\"\",\"version\":\"0.0.1\",\"description\":\"Componente de servicios para Integradora\",\"group\":\"\",\"filename\":\"integradoraservices\"}', '{}', '', '', '0', now(), '0', '0');
+--rollback DELETE FROM flpmu_extensions WHERE extension_id = 10088;
+
