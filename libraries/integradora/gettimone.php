@@ -2522,8 +2522,8 @@ class sendToTimOne {
     public function saveXMLFile( $data ) {
         $xmlpath = XML_FILES_PATH;
 
-	    if( !is_object(json_decode($data) ) ) {
-		    throw new Exception('Error creando factura');
+	    if( !$result = simplexml_load_string ($data, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE) ) {
+		    throw new Exception('Error creando factura = '.$data);
 	    }
 
         $uuid = Factura::getXmlUUID($data);
