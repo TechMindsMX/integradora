@@ -1257,7 +1257,7 @@ echo $query;
             $payMethod = new stdClass();
 
             $payMethod->id   = $paymentMethodId;
-            $payMethod->name = $names[ $paymentMethodId ];
+            $payMethod->name = $names[ $paymentMethodId ]->tag;
         } catch ( Exception $e) {
             $payMethod = null;
             JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');

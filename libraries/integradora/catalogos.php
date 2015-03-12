@@ -140,7 +140,6 @@ class Catalogos {
     }
 
 	public function getCatalogoIVA(){
-
 		$query = $this->db->getQuery(true)
 			->select('*')
 			->from($this->db->quoteName('#__catalogo_ivas'));
@@ -165,7 +164,13 @@ class Catalogos {
 	}
 
 	public function getPaymentMethods() {
-		return array('algo','LBL_SPEI', 'LBL_CHEQUE');
+		$query = $this->db->getQuery(true)
+		                  ->select('*')
+		                  ->from($this->db->quoteName('#__catalog_payment_methods'));
+
+		$cat = $this->db->setQuery($query)->loadObjectList('id');
+
+		return $cat;
 	}
 }
 	

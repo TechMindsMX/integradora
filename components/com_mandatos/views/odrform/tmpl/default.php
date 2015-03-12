@@ -127,7 +127,7 @@ if(!$this->confirmacion){
 		        if ( isset( $this->odr->paymentMethod ) ) {
 			        $selected = ($this->odr->paymentMethod->id == $key) ? ' selected ' : '';
 		        }
-		        echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val).'</option>';
+		        echo '<option value="'.$key.'"'.$selected.'>'.JText::_($val->tag).'</option>';
 	        }
 	        ?>
         </select>
