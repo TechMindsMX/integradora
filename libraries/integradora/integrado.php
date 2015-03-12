@@ -521,6 +521,14 @@ class IntegradoSimple extends Integrado {
 		return $result;
 	}
 
+	public function getIntegradoEmail() {
+		return $this->integrados[0]->datos_personales->email;
+	}
+
+	public function getIntegradoRfc() {
+		return isset($this->integrados[0]->datos_empresa->rfc) ? $this->integrados[0]->datos_empresa->rfc : $this->integrados[0]->datos_personales->rfc;
+	}
+
 }
 
 class integrado_datos_personales {

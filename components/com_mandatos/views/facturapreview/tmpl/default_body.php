@@ -26,7 +26,7 @@ $number2word = new AifLibNumber();
 
 	<div class="clearfix" id="logo">
 		<div class="span6"><img width="200" src="<?php echo JUri::base() . 'images/logo_iecce.png'; ?>"/></div>
-		<h3 class="span2 text-right">No. Orden</h3>
+		<h3 class="span2 text-right">No. </h3>
 
 		<h3 class="span2 bordes-box text-center"><?php echo $this->factura->getId(); ?></h3>
 	</div>
@@ -144,7 +144,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_CORREO'); ?>
 		</div>
 		<div class="span4">
-
+			<?php echo $this->factura->getEmisor()->getIntegradoEmail(); ?>
 		</div>
 	</div>
 	<h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>

@@ -238,9 +238,9 @@ if(!isset($this->datos['confirmacion'])){
             <label for="paymentMethod"><?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?></label>
             <select id="paymentMethod" name="paymentMethod">
 	            <?php
-	            foreach ( $this->catalogos->paymentMethods as $paymentId => $paymentName  ) {
+	            foreach ( $this->catalogos->paymentMethods as $paymentId => $paymentMethod  ) {
 				?>
-					<option value="<?php echo $paymentId; ?>" <?php echo $datos->paymentMethod == $paymentId ? 'selected' : ''; ?>><?php echo JText::_($paymentName); ?></option>
+					<option value="<?php echo $paymentId; ?>" <?php echo $datos->paymentMethod == $paymentId ? 'selected' : ''; ?>><?php echo JText::_($paymentMethod->tag); ?></option>
 				<?php
 	            }
 	            ?>

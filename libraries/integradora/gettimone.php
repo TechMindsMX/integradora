@@ -3538,6 +3538,17 @@ class Factura extends makeTx {
 //  json_decode('{"emisor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"receptor":{"datosFiscales":{"rfc":"AAD990814BP7","razonSocial":"Integradora de Emprendimientos Culturales S.A. de C.V.","codigoPostal":"11850","pais":"MEXICO","ciudad":"Ciudad de M\\u00e9xico","delegacion":"Miguel Hidalgo","calle":"Tiburcio Montiel","regime":"1"}},"datosDeFacturacion":{"moneda":"MXN","lugarDeExpedicion":"DF","numeroDeCuentaDePago":"DESCONOCIDO","formaDePago":"PAGO EN UNA SOLA EXHIBICION","metodoDePago":"TRANSFERENCIA ELECTRONICA","tipoDeComprobante":"ingreso"},"conceptos":[{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"},{"valorUnitario":120,"descripcion":"Producto MochcrearFacturaTest::testCrearFacturaTimone","cantidad":1,"unidad":"pruebas"}],"format":"Xml"}');
     }
 
+	public function sendCancelFactura(IntegradoSimple $emisor) {
+		$this->objEnvio = new stdClass();
+		$this->objEnvio->uuid = $this->getXmlUUID();
+		$this->objEnvio->rfcContribuyente = $emisor->getRfc();
+
+		$rutas = new servicesRoute();
+
+		return parent::create($rutas->getUrlService('facturacion', 'factura', 'cancel'));
+	}
+
+
 }
 
 class Concepto

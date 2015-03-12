@@ -11,20 +11,41 @@ jimport('integradora.notifications');
  */
 class MandatosControllerFacturapreview extends JControllerAdmin {
 
+	protected $integradoId;
+
 	function cancel() {
 		$this->app 			= JFactory::getApplication();
 
-		$session            = JFactory::getSession();
-		$integradoId  = $session->get( 'integradoId', null, 'integrado' );
-		$this->integradoId = $integradoId;
-		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $integradoId);
+		$idODV = $this->input->get('facturanum', null, 'INT');
 
-		if($this->permisos['canAuth']) {
+		$session            = JFactory::getSession();
+		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+		$this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+
+		if($this->permisos['canAuth'] && !is_null($idODV) ) {
 			// acciones cuando tiene permisos para autorizar
 			$this->sendEmail();
 
+			$save = new sendToTimOne();
+//			$changeStatus = $save->changeOrderStatus($idODV, 'odv', $this->getStatusId('Cancelada'));
+			$changeStatus= true;
 
-			$this->app->redirect('index.php?option=com_mandatos&view=facturalist' ,'aqui enviamos a timone la autorizacion y redireccion con mensaje');
+			if($changeStatus) {
+				$orden = new \Integralib\OdVenta();
+				$orden->setOrderFromId($idODV);
+
+				$userRfc = $orden->getEmisor()->getIntegradoRfc();
+				$xmlUUID = $orden->getfacturaUUID();
+
+				$request = new \Integralib\TimOneRequest();
+				$canceled = $request->sendCancelFactura($userRfc, $xmlUUID);
+			}
+
+			if ($canceled) {
+				$this->app->redirect('index.php?option=com_mandatos&view=facturalist', JText::_('LBL_FACT_CANCELED_SUCCESSFULY'));
+			} else {
+				$this->app->redirect('index.php?option=com_mandatos&view=facturapreview&facturanum='.$idODV, JText::_('LBL_FACT_CANCELED_FAILED'), 'error');
+			}
 		} else {
 			// acciones cuando NO tiene permisos para autorizar
 			$this->app->redirect(JRoute::_(''), JText::_(''), 'error');
@@ -67,5 +88,11 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 		$send = new Send_email();
 		$send->setAdminEmails();
 		$info[] 			= $send->sendNotifications('24', $array, $arrayTitleAdmin);
+	}
+
+	private function getStatusId( $string ) {
+		$statusCat = getFromTimOne::getOrderStatusCatalogByName();
+
+		return $statusCat[$string]->id;
 	}
 }

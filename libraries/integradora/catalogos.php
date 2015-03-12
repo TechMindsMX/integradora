@@ -104,8 +104,6 @@ class Catalogos {
 
 	public function getStatusSolicitud()
 	{
-
-
 		$query = $this->db->getQuery(true)
 			->select('*')
 			->from($this->db->quoteName('#__integrado_status_catalog'));

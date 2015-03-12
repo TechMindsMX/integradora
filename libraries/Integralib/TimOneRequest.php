@@ -8,17 +8,38 @@
 
 namespace Integralib;
 
+use JFactory;
+use JLog;
 use sendToTimOne;
 use servicesRoute;
 
 class TimOneRequest {
 	protected $integradoId;
+	protected $objEnvio;
 
 	/**
 	 * @param $txUUID
 	 *
 	 * @return mixed
 	 */
+	protected function makeRequest($datosEnvio){
+		unset($this->options);
+
+		$request = new sendToTimOne();
+		$request->setServiceUrl($datosEnvio->url);
+		$request->setJsonData(json_encode($this->objEnvio));
+		$request->setHttpType($datosEnvio->type);
+
+		$this->resultado = $request->to_timone();
+
+		jimport('joomla.log.log');
+
+		JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
+		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
+		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
+
+		return $this->resultado->code == 200;
+	}
 	public function getTxDetails($txUUID) {
 		$rutas = new servicesRoute();
 
@@ -37,6 +58,16 @@ class TimOneRequest {
 		$result = $request->to_timone(); // realiza el envio
 
 		return $result;
+	}
+
+	public function sendCancelFactura($emisorRfc, $facturaUUID) {
+		$this->objEnvio = new \stdClass();
+		$this->objEnvio->uuid = $facturaUUID;
+		$this->objEnvio->rfcContribuyente = $emisorRfc;
+
+		$rutas = new servicesRoute();
+
+		return $this->makeRequest($rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
 	}
 
 }

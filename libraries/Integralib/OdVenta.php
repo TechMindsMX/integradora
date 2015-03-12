@@ -60,4 +60,10 @@ class OdVenta extends Order {
 		return $this->totalAmount;
 	}
 
+	public function getfacturaUUID() {
+		$xml = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$this->urlXML);
+
+		return \Factura::getXmlUUID($xml);
+	}
+
 }
