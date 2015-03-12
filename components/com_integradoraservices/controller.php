@@ -98,7 +98,7 @@ class IntegradoraservicesController extends JControllerLegacy {
     function processData($json){
         $save           = new sendToTimOne();
         $post           = $json;
-        $data_integrado = getFromTimOne::getIntegradoId($post->timOneId);
+        $data_integrado = getFromTimOne::getIntegradoId($post->timoneUuid);
 
         $simula= new stdClass();
         $simula->integradoId = 1;
@@ -110,7 +110,7 @@ class IntegradoraservicesController extends JControllerLegacy {
             $data_integrado = $data_integrado[0];
         } else {
             // error no existe el integrado
-            return array('code' => '2');
+            return array('code' => '5');
         }
 
 
@@ -154,7 +154,8 @@ class IntegradoraservicesController extends JControllerLegacy {
             400 => 'Bad Request',
             401 => 'Unauthorized',
             403 => 'Forbidden',
-            404 => 'Not Found'
+            404 => 'Not Found',
+            405 => 'UUID not found'
         );
 
         header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);

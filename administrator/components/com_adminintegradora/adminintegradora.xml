@@ -37,6 +37,7 @@
 			<!-- SQL files section -->
 			<folder>models</folder>
 			<folder>views</folder>
+			<folder>helpers</folder>
 		</files>
 	</administration>
 
