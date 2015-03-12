@@ -726,7 +726,6 @@ class getFromTimOne{
             $query->select('*')
                 ->from($db->quoteName('#__'.$table));
         }
-echo $query;
         try {
             $db->setQuery($query);
             $results = $db->loadObjectList($keyAssoc, $class);
