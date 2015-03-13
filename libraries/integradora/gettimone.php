@@ -2344,7 +2344,7 @@ class sendToTimOne {
         $this->result->info = curl_getinfo ($ch);
         curl_close($ch);
 
-	    JLog::add(json_encode(array($this->jsonData, $this->result->data)), JLog::ERROR, 'errors');
+	    JLog::add(json_encode($this->jsonData, $this->result->info), JLog::ERROR);
 
         switch ($this->result->code) {
             case 200:
