@@ -77,7 +77,6 @@ class TimOneRequest {
 	public function sendCashInTx($uuidReceptor, $amount) {
 		$this->objEnvio = new \stdClass();
 		$this->objEnvio->uuid = $uuidReceptor;
-		$this->objEnvio->uuid = 'd891caac2c434c499a3385f09785619d';
 		$this->objEnvio->amount = $amount;
 
 		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
