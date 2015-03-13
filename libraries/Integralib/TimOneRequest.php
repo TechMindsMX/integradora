@@ -39,7 +39,7 @@ class TimOneRequest {
 
 		jimport('joomla.log.log');
 
-		JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
+		JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora_txs');
 		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
 		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
@@ -76,7 +76,8 @@ class TimOneRequest {
 
 	public function sendCashInTx($uuidReceptor, $amount) {
 		$this->objEnvio = new \stdClass();
-		$this->objEnvio->uuidReceptor = $uuidReceptor;
+		$this->objEnvio->uuid = $uuidReceptor;
+		$this->objEnvio->uuid = 'd891caac2c434c499a3385f09785619d';
 		$this->objEnvio->amount = $amount;
 
 		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
