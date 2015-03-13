@@ -14,8 +14,13 @@ use sendToTimOne;
 use servicesRoute;
 
 class TimOneRequest {
+	public $resultado;
 	protected $integradoId;
 	protected $objEnvio;
+
+	function __construct() {
+		$this->rutas = new servicesRoute();
+	}
 
 	/**
 	 * @param $txUUID
@@ -64,10 +69,19 @@ class TimOneRequest {
 		$this->objEnvio = new \stdClass();
 		$this->objEnvio->uuid = $facturaUUID;
 		$this->objEnvio->rfcContribuyente = $emisorRfc;
+		$this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
 
-		$rutas = new servicesRoute();
+		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+	}
 
-		return $this->makeRequest($rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+	public function sendCashInTx($uuidReceptor, $amount) {
+		$this->objEnvio = new \stdClass();
+		$this->objEnvio->uuidReceptor = $uuidReceptor;
+		$this->objEnvio->amount = $amount;
+
+		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
+
+		return $this->resultado;
 	}
 
 }

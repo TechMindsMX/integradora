@@ -105,6 +105,10 @@ class servicesUrls extends timOneControllers
 		$this->list->url = 'tx/getTransactions/{uuid}/{startDate}/{endDate}';
 	}
 
+	public function txCashIn() {
+		$this->create->url = 'tx/cashin';
+	}
+
 	public function factura() {
 		$this->create->url = 'create';
 	}

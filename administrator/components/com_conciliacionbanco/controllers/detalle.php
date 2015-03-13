@@ -16,6 +16,7 @@ jimport('integradora.gettimone');
 
 class conciliacionbancoControllerdetalle extends JControllerAdmin{
 	protected $data;
+	private $receptor;
 
 	public function confirmacion(){
         $post = array(
@@ -46,7 +47,7 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $post = array(
-            'id'            => 'int',
+            'id'            => 'INT',
             'integradoId'   => 'INT',
             'cuenta'        => 'STRING',
             'referencia'    => 'STRING',
@@ -54,32 +55,43 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
             'amount'        => 'FLOAT'
         );
 	    $this->data = JFactory::getApplication()->input->getArray($post);
-        $save = new sendToTimOne();
         $changeDateType = new DateTime($this->data['date']);
 
         $this->data['date'] = $changeDateType->getTimestamp();
 
 	    $this->verifyIntegrado();
 
-	    $save->formatData($this->data);
+	    $dataObj = (object)$this->data;
 
-	    if(is_null($this->data['id'])){
-            $resultado = $save->insertDB('txs_banco_integrado');
-        }else{
-            $resultado = $save->updateDB('txs_banco_integrado',null,'id = '.$this->data['id']);
-        }
+	    $db->transactionStart();
 
-        if($resultado){
-	        $txTimone   = $this->makeTxTimone();
-	        $id_tx_banco = $db->insertid();
-	        $save       = $this->saveTxsRelation($save, $txTimone, $id_tx_banco);
+	    try {
+		    if ( is_null( $this->data['id'] ) ) {
+			    unset($dataObj->id);
+			    $db->insertObject('#__txs_banco_integrado', $dataObj);
+		    } else {
+			    $db->updateObject('#__txs_banco_integrado', $dataObj, 'id');
+		    }
 
+		    $txTimone    = $this->makeTxTimone();
+		    $id_tx_banco = $db->insertid();
+		    $this->saveTxsRelation( $txTimone, $id_tx_banco );
 
-	        $app->redirect('index.php?option=com_conciliacionbanco', JText::_('LBL_SAVED'), 'MESSAGE');
-        }else{
-            $app->enqueueMessage(JText::_('LBL_NO_SAVED'), 'WARNING');
-        }
+		    if ( is_numeric($txTimone) ) {
+			    $this->makeTransferIntegradoraIntegrado( $dataObj );
+		    }
 
+		    $db->transactionCommit();
+		    $app->enqueueMessage( JText::_( 'LBL_SAVED' ), 'MESSAGE' );
+
+	    } catch (Exception $e) {
+		    $db->transactionRollback();
+
+		    JLog::add($e->getMessage(), JLog::ERROR);
+
+		    $app->enqueueMessage( JText::_( 'LBL_NO_SAVED' ), 'WARNING' );
+	    }
+		$app->redirect('index.php?option=com_conciliacionbanco');
     }
 
 	private function verifyIntegrado() {
@@ -91,51 +103,55 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
 	}
 
 	private function makeTxTimone() {
-		//TODO: funcion de cash in en timone hacia la cuenta de integradora
-		return time();
-	}
+		$this->receptor = new IntegradoSimple(1);
+		$this->receptor->getTimOneData();
 
-	private function saveTxsRelation(sendToTimOne $save, $txTimone, $id_tx_banco) {
-		$db = JFactory::getDbo();
-		$return = true;
+		$send = new \Integralib\TimOneRequest();
+		$result = $send->sendCashInTx($this->receptor->timoneData->timoneUuid, $this->data['amount']);
 
-		try
-		{
-			$db->transactionStart();
-
-				$query = $db->getQuery(true);
-
-				$values = array($db->quote($txTimone), $db->quote(time()), $db->quote($this->data['integradoId']));
-
-				$query->insert($db->quoteName('#__txs_timone_mandato'));
-				$query->columns($db->quoteName(array('idTx', 'date', 'idIntegrado')));
-				$query->values(implode(',',$values));
-
-				$db->setQuery($query);
-				$db->execute();
-				$id_tx_timone = $db->insertid();
-
-				$query = $db->getQuery(true);
-
-				$values = array($db->quote($id_tx_banco), $db->quote($id_tx_timone));
-
-				$query->insert($db->quoteName('#__txs_banco_timone_relation'));
-				$query->columns($db->quoteName(array('id_txs_banco', 'id_txs_timone')));
-				$query->values(implode(',',$values));
-
-				$db->setQuery($query);
-				$db->execute();
-
-			$db->transactionCommit();
-		}
-		catch (Exception $e)
-		{
-			// catch any database errors.
-			$db->transactionRollback();
-//			JErrorPage::render($e);
-			$return = false;
+		if ($result->code != 200) {
+			throw new Exception('Error en '.__METHOD__.' = '.$result->code);
 		}
 
 		return $result;
+	}
+
+	private function saveTxsRelation($txTimone, $id_tx_banco) {
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+
+		$values = array($db->quote($txTimone), $db->quote(time()), $db->quote($this->data['integradoId']));
+
+		$query->insert($db->quoteName('#__txs_timone_mandato'));
+		$query->columns($db->quoteName(array('idTx', 'date', 'idIntegrado')));
+		$query->values(implode(',',$values));
+
+		$db->setQuery($query);
+		$db->execute();
+		$id_tx_timone = $db->insertid();
+
+		$query = $db->getQuery(true);
+
+		$values = array($db->quote($id_tx_banco), $db->quote($id_tx_timone));
+
+		$query->insert($db->quoteName('#__txs_banco_timone_relation'));
+		$query->columns($db->quoteName(array('id_txs_banco', 'id_txs_timone')));
+		$query->values(implode(',',$values));
+
+		$db->setQuery($query);
+		$db->execute();
+	}
+
+	/**
+	 * @param $dataObj
+	 */
+	public function makeTransferIntegradoraIntegrado( $dataObj ) {
+		$transfer = new transferFunds( '', 1, $dataObj->integradoId, $dataObj->amount );
+		$result = $transfer->sendCreateTx();
+
+		if($result->code != 200) {
+			throw new Exception('Fallo al hacer la Tx Integradora Integrado');
+		}
 	}
 }

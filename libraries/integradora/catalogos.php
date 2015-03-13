@@ -161,10 +161,13 @@ class Catalogos {
 		return array(1,2);
 	}
 
-	public function getPaymentMethods() {
+	public function getPaymentMethods( $onlyActive = true ) {
+		$where = $onlyActive ? 'published = 1' : 'id NOT NULL';
+
 		$query = $this->db->getQuery(true)
-		                  ->select('*')
-		                  ->from($this->db->quoteName('#__catalog_payment_methods'));
+			->select('*')
+		    ->from($this->db->quoteName('#__catalog_payment_methods'))
+			->where($where);
 
 		$cat = $this->db->setQuery($query)->loadObjectList('id');
 

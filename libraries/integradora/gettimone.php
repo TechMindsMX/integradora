@@ -2251,7 +2251,7 @@ class sendToTimOne {
 
         $verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
-        $verbose = fopen('curl.log', 'a+');
+        $verbose = fopen(JFactory::getConfig()->get('log_path').'/curl-'.date('d-m-y').'.log', 'a+');
         $ch = curl_init();
 
         switch($this->getHttpType()) {
@@ -2343,6 +2343,8 @@ class sendToTimOne {
         $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
         $this->result->info = curl_getinfo ($ch);
         curl_close($ch);
+
+	    JLog::add(json_encode(array($this->jsonData, $this->result->data)), JLog::ERROR, 'errors');
 
         switch ($this->result->code) {
             case 200:
@@ -3540,7 +3542,7 @@ class Factura extends makeTx {
 
 	public function sendCancelFactura(IntegradoSimple $emisor) {
 		$this->objEnvio = new stdClass();
-		$this->objEnvio->uuid = $this->getXmlUUID();
+		$this->objEnvio->uuid = $this->getXmlUUID($this->xml);
 		$this->objEnvio->rfcContribuyente = $emisor->getRfc();
 
 		$rutas = new servicesRoute();

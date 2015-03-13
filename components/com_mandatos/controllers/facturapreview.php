@@ -38,6 +38,8 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 				$xmlUUID = $orden->getfacturaUUID();
 
 				$request = new \Integralib\TimOneRequest();
+				$lp = 	    JFactory::getConfig()->get('log_path');
+
 				$canceled = $request->sendCancelFactura($userRfc, $xmlUUID);
 			}
 

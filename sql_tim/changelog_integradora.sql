@@ -349,13 +349,14 @@ INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 10088;
 
 --changeset ricardolyon:43
-UPDATE `integradb`.`flpmu_modules` SET `published`='0' WHERE `id`='101';
+UPDATE `flpmu_modules` SET `published`='0' WHERE `id`='101';
 CREATE TABLE `flpmu_catalog_payment_methods` (
-  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-  `tag` varchar(25) NOT NULL
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `tag` varchar(25) NOT NULL,
+  `published` BOOLEAN
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT `flpmu_catalog_payment_methods` SET `tag` = 'algo';
-INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_SPEI';
-INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE';
---rollback UPDATE `integradb`.`flpmu_methods` SET `published`='1' WHERE `id`='101';
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_SPEI', `published` = 1;
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_DEPOSIT', `published` = 1;
+INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE', `published` = 0;
+--rollback UPDATE `flpmu_modules` SET `published`='1' WHERE `id`='101';
 --rollback DROP TABLE `flpmu_catalog_payment_methods`;
