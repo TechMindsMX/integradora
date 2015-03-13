@@ -75,7 +75,7 @@ class conciliacionbancoControllerdetalle extends JControllerAdmin{
 
 		    $txTimone    = $this->makeTxTimone();
 		    $id_tx_banco = $db->insertid();
-		    $this->saveTxsRelation( $txTimone, $id_tx_banco );
+		    $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
 
 		    if ( is_numeric($txTimone) ) {
 			    $this->makeTransferIntegradoraIntegrado( $dataObj );
