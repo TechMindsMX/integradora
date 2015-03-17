@@ -14,11 +14,12 @@ jimport('joomla.application.component.controlleradmin');
 jimport('integradora.validator');
 jimport('integradora.gettimone');
 
-class AdminintegradoraControllerConciliacionBAncoForm extends JControllerAdmin{
+class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     protected $data;
     private $receptor;
 
     public function confirmacion(){
+        JFactory::getDocument()->setMimeEncoding('application/json');
         $post = array(
             'id'            => 'INT',
             'confirmacion'  => 'INT',
@@ -32,14 +33,14 @@ class AdminintegradoraControllerConciliacionBAncoForm extends JControllerAdmin{
         $data = JFactory::getApplication()->input->getArray($post);
 
         $diccionario = array(
-            'integradoId' => array('number' => true, 'maxlength' => 10),
-            'cuenta'     => array('number' => true,    'maxlength' => 3),
-            'referencia' => array('string' => true, 'maxlength' => 21),
-            'date'       => array('fecha' => true,  'maxlength' => 10),
-            'amount'     => array('float' => true,  'maxlength' => 20)
+            'integradoId' => array('number'  => true, 'maxlength' => 10),
+            'cuenta'      => array('number'  => true, 'maxlength' => 3),
+            'referencia'  => array('string'  => true, 'maxlength' => 21),
+            'date'        => array('fecha'   => true, 'maxlength' => 10),
+            'amount'      => array('float'   => true, 'maxlength' => 20)
         );
         $resultadovalidacion = $validaciones->procesamiento($data,$diccionario);
-
+        var_dump($data,$resultadovalidacion);exit;
 
     }
 
@@ -91,7 +92,7 @@ class AdminintegradoraControllerConciliacionBAncoForm extends JControllerAdmin{
 
             $app->enqueueMessage( JText::_( 'LBL_NO_SAVED' ), 'WARNING' );
         }
-        $app->redirect('index.php?option=com_conciliacionbanco');
+        $app->redirect('index.php?option=com_adminintegradora&view=conciliacionbancoform');
     }
 
     private function verifyIntegrado() {
@@ -154,4 +155,5 @@ class AdminintegradoraControllerConciliacionBAncoForm extends JControllerAdmin{
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');
         }
     }
+
 }

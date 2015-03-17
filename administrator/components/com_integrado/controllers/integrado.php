@@ -252,17 +252,18 @@ class IntegradoControllerIntegrado extends JControllerForm {
             $result->integradoId = $result->integraUuid;
 
 	        $banco = new stdClass();
-	        $banco->stpClabe = $result->stpClabe;
-	        $banco->integradoId = $result->integradoId;
+            $banco->integrado_id    = $result->integradoId;
+            $banco->banco_clabe     = $result->stpClabe;
 
 	        $db->transactionStart();
 
 	        try {
 		        $db->insertObject( '#__integrado_datos_bancarios', $banco );
 
-		        unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance, $result->stpClabe );
-		        $db->insertObject( '#__integrado_timone', $result );
+		        unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance);
+                $db->insertObject( '#__integrado_timone', $result );
 
+                $db->transactionCommit();
 	        } catch (Exception $e) {
 		        $db->transactionRollback();
 

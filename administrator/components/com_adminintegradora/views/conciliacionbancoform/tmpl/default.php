@@ -10,7 +10,11 @@ $integrados = $this->integrados;
 $bancos = $this->bancos;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+
+echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
+echo '<script src="../libraries/integradora/js/file_validation.js"> </script>';
 ?>
+
     <script>
         var integradosArray   = new Array();
         var integradoNon_id   = new Array();
@@ -36,7 +40,26 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
                 jQuery('#integradoId').val(integradoNon_id[integradoName]);
             }
 
-            formulario.submit();
+            var data = formulario.serialize();
+
+            var parametros = {
+                'link': 'index.php?option=com_adminintegradora&task=validacionforms.validatx&format=raw',
+                'datos': data
+            };
+
+            var request = jQuery.ajax({
+                url: parametros.link,
+                data: parametros.datos,
+                type: 'post'
+            });
+
+            request.done(function (response) {
+                if (response.success) {
+                    formulario.submit();
+                } else {
+                    mensajesValidaciones(response);
+                }
+            });
         }
 
         function cancelar() {
@@ -58,13 +81,13 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         <div class="form-group">
             <p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
         </div>
-        <form id="conciliacionbanco" action="index.php?option=com_conciliacionbanco&view=detalle&confirmacion=1" method="post">
+        <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&view=conciliacionbancoform&confirmacion=1" method="post">
             <input type="hidden" name="id" id="id" value="<?php $data->id; ?>" />
 
             <div>
                 <label for="cuenta"><?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_BANCO'); ?></label>
                 <select name="cuenta" id="cuenta">
-                    <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+                    <option value=""><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
                     <?php foreach ($this->bancosIntegradora as $key => $value) {
                         $nombreBanco = $bancos[$value->banco_codigo];
                         $cuenta = substr($value->banco_clabe, -4, 4);
@@ -113,7 +136,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 
     </div>
 <?php }else { ?>
-    <form id="conciliacionbanco" action="index.php?option=com_conciliacionbanco&task=detalle.save" method="post">
+    <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&task=conciliacionbancoform.save" method="post">
         <input type="hidden" name="integradoId" value="<?php echo $data->integradoId; ?>" />
         <input type="hidden" name="cuenta" value="<?php echo $data->cuenta; ?>" />
         <input type="hidden" name="referencia" value="<?php echo $data->referencia; ?>" />
