@@ -212,7 +212,7 @@ if(!isset($this->datos['confirmacion'])){
 
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
-            <input type="text" id="paymentDate" name="paymentDate" readonly>
+            <input type="text" id="paymentDate" name="paymentDate" class="datepicker" readonly>
         </div>
 
         <div class="form-group">

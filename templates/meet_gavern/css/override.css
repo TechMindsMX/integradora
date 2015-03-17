@@ -159,3 +159,14 @@ select.productos{
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
     box-sizing: initial;
 }
+
+img.ui-datepicker-trigger {
+    display: inline;
+    height: 1.5em;
+    margin: -10px 0 0 -25px;
+    opacity: 0.5;
+}
+input.datepicker {
+    cursor: pointer;
+    cursor: hand;
+}

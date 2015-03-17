@@ -16,7 +16,10 @@ jQuery(document).ready(function($) {
         dateFormat: "yy-mm-dd",
         isRTL: false,
         showMonthAfterYear: false,
-        yearSuffix: ''
+        yearSuffix: '',
+        showOn: "both",
+        buttonImage: "images/icons/calendar.png",
+        buttonImageOnly: true
     };
     $.datepicker.setDefaults(jQuery.datepicker.regional['es']);
 });
