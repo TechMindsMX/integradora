@@ -121,7 +121,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
 				</div>
 				<div class="span4">
-					<?php echo $orden->proveedor->phone; ?>
+					<?php echo $orden->receptor->getIntegradoPhone(); ?>
 				</div>
 				<div class="span2 text-right">
 					<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
@@ -135,7 +135,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_CORREO'); ?>
 				</div>
 				<div class="span4">
-
+					<?php echo $orden->receptor->getIntegradoEmail(); ?>
 				</div>
 			</div>
 		</div>
@@ -173,14 +173,14 @@ $app->enqueueMessage($msg,'MESSAGE');
 					endforeach;
 				?>
 				<tr>
-					<td colspan="4" rowspan="3">
+					<td colspan="4" rowspan="4">
 						<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($orden->totalAmount,2)); ?></span>
 					</td>
 					<td class="span2">
 						<?php echo JText::_('LBL_SUBTOTAL'); ?>
 					</td>
 					<td><div class="text-right">
-                            $<?php $subtotal = $orden->totalAmount-$orden->impuestos; echo number_format($subtotal, 2); ?>
+                            $<?php $subtotal = $orden->totalAmount - $orden->impuestos; echo number_format($subtotal, 2); ?>
 					</div></td>
 				</tr>
 				<tr>
@@ -188,7 +188,15 @@ $app->enqueueMessage($msg,'MESSAGE');
 						<?php echo $orden->iva->tasa.'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?>
 					</td>
 					<td><div class="text-right">
-                            $<?php echo number_format($orden->impuestos, 2); ?>
+                            $<?php echo number_format($orden->iva->importe, 2); ?>
+					</div></td>
+				</tr>
+				<tr>
+					<td class="span2">
+						<?php echo $orden->ieps->tasa.'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?>
+					</td>
+					<td><div class="text-right">
+                            $<?php echo number_format($orden->ieps->importe, 2); ?>
 					</div></td>
 				</tr>
 				<tr>

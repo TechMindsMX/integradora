@@ -1140,6 +1140,8 @@ class getFromTimOne{
 	        $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
+	        $value->receptor = new IntegradoSimple($value->proveedor->id);
+
             $proyectos = self::getProyects(null, $value->proyecto);
 
             if($proyectos[$value->proyecto]->parentId != 0){
