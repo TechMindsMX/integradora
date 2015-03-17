@@ -1247,7 +1247,7 @@ class getFromTimOne{
 	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
 
-	        $value = self::getProyectFromId($value);
+	        $value = self::getProyectFromOrder($value);
             $value = self::getClientFromID($value);
             $value->status = self::getOrderStatusName($value->status);
         }
@@ -1320,7 +1320,7 @@ class getFromTimOne{
         return $payMethod;
     }
 
-    public static function getProyectFromId($orden){
+    public static function getProyectFromOrder($orden){
         $proyectos = self::getProyects($orden->integradoId);
 
         if(array_key_exists($orden->proyecto, $proyectos)) {

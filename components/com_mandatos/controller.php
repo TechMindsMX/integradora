@@ -43,7 +43,7 @@ class MandatosController extends JControllerLegacy {
     function editarproyecto(){
         $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
         $data 			= $this->input_data->getArray($post);
-        $proyectos 		= getFromTimOne::getProyects($this->integradoId);
+        $proyectos 		= getFromTimOne::getProyects(null, $data['id_proyecto']);
         $count          = 0;
 
         if($this->currUser->guest){
