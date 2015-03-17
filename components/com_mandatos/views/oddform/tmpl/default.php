@@ -5,14 +5,20 @@ jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
 jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
-
 $document	= JFactory::getDocument();
+
+$document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
+$document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
+$document->addStyleSheet('//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css');
+
 $app 		= JFactory::getApplication();
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 ?>
     <script src="libraries/integradora/js/tim-validation.js"> </script>
     <script>
         jQuery(document).ready(function(){
+	        jQuery('.datepicker').datepicker();
+
             jQuery('input:button').on('click', envioAjax);
         });
 
@@ -91,10 +97,7 @@ if(!$this->confirmacion){
 
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_DEPOSIT_DATE'); ?></label>
-            <?php
-            $default = $datos->paymentDate!='' ? $datos->paymentDate : date('Y-m-d');
-            echo JHTML::_('calendar',$default, 'paymentDate', 'paymentDate', $format = '%Y-%m-%d', $attsCal);
-            ?>
+	        <input type="text" name="paymentDate" id="paymentDate" class="datepicker" readonly />
         </div>
 
         <div class="form-group">
@@ -118,7 +121,7 @@ if(!$this->confirmacion){
 }else{
     $archivo = $this->file;
     $datos['attachment'] = $archivo['name'];
-    $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
+    $formadepago = CatalogoFactory::create()->getPaymentMethods(true);
     ?>
 
     <h1><?php echo JText::_('COM_MANDATOS_ORDENES_DEPOSITO_LBL_CONFIMACION'); ?></h1>
@@ -126,7 +129,7 @@ if(!$this->confirmacion){
     <div class="form-group">
         <span class="label-default"><?php echo JText::_('LBL_FORMA_PAGO'); ?>: </span>
         <span>
-            <?php echo $formadepago[$datos['paymentMethod']]; ?>
+            <?php echo JText::_($formadepago[$datos['paymentMethod']]->tag); ?>
         </span>
     </div>
 

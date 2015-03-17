@@ -83,7 +83,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    jQuery('#tipo_alta_cp input:radio').on('click', tipoAlta);
 	    jQuery('button.envio').on('click', saveCliente);
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-	    jQuery('.datepicker').datepicker();
+	    jQuery('.datepicker').datepicker({
+		    changeMonth: true,
+		    changeYear: true
+	    });
     }
 
     function ajax(parametros){

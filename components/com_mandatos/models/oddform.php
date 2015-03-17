@@ -14,8 +14,10 @@ class MandatosModelOddform extends JModelItem {
         $integradoId    = $session->get('integradoId', null, 'integrado');
 
         $oddId          = isset($data['idOrden']) ? $data['idOrden'] : null;
-        $listado        = getFromTimOne::getOrdenesDeposito($integradoId, $oddId);
+	    if ( isset( $oddId ) ) {
+		    $listado        = getFromTimOne::getOrdenesDeposito($integradoId, $oddId);
+	    }
 
-        return $listado;
+        return (isset($listado) || null);
     }
 }
