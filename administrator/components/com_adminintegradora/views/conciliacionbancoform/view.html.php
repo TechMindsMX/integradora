@@ -3,10 +3,13 @@ defined( '_JEXEC' ) or die;
 
 jimport( 'joomla.application.component.view' );
 
-class adminintegradoraViewConciliacionBancoform extends JViewLegacy {
-	public function display( $tpl = null ) {
-        require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
+class AdminintegradoraViewConciliacionBancoform extends JViewLegacy {
 
+    public function display( $tpl = null ) {
+        require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
+        AdminintegradoraHelper::addSubmenu('conciliacionbanco');
+
+        $this->sidebar = JHtmlSidebar::render();
         $post = array(
             'id'            => 'INT',
             'confirmacion'  => 'INT',
@@ -22,19 +25,18 @@ class adminintegradoraViewConciliacionBancoform extends JViewLegacy {
         $this->bancosIntegradora    = $this->get('BancosIntegradora');
         $this->data                 = (object) $data;
 
-		if (is_numeric($data['integradoId'])) {
-			$integ = new IntegradoSimple($data['integradoId']);
-			$this->nombreIntegrado = $integ->getDisplayName();
-		}
+        if (is_numeric($data['integradoId'])) {
+            $integ = new IntegradoSimple($data['integradoId']);
+            $this->nombreIntegrado = $integ->getDisplayName();
+        }
 
         $this->addToolbar();
-		parent::display( $tpl );
-	}
+        parent::display( $tpl );
+    }
 
-	protected function addToolbar() {
-		require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
-		$title = JText::_('COM_CONCICLIACIONBANCO_BTN_DETALLE').' - '. JText::_( 'COM_CONCILIACION_BANCO_DETAIL_TITTLE' );
-		JToolBarHelper::title( $title );
-	}
+    protected function addToolbar() {
+        require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
+        JToolBarHelper::title(JText::_('Conciliación Banco'), '');
+    }
 
 }

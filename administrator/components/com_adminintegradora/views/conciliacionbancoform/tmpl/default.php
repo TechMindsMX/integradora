@@ -2,7 +2,8 @@
 // no direct access
 defined( '_JEXEC' ) or die;
 
-
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::_('behavior.tooltip');
 JHTML::_('behavior.calendar');
 
 $integrados = $this->integrados;
@@ -39,7 +40,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         }
 
         function cancelar() {
-            window.location = 'index.php?option=com_adminintegradora&view=cblist';
+            window.location = 'index.php?option=com_adminintegradora&view=odclist';
         }
 
         jQuery(document).ready(function(){
@@ -49,65 +50,70 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         });
     </script>
 <?php if(is_null($data->confirmacion)) {
-	?>
-
-	<div class="form-group">
-		<p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
-	</div>
-    <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&view=conciliacionbancoform&confirmacion=1" method="post">
-        <input type="hidden" name="id" id="id" value="<?php $data->id; ?>" />
-
-        <div>
-            <label for="cuenta"><?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_BANCO'); ?></label>
-            <select name="cuenta" id="cuenta">
-                <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
-                <?php foreach ($this->bancosIntegradora as $key => $value) {
-                    $nombreBanco = $bancos[$value->banco_codigo];
-                    $cuenta = substr($value->banco_clabe, -4, 4);
-                    ?>
-                    <option
-                        value="<?php echo $value->datosBan_id; ?>"><?php echo $nombreBanco . ' - ' . $cuenta; ?></option>
-                <?php } ?>
-            </select>
+    ?>
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+    <div id="j-main-container" class="span10">
+        <div class="form-group">
+            <p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
         </div>
+        <form id="conciliacionbanco" action="index.php?option=com_conciliacionbanco&view=detalle&confirmacion=1" method="post">
+            <input type="hidden" name="id" id="id" value="<?php $data->id; ?>" />
 
-        <div>
-            <label for="referencia"><?php echo JText::_('COM_CONCILIACIONBANCO_REFERENCIA'); ?></label>
-            <input type="text" name="referencia" id="referencia" maxlength="21"/>
-        </div>
+            <div>
+                <label for="cuenta"><?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_BANCO'); ?></label>
+                <select name="cuenta" id="cuenta">
+                    <option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+                    <?php foreach ($this->bancosIntegradora as $key => $value) {
+                        $nombreBanco = $bancos[$value->banco_codigo];
+                        $cuenta = substr($value->banco_clabe, -4, 4);
+                        ?>
+                        <option
+                            value="<?php echo $value->datosBan_id; ?>"><?php echo $nombreBanco . ' - ' . $cuenta; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
 
-        <div>
-            <label><?php echo JText::_('COM_CONCILIACIONBANCO_FECHA'); ?></label>
-            <?php
-            $default = date('Y-m-d');
-            echo JHTML::_('calendar',$default,'date', 'date', $format = '%Y-%m-%d', $attsCal);
-            ?>
-        </div>
+            <div>
+                <label for="referencia"><?php echo JText::_('COM_CONCILIACIONBANCO_REFERENCIA'); ?></label>
+                <input type="text" name="referencia" id="referencia" maxlength="21"/>
+            </div>
 
-        <div>
-            <label for="amount"><?php echo JText::_('COM_CONCILIACIONBANCO_MONTO'); ?></label>
-            <input type="text" name="amount" id="amount" maxlength="21"/>
-        </div>
+            <div>
+                <label><?php echo JText::_('COM_CONCILIACIONBANCO_FECHA'); ?></label>
+                <?php
+                $default = date('Y-m-d');
+                echo JHTML::_('calendar',$default,'date', 'date', $format = '%Y-%m-%d', $attsCal);
+                ?>
+            </div>
 
-        <div>
-            <label for="integradoName">
-                <?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_INTEGRADO') ?>
-                <span style="font-size: 9px;">
+            <div>
+                <label for="amount"><?php echo JText::_('COM_CONCILIACIONBANCO_MONTO'); ?></label>
+                <input type="text" name="amount" id="amount" maxlength="21"/>
+            </div>
+
+            <div>
+                <label for="integradoName">
+                    <?php echo JText::_('COM_CONCILIACIONBANCO_SELECT_INTEGRADO') ?>
+                    <span style="font-size: 9px;">
                 <?php echo JText::_('COM_CONCILIACIONBANCO_LEYEDA'); ?>
             </span>
-            </label>
-            <input type="text" id="integradoName" class="typeahead" autocomplete="off"/>
-            <input type="hidden" name="integradoId" id="integradoId" value="0"/>
-        </div>
+                </label>
+                <input type="text" id="integradoName" class="typeahead" autocomplete="off"/>
+                <input type="hidden" name="integradoId" id="integradoId" value="0"/>
+            </div>
 
-        <div>
-            <input type="button" class="btn btn-primary enviar" value="<?php echo JText::_('LBL_ENVIAR') ?>"/>
-            <input type="button" class="btn btn-danger cancel" value="<?php echo JText::_('LBL_CANCELAR') ?>"/>
-        </div>
+            <div>
+                <input type="button" class="btn btn-primary enviar" value="<?php echo JText::_('LBL_ENVIAR') ?>"/>
+                <input type="button" class="btn btn-danger cancel" value="<?php echo JText::_('LBL_CANCELAR') ?>"/>
+            </div>
 
-    </form>
+        </form>
+
+    </div>
 <?php }else { ?>
-    <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&task=conciliacionbancoform.save" method="post">
+    <form id="conciliacionbanco" action="index.php?option=com_conciliacionbanco&task=detalle.save" method="post">
         <input type="hidden" name="integradoId" value="<?php echo $data->integradoId; ?>" />
         <input type="hidden" name="cuenta" value="<?php echo $data->cuenta; ?>" />
         <input type="hidden" name="referencia" value="<?php echo $data->referencia; ?>" />

@@ -10,7 +10,7 @@ jimport('integradora.gettimone');
 jimport('integradora.integrado');
 jimport('integradora.catalogos');
 
-class ConciliacionBancoModelConciliacionBancoForm extends JModelLegacy {
+class AdminintegradoraModelConciliacionBancoForm extends JModelLegacy {
     public function getIntegrados(){
         $integradosArray = getFromTimOne::getintegrados();
 

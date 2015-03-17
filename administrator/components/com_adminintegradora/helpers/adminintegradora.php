@@ -4,6 +4,12 @@ defined('_JEXEC') or die;
 class AdminintegradoraHelper {
     public static function addSubmenu($vName = '') {
         JHtmlSidebar::addEntry(
+            JText::_('LBL_REGISTRO_TX_BANCO'),
+            'index.php?option=com_adminintegradora&view=conciliacionbancoform',
+            $vName == 'conciliacionbanco'
+        );
+
+        JHtmlSidebar::addEntry(
             JText::_('COM_FACTURAS_LISTADO_ODD'),
             'index.php?option=com_adminintegradora&view=oddlist',
             $vName == 'listadoODD'
