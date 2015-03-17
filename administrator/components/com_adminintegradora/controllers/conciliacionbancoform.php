@@ -18,32 +18,6 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     protected $data;
     private $receptor;
 
-    public function confirmacion(){
-        JFactory::getDocument()->setMimeEncoding('application/json');
-        $post = array(
-            'id'            => 'INT',
-            'confirmacion'  => 'INT',
-            'integradoId'   => 'INT',
-            'cuenta'        => 'STRING',
-            'referencia'    => 'STRING',
-            'date'          => 'STRING',
-            'amount'        => 'FLOAT'
-        );
-        $validaciones = new validador();
-        $data = JFactory::getApplication()->input->getArray($post);
-
-        $diccionario = array(
-            'integradoId' => array('number'  => true, 'maxlength' => 10),
-            'cuenta'      => array('number'  => true, 'maxlength' => 3),
-            'referencia'  => array('string'  => true, 'maxlength' => 21),
-            'date'        => array('fecha'   => true, 'maxlength' => 10),
-            'amount'      => array('float'   => true, 'maxlength' => 20)
-        );
-        $resultadovalidacion = $validaciones->procesamiento($data,$diccionario);
-        var_dump($data,$resultadovalidacion);exit;
-
-    }
-
     public function save(){
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
@@ -69,14 +43,14 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         try {
             if ( is_null( $this->data['id'] ) ) {
                 unset($dataObj->id);
-                $db->insertObject('#__txs_banco_integrado', $dataObj);
+                $algo = $db->insertObject('#__txs_banco_integrado', $dataObj);
             } else {
-                $db->updateObject('#__txs_banco_integrado', $dataObj, 'id');
+                $algo = $db->updateObject('#__txs_banco_integrado', $dataObj, 'id');
             }
 
-            $txTimone    = $this->makeTxTimone();
             $id_tx_banco = $db->insertid();
-            $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
+            $txTimone    = $this->makeTxTimone();
+             $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
 
             if ( is_numeric($txTimone) ) {
                 $this->makeTransferIntegradoraIntegrado( $dataObj );
