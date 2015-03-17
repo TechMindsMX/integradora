@@ -45,13 +45,13 @@ class AdminintegradoraModelOdcform extends JModelList
     }
 
     public function getTransacciones(){
-	    $return = '';
+        $return = '';
         $orden = $this->getOrden();
-        $respuesta = getFromTimOne::getTxIntegradoSinMandato();
+        $respuesta = getFromTimOne::getTxConciliacionesBanco(null);
 
-	    if (!empty($respuesta)) {
+        if (!empty($respuesta)) {
 		    foreach ($respuesta as $tx) {
-			    if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) && $tx->conciliacionMandato == 0 ) {
+			    if( ( ($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0) ) ) {
 				    $return[] = $tx;
 			    }
 		    }
