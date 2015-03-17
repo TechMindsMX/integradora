@@ -46,7 +46,7 @@ class MandatosModelOdcform extends JModelItem {
         $proyectos = getFromTimOne::getActiveProyects($this->integradoId);
 
         foreach($proyectos as $proyecto){
-            $proyecto->subproyectos = getFromTimOne::getAllSubProyects($proyecto->id_proyecto);
+            $proyecto->subproyectos = getFromTimOne::getActiveSubProyects($proyecto->id_proyecto);
         }
 
         return $proyectos;
