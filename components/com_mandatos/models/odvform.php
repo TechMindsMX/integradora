@@ -48,7 +48,7 @@ class MandatosModelOdvform extends JModelItem {
     }
 
 	public function getProyectos(){
-        $proyectos = getFromTimOne::getProyects($this->integradoId);
+        $proyectos = getFromTimOne::getActiveProyects($this->integradoId);
 
         return $proyectos;
     }
@@ -57,7 +57,7 @@ class MandatosModelOdvform extends JModelItem {
         $projects = $this->getProyectos();
 
         foreach ($projects as $proyect) {
-            $subprojects[$proyect->id_proyecto] = getFromTimOne::getAllSubProyects($proyect->id_proyecto);
+	        $subprojects[$proyect->id_proyecto] = getFromTimOne::getActiveSubProyects($proyect->id_proyecto);
         }
 
         return $subprojects;
