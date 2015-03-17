@@ -758,6 +758,20 @@ class getFromTimOne{
         return $respuesta;
     }
 
+    public static function getActiveProyects($integradoId = null, $projectId = null){
+        $where = null;
+
+        if(!is_null($integradoId)){
+            $where = 'parentId = 0 AND status = 1 AND integradoId = '.$integradoId;
+        }elseif(!is_null($projectId)){
+            $where = 'status = 1 AND id_proyecto = '.$projectId;
+        }
+
+        $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
+
+        return $respuesta;
+    }
+
     public static function getAllSubProyects($idProy = null){
 	    $respuesta = null;
 
