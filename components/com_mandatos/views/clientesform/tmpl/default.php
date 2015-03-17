@@ -6,13 +6,17 @@ jimport('joomla.html.html.bootstrap');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-JHTML::_('behavior.calendar');
 
 $datos = $this->datos;
 $document = JFactory::getDocument();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $document->addScript('libraries/integradora/js/jquery.metadata.js');
 $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
+
+$document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
+$document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
+$document->addStyleSheet('//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css');
+
 $optionBancos = '';
 $token = JSession::getFormToken();
 
@@ -25,7 +29,9 @@ if (isset($datos->rfc)) {
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
+
 ?>
+
 <script xmlns="http://www.w3.org/1999/html">
     var catalogoBancos = [];
     var integradoId	= <?php echo $this->integradoId; ?>;
@@ -77,6 +83,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    jQuery('#tipo_alta_cp input:radio').on('click', tipoAlta);
 	    jQuery('button.envio').on('click', saveCliente);
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
+	    jQuery('.datepicker').datepicker();
     }
 
     function ajax(parametros){
@@ -482,10 +489,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			</div>
 			<div class="form-group">
 				<label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
-				<?php
-				$default = date('Y-m-d');
-				echo JHTML::_('calendar',$default,'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
-				?>
+				<input type="text" name="dp_fecha_nacimiento" id="dp_fecha_nacimiento" class="datepicker" readonly />
 			</div>
 			<div class="form-group">
 				<label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
@@ -756,9 +760,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
 				<div class="form-group">
 					<label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?> *</label>
-					<?php
-					echo JHTML::_('calendar',date('Y-m-d'),'t1_instrum_fecha', 't1_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-					?>
+					<input type="text" name="t1_instrum_fecha" id="t1_instrum_fecha" readonly class="datepicker" />
 				</div>
 				<div class="form-group">
 					<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
@@ -792,9 +794,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_TESTIMONIO2'); ?></h3>
 				<div class="form-group">
 					<label for="t2_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<?php
-					echo JHTML::_('calendar',date('Y-m-d'),'t2_instrum_fecha', 't2_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-					?>
+					<input type="text" name="t2_instrum_fecha" id="t2_instrum_fecha" class="datepicker" readonly />
 				</div>
 				<div class="form-group">
 					<label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -827,9 +827,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_PODER'); ?></h3>
 				<div class="form-group">
 					<label for="pn_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<?php
-					echo JHTML::_('calendar',date('Y-m-d'),'pn_instrum_fecha', 'pn_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-					?>
+					<input type="text" name="pn_instrum_fecha" id="pn_instrum_fecha" class="datepicker" readonly />
 				</div>
 				<div class="form-group">
 					<label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -862,9 +860,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_RPP'); ?></h3>
 				<div class="form-group">
 					<label for="rp_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<?php
-					echo JHTML::_('calendar',date('Y-m-d'),'rp_instrum_fecha', 'rp_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-					?>
+					<input type="text" name="rp_instrum_fecha" id="rp_instrum_fecha" class="datepicker" readonly />
 				</div>
 				<div class="form-group">
 					<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
