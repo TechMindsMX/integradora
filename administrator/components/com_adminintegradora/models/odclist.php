@@ -38,11 +38,15 @@ class AdminintegradoraModelOdclist extends JModelList {
 
     public function getOrdenes(){
         $data = getFromTimOne::getOrdenesCompra();
+        $respuesta = array();
 
         foreach($data as $value){
-            $value->integradoName = $this->getIntegradoName($value->integradoId);
+            if($value->status->id == 1) {
+                $value->integradoName = $this->getIntegradoName($value->integradoId);
+                $respuesta[] = $value;
+            }
         }
-        return $data;
+        return $respuesta;
     }
 
     public function getIntegrados(){
