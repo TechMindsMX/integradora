@@ -47,36 +47,17 @@ foreach ($this->proyectos as $key => $proyecto) {
 ?>
     <script src="libraries/integradora/js/tim-validation.js"> </script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+	<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+	<script src="libraries/integradora/js/tim-datepicker-defaults.js"> </script>
 
     <script>
-        jQuery.datepicker.regional['es'] = {
-            closeText: 'Cerrar',
-            prevText: '<Ant',
-            nextText: 'Sig>',
-            currentText: 'Hoy',
-            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
-            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
-            weekHeader: 'Sm',
-            dateFormat: "yy-mm-dd",
-            minDate: 0,
-            firstDay: 0,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: ''
-        };
-        jQuery.datepicker.setDefaults(jQuery.datepicker.regional['es']);
-
-        jQuery(function() {
-            jQuery( "#paymentDate" ).datepicker({
-            });
-        });
-
         jQuery(document).ready(function(){
-            var selectProveedor = jQuery('#proveedor');
+	        jQuery( "#paymentDate" ).datepicker({
+		        minDate: 0,
+		        firstDay: 0
+	        });
+
+	        var selectProveedor = jQuery('#proveedor');
 
             jQuery('#agregarProveedor').on('click', agregaProveedor);
             jQuery('input:button').on('click',envio);
@@ -231,7 +212,7 @@ if(!isset($this->datos['confirmacion'])){
 
         <div class="form-group">
             <label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
-            <input type="text" id="paymentDate" name="paymentDate">
+            <input type="text" id="paymentDate" name="paymentDate" readonly>
         </div>
 
         <div class="form-group">

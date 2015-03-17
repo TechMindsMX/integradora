@@ -43,7 +43,7 @@ class MandatosController extends JControllerLegacy {
     function editarproyecto(){
         $post           = array('integradoId'=>'INT', 'id_proyecto'=>'INT');
         $data 			= $this->input_data->getArray($post);
-        $proyectos 		= getFromTimOne::getProyects($this->integradoId);
+        $proyectos 		= getFromTimOne::getProyects(null, $data['id_proyecto']);
         $count          = 0;
 
         if($this->currUser->guest){
@@ -556,40 +556,6 @@ class MandatosController extends JControllerLegacy {
 
         $this->document->setMimeEncoding('application/json');
         echo json_encode($response);
-    }
-
-    public function tabla(){
-        $this->document->setMimeEncoding('application/json');
-        $input  = $this->input;
-        $post   = array(
-            'quantityPayments' => 'FLOAT',
-            'paymentPeriod'    => 'FLOAT',
-            'totalAmount'      => 'FLOAT',
-            'interes'          => 'FLOAT'
-        );
-
-        $data   = (object) $input->getArray($post);
-
-        $validacion = new validador();
-
-        $diccionario = array(
-            'quantityPayments' => array('float' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
-            'paymentPeriod'    => array('int'   => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
-            'totalAmount'      => array('float' => true, 'maxlength' => '100', 'required' => true),
-            'interes'          => array('float' => true, 'maxlength' => '100', 'required' => true));
-
-        $respuesta = $validacion->procesamiento($data,$diccionario);
-
-        foreach($respuesta as $key => $campo){
-            if(is_array($campo)){
-                echo json_encode($respuesta);
-                return false;
-            }
-        }
-
-        $tabla  = getFromTimOne::getTablaAmotizacion($data);
-
-        echo json_encode($tabla);
     }
 
     public function getFacturasCom(){

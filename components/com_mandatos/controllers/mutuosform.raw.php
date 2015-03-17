@@ -113,7 +113,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
                 'payments'          => array('string'       => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
-                'interes'           => array('float'        => true, 'maxlength' => '100',  'required' => true),
+                'interes'           => array('float'        => true, 'maxlength' => '5',  'notEmpty' => true),
                 'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3,      'required' => true),
                 'banco_cuenta'      => array('required'     => true),
                 'banco_sucursal'    => array('required'     => true),
@@ -124,7 +124,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'expirationDate'    => array('date'   => true, 'maxlength' => '10'),
                 'payments'          => array('string' => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'  => true, 'maxlength' => '100'),
-                'interes'           => array('float'  => true, 'maxlength' => '100', 'required' => true));
+                'interes'           => array('float'  => true, 'maxlength' => '5',  'notEmpty' => true));
         }
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
@@ -143,4 +143,40 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $respuesta['redirect'] = true;
         echo json_encode($respuesta);
     }
+
+	public function tabla(){
+		$this->document->setMimeEncoding('application/json');
+		$input  = $this->inputVars;
+		$post   = array(
+			'quantityPayments' => 'FLOAT',
+			'paymentPeriod'    => 'FLOAT',
+			'totalAmount'      => 'FLOAT',
+			'interes'          => 'FLOAT'
+		);
+
+		$data   = (object) $input->getArray($post);
+
+		$validacion = new validador();
+
+		$diccionario = array(
+			'quantityPayments' => array('float' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
+			'paymentPeriod'    => array('int'   => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
+			'totalAmount'      => array('float' => true, 'maxlength' => '100', 'required' => true),
+			'interes'          => array('float' => true, 'maxlength' => '5', 'notEmpty' => true));
+
+		$respuesta = $validacion->procesamiento($data,$diccionario);
+
+		foreach($respuesta as $key => $campo){
+			if(is_array($campo)){
+				echo json_encode($respuesta);
+				return false;
+			}
+		}
+
+		$tabla  = getFromTimOne::getTablaAmotizacion($data);
+
+		echo json_encode($tabla);
+	}
+
+
 }

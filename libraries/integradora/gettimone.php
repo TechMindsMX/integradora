@@ -136,9 +136,10 @@ class getFromTimOne{
          *  float()
          * }
          * */
+	    $factorIva = CatalogoFactory::create()->getFullIva() / 100;
 
         $tabla= new stdClass();
-        $tabla->intereses_con_iva = $data->interes*1.16;
+        $tabla->intereses_con_iva = $data->interes * (1 + $factorIva );
         $tabla->capital           = $data->totalAmount;
         $tabla->tipoPeriodos      = $data->quantityPayments;
         switch($data->paymentPeriod){
@@ -191,8 +192,8 @@ class getFromTimOne{
             $inicial              = (float)$final;
             $intiva               = (float)$inicial*($tabla->intereses_con_iva/100);
 
-            $intereses            = (float)$intiva/1.16;
-            $iva                  = (float)$intereses*0.16;
+            $intereses            = (float)$intiva / (1 + $factorIva );
+            $iva                  = (float)$intereses * $factorIva;
             $cuota                = (float)$tabla->capital_fija+$intiva;
             $final                = (float)$inicial-$tabla->capital_fija;
 
@@ -212,15 +213,20 @@ class getFromTimOne{
         $temp                           = (float) pow($temp ,$data->quantityPayments);
         $number1                        = (float) $temp*($tabla->intereses_con_iva/100);
         $number2                        = (float) $temp-1;
-        $tabla->factor                  = (float) $number1/$number2;
+	    if ( $number2 != 0 ) {
+		    $tabla->factor                  = (float) $number1/$number2;
+	    } else {
+		    $tabla->factor = 1/$data->quantityPayments;
+	    }
+
         $tabla->cuota_Fija              = (float) $tabla->factor*$tabla->capital;
         $saldo_final                    = (float) $tabla->capital;
 
         for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $saldo_inicial                    = (float)$saldo_final;
             $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
-            $intereses                        = (float)$intiva/1.16;
-            $iva                              = (float)$intereses*0.16;
+            $intereses                        = (float)$intiva / (1 + $factorIva );
+            $iva                              = (float)$intereses * $factorIva;
             $saldo_final                      = (float)$saldo_inicial-($tabla->cuota_Fija-$intiva);
             $tabla->amortizacion_cuota_fija[] = array(
                 'periodo'       => (float)$i,
@@ -752,7 +758,7 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getAllSubProyects($idProy = null){
+	public static function getAllSubProyects($idProy = null){
 	    $respuesta = null;
 
         $db = JFactory::getDbo();
@@ -786,7 +792,54 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getProducts($integradoId = null, $productId = null, $status = null){
+	public static function getActiveProyects($integradoId = null, $projectId = null){
+		$where = null;
+
+		if(!is_null($integradoId)){
+			$where = 'parentId = 0 AND status = 1 AND integradoId = '.$integradoId;
+		}elseif(!is_null($projectId)){
+			$where = 'status = 1 AND id_proyecto = '.$projectId;
+		}
+
+		$respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
+
+		return $respuesta;
+	}
+
+	public static function getActiveSubProyects($idProy = null){
+		$respuesta = null;
+
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		if( is_null($idProy) ){
+			$query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
+			      ->from($db->quoteName('#__integrado_proyectos', 't1'))
+			      ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')')
+			->where($db->quoteName('t2.status') .'= 1');
+		}else{
+			$query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
+			      ->from($db->quoteName('#__integrado_proyectos', 't1'))
+			      ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')')
+			      ->where($db->quoteName('t2.parentId').' = '.$db->quote($idProy) . ' AND ' . $db->quoteName('t2.status') .' = 1');
+		}
+
+		try{
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+		}catch (Exception $e){
+			var_dump($e);
+		}
+
+		foreach ($result as $value) {
+			if(!is_null($value->parentId)){
+				$respuesta[] = $value;
+			}
+		}
+
+		return $respuesta;
+	}
+
+	public static function getProducts($integradoId = null, $productId = null, $status = null){
         $where = null;
 
         if(is_null($integradoId) && is_null($productId)){
@@ -1134,6 +1187,8 @@ class getFromTimOne{
 	        $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
+	        $value->receptor = new IntegradoSimple($value->proveedor->id);
+
             $proyectos = self::getProyects(null, $value->proyecto);
 
             if($proyectos[$value->proyecto]->parentId != 0){
@@ -1192,7 +1247,7 @@ class getFromTimOne{
 	        $o = new OrdenFn();
 	        $value->balance = $o->calculateBalance($value);
 
-	        $value = self::getProyectFromId($value);
+	        $value = self::getProyectFromOrder($value);
             $value = self::getClientFromID($value);
             $value->status = self::getOrderStatusName($value->status);
         }
@@ -1265,7 +1320,7 @@ class getFromTimOne{
         return $payMethod;
     }
 
-    public static function getProyectFromId($orden){
+    public static function getProyectFromOrder($orden){
         $proyectos = self::getProyects($orden->integradoId);
 
         if(array_key_exists($orden->proyecto, $proyectos)) {
@@ -2344,7 +2399,7 @@ class sendToTimOne {
         $this->result->info = curl_getinfo ($ch);
         curl_close($ch);
 
-	    JLog::add(json_encode($this->jsonData, $this->result->info), JLog::ERROR);
+	    JLog::add(json_encode($this), JLog::DEBUG);
 
         switch ($this->result->code) {
             case 200:
