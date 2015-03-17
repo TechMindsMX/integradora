@@ -136,9 +136,10 @@ class getFromTimOne{
          *  float()
          * }
          * */
+	    $factorIva = CatalogoFactory::create()->getFullIva() / 100;
 
         $tabla= new stdClass();
-        $tabla->intereses_con_iva = $data->interes*1.16;
+        $tabla->intereses_con_iva = $data->interes * (1 + $factorIva );
         $tabla->capital           = $data->totalAmount;
         $tabla->tipoPeriodos      = $data->quantityPayments;
         switch($data->paymentPeriod){
@@ -191,8 +192,8 @@ class getFromTimOne{
             $inicial              = (float)$final;
             $intiva               = (float)$inicial*($tabla->intereses_con_iva/100);
 
-            $intereses            = (float)$intiva/1.16;
-            $iva                  = (float)$intereses*0.16;
+            $intereses            = (float)$intiva / (1 + $factorIva );
+            $iva                  = (float)$intereses * $factorIva;
             $cuota                = (float)$tabla->capital_fija+$intiva;
             $final                = (float)$inicial-$tabla->capital_fija;
 
@@ -212,15 +213,20 @@ class getFromTimOne{
         $temp                           = (float) pow($temp ,$data->quantityPayments);
         $number1                        = (float) $temp*($tabla->intereses_con_iva/100);
         $number2                        = (float) $temp-1;
-        $tabla->factor                  = (float) $number1/$number2;
+	    if ( $number2 != 0 ) {
+		    $tabla->factor                  = (float) $number1/$number2;
+	    } else {
+		    $tabla->factor = 1/$data->quantityPayments;
+	    }
+
         $tabla->cuota_Fija              = (float) $tabla->factor*$tabla->capital;
         $saldo_final                    = (float) $tabla->capital;
 
         for($i = 1; $i <= $data->quantityPayments; $i++ ){
             $saldo_inicial                    = (float)$saldo_final;
             $intiva                           = (float)$saldo_inicial*($tabla->intereses_con_iva/100);
-            $intereses                        = (float)$intiva/1.16;
-            $iva                              = (float)$intereses*0.16;
+            $intereses                        = (float)$intiva / (1 + $factorIva );
+            $iva                              = (float)$intereses * $factorIva;
             $saldo_final                      = (float)$saldo_inicial-($tabla->cuota_Fija-$intiva);
             $tabla->amortizacion_cuota_fija[] = array(
                 'periodo'       => (float)$i,
@@ -2344,7 +2350,7 @@ class sendToTimOne {
         $this->result->info = curl_getinfo ($ch);
         curl_close($ch);
 
-	    JLog::add(json_encode($this->jsonData, $this->result->info), JLog::ERROR);
+	    JLog::add(json_encode($this), JLog::DEBUG);
 
         switch ($this->result->code) {
             case 200:

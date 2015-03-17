@@ -3,6 +3,12 @@ defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.factory');
 
+class CatalogoFactory {
+	public static function create() {
+		return new Catalogos();
+	}
+}
+
 /**
  * Clase catalogos
  */
@@ -145,6 +151,12 @@ class Catalogos {
 		$catIva = $this->db->setQuery($query)->loadObjectList('valor');
 
 		return $catIva;
+	}
+
+	public function getFullIva() {
+		$ivas = $this->getCatalogoIVA();
+
+		return $ivas['3']->leyenda;
 	}
 
 	public function getPesonalidadesJuridicas() {

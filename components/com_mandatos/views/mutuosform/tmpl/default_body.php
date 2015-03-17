@@ -88,7 +88,7 @@ $optionBancos = '';
         var interes     = jQuery('#interes').val();
 
         var parametros = {
-            'link'  : 'index.php?option=com_mandatos&view=mutuosform&task=tabla&format=raw',
+            'link'  : 'index.php?option=com_mandatos&view=mutuosform&task=mutuosform.tabla&format=raw',
             'datos' : {
                 'quantityPayments' : vencimiento,
                 'paymentPeriod'   : tipoPlazo,
