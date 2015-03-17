@@ -815,14 +815,13 @@ class getFromTimOne{
 			$query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
 			      ->from($db->quoteName('#__integrado_proyectos', 't1'))
 			      ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')')
-			->where($db->quoteName('t1.status') .'= 1');
+			->where($db->quoteName('t2.status') .'= 1');
 		}else{
 			$query->select($db->quoteName('t2.id_proyecto').', '.$db->quoteName('t2.integradoId').', '.$db->quoteName('t2.parentId').', '.$db->quoteName('t2.name').', '.$db->quoteName('t2.description').', '.$db->quoteName('t2.status') )
 			      ->from($db->quoteName('#__integrado_proyectos', 't1'))
 			      ->join('LEFT', $db->quoteName('#__integrado_proyectos', 't2') . ' ON (' . $db->quoteName('t2.parentId') . ' = ' . $db->quoteName('t1.id_proyecto') . ')')
-			      ->where($db->quoteName('t2.parentId').' = '.$db->quote($idProy)) . ' AND ' . $db->quoteName('t1.status') .' = 1';
+			      ->where($db->quoteName('t2.parentId').' = '.$db->quote($idProy) . ' AND ' . $db->quoteName('t2.status') .' = 1');
 		}
-
 
 		try{
 			$db->setQuery($query);
@@ -830,7 +829,6 @@ class getFromTimOne{
 		}catch (Exception $e){
 			var_dump($e);
 		}
-
 
 		foreach ($result as $value) {
 			if(!is_null($value->parentId)){
