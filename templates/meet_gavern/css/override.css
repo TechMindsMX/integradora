@@ -170,3 +170,6 @@ input.datepicker {
     cursor: pointer;
     cursor: hand;
 }
+.ui-datepicker .ui-datepicker-title select {
+    padding: 0;
+}

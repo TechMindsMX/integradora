@@ -82,12 +82,27 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    jQuery('#agregarBanco').on('click', AltaBanco);
 	    jQuery('#tipo_alta_cp input:radio').on('click', tipoAlta);
 	    jQuery('button.envio').on('click', saveCliente);
+	    jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 	    jQuery('.datepicker').datepicker({
+		    yearRange: "-90:-18",
 		    changeMonth: true,
 		    changeYear: true
 	    });
     }
+
+    function deshabilitaregistroProp() {
+	    var checkbox = jQuery(this).prop('checked');
+	    var campos   = jQuery('div#registro-propiedad').find('input, select');
+
+	    jQuery.each(campos, function(key, value){
+		    var campo = jQuery(value);
+		    if( campo.prop('id') != 'tramiteRegistro' ){
+			    jQuery(value).prop('disabled',checkbox);
+		    }
+	    });
+    }
+
 
     function ajax(parametros){
 		
@@ -360,7 +375,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		    li_href = jQuery(value).find('a').attr('href');
 		    if ((li_href == campo)) {
 			    if (campo == '#banco') {
-				    jQuery(lastTab).after(value);
+				    jQuery(lastTab).before(value);
 			    }
 			    if (campo == '#empresa') {
 				    jQuery(tabs[key - 1]).after(detached[key]);
@@ -883,7 +898,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 
 				<div class="checkbox">
-					<label><input type="checkbox"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
+					<label><input type="checkbox" id="tramiteRegistro"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
 				</div>
 			</div>
 

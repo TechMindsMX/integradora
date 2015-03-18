@@ -137,7 +137,7 @@ class validador{
 	public function rfc_fisica () {
         $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
-        $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+        $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z]{2})([0-9])$/';
 
         if (preg_match ($regex, $rfc, $coicidencias) == 1) {
             $respuesta = true;
@@ -151,7 +151,7 @@ class validador{
 	public function rfc_moral () {
         $rfc = strtoupper($this->dataPost[$this->currentKey]);
 
-        $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3,4})$/';
+        $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z]{2})([0-9])$/';
 
         if (preg_match ($regex, $rfc, $coicidencias) == 1) {
             $respuesta = true;
