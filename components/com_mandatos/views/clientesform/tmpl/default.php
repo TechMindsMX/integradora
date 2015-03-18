@@ -85,6 +85,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 	    jQuery('.datepicker').datepicker({
+		    yearRange: "-90:-18",
 		    changeMonth: true,
 		    changeYear: true
 	    });
@@ -374,7 +375,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		    li_href = jQuery(value).find('a').attr('href');
 		    if ((li_href == campo)) {
 			    if (campo == '#banco') {
-				    jQuery(lastTab).after(value);
+				    jQuery(lastTab).before(value);
 			    }
 			    if (campo == '#empresa') {
 				    jQuery(tabs[key - 1]).after(detached[key]);

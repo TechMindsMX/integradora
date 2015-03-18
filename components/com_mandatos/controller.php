@@ -114,6 +114,8 @@ class MandatosController extends JControllerLegacy {
 		    // guarda la cuenta si no existe
 		    if (is_null($existe)) {
 			    list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
+			    $existe = (OBJECT)$respuesta;
+			    $existe->datosBan_id = $newId;
 		    } else {
 			    $respuesta['success'] = true;
 			    $respuesta = array_merge( $respuesta, (array)$existe );
