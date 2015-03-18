@@ -7,11 +7,17 @@ JHTML::_('behavior.calendar');
 $orden   = $this->orden;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-
+var_dump($this->txs);
 $option = '';
 foreach ($this->txs as $txs) {
-    $txs->dateJavascript = date('Y-m-d', ($txs->fechaTimestamp) );
-    $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.number_format($txs->amount,2).'</option>';
+    if($txs->balance == $txs->amount){
+        $monto = number_format($txs->amount,2);
+    }else{
+        $monto = number_format($txs->balance,2);
+    }
+
+    $txs->dateJavascript = date('Y-m-d', ($txs->date) );
+    $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.$monto.'</option>';
 }
 
 ?>
@@ -56,7 +62,7 @@ foreach ($this->txs as $txs) {
     </div>
     <div class="clearfix">&nbsp;</div>
 
-    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_conciliacionadmin&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
+    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
         <div class="form-group">
             <label for="ordenPagada">
                 <?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
@@ -74,38 +80,6 @@ foreach ($this->txs as $txs) {
                 <?php echo $option; ?>
                 </select>
         </div>
-        <div class="clearfix">&nbsp;</div>
-
-        <div class="form-group">
-            <label for="banco_cuenta"><?php echo JText::_('COM_FACTURAS_FROM_ODD_BANCO'); ?></label>
-            <select name="cuenta" id="cuenta">
-                <option value="0">Seleccione su opción</option>
-                <option value="1">BBVA - 6622</option>
-                <option value="2">BANORTE - 5599</option>
-            </select>
-        </div>
-        <div class="clearfix">&nbsp;</div>
-
-        <div class="form-group">
-            <label for="referencia"><?php echo JText::_('COM_FACTURAS_FROM_ODD_REFERENCIA'); ?></label>
-            <input type="text" maxlength="21" name="referencia" id="referencia">
-        </div>
-        <div class="clearfix">&nbsp;</div>
-
-        <div class="form-group">
-            <label for="paymentDate"><?php echo JText::_('COM_FACTURAS_FROM_ODD_FECHA_CONCILIACION'); ?></label>
-            <?php
-            $default = date('Y-m-d');
-            echo JHTML::_('calendar',$default,'date', 'date', $format = '%Y-%m-%d', $attsCal);
-            ?>
-        </div>
-        <div class="clearfix">&nbsp;</div>
-
-        <div class="form-group">
-            <label for="amount"><?php echo JText::_('COM_FACTURAS_FROM_ODD_MONTO'); ?></label>
-            <input type="text" name="amount" id="amount">
-        </div>
-        <div class="clearfix">&nbsp;</div>
 
         <div class="form-group">
             <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">

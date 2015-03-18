@@ -108,7 +108,7 @@ class getFromTimOne{
 
     public static function getTxConciliacionesBanco($where){
 
-        $txs = self::selectDB('txs_banco_integrado',$where,'','getFromTimOne');
+        $txs = self::selectDB('txs_banco_integrado',$where);
 
         foreach ($txs as $value) {
             $value->id              = (INT) $value->id;

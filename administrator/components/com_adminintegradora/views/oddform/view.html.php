@@ -3,7 +3,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class conciliacionadminViewOddform extends JViewLegacy {
+class AdminintegradoraViewOddform extends JViewLegacy {
 
     public function display($tpl = null) {
         $post = array(
