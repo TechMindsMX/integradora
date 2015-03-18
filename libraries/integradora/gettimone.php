@@ -364,7 +364,12 @@ class getFromTimOne{
 
         if ( isset( $timestampStart ) ) {
             foreach ( $txs as $key => $val ) {
-                $val->data->date = getFromTimOne::convertDateLength($val->data->date, 10);
+
+	            if (!is_object($val->data->data) ) {
+		            $val->data = json_decode($val->data->data);
+	            }
+
+                $val->data->date = getFromTimOne::convertDateLength($val->data->timestamp, 10);
                 if ($val->data->date > $timestampStart && $val->data->date < $timestampEnd) {
                     $filteredTxs[] = $val;
                 }
@@ -417,8 +422,18 @@ class getFromTimOne{
      *
      * @return array
      */
-    public static function getTxbyIntegradoByOrderTypeAndId($integradoId, $orderType, $idOrden){
-        return self::selectDB('txs_timone_mandato', 'idIntegrado = '.$integradoId.' AND tipoOrden = "'.$orderType.'" AND idOrden = '.$idOrden);
+    public static function getTxbyOrderTypeAndOrderId($integradoId, $orderType, $idOrden){
+	    $db = JFactory::getDbo();
+
+	    $query = $db->getQuery(true);
+	    $query->select('tm.idIntegrado, tm.idTx, tm.idComision, tm.date, ma.*')
+		    ->from($db->quoteName('#__txs_timone_mandato', 'tm'))
+		    ->join('LEFT', $db->quoteName('#__txs_mandatos', 'ma'). ' ON (tm.id = ma.id)' )
+		    ->where('ma.orderType = '.$db->quote($orderType). ' AND '. 'ma.idOrden = '.$db->quote($idOrden) );
+		$db->setQuery($query);
+	    $results = $db->loadObjectList();
+
+	    return $results;
     }
 
     public static function sumaOrders($orders){
@@ -3192,7 +3207,7 @@ class ReportFlujo extends IntegradoTxs {
 
         foreach ( $txs as $key => $value ) {
 
-            switch ($value->tipoOrden) {
+            switch ($value->orderType) {
                 case 'odv':
                     $orden = getFromTimOne::getOrdenesVenta(null, $value->idOrden);
                     $orden = $orden[0];
@@ -3231,7 +3246,7 @@ class ReportFlujo extends IntegradoTxs {
             $value->data->iva = $ivaTmp;
             $value->data->neto = $value->data->amount - $ivaTmp;
 
-            $value->orden->beneficiario = isset($orden->receptor) ? $orden->proveedor->corporateName : null;
+            $value->orden->beneficiario = isset($orden->receptor) ? $orden->receptor : null;
 
             if ( isset( $orden->factura ) ) {
                 $value->orden->folio = $orden->factura->comprobante['FOLIO'];
@@ -3324,7 +3339,7 @@ class IntegradoOrders {
     private function getTxs(){
         foreach ($this->orders as $key => $value) {
             foreach ($value as $orden) {
-                $orden->txs = getFromTimOne::getTxbyIntegradoByOrderTypeAndId($orden->integradoId, $key, $orden->id);
+                $orden->txs = getFromTimOne::getTxbyOrderTypeAndOrderId($orden->integradoId, $key, $orden->id);
                 $this->getTxDetails($orden->txs);
             }
         }
@@ -3355,8 +3370,15 @@ class IntegradoTxs {
      */
     protected function getIntegradoTxs( ){
 
-        $where = JFactory::getDbo()->quoteName('idIntegrado') . ' = '. $this->integradoId;
-        $results = getFromTimOne::selectDB('txs_timone_mandato', $where);
+	    $db = JFactory::getDbo();
+
+	    $query = $db->getQuery(true);
+	    $query->select('tm.idIntegrado, tm.idTx, tm.idComision, tm.date, ma.*')
+	          ->from($db->quoteName('#__txs_timone_mandato', 'tm'))
+	          ->join('LEFT', $db->quoteName('#__txs_mandatos', 'ma'). ' ON (tm.id = ma.id)' )
+	          ->where($db->quoteName('tm.idIntegrado') . ' = '. $this->integradoId );
+	    $db->setQuery($query);
+	    $results = $db->loadObjectList();
 
         $this->txs = $this->groupTxByType( $results );
 
@@ -3380,7 +3402,7 @@ class IntegradoTxs {
             $txData   = getFromTimOne::getTxDataByTxId( $tx->idTx );
             $tx->data = $txData;
 
-            switch ($tx->tipoOrden) {
+            switch ($tx->orderType) {
                 case 'odc':
                     $txsByType->odc[] = $tx;
                     break;
