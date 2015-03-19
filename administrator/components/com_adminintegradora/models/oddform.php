@@ -61,7 +61,7 @@ class AdminIntegradoraModelOddform extends JModelList {
 
     public function getTransacciones($integradoId=null){
         $orden      = $this->getOrden();
-        $respuesta  = getFromTimOne::getTxIntegradoSinMandato();
+//        $respuesta  = getFromTimOne::getTxIntegradoSinMandato();
         $db         = JFactory::getDbo();
         $query      = $db->getQuery(true);
 
@@ -72,8 +72,6 @@ class AdminIntegradoraModelOddform extends JModelList {
         try{
             $db->setQuery($query);
             $result = $db->loadObjectList();
-
-
         }catch (Exception $e){
             var_dump($e);
         }
