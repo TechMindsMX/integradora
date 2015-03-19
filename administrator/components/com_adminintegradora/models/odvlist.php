@@ -2,17 +2,13 @@
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 jimport('integradora.integrado');
-jimport('integradora.catalogos');
-jimport('integradora.validator');
 jimport('integradora.integrado');
-jimport('integradora.imagenes');
 jimport('integradora.gettimone');
-jimport('integradora.classDB');
 
 /**
  * Methods supporting a list of Facturas records.
  */
-class AdminintegradoraModelOdclist extends JModelList {
+class AdminintegradoraModelOdVlist extends JModelList {
 
     public function __construct($config = array()) {
 
@@ -21,10 +17,10 @@ class AdminintegradoraModelOdclist extends JModelList {
 
     public function getUserIntegrado(){
 
-       $factura = new Integrado();
-       $integrados = $factura->getIntegrados();
+        $factura = new Integrado();
+        $integrados = $factura->getIntegrados();
 
-       return $integrados;
+        return $integrados;
     }
 
     public function getSolicitud($integradoId = null)
@@ -37,16 +33,14 @@ class AdminintegradoraModelOdclist extends JModelList {
     }
 
     public function getOrdenes(){
-        $data = getFromTimOne::getOrdenesCompra();
-        $respuesta = array();
+        $data = getFromTimOne::getOrdenesVenta();
+
+        $data = getFromTimOne::filterOrdersByStatus($data,array(3,5));
 
         foreach($data as $value){
-            if($value->status->id == 1) {
-                $value->integradoName = $this->getIntegradoName($value->integradoId);
-                $respuesta[] = $value;
-            }
+            $value->integradoName = $this->getIntegradoName($value->integradoId);
         }
-        return $respuesta;
+        return $data;
     }
 
     public function getIntegrados(){

@@ -3,11 +3,11 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class AdminintegradoraViewOdclist extends JViewLegacy {
+class AdminintegradoraViewOdvlist extends JViewLegacy {
 
     public function display($tpl = null) {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
-        AdminintegradoraHelper::addSubmenu('listadoODC');
+        AdminintegradoraHelper::addSubmenu('listadoODV');
 
         $this->sidebar = JHtmlSidebar::render();
         $this->ordenes = $this->get('Ordenes');

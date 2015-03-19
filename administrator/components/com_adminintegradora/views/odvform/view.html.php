@@ -3,7 +3,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class AdminintegradoraViewOdcform extends JViewLegacy {
+class AdminintegradoraViewOdvform extends JViewLegacy {
 
     public function display($tpl = null) {
         $post = array(
@@ -31,7 +31,7 @@ class AdminintegradoraViewOdcform extends JViewLegacy {
     }
 
     protected function addToolbar() {
-        JToolBarHelper::title(JText::_('Conciliación de Orden de Compra'), '');
+        JToolBarHelper::title(JText::_('Conciliación de Orden de Venta'), '');
     }
 
 }

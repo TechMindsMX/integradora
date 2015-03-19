@@ -16,22 +16,22 @@ class AdminintegradoraHelper {
         );
 
         JHtmlSidebar::addEntry(
-            JText::_('COM_FACTURAS_LISTADO_ODC'),
-            'index.php?option=com_adminintegradora&view=odclist',
-            $vName == 'listadoODC'
+            JText::_('COM_FACTURAS_LISTADO_ODV'),
+            'index.php?option=com_adminintegradora&view=odvlist',
+            $vName == 'listadoODV'
         );
 
-        JHtmlSidebar::addEntry(
-            JText::_('COM_FACTURAS_LISTADO_ODR'),
-            'index.php?option=com_adminintegradora&view=odrlist',
-            $vName == 'listadoODR'
-        );
-
-        JHtmlSidebar::addEntry(
-            JText::_('BTN_GOBACK'),
-            'index.php?option=com_adminintegradora',
-            $vName == 'Regresar'
-        );
+//        JHtmlSidebar::addEntry(
+//            JText::_('COM_FACTURAS_LISTADO_ODR'),
+//            'index.php?option=com_adminintegradora&view=odrlist',
+//            $vName == 'listadoODR'
+//        );
+//
+//        JHtmlSidebar::addEntry(
+//            JText::_('BTN_GOBACK'),
+//            'index.php?option=com_adminintegradora',
+//            $vName == 'Regresar'
+//        );
 
     }
 
