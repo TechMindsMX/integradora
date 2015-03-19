@@ -1,4 +1,5 @@
 <?php
+use Integralib\OdVenta;
 use Integralib\OrderFactory;
 
 defined('_JEXEC') or die('Restricted access');
@@ -57,30 +58,31 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-                    $newOrden = getFromTimOne::getOrdenesVenta(null, $this->parametros['idOrden']);
-                    $newOrden = $newOrden[0];
-                    if ( $newOrden->status->id == 5 && is_null($newOrden->urlXML) ) {
-                        $factObj = $save->generaObjetoFactura( $newOrden );
+	                $newOrder = new OdVenta();
+	                $newOrder->setOrderFromId( $this->parametros['idOrden'] );
+
+	                if ( $newOrder->status->id == 5 && is_null($newOrder->urlXML) ) {
+                        $factObj = $save->generaObjetoFactura( $newOrder );
 
                         if ( $factObj != false ) {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
 	                        try {
-		                        $newOrden->urlXML = $save->saveXMLFile( $xmlFactura );
+		                        $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
 	                        } catch (Exception $e) {
 		                        $msg = $e->getMessage();
 		                        JLog::add($msg, JLog::ERROR, 'error');
 		                        $this->app->enqueueMessage($msg, 'error');
 	                        }
-                            $info = $this->sendEmail($newOrden);
+                            $info = $this->sendEmail($newOrder);
                         }
 
-                        if ( isset( $newOrden->urlXML ) ) {
-                            if ( $newOrden->urlXML != false ) {
-                                $save->formatData(array('urlXML' => $newOrden->urlXML ));
-                                $where = 'id = '.$newOrden->id;
+                        if ( isset( $newOrder->urlXML ) ) {
+                            if ( $newOrder->urlXML != false ) {
+                                $save->formatData(array('urlXML' => $newOrder->urlXML ));
+                                $where = 'id = '.$newOrder->getId();
                                 $save->updateDB('ordenes_venta', null, $where);
 
-								$this->createOpposingODC($newOrden);
+								$this->createOpposingODC($newOrder);
                             }
                         }
                     }

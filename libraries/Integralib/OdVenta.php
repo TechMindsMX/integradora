@@ -8,7 +8,6 @@
 
 namespace Integralib;
 
-
 class OdVenta extends Order {
 
 	protected $totalAmount;
@@ -60,10 +59,21 @@ class OdVenta extends Order {
 		return $this->totalAmount;
 	}
 
+	/**
+	 * @return UUID factura from xmlfile
+	 */
 	public function getfacturaUUID() {
 		$xml = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$this->urlXML);
 
 		return \Factura::getXmlUUID($xml);
+	}
+
+	public function getMontoTotalIVA() {
+		return $this->iva;
+	}
+
+	public function getMontoTotalIEPS() {
+		return $this->ieps;
 	}
 
 }

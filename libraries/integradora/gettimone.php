@@ -2561,16 +2561,7 @@ class sendToTimOne {
 
     public function generaObjetoFactura( $newOrden ) {
 
-        $emisor = new Emisor( $newOrden->integradoId );
-        $receptor = new Receptor( $newOrden->proveedor->id );
-        $datosDeFacturacion = new datosDeFacturacion( $newOrden );
-
-        foreach ( $newOrden->productosData as $key => $concepto ) {
-            $conceptos[$key] = new Concepto( $newOrden->productosData[$key] );
-        }
-
-
-    $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos, $impuestos);
+	    $data = new Factura( $newOrden, true );
 
         //TODO: qutar el mock cuando sea produccion
         if( ENVIROMENT_NAME == 'sandbox') {
@@ -3548,20 +3539,23 @@ class Factura extends makeTx {
     public $timbra;
 	public $format;
 
-	function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos, $timbra = true, $orden ) {
-        $this->emisor = $emisor;
-        $this->receptor = $receptor;
-        $this->datosDeFacturacion = $datosDeFacturacion;
-        $this->setConceptos($orden);
-        $this->setImpuestos($orden);
+	function __construct( \Integralib\OdVenta $orden, $timbra = false ) {
+        $this->emisor = new Emisor($orden->getEmisor());
+        $this->receptor = new Receptor($orden->getReceptor());
+        $this->datosDeFacturacion = new datosDeFacturacion($orden);
+
+		if(isset ($orden)) {
+			$this->setConceptos($orden);
+			$this->setImpuestos($orden);
+		}
 		$this->setTimbra($timbra);
-        $this->setFormat();
-    }
+		$this->setFormat();
+	}
 	/**
 	 * @param bool $timbra
 	 */
 	public function setTimbra( $timbra ) {
-		$this->timbra = isset($timbra) ? true : false;
+		$this->timbra = isset($timbra) && is_bool($timbra) ? $timbra : false;
 	}
 
 	public function setFormat() {
@@ -3593,11 +3587,12 @@ class Factura extends makeTx {
 	 * @return \Impuesto
 	 */
 	private function getObjectImpuestoFroIVA($orden) {
-		return new \Impuesto('IVA', \CatalogoFactory::create()->getFullIva(), $orden->getMontoTotalIVA());
+		return new \Impuesto($orden->getMontoTotalIVA(), \CatalogoFactory::create()->getFullIva(), 'IVA');
 	}
 
 	private function getObjectImpuestoFroIEPS($orden) {
-		return new \Impuesto('IEPS', $orden->productosData[0]->ieps, $orden->getMontoTotalIEPS());
+//		TODO: revisar cual es la tasa de IEPS que hay que mandar
+		return new \Impuesto($orden->getMontoTotalIEPS(), $orden->productosData[0]->ieps, 'IEPS');
 	}
 
 	/**
@@ -3679,18 +3674,16 @@ class Concepto
 class Emisor {
     public $datosFiscales;
 
-    function __construct( $integradoId ) {
-        $integ = new IntegradoSimple($integradoId);
-        $this->datosFiscales = new datosFiscales( $integ );
+    function __construct( IntegradoSimple $integrado ) {
+        $this->datosFiscales = new datosFiscales( $integrado );
     }
 }
 
 class Receptor {
     public $datosFiscales;
 
-    function __construct( $integradoId ) {
-        $integ = new IntegradoSimple($integradoId);
-        $this->datosFiscales = new datosFiscales( $integ );
+    function __construct( IntegradoSimple $integrado ) {
+        $this->datosFiscales = new datosFiscales( $integrado );
     }
 }
 
@@ -3741,14 +3734,14 @@ class datosDeFacturacion {
 }
 
 class Impuesto {
-	protected $importe;
-	protected $tasa;
-	protected $impuesto;
+	public $importe;
+	public $tasa;
+	public $impuesto;
 
 	function __construct( $importe, $tasa, $impuesto ) {
 		$this->importe  = $importe;
 		$this->tasa     = $tasa;
-		$this->impuesto = $impuesto;
+		$this->impuesto = (STRING)$impuesto;
 	}
 
 
