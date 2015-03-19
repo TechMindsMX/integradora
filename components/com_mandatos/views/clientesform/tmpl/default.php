@@ -84,10 +84,16 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    jQuery('button.envio').on('click', saveCliente);
 	    jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
-	    jQuery('.datepicker').datepicker({
+	    jQuery('#dp_fecha_nacimiento').datepicker({
 		    yearRange: "-90:-18",
 		    changeMonth: true,
 		    changeYear: true
+	    });
+	    jQuery('.instrumento').datepicker({
+		    yearRange: "1850:0",
+		    changeMonth: true,
+		    changeYear: true,
+		    max
 	    });
     }
 
@@ -778,7 +784,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
 				<div class="form-group">
 					<label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?> *</label>
-					<input type="text" name="t1_instrum_fecha" id="t1_instrum_fecha" readonly class="datepicker" />
+					<input type="text" name="t1_instrum_fecha" id="t1_instrum_fecha" readonly class="datepicker instrumento" />
 				</div>
 				<div class="form-group">
 					<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
@@ -812,7 +818,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_TESTIMONIO2'); ?></h3>
 				<div class="form-group">
 					<label for="t2_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<input type="text" name="t2_instrum_fecha" id="t2_instrum_fecha" class="datepicker" readonly />
+					<input type="text" name="t2_instrum_fecha" id="t2_instrum_fecha" class="datepicker instrumento" readonly />
 				</div>
 				<div class="form-group">
 					<label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -845,7 +851,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_PODER'); ?></h3>
 				<div class="form-group">
 					<label for="pn_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<input type="text" name="pn_instrum_fecha" id="pn_instrum_fecha" class="datepicker" readonly />
+					<input type="text" name="pn_instrum_fecha" id="pn_instrum_fecha" class="datepicker instrumento" readonly />
 				</div>
 				<div class="form-group">
 					<label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -878,7 +884,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				<h3><?php echo JText::_('LBL_RPP'); ?></h3>
 				<div class="form-group">
 					<label for="rp_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-					<input type="text" name="rp_instrum_fecha" id="rp_instrum_fecha" class="datepicker" readonly />
+					<input type="text" name="rp_instrum_fecha" id="rp_instrum_fecha" class="datepicker instrumento" readonly />
 				</div>
 				<div class="form-group">
 					<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
