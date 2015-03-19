@@ -108,7 +108,7 @@ $odds = $this->ordenes;
                         <td><?php echo $value->numOrden; ?></td>
                         <td><?php echo $value->createdDate; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->createdDate); ?>" /></td>
                         <td><?php echo $value->integradoName; ?></td>
-                        <td>$<?php echo number_format($value->totalAmount,2); ?></td>
+                        <td>$<?php echo number_format($value->balance,2); ?></td>
                         <td><a href="index.php?option=com_adminintegradora&view=oddform&idOrden=<?php echo $value->id; ?>" class="btn btn-primary">Conciliar</a> </td>
                     </tr>
                 <?php

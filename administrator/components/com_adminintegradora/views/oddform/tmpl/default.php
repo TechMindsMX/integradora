@@ -56,7 +56,7 @@ foreach ($this->txs as $txs) {
 <?php if( is_null($data->confirmacion) ){?>
     <div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN').':</h3> '.$orden->numOrden; ?></div>
-        <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->totalAmount,2 ); ?></div>
+        <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODD_INTEGRADO').':</h3> '.$orden->integradoName; ?></div>
     </div>
@@ -82,11 +82,11 @@ foreach ($this->txs as $txs) {
         </div>
 
         <div class="form-group">
-            <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
+            <a href="index.php?option=com_adminintegradora&view=odclist" class="btn btn-danger">Cancelar</a>
             <input type="submit" class="btn btn-primary" value="Enviar" id="send"/>
         </div>
     </form>
-<?php }else{ var_dump($data);?>
+<?php }else{ ?>
     <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
         <input type="hidden" name="orderType" id="orderType" value="odd" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id; ?>" />
@@ -99,11 +99,11 @@ foreach ($this->txs as $txs) {
         <div>Cuenta: <?php echo $data->cuenta; ?></div>
         <div>Referencia: <?php echo $data->referencia; ?></div>
         <div>Fecha: <?php echo $data->date; ?></div>
-        <div>Monto: $<?php echo number_format($data->amount, 2); ?></div>
+        <div>Monto: $<?php echo number_format($data->balance, 2); ?></div>
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">
-            <input type="button" id="cancel" class="btn btn-danger" value="Cancelar" />
+            <a href="index.php?option=com_adminintegradora&view=oddlist" class="btn btn-danger">Cancelar</a>
             <input type="submit" id="send" class="btn btn-primary" value="Enviar" />
         </div>
 

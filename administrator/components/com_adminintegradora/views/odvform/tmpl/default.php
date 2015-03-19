@@ -51,7 +51,7 @@ if ( ! empty( $this->txs ) ) {
             <div class="clearfix">&nbsp;</div>
 
             <div class="form-group">
-                <a href="index.php?option=com_adminintegradora&view=odclist" class="btn btn-danger">Cancelar</a>
+                <a href="index.php?option=com_adminintegradora&view=odvlist" class="btn btn-danger">Cancelar</a>
                 <input type="submit" class="btn btn-primary" value="Enviar" id="send"/>
             </div>
         </form>
@@ -59,7 +59,7 @@ if ( ! empty( $this->txs ) ) {
     <div class="div-detalleODC">
         <div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN').':</h3> '.$orden->numOrden; ?></div>
-            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->totalAmount,2 ); ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
         </div>
         <div>
@@ -113,7 +113,7 @@ if ( ! empty( $this->txs ) ) {
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">
-            <input type="button" id="cancel" class="btn btn-danger" value="Cancelar" />
+            <a href="index.php?option=com_adminintegradora&view=odvlist" class="btn btn-danger">Cancelar</a>
             <input type="submit" id="send" class="btn btn-primary" value="Enviar" />
         </div>
 
