@@ -2569,7 +2569,8 @@ class sendToTimOne {
             $conceptos[$key] = new Concepto( $newOrden->productosData[$key] );
         }
 
-        $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos);
+
+    $data = new Factura( $emisor, $receptor, $datosDeFacturacion, $conceptos, $impuestos);
 
         //TODO: qutar el mock cuando sea produccion
         if( ENVIROMENT_NAME == 'sandbox') {
@@ -3543,14 +3544,16 @@ class Factura extends makeTx {
     public $receptor;
     public $datosDeFacturacion;
     public $conceptos;
+    public $impuestos;
     public $timbra;
 	public $format;
 
-	function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos, $timbra = true ) {
+	function __construct(Emisor $emisor, Receptor $receptor, datosDeFacturacion $datosDeFacturacion, $conceptos, $timbra = true, $orden ) {
         $this->emisor = $emisor;
         $this->receptor = $receptor;
         $this->datosDeFacturacion = $datosDeFacturacion;
-        $this->conceptos = $conceptos;
+        $this->setConceptos($orden);
+        $this->setImpuestos($orden);
 		$this->setTimbra($timbra);
         $this->setFormat();
     }
@@ -3570,7 +3573,34 @@ class Factura extends makeTx {
         $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }
 
-    /**
+	public function setConceptos($orden) {
+		foreach ( $orden->productosData as $key => $concepto ) {
+			$this->conceptos[$key] = new \Concepto( $orden->productosData[$key] );
+		}
+	}
+
+	public function setImpuestos($orden) {
+
+		$impuestos = array();
+
+		$impuestos[0] = $this->getObjectImpuestoFroIVA($orden);
+		$impuestos[1] = $this->getObjectImpuestoFroIEPS($orden);
+
+		$this->impuestos = $impuestos;
+	}
+
+	/**
+	 * @return \Impuesto
+	 */
+	private function getObjectImpuestoFroIVA($orden) {
+		return new \Impuesto('IVA', \CatalogoFactory::create()->getFullIva(), $orden->getMontoTotalIVA());
+	}
+
+	private function getObjectImpuestoFroIEPS($orden) {
+		return new \Impuesto('IEPS', $orden->productosData[0]->ieps, $orden->getMontoTotalIEPS());
+	}
+
+	/**
      * @param $string
      */
     public static function getXmlUUID( $string ) {
@@ -3707,6 +3737,41 @@ class datosDeFacturacion {
 //        $this->tipoDeComprobante    = $tipoDeComprobante;
     }
 
+
+}
+
+class Impuesto {
+	protected $importe;
+	protected $tasa;
+	protected $impuesto;
+
+	function __construct( $importe, $tasa, $impuesto ) {
+		$this->importe  = $importe;
+		$this->tasa     = $tasa;
+		$this->impuesto = $impuesto;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getImporte() {
+		return $this->importe;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getTasa() {
+		return $this->tasa;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getImpuesto() {
+		return $this->impuesto;
+	}
 
 }
 
