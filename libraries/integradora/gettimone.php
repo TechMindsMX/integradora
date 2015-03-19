@@ -3591,6 +3591,7 @@ class Factura extends makeTx {
 	}
 
 	private function getObjectImpuestoFroIEPS($orden) {
+//		TODO: revisar cual es la tasa de IEPS que hay que mandar
 		return new \Impuesto($orden->getMontoTotalIEPS(), $orden->productosData[0]->ieps, 'IEPS');
 	}
 
