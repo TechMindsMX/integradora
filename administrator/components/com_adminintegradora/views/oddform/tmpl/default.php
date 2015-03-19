@@ -7,7 +7,7 @@ JHTML::_('behavior.calendar');
 $orden   = $this->orden;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-var_dump($this->txs);
+
 $option = '';
 foreach ($this->txs as $txs) {
     if($txs->balance == $txs->amount){
@@ -62,7 +62,7 @@ foreach ($this->txs as $txs) {
     </div>
     <div class="clearfix">&nbsp;</div>
 
-    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
+    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
         <div class="form-group">
             <label for="ordenPagada">
                 <?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
@@ -86,17 +86,12 @@ foreach ($this->txs as $txs) {
             <input type="submit" class="btn btn-primary" value="Enviar" id="send"/>
         </div>
     </form>
-<?php }else{ ?>
-    <form id="confirmacion" method="post" action="index.php?option=com_conciliacionadmin&view=oddlist&task=conciliar">
-        <input type="hidden" name="type" id="type" value="odd" />
+<?php }else{ var_dump($data);?>
+    <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
+        <input type="hidden" name="orderType" id="orderType" value="odd" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id; ?>" />
         <input type="hidden" name="idTx" id="idTx" value="<?php echo $data->idTx; ?>" />
-        <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $orden->integradoId; ?>" />
-        <input type="hidden" name="ordenPagada" id="ordenPagada" value="<?php echo $data->ordenPagada; ?>" />
-        <input type="hidden" name="cuenta" id="cuenta" value="<?php echo $data->cuenta; ?>" />
-        <input type="hidden" name="referencia" id="referencia" value="<?php echo $data->referencia; ?>" />
-        <input type="hidden" name="date" id="date" value="<?php echo $data->date; ?>" />
-        <input type="hidden" name="amount" id="amount" value="<?php echo $data->amount; ?>" />
+
 
         <h3>Esta seguro de guardar los siguientes datos de conciliación</h3>
 

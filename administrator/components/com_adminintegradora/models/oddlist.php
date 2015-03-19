@@ -35,6 +35,8 @@ class AdminintegradoraModelOddlist extends JModelList {
     public function getOrdenes(){
         $data = getFromTimOne::getOrdenesDeposito();
 
+        $data = getFromTimOne::filterOrdersByStatus($data,array(3,5));
+
         foreach($data as $value){
             $value->integradoName = $this->getIntegradoName($value->integradoId);
         }

@@ -31,8 +31,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
             $user = JFactory::getUser();
             $save = new sendToTimOne();
 
-            $this->parametros['userId']   = (INT)$user->id;
-            $this->parametros['authDate'] = time();
+            $this->parametros['userId']      = (INT)$user->id;
+            $this->parametros['authDate']    = time();
+            $this->parametros['integradoId'] = (INT)$this->integradoId;
 
             $save->formatData($this->parametros);
 

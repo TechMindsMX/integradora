@@ -11,14 +11,16 @@ jimport('integradora.gettimone');
 */
 class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
     public function save(){
-        $post = array('idTx' => 10, 'idOrder' =>3, 'orderType' => 'odd');
+        $post = array('idTx' => 'INT', 'idOrden' => 'INT', 'orderType' => 'STRING');
+        $input = JFactory::getApplication()->input->getArray($post);
 
-        $tx = $this->getTx($post['idTx']);
-        $order = $this->getOrder($post);
+        $tx = $this->getTx($input['idTx']);
+        $order = $this->getOrder($input);
 
         $conciliacion = new ConciliaTxOrder($tx,$order);
         $conciliacion->saveRelations();
-exit('hola');
+
+        JFactory::getApplication()->redirect('index.php?option=com_adminintegradora&view=oddlist');
     }
 
     /**
@@ -44,10 +46,10 @@ exit('hola');
     private function getOrder($post){
         switch($post['orderType']){
             case 'odd':
-                $order =getFromTimOne::getOrdenesDeposito(null, $post['idOrder']);
+                $order =getFromTimOne::getOrdenesDeposito(null, $post['idOrden']);
                 break;
             case 'odv':
-                $order =getFromTimOne::getOrdenesVenta(null, $post['idOrder']);
+                $order =getFromTimOne::getOrdenesVenta(null, $post['idOrden']);
                 break;
         }
 
