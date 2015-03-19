@@ -93,7 +93,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		    yearRange: "1850:0",
 		    changeMonth: true,
 		    changeYear: true,
-		    max
 	    });
     }
 
