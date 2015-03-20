@@ -86,6 +86,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 	    jQuery('#dp_fecha_nacimiento').datepicker({
 		    yearRange: "-90:-18",
+		    dafaultDate: "-15d -18y",
 		    changeMonth: true,
 		    changeYear: true
 	    });
@@ -374,13 +375,18 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
     function attachTab(campo) {
 	    var tabs = jQuery(formulario).find('#tabs-clientesTabs li');
+	    console.log(tabs.length);
 	    var lastTab = jQuery('#tabs-clientesTabs li:last-of-type');
 
 	    jQuery.each(tabs, function (key, value) {
 		    li_href = jQuery(value).find('a').attr('href');
 		    if ((li_href == campo)) {
 			    if (campo == '#banco') {
-				    jQuery(lastTab).before(value);
+				    if (jQuery('#tabs-clientesTabs').find('li').length > 1) {
+					    jQuery(lastTab).before(value);
+				    } else {
+					    jQuery(lastTab).after(value);
+				    }
 			    }
 			    if (campo == '#empresa') {
 				    jQuery(tabs[key - 1]).after(detached[key]);
