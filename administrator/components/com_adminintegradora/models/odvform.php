@@ -60,6 +60,7 @@ class AdminIntegradoraModelOdvform extends JModelList {
     }
 
     public function getTransacciones(){
+        $return     = array();
         $orden      = $this->getOrden();
         $db         = JFactory::getDbo();
         $query      = $db->getQuery(true);

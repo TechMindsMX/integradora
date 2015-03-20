@@ -59,10 +59,9 @@ if ( ! empty( $this->txs ) ) {
     <div class="div-detalleODC">
         <div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN').':</h3> '.$orden->numOrden; ?></div>
-            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->totalAmount,2 ); ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_SALDO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
-        </div>
-        <div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_EMISOR').':</h3> '.$orden->integradoName; ?></div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_RECEPTOR').':</h3> '.$orden->proveedor->frontName; ?></div>
         </div>

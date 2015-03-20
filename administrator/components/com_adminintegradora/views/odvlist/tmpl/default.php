@@ -100,6 +100,7 @@ $odvs = $this->ordenes;
                     <th><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_EMISOR'); ?></th>
                     <th><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_RECEPTOR'); ?></th>
                     <th><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN'); ?></th>
+                    <th><?php echo JText::_('COM_MANDATOS_ORDENES_SALDO_ORDEN'); ?></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -112,6 +113,7 @@ $odvs = $this->ordenes;
                         <td><?php echo $value->createdDate; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->createdDate); ?>" /> </td>
                         <td><?php echo $value->integradoName; ?></td>
                         <td><?php echo $value->proveedor->frontName; ?></td>
+                        <td>$<?php echo number_format($value->totalAmount,2); ?></td>
                         <td>$<?php echo number_format($value->balance,2); ?></td>
                         <td><a href="index.php?option=com_adminintegradora&view=odvform&idOrden=<?php echo $value->id ?>" class="btn btn-primary">Conciliar</a> </td>
                     </tr>
