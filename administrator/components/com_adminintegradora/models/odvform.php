@@ -78,13 +78,7 @@ class AdminIntegradoraModelOdvform extends JModelList {
 
         foreach ($result as $tx) {
             $tx->balance = $this->getTxBalance($tx);
-            echo '<pre>';
-            var_dump((($orden->integradoId == $tx->idIntegrado) || ($tx->idIntegrado == 0)), $tx->balance > 0);
-            echo '</pre>';
             if( (($orden->integradoId == $tx->idIntegrado) || ($tx->idIntegrado == 0)) && ($tx->balance > 0) ) {
-                echo '<br /> <pre>';
-                var_dump($tx);
-                echo '</pre>';
                 $return[] = $tx;
             }
         }
