@@ -21,17 +21,11 @@ class AdminintegradoraHelper {
             $vName == 'listadoODV'
         );
 
-//        JHtmlSidebar::addEntry(
-//            JText::_('COM_FACTURAS_LISTADO_ODR'),
-//            'index.php?option=com_adminintegradora&view=odrlist',
-//            $vName == 'listadoODR'
-//        );
-//
-//        JHtmlSidebar::addEntry(
-//            JText::_('BTN_GOBACK'),
-//            'index.php?option=com_adminintegradora',
-//            $vName == 'Regresar'
-//        );
+        JHtmlSidebar::addEntry(
+            JText::_('BTN_GOBACK'),
+            'index.php?option=com_adminintegradora',
+            $vName == 'Regresar'
+        );
 
     }
 
