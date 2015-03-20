@@ -86,14 +86,17 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
 	    jQuery('#dp_fecha_nacimiento').datepicker({
 		    yearRange: "-90:-18",
-		    dafaultDate: "-15d -18y",
+		    minDate: "-90y",
+		    maxDate: "-18y",
 		    changeMonth: true,
 		    changeYear: true
 	    });
 	    jQuery('.instrumento').datepicker({
 		    yearRange: "1850:0",
+		    minDate: new Date(1850,1,1),
+		    maxDate: "-1d",
 		    changeMonth: true,
-		    changeYear: true,
+		    changeYear: true
 	    });
     }
 

@@ -14,6 +14,7 @@ var file_validation = function( event ) {
 
         if ($fileInput.files[0]) {
 
+            var fname = $fileInput.files[0].name;
             var fsize = $fileInput.files[0].size;
             var ftype = $fileInput.files[0].type;
 
@@ -24,6 +25,13 @@ var file_validation = function( event ) {
                 case 'image/jpeg':
                 case 'image/pjpeg':
                 case 'application/pdf':
+                    break;
+                case 'binary/octet-stream':
+                case 'application/octet-stream':
+                    if (fname.indexOf('.pdf') == -1) {
+                        $error_span = '<span class="errormsg warning alert alert-danger">'+ event.data.msg +'</span>';
+                        jQuery($fileInput).val('').after($error_span);
+                    }
                     break;
                 default:
                     $error_span = '<span class="errormsg warning alert alert-danger">'+ event.data.msg +'</span>';
