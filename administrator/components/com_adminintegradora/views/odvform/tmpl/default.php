@@ -11,7 +11,7 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
 $option = '';
 if ( ! empty( $this->txs ) ) {
     foreach ($this->txs as $txs) {
-        $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.number_format($txs->amount,2).'</option>';
+        $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.number_format($txs->balance,2).'</option>';
     }
 }
 ?>
