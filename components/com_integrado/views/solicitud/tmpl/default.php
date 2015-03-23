@@ -6,13 +6,16 @@ jimport('joomla.html.html.bootstrap');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-JHTML::_('behavior.calendar');
 jimport('integradora.notifications');
 
 $datos = @$this->data->integrados;
 $user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $optionBancos = '';
+
+$document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
+$document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
+$document->addStyleSheet('//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css');
 
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
@@ -294,6 +297,21 @@ $token = JSession::getFormToken();
                 jQuery('#juridica').prop('disabled', true).addClass('disabled');
             });
 
+	        jQuery('#dp_fecha_nacimiento').datepicker({
+		        yearRange: "-90:-18",
+		        minDate: "-90y",
+		        maxDate: "-18y",
+		        changeMonth: true,
+		        changeYear: true
+	        });
+	        jQuery('.instrumento').datepicker({
+		        yearRange: "1850:<?php echo date('Y');?>",
+		        minDate: new Date(1850,1,1),
+		        maxDate: "-1d",
+		        changeMonth: true,
+		        changeYear: true
+	        });
+
 
         });
 
@@ -466,10 +484,7 @@ $token = JSession::getFormToken();
             </div>
             <div class="form-group">
                 <label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
-                <?php
-                $default = date('Y-m-d');
-                echo JHTML::_('calendar',$default,'dp_fecha_nacimiento', 'dp_fecha_nacimiento', $format = '%Y-%m-%d', $attsCal);
-                ?>
+	            <input type="text" name="dp_fecha_nacimiento" id="dp_fecha_nacimiento" class="datepicker" readonly />
             </div>
             <div class="form-group">
                 <label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
@@ -723,9 +738,7 @@ $token = JSession::getFormToken();
                 <h3><?php echo JText::_('LBL_TESTIMONIO1'); ?></h3>
                 <div class="form-group">
                     <label for="t1_instrum_fecha"><?php echo JText::_('LBL_FECHA_CONSTITUCION'); ?> *</label>
-                    <?php
-                    echo JHTML::_('calendar',date('Y-m-d'),'t1_instrum_fecha', 't1_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-                    ?>
+	                <input type="text" name="t1_instrum_fecha" id="t1_instrum_fecha" readonly class="datepicker instrumento" />
                 </div>
                 <div class="form-group">
                     <label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
@@ -759,9 +772,7 @@ $token = JSession::getFormToken();
                 <h3><?php echo JText::_('LBL_TESTIMONIO2'); ?></h3>
                 <div class="form-group">
                     <label for="t2_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-                    <?php
-                    echo JHTML::_('calendar',date('Y-m-d'),'t2_instrum_fecha', 't2_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-                    ?>
+	                <input type="text" name="t2_instrum_fecha" id="t2_instrum_fecha" readonly class="datepicker instrumento" />
                 </div>
                 <div class="form-group">
                     <label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -794,9 +805,7 @@ $token = JSession::getFormToken();
                 <h3><?php echo JText::_('LBL_PODER'); ?></h3>
                 <div class="form-group">
                     <label for="pn_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-                    <?php
-                    echo JHTML::_('calendar',date('Y-m-d'),'pn_instrum_fecha', 'pn_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-                    ?>
+	                <input type="text" name="pn_instrum_fecha" id="pn_instrum_fecha" readonly class="datepicker instrumento" />
                 </div>
                 <div class="form-group">
                     <label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
@@ -829,9 +838,7 @@ $token = JSession::getFormToken();
                 <h3><?php echo JText::_('LBL_RPP'); ?></h3>
                 <div class="form-group">
                     <label for="rp_instrum_fecha"><?php echo JText::_('LBL_FECHA_TESTIMONIO'); ?></label>
-                    <?php
-                    echo JHTML::_('calendar',date('Y-m-d'),'rp_instrum_fecha', 'rp_instrum_fecha', $format = '%Y-%m-%d', $attsCal);
-                    ?>
+	                <input type="text" name="rp_instrum_fecha" id="rp_instrum_fecha" readonly class="datepicker instrumento" />
                 </div>
                 <div class="form-group">
                     <label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
