@@ -5,6 +5,7 @@ jimport('joomla.application.component.view');
 
 class MandatosViewSolicitudliquidacion extends JViewLegacy {
 
+	public $integrado;
 	protected $integradoId;
 	protected $operaciones;
 	protected $saldo;
@@ -15,6 +16,8 @@ class MandatosViewSolicitudliquidacion extends JViewLegacy {
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
 		$model = $this->getModel();
+		$model->setIntegradoid($this->integradoId);
+		$this->integrado    = $model->getIntegrado();
 		$this->operaciones  = $model->getOperaciones();
 		$this->saldo 		= $model->getSaldoOperaciones($this->operaciones);
 

@@ -13,26 +13,29 @@ jimport('integradora.catalogos');
 class MandatosModelSolicitudliquidacion extends JModelItem
 {
     protected $dataModelo;
-    public    $integradoId;
+	protected $integradoId;
 
-    function __construct()
-    {
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+	/**
+	 * @param mixed $integradoId
+	 */
+	public function setIntegradoId( $integradoId ) {
+		$this->integradoId = $integradoId;
+	}
 
-        parent::__construct();
-    }
+	public function getIntegrado() {
+		$integ = new IntegradoSimple($this->integradoId);
+
+		$integ->getTimOneData();
+
+		return $integ;
+	}
 
     public function getSaldoOperaciones($operaciones){
-        $saldos = getFromTimOne::getSaldoOperacionesPorLiquidar($operaciones);
-
-        return $saldos;
+		return getFromTimOne::getSaldoOperacionesPorLiquidar($operaciones);
     }
 
     public function getOperaciones(){
-        $operaciones = getFromTimOne::getOperacionesPorLiquidar($this->integradoId);
-
-        return $operaciones;
+	    return getFromTimOne::getOperacionesPorLiquidar($this->integradoId);
     }
 }
 

@@ -36,13 +36,13 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->integCurrent->getDisplayName(); ?>
+			<?php echo $this->odv->getEmisor()->getDisplayName(); ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->createdDate; ?>
+			<?php echo $this->odv->getCreatedDate(); ?>
 		</div>
 	</div>
 	<div>
@@ -50,8 +50,8 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_PROY'); ?>
 		</div>
 		<div class="span4">
-			<?php if ( isset( $this->odv->proyecto->name ) ) {
-				echo $this->odv->proyecto->name;
+			<?php if ( isset( $this->odv->project->name ) ) {
+				echo $this->odv->project->name;
 			} ?>
 		</div>
 		<div class="span2 text-right">
@@ -66,7 +66,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SUBPROY'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->odv->sub_proyecto->name)) { echo $this->odv->sub_proyecto->name; } ?>
+			<?php if (isset($this->odv->subproject->name)) { echo $this->odv->subproject->name; } ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -80,7 +80,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_MONEDA'); ?>
 		</div>
 		<div class="span4">
-			<?php echo isset($this->odv->currency)?$this->odv->currency:'MXN'; ?>
+			<?php echo isset($this->odv->currency) ? $this->odv->currency : 'MXN'; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
@@ -99,7 +99,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 		</div>
 		<div class="span10">
-			<?php echo $this->odv->proveedor->frontName; ?>
+			<?php echo $this->odv->getReceptor()->getDisplayName(); ?>
 		</div>
 	</div>
 	<div>
@@ -123,7 +123,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->proveedor->phone; ?>
+			<?php echo $this->odv->getReceptor()->getIntegradoPhone(); ?>
 		</div>
 	</div>
 	<div class="clearfix">
@@ -131,7 +131,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_CORREO'); ?>
 		</div>
 		<div class="span4">
-
+			<?php echo $this->odv->getReceptor()->getIntegradoEmail(); ?>
 		</div>
 	</div>
 	<h3><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h3>
@@ -148,7 +148,7 @@ $number2word = new AifLibNumber();
 		</thead>
 		<tbody>
 		<?php
-		foreach (json_decode($this->odv->productos)as $key => $prod) :
+		foreach ($this->odv->productosData as $key => $prod) :
 			?>
 			<tr>
 				<td><?php echo $key+1; ?></td>
@@ -177,7 +177,7 @@ $number2word = new AifLibNumber();
 		?>
 		<tr>
 			<td colspan="4" rowspan="4">
-				<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odv->totalAmount, 2)); ?></span>
+				<?php echo JText::_('LBL_MONTO_LETRAS'); ?> <span><?php echo $number2word->toCurrency('$'.number_format($this->odv->getTotalAmount(), 2)); ?></span>
 			</td>
 			<td class="span2">
 				<?php echo JText::_('LBL_SUBTOTAL'); ?>
@@ -207,7 +207,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_TOTAL'); ?>
 			</td>
 			<td><div class="text-right">
-					$<?php echo number_format($this->odv->totalAmount, 2); ?>
+					$<?php echo number_format($this->odv->getTotalAmount(), 2); ?>
 				</div></td>
 		</tr>
 		</tbody>

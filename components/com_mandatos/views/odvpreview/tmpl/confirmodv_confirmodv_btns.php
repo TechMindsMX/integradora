@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&task=cancelOdv&idOrden='.$this->odv->id);
+$returnUrl = JRoute::_('index.php?option=com_mandatos&view=odvlist&task=cancelOdv&idOrden='.$this->odv->getId());
 ?>
 
 <legend class="container botones clearfix form-actions">

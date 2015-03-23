@@ -1,11 +1,12 @@
 <?php
+use Integralib\OdVenta;
+use Integralib\Project;
+
 defined('_JEXEC') or die('Restricted Access');
-
-
 
 class MandatosModelOdvpreview extends JModelItem {
 
-	public $odv;
+	protected $odv;
 
 	public function __construct(){
 		$this->inputVars 		 = JFactory::getApplication()->input->getArray(array('idOrden'=>'INT'));
@@ -19,8 +20,12 @@ class MandatosModelOdvpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odv)) {
-			$odv = getFromTimOne::getOrdenesVenta($this->integradoId, $this->inputVars['idOrden']);
-			$this->odv = $odv[0];
+			$odv = new OdVenta();
+			$odv->setOrderFromId($this->inputVars['idOrden']);
+			$odv->project = new Project($odv->projectId);
+			$odv->subproject = new Project($odv->projectId2);
+
+			$this->odv = $odv;
 		}
 
 		// Verifica si la ODV exite para el integrado o redirecciona

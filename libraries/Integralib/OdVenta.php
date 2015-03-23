@@ -32,13 +32,6 @@ class OdVenta extends Order {
 	}
 
 	/**
-	 * @return object IntegradoSimple
- */
-	public function getReceptor() {
-		return $this->receptor;
-	}
-
-	/**
 	 * Set totalAmount in Order
 	 */
 	public function calculateTotalAmount() {
