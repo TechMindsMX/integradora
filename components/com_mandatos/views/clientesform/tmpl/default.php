@@ -92,7 +92,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 		    changeYear: true
 	    });
 	    jQuery('.instrumento').datepicker({
-		    yearRange: "1850:0",
+		    yearRange: "1850:<?php echo date('Y');?>",
 		    minDate: new Date(1850,1,1),
 		    maxDate: "-1d",
 		    changeMonth: true,
