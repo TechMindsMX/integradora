@@ -99,10 +99,10 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	}
 
     /**
-     * @param $factObj
+     * @param $objOdv
      * @return array
      */
-    public function sendEmail($factObj)
+    public function sendEmail($objOdv)
     {
         /*
          *  NOTIFICACIONES 7
@@ -110,9 +110,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         $info = array();
 
         $getCurrUser     = new IntegradoSimple($this->integradoId);
-        $titleArray      = array( $factObj->numOrden);
+        $titleArray      = array( $objOdv->numOrden);
 
-        $array           = array($getCurrUser->user->name, $factObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $factObj->totalAmount, $factObj->integradoName,  $factObj->numOrden);
+        $array           = array($getCurrUser->user->name, $objOdv->numOrden, JFactory::getUser()->username, date('d-m-Y'), $objOdv->getTotalAmount(), $objOdv->getEmisor()->getDisplayName(),  $objOdv->numOrden);
         $send            = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
@@ -122,8 +122,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
          * Notificaciones 8
          */
 
-        $titleArrayAdmin = array( $getCurrUser->user->username, $factObj->numOrden );
-        $arrayAdmin      = array( $getCurrUser->user->username, $factObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $factObj->totalAmount, $factObj->integradoName,  $factObj->numOrden );
+        $titleArrayAdmin = array( $getCurrUser->user->username, $objOdv->numOrden );
+        $arrayAdmin      = $array;
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('8', $arrayAdmin, $titleArrayAdmin);
@@ -163,7 +163,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	private function createOpposingODC($odv) {
 
 		$odvObj = new \Integralib\OdVenta();
-		$odvObj->setOrderFromId($odv->id);
+		$odvObj->setOrderFromId($odv->getId());
 
 		if($odvObj->getReceptor()->isIntegrado()) {
 
@@ -192,7 +192,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 				$db->insertObject('#__ordenes_compra', $odc);
 
 				$relation = new stdClass();
-				$relation->id_odv = $odv->id;
+				$relation->id_odv = $odv->getId();
 				$relation->id_odc = $db->insertid();
 
 				$db->insertObject('#__ordenes_odv_odc_relation', $relation);
