@@ -20,6 +20,7 @@ class MandatosViewSolicitudliquidacion extends JViewLegacy {
 		$this->integrado    = $model->getIntegrado();
 		$this->operaciones  = $model->getOperaciones();
 		$this->saldo 		= $model->getSaldoOperaciones($this->operaciones);
+		$this->saldo->subtotalTotalOperaciones = $this->saldo->subtotalTotalOperaciones - $model->getBalanceTxsLiquidacion();
 
 		$this->loadHelper('Mandatos');
 

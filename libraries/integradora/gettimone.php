@@ -2551,10 +2551,6 @@ class sendToTimOne {
         return $returnObj;
     }
 
-    public function sendSolicitudLiquidacionTIMONE($monto, $integradoId){
-        //TODO: metodo en el que se va a enviar los datos a TIMONE para que registre la transacción y no debería regresar el id de esta.
-    }
-
     public function generarFacturaComisiones($dataFactura){
         // TODO: crear las facturas de comisiones
     }

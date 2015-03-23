@@ -16,7 +16,7 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 
 $operaciones = $this->operaciones;
 $saldo = $this->saldo;
-$saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperaciones:$nuevoSaldo;
+$saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOperaciones : $nuevoSaldo;
 
 ?>
 <script>
@@ -53,7 +53,7 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
                 jQuery('#montoText').hide().text('');
                 jQuery('#monto').val('').prop('type','text');
 
-                jQuery('#liquidar').remove()
+                jQuery('#liquidar').remove();
                 jQuery('#botonSalvado').html('<button type="button" class="btn btn-primary span3" id="confirmar">Confirmar</button>');
                 jQuery('#confirmar').on('click', confirmar)
             }
@@ -72,10 +72,11 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
 
         boton.remove();
 
-        spanBoton.html('<button type="button" class="btn btn-primary span3" id="liquidar">Enviar</button>');
+        spanBoton.html('<button type="button" class="btn btn-success span3" id="liquidar">Enviar</button>');
         campoMonto.prop('type','hidden');
         campoMontoText.text(campoMonto.val()).show();
 
+	    jQuery('#clear_form').remove();
         jQuery('#liquidar').on('click',liquidar);
     }
 
@@ -128,7 +129,7 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo==0?$saldo->subtotalTotalOperacion
         ?>
         <tr class="row">
             <td><?php echo $value->numOrden; ?></td>
-            <td><?php echo $value->beneficiary->corporateName; ?></td>
+            <td><?php echo isset($value->beneficiary->corporateName) ? $value->beneficiary->corporateName : $value->beneficiary->tradeName; ?></td>
             <td>$<?php echo number_format($value->subTotalAmount,2); ?></td>
             <td>$<?php echo number_format(($value->iva+$value->ieps),2); ?></td>
             <td>$<?php echo number_format($value->totalAmount,2); ?></td>
