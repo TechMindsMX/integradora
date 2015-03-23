@@ -361,7 +361,7 @@ INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE', `published` = 0
 --rollback UPDATE `flpmu_modules` SET `published`='1' WHERE `id`='101';
 --rollback DROP TABLE `flpmu_catalog_payment_methods`;
 
---changeset ricardolyon:43
+--changeset ricardolyon:44
 CREATE TABLE `flpmu_txs_liquidacion_saldo` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `amount` FLOAT NOT NULL,
