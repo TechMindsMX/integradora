@@ -375,6 +375,34 @@ class Integrado {
 
 		return in_array($integrado_id, $integrados);
 	}
+
+	public static function getActiveIntegrados() {
+			$db		= JFactory::getDbo();
+			$query 	= $db->getQuery(true);
+
+			$query->select('*')
+			      ->from($db->quoteName('#__integrado_users'))
+			      ->where($db->quoteName('integrado_principal').' = 1');
+
+			try {
+				$db->setQuery($query);
+				$results = $db->loadObjectList();
+			}catch (Exception $e){
+				$results = $e;
+				exit;
+			}
+
+			foreach ($results as $value) {
+				$integrado = new IntegradoSimple($value->integrado_id);
+				$integrado->integrados[0]->displayName = $integrado->getDisplayName();
+
+				if ($integrado->isActive()) {
+					$integradosArray[] = $integrado->integrados[0];
+				}
+			}
+
+			return $integradosArray;
+	}
 }
 
 /**
@@ -531,6 +559,23 @@ class IntegradoSimple extends Integrado {
 
 	public function getIntegradoPhone() {
 		return $this->integrados[0]->datos_personales->tel_fijo;
+	}
+
+	public function isActive() {
+		$cat = new Catalogos();
+		$statusCatalog = $cat->getStatusSolicitud();
+
+		foreach ( $statusCatalog as $k => $v ) {
+			$response[] = strtolower($v->status_name) == 'integrado' && $v->status == $this->getStatus();
+		}
+
+		$result = array_sum($response);
+
+		return $result === 1;
+	}
+
+	private function getStatus() {
+		return (int)$this->integrados[0]->integrado->status;
 	}
 }
 
