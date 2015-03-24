@@ -35,4 +35,6 @@ $facturas = $this->facturas;
         ?>
         </tbody>
     </table>
+
+    <a href="index.php?option=com_adminintegradora" class="btn btn-primary">Regresar</a>
 </div>
