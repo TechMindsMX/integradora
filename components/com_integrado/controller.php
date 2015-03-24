@@ -183,7 +183,9 @@ class IntegradoController extends JControllerLegacy {
 
     function uploadFiles(){
 
-        sendToTimOne::uploadFiles();
+        $saveFiles = sendToTimOne::uploadFiles();
+
+	    $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'message') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
 
         if($this->integradoId ==''){
             $url = 'index.php?option=com_integrado&view=solicitud';
@@ -191,7 +193,9 @@ class IntegradoController extends JControllerLegacy {
             $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId;
         }
 
-        JFactory::getApplication()->redirect($url, false);
+	    $app = JFactory::getApplication();
+	    $app->enqueueMessage($msg['mag'], $msg['type']);
+        $app->redirect($url, false);
 
     }
     //Recibe el post y lo envia a procesar y guardar
