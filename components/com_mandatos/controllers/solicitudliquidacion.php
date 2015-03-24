@@ -34,16 +34,9 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
 
 		$nuevoSaldo = $this->getBalance();
 		$sesion->set('nuevoSaldo',$nuevoSaldo, 'solicitudliquidacion');
-		$idTx = $sesion->get('idTx', null, 'solicitudliquidacion');
 		$sesion->clear('idTx', null, 'solicitudliquidacion');
 
-		$respuesta = array();
-		$respuesta['success']        = true;
-		$respuesta['nuevoSaldo']     = (FLOAT) $nuevoSaldo;
-		$respuesta['nuevoSaldoText'] = number_format($nuevoSaldo,2);
-		$respuesta['idTx']           = (INT) $idTx;
-
-//        $this->sendEmail($respuesta, $data);
+        $this->sendEmail($txAmount);
 
 		$app->enqueueMessage(JText::_('LBL_LIQUIDACION_SALDO_SUCCESSFUL'));
 		$sesion->clear('', 'solicitudliquidacion');
@@ -51,15 +44,15 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
 
 	}
 
-    public function sendEmail($respuesta, $data)
+    public function sendEmail($data)
     {
         $getIntegrado = new IntegradoSimple($this->integradoId);
 
-        $array = array($getIntegrado->user->username, $respuesta['nuevoSaldo'], $getIntegrado->user->username, date('d-m-Y'));
+        $array = array($getIntegrado->user->username, $data, $getIntegrado->user->username, date('d-m-Y'));
 
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegrado);
-        $send->sendNotifications('9', $array);
+        $send->sendNotifications('10', $array);
     }
 
 	private function getBalance() {
