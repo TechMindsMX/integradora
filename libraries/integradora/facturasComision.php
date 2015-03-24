@@ -8,6 +8,8 @@
  * @property mixed integradoId
  */
 
+use Integralib\OdVenta;
+
 jimport('joomla.user.user');
 jimport('joomla.factory');
 jimport('integradora.catalogos');
@@ -15,33 +17,29 @@ jimport('integradora.rutas');
 jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 
-class facturasComision {
+class facturasComision extends OdVenta{
 
     public function getFacturaComision($integradoId){
-        $integrados = new Integrado();
         $save = new sendToTimOne();
 
-        $datosFacturaComision = new stdClass();
-
-        $datosFacturaComision->integradoId = 1;
-        $datosFacturaComision->clientId = 4;
+        $datosFacturaComision = new OdVenta();
+        $datosFacturaComision->emisor = new IntegradoSimple(1);
+        $datosFacturaComision->receptor = new IntegradoSimple($integradoId);
         $datosFacturaComision->paymentMethod = $this->getpaymentMethod();
         $datosFacturaComision->conditions = 1;
         $datosFacturaComision->placeIssue = $this->getplaceIssue();
         $datosFacturaComision->urlXML = null;
         $datosFacturaComision->status = 0;
         $datosFacturaComision->productosData = $this->getProductosFact($integradoId);
-        $datosFacturaComision->proveedor = $this->getProveedor();
+        $datosFacturaComision->iva = $this->getIvaComision($datosFacturaComision->productosData);
+        $datosFacturaComision->ieps = 0;
 
         $factObj = $save->generaObjetoFactura( $datosFacturaComision );
 
-        /*if ( $factObj != false ) {
+        if ( $factObj != false ) {
             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
+        }
 
-            var_dump($xmlFactura);
-        }*/
-var_dump($factObj);
-        exit;
         return $xmlFactura;
     }
 
@@ -77,7 +75,7 @@ var_dump($factObj);
     public function getpaymentMethod(){
         $paymentMethodObj = new stdClass();
 
-        $paymentMethodObj->id   = '3';
+        $paymentMethodObj->id   = '1';
         $paymentMethodObj->name = 'Transferencia Interbancaria';
 
         return $paymentMethodObj;
@@ -95,15 +93,29 @@ var_dump($factObj);
 
 //Obtiene todas las txs de comision y se ordenan como productos para generar la factura
     public function getProductosFact($integradoId){
-        $productos = getFromTimOne::selectDB('txs_timone_mandato','idIntegrado = '.$integradoId);
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
 
+        $query->select('*')
+            ->from('#__txs_mandatos AS txm')
+            ->join('LEFT','#__txs_timone_mandato AS txtm on txtm.id = txm.id')
+            ->where('txm.orderType = "CCom"');
+
+        try{
+            $db->setQuery($query);
+            $productos = $db->loadObjectList();
+        }catch (Exception $e){
+            $productos = array();
+        }
 
         foreach ($productos as $key => $value) {
+
             $producto = new stdClass();
             $detalle = getFromTimOne::getTxDataByTxId($value->idTx);
+            $detalle = json_decode($detalle->data);
 
             $producto->name = 'Comision Orden de compra';
-            $producto->descripcion = 'Comision por la '.$value->tipoOrden.' numero '.$key.' en la Fecha '.date('d-m-Y',$detalle->date);
+            $producto->descripcion = 'Comision en la Fecha '.date('d-m-Y',$value->date);
             $producto->cantidad = '1' ;
             $producto->unidad = 'no Aplica';
             $producto->p_unitario = $detalle->amount;
@@ -114,5 +126,21 @@ var_dump($factObj);
         }
 
         return $respuesta;
+    }
+
+    private function getIvaComision($productos){
+        $totalAmount = 0;
+        $totalIva    = 0;
+        $totalIeps   = 0;
+
+        foreach ($productos as $producto) {
+            $iva          = (INT) $producto->iva;
+            $subTotalProd = ($producto->p_unitario*$producto->cantidad);
+
+            $totalAmount = $totalAmount + $subTotalProd;
+            $totalIva = $totalIva + ($subTotalProd/$iva);
+        }
+
+        return $totalIva;
     }
 }
