@@ -7,9 +7,6 @@ class AdminintegradoraViewFactcomisioneslist extends JViewLegacy {
 
     public function display($tpl = null) {
         $this->facturas = $this->get('Facturas');
-        $this->usuarios = $this->get('UserIntegrado');
-
-        $this->comision = $this->get('Comision');
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));

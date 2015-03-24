@@ -10,21 +10,24 @@ $facturas = $this->facturas;
         <tr>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_FACT'); ?></span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
-            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BENEFICIARIO'); ?> </span> </th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_RECEPTOR'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
+            <th style="text-align: center; vertical-align: middle;" ></th>
         </tr>
         </thead>
         <tbody>
         <?php
         if( !is_null($facturas) ){
-            foreach ($facturas as $key => $value) {
-
-                echo '<tr class="client_'.$value->receptor.'">';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$value->id.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->created.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->userName.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->totalAmount,2).'</td>';
-                echo '</tr>';
+            foreach($facturas as $factura){
+            ?>
+                <tr>
+                    <td><?php echo $factura->id; ?></td>
+                    <td><?php echo date('d-m-Y',$factura->createdDate); ?></td>
+                    <td><?php echo $factura->detalleFact->receptor['attrs']['NOMBRE']; ?></td>
+                    <td>$<?php echo number_format($factura->detalleFact->comprobante['TOTAL'],2); ?></td>
+                    <td><a class="btn btn-primary" target="_blank" href="../<?php echo $factura->urlXML; ?>"><?php echo JText::_('COM_ADMININTEGRADORA_ABRIR_FACTURA'); ?></a> </td>
+                </tr>
+            <?php
             }
         }else{
             JFactory::getApplication()->enqueueMessage(JText::_('MSG_NO_PRODUCTS'));

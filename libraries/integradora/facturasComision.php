@@ -18,13 +18,8 @@ jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 
 class facturasComision extends OdVenta{
-    private $db;
-
-    public function __construct(){
-        $this->db = JFactory::getDbo();
-    }
-
     public function generateFact($integradoId){
+        $db                   = JFactory::getDbo();
         $save                 = new sendToTimOne();
         $respuesta            = false;
         $datosFacturaComision = new OdVenta();
@@ -52,16 +47,16 @@ class facturasComision extends OdVenta{
             $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
             $factComDB->createdDate = $fecha->getTimestamp();
 
-            $this->db->transactionStart();
+            $db->transactionStart();
 
             try{
-                $this->db->insertObject('#__facturas_comisiones',$factComDB);
+                $db->insertObject('#__facturas_comisiones',$factComDB);
 
                 $respuesta = true;
 
-                $this->db->transactionCommit();
+                $db->transactionCommit();
             }catch (Exception $e){
-                $this->db->transactionRollback();
+                $db->transactionRollback();
             }
         }
 
@@ -139,7 +134,16 @@ class facturasComision extends OdVenta{
         return $totalIva;
     }
 
-    private function getFactComision(){
+    public function getFactComision(){
+        $allFacturas = getFromTimOne::selectDB('facturas_comisiones');
 
+        foreach ($allFacturas as $factura) {
+            $parseXML = new xml2Array();
+            $xml = file_get_contents('../'.$factura->urlXML);
+            $xmlParsed = $parseXML->manejaXML($xml);
+
+            $factura->detalleFact = $xmlParsed;
+        }
+        return $allFacturas;
     }
 }
