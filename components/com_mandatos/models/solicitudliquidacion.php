@@ -62,5 +62,12 @@ class MandatosModelSolicitudliquidacion extends JModelItem
 
 		return $txs;
 	}
+
+	public function balanceLiquidable( ){
+
+		$saldo = $this->getSaldoOperaciones($this->getOperaciones());
+
+		return $saldo->subtotalTotalOperaciones - $this->getBalanceTxsLiquidacion();
+	}
 }
 

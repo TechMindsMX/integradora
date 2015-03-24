@@ -5,8 +5,7 @@ jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
 
 JHtml::_('behavior.keepalive');
-JHtml::_('behavior.formvalidation');
-JHTML::_('behavior.calendar');
+
 $sesion = JFactory::getSession();
 $nuevoSaldo = $sesion->set('nuevoSaldo',0, 'solicitudliquidacion');
 $sesion->clear('nuevoSaldo','solicitudliquidacion');
@@ -20,24 +19,12 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOpera
 
 ?>
 <script>
-    function validaMonto() {
-        var campo = jQuery(this);
-        var monto = campo.val();
-        var saldo = jQuery('#saldoLiquidacion').val();
 
-        if(parseFloat(monto) > parseFloat(saldo)){
-            mensajes('<?php echo JText::_('MENSSAGE_ERROR_MONTO_VS_SALDO') ?>','error',campo.prop('id'));
-            jQuery('#liquidar').prop('disabled', true);
-        }else{
-            jQuery('#liquidar').prop('disabled', false);
-        }
-    }
-
-    function liquidar() {
+    function validate() {
         var data = jQuery('#form_solicitudLiquidacion').serialize();
 
         var request = jQuery.ajax({
-            url: "index.php?option=com_mandatos&task=solicitudliquidacion.saveform&format=raw",
+            url: "index.php?option=com_mandatos&task=solicitudliquidacion.validateform&format=raw",
             data: data,
             type: 'post',
             async: false
@@ -47,15 +34,19 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOpera
             mensajesValidaciones(result);
 
             if(result.success){
-                jQuery('#saldoNuevo').text(result.nuevoSaldoText);
-                jQuery('#saldoLiquidacion').val(result.nuevoSaldo);
+	            var boton          = jQuery(this);
+	            var campoMonto     = jQuery('#monto');
+	            var campoMontoText = jQuery('#montoText');
+	            var spanBoton      = jQuery('#botonSalvado');
 
-                jQuery('#montoText').hide().text('');
-                jQuery('#monto').val('').prop('type','text');
+	            boton.remove();
 
-                jQuery('#liquidar').remove();
-                jQuery('#botonSalvado').html('<button type="button" class="btn btn-primary span3" id="confirmar">Confirmar</button>');
-                jQuery('#confirmar').on('click', confirmar)
+	            spanBoton.html('<button type="button" class="btn btn-success span3" id="liquidar">Enviar</button>');
+	            campoMonto.prop('type','hidden');
+	            campoMontoText.text('$'+campoMonto.val()).show();
+
+	            jQuery('#clear_form').remove();
+	            jQuery('#liquidar').on('click',liquidar);
             }
         });
 
@@ -64,31 +55,24 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOpera
         });
     }
 
-    function confirmar() {
-        var boton          = jQuery(this);
-        var campoMonto     = jQuery('#monto');
-        var campoMontoText = jQuery('#montoText');
-        var spanBoton      = jQuery('#botonSalvado');
-
-        boton.remove();
-
-        spanBoton.html('<button type="button" class="btn btn-success span3" id="liquidar">Enviar</button>');
-        campoMonto.prop('type','hidden');
-        campoMontoText.text(campoMonto.val()).show();
-
-	    jQuery('#clear_form').remove();
-        jQuery('#liquidar').on('click',liquidar);
+    function liquidar() {
+	    var $form = jQuery('#form_solicitudLiquidacion');
+		$form.prop( 'action', 'index.php?option=com_mandatos&task=solicitudliquidacion.saveform');
+	    $form.prop( 'method', 'post');
+		$form.submit();
     }
 
     function cancel() {
         window.location = 'index.php?option=com_mandatos';
     }
+
     jQuery(document).ready(function(){
-        jQuery('#monto').on('change', validaMonto);
-        jQuery('#confirmar').on('click', confirmar);
+        jQuery('#confirmar').on('click', validate);
         jQuery('#cancel_form').on('click', cancel);
     });
+
 </script>
+
 <h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></h1>
 <form id="form_solicitudLiquidacion">
     <div>
@@ -98,10 +82,10 @@ $saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOpera
         <input type="hidden" id="integradoId"      class="integradoId"      name="integradoId" value="<?php echo $this->integradoId; ?>" />
     </div>
 
-    <div>
-        <label for="monto"><?php echo JText::_('COM_MANDATOS_LBL_MONTO_SL'); ?></label>
-        <input type="text" name="monto" id="monto" />
-        <span id="montoText" style="display: none;"></span>
+    <div class="form-group">
+        <label for="monto" class="form-control"><?php echo JText::_('COM_MANDATOS_LBL_MONTO_SL'); ?></label>
+	    <h3 id="montoText" style="display: none;"></h3>
+	    <input type="text" name="monto" id="monto" />
     </div>
 
     <div class="form-actions" style="max-width: 30%">

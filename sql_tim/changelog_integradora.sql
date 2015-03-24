@@ -365,7 +365,7 @@ INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE', `published` = 0
 CREATE TABLE `flpmu_txs_liquidacion_saldo` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `amount` FLOAT NOT NULL,
-  `integradoId` INT(11),
+  `integradoId` INT(11) NOT NULL,
   `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --rollback DROP TABLE `flpmu_txs_liquidacion_saldo`;
