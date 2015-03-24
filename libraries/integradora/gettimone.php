@@ -2555,9 +2555,9 @@ class sendToTimOne {
         // TODO: crear las facturas de comisiones
     }
 
-    public function generaObjetoFactura( $newOrden ) {
+    public function generaObjetoFactura( $newOrden, $timbra = true ) {
 
-        $data = new Factura( $newOrden );
+        $data = new Factura( $newOrden , $timbra);
 
         //TODO: qutar el mock cuando sea produccion
         if( ENVIROMENT_NAME == 'sandbox') {

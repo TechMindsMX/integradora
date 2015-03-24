@@ -560,12 +560,13 @@ class MandatosController extends JControllerLegacy {
         echo json_encode($response);
     }
 
-    public function getFacturasCom(){
-        $integradoId = $this->integradoId;
+    public function generateFactComision(){
+        $integradoId = JFactory::getApplication()->input->get('integradoId',null,'INT');
 
         $factura = new facturasComision();
 
-        $test = $factura->getFacturaComision($integradoId);
+        $test = $factura->generateFact($integradoId);
+
         exit;
     }
 

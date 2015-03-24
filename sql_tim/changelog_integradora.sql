@@ -369,3 +369,7 @@ CREATE TABLE `flpmu_txs_liquidacion_saldo` (
   `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --rollback DROP TABLE `flpmu_txs_liquidacion_saldo`;
+
+--changeset lutek:45
+ALTER TABLE `flpmu_facturas_comisiones` ADD COLUMN createdDate BIGINT;
+--rollback ALTER TABLE `flpmu_facturas_comisiones` DROP COLUMN createdDate ;

@@ -18,58 +18,54 @@ jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 
 class facturasComision extends OdVenta{
+    private $db;
 
-    public function getFacturaComision($integradoId){
-        $save = new sendToTimOne();
+    public function __construct(){
+        $this->db = JFactory::getDbo();
+    }
 
+    public function generateFact($integradoId){
+        $save                 = new sendToTimOne();
+        $respuesta            = false;
         $datosFacturaComision = new OdVenta();
-        $datosFacturaComision->emisor = new IntegradoSimple(1);
-        $datosFacturaComision->receptor = new IntegradoSimple($integradoId);
-        $datosFacturaComision->paymentMethod = $this->getpaymentMethod();
-        $datosFacturaComision->conditions = 1;
-        $datosFacturaComision->placeIssue = $this->getplaceIssue();
-        $datosFacturaComision->urlXML = null;
-        $datosFacturaComision->status = 0;
-        $datosFacturaComision->productosData = $this->getProductosFact($integradoId);
-        $datosFacturaComision->iva = $this->getIvaComision($datosFacturaComision->productosData);
-        $datosFacturaComision->ieps = 0;
+
+        $datosFacturaComision->emisor         = new IntegradoSimple(1);
+        $datosFacturaComision->receptor       = new IntegradoSimple($integradoId);
+        $datosFacturaComision->conditions     = 1;
+        $datosFacturaComision->urlXML         = null;
+        $datosFacturaComision->status         = 0;
+        $datosFacturaComision->ieps           = 0;
+        $datosFacturaComision->paymentMethod  = $this->getpaymentMethod();
+        $datosFacturaComision->placeIssue     = $this->getplaceIssue();
+        $datosFacturaComision->productosData  = $this->getProductsFromTxComision($integradoId);
+        $datosFacturaComision->iva            = $this->getIvaComision($datosFacturaComision->productosData);
 
         $factObj = $save->generaObjetoFactura( $datosFacturaComision );
 
         if ( $factObj != false ) {
+            $fecha      = new DateTime();
             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
+            $factComDB  = new stdClass();
+
+            $factComDB->integradoId = $integradoId;
+            $factComDB->status      = 0;
+            $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
+            $factComDB->createdDate = $fecha->getTimestamp();
+
+            $this->db->transactionStart();
+
+            try{
+                $this->db->insertObject('#__facturas_comisiones',$factComDB);
+
+                $respuesta = true;
+
+                $this->db->transactionCommit();
+            }catch (Exception $e){
+                $this->db->transactionRollback();
+            }
         }
 
-        return $xmlFactura;
-    }
-
-    public function getProveedor(){
-        $objProveedor = new stdClass();
-        $objProveedor->id = 4;
-        $objProveedor->type = 0;
-        $objProveedor->integrado_id = 1;
-        $objProveedor->status = 0;
-        $objProveedor->rfc = 'LUT031214C01';
-        $objProveedor->tradeName = 'CLiente 1';
-        $objProveedor->corporateName = 'Cliente 1 S.A. de C.V.';
-        $objProveedor->contact = 'Luis Enrique Magaña Manzano';
-        $objProveedor->phone = '1111111111';
-
-        $bancos = array();
-        $bancoObj = new stdClass();
-        $bancoObj->datosBan_id      = '5';
-        $bancoObj->integrado_id     = '7';
-        $bancoObj->banco_codigo     = '002';
-        $bancoObj->banco_cuenta     = '4977002575';
-        $bancoObj->banco_sucursal   = '497';
-        $bancoObj->banco_clabe      = '002180497700257529';
-        $bancoObj->banco_file       = 'media/archivosJoomla/7_db_banco_file.jpg';
-        $bancoObj->banco_cuenta_xxx = 'XXXXXX2575';
-        $bancoObj->banco_clabe_xxx  = 'XXXXXXXXXXXXXX7529';
-        $bancos[] = $bancoObj;
-        $objProveedor->bancos = $bancos;
-
-        return $objProveedor;
+        return $respuesta;
     }
 
     public function getpaymentMethod(){
@@ -91,15 +87,14 @@ class facturasComision extends OdVenta{
         return $placeIssure;
     }
 
-//Obtiene todas las txs de comision y se ordenan como productos para generar la factura
-    public function getProductosFact($integradoId){
+    public function getProductsFromTxComision($integradoId){
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query->select('*')
             ->from('#__txs_mandatos AS txm')
             ->join('LEFT','#__txs_timone_mandato AS txtm on txtm.id = txm.id')
-            ->where('txm.orderType = "CCom"');
+            ->where('txm.orderType = "CCom" AND txtm.idIntegrado = '.$integradoId);
 
         try{
             $db->setQuery($query);
@@ -142,5 +137,9 @@ class facturasComision extends OdVenta{
         }
 
         return $totalIva;
+    }
+
+    private function getFactComision(){
+
     }
 }
