@@ -13,6 +13,7 @@ $user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $optionBancos = '';
 
+$document = JFactory::getDocument();
 $document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
 $document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
 $document->addStyleSheet('//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css');
