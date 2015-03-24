@@ -15,7 +15,6 @@ echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 
 $operaciones = $this->operaciones;
 $saldo = $this->saldo;
-$saldo->subtotalTotalOperaciones = $nuevoSaldo == 0 ? $saldo->subtotalTotalOperaciones : $nuevoSaldo;
 
 ?>
 <script>

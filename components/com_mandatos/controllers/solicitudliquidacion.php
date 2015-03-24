@@ -46,6 +46,7 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
 //        $this->sendEmail($respuesta, $data);
 
 		$app->enqueueMessage(JText::_('LBL_LIQUIDACION_SALDO_SUCCESSFUL'));
+		$sesion->clear('', 'solicitudliquidacion');
 		$app->redirect('index.php?option=com_mandatos');
 
 	}
