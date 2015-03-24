@@ -12,7 +12,6 @@ $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
-echo '<script src="../libraries/integradora/js/file_validation.js"> </script>';
 ?>
 
     <script>
