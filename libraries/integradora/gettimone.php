@@ -3893,7 +3893,7 @@ class makeTx {
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
-        JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
+        JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
         return $this->resultado->code == 200;
     }

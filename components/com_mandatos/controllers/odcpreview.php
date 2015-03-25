@@ -91,7 +91,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                         if($statusChange) {
                             $save->deleteDB('auth_odc', 'idOrden = ' . $this->parametros['idOrden']);
-                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
                         }
                     }
                 }
@@ -99,7 +99,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->sendEmail();
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             } else {
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
@@ -134,9 +134,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function realizaTx(){
         $orden = $this->getOrden();
 
-        $proveedor = new IntegradoSimple($orden->proveedor->id);
+        $proveedor = new IntegradoSimple($orden->proveedor->integrado->integrado_id);
 
-        if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
+        if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount);
             $txDone = $txData->sendCreateTx();
         }else{
