@@ -3851,11 +3851,11 @@ class transferFunds extends makeTx {
     protected $objEnvio;
 
     function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
-        $this->orden    = $orden;
+	    $this->orden    = $orden;
 
-        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
-        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
-        $this->objEnvio->amount           = (float)$totalAmount;
+	    $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
+	    $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+	    $this->objEnvio->amount           = (float)$totalAmount;
     }
 
     public function sendCreateTx()

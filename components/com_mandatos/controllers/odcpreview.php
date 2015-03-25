@@ -139,7 +139,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 	    JLog::add($proveedor->isIntegrado(), JLog::ERROR);
 
         if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount);
+            $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
             $txDone = $txData->sendCreateTx();
         }else{
             $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor->id,$orden->totalAmount, array('accountId' => $orden->bankId));
