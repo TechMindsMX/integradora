@@ -50,9 +50,9 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
             $id_tx_banco = $db->insertid();
             $txTimone    = $this->makeTxTimone();
-             $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
+            $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
 
-            if ( is_numeric($txTimone) ) {
+            if ( $txTimone->code == 200 ) {
                 $this->makeTransferIntegradoraIntegrado( $dataObj );
             }
 
