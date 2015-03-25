@@ -59,7 +59,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             if ($check) {
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
-            $resultado = $save->insertDB('auth_odc');
+//            $resultado = $save->insertDB('auth_odc');
+$resultado = true;
 
             if ($resultado) {
                 $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
@@ -67,7 +68,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
 
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+//                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+                $statusChange = true;;
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();

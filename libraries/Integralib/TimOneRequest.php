@@ -10,10 +10,9 @@ namespace Integralib;
 
 use JFactory;
 use JLog;
-use sendToTimOne;
 use servicesRoute;
 
-class TimOneRequest {
+class TimOneRequest implements TimOneRequestInterface {
 	public $resultado;
 	protected $integradoId;
 	protected $objEnvio;
@@ -23,14 +22,17 @@ class TimOneRequest {
 	}
 
 	/**
-	 * @param $txUUID
+	 * @param \urlAndType $datosEnvio
+	 * @param $objEnvio
 	 *
 	 * @return mixed
+	 * @internal param $txUUID
+	 *
 	 */
-	protected function makeRequest($datosEnvio){
+	public function makeRequest(\urlAndType $datosEnvio, $objEnvio){
 		unset($this->options);
 
-		$request = new sendToTimOne();
+		$request = new TimOneCurl();
 		$request->setServiceUrl($datosEnvio->url);
 		$request->setJsonData(json_encode($this->objEnvio));
 		$request->setHttpType($datosEnvio->type);
@@ -43,7 +45,7 @@ class TimOneRequest {
 		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
 		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
-		return $this->resultado->code == 200;
+		return $this->resultado;
 	}
 
 	public function getTxDetails($txUUID) {
@@ -55,7 +57,7 @@ class TimOneRequest {
 		$jsonData = '';
 		$httpType = $params->type;
 
-		$request = new sendToTimOne();
+		$request = new TimOneCurl();
 
 		$request->setServiceUrl($serviceUrl);
 		$request->setJsonData($jsonData);
@@ -72,7 +74,7 @@ class TimOneRequest {
 		$this->objEnvio->rfcContribuyente = $emisorRfc;
 		$this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
 
-		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'), $this->objEnvio);
 	}
 
 	public function sendCashInTx($uuidReceptor, $amount) {
@@ -80,9 +82,9 @@ class TimOneRequest {
 		$this->objEnvio->uuid = $uuidReceptor;
 		$this->objEnvio->amount = $amount;
 
-		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
-
-		return $this->resultado;
+		return $this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
 	}
+
+
 
 }

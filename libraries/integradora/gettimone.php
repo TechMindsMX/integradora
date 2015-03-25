@@ -2289,159 +2289,6 @@ class sendToTimOne {
         return $return;
     }
 
-    /**
-     * @param mixed $serviceUrl
-     */
-    public function setServiceUrl ($serviceUrl) {
-        $this->serviceUrl = $serviceUrl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getServiceUrl () {
-        return $this->serviceUrl;
-    }
-
-    /**
-     * @param mixed $jsonData
-     */
-    public function setJsonData ($jsonData) {
-        $this->jsonData = $jsonData;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getJsonData () {
-        return $this->jsonData;
-    }
-
-    public function to_timone() {
-
-        $verboseflag = true;
-//		$credentials = array('username' => '' ,'password' => '');
-        $verbose = fopen(JFactory::getConfig()->get('log_path').'/curl-'.date('d-m-y').'.log', 'a+');
-        $ch = curl_init();
-
-        switch($this->getHttpType()) {
-            case ('POST'):
-                $options = array(
-                    CURLOPT_POST 		    => true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_POSTFIELDS     => $this->jsonData,
-                    CURLOPT_HEADER         => false,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json',
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            case ('PUT'):
-                $options = array(
-                    CURLOPT_PUT 			=> true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => true,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            case 'DELETE':
-                $options = array(
-                    CURLOPT_CUSTOMREQUEST => "DELETE",
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => true,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            default:
-                $options = array(
-                    CURLOPT_HTTPGET			=> true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => false,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json',
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-        }
-
-        curl_setopt_array($ch,$options);
-
-        if($verboseflag === true) {
-            $headers = curl_getinfo( $ch,
-                CURLINFO_HEADER_OUT );
-            $this->result->data = curl_exec($ch);
-
-            rewind( $verbose );
-            $verboseLog = stream_get_contents( $verbose );
-            //echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
-        }
-
-        $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
-        $this->result->info = curl_getinfo ($ch);
-        curl_close($ch);
-
-        JLog::add(json_encode($this), JLog::DEBUG);
-
-        switch ($this->result->code) {
-            case 200:
-                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
-                break;
-            case 401:
-                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
-                break;
-            default:
-                $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
-                break;
-        }
-
-        return $this->result;
-    }
-
-    public function setHttpType ($type) {
-        if(in_array($type, array('PUT', 'POST', 'GET', 'PATCH', 'DELETE'))) {
-            $this->httpType = $type;
-        } else {
-            return false;
-        }
-    }
-
-    public function getHttpType () {
-        return strtoupper($this->httpType);
-    }
 
     public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
@@ -2572,33 +2419,6 @@ class sendToTimOne {
         return $factura->sendCreateFactura(); // realiza el envio
     }
 
-    /**
-     * @param $data
-     *
-     * @return bool|string filename {uuid}.xml
-     */
-    public function saveXMLFile( $data ) {
-        $xmlpath = XML_FILES_PATH;
-
-        if( !$result = simplexml_load_string ($data, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE) ) {
-            throw new Exception('Error creando factura = '.$data);
-        }
-
-        $uuid = Factura::getXmlUUID($data);
-
-        $filename = $xmlpath.$uuid.'.xml';
-        $handle = fopen($filename, 'w');
-        $write = fwrite($handle, $data);
-        fclose($handle);
-
-        if($write) {
-            $return = $filename;
-        } else {
-            $return = false;
-        }
-
-        return $return;
-    }
 
     public function changeProductStatus( $data ) {
         $response = false;
@@ -3612,11 +3432,13 @@ class Factura extends makeTx {
      */
     public function sendCreateFactura()
     {
+	    $request = new TimOneRequest();
+
         $this->objEnvio = $this->setObjEnvio();
 
         $rutas = new servicesRoute();
 
-        $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
+        $result = ($rutas->getUrlService('facturacion', 'factura', 'create'));
 
         if ($result === true) {
             $result = $this->returnXML();
@@ -3648,6 +3470,33 @@ class Factura extends makeTx {
         return parent::create($rutas->getUrlService('facturacion', 'factura', 'cancel'));
     }
 
+	/**
+	 * @param $data
+	 *
+	 * @return bool|string filename {uuid}.xml
+	 */
+	public function saveXMLFile( $data ) {
+		$xmlpath = XML_FILES_PATH;
+
+		if( !$result = simplexml_load_string ($data, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE) ) {
+			throw new Exception('Error creando factura = '.$data);
+		}
+
+		$uuid = Factura::getXmlUUID($data);
+
+		$filename = $xmlpath.$uuid.'.xml';
+		$handle = fopen($filename, 'w');
+		$write = fwrite($handle, $data);
+		fclose($handle);
+
+		if($write) {
+			$return = $filename;
+		} else {
+			$return = false;
+		}
+
+		return $return;
+	}
 
 }
 
@@ -3847,7 +3696,7 @@ class Cashout extends makeTx{
     }
 }
 
-class transferFunds extends makeTx {
+class transferFunds implements \Integralib\TimOneRequestInterface {
     protected $objEnvio;
 
     function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
@@ -3860,15 +3709,21 @@ class transferFunds extends makeTx {
 
     public function sendCreateTx()
     {
-        $rutas = new servicesRoute();
-        $result = parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
+	    $result = $this->makeRequest($this->rutas->getUrlService('timone', 'transferFunds', 'create'), $this->objEnvio);
 
-        if ( $result === true ) {
+	    return $this->resultado->code == 200;
+
+
+	    if ( $result === true ) {
             $this->saveTxOrderRelationship();
         }
 
         return $result;
     }
+
+	public function makeRequest( $urlAndType, $objEnvio ) {
+
+	}
 
 }
 

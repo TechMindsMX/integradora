@@ -44,7 +44,7 @@ class facturasComision extends OdVenta{
 
             $factComDB->integradoId = $integradoId;
             $factComDB->status      = 0;
-            $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
+            $factComDB->urlXML      = $factObj->saveXMLFile($xmlFactura);
             $factComDB->createdDate = $fecha->getTimestamp();
 
             $db->transactionStart();
