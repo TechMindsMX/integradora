@@ -125,7 +125,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $transfer = new transferFunds( '', 1, $dataObj->integradoId, $dataObj->amount );
         $result = $transfer->sendCreateTx();
 
-        if($result->code != 200) {
+        if($result != 200) {
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');
         }
     }
