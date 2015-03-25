@@ -4034,7 +4034,12 @@ class OrdenFn {
         return $return;
     }
 
-    public function calculateBalance( $order ) {
+	public static function getRelatedOdvIdFromOdcId( $id_odc ) {
+		$result = getFromTimOne::selectDB('', 'id_odc = '.(INT)$id_odc);
+		return $result[0];
+	}
+
+	public function calculateBalance( $order ) {
         $this->order = $order;
 
         $this->order->sumOrderTxs = 0;

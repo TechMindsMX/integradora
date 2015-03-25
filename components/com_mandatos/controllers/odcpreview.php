@@ -80,6 +80,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                             $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
 
                             if($statusChange){
+
+	                            $odc= getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
+	                            $odc= $odc[0];
+	                            $proveedor = new IntegradoSimple($odc->proveedor->integrado->integrado_id);
+
+	                            if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
+		                            $odvId = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
+		                            $odvStatusChange = $save->changeOrderStatus($odvId, 'odv', $newStatusId);
+	                            }
+
                                 $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                             }
                         }else{
