@@ -45,6 +45,7 @@ class TimOneRequest {
 
 		return $this->resultado->code == 200;
 	}
+
 	public function getTxDetails($txUUID) {
 		$rutas = new servicesRoute();
 
