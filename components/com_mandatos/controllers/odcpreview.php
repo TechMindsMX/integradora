@@ -39,7 +39,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $integradoSimple = new IntegradoSimple($this->integradoId);
             $integradoSimple->getTimOneData();
 
-            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
+//            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
 
             // acciones cuando tiene permisos para autorizar
             $user = JFactory::getUser();
@@ -68,6 +68,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $newStatusId = 5;
 
                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();

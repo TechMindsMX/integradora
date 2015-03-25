@@ -4036,7 +4036,7 @@ class OrdenFn {
 
 	public static function getRelatedOdvIdFromOdcId( $id_odc ) {
 		$result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odc = '.(INT)$id_odc);
-		return $result[0];
+		return $result[0]->id_odv;
 	}
 
 	public function calculateBalance( $order ) {
