@@ -3873,7 +3873,7 @@ class transferFunds extends makeTx {
 }
 
 /**
- * @property  resultado
+ * @property  object resultado
  */
 class makeTx {
     protected $objEnvio;
