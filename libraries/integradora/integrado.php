@@ -490,7 +490,7 @@ class IntegradoSimple extends Integrado {
     {
 	    $this->timoneData = new TimOneData();
 
-        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
+        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->getId());
 		if(!empty($timoneData)) {
 			$timoneData = $timoneData[0];
 
