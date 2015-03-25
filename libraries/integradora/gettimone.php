@@ -4035,7 +4035,7 @@ class OrdenFn {
     }
 
 	public static function getRelatedOdvIdFromOdcId( $id_odc ) {
-		$result = getFromTimOne::selectDB('', 'id_odc = '.(INT)$id_odc);
+		$result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odc = '.(INT)$id_odc);
 		return $result[0];
 	}
 
