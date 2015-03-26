@@ -67,11 +67,11 @@ class IntegradoModelIntegrado extends JModelAdmin
 	}
 
 	public function getVerifications( ){
-		$data = getFromTimOne::selectDB('integrado_verificacion_solicitud', 'integradoId = '. $this->integ_id );
+		$dbq = JFactory::getDbo();
+		$data = getFromTimOne::selectDB('integrado_verificacion_solicitud', 'integradoId = '. $dbq->quote($this->integ_id) );
 		$data = empty($data)?$data:$data[0];
 
 		return $data;
-
 	}
 
 	public function getTable($type = 'Integrado', $prefix = 'IntegradoTable', $config = array())
@@ -81,11 +81,6 @@ class IntegradoModelIntegrado extends JModelAdmin
 
 	public function getForm($data = array(), $loadData = true)
 	{
-//		$form = $this->loadForm('com_integrado.integrado', 'integrado', array('control' => 'jform', 'load_data' => $loadData));
-//		if (empty($form)) {
-//			return false;
-//		}
-//		return $form;
 	}
 
 	protected function loadFormData()

@@ -1,4 +1,6 @@
 <?php
+use Integralib\IntFactory;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.controllerform');
@@ -198,7 +200,8 @@ class IntegradoControllerIntegrado extends JControllerForm {
             }
             $set['integradoId'] = $this->integradoId;
 
-            $condition = 'integradoId = ' . $this->integradoId;
+	        $dbq = JFactory::getDbo();
+	        $condition = 'integradoId = ' . $dbq->quote($this->integradoId);
             $this->save->deleteDB($this->tabla_db, $condition);
 
             $this->save->formatData($set);
@@ -219,7 +222,8 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
     private function checkExistIntegrado() {
 
-        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $this->data['id']);
+	    $dbq = JFactory::getDbo();
+        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $dbq->quote( $this->data['id']) );
 
         if(empty($integrado)) {
             $this->save->formatData(array('integradoId' => $this->data['id']));
@@ -236,16 +240,11 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $db = JFactory::getDbo();
         $integradoData = new UserTimone(new IntegradoSimple($this->integradoId));
 
-        $rutas = new servicesRoute();
-        $retorno = $rutas->getUrlService('timone', 'user', 'create');
+	    $urlAndType = IntFactory::getServiceRoute('timone', 'user', 'create');
+	    $request = IntFactory::getTimoneRequest($urlAndType, $integradoData);
 
-        $request = new sendToTimOne();
+	    $resultado = $request->makeRequest();
 
-        $request->setServiceUrl( $retorno->url );
-        $request->setJsonData( json_encode($integradoData) );
-        $request->setHttpType( $retorno->type );
-
-        $resultado = $request->to_timone(); // realiza el envio
         $result = json_decode($resultado->data);
 
         if($resultado->code == 200) {

@@ -40,7 +40,9 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$model    = $this->getModel('txsinmandatoform');
 		$tx       = $model->getItem($this->vars['idTx']);
 		$this->tx = $tx[0];
-		$this->tx->relations = getFromTimOne::selectDB('txs_banco_timone_relation','id_txs_banco = '.$this->tx->id);
+
+		$dbq = JFactory::getDbo();
+		$this->tx->relations = getFromTimOne::selectDB('txs_banco_timone_relation','id_txs_banco = '. $dbq->quote($this->tx->id) );
 
 		$unpaidOrders   = $model->getOrdersCxC($this->integradoId);
 
