@@ -107,7 +107,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RFC'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->proveedor->rfc; ?>
+			<?php echo $this->odv->getReceptor()->getIntegradoRfc(); ?>
 		</div>
 	</div>
 	<div>
