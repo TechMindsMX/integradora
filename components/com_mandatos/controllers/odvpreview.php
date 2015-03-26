@@ -176,7 +176,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 			$odc->createdDate   = time();
 			$odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
 			$odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
-			$odc->status        = 1;
+			$odc->status        = 3;
 			$odc->proyecto      = $odv->projectId2 !== "0" ? $odv->projectId2 : $odv->projectId;
 			$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
 			$odc->paymentDate   = $odv->paymentDate;
