@@ -3337,7 +3337,7 @@ class Factura extends makeTx {
 	{
 		$objEnvio = $this->setObjEnvio();
 
-		$urlAndType = IntFactory::getServiceRoute('facturacion', 'factura', 'create'));
+		$urlAndType = IntFactory::getServiceRoute('facturacion', 'factura', 'create');
 
 		$request = IntFactory::getTimoneRequest($urlAndType, $objEnvio);
 
