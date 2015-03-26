@@ -33,10 +33,10 @@ class facturasComision extends OdVenta{
         $datosFacturaComision->paymentMethod  = $this->getpaymentMethod();
         $datosFacturaComision->placeIssue     = $this->getplaceIssue();
         $datosFacturaComision->productosData  = $this->getProductsFromTxComision($integradoId);
-        $datosFacturaComision->iva            = $this->getIvaComision($datosFacturaComision->productosData);
 
         if( !empty($datosFacturaComision->productosData) ) {
-            $factObj = $save->generaObjetoFactura($datosFacturaComision);
+            $datosFacturaComision->iva  = $this->getIvaComision($datosFacturaComision->productosData);
+            $factObj                    = $save->generaObjetoFactura($datosFacturaComision);
 
             if ($factObj != false) {
                 $fecha = new DateTime();

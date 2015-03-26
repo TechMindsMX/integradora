@@ -567,6 +567,11 @@ class MandatosController extends JControllerLegacy {
 
         $test = $factura->generateFact($integradoId);
 
+        if($test){
+            echo 'generadas';
+        }else{
+            echo 'no se generaron';
+        }
         exit;
     }
 
