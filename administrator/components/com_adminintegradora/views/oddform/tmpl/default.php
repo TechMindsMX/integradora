@@ -23,9 +23,9 @@ foreach ($this->txs as $txs) {
 ?>
 <link rel="stylesheet" href="templates/isis/css/override.css" type="text/css">
 <script>
-    function cancelar() {
-        window.location = 'index.php?option=com_conciliacionadmin&view=oddlist';
-    }
+    jQuery(document).ready(function(){
+        jQuery('#idTx').on('change',cargaData);
+    });
 
     function cargaData() {
         var idTx = jQuery(this).val();
@@ -47,16 +47,12 @@ foreach ($this->txs as $txs) {
             jQuery('#amount').val('');
         }
     }
-
-    jQuery(document).ready(function(){
-        jQuery('#cancel').on('click', cancelar);
-        jQuery('#idTx').on('change',cargaData);
-    });
 </script>
 <?php if( is_null($data->confirmacion) ){?>
     <div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN').':</h3> '.$orden->numOrden; ?></div>
-        <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
+        <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->totalAmount,2 ); ?></div>
+        <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_SALDO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
         <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODD_INTEGRADO').':</h3> '.$orden->integradoName; ?></div>
     </div>
@@ -82,7 +78,7 @@ foreach ($this->txs as $txs) {
         </div>
 
         <div class="form-group">
-            <a href="index.php?option=com_adminintegradora&view=odclist" class="btn btn-danger">Cancelar</a>
+            <a href="index.php?option=com_adminintegradora&view=oddlist" class="btn btn-danger">Cancelar</a>
             <input type="submit" class="btn btn-primary" value="Enviar" id="send"/>
         </div>
     </form>
