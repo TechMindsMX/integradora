@@ -10,32 +10,29 @@ namespace Integralib;
 
 use JFactory;
 use JLog;
-use servicesRoute;
 
-class TimOneRequest implements TimOneRequestInterface {
+class TimOneRequest {
 	public $resultado;
-	protected $integradoId;
 	protected $objEnvio;
+	protected $url;
+	protected $type;
 
-	function __construct() {
-		$this->rutas = new servicesRoute();
+	function __construct( \urlAndType $datosEnvio, $objEnvio ) {
+		$this->url = $datosEnvio->url;
+		$this->type = $datosEnvio->type;
+		$this->objEnvio = $objEnvio;
 	}
 
 	/**
-	 * @param \urlAndType $datosEnvio
-	 * @param $objEnvio
-	 *
 	 * @return mixed
-	 * @internal param $txUUID
-	 *
 	 */
-	public function makeRequest(\urlAndType $datosEnvio, $objEnvio){
+	public function makeRequest(){
 		unset($this->options);
 
 		$request = new TimOneCurl();
-		$request->setServiceUrl($datosEnvio->url);
+		$request->setServiceUrl($this->url);
 		$request->setJsonData(json_encode($this->objEnvio));
-		$request->setHttpType($datosEnvio->type);
+		$request->setHttpType($this->type);
 
 		$this->resultado = $request->to_timone();
 
@@ -47,44 +44,5 @@ class TimOneRequest implements TimOneRequestInterface {
 
 		return $this->resultado;
 	}
-
-	public function getTxDetails($txUUID) {
-		$rutas = new servicesRoute();
-
-		$params = $rutas->getUrlService('timone','txDetails','details');
-
-		$serviceUrl = str_replace('{uuid}', $txUUID, $params->url);
-		$jsonData = '';
-		$httpType = $params->type;
-
-		$request = new TimOneCurl();
-
-		$request->setServiceUrl($serviceUrl);
-		$request->setJsonData($jsonData);
-		$request->setHttpType($httpType);
-
-		$result = $request->to_timone(); // realiza el envio
-
-		return $result;
-	}
-
-	public function sendCancelFactura($emisorRfc, $facturaUUID) {
-		$this->objEnvio = new \stdClass();
-		$this->objEnvio->uuid = $facturaUUID;
-		$this->objEnvio->rfcContribuyente = $emisorRfc;
-		$this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
-
-		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'), $this->objEnvio);
-	}
-
-	public function sendCashInTx($uuidReceptor, $amount) {
-		$this->objEnvio = new \stdClass();
-		$this->objEnvio->uuid = $uuidReceptor;
-		$this->objEnvio->amount = $amount;
-
-		return $this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
-	}
-
-
 
 }
