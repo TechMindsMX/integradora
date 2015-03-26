@@ -35,28 +35,30 @@ class facturasComision extends OdVenta{
         $datosFacturaComision->productosData  = $this->getProductsFromTxComision($integradoId);
         $datosFacturaComision->iva            = $this->getIvaComision($datosFacturaComision->productosData);
 
-        $factObj = $save->generaObjetoFactura( $datosFacturaComision );
+        if( !empty($datosFacturaComision->productosData) ) {
+            $factObj = $save->generaObjetoFactura($datosFacturaComision);
 
-        if ( $factObj != false ) {
-            $fecha      = new DateTime();
-            $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-            $factComDB  = new stdClass();
+            if ($factObj != false) {
+                $fecha = new DateTime();
+                $xmlFactura = $save->generateFacturaFromTimone($factObj);
+                $factComDB = new stdClass();
 
-            $factComDB->integradoId = $integradoId;
-            $factComDB->status      = 0;
-            $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
-            $factComDB->createdDate = $fecha->getTimestamp();
+                $factComDB->integradoId = $integradoId;
+                $factComDB->status = 0;
+                $factComDB->urlXML = $save->saveXMLFile($xmlFactura);
+                $factComDB->createdDate = $fecha->getTimestamp();
 
-            $db->transactionStart();
+                $db->transactionStart();
 
-            try{
-                $db->insertObject('#__facturas_comisiones',$factComDB);
+                try {
+                    $db->insertObject('#__facturas_comisiones', $factComDB);
 
-                $respuesta = true;
+                    $respuesta = true;
 
-                $db->transactionCommit();
-            }catch (Exception $e){
-                $db->transactionRollback();
+                    $db->transactionCommit();
+                } catch (Exception $e) {
+                    $db->transactionRollback();
+                }
             }
         }
 
