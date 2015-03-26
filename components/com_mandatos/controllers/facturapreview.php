@@ -38,20 +38,21 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 				$xmlUUID = $orden->getfacturaUUID();
 
 				$request = new \Integralib\TimOneRequest();
-				$lp = 	    JFactory::getConfig()->get('log_path');
 
 				$canceled = $request->sendCancelFactura($userRfc, $xmlUUID);
 			}
 
 			if ($canceled) {
-				$this->app->redirect('index.php?option=com_mandatos&view=facturalist', JText::_('LBL_FACT_CANCELED_SUCCESSFULY'));
+				$this->app->enqueueMessage(JText::_('LBL_FACT_CANCELED_SUCCESSFULY'));
 			} else {
-				$this->app->redirect('index.php?option=com_mandatos&view=facturapreview&facturanum='.$idODV, JText::_('LBL_FACT_CANCELED_FAILED'), 'error');
+				$this->app->enqueueMessage(JText::_('LBL_FACT_CANCELED_FAILED'), 'error');
+				$this->app->redirect('index.php?option=com_mandatos&view=facturapreview&facturanum='.$idODV);
 			}
 		} else {
 			// acciones cuando NO tiene permisos para autorizar
-			$this->app->redirect(JRoute::_(''), JText::_(''), 'error');
+			$this->app->enqueueMessage(JText::_('LBL_CANT_AUTHORIZE'), 'error');
 		}
+		$this->app->redirect('index.php?option=com_mandatos&view=facturalist');
 	}
 
 	/**

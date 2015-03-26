@@ -2572,13 +2572,17 @@ class sendToTimOne {
         return $factura->sendCreateFactura(); // realiza el envio
     }
 
-    /**
-     * @param $data
-     *
-     * @return bool|string filename {uuid}.xml
-     */
-    public function saveXMLFile( $data ) {
-        $xmlpath = XML_FILES_PATH;
+	/**
+	 * @param $data
+	 *
+	 * @param string $xmlpath
+	 *
+	 * @return bool|string filename {uuid}.xml
+	 * xml
+	 * @throws Exception
+	 */
+    public function saveXMLFile( $data, $xmlpath = XML_FILES_PATH ) {
+	    $xmlpath = substr($xmlpath, -1) == '/' ? $xmlpath : $xmlpath.'/';
 
         if( !$result = simplexml_load_string ($data, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE) ) {
             throw new Exception('Error creando factura = '.$data);
