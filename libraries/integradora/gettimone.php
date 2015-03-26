@@ -3578,7 +3578,10 @@ class Factura extends makeTx {
         $impuestos = array();
 
         $impuestos[0] = $this->getObjectImpuestoFromIVA($orden);
-        $impuestos[1] = $this->getObjectImpuestoFromIEPS($orden);
+        $ieps = $this->getObjectImpuestoFromIEPS($orden);
+        if($ieps->importe != 0){
+            $impuestos[1] = $ieps;
+        }
 
         $this->impuestos = $impuestos;
     }
