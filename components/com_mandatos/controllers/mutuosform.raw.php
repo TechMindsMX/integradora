@@ -44,7 +44,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $save  = new sendToTimOne();
 
         if($datos->integradoIdR == 0){
-            $id = getFromTimOne::newintegradoId(0);
+            $id = getFromTimOne::saveNewIntegradoIdAndReturnIt(0);
             $data_integrado = array(
                 'nombre_representante' => $datos->beneficiario,
                 'rfc'                  => $datos->rfc,

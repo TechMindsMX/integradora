@@ -201,7 +201,7 @@ class IntegradoController extends JControllerLegacy {
     //Recibe el post y lo envia a procesar y guardar
 
     function saveform(){
-        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
+        $data = $this->input->getArray( array( 'integradoId' => 'STRING', 'busqueda_rfc' => 'STRING' ) );
 
         if($data['busqueda_rfc']) {
             $respuesta = $this->rfc_type($data['busqueda_rfc']);
@@ -410,13 +410,13 @@ class IntegradoController extends JControllerLegacy {
             }
 
         $diccionarioDefault  = array(
-            'integradoId'                => array('number' => true,		    	'maxlength' => 10),
-            'tab'                        => array('string' => true,   	    	'maxlength' => 18),
+            'integradoId'                => array('alohaNum' => true,   'maxlength' => 36),
+            'tab'                        => array('string' => true,     'maxlength' => 18),
         );
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 
         if($integrado_id === null){
-            $integrado_id = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
+            $integrado_id = getFromTimOne::saveNewIntegradoIdAndReturnIt($data['pj_pers_juridica']);
 
             $columnas 		= array('user_id', 'integrado_id', 'integrado_principal', 'integrado_permission_level');
             $valores 		= array(JFactory::getUser()->id, $integrado_id, 1, 3);

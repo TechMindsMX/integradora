@@ -1,6 +1,7 @@
 <?php
 use Integralib\IntFactory;
 use Integralib\Txs;
+use Integralib\UUID;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -1764,20 +1765,25 @@ class getFromTimOne{
         return $token;
     }
 
-    public static function newintegradoId($envio){
+    public static function saveNewIntegradoIdAndReturnIt($envio){
+	    $newUUID = UUID::v4();
         $createdDate = time();
-        $db		= JFactory::getDbo();
-        $query 	= $db->getQuery(true);
 
-        $query->insert($db->quoteName('#__integrado'))
-            ->columns($db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
-            ->values($db->quote(0).','.$db->quote($envio).', '.$createdDate);
+	    try {
+		    $db		= JFactory::getDbo();
+		    $query 	= $db->getQuery(true);
 
-        $db->setQuery($query);
-        $db->execute();
-        $newId = $db->insertid();
+		    $query->insert($db->quoteName('#__integrado'))
+		          ->columns($db->quoteName('integrado_id'). ', '. $db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
+		          ->values($db->quote( $newUUID ). ', ' .$db->quote(0).','.$db->quote($envio).', '.$createdDate);
 
-        return $newId;
+		    $db->setQuery($query);
+		    $db->execute();
+	    } catch (Exception $e) {
+		    return null;
+	    }
+
+        return $newUUID;
     }
 
     public static function getTxSTPbyRef( $id ) {

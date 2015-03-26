@@ -373,3 +373,7 @@ CREATE TABLE `flpmu_txs_liquidacion_saldo` (
 --changeset lutek:45
 ALTER TABLE `flpmu_facturas_comisiones` ADD COLUMN createdDate BIGINT;
 --rollback ALTER TABLE `flpmu_facturas_comisiones` DROP COLUMN createdDate ;
+
+--changeset ricardolyon:46
+ALTER TABLE `flpmu_integrado` CHANGE COLUMN `integrado_id` `integrado_id` VARCHAR(36) NOT NULL ;
+--rollback ALTER TABLE `flpmu_integrado` CHANGE COLUMN `integrado_id` `integrado_id` INT(11) AUTO_INCREMENT NOT NULL ;
