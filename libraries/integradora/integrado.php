@@ -150,7 +150,8 @@ class Integrado {
 	}
 
 	public static function getSTPaccount( $integradoId ) {
-		$cuentas = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$integradoId);
+		$dbq = JFactory::getDbo();
+		$cuentas = getFromTimOne::selectDB('integrado_timone', 'integradoId = '. $dbq->quote($integradoId) );
 
 		$cuenta = !empty($cuentas) ? $cuentas[0] : null;
 
@@ -489,8 +490,9 @@ class IntegradoSimple extends Integrado {
     public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
+	    $dbq = JFactory::getDbo();
 
-        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->id);
+        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '. $dbq->quote($this->id) );
 		if(!empty($timoneData)) {
 			$timoneData = $timoneData[0];
 

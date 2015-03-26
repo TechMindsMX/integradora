@@ -17,7 +17,8 @@ class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
         $tabla = sendToTimOne::getTableByType($tipo);
 
-        $authorizations = self::selectDB($tabla,'idOrden = '.$idOrden);
+	    $dbq = JFactory::getDbo();
+        $authorizations = self::selectDB($tabla,'idOrden = '. $dbq->quote($idOrden) );
 
         if (isset($authorizations)) {
             foreach($authorizations as $key => $value){
@@ -95,31 +96,16 @@ class getFromTimOne{
 
     public static function getTxIntegradoSinMandato($integradoId=null, $idTX = null)
     {
+	    $dbq = JFactory::getDbo();
         $where = null;
         if (!is_null($idTX)) {
-            $where = 'id = ' . $idTX;
+            $where = 'id = ' . $dbq->quote($idTX);
         } elseif (!is_null($integradoId)) {
-            $where = 'idIntegrado = ' . $integradoId;
+            $where = 'idIntegrado = ' . $dbq->quote($integradoId) ;
         }
 
         $txs = self::selectDB('txs_timone_mandato',$where);
 
-        return $txs;
-    }
-
-    public static function getTxConciliacionesBanco($where){
-
-        $txs = self::selectDB('txs_banco_integrado',$where);
-
-        foreach ($txs as $value) {
-            $value->id              = (INT) $value->id;
-            $value->cuenta          = (INT) $value->cuenta;
-            $value->date            = (INT) $value->date;
-            $value->amount          = (FLOAT) $value->amount;
-            $value->integradoId     = (INT) $value->integradoId;
-            $value->fechaTimestamp  = $value->date;
-            self::convierteFechas($value);
-        }
         return $txs;
     }
 
@@ -262,10 +248,11 @@ class getFromTimOne{
      */
     public static function getMutuos($integradoId=null, $idMutuo=null){
         $where = null;
+	    $dbq = JFactory::getDbo();
         if(isset($idMutuo) && is_null($integradoId)){
-            $where = 'id = '.$idMutuo;
+            $where = 'id = '. $dbq->quote($idMutuo);
         }elseif(isset($integradoId) && is_null($idMutuo)){
-            $where = 'integradoIdE = '.$integradoId;
+            $where = 'integradoIdE = '. $dbq->quote($integradoId);
         }
         $mutuos = self::selectDB('mandatos_mutuos',$where,'');
 
@@ -295,20 +282,22 @@ class getFromTimOne{
      * @return stdClass
      */
     public static function getMutuosODP($integradoId=null, $idMutuo=null){
-        $where = null;
-        $respuesta              = new stdClass();
-        if(is_null($integradoId) && is_null($idMutuo)){
-            $where = null;
+	    $dbq = JFactory::getDbo();
+	    $where = null;
+	    $respuesta              = new stdClass();
+	    if(is_null($integradoId) && is_null($idMutuo)){
+	        $where = null;
         }elseif(!is_null($integradoId) && is_null($idMutuo)){
-
-            $where      = 'acreedor = '.$integradoId;
+	        $where      = 'acreedor = '. $dbq->quote($integradoId);
             $acredor    = self::selectDB('ordenes_prestamo',$where);
-            $where      = 'deudor='.$integradoId;
+
+            $where      = 'deudor='. $dbq->quote($integradoId);
             $deudor     = self::selectDB('ordenes_prestamo',$where);
+
             $respuesta->acreedor    = $acredor;
             $respuesta->deudor      = $deudor;
         }elseif(!is_null($idMutuo) && is_null($integradoId)){
-            $where = 'mutuo = '.$idMutuo;
+            $where = 'mutuo = '. $dbq->quote($idMutuo);
             $mutuo      = self::selectDB('ordenes_prestamo',$where);
             $respuesta->mudutuo     = $mutuo;
         }
@@ -331,7 +320,8 @@ class getFromTimOne{
     }
 
     public static function getIntegradoId($timOneId){
-        $data = self::selectDB('integrado_timone','timoneUuid = '.$timOneId);
+	    $dbq = JFactory::getDbo();
+	    $data = self::selectDB('integrado_timone','timoneUuid = '. $dbq->quote($timOneId));
 
         return $data;
     }
@@ -499,10 +489,11 @@ class getFromTimOne{
     }
 
     public static function getOrdenesPrestamo($idMutuo=null,$idOrden=null){
+	    $dbq = JFactory::getDbo();
         if( is_null($idOrden) ){
-            $where = 'idMutuo = '.$idMutuo;
+            $where = 'idMutuo = '. $dbq->quote($idMutuo);
         }else{
-            $where = 'id = '.$idOrden;
+            $where = 'id = '. $dbq->quote($idOrden);
         }
 
         $ordenes = self::selectDB('ordenes_prestamo',$where);
@@ -618,7 +609,7 @@ class getFromTimOne{
         return $arrayBancos;
     }
     private static function getDataBankByBankId($bankId){
-        $banco = self::selectDB('integrado_datos_bancarios', 'datosBan_id = '.$bankId);
+        $banco = self::selectDB('integrado_datos_bancarios', 'datosBan_id = '. (INT)$bankId);
         $banco = self::getBankName($banco);
 
         return $banco;
@@ -700,7 +691,7 @@ class getFromTimOne{
         if ( empty( $banco_clabe ) ) {
             $banco_clabe = '0000000';
         }
-        $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $banco_clabe;
+        $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($banco_clabe);
         $existe = getFromTimOne::selectDB( $table, $where );
 
         return !empty($existe)?$existe[0]:null;
@@ -711,12 +702,6 @@ class getFromTimOne{
         $persJuridicas = array_flip( $cat->getPesonalidadesJuridicas() );
 
         return $persJuridicas[ucfirst($string)];
-    }
-
-    private static function getTxUUID( $txId ) {
-        $result = self::selectDB('txs_timone_mandatos', 'id = '.$txId);
-
-        return $result[0]->idTx;
     }
 
     public function createNewProject($envio, $integradoId){
@@ -762,11 +747,12 @@ class getFromTimOne{
 
     public static function getProyects($integradoId = null, $projectId = null){
         $where = null;
+	    $dbq = JFactory::getDbo();
 
         if(!is_null($integradoId)){
-            $where = 'parentId = 0 AND integradoId = '.$integradoId;
+            $where = 'parentId = 0 AND integradoId = '. $dbq->quote($integradoId);
         }elseif(!is_null($projectId)){
-            $where = 'id_proyecto = '.$projectId;
+            $where = 'id_proyecto = '. $dbq->quote($projectId);
         }
 
         $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
@@ -810,11 +796,12 @@ class getFromTimOne{
 
     public static function getActiveProyects($integradoId = null, $projectId = null){
         $where = null;
+	    $dbq = JFactory::getDbo();
 
         if(!is_null($integradoId)){
-            $where = 'parentId = 0 AND status = 1 AND integradoId = '.$integradoId;
+            $where = 'parentId = 0 AND status = 1 AND integradoId = '. $dbq->quote($integradoId);
         }elseif(!is_null($projectId)){
-            $where = 'status = 1 AND id_proyecto = '.$projectId;
+            $where = 'status = 1 AND id_proyecto = '. $dbq->quote($projectId);
         }
 
         $respuesta = self::selectDB('integrado_proyectos',$where,'id_proyecto');
@@ -857,13 +844,14 @@ class getFromTimOne{
 
     public static function getProducts($integradoId = null, $productId = null, $status = null){
         $where = null;
+	    $dbq = JFactory::getDbo();
 
         if(is_null($integradoId) && is_null($productId)){
             $where = null;
         }elseif(!is_null($integradoId) && is_null($productId)){
-            $where = 'integradoId = '.$integradoId;
+            $where = 'integradoId = '. $dbq->quote($integradoId);
         }elseif(!is_null($productId) && is_null($integradoId)){
-            $where = 'id_producto = '.$productId;
+            $where = 'id_producto = '. $dbq->quote($productId);
         }
 
         if(!is_null($status) ){
@@ -985,7 +973,7 @@ class getFromTimOne{
             }
 
             foreach ($listAllCliPro as $value) {
-                $where = $db->quoteName('integrado_id').' = '.$value->idCliPro;
+                $where = $db->quoteName('integrado_id').' = '. $db->quote($value->idCliPro);
                 $contacto   = self::selectDB('integrado_contacto', $where);
                 $banco      = self::selectDB('integrado_datos_bancarios', $where);
 
@@ -1093,11 +1081,12 @@ class getFromTimOne{
     }
 
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
+	    $dbq = JFactory::getDbo();
         $where = null;
         if(isset($idOrden)){
-            $where = 'id = '.$idOrden;
+            $where = 'id = '. $dbq->quote($idOrden);
         }elseif(isset($integradoId)){
-            $where = 'integradoId = '.$integradoId;
+            $where = 'integradoId = '. $dbq->quote($integradoId);
         }
         $ordenes = self::selectDB($table, $where);
 
@@ -1644,11 +1633,12 @@ class getFromTimOne{
     }
 
     public static function getFacturasComision($integradoId=null, $idFactura=null){
+	    $dbq = JFactory::getDbo();
         $where = null;
         if(!is_null($idFactura)){
-            $where = 'id = '.$idFactura;
+            $where = 'id = '. $dbq->quote($idFactura);
         }elseif(!is_null($integradoId)){
-            $where = 'integradoId = '.$integradoId;
+            $where = 'integradoId = '. $dbq->quote($integradoId);
         }
         $facturas = self::selectDB('facturas_comisiones', $where);
 
@@ -1720,8 +1710,9 @@ class getFromTimOne{
 
     public static function getTxSinMandato($integradoId = null) {
         $where = 'idOrden IS NULL';
+	    $dbq = JFactory::getDbo();
         if(!is_null($integradoId)) {
-            $where = $where.' AND idIntegrado = '.$integradoId;
+            $where = $where.' AND idIntegrado = '. $dbq->quote($integradoId);
         }
 
         $txs = getFromTimOne::selectDB( 'txs_timone_mandato', $where );
@@ -1866,7 +1857,7 @@ class getFromTimOne{
 
         $where = null;
         if(!is_null($id)) {
-            $where = 'id = '.$id;
+            $where = 'id = '. (INT)$id;
         }
         $comisiones = $request->selectDB('mandatos_comisiones', $where);
 
@@ -1876,10 +1867,11 @@ class getFromTimOne{
     public static function getComisionesOfIntegrado($integradoId) {
         $comisiones = null;
         $request = new getFromTimOne();
+	    $dbq = JFactory::getDbo();
 
         $where = null;
         if(!is_null($integradoId)) {
-            $where = 'integradoId = '.$integradoId;
+            $where = 'integradoId = '. $dbq->quote($integradoId);
         }
         $comisionesInteg = $request->selectDB('integrado_comisiones', $where);
 
@@ -2539,9 +2531,10 @@ class ReportBalance extends IntegradoOrders {
     }
 
     public function getExistingBalance() {
+	    $dbq = JFactory::getDbo();
 
         if ( ! empty( $this->request->integradoId ) && ! empty($this->request->balanceId) ) {
-            $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$this->request->integradoId.' AND id = '. $this->request->balanceId );
+            $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '. $dbq->quote($this->request->integradoId) .' AND id = '. (INT)$this->request->balanceId );
             list( $this->period->startDate, $this->period->endDate ) = $this->setDatesInicioFin($data[0]->year);
         }
 
@@ -2666,7 +2659,8 @@ class ReportBalance extends IntegradoOrders {
     }
 
     public static function getIntegradoExistingBalanceList($integradoId) {
-        $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
+	    $dbq = JFactory::getDbo();
+        $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '. $dbq->quote($integradoId) );
 
         return $data;
     }
@@ -2838,7 +2832,8 @@ class ReportBalanceTxs extends IntegradoTxs {
     }
 
     public static function getIntegradoExistingBalanceList($integradoId) {
-        $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '.$integradoId );
+	    $dbq = JFactory::getDbo();
+        $data = getFromTimOne::selectDB('reportes_balance', 'integradoId = '. $dbq->quote($integradoId) );
 
         return $data;
     }
