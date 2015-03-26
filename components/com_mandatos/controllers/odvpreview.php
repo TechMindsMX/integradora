@@ -79,7 +79,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                         if ( isset( $newOrder->urlXML ) ) {
                             if ( $newOrder->urlXML != false ) {
                                 $save->formatData(array('urlXML' => $newOrder->urlXML ));
-                                $where = 'id = '.$newOrder->getId();
+                                $where = 'id = '. $newOrder->getId();
                                 $save->updateDB('ordenes_venta', null, $where);
 
 								$this->createOpposingODC($newOrder);

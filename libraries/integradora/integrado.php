@@ -99,7 +99,7 @@ class Integrado {
 
 			if ( $validator->allPassed() ) {
 				$table = 'integrado_datos_bancarios';
-				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $existe['banco_clabe'];
+				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe['banco_clabe']);
 
 				if ( empty( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );

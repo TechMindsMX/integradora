@@ -87,7 +87,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$objToInsert->idOrden   = $this->order->id;
 		$objToInsert->orderType = $this->order->orderType;
 
-		$where = 'id = ' . $this->tx->id;
+		$where = 'id = ' . (INT)$this->tx->id;
 
 		$db = JFactory::getDbo();
 		$db->transactionStart();

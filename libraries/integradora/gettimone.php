@@ -855,7 +855,7 @@ class getFromTimOne{
         }
 
         if(!is_null($status) ){
-            $where .= ' AND status = '.$status;
+            $where .= ' AND status = '. (INT)$status;
         }
 
         $respuesta = self::selectDB('integrado_products',$where);
@@ -1972,7 +1972,8 @@ class sendToTimOne {
 
                 $columna = substr( $key, 3 );
                 $clave   = substr( $key, 0, 3 );
-                $where   = $db->quoteName( 'integrado_id' ) . ' = ' . $integrado_id;
+	            $dbq = JFactory::getDbo();
+                $where   = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id);
 
                 switch ( $clave ) {
                     case 'dp_':
@@ -1986,19 +1987,19 @@ class sendToTimOne {
                         break;
                     case 't1_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $integrado_id . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 1';
+                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 1';
                         break;
                     case 't2_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $integrado_id . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 2';
+                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 2';
                         break;
                     case 'pn_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $integrado_id . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 3';
+                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 3';
                         break;
                     case 'rp_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $integrado_id . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
+                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
                         break;
 
                     default:
@@ -2115,7 +2116,7 @@ class sendToTimOne {
 
         $table = self::getTableByType($tipo);
 
-        $where = $db->quoteName('integradoId').' = '.$integrado;
+        $where = $db->quoteName('integradoId').' = '. $db->quote($integrado);
 
         $query 	= $db->getQuery(true);
 
@@ -3590,7 +3591,7 @@ class Cashout extends makeTx{
     }
 }
 
-class transferFunds implements \Integralib\TimOneRequestInterface {
+class transferFunds extends makeTx {
     protected $objEnvio;
 
     function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){

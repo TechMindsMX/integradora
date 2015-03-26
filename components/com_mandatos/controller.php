@@ -174,7 +174,7 @@ class MandatosController extends JControllerLegacy {
         $post       = array('datosBan_id' => 'INT');
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
@@ -316,7 +316,7 @@ class MandatosController extends JControllerLegacy {
             switch($data['tab']){
                 case 'tipoAlta_btn':
                     $table 		= 'integrado_clientes_proveedor';
-                    $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '. $db->quote($this->integradoId);
+                    $where      = $db->quoteName('integradoIdCliente').' = '. $db->quote($idCliPro) .' && integrado_Id = '. $db->quote($this->integradoId);
                     $existe     = getFromTimOne::selectDB($table,$where);
 
                     $columnas[] = 'integrado_id';
@@ -522,15 +522,15 @@ class MandatosController extends JControllerLegacy {
         switch($data['type']){
             case 'proyecto':
                 $table = 'integrado_proyectos';
-                $where = 'id_proyecto = '.$data['id'];
+                $where = 'id_proyecto = '. (INT)$data['id'];
                 break;
             case 'producto':
                 $table = 'integrado_products';
-                $where = 'id_producto = '.$data['id'];
+                $where = 'id_producto = '. (INT)$data['id'];
                 break;
             case 'cliente';
                 $table = 'integrado_clientes_proveedor';
-                $where = 'id = '.$data['id'];
+                $where = 'id = '. (INT)$data['id'];
                 break;
         }
 

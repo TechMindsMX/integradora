@@ -150,16 +150,15 @@ class IntegradoController extends JControllerLegacy {
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
         $valores	= array($this->integradoId, $data['userId'], 0, $data['permission_level']);
 
-
-        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
+        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integrado_id').' = '. $db->quote($data['integrado_id']) );
 
         if( empty($existe) ){
             self::insertData('integrado_users', $columnas, $valores);
         }else{
-            self::updateData('integrado_users', $update, $db->quoteName('user_id').' = '.$data['userId']);
+            self::updateData('integrado_users', $update, $db->quoteName('user_id').' = '. (INT)$data['userId']);
         }
 
-        JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
+        JFactory::getApplication()->redirect('index.php?option=com_integrado&view=altausuarios', false);
     }
     //elimina la relacion entre el integrado y el usuario dado de alta
 
@@ -169,7 +168,7 @@ class IntegradoController extends JControllerLegacy {
         $input		= JFactory::getApplication()->input;
 
         $user		= $input->getArray();
-        $where 		= array($db->quoteName('user_id') . ' = ' . $user['data']);
+        $where 		= array($db->quoteName('user_id') . ' = ' . (INT)$user['data']);
 
         $response 	= self::deleteData('integrado_users', $where);
         $response['delete']	= true;
@@ -524,32 +523,17 @@ class IntegradoController extends JControllerLegacy {
                 break;
         }
 
-        $existe = self::checkData($table, $db->quoteName('integrado_id').' = '.$integrado_id);
-
+        $existe = self::checkData($table, $db->quoteName('integrado_id').' = '. $db->quote($integrado_id) );
 
         if( empty($existe) ){
             $respuesta = self::insertData($table, $columnas, $valores);
         }else{
-            $condicion 	= array($db->quoteName('integrado_id').' = '.$integrado_id );
+            $condicion 	= array($db->quoteName('integrado_id').' = '. $db->quote($integrado_id) );
             $respuesta = self::updateData($table, $updateSet, $condicion);
         }
 
         $resultado['safeComplete']  = true;
         $resultado['integradoId'] = $integrado_id;
-
-        /*if($data['tab']=='personales'){
-            $contenido = JText::_('NOTIFICACIONES_1');
-            $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
-            $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$data['user_id'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $dato['titulo']         = JText::_('TITULO_1');
-            $dato['body']           = $contenido;
-
-            $send                   = new Send_email();
-            // $send->notification($dato);
-        }
-*/
 
         return $resultado;
     }
@@ -685,7 +669,7 @@ class IntegradoController extends JControllerLegacy {
             }
         }
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 1';
+        $where = $db->quoteName('integrado_id').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 1';
         $existet1 = self::checkData('integrado_instrumentos', $where);
         if(empty($existet1) ){
             self::insertData('integrado_instrumentos', $columnast1, $valort1);
@@ -696,7 +680,7 @@ class IntegradoController extends JControllerLegacy {
         }
         self::saveInstrumentosEmpresa($data['integradoId'], $existet1[0]->id, 'testimonio_1');
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 2';
+        $where = $db->quoteName('integrado_id').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 2';
         $existet2 = self::checkData('integrado_instrumentos', $where);
         if(empty($existet2) ){
             self::insertData('integrado_instrumentos', $columnast2, $valort2);
@@ -707,7 +691,7 @@ class IntegradoController extends JControllerLegacy {
         }
         self::saveInstrumentosEmpresa($data['integradoId'], $existet2[0]->id, 'testimonio_2');
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 3';
+        $where = $db->quoteName('integrado_id').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 3';
         $existepn = self::checkData('integrado_instrumentos', $where);
         if(empty($existepn) ){
             self::insertData('integrado_instrumentos', $columnasPN, $valorPN);
@@ -718,7 +702,7 @@ class IntegradoController extends JControllerLegacy {
         }
         self::saveInstrumentosEmpresa($data['integradoId'], $existepn[0]->id, 'poder');
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 4';
+        $where = $db->quoteName('integrado_id').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 4';
         $existerp = self::checkData('integrado_instrumentos', $where);
         if(empty($existerp) ){
             self::insertData('integrado_instrumentos', $columnasRP, $valorRP);
@@ -732,7 +716,7 @@ class IntegradoController extends JControllerLegacy {
 
     public static function saveInstrumentosEmpresa($integrado_id, $id_instrumento, $campo){
         $db				= JFactory::getDbo();
-        $where			= $db->quoteName('integrado_id').' = '.$integrado_id;
+        $where			= $db->quoteName('integrado_id').' = '. $db->quote($integrado_id) ;
         $dataEmpresa 	= self::checkData('integrado_datos_empresa', $where);
         $columna[] 		= $campo;
         $columna[]		= 'integrado_id';
