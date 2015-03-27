@@ -48,7 +48,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             $data_integrado = array(
                 'nombre_representante' => $datos->beneficiario,
                 'rfc'                  => $datos->rfc,
-                'integrado_id'         => $id
+                'integradoId'         => $id
             );
 
             $save->formatData($data_integrado);
@@ -59,7 +59,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'banco_cuenta'      => $datos->banco_cuenta,
                 'banco_sucursal'    => $datos->banco_sucursal,
                 'banco_clabe'       => $datos->banco_clabe,
-                'integrado_id'       => $id
+                'integradoId'       => $id
             );
 
             $save->formatData($dataBancaria);

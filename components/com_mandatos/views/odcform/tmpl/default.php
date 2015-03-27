@@ -128,7 +128,7 @@ foreach ($this->proyectos as $key => $proyecto) {
             <?php
             foreach ($this->proveedores as $providerData) {
                 $bancos = $providerData->integrados[0]->datos_bancarios;
-                echo 'arregloIntegrado['.$providerData->integrados[0]->integrado->integrado_id.'] = '.json_encode($bancos).';'."\n";
+                echo 'arregloIntegrado['.$providerData->integrados[0]->integrado->integradoId.'] = '.json_encode($bancos).';'."\n";
                 if(isset($this->orden->bankId)){
                     echo 'var optionSelected = '.$this->orden->bankId.';'."\n";
                 }
