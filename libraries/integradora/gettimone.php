@@ -63,7 +63,7 @@ class getFromTimOne{
         }
 
         foreach ($results as $value) {
-            $integrado = new IntegradoSimple($value->integrado_id);
+            $integrado = new IntegradoSimple($value->integradoId);
             $integrado->integrados[0]->displayName = $integrado->getDisplayName();
             $integradosArray[] = $integrado->integrados[0];
         }
@@ -567,13 +567,13 @@ class getFromTimOne{
         return $client;
     }
 
-    public static function getClientProviderFromIntegradoId( $integrado_id ) {
+    public static function getClientProviderFromIntegradoId( $integradoId ) {
         $client = array();
 
         $clientes = self::getClientes();
 
         foreach ( $clientes as $key => $value ) {
-            if ( $integrado_id == $value->idCliPro ) {
+            if ( $integradoId == $value->idCliPro ) {
                 $client = $value;
             }
         }
@@ -870,9 +870,9 @@ class getFromTimOne{
 
         if( !is_null($userId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
-            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id, status, bancos AS bancoIds')
+            $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integradoId, status, bancos AS bancoIds')
                 ->from('#__integrado_clientes_proveedor')
-                ->where('integrado_Id = ' . $userId);
+                ->where('integradoId = ' . $userId);
             try {
                 $db->setQuery($query);
                 $response = $db->loadObjectList();
@@ -887,8 +887,8 @@ class getFromTimOne{
 
                 $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
                     ->from('#__integrado_datos_personales AS DP')
-                    ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
-                    ->where('DP.integrado_id = ' . $value->id);
+                    ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integradoId') . ' = ' . $db->quoteName('DP.integradoId') . ')')
+                    ->where('DP.integradoId = ' . $value->id);
 
                 try {
                     $db->setQuery($querygral);
@@ -912,7 +912,7 @@ class getFromTimOne{
 
                 $queryphone->select('*')
                     ->from('#__integrado_contacto')
-                    ->where('integrado_id = ' . $value->id);
+                    ->where('integradoId = ' . $value->id);
 
                 try {
                     $db->setQuery($queryphone);
@@ -958,13 +958,13 @@ class getFromTimOne{
             }
         }else{
             //Se regresan los datos de los clientes/proveedores dados de alta.
-            $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integrado_Id AS integradoId, clientes.tipo_alta AS type, clientes.monto, clientes.status,
+            $query->select('clientes.id AS client_id, clientes.integradoIdCliente AS idCliPro, clientes.integradoId AS integradoId, clientes.tipo_alta AS type, clientes.monto, clientes.status,
                             DP.nom_comercial AS dp_con_comercial, DP.nombre_representante AS dp_nom_representante, DP.rfc AS dp_rfc, DP.curp AS dp_curp,
                             DE.razon_social AS de_razon_social, DE.rfc AS de_rfc')
                 ->from('#__integrado_clientes_proveedor AS clientes')
-                ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integrado_id')
-                ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integrado_id')
-                ->order('clientes.integrado_Id, clientes.tipo_alta ASC');
+                ->join('INNER','#__integrado_datos_personales AS DP on clientes.integradoIdCliente = DP.integradoId')
+                ->join('INNER', '#__integrado_datos_empresa as DE on clientes.integradoIdCliente = DE.integradoId')
+                ->order('clientes.integradoId, clientes.tipo_alta ASC');
 
             try{
                 $db->setQuery($query);
@@ -974,7 +974,7 @@ class getFromTimOne{
             }
 
             foreach ($listAllCliPro as $value) {
-                $where = $db->quoteName('integrado_id').' = '. $db->quote($value->idCliPro);
+                $where = $db->quoteName('integradoId').' = '. $db->quote($value->idCliPro);
                 $contacto   = self::selectDB('integrado_contacto', $where);
                 $banco      = self::selectDB('integrado_datos_bancarios', $where);
 
@@ -1193,7 +1193,7 @@ class getFromTimOne{
             $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
-            $value->receptor = new IntegradoSimple($value->proveedor->integrado->integrado_id);
+            $value->receptor = new IntegradoSimple($value->proveedor->integrado->integradoId);
 
             $proyectos = self::getProyects(null, $value->proyecto);
 
@@ -1774,7 +1774,7 @@ class getFromTimOne{
 		    $query 	= $db->getQuery(true);
 
 		    $query->insert($db->quoteName('#__integrado'))
-		          ->columns($db->quoteName('integrado_id'). ', '. $db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
+		          ->columns($db->quoteName('integradoId'). ', '. $db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
 		          ->values($db->quote( $newUUID ). ', ' .$db->quote(0).','.$db->quote($envio).', '.$createdDate);
 
 		    $db->setQuery($query);
@@ -1979,7 +1979,7 @@ class sendToTimOne {
                 $columna = substr( $key, 3 );
                 $clave   = substr( $key, 0, 3 );
 	            $dbq = JFactory::getDbo();
-                $where   = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id);
+                $where   = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id);
 
                 switch ( $clave ) {
                     case 'dp_':
@@ -1993,19 +1993,19 @@ class sendToTimOne {
                         break;
                     case 't1_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 1';
+                        $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 1';
                         break;
                     case 't2_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 2';
+                        $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 2';
                         break;
                     case 'pn_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 3';
+                        $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 3';
                         break;
                     case 'rp_':
                         $table = 'integrado_instrumentos';
-                        $where = $db->quoteName( 'integrado_id' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
+                        $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
                         break;
 
                     default:
@@ -3520,11 +3520,11 @@ class UserTimone {
     public $email = '';
 
     function __construct( Integrado $integrado ) {
-        $user = $integrado->getUsuarioPrincipal($integrado->integrados[0]->integrado->integrado_id);
+        $user = $integrado->getUsuarioPrincipal($integrado->integrados[0]->integrado->integradoId);
 
         $this->name = $user->name;
         $this->email = $user->email;
-        $this->uuid = $integrado->integrados[0]->integrado->integrado_id;
+        $this->uuid = $integrado->integrados[0]->integrado->integradoId;
     }
 }
 

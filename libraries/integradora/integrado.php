@@ -29,7 +29,7 @@ class Integrado {
         $query = $db->getQuery(true);
 	    $query->select($db->quoteName('user_id'))
             ->from($db->quoteName('#__integrado_users'))
-            ->where($db->quoteName('integrado_id') . ' = ' . $integ_id . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
+            ->where($db->quoteName('integradoId') . ' = ' . $integ_id . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
 
         $result = $db->setQuery($query)->loadResult();
 
@@ -80,7 +80,7 @@ class Integrado {
 		JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 
 		if ( empty( $existe ) ) {
-			$columnas[] = 'integrado_id';
+			$columnas[] = 'integradoId';
 			$valores[]  = $integradoId;
 
 			$datosQuery['columnas'] = $columnas;
@@ -141,12 +141,12 @@ class Integrado {
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->select('integrado_id')
+		$query->select('integradoId')
 			->from('#__integrado')
 			->where('status ='. 50);
 		$db->setQuery($query);
 
-		return $db->loadAssocList('integrado_id');
+		return $db->loadAssocList('integradoId');
 	}
 
 	public static function getSTPaccount( $integradoId ) {
@@ -175,7 +175,7 @@ class Integrado {
 	function getIntegrados (){
         $db     =JFactory::getDbo();
         $query  =$db->getQuery(true);
-        $query->select('intuser.integrado_id, user.id,user.name' )
+        $query->select('intuser.integradoId, user.id,user.name' )
             ->from('#__integrado_users as intuser')
             ->join('INNER', '#__users as user on  intuser.user_id = user.id')
             ->where('intuser.integrado_principal'.' <> 0 ');
@@ -191,7 +191,7 @@ class Integrado {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
+		$query->select($db->quoteName('integradoId').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
 			->where($db->quoteName('user_id') . '=' . $db->quote( JFactory::getUser()->id ));
 		$result = $db->setQuery($query)->loadObjectList();
@@ -208,7 +208,7 @@ class Integrado {
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('integrado_id') . '=' . $integ_id);
+			->where($db->quoteName('integradoId') . '=' . $integ_id);
 
 		$result = $db->setQuery($query)->loadObjectList();
 
@@ -216,7 +216,6 @@ class Integrado {
 			$user = JFactory::getUser($value->user_id);
 			
 			$user->permission_level		= $value->integrado_permission_level;
-			$user->integradoId			= $value->integrado_id;
 			$user->integrado_principal	= $value->integrado_principal;
 
 			$result[$key] = $user;
@@ -232,15 +231,15 @@ class Integrado {
 		if ($integ_id == null){
 			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
-		$integrado_id 					= isset($this->gral->integrado_id) ? $this->gral->integrado_id : $integ_id;
+		$integradoId 					= isset($this->gral->integradoId) ? $this->gral->integradoId : $integ_id;
 
-		if(!is_null($integrado_id) && $integrado_id != 0){
+		if(!is_null($integradoId) && $integradoId != 0){
 			$this->integrados[$key] = new stdClass();
-			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integrado_id', $integrado_id);
-			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integrado_id', $integrado_id);
-			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integrado_id', $integrado_id);
-            $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integrado_id', $integrado_id);
-            $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integrado_id', $integrado_id);
+			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integradoId', $integradoId);
+			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integradoId', $integradoId);
+			$this->integrados[$key]->datos_empresa 		= self::selectDataSolicitud('integrado_datos_empresa', 'integradoId', $integradoId);
+            $this->integrados[$key]->params         	= self::selectDataSolicitud('integrado_params', 'integradoId', $integradoId);
+            $this->integrados[$key]->datos_bancarios	= self::selectDataSolicitud('integrado_datos_bancarios', 'integradoId', $integradoId);
 
 			if( !empty($this->integrados[$key]->datos_bancarios) ) {
 				$this->integrados[$key]->datos_bancarios = getFromTimOne::getBankName($this->integrados[$key]->datos_bancarios);
@@ -329,7 +328,7 @@ class Integrado {
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('integrado_id') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
+			->where($db->quoteName('integradoId') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
 
 		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
@@ -371,10 +370,10 @@ class Integrado {
 		return $isValid;
 	}
 
-	public function belongsToIntegrado( $integrado_id ) {
+	public function belongsToIntegrado( $integradoId ) {
 		$integrados = $this->getIntegradosCurrUser();
 
-		return in_array($integrado_id, $integrados);
+		return in_array($integradoId, $integrados);
 	}
 
 	public static function getActiveIntegrados() {
@@ -394,7 +393,7 @@ class Integrado {
 			}
 
 			foreach ($results as $value) {
-				$integrado = new IntegradoSimple($value->integrado_id);
+				$integrado = new IntegradoSimple($value->integradoId);
 				$integrado->integrados[0]->displayName = $integrado->getDisplayName();
 
 				if ($integrado->isActive()) {
@@ -437,7 +436,7 @@ class IntegradoSimple extends Integrado {
 	 * @param mixed $ordersAtuhorizationParams
 	 */
 	public function setOrdersAtuhorizationParams( ) {
-		$result = getFromTimOne::selectDB('integrado_params', 'integrado_id');
+		$result = getFromTimOne::selectDB('integrado_params', 'integradoId');
 		$this->ordersAtuhorizationParams = !empty($result)?$result[0]->params:array();
 	}
 
@@ -532,7 +531,7 @@ class IntegradoSimple extends Integrado {
 	}
 
 	public function getId() {
-		return $this->integrados[0]->integrado->integrado_id;
+		return $this->integrados[0]->integrado->integradoId;
 	}
 
     public function isIntegrado(){
@@ -618,7 +617,7 @@ class UsuarioIntegradora {
 
 		if ( ! empty( $ints ) ) {
 			foreach ( $ints as $int ) {
-				$arrayIntIds[] = $int->integrado_id;
+				$arrayIntIds[] = $int->integradoId;
 			}
 		}
 
