@@ -100,7 +100,7 @@ $token = JSession::getFormToken();
             });
 
             var tabs = jQuery('#tabs-solicitudTabs li');
-            var integradoIdModel = '<?php if (isset($this->data->integrados->integrado->integrado_id)) : echo $this->data->integrados->integrado->integrado_id; endif; ?>';
+            var integradoIdModel = '<?php if (isset($this->data->integrados->integrado->integradoId)) : echo $this->data->integrados->integrado->integradoId; endif; ?>';
             if (integradoIdModel == '') {
                 tabs.addClass('disabled').find('a').attr("data-toggle", "disabled");
                 activeTab( tabs.first() );

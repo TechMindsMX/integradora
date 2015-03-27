@@ -174,7 +174,7 @@ class PlgUserIntegrado extends JPlugin
 	function getIntegradosCurrUser($instance)
 	{
 		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('integrado_id'))
+			->select($this->db->quoteName('integradoId'))
 			->from($this->db->quoteName('#__integrado_users'))
 			->where($this->db->quoteName('user_id') . '=' . $this->db->quote($instance->id));
 		$result = $this->db->setQuery($query)->loadObjectList();
