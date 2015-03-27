@@ -61,14 +61,12 @@ class xml2Array {
         foreach($conceptos['children'] as $key => $value){
             $datosXML->conceptos[$key]   = $value['attrs'];
         }
-        settype($impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'], 'float');
-        $datosXML->impuestos->totalTrasladados  = $impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
-        settype($impuestos['children'][0]['children'][0]['attrs']['TASA'], 'integer');
-        $datosXML->impuestos->iva->tasa         = $impuestos['children'][0]['children'][0]['attrs']['TASA'];
-        settype($impuestos['children'][0]['children'][0]['attrs']['IMPORTE'], 'float');
-        $datosXML->impuestos->iva->importe      = $impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
-        $datosXML->impuestos->ieps->tasa        = 0;
-        $datosXML->impuestos->ieps->importe     = 0;
+        $datosXML->impuestos->totalTrasladados  = (FLOAT)$impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS']; // TODO: !isset tengo que sumar los impuestos
+        $datosXML->impuestos->iva->tasa         = (INT)$impuestos['children'][0]['children'][0]['attrs']['TASA'];
+        $datosXML->impuestos->iva->importe      = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
+        $datosXML->impuestos->ieps->tasa        = (INT)$impuestos['children'][0]['children'][1]['attrs']['TASA'];// TODO: !isset
+
+        $datosXML->impuestos->ieps->importe     = (FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE'];// TODO: !isset
         $datosXML->comprobante                  = $comprobante;
         $datosXML->emisor                       = $emisor;
         $datosXML->receptor                     = $receptor;

@@ -85,6 +85,8 @@ class facturasComision extends OdVenta{
     }
 
     public function getProductsFromTxComision($integradoId){
+        $catalogo = new Catalogos();
+        $iva = $catalogo->getFullIva();
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -110,8 +112,8 @@ class facturasComision extends OdVenta{
             $producto->descripcion = 'Comision en la Fecha '.date('d-m-Y',$value->date);
             $producto->cantidad = '1' ;
             $producto->unidad = 'no Aplica';
-            $producto->p_unitario = $detalle->amount;
-            $producto->iva = '16';
+            $producto->p_unitario = $detalle->amount / (1+($iva/100));
+            $producto->iva = $iva;
             $producto->ieps = '0';
 
             $respuesta[] = $producto;
@@ -121,19 +123,17 @@ class facturasComision extends OdVenta{
     }
 
     private function getIvaComision($productos){
-        $totalAmount = 0;
-        $totalIva    = 0;
-        $totalIeps   = 0;
+//        $totalIva    = 0;
 
         foreach ($productos as $producto) {
             $iva          = (INT) $producto->iva;
-            $subTotalProd = ($producto->p_unitario*$producto->cantidad);
+            $subTotalProd = ($producto->p_unitario * $producto->cantidad);
 
-            $totalAmount = $totalAmount + $subTotalProd;
-            $totalIva = $totalIva + ($subTotalProd/$iva);
+            $totalIva[] = $subTotalProd * ($iva/100);
         }
 
-        return $totalIva;
+        $total = array_sum($totalIva);
+        return  $total;
     }
 
     public function getFactComision(){

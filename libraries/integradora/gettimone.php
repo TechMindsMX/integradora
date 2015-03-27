@@ -1907,7 +1907,12 @@ class getFromTimOne{
         $comision = self::getAplicableComision($tipoOrden, $comisiones);
 
         // TODO: verificar $orden->totalAmount con el comprobante del xml
-        $montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) : null;
+        // TODO: agregar una variable que indique el IVA que se va a ocupar y quitar el valor harcodeado.
+        $catalogo = new Catalogos();
+
+        $ivas = (int)$catalogo->getFullIva();
+
+        $montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) * (1+(ivas/100)) : null;
 
         return $montoComision;
     }
