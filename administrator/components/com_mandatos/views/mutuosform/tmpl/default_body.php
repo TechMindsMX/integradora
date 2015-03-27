@@ -67,7 +67,7 @@ $optionBancos = '';
                 beneficiario.val(data.nom_comercial);
                 beneficiario.prop('readOnly', true);
 
-                jQuery('#integradoIdR').val(data.integrado_id);
+                jQuery('#integradoIdR').val(data.integradoId);
                 jQuery('#dataBanco').hide();
                 jQuery('#existe').val(true);
             }else{
