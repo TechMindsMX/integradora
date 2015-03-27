@@ -59,7 +59,7 @@ $odrs = $this->ordenes;
                         <option value="0" selected="selected">Seleccione el filtro</option>
                         <?php
                         foreach ($this->usuarios as $key => $value) {
-                            echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
+                            echo '<option value="'.$value->integradoId.'">'.$value->name.'</option>';
                         }
                         ?>
                     </select>

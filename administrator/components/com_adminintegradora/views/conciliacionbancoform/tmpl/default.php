@@ -21,7 +21,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
                 foreach ($integrados as $key => $value) {
                     if ($value->integrado->status == 50 ) {
 	                    echo 'integradosArray['.$key.'] = "'.$value->displayName.'";'."\n";
-	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integrado_id.';'."\n";
+	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integradoId.';'."\n";
                     }
                 }
             ?>
