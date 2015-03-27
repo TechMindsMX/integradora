@@ -12,7 +12,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
 ?>
 <script>
-    var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
+    var integradoId = <?php echo $integ->integrado->integradoId; ?>;
 
     function cambiarPeriodo() {
         fechaInicial   = jQuery('#startDate').val();
