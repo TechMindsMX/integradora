@@ -61,17 +61,29 @@ class xml2Array {
         foreach($conceptos['children'] as $key => $value){
             $datosXML->conceptos[$key]   = $value['attrs'];
         }
-        $datosXML->impuestos->totalTrasladados  = (FLOAT)$impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS']; // TODO: !isset tengo que sumar los impuestos
-        $datosXML->impuestos->iva->tasa         = (INT)$impuestos['children'][0]['children'][0]['attrs']['TASA'];
-        $datosXML->impuestos->iva->importe      = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
-        $datosXML->impuestos->ieps->tasa        = (INT)$impuestos['children'][0]['children'][1]['attrs']['TASA'];// TODO: !isset
+        $this->trasladados($datosXML, $impuestos);
 
-        $datosXML->impuestos->ieps->importe     = (FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE'];// TODO: !isset
         $datosXML->comprobante                  = $comprobante;
         $datosXML->emisor                       = $emisor;
         $datosXML->receptor                     = $receptor;
         $datosXML->complemento                  = $complemento;
 
         return $datosXML;
+    }
+
+    public function trasladados($datosXML,$impuestos){
+        if(isset($impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'])){
+            $datosXML->impuestos->totalTrasladados  = (FLOAT)$impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
+        }else{
+            $datosXML->impuestos->totalTrasladados = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE']+ (FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE'];
+        }
+
+        $datosXML->impuestos->iva->tasa         = (INT)$impuestos['children'][0]['children'][0]['attrs']['TASA'];
+        $datosXML->impuestos->iva->importe      = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
+
+        $datosXML->impuestos->ieps->tasa        = isset($impuestos['children'][0]['children'][1]['attrs']['TASA'])?(INT)$impuestos['children'][0]['children'][1]['attrs']['TASA']:0;
+        $datosXML->impuestos->ieps->importe     = isset($impuestos['children'][0]['children'][1]['attrs']['IMPORTE'])?(FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE']:0;
+
+
     }
 }

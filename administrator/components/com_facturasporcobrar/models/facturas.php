@@ -53,10 +53,17 @@ class FacturasporcobrarModelFacturas extends JModelList {
 
         $returnDataFactura = array();
         $data = getFromTimOne::getOrdenesVenta($integradoId);
+
         foreach ($data as $key => $value) {
-            if($value->status->id==5 || $value->status->id==8){
-                $comision =getFromTimOne::getComisionesOfIntegrado($value->integradoId);
-                $value->comision = $comision[0]->monto;
+            if( ($value->status->id == 5) || ($value->status->id == 8) ) {
+                $value->comision = 0;
+                $comsionesFactura = getFromTimOne::selectDB('txs_mandatos', 'orderType = "CCom-odv"');
+
+                foreach($comsionesFactura as $comision){
+                    if($value->id == $comision->idOrden){
+                        $value->comision = $comision->amount;
+                    }
+                }
                 $returnDataFactura[] = $value;
             }
         }

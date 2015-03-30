@@ -145,7 +145,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function realizaTx(){
         $orden = $this->getOrden();
 
-        $proveedor = new IntegradoSimple($orden->proveedor->integrado->integrado_id);
+        $proveedor = new IntegradoSimple($orden->proveedor->integrado_id);
 
         if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
@@ -163,7 +163,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $orden          = $this->getOrden();
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
-        $orden->orderType = 'CCom';
+        $orden->orderType = 'CCom-'.$orden->orderType;
 
         $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 

@@ -182,7 +182,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $orden          = $this->orden;
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
 
-        $orden->orderType = 'CCom';
+        $orden->orderType = 'CCom-'.$orden->orderType;
 
         $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 
