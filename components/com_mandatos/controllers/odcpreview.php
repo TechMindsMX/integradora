@@ -144,8 +144,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
     private function realizaTx(){
         $orden = $this->getOrden();
+        $idProveedor = isset($orden->proveedor->integrado_id)?$orden->proveedor->integrado_id:$orden->proveedor->integrado->integrado_id;
 
-        $proveedor = new IntegradoSimple($orden->proveedor->integrado_id);
+        $proveedor = new IntegradoSimple($idProveedor);
 
         if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
             $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
