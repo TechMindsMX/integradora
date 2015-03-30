@@ -8,7 +8,7 @@
 
 namespace Integralib;
 
-
+use JFactory;
 use JLog;
 use JText;
 
