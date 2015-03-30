@@ -42,63 +42,65 @@ class Enviroment {
     }
 
     public function integradora() {
-        $middle           = "api-stage.timone.mx";
+        $middle           = "api-stage.timone.mx/";
         $puertoTimOne     = "";
-        $controllerTimOne = "/timone/services/";
+        $controllerTimOne = "timone/services/";
 
         define( "MIDDLE", 'http://' . $middle );
         define( "PUERTO", $puertoTimOne );
         define( "TIMONE", $controllerTimOne );
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+        define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
-        define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
+        define( 'XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
     }
 
     public function qaintegradora() {
-        $middle = "api-qa.timone.mx";
+        $middle = "api-qa.timone.mx/";
         $puertoTimOne =  "";
-        $controllerTimOne =  "/timone/services/";
+        $controllerTimOne =  "timone/services/";
 
         define( "MIDDLE", 'http://'.$middle);
         define( "PUERTO", $puertoTimOne);
         define( "TIMONE", $controllerTimOne);
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+	    define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
-        define('XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
+        define( 'XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
     }
 
     public function produccion() {
-        $middle           = "integra.trama.mx";
+        $middle           = "integra.trama.mx/";
         $puertoTimOne     = "";
-        $controllerTimOne = "/timone/services/";
+        $controllerTimOne = "timone/services/";
 
         define( "MIDDLE", 'http://' . $middle );
         define( "PUERTO", $puertoTimOne );
         define( "TIMONE", $controllerTimOne );
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+	    define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'factura.trama.mx/facturacion/' );
-        define('XML_FILES_PATH', 'media/facturas/');
-
+        define( 'XML_FILES_PATH', 'media/facturas/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
     }
 
     public function localhost() {
-        $middle           = "api-stage.timone.mx";
+        $middle           = "api-stage.timone.mx/";
         $puertoTimOne     = "";
-        $controllerTimOne = "/timone/services/";
+        $controllerTimOne = "timone/services/";
 
         define( "MIDDLE", 'http://' . $middle );
         define( "PUERTO", $puertoTimOne );
         define( "TIMONE", $controllerTimOne );
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+	    define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
-        define('XML_FILES_PATH', 'media/facturas/');
-
+        define( 'XML_FILES_PATH', 'media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
     }

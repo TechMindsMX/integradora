@@ -3,42 +3,13 @@ defined ('JPATH_PLATFORM') or die;
 
 jimport ('joomla.factory');
 
-/**
- * Clase rutas de servicios
- */
-
-class servicesRoute extends servicesUrls
-{
-	private $ssl;
-
-	protected $port = '';
-
-	public function __construct () {
-
-		$juri = JUri::getInstance ();
-		$this->ssl = ($juri->getScheme() === null) ? 'http' : $juri->getScheme();
-
-        parent::__construct();
-	}
-
-    public function getUrlService($controller, $service, $action){
-        call_user_func (array ('servicesRoute', $service));
-        $respuesta = new urlAndType();
-
-        $respuesta->url = $this->ssl.'://'.$this->controllers->$controller.$this->$action->url;
-        $respuesta->type = $this->$action->type;
-
-        return $respuesta;
-    }
-
-}
-
 class timOneControllers{
     public $controllers;
 
     public function __construct(){
 	    $this->controllers = new stdClass();
         $this->controllers->timone       = TIMONE_ROUTE;
+        $this->controllers->oauth        = TOKEN_ROUTE;
         $this->controllers->facturacion  = FACTURA_ROUTE;
     }
 }
@@ -112,7 +83,6 @@ class servicesUrls extends timOneControllers
 	public function factura() {
 		$this->create->url = 'create';
 	}
-
 	public function facturaCancel() {
 		$this->create->url = 'cancel';
 	}
@@ -124,6 +94,36 @@ class servicesUrls extends timOneControllers
 	public function validateXml() {
 		$this->create->url = 'validate';
 	}
+
+	public function token() {
+		$this->create->url = 'token';
+	}
+}
+
+class servicesRoute extends servicesUrls
+{
+	private $ssl;
+
+	protected $port = '';
+
+	public function __construct () {
+
+		$juri = JUri::getInstance ();
+		$this->ssl = ($juri->getScheme() === null) ? 'http' : $juri->getScheme();
+
+		parent::__construct();
+	}
+
+	public function getUrlService($controller, $service, $action){
+		call_user_func (array ('servicesRoute', $service));
+		$respuesta = new urlAndType();
+
+		$respuesta->url = $this->ssl.'://'.$this->controllers->$controller.$this->$action->url;
+		$respuesta->type = $this->$action->type;
+
+		return $respuesta;
+	}
+
 }
 
 class urlAndType

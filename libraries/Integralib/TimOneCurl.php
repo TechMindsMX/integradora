@@ -66,12 +66,23 @@ class TimOneCurl {
 		return strtoupper($this->httpType);
 	}
 
-	public function to_timone() {
+	public function to_timone($token = null) {
 
 		$verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
 		$verbose = fopen(JFactory::getConfig()->get('log_path').'/curl-'.date('d-m-y').'.log', 'a+');
 		$ch = curl_init();
+
+		$curl_headers = array(
+			'Content-Length: ' . strlen($this->jsonData)
+		);
+		if( !is_null($token) ) {
+			$array = array('Accept: application/json', 'Content-Type: application/json', 'Authorization: '.$token->token_type. ' '. $token->access_token);
+			$curl_headers = array_merge($curl_headers, $array);
+		} else {
+			$array = array('Accept: application/json', 'Content-Type: application/x-www-form-urlencoded');
+			$curl_headers = array_merge($curl_headers, $array);
+		}
 
 		switch($this->getHttpType()) {
 			case ('POST'):
@@ -86,11 +97,7 @@ class TimOneCurl {
 					CURLOPT_FOLLOWLOCATION => false,
 					CURLOPT_VERBOSE        => $verboseflag,
 					CURLOPT_STDERR		   => $verbose,
-					CURLOPT_HTTPHEADER	   => array(
-						'Accept: application/json',
-						'Content-Type: application/json',
-						'Content-Length: ' . strlen($this->jsonData)
-					)
+					CURLOPT_HTTPHEADER	   => $curl_headers
 				);
 				break;
 			case ('PUT'):

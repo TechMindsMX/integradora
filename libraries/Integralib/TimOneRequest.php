@@ -30,11 +30,13 @@ class TimOneRequest extends TimOneCurl {
 	public function makeRequest(){
 		unset($this->options);
 
+		$token = $this->getAccessToken();
+
 		$this->setServiceUrl($this->url);
 		$this->setJsonData(json_encode($this->objEnvio));
 		$this->setHttpType($this->type);
 
-		$this->resultado = $this->to_timone();
+		$this->resultado = $this->to_timone( $token );
 
 		jimport('joomla.log.log');
 
@@ -43,6 +45,18 @@ class TimOneRequest extends TimOneCurl {
 		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
 		return $this->resultado;
+	}
+
+	public function getAccessToken() {
+		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
+
+		$this->setServiceUrl("http://api-qa.timone.mx/timone/oauth/token");
+		$this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+		$this->setHttpType('POST');
+
+		$token = $this->to_timone();
+
+		return json_decode($token->data);
 	}
 
 }
