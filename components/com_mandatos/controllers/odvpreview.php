@@ -107,12 +107,10 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         /*
          *  NOTIFICACIONES 7
          */
-        $info = array();
-
         $getCurrUser     = new IntegradoSimple($this->integradoId);
         $titleArray      = array( $objOdv->numOrden);
 
-        $array           = array($getCurrUser->user->name, $objOdv->numOrden, JFactory::getUser()->username, date('d-m-Y'), $objOdv->getTotalAmount(), $objOdv->getEmisor()->getDisplayName(),  $objOdv->numOrden);
+        $array           = array($getCurrUser->user->name, $objOdv->numOrden, JFactory::getUser()->username, date('d-m-Y'), $objOdv->getTotalAmount(), $objOdv->getReceptor()->getDisplayName(),  $objOdv->numOrden);
         $send            = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
@@ -209,32 +207,4 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 		return isset($relation->id_odc);
 	}
 
-	public function sendEmailODC($odcObj)
-	{
-		/*
-		 *  NOTIFICACIONES
-		 */
-		$info = array();
-
-		$getCurrUser     = new IntegradoSimple($odcObj->integradoId);
-		$titleArray      = array( $odcObj->numOrden);
-
-		$array           = array($getCurrUser->user->name, $odcObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $odcObj->totalAmount, $odcObj->integradoName,  $odcObj->numOrden);
-		$send            = new Send_email();
-
-		$send->setIntegradoEmailsArray($getCurrUser);
-		$info[]            = $send->sendNotifications('7', $array, $titleArray);
-
-		/*
-		 * Notificaciones
-		 */
-
-		$titleArrayAdmin = array( $getCurrUser->user->username, $odcObj->numOrden );
-		$arrayAdmin      = array( $getCurrUser->user->username, $odcObj->numOrden, JFactory::getUser()->username, date('d-m-Y'), $odcObj->totalAmount, $odcObj->integradoName,  $odcObj->numOrden );
-
-		$send->setAdminEmails();
-		$info[] = $send->sendNotifications('8', $arrayAdmin, $titleArrayAdmin);
-
-		return $info;
-	}
 }
