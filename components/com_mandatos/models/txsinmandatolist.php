@@ -16,11 +16,17 @@ class MandatosModelTxsinmandatolist extends JModelItem {
 
 		$txs = getFromTimOne::getTxIntegradoSinMandato($integradoId);
 
+        $retorno = array();
 		foreach ( $txs as $trans ) {
 			$trans->balance = $this->getTxBalance($trans);
+
+            if($trans->balance > 0) {
+
+                $retorno[] = $trans;
+            }
 		}
 
-		return $txs;
+		return $retorno;
 	}
 
 	/**
