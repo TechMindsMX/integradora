@@ -385,7 +385,7 @@ class MandatosController extends JControllerLegacy {
 
                 if( $table == 'integrado_datos_personales'){
 
-                    $this->sendEmail();
+                    $this->sendEmail(__METHOD__);
 
                 }
 
@@ -561,13 +561,14 @@ class MandatosController extends JControllerLegacy {
     }
 
     public function generateFactComision(){
-        $integradoId = JFactory::getApplication()->input->get('integradoId',null,'INT');
+	    $integradoId = 2;
 
-        $factura = new facturasComision();
+	    $factura = new facturasComision();
 
-        $test = $factura->generateFact($integradoId);
+        $this->factutaComisiones = $factura->generateFact($integradoId);
 
-        if($test){
+        if(is_object($this->factutaComisiones)){
+	        $this->sendEmail(__METHOD__);
             echo 'generadas';
         }else{
             echo 'no se generaron';
@@ -575,30 +576,40 @@ class MandatosController extends JControllerLegacy {
         exit;
     }
 
-    public function sendEmail()
+    public function sendEmail($param)
     {
-        /*
-         * Notificaciones 6
-         */
-        $tipo = '';
-        if ($this->dataCliente->tp_tipo_alta == 0) {
-            $tipo = 'Cliente';
-        }
-        if ($this->dataCliente->tp_tipo_alta == 1) {
-            $tipo = 'Proveedor';
-        }
-        if ($this->dataCliente->tp_tipo_alta == 2) {
-            $tipo = 'Cliente/Proveedor';
-        }
+	    $getCurrUser = new IntegradoSimple($this->integradoId);
 
-        $getCurrUser = new IntegradoSimple($this->integradoId);
+	    switch ($param) {
+		    case 'MandatosController::generateFactComision':
 
-        $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
+			    $array = array($this->factutaComisiones->getReceptor()->getDisplayName(), $this->factutaComisiones->id, date('d-m-Y'), $this->factutaComisiones->totales->total);
+			    $notificationNumber = '19';
+			    break;
+		    case 'MandatosController::saveCliPro':
+			    /*
+			 * Notificaciones 6
+			 */
+			    $tipo = '';
+			    if ($this->dataCliente->tp_tipo_alta == 0) {
+				    $tipo = 'Cliente';
+			    }
+			    if ($this->dataCliente->tp_tipo_alta == 1) {
+				    $tipo = 'Proveedor';
+			    }
+			    if ($this->dataCliente->tp_tipo_alta == 2) {
+				    $tipo = 'Cliente/Proveedor';
+			    }
 
-        $sendEmail = new Send_email();
-        $sendEmail->setIntegradoEmailsArray($getCurrUser);
+			    $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
+			    $notificationNumber = '6';
+			    break;
+	    }
 
-        $infoEmail = $sendEmail->sendNotifications('6', $array);
+	    $send = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+
+        $infoEmail = $send->sendNotifications($notificationNumber, $array);
         return $infoEmail;
     }
 

@@ -18,25 +18,33 @@ jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 
 class facturasComision extends OdVenta{
-    public function generateFact($integradoId){
+	public $status;
+	public $ieps;
+	public $paymentMethod;
+	public $placeIssue;
+	public $conditions;
+	public $productosData;
+	public $urlXML;
+
+	public function generateFact($integradoId){
         $db                   = JFactory::getDbo();
+
         $save                 = new sendToTimOne();
         $respuesta            = false;
-        $datosFacturaComision = new OdVenta();
 
-        $datosFacturaComision->emisor         = new IntegradoSimple(1);
-        $datosFacturaComision->receptor       = new IntegradoSimple($integradoId);
-        $datosFacturaComision->conditions     = 1;
-        $datosFacturaComision->urlXML         = null;
-        $datosFacturaComision->status         = 0;
-        $datosFacturaComision->ieps           = 0;
-        $datosFacturaComision->paymentMethod  = $this->getpaymentMethod();
-        $datosFacturaComision->placeIssue     = $this->getplaceIssue();
-        $datosFacturaComision->productosData  = $this->getProductsFromTxComision($integradoId);
+        $this->emisor         = new IntegradoSimple(1);
+        $this->receptor       = new IntegradoSimple($integradoId);
+        $this->conditions     = 1;
+        $this->urlXML         = null;
+        $this->status         = 0;
+        $this->ieps           = 0;
+        $this->paymentMethod  = $this->getpaymentMethod();
+        $this->placeIssue     = $this->getplaceIssue();
+        $this->productosData  = $this->getProductsFromTxComision($integradoId);
 
-        if( !empty($datosFacturaComision->productosData) ) {
-            $datosFacturaComision->iva  = $this->getIvaComision($datosFacturaComision->productosData);
-            $factObj                    = $save->generaObjetoFactura($datosFacturaComision);
+        if( !empty($this->productosData) ) {
+            $this->iva  = $this->getIvaComision($this->productosData);
+            $factObj                    = $save->generaObjetoFactura($this);
 
             if ($factObj != false) {
                 $fecha = new DateTime();
@@ -53,9 +61,12 @@ class facturasComision extends OdVenta{
                 try {
                     $db->insertObject('#__facturas_comisiones', $factComDB);
 
-                    $respuesta = true;
+	                $db->transactionCommit();
 
-                    $db->transactionCommit();
+	                $this->id = $db->insertid();
+
+	                $respuesta = $factObj;
+
                 } catch (Exception $e) {
                     $db->transactionRollback();
                 }
