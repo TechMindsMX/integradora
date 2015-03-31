@@ -561,20 +561,42 @@ class MandatosController extends JControllerLegacy {
     }
 
     public function generateFactComision(){
-	    $integradoId = 2;
 
-	    $factura = new facturasComision();
+	    foreach ( $this->getAllIntegrados() as $integrado ) {
 
-        $this->factutaComisiones = $factura->generateFact($integradoId);
+		    $factura = new facturasComision();
 
-        if(is_object($this->factutaComisiones)){
-	        $this->sendEmail(__METHOD__);
-            echo 'generadas';
-        }else{
-            echo 'no se generaron';
-        }
-        exit;
+		    $this->factutaComisiones = $factura->generateFact($integrado->Id);
+
+		    if(is_object($this->factutaComisiones)){
+			    $this->sendEmail(__METHOD__);
+			    echo 'generadas';
+		    }else{
+			    echo 'no se generaron';
+		    }
+		    exit;
+	    }
+
     }
+
+	public function getAllIntegrados() {
+		$result = null;
+
+		$db = JFactory::getDbo();
+
+		$query = $db->getQuery(true);
+		$query->select($db->quote('integrado_id ', 'id') )
+			->from($db->quoteName('#__integrado') );
+		$db->setQuery($query);
+
+		foreach ( $db->loadObjectList() as $integ ) {
+			$intSim = new IntegradoSimple($integ->id);
+
+			$result[] = $intSim->isIntegrado() ? $intSim->id : null;
+		}
+
+		return $result;
+	}
 
     public function sendEmail($param)
     {
