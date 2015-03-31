@@ -895,7 +895,7 @@ class getFromTimOne{
                 $db = JFactory::getDbo();
                 $querygral = $db->getQuery(true);
 
-                $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact')
+                $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact, DP.tel_fijo AS phone')
                     ->from('#__integrado_datos_personales AS DP')
                     ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integrado_id') . ' = ' . $db->quoteName('DP.integrado_id') . ')')
                     ->where('DP.integrado_id = ' . $value->id);
@@ -904,16 +904,14 @@ class getFromTimOne{
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
 
-                    $value->rfc = @$general->rfc;
-                    $value->pRFC = @$general->pRFC;
-                    $value->tradeName = @$general->tradeName;
-                    $value->corporateName = @$general->corporateName;
-                    $value->contact = @$general->contact;
+                    foreach ($general as $key => $val) {
+                        $value->$key = @$val;
+                    }
+
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }
             }
-
 
             //obtiene los datos de contacto para el cliente/proveedor
             foreach ($response as $value) {
@@ -927,7 +925,7 @@ class getFromTimOne{
                 try {
                     $db->setQuery($queryphone);
                     $phone = $db->loadObject();
-                    $value->phone = isset($phone->telefono) ? $phone->telefono : '';
+                    $value->phone = isset($phone->telefono) ? $phone->telefono : $value->phone;
                 } catch (Exception $e) {
                     echo $e->getMessage();
                 }
@@ -989,6 +987,7 @@ class getFromTimOne{
                 $banco      = self::selectDB('integrado_datos_bancarios', $where);
 
                 $value->datosBanco  = $banco;
+
                 $value->contacto    = $contacto;
             }
             $response = $listAllCliPro;
@@ -1002,10 +1001,10 @@ class getFromTimOne{
             foreach ($response as $value) {
 
                 if( in_array($value->type, $catalogo->clientTypes()) && in_array($type, $catalogo->clientTypes()) ){
-                    $clientes[] = $value;
+                    $clientes["c".$value->client_id] = $value;
                 }
                 if( in_array($value->type, $catalogo->providerTypes()) && in_array($type, $catalogo->providerTypes()) ){
-                    $proveedores[] = $value;
+                    $proveedores["c".$value->client_id] = $value;
                 }
 
             }
@@ -3553,6 +3552,7 @@ class Factura extends makeTx {
         if(isset ($orden)) {
             $this->setConceptos($orden);
             $this->setImpuestos($orden);
+            $this->setTotales($orden);
         }
         $this->setTimbra($timbra);
         $this->setFormat();
@@ -3583,25 +3583,15 @@ class Factura extends makeTx {
 
         $impuestos = array();
 
-        $impuestos[0] = $this->getObjectImpuestoFromIVA($orden);
-        $ieps = $this->getObjectImpuestoFromIEPS($orden);
-        if($ieps->importe != 0){
-            $impuestos[1] = $ieps;
+        $impuestosAgrupados = $this->agrupaImpuestos($orden->productosData);
+
+        foreach ($impuestosAgrupados as $key => $value) {
+            foreach ($value as $indice => $valor) {
+                $impuestos[] = new \Impuesto($valor,$indice,$key);
+            }
         }
 
         $this->impuestos = $impuestos;
-    }
-
-    /**
-     * @return \Impuesto
-     */
-    private function getObjectImpuestoFromIVA($orden) {
-        return new \Impuesto($orden->getMontoTotalIVA(), \CatalogoFactory::create()->getFullIva(), 'IVA');
-    }
-
-    private function getObjectImpuestoFromIEPS($orden) {
-//		TODO: revisar cual es la tasa de IEPS que hay que mandar
-        return new \Impuesto($orden->getMontoTotalIEPS(), $orden->productosData[0]->ieps, 'IEPS');
     }
 
     /**
@@ -3659,6 +3649,22 @@ class Factura extends makeTx {
         $rutas = new servicesRoute();
 
         return parent::create($rutas->getUrlService('facturacion', 'factura', 'cancel'));
+    }
+
+    private function agrupaImpuestos($productosData){
+        $retorno = array();
+
+        foreach ($productosData as $producto) {
+            $retorno['iva'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->iva/100);
+            $retorno['ieps'][$producto->ieps] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->ieps/100);
+        }
+
+        return $retorno;
+
+    }
+
+    private function setTotales($orden){
+        $this->totales = new \Integralib\Totales($orden ,$this->impuestos);
     }
 
 

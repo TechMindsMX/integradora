@@ -695,4 +695,11 @@ class MandatosController extends JControllerLegacy {
         return $validador;
     }
 
+    //TODO:quitar
+    public function TestFactura(){
+        $odv = new \Integralib\OdVenta();
+        $odv->setOrderFromId(5);
+
+        $factura = new Factura($odv, true);
+    }
 }

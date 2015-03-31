@@ -48,20 +48,20 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $resultado = $save->insertDB('auth_odv');
+            $resultado = true;//$save->insertDB('auth_odv');
 
             if($resultado) {
                 // autorización guardada
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId  = 5;
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
+                $statusChange = true;//$save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
 	                $newOrder = new OdVenta();
 	                $newOrder->setOrderFromId( $this->parametros['idOrden'] );
 
-	                if ( $newOrder->status->id == 5 && is_null($newOrder->urlXML) ) {
+	                if ( true/*$newOrder->status->id == 5 && is_null($newOrder->urlXML)*/ ) {
                         $factObj = $save->generaObjetoFactura( $newOrder );
 
                         if ( $factObj != false ) {
