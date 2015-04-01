@@ -24,7 +24,7 @@ class IntegradoModelIntegradoParams extends JModelAdmin{
 	}
 
     private function getComisiones(){
-        return getFromTimOne::getComisiones();
+        return getFromTimOne::getComisiones(null,true);
     }
 
 	public function getTable($type = 'IntegradoParams', $prefix = 'IntegradoTable', $config = array()){

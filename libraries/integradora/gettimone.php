@@ -1860,13 +1860,16 @@ class getFromTimOne{
         return $facturas;
     }
 
-    public static function getComisiones($id = null) {
+    public static function getComisiones($id = null, $getActive = false) {
         $request = new getFromTimOne();
 
         $where = null;
         if(!is_null($id)) {
-            $where = 'id = '.$id;
+            $where = 'id = '.(INT)$id;
+        }elseif($getActive){
+            $where = 'status = 1';
         }
+
         $comisiones = $request->selectDB('mandatos_comisiones', $where);
 
         return $comisiones;
