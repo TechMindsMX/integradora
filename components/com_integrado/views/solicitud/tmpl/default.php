@@ -151,7 +151,7 @@ $token = JSession::getFormToken();
                                     jQuery('#de_rfc').val( jQuery('#busqueda_rfc').val() ).attr('readonly', 'readonly');
                                     a_empresa.insertAfter(jQuery('a[href="#basic-details"]').parent());
 
-	                                $filesContent.find('input').prop('disabled', false);
+	                                $filesContent.find('input, label').prop('disabled', false).show();
                                     nextTab();
                                 }
                                 else if (juridica.pj_pers_juridica == 2) {
@@ -159,9 +159,8 @@ $token = JSession::getFormToken();
 
                                     a_empresa = jQuery('a[href="#empresa"]').parent().detach();
 
-	                                $filesContent.find('input').prop('disabled', true);
-	                                $filesContent.find('input[name*="dp_"]').prop('disabled', false);
-//                                    nextTab();
+	                                $filesContent.find('input, label').prop('disabled', true).hide();
+	                                $filesContent.find('input[name*="dp_"], input[name="db_banco_file"], label[for*="dp_"], label[for="db_banco_file"]').prop('disabled', false).show();
                                 }
                                 jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
                             }
