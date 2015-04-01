@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted Access');
 
-use \Integralib\OdVenta;
+use Integralib\OdVenta;
 
 class MandatosModelFacturapreview extends JModelItem {
 
@@ -26,6 +26,8 @@ class MandatosModelFacturapreview extends JModelItem {
 			$this->factura = new OdVenta();
 			$this->factura->setOrderFromId($this->inputVars['facturanum']);
 			$this->factura->currency = $cats[0]->code;
+			$this->factura->project = isset( $this->factura->projectId ) ? new \Integralib\Project($this->factura->projectId) : null;
+			$this->factura->subProject = isset( $this->factura->projectId2 ) ? new \Integralib\Project($this->factura->projectId2) : null;
 		}
 
 		// Verifica si la FACTURA exite para el integrado o redirecciona

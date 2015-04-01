@@ -34,5 +34,8 @@ class Project {
 		}
 	}
 
+	public function isSubProject() {
+		return (INT)$this->parentId != 0;
+	}
 
 }
