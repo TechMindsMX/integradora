@@ -26,7 +26,7 @@ class IntegradoViewIntegradoParams extends JViewLegacy {
 		JToolBarHelper::title(JText::_('COM_INTEGRADO_MANAGER_INTEGRADO_EDIT'));
 		
 		JToolBarHelper::save('integradoparams.save');
-		JToolBarHelper::cancel('integradoparams.cancel', 'JTOOLBAR_CLOSE');
+		JToolBarHelper::cancel('integrado.cancel', 'JTOOLBAR_CLOSE');
 	}
 
 }
