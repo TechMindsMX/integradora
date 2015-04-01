@@ -33,10 +33,32 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
         $params->integrado_id = $this->integradoId;
         $params->params = $this->data['params'];
 
-        var_dump($this->data);exit;
+        try {
+            if((BOOLEAN)$this->data['exist']){
+                $query = $db->getQuery(true);
 
-        try{
-            $db->insertObject('#__integrado_params',$params);
+                $conditions = array(
+                    $db->quoteName('integrado_id') . ' = '.$this->integradoId
+                );
+
+                $query->delete($db->quoteName('#__integrado_params'));
+                $query->where($conditions);
+
+                $db->setQuery($query);
+                $db->execute();
+
+                $query = $db->getQuery(true);
+                $conditions = array(
+                    $db->quoteName('integradoId') . ' = '.$this->integradoId
+                );
+
+                $query->delete($db->quoteName('#__integrado_comisiones'));
+                $query->where($conditions);
+
+                $db->setQuery($query);
+                $db->execute();
+            }
+            $db->insertObject('#__integrado_params', $params);
 
             $comisones = new stdClass();
             foreach ($this->data['comision'] as $value) {
@@ -47,11 +69,11 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
             }
             $db->transactionCommit();
 
-            $app->enqueueMessage('Datos Almacenados', 'message');
+            $app->enqueueMessage('Datos Almacenados');
             $ruta = 'index.php?option=com_integrado';
-        }catch (Exception $e){
-            $app->enqueueMessage('No se pudo Almacenar los datos');
-            $ruta = 'index.php?option=com_integrado&view=integradoparams&layout=edit&id='.$this->integradoId;
+        } catch (Exception $e) {
+            $app->enqueueMessage('No se pudo Almacenar los datos', 'error');
+            $ruta = 'index.php?option=com_integrado&view=integradoparams&layout=edit&id=' . $this->integradoId;
             $db->transactionRollback();
         }
 

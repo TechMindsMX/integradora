@@ -15,13 +15,16 @@ jimport('integradora.validator');
 jimport('integradora.gettimone');
 
 class AdminintegradoraControllerValidacionForms extends JControllerAdmin{
+    public $input;
+    public $encoding;
     protected $data;
-    private $receptor;
 
     public function __construct(){
         $this->encoding = JFactory::getDocument()->setMimeEncoding('application/json');
+        $this->input = JFactory::getApplication()->input;
 
         parent::__construct();
+
     }
 
     public function validatx(){
@@ -36,7 +39,7 @@ class AdminintegradoraControllerValidacionForms extends JControllerAdmin{
             'amount'        => 'STRING'
         );
         $validaciones = new validador();
-        $data = JFactory::getApplication()->input->getArray($post);
+        $data = $this->input->getArray($post);
 
         $diccionario = array(
             'integradoId' => array('number'       => true, 'maxlength' => 10),
@@ -60,5 +63,29 @@ class AdminintegradoraControllerValidacionForms extends JControllerAdmin{
         $resultadovalidacion['success'] = true;
 
         echo json_encode($resultadovalidacion);
+    }
+
+    public function validaparams(){
+        $this->encoding;
+        $filtroPost   = array('params' => 'STRING');
+        $params       = $this->input->getArray($filtroPost);
+        $validaciones = new validador();
+        $diccionario  = array(
+            'params' => array('number' => true, 'max' => 5, 'min'=>1, 'required' => true)
+        );
+
+        $isValid = $validaciones->procesamiento($params,$diccionario);
+
+        if( is_array($isValid['params']) ){
+            $isValid['success'] = false;
+
+            echo json_encode($isValid);
+            die;
+
+        }
+
+        $isValid['success'] = true;
+
+        echo json_encode($isValid);
     }
 }

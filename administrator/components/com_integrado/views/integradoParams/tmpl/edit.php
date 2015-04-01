@@ -19,10 +19,46 @@ if(!empty($this->item->dataSaved)){
     }
 }
 ?>
+<script src="../libraries/integradora/js/tim-validation.js"> </script>
+
+<script>
+    function valida() {
+        var data = jQuery('#params').val();
+        var loading = jQuery('#loading');
+
+        var parametros = {
+            'link': 'index.php?option=com_adminintegradora&task=validacionforms.validaparams&format=raw',
+            'datos': {'params':data}
+        };
+
+        loading.show();
+        var request = jQuery.ajax({
+            url: parametros.link,
+            data: parametros.datos,
+            type: 'post'
+        });
+
+        request.done(function (response) {
+            loading.hide()
+            if (response.success) {
+                Joomla.submitbutton('integradoparams.save');
+            } else {
+                mensajesValidaciones(response);
+            }
+        });
+    }
+
+    jQuery(Document).ready(function(){
+        var btnSave = jQuery('#toolbar-save').find('button');
+        btnSave.removeProp('onclick');
+
+        btnSave.on('click', valida);
+    });
+</script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integradoparams&layout=edit&id='.(int)$this -> item -> id); ?>" method="post" name="adminForm" id="adminForm">
     <div class="form-vertical">
-        <legend><?php echo JText::_('COM_INTEGRADO_MANAGER_PARAMETRIZACION').' - '.$nombre; ?></legend>
+        <legend><?php echo JText::_('COM_INTEGRADO_MANAGER_PARAMETRIZACION').' - '.$nombre; ?> <span id="loading" style="display: none;"><img style="height: 33px;" src="../media/media/images/loading.gif" </span> </legend>
 
         <div class="input-group">
             <label for="params">Número de Autorizaciones</label>
