@@ -12,7 +12,7 @@ jimport('integradora.gettimone');
  */
 class Integrado {
 	public $integrados;
-	
+
 	function __construct($integ_id = null) {
 		$this->integrados = $this->getIntegradosCurrUser();
 	}
@@ -183,12 +183,12 @@ class Integrado {
 
         return $result;
     }
-	
+
 	//retorna todos los integrados (solicitudes) relacionadas al idJoomla
 	function getIntegradosCurrUser()
 	{
 		$db = JFactory::getDbo();
-		
+
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('integrado_id').','.$db->quoteName('integrado_principal').','. $db->quoteName('integrado_permission_level'))
 			->from($db->quoteName('#__integrado_users'))
@@ -197,13 +197,13 @@ class Integrado {
 
         return $result;
 	}
-	
+
 	//Retorna todos los usuarios agregados a un Integrado
 	public function getUsersOfIntegrado($integ_id){
 		if(is_null($integ_id)) { $integ_id = 0; }
 
 		$db = JFactory::getDbo();
-		
+
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from($db->quoteName('#__integrado_users'))
@@ -213,7 +213,7 @@ class Integrado {
 
 		foreach ($result as $key => $value) {
 			$user = JFactory::getUser($value->user_id);
-			
+
 			$user->permission_level		= $value->integrado_permission_level;
 			$user->integradoId			= $value->integrado_id;
 			$user->integrado_principal	= $value->integrado_principal;
@@ -225,7 +225,7 @@ class Integrado {
 
 		return $result;
 	}
-	
+
 	function getSolicitud($integ_id = null, $key){
 
 		if ($integ_id == null){
@@ -246,19 +246,23 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+
+				$address    = $this->getAddressFromCodPostal(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_personales->cod_postal);
+
 				$this->integrados[$key]->datos_personales->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 			}
 
 			$empresa = $this->integrados[$key]->datos_empresa;
-			if (isset($empresa)){		
+			if (isset($empresa)){
 				$this->integrados[$key]->testimonio1		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_1);
 				$this->integrados[$key]->testimonio2		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->testimonio_2);
 				$this->integrados[$key]->poder				= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->poder);
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+
+					$address = $this->getAddressFromCodPostal(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal);
+
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
@@ -270,7 +274,7 @@ class Integrado {
 			$this->integrados[$key]->datos_empresa 		= null;
 			$this->integrados[$key]->params		 		= null;
 			$this->integrados[$key]->datos_bancarios 	= null;
-			
+
 			$this->integrados[$key]->testimonio1		= null;
 			$this->integrados[$key]->testimonio2		= null;
 			$this->integrados[$key]->poder				= null;
@@ -301,7 +305,7 @@ class Integrado {
 
 		return $return;
 	}
-	
+
 	public static function checkPermisos($class, $userId, $integradoId)
 	{
         $app = JFactory::getApplication();
@@ -342,27 +346,27 @@ class Integrado {
 		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_auth']);
 
 		return $permisos;
-		
+
 	}
 
     public static function getNationalityNameFromId($id) {
 		$db = JFactory::getDbo();
-		
+
 		$query = $db->getQuery(true)
 					->select($db->quoteName('nombre'))
 					->from($db->quoteName('#__catalog_paises'))
 					->where('id ='. (int)$id);
 		$result = $db->setQuery($query)->loadResult();
-		
+
 		return $result;
 	}
-	
+
 	public static function isValidPrincipal($integ_id, $userJoomla){
 		$isValid 	= true;
 
 		if(!is_null($integ_id) ){
             $result = self::getUsuarioPrincipal($integ_id);
-			
+
 			if( !is_null($result->id) ){
 				$isValid = $result->id==$userJoomla?true:false;
 			}
@@ -402,6 +406,21 @@ class Integrado {
 			}
 
 			return $integradosArray;
+	}
+
+	/**
+	 * @param $filename
+	 *
+	 * @return mixed
+	 * @internal param $key
+	 *
+	 */
+	public function getAddressFromCodPostal( $filename ) {
+		static $file_contents = array();
+		if (!isset($file_contents[$filename])) {
+			$file_contents[$filename] = json_decode(file_get_contents($filename));
+		}
+		return $file_contents[$filename];
 	}
 }
 
