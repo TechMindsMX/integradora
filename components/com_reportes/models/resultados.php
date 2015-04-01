@@ -43,9 +43,7 @@ class ReportesModelResultados extends JModelItem {
     }
 
     public function getReporte(){
-        $input                 = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
-        $input->startDate      = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
-        $input->endDate        = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
+	    $input = $this->getInputDaterangeAndProject();
 
        // TODO: quitar hardcoded data
         $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate, $input->proyecto);
@@ -58,11 +56,8 @@ class ReportesModelResultados extends JModelItem {
     }
 
     public function getDetalleIngresos($periodStarDate = null, $periodEndDate = null){
-        //Periodo diciembre (1417392000 primero de diciembre, 1420070399 31 de diciembre) 1418655600
+        $input          = $this->getInputDaterangeAndProject();
 
-        $input          = (object)JFactory::getApplication()->input->getArray(array('startDate'=>'string','endDate'=>'STRING', 'proyecto' => 'INT'));
-        $startPeriod    = !is_null($input->startDate)?strtotime($input->startDate) : 1417392000;
-        $endPeriod      = !is_null($input->endDate) ? strtotime($input->endDate) : 1420070399;
         $retorno        = array();
         $cxc            = $this->getCXC();
         $ordenesPagadas = getFromTimOne::getOrdenesVenta($this->input->integradoId);
@@ -176,4 +171,21 @@ class ReportesModelResultados extends JModelItem {
 
         return $proyectos;
     }
+
+	/**
+	 * @return object
+	 * @throws Exception
+	 */
+	public function getInputDaterangeAndProject() {
+		$input            = (object) JFactory::getApplication()->input->getArray( array (
+			                                                                          'startDate' => 'string',
+			                                                                          'endDate'   => 'STRING',
+			                                                                          'proyecto'  => 'INT'
+		                                                                          ) );
+		$input->startDate = ! is_null( $input->startDate ) ? strtotime( $input->startDate ) : null;
+		$input->endDate   = ! is_null( $input->endDate ) ? strtotime( $input->endDate ) : null;
+		$input->proyecto  = ! is_null( $input->proyecto ) ? strtotime( $input->proyecto ) : null;
+
+		return $input;
+	}
 }
