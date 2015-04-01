@@ -7,30 +7,49 @@ jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidation');
-JHTML::_('behavior.calendar');
-echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
-$attsCal        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-$attsCal2        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-$attsCal3        = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-$rfc                = $this->data->integrados[0]->datos_personales->rfc;
-$integradoName      = $this->data->integrados[0]->datos_empresa->razon_social;
-$calle              = $this->data->integrados[0]->datos_empresa->calle;
-$no_ext             = $this->data->integrados[0]->datos_empresa->num_exterior;
-$no_int             = $this->data->integrados[0]->datos_empresa->num_interior;
-$cp                 = $this->data->integrados[0]->datos_empresa->cod_postal;
-$direccion          = 'Calle; '.$calle.', No. Exterior '.$no_ext.', No. Interior '.' C.P. '.$cp;
 
 $formToken  = JSession::getFormToken(true).'=1';
 
-$url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
-?>
-<script>
+$projects = $this->projects;
 
-   /* if((Date.parse(fech1)) > (Date.parse(fech2))){
-        alert(‘La fecha inicial no puede ser mayor que la fecha final’);
-    }
-    }
-*/
+$url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
+$url_resultados = 'index.php?option=com_reportes&view=resultados&'.$formToken;
+?>
+
+<script src="libraries/integradora/js/tim-validation.js"> </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+<script src="libraries/integradora/js/tim-datepicker-defaults.js"> </script>
+
+<script>
+	jQuery(document).ready(function(){
+		jQuery('#changePeriod').on('click',cambiarPeriodo);
+		jQuery('.datepicker').datepicker();
+
+		jQuery('.monthYearPicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			showButtonPanel: true,
+			dateFormat: 'MM yy',
+			maxDate: '-1M'
+		}).focus(function() {
+			var thisCalendar = jQuery(this);
+			jQuery('.ui-datepicker-calendar').detach();
+			jQuery('.ui-datepicker-close').click(function() {
+				var month = jQuery("#ui-datepicker-div .ui-datepicker-month :selected").val();
+				var year = jQuery("#ui-datepicker-div .ui-datepicker-year :selected").val();
+				thisCalendar.datepicker('setDate', new Date(year, month, 1));
+			});
+		});
+
+	});
+
+	function cambiarPeriodo() {
+		fechaInicial   = jQuery('#startDate').val();
+		fechaFinal     = jQuery('#endDate').val();
+
+		window.location = 'index.php?option=com_reportes&view=resultados&startDate='+fechaInicial+'&endDate='+fechaFinal;
+	}
 
     function showhide(id) {
 
@@ -78,20 +97,14 @@ $url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
 <form action="<?php echo $url_flujo; ?>" class="form" id="periodo" name="periodo" method="post" enctype="multipart/form-data" >
     <fieldset id="flujo">
         <div>
-            <div class="form-group" style="margin-left: 31px; text-align: 0;">
+            <div class="form-group" style="margin-left: 31px;">
                 <div style="display: inline-block">
                     <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
-                    <?php
-                    $default = date('d-m-Y');
-                    echo JHTML::_('calendar',$default, 'startDate', 'dupfecha2', $format = '%d-%m-%Y', $attsCal2);
-                    ?>
+	                <input class="datepicker" id="startDate" name="startDate" type="text" readonly />
                 </div>
-                <div>
-                    <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
-                    <?php
-                    $default = date('d-m-Y');
-                    echo JHTML::_('calendar',$default, 'endDate','dendfecha2', $format = '%d-%m-%Y', $attsCal2);
-                    ?>
+	            <div>
+		            <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
+		            <input class="datepicker" id="endDate" name="endDate" type="text" readonly />
                 </div>
                 <div>
                     <button id="greporte_flujo" class="btn btn-primary span2" type="submit">Generar Reporte  </button>
@@ -102,41 +115,37 @@ $url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
             </div>
         </div>
 
-
-
     </fieldset>
 </form>
 <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.addTab', 'tabs-lr', 'lr-eresul', JText::_('COM_REPORTES_LR_ERESUL'));
     ?>
+<form action="<?php echo $url_resultados; ?>" class="form" id="resultados" name="resultados" method="post" enctype="multipart/form-data" >
     <fieldset>
         <div>
 
-            <div class="form-group" style="margin-left: 31px; text-align: 0;">
-                <div style="display: inline-block">
-                    <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
-                    <?php
-                    $default = date('d-m-Y');
-                    echo JHTML::_('calendar',$default, 'dupfecha3', 'dupfecha3', $format = '%d-%m-%Y', $attsCal3);
-                    ?>
-                </div>
+            <div class="form-group" style="margin-left: 31px;">
                 <div>
-                    <label for="created"><?php echo JText::_('LBL_DEND'); ?></label>
-                    <?php
-                    $default = date('d-m-Y');
-                    echo JHTML::_('calendar',$default, 'dendfecha3', 'dendfecha3', $format = '%d-%m-%Y', $attsCal3);
-                    ?>
-                </div><div>
-                    <button id="greporte" class="btn btn-primary span2" type="button">Generar Reporte</button>
+                    <label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
+	                <input id="startDate" class="monthYearPicker" type="text" readonly />
                 </div>
-                <div style="margin: auto;">
-                    <button id="fecha3" onclick="showhide(this.id)" class="btn btn-primary span2" type="button">Buscar</button>
+	            <div>
+		            <label for="project"><?php echo JText::_('LBL_PROY');?></label>
+		            <select name="project" id="project">
+			            <option value=""><?php echo JText::_('LBL_SELECCIONE_OPCION');?></option>
+			            <?php
+			            foreach ( $projects as $project ) {
+				            echo '<option value="'.$project->id_proyecto.'">'.$project->name.'</option>';
+		                }
+			            ?>
+		            </select>
+	            </div>
+	            <div>
+                    <button id="greporte" class="btn btn-primary span2" type="submit">Generar Reporte</button>
                 </div>
 
             </div>
-
-        </div>
 
         </div>
 
@@ -145,7 +154,6 @@ $url_flujo = 'index.php?option=com_reportes&view=flujo&'.$formToken;
     <?php
     echo JHtml::_('bootstrap.endTab');
     echo JHtml::_('bootstrap.endTabSet');
-    echo JHtml::_('form.token');
     ?>
-
 </form>
+

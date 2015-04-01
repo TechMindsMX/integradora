@@ -42,5 +42,9 @@ class ReportesModelReporteslistados extends JModelItem {
         $resultados = getFromTimOne::getResultados($this->integradoId);
         return $resultados;
     }
+
+	public function getProjects() {
+		return getFromTimOne::getActiveProyects($this->integradoId);
+	}
 }
 

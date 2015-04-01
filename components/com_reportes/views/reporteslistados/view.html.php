@@ -23,6 +23,7 @@ class ReportesViewReporteslistados extends JViewLegacy
         $this->balances         = $this->get('BalanceList');
         $this->flujo            = $this->get('Flujo');
         $this->resultados       = $this->get('Resultados');
+        $this->projects         = $this->get('Projects');
 
         // Check for errors.
         if (count($errors = $this->get('Errors')))

@@ -486,6 +486,10 @@ class IntegradoSimple extends Integrado {
 		$this->integrados[0]->address = $address;
 	}
 
+	public function getAddressFormatted() {
+		return $this->integrados[0]->address;
+	}
+
     public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
