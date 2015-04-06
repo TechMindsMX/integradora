@@ -3717,8 +3717,8 @@ class datosFiscales {
     public $calle        = 'REFORMA';
     public $regimen       = 'PERSONA FISICA';
 
-    function __construct( IntegradoSimple $integ ) {
-        $integ = $integ->integrados[0];
+    function __construct( IntegradoSimple $integrado ) {
+        $integ = $integrado->integrados[0];
         $pJuri = $integ->integrado->pers_juridica;
 
         $this->rfc          = $pJuri == 2 ? $integ->datos_personales->rfc : $integ->datos_empresa->rfc ;
@@ -3726,7 +3726,7 @@ class datosFiscales {
         $this->regimen      = JText::_('LBL_REGIMEN_FACTURA_'.$pJuri);
         $this->calle        = $pJuri == 2 ? $integ->datos_personales->calle : $integ->datos_empresa->calle ;
         $this->delegacion   = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dMnpio : $integ->datos_empresa->direccion_CP->dMnpio ;
-        $this->ciudad       = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dCiudad : $integ->datos_empresa->direccion_CP->dCiudad ;
+        $this->ciudad       = $integrado->getCiudad();
         $this->codigoPostal = $pJuri == 2 ? $integ->datos_personales->cod_postal : $integ->datos_empresa->cod_postal ;
     }
 

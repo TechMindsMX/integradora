@@ -48,7 +48,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $resultado = true;//$save->insertDB('auth_odv');
+            $resultado = $save->insertDB('auth_odv');
 
             if($resultado) {
                 // autorización guardada
@@ -61,7 +61,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                $newOrder = new OdVenta();
 	                $newOrder->setOrderFromId( $this->parametros['idOrden'] );
 
-	                if ( true/*$newOrder->status->id == 5 && is_null($newOrder->urlXML)*/ ) {
+	                if ( $newOrder->status->id == 5 && is_null($newOrder->urlXML) ) {
                         $factObj = $save->generaObjetoFactura( $newOrder );
 
                         if ( $factObj != false ) {
