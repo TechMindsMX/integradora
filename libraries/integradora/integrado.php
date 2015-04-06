@@ -448,10 +448,10 @@ class IntegradoSimple extends Integrado {
 
         switch($this->integrados[0]->integrado->pers_juridica){
             case 2:
-                $ciudad = isset($this->integrados[0]->datos_personales->direccion_CP->dCiudad)?$this->integrados[0]->datos_personales->direccion_CP->dCiudad : $this->integrados[0]->datos_personales->direccion_CP->dAsenta[0];
+                $ciudad = !empty($this->integrados[0]->datos_personales->direccion_CP->dCiudad)?$this->integrados[0]->datos_personales->direccion_CP->dCiudad : $this->integrados[0]->datos_personales->direccion_CP->dAsenta[0];
                 break;
             case 1:
-                $ciudad = isset($this->integrados[0]->datos_empresa->direccion_CP->dCiudad)?$this->integrados[0]->datos_empresa->direccion_CP->dCiudad : $this->integrados[0]->datos_empresa->direccion_CP->dAsenta[0];
+                $ciudad = !empty($this->integrados[0]->datos_empresa->direccion_CP->dCiudad)?$this->integrados[0]->datos_empresa->direccion_CP->dCiudad : $this->integrados[0]->datos_empresa->direccion_CP->dAsenta[0];
                 break;
         }
 
