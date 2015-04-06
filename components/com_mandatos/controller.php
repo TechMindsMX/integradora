@@ -730,9 +730,18 @@ class MandatosController extends JControllerLegacy {
 
     //TODO:quitar
     public function TestFactura(){
+        $save = new sendToTimOne();
+
         $odv = new \Integralib\OdVenta();
         $odv->setOrderFromId(5);
 
         $factura = new Factura($odv, true);
+
+        //TODO: qutar el mock cuando sea produccion
+        if( ENVIROMENT_NAME == 'sandbox') {
+            $factura->setTestRFC();
+        }
+
+        $save->generateFacturaFromTimone($factura);
     }
 }

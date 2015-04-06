@@ -12,14 +12,14 @@ namespace Integralib;
 class Totales {
     public $total;
     public $subtotal;
-    public $totalimpuestosTrasladados;
+    public $totalImpuestosTrasladados;
 
     function __construct(OdVenta $objOdv, $objImpuestos)
     {
         $this->total = $objOdv->getTotalAmount();
         $this->subtotal = $objOdv->subTotalAmount;
 
-        $this->totalimpuestosTrasladados = $this->calculateTotalimpuestosTrasladados($objImpuestos);
+        $this->totalImpuestosTrasladados = $this->calculateTotalimpuestosTrasladados($objImpuestos);
     }
 
     private function calculateTotalimpuestosTrasladados($objImpuestos){

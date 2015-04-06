@@ -24,7 +24,7 @@
 	</files>
 	<administration>
 		<!-- Administration Menu Section -->
-		<menu>Administracion</menu>
+		<menu>com_adminintegradora</menu>
 		<!-- Administration Main File Copy Section -->
 		<!-- Note the folder attribute: This attribute describes the folder
 		to copy FROM in the package to install therefore files copied
@@ -39,6 +39,10 @@
 			<folder>views</folder>
 			<folder>helpers</folder>
 		</files>
+        <languages folder="admin">
+            <language tag="es-ES">language/es-ES.com_adminintegradora.ini</language>
+            <language tag="es-ES">language/es-ES.com_adminintegradora.sys.ini</language>
+        </languages>
 	</administration>
 
 </extension>

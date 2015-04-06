@@ -2315,6 +2315,7 @@ echo $query.'<br />';
      * @param mixed $jsonData
      */
     public function setJsonData ($jsonData) {
+        $jsonData = json_encode($jsonData);
         $this->jsonData = $jsonData;
     }
 
@@ -2348,6 +2349,7 @@ echo $query.'<br />';
                     CURLOPT_HTTPHEADER	   => array(
                         'Accept: application/json',
                         'Content-Type: application/json',
+                        'charset=utf-8',
                         'Content-Length: ' . strlen($this->jsonData)
                     )
                 );
@@ -3658,8 +3660,8 @@ class Factura extends makeTx {
         $retorno = array();
 
         foreach ($productosData as $producto) {
-            $retorno['iva'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->iva/100);
-            $retorno['ieps'][$producto->ieps] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->ieps/100);
+            $retorno['IVA'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->iva/100);
+            $retorno['IEPS'][$producto->ieps] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->ieps/100);
         }
 
         return $retorno;
@@ -3713,7 +3715,7 @@ class datosFiscales {
     public $ciudad       = 'DISTRITO FEDERAL';
     public $delegacion   = 'BENITO JUAREZ';
     public $calle        = 'REFORMA';
-    public $regime       = 'PERSONA FISICA';
+    public $regimen       = 'PERSONA FISICA';
 
     function __construct( IntegradoSimple $integ ) {
         $integ = $integ->integrados[0];
@@ -3721,7 +3723,7 @@ class datosFiscales {
 
         $this->rfc          = $pJuri == 2 ? $integ->datos_personales->rfc : $integ->datos_empresa->rfc ;
         $this->razonSocial  = $pJuri == 2 ? $integ->datos_personales->nombre_representante : $integ->datos_empresa->razon_social ;
-        $this->regime       = $pJuri ;
+        $this->regimen      = JText::_('LBL_REGIMEN_FACTURA_'.$pJuri);
         $this->calle        = $pJuri == 2 ? $integ->datos_personales->calle : $integ->datos_empresa->calle ;
         $this->delegacion   = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dMnpio : $integ->datos_empresa->direccion_CP->dMnpio ;
         $this->ciudad       = $pJuri == 2 ? $integ->datos_personales->direccion_CP->dCiudad : $integ->datos_empresa->direccion_CP->dCiudad ;
@@ -3906,7 +3908,7 @@ class makeTx {
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
-        $request->setJsonData(json_encode($this->objEnvio));
+        $request->setJsonData($this->objEnvio);
         $request->setHttpType($datosEnvio->type);
 
         $this->resultado = $request->to_timone();
