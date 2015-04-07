@@ -32,7 +32,7 @@ class TimOneRequest {
 
 		$request = new sendToTimOne();
 		$request->setServiceUrl($datosEnvio->url);
-		$request->setJsonData(json_encode($this->objEnvio));
+		$request->setJsonData($this->objEnvio);
 		$request->setHttpType($datosEnvio->type);
 
 		$this->resultado = $request->to_timone();
@@ -75,6 +75,12 @@ class TimOneRequest {
 		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
 	}
 
+	/**
+	 * @param $uuidReceptor
+	 * @param $amount
+	 *
+	 * @return object resultado
+	 */
 	public function sendCashInTx($uuidReceptor, $amount) {
 		$this->objEnvio = new \stdClass();
 		$this->objEnvio->uuid = $uuidReceptor;

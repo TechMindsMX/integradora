@@ -3650,11 +3650,16 @@ class Factura extends makeTx {
     }
 
     private function agrupaImpuestos($productosData){
-        $retorno = array();
+        $retorno = array('IVA' => array(), 'IEPS' => array());
+
+	    foreach ($productosData as $producto) {
+		    $retorno['IVA'][$producto->iva] = 0;
+		    $retorno['IEPS'][$producto->ieps] = 0;
+	    }
 
         foreach ($productosData as $producto) {
-            $retorno['IVA'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->iva/100);
-            $retorno['IEPS'][$producto->ieps] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ($producto->ieps/100);
+            $retorno['IVA'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ((FLOAT)$producto->iva/100);
+            $retorno['IEPS'][$producto->ieps] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ((FLOAT)$producto->ieps/100);
         }
 
         return $retorno;
