@@ -3282,13 +3282,13 @@ class ReportFlujo extends IntegradoTxs {
             $fechaInicio = 'first day of January';
             $this->period->fechaInicio = new DateTime($fechaInicio, $timeZone);
         } else {
-            $this->period->fechaInicio = DateTime::createFromFormat('d-m-Y H:i:s', $fechaInicio.' 00:00:00', $timeZone);
+            $this->period->fechaInicio = DateTime::createFromFormat('Y-m-d H:i:s', $fechaInicio.' 00:00:00', $timeZone);
         }
         if (!isset($fechaFin)) {
             // Si no viene la fecha, se crea con la fecha actual
             $this->period->fechaFin = new DateTime('', $timeZone);
         } else {
-            $this->period->fechaFin = DateTime::createFromFormat('d-m-Y H:i:s', $fechaFin.' 23:59:59', $timeZone);
+            $this->period->fechaFin = DateTime::createFromFormat('Y-m-d H:i:s', $fechaFin.' 23:59:59', $timeZone);
         }
         $this->period->fechaInicio->timestamp = $this->period->fechaInicio->getTimeStamp();
         $this->period->fechaFin->timestamp = $this->period->fechaFin->getTimeStamp();
