@@ -2260,7 +2260,7 @@ class sendToTimOne {
         $query->update($db->quoteName('#__'.$table))
             ->set(implode(',', $set))
             ->where($condicion);
-echo $query.'<br />';
+
         try {
             $db->setQuery($query);
             $db->execute();
