@@ -2401,8 +2401,7 @@ echo $query.'<br />';
                     CURLOPT_STDERR		   => $verbose,
                     CURLOPT_HTTPHEADER	   => array(
                         'Accept: application/json',
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($this->jsonData)
+                        'Content-Type: application/json'
                     )
                 );
                 break;
@@ -3318,9 +3317,6 @@ class IntegradoOrders {
         self::setOrders($integradoId);
     }
 
-    protected function setTxs( ){
-        $this->txs = parent::getIntegradoTxs();
-    }
     private function setOrders($integradoId){
         $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
         $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
