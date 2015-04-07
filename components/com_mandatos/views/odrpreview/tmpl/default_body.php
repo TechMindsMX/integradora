@@ -36,7 +36,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->razon_social; ?>
+				<?php echo $this->integCurrent->getDisplayName(); ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -64,7 +64,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->razon_social; ?>
+				<?php echo $integrado->datos_personales->nombre_representante; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -78,7 +78,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->tel_fijo; ?>
+				<?php echo $this->integCurrent->getIntegradoPhone(); ?>
 			</div>
 			<div class="span2 text-right">
 			</div>
@@ -96,7 +96,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_BANCOS'); ?>
 			</div>
 			<div class="span4">
-				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta->banco_codigo; } ?>
+				<?php if (isset($this->odr->cuenta)) { echo $this->odr->cuenta->bankName; } ?>
 			</div>
 		</div>
 		<div>
