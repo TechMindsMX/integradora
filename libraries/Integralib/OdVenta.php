@@ -44,8 +44,8 @@ class OdVenta extends Order {
 
 		foreach ( json_decode($this->productos) as $prod ) {
 			$subtotalNetProd = ((float)$prod->p_unitario * (float)$prod->cantidad);
-			$tmpIva += $subtotalNetProd * ((float)$ivas[$prod->iva]->leyenda/100);
-			$tmpIeps += $subtotalNetProd * (float)$prod->ieps/100;
+			$tmpIva = $subtotalNetProd * ((float)$ivas[$prod->iva]->leyenda/100);
+			$tmpIeps = $subtotalNetProd * (float)$prod->ieps/100;
 			$this->totalAmount +=  $subtotalNetProd + $tmpIva + $tmpIeps;
 		}
 	}
