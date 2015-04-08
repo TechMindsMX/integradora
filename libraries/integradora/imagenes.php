@@ -3,12 +3,11 @@
 class manejoImagenes {
 
 	public static function cargar_imagen($tipo, $usuario, $archivos, $key) {
-		$validaciones = (($tipo === 'image/jpeg') || ($tipo === 'image/gif') || ($tipo === 'image/png') );
 
-			if ($validaciones && getimagesize($archivos["tmp_name"])) {
+			if (self::validExtension($archivos) && getimagesize($archivos["tmp_name"])) {
 				move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".jpg");
                 $regreso = MEDIA_FILES . $usuario.'_'.$key . ".jpg";
-			} elseif('application/pdf' == $archivos['type']) {
+			} elseif(self::validExtension($archivos)) {
 				move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".pdf");
                 $regreso = MEDIA_FILES . $usuario.'_'.$key . ".pdf";
 			} else{
@@ -117,5 +116,20 @@ class manejoImagenes {
 
 		clearstatcache();
 		imagejpeg($desired_gdim, $archivo, 90);
+	}
+
+	private static function validExtension( $file ) {
+		$finfo = new finfo(FILEINFO_MIME);
+
+		$info = $finfo->file($file['tmp_name']);
+
+		$validMimes = array(
+			'application/pdf',
+			'image/jpeg',
+			'image/gif',
+			'image/png'
+		);
+
+		return in_array(strstr($info, ';', true) , $validMimes);
 	}
 }
