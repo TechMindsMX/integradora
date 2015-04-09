@@ -536,20 +536,6 @@ class IntegradoController extends JControllerLegacy {
         $resultado['safeComplete']  = true;
         $resultado['integradoId'] = $integrado_id;
 
-        /*if($data['tab']=='personales'){
-            $contenido = JText::_('NOTIFICACIONES_1');
-            $contenido = str_replace('$nombre', '<strong style="color: #000000">'.$data['dp_nom_comercial'].'</strong>',$contenido);
-            $contenido = str_replace('$folio', '<strong style="color: #000000">$'.$data['user_id'].'</strong>',$contenido);
-            $contenido = str_replace('$fecha', '<strong style="color: #000000">'.date('d-m-Y').'</strong>',$contenido);
-
-            $dato['titulo']         = JText::_('TITULO_1');
-            $dato['body']           = $contenido;
-
-            $send                   = new Send_email();
-            // $send->notification($dato);
-        }
-*/
-
         return $resultado;
     }
 
