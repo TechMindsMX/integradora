@@ -1772,14 +1772,19 @@ class getFromTimOne{
         return $token;
     }
 
-    public static function newintegradoId($envio){
+	/**
+	 * @param $persJuridica
+	 *
+	 * @return mixed
+	 */
+	public static function newintegradoId($persJuridica){
         $createdDate = time();
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
         $query->insert($db->quoteName('#__integrado'))
             ->columns($db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
-            ->values($db->quote(0).','.$db->quote($envio).', '.$createdDate);
+            ->values($db->quote(0).','.$db->quote($persJuridica).', '.$createdDate);
 
         $db->setQuery($query);
         $db->execute();
