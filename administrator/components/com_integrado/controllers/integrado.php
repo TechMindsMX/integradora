@@ -242,7 +242,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $request = new sendToTimOne();
 
         $request->setServiceUrl( $retorno->url );
-        $request->setJsonData( json_encode($integradoData) );
+        $request->setJsonData( $integradoData );
         $request->setHttpType( $retorno->type );
 
         $resultado = $request->to_timone(); // realiza el envio
