@@ -373,3 +373,11 @@ CREATE TABLE `flpmu_txs_liquidacion_saldo` (
 --changeset lutek:45
 ALTER TABLE `flpmu_facturas_comisiones` ADD COLUMN createdDate BIGINT;
 --rollback ALTER TABLE `flpmu_facturas_comisiones` DROP COLUMN createdDate ;
+
+--changeset ricardolyon:46
+UPDATE `flpmu_extensions` SET `params`='{\"public_key\":\"6LdyTwUTAAAAAHR1ksTclf7Hg9ZWJpwBv5dHf7NF\r\",\"private_key\":\"6LdyTwUTAAAAAKylbEIE3sGrqx7zPbOVYnCFDU5P\r\",\"theme\":\"clean\"}' WHERE `extension_id`='439';
+UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_usertype\":\"2\",\"guest_usergroup\":\"9\",\"sendpassword\":\"0\",\"useractivation\":\"1\",\"mail_to_admin\":\"0\",\"captcha\":\"recaptcha\",\"frontend_userparams\":\"0\",\"site_language\":\"0\",\"change_login_name\":\"0\",\"reset_count\":\"5\",\"reset_time\":\"1\",\"minimum_length\":\"10\",\"minimum_integers\":\"1\",\"minimum_symbols\":\"1\",\"minimum_uppercase\":\"1\",\"save_history\":\"0\",\"history_limit\":5,\"mailSubjectPrefix\":\"\",\"mailBodySuffix\":\"\"}' WHERE `extension_id`='25';
+--rollback UPDATE `flpmu_extensions` SET `params`='{\"public_key\":\"\",\"private_key\":\"\",\"theme\":\"clean\"}' WHERE `extension_id`='439';
+--rollback UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_usertype\":\"2\",\"guest_usergroup\":\"9\",\"sendpassword\":\"1\",\"useractivation\":\"1\",\"mail_to_admin\":\"0\",\"captcha\":\"\",\"frontend_userparams\":\"1\",\"site_language\":\"0\",\"change_login_name\":\"0\",\"reset_count\":\"10\",\"reset_time\":\"1\",\"minimum_length\":\"4\",\"minimum_integers\":\"0\",\"minimum_symbols\":\"0\",\"minimum_uppercase\":\"0\",\"save_history\":\"0\",\"history_limit\":5,\"mailSubjectPrefix\":\"\",\"mailBodySuffix\":\"\"}' WHERE `extension_id`='25';
+
+
