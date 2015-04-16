@@ -99,7 +99,7 @@ $producto 	= $this->producto;
                 <select name="currency"
                         class="form-control"
                         id="currency">
-                    <option><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
+                    <option value=""><?php echo JText::_('COM_MANDATOS_PRODUCTOS_INPUT_MEDIDAS'); ?></option>
                     <?php
                     foreach ($this->currencies as $key => $value) {
                         $selected = $value->code == $producto->currency?'selected = "selected"':'';

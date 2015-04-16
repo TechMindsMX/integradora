@@ -18,45 +18,58 @@ jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 
 class facturasComision extends OdVenta{
-    public function generateFact($integradoId){
+	public $status;
+	public $ieps;
+	public $paymentMethod;
+	public $placeIssue;
+	public $conditions;
+	public $productosData;
+	public $urlXML;
+
+	public function generateFact($integradoId){
         $db                   = JFactory::getDbo();
+
         $save                 = new sendToTimOne();
         $respuesta            = false;
-        $datosFacturaComision = new OdVenta();
 
-        $datosFacturaComision->emisor         = new IntegradoSimple(1);
-        $datosFacturaComision->receptor       = new IntegradoSimple($integradoId);
-        $datosFacturaComision->conditions     = 1;
-        $datosFacturaComision->urlXML         = null;
-        $datosFacturaComision->status         = 0;
-        $datosFacturaComision->ieps           = 0;
-        $datosFacturaComision->paymentMethod  = $this->getpaymentMethod();
-        $datosFacturaComision->placeIssue     = $this->getplaceIssue();
-        $datosFacturaComision->productosData  = $this->getProductsFromTxComision($integradoId);
-        $datosFacturaComision->iva            = $this->getIvaComision($datosFacturaComision->productosData);
+        $this->emisor         = new IntegradoSimple(1);
+        $this->receptor       = new IntegradoSimple($integradoId);
+        $this->conditions     = 1;
+        $this->urlXML         = null;
+        $this->status         = 0;
+        $this->ieps           = 0;
+        $this->paymentMethod  = $this->getpaymentMethod();
+        $this->placeIssue     = $this->getplaceIssue();
+        $this->productosData  = $this->getProductsFromTxComision($integradoId);
 
-        $factObj = $save->generaObjetoFactura( $datosFacturaComision );
+        if( !empty($this->productosData) ) {
+            $this->iva  = $this->getIvaComision($this->productosData);
+            $factObj                    = $save->generaObjetoFactura($this);
 
-        if ( $factObj != false ) {
-            $fecha      = new DateTime();
-            $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-            $factComDB  = new stdClass();
+            if ($factObj != false) {
+                $fecha = new DateTime();
+                $xmlFactura = $save->generateFacturaFromTimone($factObj);
+                $factComDB = new stdClass();
 
-            $factComDB->integradoId = $integradoId;
-            $factComDB->status      = 0;
-            $factComDB->urlXML      = $factObj->saveXMLFile($xmlFactura);
-            $factComDB->createdDate = $fecha->getTimestamp();
+	            $factComDB->integradoId = $integradoId;
+	            $factComDB->status      = 0;
+	            $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
+	            $factComDB->createdDate = $fecha->getTimestamp();
+	
+	            $db->transactionStart();
 
-            $db->transactionStart();
+                try {
+                    $db->insertObject('#__facturas_comisiones', $factComDB);
 
-            try{
-                $db->insertObject('#__facturas_comisiones',$factComDB);
+	                $db->transactionCommit();
 
-                $respuesta = true;
+	                $this->id = $db->insertid();
 
-                $db->transactionCommit();
-            }catch (Exception $e){
-                $db->transactionRollback();
+	                $respuesta = $factObj;
+
+                } catch (Exception $e) {
+                    $db->transactionRollback();
+                }
             }
         }
 
@@ -83,6 +96,8 @@ class facturasComision extends OdVenta{
     }
 
     public function getProductsFromTxComision($integradoId){
+        $catalogo = new Catalogos();
+        $iva = $catalogo->getFullIva();
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
@@ -108,8 +123,8 @@ class facturasComision extends OdVenta{
             $producto->descripcion = 'Comision en la Fecha '.date('d-m-Y',$value->date);
             $producto->cantidad = '1' ;
             $producto->unidad = 'no Aplica';
-            $producto->p_unitario = $detalle->amount;
-            $producto->iva = '16';
+            $producto->p_unitario = $detalle->amount / (1+($iva/100));
+            $producto->iva = $iva;
             $producto->ieps = '0';
 
             $respuesta[] = $producto;
@@ -119,19 +134,17 @@ class facturasComision extends OdVenta{
     }
 
     private function getIvaComision($productos){
-        $totalAmount = 0;
-        $totalIva    = 0;
-        $totalIeps   = 0;
+//        $totalIva    = 0;
 
         foreach ($productos as $producto) {
             $iva          = (INT) $producto->iva;
-            $subTotalProd = ($producto->p_unitario*$producto->cantidad);
+            $subTotalProd = ($producto->p_unitario * $producto->cantidad);
 
-            $totalAmount = $totalAmount + $subTotalProd;
-            $totalIva = $totalIva + ($subTotalProd/$iva);
+            $totalIva[] = $subTotalProd * ($iva/100);
         }
 
-        return $totalIva;
+        $total = array_sum($totalIva);
+        return  $total;
     }
 
     public function getFactComision(){

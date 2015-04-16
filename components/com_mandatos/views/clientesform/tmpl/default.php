@@ -199,13 +199,13 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				if (response.bu_rfc == 1) {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
 					jQuery('#de_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
-					$filesContent.find('input').prop('disabled', false);
+					$filesContent.find('input, label').prop('disabled', false).show();
 				}
 				else {
 					jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
 					jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
-					$filesContent.find('input').prop('disabled', true);
-					$filesContent.find('input[name*="dp_"]').prop('disabled', false);
+					$filesContent.find('input, label').prop('disabled', true).hide();
+					$filesContent.find('input[name*="dp_"], input[name="db_banco_file"], label[for*="dp_"], label[for="db_banco_file"]').prop('disabled', false).show();
 					extractTab('#empresa');
 				}
 				var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';

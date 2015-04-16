@@ -53,7 +53,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_PROY'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->proyecto->name; ?>
+			<?php echo $this->factura->project->name; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
@@ -67,8 +67,8 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SUBPROY'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->sub_proyecto->name)) {
-				echo $this->factura->sub_proyecto->name;
+			<?php if (isset($this->factura->subProject->name)) {
+				echo $this->factura->subProject->name;
 			} ?>
 		</div>
 		<div class="span2 text-right">
@@ -102,7 +102,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RFC'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->proveedor->rfc; ?>
+			<?php echo $this->factura->getReceptor()->getIntegradoRfc();; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_BANCOS'); ?>

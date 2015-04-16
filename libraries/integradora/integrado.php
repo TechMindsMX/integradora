@@ -246,7 +246,9 @@ class Integrado {
 			}
 
 			if ( ! empty( $this->integrados[ $key ]->datos_personales->cod_postal ) ) {
-				$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[$key]->datos_personales->cod_postal));
+
+                $address    = $this->getAddressFromCodPostal(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_personales->cod_postal);
+
 				$this->integrados[$key]->datos_personales->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 			}
 
@@ -258,7 +260,9 @@ class Integrado {
 				$this->integrados[$key]->reg_propiedad		= self::selectDataSolicitud('integrado_instrumentos', 'id', $empresa->reg_propiedad);
 
 				if ( !empty( $this->integrados[ $key ]->datos_empresa->cod_postal ) ) {
-					$address = json_decode(@file_get_contents(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal));
+
+                    $address = $this->getAddressFromCodPostal(SEPOMEX_SERVICE.$this->integrados[ $key ]->datos_empresa->cod_postal);
+
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = !empty($address) ? $address : JText::_('ERROR_SEPOMEX_NOT_AVAILABLE');
 				} else {
 					$this->integrados[ $key ]->datos_empresa->direccion_CP = 'falta dirección';
@@ -403,6 +407,21 @@ class Integrado {
 
 			return $integradosArray;
 	}
+
+    /**
+     * @param $filename
+     *
+     * @return mixed
+     * @internal param $key
+     *
+     */
+    public function getAddressFromCodPostal( $filename ) {
+        static $file_contents = array();
+        if (!isset($file_contents[$filename])) {
+            $file_contents[$filename] = json_decode(file_get_contents($filename));
+		}
+        return $file_contents[$filename];
+    }
 }
 
 /**
@@ -424,6 +443,20 @@ class IntegradoSimple extends Integrado {
 
 		$this->setMainAddressFormatted();
 	}
+
+    public function getCiudad(){
+
+        switch($this->integrados[0]->integrado->pers_juridica){
+            case 2:
+                $ciudad = !empty($this->integrados[0]->datos_personales->direccion_CP->dCiudad)?$this->integrados[0]->datos_personales->direccion_CP->dCiudad : $this->integrados[0]->datos_personales->direccion_CP->dAsenta[0];
+                break;
+            case 1:
+                $ciudad = !empty($this->integrados[0]->datos_empresa->direccion_CP->dCiudad)?$this->integrados[0]->datos_empresa->direccion_CP->dCiudad : $this->integrados[0]->datos_empresa->direccion_CP->dAsenta[0];
+                break;
+        }
+
+        return $ciudad;
+    }
 
 	/**
 	 * @return mixed
@@ -486,12 +519,15 @@ class IntegradoSimple extends Integrado {
 		$this->integrados[0]->address = $address;
 	}
 
+    public function getAddressFormatted() {
+        return $this->integrados[0]->address;
+    }
+
     public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
-	    $dbq = JFactory::getDbo();
 
-        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '. $dbq->quote($this->id) );
+        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->getId());
 		if(!empty($timoneData)) {
 			$timoneData = $timoneData[0];
 

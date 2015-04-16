@@ -36,12 +36,17 @@ class OdVenta extends Order {
 	 */
 	public function calculateTotalAmount() {
 		$this->totalAmount = 0;
+		$tmpIva = 0;
+		$tmpIeps = 0;
 
 		$catalogo = new \Catalogos();
 		$ivas = $catalogo->getCatalogoIVA();
 
 		foreach ( json_decode($this->productos) as $prod ) {
-			$this->totalAmount += ((float)$prod->p_unitario * (float)$prod->cantidad) * (1 + ((float)$ivas[$prod->iva]->leyenda/100)) * (1 + (float)$prod->ieps);
+			$subtotalNetProd = ((float)$prod->p_unitario * (float)$prod->cantidad);
+			$tmpIva = $subtotalNetProd * ((float)$ivas[$prod->iva]->leyenda/100);
+			$tmpIeps = $subtotalNetProd * (float)$prod->ieps/100;
+			$this->totalAmount +=  $subtotalNetProd + $tmpIva + $tmpIeps;
 		}
 	}
 

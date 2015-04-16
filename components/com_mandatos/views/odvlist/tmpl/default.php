@@ -90,6 +90,9 @@ if(is_null($ordenes) || empty($ordenes)){
                 } elseif ($value->status->id == 5) {
                     $auth_button = JText::_('LBL_AUTHORIZED');
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
+                }elseif ($value->status->id == 13) {
+                    $auth_button = JText::_('LBL_PAID');
+                    $edit_button = JText::_('LBL_NOT_EDITABLE');
                 } else {
                     $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
                     $edit_button = JText::_('LBL_NOT_EDITABLE');

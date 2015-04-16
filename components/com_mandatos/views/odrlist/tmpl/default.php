@@ -64,11 +64,12 @@ jQuery(document).ready(function(){
 	<table id="myTable" class="table table-bordered tablesorter">
 		<thead>
 			<tr>
-				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?></span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+				<th class="header"><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN'); ?></span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
+				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -99,11 +100,12 @@ jQuery(document).ready(function(){
 				$class = $value->status->id == 1?'':'status1';
 				
 				echo '<tr class="type_'.$value->status->id.'" data-filtro="'.$value->status->id.'">';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
+				echo '	<td class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
+				echo '	<td class="rfc '.$class.'" >'.$value->createdDate.'</td>';
+				echo '	<td class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
+				echo '	<td class="'.$class.'" >'.$value->status->name.'</td>';
+				echo '	<td class="'.$class.'" >'.$auth_button.'</td>';
+				echo '	<td class="'.$class.'" >'.$edit_button.'</td>';
 				echo '</tr>';
 			}
 		}else{

@@ -59,8 +59,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             if ($check) {
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
-//            $resultado = $save->insertDB('auth_odc');
-$resultado = true;
+            $resultado = $save->insertDB('auth_odc');
 
             if ($resultado) {
                 $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
@@ -68,8 +67,8 @@ $resultado = true;
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                 $newStatusId = 5;
 
-//                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
-                $statusChange = true;;
+                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+
                 if ($statusChange) {
 
                     $TxOdc = $this->realizaTx();
@@ -82,6 +81,16 @@ $resultado = true;
                             $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
 
                             if($statusChange){
+
+	                            $odc= getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
+	                            $odc= $odc[0];
+	                            $proveedor = new IntegradoSimple($odc->proveedor->integrado->integradoId);
+
+	                            if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
+		                            $odvId = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
+		                            $odvStatusChange = $save->changeOrderStatus($odvId, 'odv', $newStatusId);
+	                            }
+
                                 $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                             }
                         }else{
@@ -93,7 +102,7 @@ $resultado = true;
 
                         if($statusChange) {
                             $save->deleteDB('auth_odc', 'idOrden = ' . $this->parametros['idOrden']);
-                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
                         }
                     }
                 }
@@ -101,7 +110,7 @@ $resultado = true;
                 $this->sendEmail();
                 $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
             } else {
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
@@ -135,11 +144,12 @@ $resultado = true;
 
     private function realizaTx(){
         $orden = $this->getOrden();
+        $idProveedor = isset($orden->proveedor->integradoId) ? $orden->proveedor->integradoId : $orden->proveedor->integrado->integradoId;
 
-        $proveedor = new IntegradoSimple($orden->proveedor->id);
+        $proveedor = new IntegradoSimple($idProveedor);
 
-        if( !empty($proveedor->usuarios) ) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount);
+        if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
+            $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
             $txDone = $txData->sendCreateTx();
         }else{
             $txData = new Cashout($orden,$orden->integradoId,$orden->proveedor->id,$orden->totalAmount, array('accountId' => $orden->bankId));
@@ -154,7 +164,7 @@ $resultado = true;
         $orden          = $this->getOrden();
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
-        $orden->orderType = 'Cobro Comisión';
+        $orden->orderType = 'CCom-'.$orden->orderType;
 
         $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
 

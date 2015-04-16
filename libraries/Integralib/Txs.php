@@ -56,7 +56,7 @@ class Txs {
 
 		$this->tx->details = json_decode( $txDetails->data );
 
-		return $this->tx->details->amount - $this->tx->sumOrderTxs;
+		return $this->getAmountFromDetails() - $this->tx->sumOrderTxs;
 	}
 
 	private function getTxOrders() {
@@ -70,6 +70,12 @@ class Txs {
 		$resutls = $db->loadObjectList();
 
 		return $resutls;
+	}
+
+	public function getAmountFromDetails() {
+		$amount = isset($this->tx->details->amount) ? (FLOAT)$this->tx->details->amount : 0;
+
+		return $amount;
 	}
 
 }

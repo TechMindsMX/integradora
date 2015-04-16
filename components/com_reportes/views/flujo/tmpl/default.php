@@ -11,6 +11,11 @@ $idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 
 ?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"
+      xmlns="http://www.w3.org/1999/html">
+<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+<script src="libraries/integradora/js/tim-datepicker-defaults.js"> </script>
+
 <script>
     var integradoId = <?php echo $integ->integrado->integradoId; ?>;
 
@@ -23,6 +28,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
+	    jQuery('.datepicker').datepicker();
     });
 </script>
 
@@ -66,23 +72,17 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <div class="span6">
         <h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
         <div class="row-fluid">
-            <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
+            <div class="span6"><label for="startDate"><?php echo JText::_('LBL_FROM_DATE'); ?></label></div>
             <div class="span6 visible-print-block"><?php echo $report->period->fechaInicio->format('d-m-Y'); ?></div>
             <div class="span6 hidden-print">
-                <?php
-            $default = $report->period->fechaInicio->format('d-m-Y');
-            echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%d-%m-%Y', $attsCal);
-            ?>
+	            <input class="datepicker" id="startDate" name="startDate" type="text" readonly />
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
+            <div class="span6"><label for="endDate"><?php echo JText::_('LBL_TO_DATE'); ?></label></div>
             <div class="span6 visible-print-block"><?php echo $report->period->fechaFin->format('d-m-Y'); ?></div>
             <div class="span6">
-                <?php
-                $default = $report->period->fechaFin->format('d-m-Y');
-                echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%d-%m-%Y', $attsCal);
-                ?>
+	            <input class="datepicker" id="endDate" name="endDate" type="text" readonly />
             </div>
         </div>
         <div class="row-fluid">

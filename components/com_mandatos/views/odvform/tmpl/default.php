@@ -71,15 +71,15 @@ $subProyects = $this->subprojects;
 
     function addrow(){
 
-        nextinput++;
 	    $insertedRow = $inputRow.attr('id', 'content'+nextinput+'').clone().appendTo('#odv');
 	    $insertedRow.find('input').each(function () {
 		    var $input = jQuery(this);
 		    var $id = $input.attr('id');
 		    $input.attr('id', $id + nextinput);
 	    });
-
 	    triggersProductsTable($insertedRow);
+
+	    nextinput++;
     }
 
     function llenasubproject() {
