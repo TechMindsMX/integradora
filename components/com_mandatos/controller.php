@@ -440,7 +440,7 @@ class MandatosController extends JControllerLegacy {
         $existe     = getFromTimOne::selectDB($table, $where);
 
         $columnas[] = 'integradoId';
-        $valores[]	= $integradoId;
+        $valores[]	= $db->quote($integradoId);
 
         $datosQuery['columnas'] = $columnas;
         $datosQuery['valores']  = $valores;
@@ -469,7 +469,7 @@ class MandatosController extends JControllerLegacy {
             $ext = 'tel_fijo_extension'.($i+1);
             $correo = 'email'.($i+1);
 
-            $valores[] = $integradoId;
+            $valores[] = $db->quote($integradoId);
             $valores[] = $arreglo[$tel];
             $valores[] = $arreglo[$movil];
             $valores[] = $arreglo[$ext];

@@ -29,7 +29,7 @@ class Integrado {
         $query = $db->getQuery(true);
 	    $query->select($db->quoteName('user_id'))
             ->from($db->quoteName('#__integrado_users'))
-            ->where($db->quoteName('integradoId') . ' = ' . $integ_id . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
+            ->where($db->quoteName('integradoId') . ' = ' . $db->quote($integ_id) . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
 
         $result = $db->setQuery($query)->loadResult();
 
@@ -81,7 +81,7 @@ class Integrado {
 
 		if ( empty( $existe ) ) {
 			$columnas[] = 'integradoId';
-			$valores[]  = $integradoId;
+			$valores[]  = $db->quote($integradoId);
 
 			$datosQuery['columnas'] = $columnas;
 			$datosQuery['valores']  = $valores;
@@ -208,7 +208,7 @@ class Integrado {
 		$query = $db->getQuery(true);
 		$query->select('*')
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('integradoId') . '=' . $integ_id);
+			->where($db->quoteName('integradoId') . '=' . $db->quote($integ_id));
 
 		$result = $db->setQuery($query)->loadObjectList();
 

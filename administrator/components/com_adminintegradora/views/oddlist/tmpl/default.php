@@ -51,7 +51,7 @@ $odds = $this->ordenes;
     <?php echo $this->sidebar; ?>
 </div>
 <div id="j-main-container" class="span10">
-    <form action="" method="post" name="adminForm" id="adminForm">
+    <form action="" method="post" name="adminForm" id="adminForm" autocomplete="off">
         <div  class="integrado-id" id="odv">
             <div class="head2" id="head" >
                 <div class="filtros" id="columna1" >

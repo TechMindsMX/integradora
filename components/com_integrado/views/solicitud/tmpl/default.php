@@ -84,7 +84,6 @@ $token = JSession::getFormToken();
             activeTab(nextTabObj);
         }
 
-
         jQuery(document).ready(function(){
 
 	        jQuery('input[type="file"]').on('change' ,{
@@ -426,7 +425,7 @@ $token = JSession::getFormToken();
 
     <div class="msgs_plataforma" id="msgs_plataforma"></div>
 
-    <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
+    <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
         <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
 
@@ -436,7 +435,7 @@ $token = JSession::getFormToken();
         ?>
         <label class="busqueda_rfc" for="busqueda_rfc">RFC:</label>
         <div class="form-group form-inline">
-            <input class="busqueda_rfc form-control" id="busqueda_rfc" name="busqueda_rfc" type="text" placeholder="RFC"/>
+            <input class="busqueda_rfc form-control" id="busqueda_rfc" name="busqueda_rfc" type="text" placeholder="RFC" autocomplete="on"/>
             <a class="btn btn-primary" type="button" id="busqueda_rfc_btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></a>
         </div>
         <fieldset>

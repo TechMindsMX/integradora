@@ -28,7 +28,7 @@ if ( ! empty( $this->txs ) ) {
 
 <?php if( is_null($data->confirmacion) ){?>
     <div class="div-formODC">
-        <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=odvform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
+        <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=odvform&confirmacion=1&idOrden=<?php echo $orden->id; ?>" autocomplete="off">
             <div class="form-group marcarOrden">
                 <label for="ordenPagada">
                     <h3><?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
@@ -97,7 +97,7 @@ if ( ! empty( $this->txs ) ) {
         </div>
     </div>
 <?php }else{ ?>
-    <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
+    <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save" autocomplete="off">
         <input type="hidden" name="orderType"   id="orderType"   value="odv" />
         <input type="hidden" name="idOrden"     id="idOrden"     value="<?php echo $orden->id; ?>" />
         <input type="hidden" name="idTx"        id="idTx"        value="<?php echo $data->idTx; ?>" />

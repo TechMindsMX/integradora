@@ -51,7 +51,7 @@ $proyecto = $this->proyecto;
 	}
 </script>
 
-<form id="form_alta" method="post" action="">
+<form id="form_alta" method="post" action="" autocomplete="off">
 	<h1 style="margin-bottom: 40px;"><?php echo JText::_($this->titulo); ?></h1>
 
 	<input type="hidden" name="confirm" 	value="1" />

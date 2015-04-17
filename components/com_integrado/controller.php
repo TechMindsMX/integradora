@@ -419,7 +419,7 @@ class IntegradoController extends JControllerLegacy {
             $integrado_id = getFromTimOne::saveNewIntegradoIdAndReturnIt($data['pj_pers_juridica']);
 
             $columnas 		= array('user_id', 'integradoId', 'integrado_principal', 'integrado_permission_level');
-            $valores 		= array(JFactory::getUser()->id, $integrado_id, 1, 3);
+            $valores 		= array(JFactory::getUser()->id, $db->quote($integrado_id), 1, 3);
 
             $saveUserIntegRealtion = self::insertData('integrado_users', $columnas, $valores);
 
@@ -446,13 +446,13 @@ class IntegradoController extends JControllerLegacy {
                 $createdDate  = time();
                 $table 		  = 'integrado';
                 $columnas 	  = array('integradoId','status','pers_juridica', 'createdDate');
-                $valores	  = array( $integrado_id, '0', $data['pj_pers_juridica'], $createdDate );
+                $valores	  = array( $db->quote($integrado_id), '0', $data['pj_pers_juridica'], $createdDate );
                 $updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pj_pers_juridica'] );
                 break;
             case 'personales':
                 $table 		= 'integrado_datos_personales';
                 $columnas[] = 'integradoId';
-                $valores[]	= $integrado_id;
+                $valores[]	= $db->quote($integrado_id);
                 $valoresvalidaicon['integradoId']= $integrado_id;
 
                 foreach ($data as $key => $value) {
@@ -470,7 +470,7 @@ class IntegradoController extends JControllerLegacy {
             case 'empresa':
                 $table = 'integrado_datos_empresa';
                 $columnas[] = 'integradoId';
-                $valores[]	= $integrado_id;
+                $valores[]	= $db->quote($integrado_id);
 
                 self::saveInstrumentos($data);
 
@@ -490,7 +490,7 @@ class IntegradoController extends JControllerLegacy {
             case 'params':
                 $table = 'integrado_params';
                 $columnas[] = 'integradoId';
-                $valores[]  = $integrado_id;
+                $valores[]  = $db->quote($integrado_id);
 
                 foreach ($data as $key => $value) {
                     $columna 	= substr($key, 3);
@@ -507,7 +507,7 @@ class IntegradoController extends JControllerLegacy {
             case 'bancos':
                 $table = 'integrado_datos_bancarios';
                 $columnas[] = 'integradoId';
-                $valores[]	= $integrado_id;
+                $valores[]	= $db->quote($integrado_id);
 
                 foreach ($data as $key => $value) {
                     $columna 	= substr($key, 3);
@@ -539,6 +539,7 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public static function checkData($table, $where){
+        $results = false;
         try{
             $db		= JFactory::getDbo();
             $query 	= $db->getQuery(true);
@@ -550,13 +551,13 @@ class IntegradoController extends JControllerLegacy {
             $db->setQuery($query);
 
             $results = $db->loadObjectList();
-
-            return $results;
         }
         catch(Exception $e){
             $response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
             echo json_encode($response);
         }
+
+        return $results;
     }
 
     public static function insertData($tabla, $columnas, $valores){
@@ -742,7 +743,7 @@ class IntegradoController extends JControllerLegacy {
         if (!JSession::checkToken()) {
             $this->redirectToSelectIntegrado();
         } else {
-            $this->id = $this->app->input->get('integradoId', null, 'INT');
+            $this->id = $this->app->input->get('integradoId', null, 'STRING');
 
             list($valid, $integrado) = $this->isValidIntegradoIdForUser();
             if ($valid) {

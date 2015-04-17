@@ -553,20 +553,14 @@ class getFromTimOne{
     }
 
     public static function getTimoneUserDetalis($uuidTimone){
-        $send  = new sendToTimOne();
-        $rutas = new servicesRoute();
-        $get = $rutas->getUrlService('timone', 'user', 'details');
+        $urlAndType = IntFactory::getServiceRoute('timone', 'user', 'details');
+        $urlAndType->url = str_replace('{uuid}',$uuidTimone,$urlAndType->url);
 
-        $serviceUrl = str_replace('{uuid}',$uuidTimone,$get->url);
+        $request = IntFactory::getTimoneRequest($urlAndType,null);
 
-        $send->setHttpType($get->type);
-        $send->setServiceUrl($serviceUrl);
-        $send->setJsonData('');
+        $resultado = $request->makeRequest();
 
-        $result = $send->to_timone();
-        $datos = json_decode($result->data);
-
-        return $datos;
+        return json_decode($resultado->data);
     }
 
     public static function getClientProvider( $client_id ) {
@@ -1973,15 +1967,9 @@ class getFromTimOne{
 class sendToTimOne {
 
     public $result;
-    protected $httpType;
-    protected $serviceUrl;
-    protected $jsonData;
     protected $integradoId;
 
     function __construct () {
-        $this->serviceUrl   = null;
-        $this->jsonData     = null;
-        $this->setHttpType('GET');
         $session = JFactory::getSession();
         $this->integradoId = $session->get('integradoId', null, 'integrado');
     }

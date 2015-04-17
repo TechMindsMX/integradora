@@ -35,10 +35,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         // Create an object for the record we are going to update.
         $object = new stdClass();
-        $object->integrado_id = $this->data['id'];
+        $object->integradoId = $this->data['id'];
         $object->status = $this->data['status'];
 
-        $datosIntegrado = new IntegradoSimple($object->integrado_id);
+        $datosIntegrado = new IntegradoSimple($object->integradoId);
         $valido = $this->cambioStatusValido( $datosIntegrado->integrados[0]->integrado->status, $object->status);
 
         if (!$valido) {
@@ -46,7 +46,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             $this->setRedirect(
                 JRoute::_(
                     'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($object->integrado_id, 'id' ) , false
+                    . $this->getRedirectToItemAppend($object->integradoId, 'id' ) , false
                 )
             );
             return true;
@@ -54,7 +54,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         if($datosIntegrado->integrados[0]->integrado->status != $object->status) {
             // Update their details in the users table using id as the primary key.
-            $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
+            $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integradoId');
         }
 
         if($object->status == 50 && $result){
@@ -251,7 +251,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             $result->integradoId = $result->integraUuid;
 
 	        $banco = new stdClass();
-            $banco->integrado_id    = $result->integradoId;
+            $banco->integradoId    = $result->integradoId;
             $banco->banco_clabe     = $result->stpClabe;
 
 	        $db->transactionStart();

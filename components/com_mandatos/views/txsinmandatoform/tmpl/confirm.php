@@ -39,7 +39,7 @@ echo $this->loadTemplate('tx_head');
 </div>
 </div>
 
-<form action="<?php echo $accion; ?>" method="post" enctype="application/x-www-form-urlencoded">
+<form action="<?php echo $accion; ?>" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
 	<input type="hidden" name="idOrden" value="<?php echo $order->id; ?>">
 	<input type="hidden" name="orderType" value="<?php echo $order->orderType; ?>">
 	<input type="hidden" name="idTx" value="<?php echo $this->data[0]->id; ?>">

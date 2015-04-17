@@ -230,7 +230,7 @@ $subProyects = $this->subprojects;
 
 </script>
 
-<form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data" >
+<form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data"  autocomplete="off">
     <h1>Generación de Orden de Venta</h1>
     <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
 

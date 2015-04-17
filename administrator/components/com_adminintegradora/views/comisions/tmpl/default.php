@@ -13,8 +13,7 @@ $sesion->clear('mensaje','myMessages');
 
 $accion =  JRoute::_ ('index.php?option=com_adminintegradora&view=comision&comisionId=');
 ?>
-<form action="<?php echo $accion; ?>" method="post"
-	  name="adminForm" id="adminForm">
+<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
 
 	<table class="table table-striped" id="articleList">
 		<thead>
