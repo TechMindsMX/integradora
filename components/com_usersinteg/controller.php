@@ -9,6 +9,16 @@ class UsersIntegController extends JControllerLegacy {
 		parent::__construct();
 	}
 
+	public function request() {
+		// Check the request token.
+		JSession::checkToken('post') or jexit(JText::_('JINVALID_TOKEN'));
+
+		$app   = JFactory::getApplication();
+		$data  = $this->input->post->get('jform', array(), 'array');
+
+
+	}
+
 	public function validate() {
 		$app = JFactory::getApplication();
 
@@ -50,8 +60,6 @@ class UsersIntegController extends JControllerLegacy {
 			$app->redirect( 'index.php?option=com_usersinteg' );
 		}
 
-		// Go to password remind screen
-		$app->redirect('index.php?option=com_users&view=reset&'. $token );
 	}
 
 	public function savequestions() {
@@ -103,6 +111,135 @@ class UsersIntegController extends JControllerLegacy {
 		$app->enqueueMessage('LBL_SAVE_SUCCESSFUL');
 		$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101');
 
+	}
+
+	public function sendReset() {
+		$vars[JSession::getFormToken()] = '=1';
+		$vars['email'] = 'remy.ochoa@trama.mx';
+
+		// Submit the password reset request.
+		$return	= $this->processResetRequest($vars);
+
+	}
+
+	private function processResetRequest($data)
+	{
+		$config = JFactory::getConfig();
+
+		$data['email'] = JStringPunycode::emailToPunycode($data['email']);
+
+		// Find the user id for the given email address.
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+		            ->select('id')
+		            ->from($db->quoteName('#__users'))
+		            ->where($db->quoteName('email') . ' = ' . $db->quote($data['email']));
+
+		// Get the user object.
+		$db->setQuery($query);
+
+		try
+		{
+			$userId = $db->loadResult();
+		}
+		catch (RuntimeException $e)
+		{
+			$this->setError(JText::sprintf('COM_USERS_DATABASE_ERROR', $e->getMessage()), 500);
+
+			return false;
+		}
+
+		// Check for a user.
+		if (empty($userId))
+		{
+			$this->setError(JText::_('COM_USERS_INVALID_EMAIL'));
+
+			return false;
+		}
+
+		// Get the user object.
+		$user = JUser::getInstance($userId);
+
+		// Make sure the user isn't blocked.
+		if ($user->block)
+		{
+			$this->setError(JText::_('COM_USERS_USER_BLOCKED'));
+
+			return false;
+		}
+
+		// Make sure the user isn't a Super Admin.
+		if ($user->authorise('core.admin'))
+		{
+			$this->setError(JText::_('COM_USERS_REMIND_SUPERADMIN_ERROR'));
+
+			return false;
+		}
+
+		jimport('joomla.application.component.model');
+		JModelLegacy::addIncludePath(JPATH_SITE.'/components/com_users/models');
+		$usersModel = JModelLegacy::getInstance( 'Reset', 'UsersModel' );
+		// Make sure the user has not exceeded the reset limit
+		if (!$usersModel->checkResetLimit($user))
+		{
+			$resetLimit = (int) JFactory::getApplication()->getParams()->get('reset_time');
+			$this->setError(JText::plural('COM_USERS_REMIND_LIMIT_ERROR_N_HOURS', $resetLimit));
+
+			return false;
+		}
+
+		// Set the confirmation token.
+		$token = JApplicationHelper::getHash(JUserHelper::genRandomPassword());
+		$salt = JUserHelper::getSalt('crypt-md5');
+		$hashedToken = md5($token . $salt) . ':' . $salt;
+		$user->activation = $hashedToken;
+
+		// Save the user to the database.
+		if (!$user->save(true))
+		{
+			return new JException(JText::sprintf('COM_USERS_USER_SAVE_FAILED', $user->getError()), 500);
+		}
+
+		// Assemble the password reset confirmation link.
+		$mode = $config->get('force_ssl', 0) == 2 ? 1 : (-1);
+
+		require_once( JPATH_SITE.'/components/com_users/helpers/route.php');
+		$itemid = UsersHelperRoute::getLoginRoute();
+		$itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
+		$link = 'index.php?option=com_users&view=reset&layout=confirm&token=' . $token . $itemid;
+
+		echo $link;
+		// Put together the email template data.
+		$data = $user->getProperties();
+		$data['fromname'] = $config->get('fromname');
+		$data['mailfrom'] = $config->get('mailfrom');
+		$data['sitename'] = $config->get('sitename');
+		$data['link_text'] = JRoute::_($link, false, $mode);
+		$data['link_html'] = JRoute::_($link, true, $mode);
+		$data['token'] = $token;
+
+		$subject = JText::sprintf(
+			'COM_USERS_EMAIL_PASSWORD_RESET_SUBJECT',
+			$data['sitename']
+		);
+
+		$body = JText::sprintf(
+			'COM_USERS_EMAIL_PASSWORD_RESET_BODY',
+			$data['sitename'],
+			$data['token'],
+			$data['link_text']
+		);
+
+		// Send the password reset request email.
+		$return = JFactory::getMailer()->sendMail($data['mailfrom'], $data['fromname'], $user->email, $subject, $body);
+
+		// Check for an error.
+		if ($return !== true)
+		{
+			return new JException(JText::_('COM_USERS_MAIL_FAILED'), 500);
+		}
+
+		return true;
 	}
 
 }

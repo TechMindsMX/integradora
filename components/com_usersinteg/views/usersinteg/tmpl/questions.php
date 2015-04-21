@@ -39,6 +39,7 @@ defined('_JEXEC') or die('Restricted Access');
 		<div class="form-control">
 			<input class="btn btn-primary" type="submit" value="<?php echo JText::_('LBL_ENVIAR'); ?>" />
 			<a class="btn btn-danger" href="index.php?option=com_user"><?php echo JText::_('LBL_CANCELAR'); ?></a>
+			<a class="btn" href="index.php?option=com_content&view=article&id=8&Itemid=101"><?php echo JText::_('LBL_LATER'); ?></a>
 		</div>
 	</form>
 </div>
