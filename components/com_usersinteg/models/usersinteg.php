@@ -25,7 +25,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $questions;
 	}
 
-	private function getAllUserQuestions() {
+	public function getAllUserQuestions() {
 		$userQuestions = array();
 
 		$userQuetionIds = $this->getUserQuestionsIds();
