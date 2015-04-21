@@ -135,32 +135,32 @@ class validador{
     }
 
 	public function rfc_fisica () {
-        $rfc = strtoupper($this->dataPost[$this->currentKey]);
+		$rfc = strtoupper($this->dataPost[$this->currentKey]);
 
-        $regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z]{2})([0-9])$/';
+		$regex = '/^[A-Z]{4}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3})$/';
 
-        if (preg_match ($regex, $rfc, $coicidencias) == 1) {
-            $respuesta = true;
-        } else {
-            $respuesta = false;
-        }
+		if (preg_match ($regex, $rfc, $coicidencias) == 1) {
+			$respuesta = true;
+		} else {
+			$respuesta = false;
+		}
 
-        return $respuesta;
-    }
+		return $respuesta;
+	}
 
 	public function rfc_moral () {
-        $rfc = strtoupper($this->dataPost[$this->currentKey]);
+		$rfc = strtoupper($this->dataPost[$this->currentKey]);
 
-        $regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z]{2})([0-9])$/';
+		$regex = '/^[A-Z]{3}([0-9]{2})(1[0-2]|0[1-9])([0-3][0-9])([A-Z0-9]{3})$/';
 
-        if (preg_match ($regex, $rfc, $coicidencias) == 1) {
-            $respuesta = true;
-        } else {
-            $respuesta = false;
-        }
+		if (preg_match ($regex, $rfc, $coicidencias) == 1) {
+			$respuesta = true;
+		} else {
+			$respuesta = false;
+		}
 
-        return $respuesta;
-    }
+		return $respuesta;
+	}
 
 	protected function length () {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_LENGTH', $this->diccionario_value);
