@@ -13,6 +13,8 @@ $datosBanco   = isset($datos->integradoDeudor->datosBancarios[0])?$datos->integr
 $document     = JFactory::getDocument();
 $attsCal      = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 $optionBancos = '';
+$existe = is_null($datos->id)?'false':'true';
+
 ?>
 <script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
@@ -23,7 +25,7 @@ $optionBancos = '';
     foreach ($this->catalogos->bancos as $key => $value){
         $bancoCodigo = isset($datosBanco->banco_codigo)?$datosBanco->banco_codigo:null;
 
-        $selected = $bancoCodigo == $value->claveClabe?'selected="selected"':'';
+        $selected = '';//$bancoCodigo == $value->claveClabe?'selected="selected"':'';
         $optionBancos .= '<option value="'.$value->claveClabe.'" '.$selected.'>'.$value->banco.'</option>';
         echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
 	}
@@ -35,6 +37,8 @@ $optionBancos = '';
         jQuery('#confirmarodc').on('click',beforeSubmit);
 
         <?php echo (!is_null($datos->integradoDeudor->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
+
+        jQuery('#rfc').trigger('change');
     });
 
     function ajax(parametros){
@@ -194,7 +198,7 @@ $optionBancos = '';
 <div class="clearfix">&nbsp;</div>
 <form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
     <div>
-        <input type="hidden" name="existe"       id="existe"       value="false">
+        <input type="hidden" name="existe"       id="existe"       value="<?php echo $existe; ?>">
         <input type="hidden" name="id"           id="id"           value="<?php echo $datos->id; ?>" />
         <input type="hidden" name="integradoId"  id="integradoId"  value="<?php echo $this->integradoId; ?>" />
         <input type="hidden" name="integradoIdR" id="integradoIdR" value="<?php echo $datos->integradoIdR; ?>" />
