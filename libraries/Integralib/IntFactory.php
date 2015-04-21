@@ -25,4 +25,11 @@ class IntFactory {
 		return $r->getUrlService($controller, $service, $action);
 	}
 
+	public static function getValidator() {
+		return new Validator();
+	}
+
+	public static function getsUserSecurity( $instance ) {
+		return new UserSecurity($instance);
+	}
 }

@@ -488,3 +488,13 @@ ALTER TABLE `flpmu_txs_timone_mandato` COLLATE utf8_general_ci, CHANGE COLUMN `i
 --rollback ALTER TABLE `flpmu_txs_timone_mandato` DROP FOREIGN KEY `flpmu_txs_timone_mandato_ibfk_1`;
 --rollback ALTER TABLE `flpmu_txs_timone_mandato` CHANGE COLUMN `integradoId` `idIntegrado` INT(11) NOT NULL;
 --rollback ALTER TABLE `flpmu_integrado` CHANGE COLUMN `integradoId` `integrado_id` INT(11) AUTO_INCREMENT NOT NULL;
+
+--changelog ricardolyon:48
+CREATE TABLE `flpmu_users_security_questions` (
+  `user_id` INT NOT NULL,
+  `question_id` INT NOT NULL,
+  `answer` VARCHAR(255) NOT NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `flpmu_users`(id)
+
+);
+--rollback DROP TABLE `flpmu_users_security_questions`;
