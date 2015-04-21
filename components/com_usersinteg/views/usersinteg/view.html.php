@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 class UsersintegViewUsersinteg extends JViewLegacy {
 
-	protected $challengeQuestions;
+	protected $challengeQuestions = array();
 	protected $allQuestions;
 
 	public function display($tpl = null) {

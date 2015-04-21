@@ -87,7 +87,9 @@ class PlgUserIntegrado extends JPlugin
 		
 		// extiende los datos de usuario con los de integrados
 		$integrados = $this->getIntegradosCurrUser($instance);
+		$instance->set('integrados', $integrados);
 
+		// extiende los datos de usuario con las presuntas de seguridad
 		$securityQuestions = $this->getSecurityQuestions($instance);
 		$instance->set('security', $securityQuestions);
 
@@ -110,15 +112,6 @@ class PlgUserIntegrado extends JPlugin
 		// Hit the user last visit field
 		$instance->setLastVisit();
 		
-		if ($this->app->getName() == 'site') {
-			if(count($instance->security->questions) == 0 ) {
-				$this->app->redirect(JRoute::_('index.php?option=com_usersinteg&view=usersinteg&layout=questions'), JText::_('NO_SECURITY_QUESTIONS'), 'warning');
-			}
-
-			if(count($integrados) === 0) {
-				$this->app->redirect(JRoute::_('index.php?option=com_integrado&view=solicitud'), JText::_('NO_INTEGRADO'), 'warning');
-			}
-		}
 		return true;
 	}
 
@@ -199,6 +192,25 @@ class PlgUserIntegrado extends JPlugin
 
 	private function getSecurityQuestions( $instance ) {
 		return IntFactory::getsUserSecurity($instance);
+	}
+
+	/**
+	 * @param $instance
+	 */
+	public function onUserAfterLogin( ) {
+
+		$user = JFactory::getUser();
+
+		if ($this->app->getName() == 'site') {
+			if ( count( $user->security->questions ) == 0 ) {
+				$this->app->redirect( JRoute::_( 'index.php?option=com_usersinteg&view=usersinteg&layout=questions' ),
+				                      JText::_( 'NO_SECURITY_QUESTIONS' ), 'warning' );
+			}
+
+			if(count($user->integrados) === 0) {
+				$this->app->redirect(JRoute::_('index.php?option=com_integrado&view=solicitud'), JText::_('NO_INTEGRADO'), 'warning');
+			}
+		}
 	}
 
 }

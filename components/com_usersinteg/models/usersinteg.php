@@ -40,30 +40,14 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	}
 
 	public function getQuestions() {
-		//TODO: traer desde la db
-		$questions = array (
-			'¿Cuál fue su apodo de la infancia?',
-			'¿En qué ciudad se conocieron su cónyuge / pareja?',
-			'¿Cuál es el nombre de tu amigo favorito de la infancia?',
-			'¿En qué calle vivía usted en el tercer grado?',
-			'¿Cual es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)',
-			'¿Cuál es el segundo nombre de su hijo mayor?',
-			'¿Cuál es el segundo nombre de su hermano mayor?',
-			'¿A qué escuela fue usted al sexto grado?',
-			'¿Cuál fue su número de teléfono de la niñez incluyendo código de área? (Por ejemplo, 000-000-0000)',
-			'¿Cuál es el nombre y apellido de su primo mayor?',
-			'¿Cuál era el nombre de su primer animal de peluche?',
-			'¿En qué ciudad o pueblo conocieron su madre y su padre?',
-			'¿Dónde estabas cuando tuviste tu primer beso?',
-			'¿Cuál es el primer nombre del niño o niña que primero besaste?',
-			'¿Cuál fue el apellido de su maestra de tercer grado?',
-			'¿En qué ciudad vive su hermano más cercano?',
-			'¿Qué es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)',
-			'¿Cuál es el apellido de soltera de su abuela materna?',
-			'¿En qué ciudad o pueblo fue tu primer trabajo?',
-			'¿Cuál es el nombre del lugar de la recepción de su boda?',
-			'¿Cuál es el nombre de una universidad a la que aplicó a pero no asistió?'
-		);
+		$db = JFactory::getDbo();
+		$query  = $db->getQuery(true);
+
+		$query->select('*')
+			->from($db->quoteName('#__security_questions'));
+		$db->setQuery($query);
+
+		$questions = $db->loadObjectList('id');
 
 		return $questions;
 	}
@@ -130,7 +114,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select($db->quoteName('question_id'))
+		$query->select($db->quoteName(array('question_id')))
 			->from( $db->quoteName('#__users_security_questions') )
 			->where( $db->quoteName('user_id') .' = ' . $db->quote($userId) );
 		$db->setQuery($query);

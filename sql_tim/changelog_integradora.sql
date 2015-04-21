@@ -518,3 +518,26 @@ CREATE TABLE `flpmu_security_questions` (
 );
 --rollback DROP TABLE `flpmu_security_questions`;
 
+--changeset  ricardolyon:56
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue su apodo de la infancia?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad se conocieron su cónyuge / pareja?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre de tu amigo favorito de la infancia?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué calle vivía usted en el tercer grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cual es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el segundo nombre de su hijo mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el segundo nombre de su hermano mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿A qué escuela fue usted al sexto grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue su número de teléfono de la niñez incluyendo código de área? (Por ejemplo, 000-000-0000)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre y apellido de su primo mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál era el nombre de su primer animal de peluche?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad o pueblo conocieron su madre y su padre?';
+INSERT `flpmu_security_questions` SET `question` = '¿Dónde estabas cuando tuviste tu primer beso?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el primer nombre del niño o niña que primero besaste?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue el apellido de su maestra de tercer grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad vive su hermano más cercano?';
+INSERT `flpmu_security_questions` SET `question` = '¿Qué es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el apellido de soltera de su abuela materna?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad o pueblo fue tu primer trabajo?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre del lugar de la recepción de su boda?';
+INSERT `flpmu_security_questions` SET `question` = 'Cuál es el nombre de una universidad a la que aplicó a pero no asistió?';
+--rollback TRUNCATE `flpmu_security_questions`;

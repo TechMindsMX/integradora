@@ -67,10 +67,9 @@ class UsersIntegController extends JControllerLegacy {
 		$answers = $app->input->getArray($fields);
 		$questions = $app->input->getArray($fieldsquestions);
 
-		$model = $this->getModel();
-
 		$db = JFactory::getDbo();
 		try {
+			$model->validateTypeLength( array_merge($fields, $answers) );
 
 			$model->saveUserQuestionsAndAnswers($questions, $answers, $db);
 
@@ -83,6 +82,7 @@ class UsersIntegController extends JControllerLegacy {
 		}
 
 		$app->enqueueMessage('LBL_SAVED_SUCCESFULLY');
+		$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101');
 
 	}
 

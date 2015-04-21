@@ -20,7 +20,7 @@ defined('_JEXEC') or die('Restricted Access');
 					<select id="question<?php echo $count; ?>" name="question<?php echo $count; ?>" class="form-control span6">
 						<?php
 						foreach ( $this->getAllQuestions() as $id => $question ) {
-							echo "<option value=\"$id\">$question</option>";
+							echo "<option value=\"$id\">$question->question</option>";
 						}
 						?>
 
