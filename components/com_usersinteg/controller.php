@@ -13,10 +13,13 @@ class UsersIntegController extends JControllerLegacy {
 		// Check the request token.
 		JSession::checkToken('post') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app   = JFactory::getApplication();
-		$data  = $this->input->post->get('jform', array(), 'array');
+		$app = JFactory::getApplication();
+		$vars = $app->input->get('jform', array(), 'array');
 
+		$sesion = JFactory::getSession();
+		$vars['email'] = $sesion->set('resetPassEmail', $vars['email']);
 
+		$app->redirect('index.php?option=com_usersinteg');
 	}
 
 	public function validate() {
@@ -42,23 +45,25 @@ class UsersIntegController extends JControllerLegacy {
 			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
 			'answer_2'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
 			'answer_3'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
-			'q1'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
-			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
-			'q3'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() )
+			'q1'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() ),
+			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() ),
+			'q3'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() )
 		);
-
 
 		try {
 			$model->validateTypeLength( $diccionario, array_merge($post, $postQuestions) );
 
 			$model->checkAnswers( $post, $postQuestions );
 
-			$token = JSession::getFormToken() .'=1';
-
 		} catch (Exception $e) {
 			$app->enqueueMessage($e->getMessage(), 'error');
 			$app->redirect( 'index.php?option=com_usersinteg' );
 		}
+
+		$vars[JSession::getFormToken()] = '=1';
+		$sesion = JFactory::getSession();
+		$vars['email'] = $sesion->get('resetPassEmail', null);
+		$return	= $this->processResetRequest($vars);
 
 	}
 
@@ -110,15 +115,6 @@ class UsersIntegController extends JControllerLegacy {
 
 		$app->enqueueMessage('LBL_SAVE_SUCCESSFUL');
 		$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101');
-
-	}
-
-	public function sendReset() {
-		$vars[JSession::getFormToken()] = '=1';
-		$vars['email'] = 'remy.ochoa@trama.mx';
-
-		// Submit the password reset request.
-		$return	= $this->processResetRequest($vars);
 
 	}
 
