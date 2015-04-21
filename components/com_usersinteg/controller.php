@@ -28,8 +28,18 @@ class UsersIntegController extends JControllerLegacy {
 		$post = $app->input->getArray($fields);
 		$postQuestions = $app->input->getArray($fieldsquestions);
 
+		$diccionario = array (
+			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_2'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_3'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'q1'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
+			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
+			'q3'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() )
+		);
+
+
 		try {
-			$model->validateTypeLength( array_merge($post, $postQuestions) );
+			$model->validateTypeLength( $diccionario, array_merge($post, $postQuestions) );
 
 			$model->checkAnswers( $post, $postQuestions );
 
@@ -68,8 +78,17 @@ class UsersIntegController extends JControllerLegacy {
 		$questions = $app->input->getArray($fieldsquestions);
 
 		$db = JFactory::getDbo();
+
+		$diccionario = array (
+			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_2'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_3'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_4'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
+			'answer_5'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5)
+		);
+
 		try {
-			$model->validateTypeLength( array_merge($fields, $answers) );
+			$model->validateTypeLength( $diccionario, array_merge($fields, $answers) );
 
 			$model->saveUserQuestionsAndAnswers($questions, $answers, $db);
 
@@ -81,7 +100,7 @@ class UsersIntegController extends JControllerLegacy {
 
 		}
 
-		$app->enqueueMessage('LBL_SAVED_SUCCESFULLY');
+		$app->enqueueMessage('LBL_SAVE_SUCCESSFUL');
 		$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101');
 
 	}

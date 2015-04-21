@@ -57,17 +57,8 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	 *
 	 * @throws Exception
 	 */
-	public function validateTypeLength( $post ) {
+	public function validateTypeLength( $diccionario, $post ) {
 		$validator = IntFactory::getValidator();
-
-		$diccionario = array (
-			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
-			'answer_2'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
-			'answer_3'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
-			'q1'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
-			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() ),
-			'q3'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $this->countQuestionsDb() )
-		);
 
 		$validator->procesamiento( $post, $diccionario );
 
