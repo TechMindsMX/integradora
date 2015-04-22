@@ -48,8 +48,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $this->parametros['userId'] = (INT)$user->id;
             $this->parametros['authDate'] = time();
 
-            unset($this->parametros['integradoId']);
-
             $save->formatData($this->parametros);
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'], 'odc_auth');
@@ -144,7 +142,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
     private function realizaTx(){
         $orden = $this->getOrden();
-        $idProveedor = isset($orden->proveedor->integrado_id)?$orden->proveedor->integrado_id:$orden->proveedor->integrado->integrado_id;
+
+        $idProveedor = $orden->receptor->id;
 
         $proveedor = new IntegradoSimple($idProveedor);
 

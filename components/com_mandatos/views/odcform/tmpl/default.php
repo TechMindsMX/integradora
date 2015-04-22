@@ -384,7 +384,7 @@ if(!isset($this->datos['confirmacion'])){
         <input type="hidden" name="numOrden"      value="<?php echo $datos['numOrden'] ?>" />
         <input type="hidden" name="proyecto"      value="<?php echo $datos['proyecto']; ?>" />
         <input type="hidden" name="proveedor"     value="<?php echo $datos['proveedor']; ?>" />
-        <input type="hidden" name="bankId" value="<?php echo $datos['bankId']; ?>" />
+        <input type="hidden" name="bankId"        value="<?php echo $datos['bankId']; ?>" />
         <input type="hidden" name="paymentDate"   value="<?php echo $datos['paymentDate']; ?>" />
         <input type="hidden" name="paymentMethod" value="<?php echo $datos['paymentMethod']; ?>" />
         <input type="hidden" name="totalAmount"   value="<?php echo $comprobante['TOTAL']; ?>" />
