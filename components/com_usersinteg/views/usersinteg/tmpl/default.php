@@ -15,9 +15,9 @@ foreach ( $this->getChallengeQuestions() as $id => $question ) {
 ?>
 
 	<div class="conttol-group">
-		<label for="question<?php echo $count; ?>"><?php echo $question; ?></label>
+		<label for="question<?php echo $count; ?>"><?php echo $question->question; ?></label>
 		<input type="text" class="form-control" name="answer_<?php echo $count; ?>" />
-		<input type="hidden" name="q<?php echo $count; ?>" value="<?php echo $id; ?>" />
+		<input type="hidden" name="q<?php echo $count; ?>" value="<?php echo $question->id; ?>" />
 	</div>
 
 <?php

@@ -18,7 +18,8 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	public function getRandomQuestionsFromUserQuestions() {
 		$allUserQuestions = $this->getAllUserQuestions();
 
-		foreach ( array_rand($allUserQuestions, 3) as $qId ) {
+		$rand = array_rand($allUserQuestions, 3);
+		foreach ( $rand as $qId ) {
 			$questions[$qId] = $allUserQuestions[$qId];
 		}
 
@@ -101,7 +102,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	 * @return array
 	 */
 	private function getUserQuestionsIds() {
-		$userId = JFactory::getUser()->id;
+		$userId = $this->getUserFromEmail();
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -115,7 +116,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $userQuetionIds;
 	}
 
-	private function countQuestionsDb() {
+	public function countQuestionsDb() {
 		return count($this->getQuestions());
 	}
 
@@ -151,6 +152,20 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		$decrypted = str_replace( $this->salt, '', $decrypted);
 
 		return $decrypted;
+	}
+
+	private function getUserFromEmail() {
+		$sesion = JFactory::getSession();
+		$email = $sesion->get('resetPassEmail');
+
+		$db = $this->getDbo();
+		$query = $db->getQuery(true)
+		            ->select('id')
+		            ->from($db->quoteName('#__users'))
+		            ->where($db->quoteName('email') . ' = ' . $db->quote( $email ));
+		$db->setQuery($query);
+
+		return$db->loadResult();
 	}
 
 }
