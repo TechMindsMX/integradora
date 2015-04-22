@@ -3644,16 +3644,6 @@ class Factura extends makeTx {
         return $this;
     }
 
-    public function sendCancelFactura(IntegradoSimple $emisor) {
-        $this->objEnvio = new stdClass();
-        $this->objEnvio->uuid = $this->getXmlUUID($this->xml);
-        $this->objEnvio->rfcContribuyente = $emisor->getRfc();
-
-        $rutas = new servicesRoute();
-
-        return parent::create($rutas->getUrlService('facturacion', 'factura', 'cancel'));
-    }
-
     private function agrupaImpuestos($productosData){
         $retorno = array('IVA' => array(), 'IEPS' => array());
 

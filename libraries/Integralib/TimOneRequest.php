@@ -16,7 +16,7 @@ use servicesRoute;
 class TimOneRequest {
 	public $resultado;
 	protected $integradoId;
-	protected $objEnvio;
+	public $objEnvio;
 
 	function __construct() {
 		$this->rutas = new servicesRoute();
@@ -27,7 +27,7 @@ class TimOneRequest {
 	 *
 	 * @return mixed
 	 */
-	protected function makeRequest($datosEnvio){
+	public function makeRequest($datosEnvio){
 		unset($this->options);
 
 		$request = new sendToTimOne();
@@ -87,6 +87,15 @@ class TimOneRequest {
 		$this->objEnvio->amount = $amount;
 
 		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
+
+		return $this->resultado;
+	}
+
+	public function sendValidateInvoice( $uuid ) {
+		$this->objEnvio = new \stdClass();
+		$this->objEnvio->xmlName = $uuid;
+
+		$this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaValidate', 'create'));
 
 		return $this->resultado;
 	}
