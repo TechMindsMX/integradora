@@ -9,7 +9,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	private $salt;
 
 	function __construct() {
-		$this->user = JFactory::getUser();
+		$this->user = JFactory::getUser($this->getUserFromEmail());
 		$this->salt = 'u-d-6wBa6/E?wTwqmm$}K_EQC0Dh,|y&W*+Gzx?4HV?_XaP>;q%nthuN}d+sZs54';
 
 		parent::__construct();
@@ -18,8 +18,7 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	public function getRandomQuestionsFromUserQuestions() {
 		$allUserQuestions = $this->getAllUserQuestions();
 
-		$rand = array_rand($allUserQuestions, 3);
-		foreach ( $rand as $qId ) {
+		foreach ( array_rand($allUserQuestions, 2) as $qId ) {
 			$questions[$qId] = $allUserQuestions[$qId];
 		}
 
@@ -71,10 +70,10 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 	public function checkAnswers( $post, $postQuestions ) {
 		$savedAnswers = $this->getUserSavedAnswers();
 
-		$answers = array_combine($post, $postQuestions);
+		$answers = array_combine($postQuestions, $post);
 
 		foreach ( $answers as $questionId => $answer ) {
-			if ($savedAnswers[$questionId] != $answer) {
+			if ($savedAnswers[$questionId]->answer != $answer) {
 				throw new Exception( JText::_('ERR_FAILED_SECURITY_QUESTIONS') );
 			}
 		}
@@ -158,14 +157,14 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		$sesion = JFactory::getSession();
 		$email = $sesion->get('resetPassEmail');
 
-		$db = $this->getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 		            ->select('id')
 		            ->from($db->quoteName('#__users'))
 		            ->where($db->quoteName('email') . ' = ' . $db->quote( $email ));
 		$db->setQuery($query);
 
-		return$db->loadResult();
+		return $db->loadResult();
 	}
 
 }

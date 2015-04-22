@@ -4,6 +4,8 @@ defined('_JEXEC') or die('Restricted Access');
 
 class UsersIntegController extends JControllerLegacy {
 
+	private $homeUrl = 'index.php?option=com_content&view=article&id=8&Itemid=101';
+
 	function __construct() {
 
 		parent::__construct();
@@ -28,12 +30,10 @@ class UsersIntegController extends JControllerLegacy {
 		$fields = array(
 			'answer_1'  => 'STRING',
 			'answer_2'  => 'STRING',
-			'answer_3'  => 'STRING'
 		);
 		$fieldsquestions = array(
 			'q1'        => 'INT',
 			'q2'        => 'INT',
-			'q3'        => 'INT'
 		);
 
 		$model = $this->getModel();
@@ -44,10 +44,8 @@ class UsersIntegController extends JControllerLegacy {
 		$diccionario = array (
 			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
 			'answer_2'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
-			'answer_3'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
 			'q1'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() ),
-			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() ),
-			'q3'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() )
+			'q2'        => array ( 'number'     => true,    'required' => true, 'min' => 1,     'max' => $model->countQuestionsDb() )
 		);
 
 		try {
@@ -65,6 +63,17 @@ class UsersIntegController extends JControllerLegacy {
 		$vars['email'] = $sesion->get('resetPassEmail', null);
 		$return	= $this->processResetRequest($vars);
 
+		if ($return) {
+			$msg = 	JText::_('LBL_RESET_LINK_SENT');
+			$type = 'message';
+			$url = $this->homeUrl;
+		} else {
+			$msg = 	JText::_('ERR_403');
+			$type = 'error';
+			$url = $this->homeUrl;
+		}
+		$app->enqueueMessage( $msg, $type );
+		$app->redirect( $url );
 	}
 
 	public function savequestions() {
@@ -114,7 +123,7 @@ class UsersIntegController extends JControllerLegacy {
 		}
 
 		$app->enqueueMessage('LBL_SAVE_SUCCESSFUL');
-		$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101');
+		$app->redirect($this->homeUrl);
 
 	}
 
@@ -204,7 +213,6 @@ class UsersIntegController extends JControllerLegacy {
 		$itemid = $itemid !== null ? '&Itemid=' . $itemid : '';
 		$link = 'index.php?option=com_users&view=reset&layout=confirm&token=' . $token . $itemid;
 
-		echo $link;
 		// Put together the email template data.
 		$data = $user->getProperties();
 		$data['fromname'] = $config->get('fromname');
