@@ -99,7 +99,11 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_BANCOS'); ?>
 				</div>
 				<div class="span4">
-					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->bankName; } ?>
+					<?php
+                    if (isset($orden->dataBank)) {
+                        echo isset($orden->dataBank[0]->bankName) ? $orden->dataBank[0]->bankName: 'STP';
+                    }
+                    ?>
 				</div>
 			</div>
 			<div>
@@ -113,7 +117,12 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 				</div>
 				<div class="span4">
-					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_cuenta; } ?>
+					<?php
+                    if (isset($orden->dataBank)) {
+                        $banco = is_null($orden->dataBank[0]->banco_cuenta) ? 'Cuenta STP' : $orden->dataBank[0]->banco_cuenta;
+                        echo $banco;
+                    }
+                    ?>
 				</div>
 			</div>
 			<div>

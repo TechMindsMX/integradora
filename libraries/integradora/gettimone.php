@@ -1201,7 +1201,7 @@ class getFromTimOne{
             $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
-            $idProveedor = isset($value->proveedor->integrado_id)?$value->proveedor->integrado_id:$value->proveedor->integrado->integrado_id;
+            $idProveedor = isset($value->proveedor->id) ? $value->proveedor->id : $value->proveedor->integrado->integrado_id;
             $value->receptor = new IntegradoSimple($idProveedor);
 
             $proyectos = self::getProyects(null, $value->proyecto);
@@ -1392,11 +1392,11 @@ class getFromTimOne{
             $proveedores[$orden->clientId] = $integ->integrados[0];
             $proveedores[$orden->clientId]->frontName = $integ->getDisplayName();
             $types = $catalogo->providerTypes();
-            $proveedores[$orden->clientId]->type = $types[0];
+            $proveedores[$orden->clientId]->type    = $types[0];
             $proveedores[$orden->clientId]->contact = $integ->integrados[0]->datos_personales->nombre_representante;
-            $proveedores[$orden->clientId]->pRFC = $integ->integrados[0]->datos_personales->rfc;
-            $proveedores[$orden->clientId]->rfc = $integ->integrados[0]->datos_empresa->rfc;
-            $proveedores[$orden->clientId]->phone = $integ->integrados[0]->datos_empresa->tel_fijo;
+            $proveedores[$orden->clientId]->pRFC    = $integ->integrados[0]->datos_personales->rfc;
+            $proveedores[$orden->clientId]->rfc     = isset($integ->integrados[0]->datos_empresa->rfc) ? $integ->integrados[0]->datos_empresa->rfc : '';
+            $proveedores[$orden->clientId]->phone   = isset($integ->integrados[0]->datos_empresa->tel_fijo) ? $integ->integrados[0]->datos_empresa->tel_fijo : '';
         }
         $orden->proveedor = $proveedores[$orden->clientId];
 
@@ -1772,12 +1772,12 @@ class getFromTimOne{
         return $token;
     }
 
-	/**
-	 * @param $persJuridica
-	 *
-	 * @return mixed
-	 */
-	public static function newintegradoId($persJuridica){
+    /**
+     * @param $persJuridica
+     *
+     * @return mixed
+     */
+    public static function newintegradoId($persJuridica){
         $createdDate = time();
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
@@ -2472,7 +2472,7 @@ class sendToTimOne {
                 $order->cantidadAuthNecesarias = $auths->emisor;
                 break;
             case 'odc':
-                $order->cantidadAuthNecesarias = $auths->receptor;
+                $order->cantidadAuthNecesarias = 1;
                 break;
             default:
                 $order->cantidadAuthNecesarias = $auths->totales;
@@ -2586,17 +2586,17 @@ class sendToTimOne {
         return $factura->sendCreateFactura(); // realiza el envio
     }
 
-	/**
-	 * @param $data
-	 *
-	 * @param string $xmlpath
-	 *
-	 * @return bool|string filename {uuid}.xml
-	 * xml
-	 * @throws Exception
-	 */
+    /**
+     * @param $data
+     *
+     * @param string $xmlpath
+     *
+     * @return bool|string filename {uuid}.xml
+     * xml
+     * @throws Exception
+     */
     public function saveXMLFile( $data, $xmlpath = XML_FILES_PATH ) {
-	    $xmlpath = substr($xmlpath, -1) == '/' ? $xmlpath : $xmlpath.'/';
+        $xmlpath = substr($xmlpath, -1) == '/' ? $xmlpath : $xmlpath.'/';
 
         if( !$result = simplexml_load_string ($data, 'SimpleXmlElement', LIBXML_NOERROR+LIBXML_ERR_FATAL+LIBXML_ERR_NONE) ) {
             throw new Exception('Error creando factura = '.$data);
@@ -3647,10 +3647,10 @@ class Factura extends makeTx {
     private function agrupaImpuestos($productosData){
         $retorno = array('IVA' => array(), 'IEPS' => array());
 
-	    foreach ($productosData as $producto) {
-		    $retorno['IVA'][$producto->iva] = 0;
-		    $retorno['IEPS'][$producto->ieps] = 0;
-	    }
+        foreach ($productosData as $producto) {
+            $retorno['IVA'][$producto->iva] = 0;
+            $retorno['IEPS'][$producto->ieps] = 0;
+        }
 
         foreach ($productosData as $producto) {
             $retorno['IVA'][$producto->iva] += (FLOAT)($producto->p_unitario * $producto->cantidad) * ((FLOAT)$producto->iva/100);
@@ -3868,11 +3868,11 @@ class transferFunds extends makeTx {
     protected $objEnvio;
 
     function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
-	    $this->orden    = $orden;
+        $this->orden    = $orden;
 
-	    $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
-	    $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
-	    $this->objEnvio->amount           = (float)$totalAmount;
+        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
+        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+        $this->objEnvio->amount           = (float)$totalAmount;
     }
 
     public function sendCreateTx()
@@ -4051,12 +4051,12 @@ class OrdenFn {
         return $return;
     }
 
-	public static function getRelatedOdvIdFromOdcId( $id_odc ) {
-		$result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odc = '.(INT)$id_odc);
-		return $result[0]->id_odv;
-	}
+    public static function getRelatedOdvIdFromOdcId( $id_odc ) {
+        $result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odc = '.(INT)$id_odc);
+        return $result[0]->id_odv;
+    }
 
-	public function calculateBalance( $order ) {
+    public function calculateBalance( $order ) {
         $this->order = $order;
 
         $this->order->sumOrderTxs = 0;
