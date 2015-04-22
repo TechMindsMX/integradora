@@ -14,8 +14,11 @@ class ReportesModelResultados extends JModelItem {
     protected $input;
 
     function __construct() {
-        $post        = array('integradoId'=>'INT');
+        $post        = array('project'=>'INT');
         $this->input = (object) JFactory::getApplication()->input->getArray($post);
+
+	    $session = JFactory::getSession();
+	    $this->input->integradoId = $session->get('integradoId', null, 'integrado');
 
         parent::__construct();
     }
@@ -46,7 +49,7 @@ class ReportesModelResultados extends JModelItem {
 	    $input = $this->getInputDaterangeAndProject();
 
        // TODO: quitar hardcoded data
-        $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate, $input->proyecto);
+        $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate, $this->input->project);
         $reportResultados->getIngresos();
         $reportResultados->getEgresos();
         $reportResultados->startPeriod = $reportResultados->getFechaInicio();
