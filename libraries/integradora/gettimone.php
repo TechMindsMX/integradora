@@ -3574,7 +3574,20 @@ class Factura extends makeTx {
         $this->format = 'Xml';
     }
 
-    public function setTestRFC() {
+	public static function validateXml( $xmlpath ) {
+		$request = new \Integralib\TimOneRequest();
+		$xmlFileData            = file_get_contents($xmlpath);
+		$data 			        = new xml2Array();
+		$factura                = $data->manejaXML($xmlFileData);
+
+		$result = $request->sendInvoiceToValidation( Factura::getXmlUUID($factura) );
+
+		if (substr_count('El sello es correcto', $result->data) === 0) {
+			throw new Exception('ERR_XML_NOT_VALID');
+		}
+	}
+
+	public function setTestRFC() {
         $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
         $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }

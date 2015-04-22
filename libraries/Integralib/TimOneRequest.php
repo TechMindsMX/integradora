@@ -91,7 +91,7 @@ class TimOneRequest {
 		return $this->resultado;
 	}
 
-	public function sendValidateInvoice( $uuid ) {
+	public function sendInvoiceToValidation( $uuid ) {
 		$this->objEnvio = new \stdClass();
 		$this->objEnvio->xmlName = $uuid;
 

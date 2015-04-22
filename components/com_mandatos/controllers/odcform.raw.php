@@ -25,13 +25,15 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $this->parametros   = $this->inputVars->getArray($post);
 
-	    $request = new \Integralib\TimOneRequest();
-	    $xmlFileData            = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML);
-	    $data 			        = new xml2Array();
-	    $factura                = $data->manejaXML($xmlFileData);
 
 	    // TODO: validación del xml que se sube en la plataforma, ACTIVAR
-//	    $request->sendValidateInvoice( Factura::getXmlUUID($factura) );
+	    try {
+		    Factura::validateXml( JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML );
+
+	    } catch (Exception $e) {
+		    $this->app->enqueueMessage(JText::_($e->getMessage()), 'error');
+		    $this->app->redirect('index.php?option=com_mandatos&view=odcform');
+	    }
 
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
