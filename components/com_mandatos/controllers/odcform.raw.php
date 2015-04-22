@@ -28,7 +28,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
 	    // TODO: validación del xml que se sube en la plataforma, ACTIVAR
 	    try {
-		    Factura::validateXml( JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML );
+//		    Factura::validateXml( JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML );
 
 	    } catch (Exception $e) {
 		    $this->app->enqueueMessage(JText::_($e->getMessage()), 'error');
