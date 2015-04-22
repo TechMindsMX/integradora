@@ -1201,7 +1201,7 @@ class getFromTimOne{
             $emisor = new IntegradoSimple($value->integradoId);
             $value->emisor = $emisor->getDisplayName();
 
-            $idProveedor = $value->proveedor->id;
+            $idProveedor = isset($value->proveedor->id) ? $value->proveedor->id : $value->proveedor->integrado->integrado_id;
             $value->receptor = new IntegradoSimple($idProveedor);
 
             $proyectos = self::getProyects(null, $value->proyecto);
@@ -1392,11 +1392,11 @@ class getFromTimOne{
             $proveedores[$orden->clientId] = $integ->integrados[0];
             $proveedores[$orden->clientId]->frontName = $integ->getDisplayName();
             $types = $catalogo->providerTypes();
-            $proveedores[$orden->clientId]->type = $types[0];
+            $proveedores[$orden->clientId]->type    = $types[0];
             $proveedores[$orden->clientId]->contact = $integ->integrados[0]->datos_personales->nombre_representante;
-            $proveedores[$orden->clientId]->pRFC = $integ->integrados[0]->datos_personales->rfc;
-            $proveedores[$orden->clientId]->rfc = $integ->integrados[0]->datos_empresa->rfc;
-            $proveedores[$orden->clientId]->phone = $integ->integrados[0]->datos_empresa->tel_fijo;
+            $proveedores[$orden->clientId]->pRFC    = $integ->integrados[0]->datos_personales->rfc;
+            $proveedores[$orden->clientId]->rfc     = isset($integ->integrados[0]->datos_empresa->rfc) ? $integ->integrados[0]->datos_empresa->rfc : '';
+            $proveedores[$orden->clientId]->phone   = isset($integ->integrados[0]->datos_empresa->tel_fijo) ? $integ->integrados[0]->datos_empresa->tel_fijo : '';
         }
         $orden->proveedor = $proveedores[$orden->clientId];
 
