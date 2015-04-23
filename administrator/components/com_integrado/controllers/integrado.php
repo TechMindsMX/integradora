@@ -3,7 +3,8 @@ defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.controllerform');
 jimport('integradora.integrado');
-
+jimport('integradora.notifications');
+jimport('integradora.catalogos');
 /**
  *
  */
@@ -19,6 +20,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $this->save = new sendToTimOne();
 
         $this->integradoId = $this->data['id'];
+        $this->catalogos = new Catalogos();
 
         parent::__construct();
     }
@@ -56,6 +58,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         }
 
         if($object->status == 50 && $result){
+            $this->notification();
             $this->createIntegradoTimoneUUID();
         }
 
@@ -251,26 +254,26 @@ class IntegradoControllerIntegrado extends JControllerForm {
         if($resultado->code == 200) {
             $result->integradoId = $result->integraUuid;
 
-	        $banco = new stdClass();
+            $banco = new stdClass();
             $banco->integrado_id    = $result->integradoId;
             $banco->banco_clabe     = $result->stpClabe;
 
-	        $db->transactionStart();
+            $db->transactionStart();
 
-	        try {
-		        $db->insertObject( '#__integrado_datos_bancarios', $banco );
+            try {
+                $db->insertObject( '#__integrado_datos_bancarios', $banco );
 
-		        unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance);
+                unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance);
                 $db->insertObject( '#__integrado_timone', $result );
 
                 $db->transactionCommit();
-	        } catch (Exception $e) {
-		        $db->transactionRollback();
+            } catch (Exception $e) {
+                $db->transactionRollback();
 
-		        $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
-		        JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
+                $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
+                JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
 
-	        }
+            }
 
         }
 
@@ -280,6 +283,24 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 
         return $integradoData;
+    }
+
+    private function notification() {
+        $catalogoStatusSolicitud = $this->catalogos->getStatusSolicitud();
+        $getCurrUser             = new IntegradoSimple($this->data['id']);
+        foreach($catalogoStatusSolicitud as $value){
+            if($value->status == $getCurrUser->integrados[0]->integrado->status){
+                $status = $value->status_name;
+            }
+        }
+
+        $array                   = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'],$status);
+        $send                    = new Send_email();
+
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info = $send->sendNotifications('3', $array);
+
+        return $info;
     }
 }
 

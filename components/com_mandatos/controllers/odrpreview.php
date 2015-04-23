@@ -126,7 +126,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $getCurrUser         = new IntegradoSimple($this->integradoId);
         $titleArray          = array($this->orden->numOrden);
-        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), $this->orden->totalAmount, $this->cuenta->banco_cuenta, $this->orden->numOrden);
+        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), '$'.number_format($this->orden->totalAmount,2), $this->cuenta->banco_cuenta, $this->orden->numOrden);
 
         $send                   = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);

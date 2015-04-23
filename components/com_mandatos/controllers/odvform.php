@@ -96,11 +96,11 @@ class MandatosControllerOdvform extends JControllerAdmin {
 			$saved = $save->updateDB('ordenes_venta',null,$db->quoteName('id').' = '.$db->quote($this->data['id']));
 		}
 
-		if ($saved) {
-			$this->sendMail($this->data);
-		}
+        if ($saved) {
+            $this->sendMail($this->data);
+        }
 
-		$url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$this->data['id'];
+        $url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$this->data['id'];
 
 		JFactory::getApplication()->redirect($url);
 
@@ -109,20 +109,20 @@ class MandatosControllerOdvform extends JControllerAdmin {
 	public function sendMail($data)
 	{
 		/*
-		 * Notificaciones 6
+		 * Notificaciones 7
 		 */
 		$clientes = new IntegradoSimple($data['clientId']);
 		$nameCliente = $clientes->getDisplayName();
 
 		$totalAmount = self::getTotalAmount(json_decode($data['productos']));
 		$getCurrUser = new IntegradoSimple($this->integradoId);
-
-		$array = array($getCurrUser->getUserPrincipal()->name, $data['numOrden'], JFactory::getUser()->name, date('d-m-Y'), $totalAmount, $nameCliente);
+        $title = array($data['numOrden']);
+		$array = array($getCurrUser->getUserPrincipal()->name, $data['numOrden'], JFactory::getUser()->name, date('d-m-Y'), '$'.number_format($totalAmount,2), strtoupper($nameCliente));
 
 		$sendEmail = new Send_email();
 		$sendEmail->setIntegradoEmailsArray($getCurrUser);
 
-		$reportEmail = $sendEmail->sendNotifications('2', $array);
+		$reportEmail = $sendEmail->sendNotifications('7', $array, $title);
 
 	}
 

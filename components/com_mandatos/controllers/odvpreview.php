@@ -68,12 +68,13 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                             $xmlFactura = $save->generateFacturaFromTimone( $factObj );
 	                        try {
 		                        $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
+                                $newOrder->XML = $xmlFactura;
+                                $info = $this->sendEmail($newOrder);
 	                        } catch (Exception $e) {
 		                        $msg = $e->getMessage();
 		                        JLog::add($msg, JLog::ERROR, 'error');
 		                        $this->app->enqueueMessage($msg, 'error');
 	                        }
-                            $info = $this->sendEmail($newOrder);
                         }
 
                         if ( isset( $newOrder->urlXML ) ) {
@@ -105,26 +106,36 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
     public function sendEmail($objOdv)
     {
         /*
-         *  NOTIFICACIONES 7
+         *  NOTIFICACIONES 8
          */
         $getCurrUser     = new IntegradoSimple($this->integradoId);
         $titleArray      = array( $objOdv->numOrden);
+        $numFact = Factura::getXmlUUID($objOdv->XML);
+        $name = $getCurrUser->getDisplayName();
 
-        $array           = array($getCurrUser->user->name, $objOdv->numOrden, JFactory::getUser()->username, date('d-m-Y'), $objOdv->getTotalAmount(), $objOdv->getReceptor()->getDisplayName(),  $objOdv->numOrden);
+        $array           = array(
+            $name,
+            $numFact,
+            JFactory::getUser()->username,
+            date('d-m-Y'),
+            '$'.number_format($objOdv->getTotalAmount(), 2),
+            $objOdv->getReceptor()->getDisplayName(),
+            $objOdv->numOrden);
+
         $send            = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
-        $info[]            = $send->sendNotifications('7', $array, $titleArray);
+        $info[]            = $send->sendNotifications('8', $array, $titleArray);
 
         /*
-         * Notificaciones 8
+         * Notificaciones 9
          */
 
-        $titleArrayAdmin = array( $getCurrUser->user->username, $objOdv->numOrden );
+        $titleArrayAdmin = array( $name, $objOdv->numOrden );
         $arrayAdmin      = $array;
 
         $send->setAdminEmails();
-        $info[] = $send->sendNotifications('8', $arrayAdmin, $titleArrayAdmin);
+        $info[] = $send->sendNotifications('9', $arrayAdmin, $titleArrayAdmin);
 
         return $info;
     }
