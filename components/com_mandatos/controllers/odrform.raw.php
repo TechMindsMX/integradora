@@ -101,7 +101,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
         }else{
             $respuesta = array('redireccion' => false);
         }
-        $this->sendEmail($datos);
+
+        $this->sendEmail($idOrden);
 
         JFactory::getDocument()->setMimeEncoding('application/json');
         echo json_encode($respuesta);
@@ -160,14 +161,20 @@ class MandatosControllerOdrform extends JControllerLegacy {
         JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odrlist', 'LBL_ERROR' ,'error');
     }
 
-    private function sendEmail($datos)
+    private function sendEmail($idOdr)
     {
         /*
          * NOTIFICACIONES 18
          */
+        $odr = getFromTimOne::getOrdenesRetiro(null,$idOdr);
+        $odr = $odr[0];
+
         $getCurrUser    = new IntegradoSimple($this->integradoId);
-        $titleArray     = array($datos['numOrden']);
-        $array          = array($getCurrUser->getUserPrincipal()->name, $datos['numOrden'], JFactory::getUser()->username, date('d-m-Y'), $datos['totalAmount'], 'Cuenta' );
+        $cuenta = is_null($getCurrUser->integrados[0]->datos_bancarios[0]->banco_cuenta) ? 'Cuenta STP': $getCurrUser->integrados[0]->datos_bancarios[0]->banco_cuenta;
+        $cuenta = substr($cuenta,-4);
+
+        $titleArray     = array($odr->numOrden);
+        $array          = array($getCurrUser->getDisplayName(), $odr->numOrden, JFactory::getUser()->name, date('d-m-Y'), '$'.number_format($odr->totalAmount, 2), $cuenta );
 
         $send                   = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
