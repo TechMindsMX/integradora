@@ -195,13 +195,20 @@ class MandatosControllerOdcpreview extends JControllerAdmin
          */
 
         $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->parametros['idOrden']);
+        $odc = $odc[0];
 
         $info = array();
 
         $getCurrUser     = new IntegradoSimple($this->integradoId);
-        $titleArray      = array( $this->parametros['idOrden']);
+        $titleArray      = array( $odc->numOrden );
 
-        $array           = array($getCurrUser->user->name, $this->parametros['idOrden'], JFactory::getUser()->username, date('d-m-Y'), $odc[0]->totalAmount, $odc[0]->proveedor->corporateName);
+        $array           = array(
+            $getCurrUser->getDisplayName(),
+            $odc->numOrden,
+            JFactory::getUser()->name,
+            date('d-m-Y'),
+            '$'.number_format($odc->totalAmount, 2),
+            strtoupper($odc->receptor->getDisplayName()) );
 
         $send            = new Send_email();
 
@@ -212,7 +219,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
          * Notificaciones 15&34
          */
 
-        $titleArrayAdmin = array( $getCurrUser->user->username, $this->parametros['idOrden'] );
+        $titleArrayAdmin = array( $getCurrUser->getDisplayName(), $odc->numOrden );
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('15', $array, $titleArrayAdmin);

@@ -72,8 +72,6 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $salvado = $save->insertDB('ordenes_compra');
 
             $id = $db->insertid();
-
-            $this->sendNotifications($datos);
         }else{
             unset($datos['idOrden']);
             $save->formatData($datos);
@@ -83,6 +81,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
         if($salvado) {
             $sesion = JFactory::getSession();
             $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
+
+            $this->sendNotifications($datos);
 
             $respuesta = array(
                 'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
@@ -133,7 +133,13 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $getIntegradoSimple = new IntegradoSimple($this->integradoId);
 
         $arrayTitle = array($datos['numOrden']);
-        $array = array($getIntegradoSimple->user->username, $datos['numOrden'],  JFactory::getUser()->name, date('d-m-Y'), $this->parametros['totalAmount'], $nameProveedor);
+        $array = array(
+            $getIntegradoSimple->getDisplayName(),
+            $datos['numOrden'],
+            JFactory::getUser()->name,
+            date('d-m-Y'),
+            '$'.number_format($this->parametros['totalAmount'], 2),
+            strtoupper($nameProveedor));
 
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getIntegradoSimple);
@@ -141,12 +147,12 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $info[] = $send->sendNotifications('11', $array, $arrayTitle);
 
         /*
-         * Notificaciones 12
+         * Notificaciones 13
          */
-        $arrayTitleAdmin = array($datos['numOrden'], date('d-m-Y'), $nameProveedor, $this->parametros['totalAmount'], $getIntegradoSimple->user->username, JFactory::getUser()->name);
+        $arrayTitleAdmin = array($getIntegradoSimple->getDisplayName(),$datos['numOrden']);
 
         $send->setAdminEmails();
-        $info[] = $send->sendNotifications('12', $array, $arrayTitleAdmin);
+        $info[] = $send->sendNotifications('13', $array, $arrayTitleAdmin);
     }
 
     /**
