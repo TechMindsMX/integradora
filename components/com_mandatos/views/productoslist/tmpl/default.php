@@ -95,7 +95,7 @@ $productos = $this->data;
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_PRODUCTOS_LBL_MONEDA'); ?> </span> </th>
-            <th style="text-align: center; vertical-align: middle;" ></th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_PUBLISHED'); ?></span></th>
         </tr>
         </thead>

@@ -36,7 +36,8 @@ if(is_null($ordenes) || empty($ordenes)){
                 1:{ sorter: false },
                 2:{ sorter: false },
                 3:{ sorter: false },
-                4:{ sorter: false }
+                4:{ sorter: false },
+                5:{ sorter: false }
             }
         });
     });
@@ -70,7 +71,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BENEFICIARIO'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
-            <th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
         </tr>
         </thead>
         <tbody>

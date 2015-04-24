@@ -101,7 +101,7 @@ $odvs = $this->ordenes;
                     <th><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_RECEPTOR'); ?></th>
                     <th><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN'); ?></th>
                     <th><?php echo JText::_('COM_MANDATOS_ORDENES_SALDO_ORDEN'); ?></th>
-                    <th></th>
+                    <th>Conciliación</th>
                 </tr>
                 </thead>
                 <tbody class="tbody">

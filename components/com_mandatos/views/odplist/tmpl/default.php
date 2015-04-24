@@ -40,7 +40,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('ODPLIST_LBL_NUM'); ?></span> </th>
             <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('ODPLIST_LBL_DEPOSITO'); ?></span> </th>
             <th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('ODPLIST_LBL_CAPITAL'); ?></span> </th>
-            <th></th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Status / Visualización</span> </th>
         </tr>
         </thead>
         <tbody>

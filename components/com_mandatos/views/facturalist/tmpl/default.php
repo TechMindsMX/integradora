@@ -81,7 +81,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BENEFICIARIO'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
-				<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+                <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Cancelación</span> </th>
 			</tr>
 		</thead>
 		<tbody>

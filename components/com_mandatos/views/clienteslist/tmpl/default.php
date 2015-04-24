@@ -188,7 +188,7 @@ function busquedapor(valor, campo){
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?> </span> </th>
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JSTATUS'); ?> </span> </th>
 <!--				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">--><?php //echo JText::_('COM_MANDATOS_CLIENTES_ACCOUNT_BANK'); ?><!-- </span> </th>-->
-				<th style="text-align: center; vertical-align: middle;" ></th>
+                <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JPUBLISHED'); ?></span></th>
 			</tr>
 		</thead>

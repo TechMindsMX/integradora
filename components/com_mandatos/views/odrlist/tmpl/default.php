@@ -69,7 +69,7 @@ jQuery(document).ready(function(){
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
-				<th>&nbsp;</th>
+                <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
 			</tr>
 		</thead>
 		<tbody>

@@ -23,8 +23,7 @@ $btn_nuevo_odd = '<a class="btn btn-primary" href="index.php?option=com_mandatos
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_DATE'); ?> </span> </th>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_LIST_TX_AMOUNT'); ?> </span> </th>
 			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_BALANCE'); ?> </span> </th>
-			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"></span> </th>
-			<th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+			<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Asociación a Mandatos</span> </th>
 		</tr>
 		</thead>
 		<tbody>

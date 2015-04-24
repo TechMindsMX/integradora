@@ -59,7 +59,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
         <th>Estatus</th>
-        <th></th>
+        <th>Autorización / Ordenes de Pago</th>
     </tr>
     </thead>
     <tbody>
@@ -118,6 +118,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Cantidad de Pagos</th>
         <th>Duración</th>
         <th>Estatus</th>
+        <th>Autorización / Ordenes de Pago</th>
     </tr>
     </thead>
     <tbody>
