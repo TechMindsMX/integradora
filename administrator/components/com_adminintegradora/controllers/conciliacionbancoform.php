@@ -40,8 +40,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $dataObj = (object)$this->data;
 
         $db->transactionStart();
-$this->sendNotification();
-        exit;
+
         try {
             if ( is_null( $this->data['id'] ) ) {
                 unset($dataObj->id);

@@ -58,7 +58,6 @@ class IntegradoControllerIntegrado extends JControllerForm {
         }
 
         if($object->status == 50 && $result){
-            $this->notification();
             $this->createIntegradoTimoneUUID();
         }
 
@@ -67,6 +66,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
                 JText::_('JLIB_APPLICATION' . '_SUBMIT' . '_SAVE_SUCCESS')
             );
         }
+        $this->notification();
 
         // Redirect to the list screen.
         $this->setRedirect(
@@ -98,10 +98,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
                 $validos = array(50,99);
                 break;
             case 50: // integrado
-                $validos = array();
+                $validos = array(99);
                 break;
             case 99: // cancelada
-                $validos = array();
+                $validos = array(1);
                 break;
             default:
                 $validos = array();

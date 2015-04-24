@@ -35,10 +35,10 @@ class IntegradoModelIntegrado extends JModelAdmin
 				$validos = array(3, 50, 99);
 				break;
 			case 50: // integrado 50
-				$validos = array(50);
+				$validos = array(50,99);
 				break;
 			case 99: // cancelada 99
-				$validos = array(99);
+				$validos = array(1);
 				break;
 			default:
 				$validos = array();
