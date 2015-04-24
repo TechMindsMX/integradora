@@ -22,8 +22,6 @@ class AdminintegradoraViewOdvform extends JViewLegacy {
 	    $this->txs   = $this->get('Transacciones');
 	    $this->data  = (object) $data;
 
-    var_dump($data, $this->data);
-
 	    if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }

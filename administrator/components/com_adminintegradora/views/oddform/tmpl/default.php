@@ -59,12 +59,6 @@ foreach ($this->txs as $txs) {
     <div class="clearfix">&nbsp;</div>
 
     <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
-        <div class="form-group">
-            <label for="ordenPagada">
-                <?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
-                <input type="checkbox" id="ordenPagada" name="ordenPagada" value="1" >
-            </label>
-        </div>
         <div class="clearfix">&nbsp;</div>
 
         <h2><?php echo JText::_('COM_FACTURAS_FROM_ODD_TRANSACCION'); ?></h2>

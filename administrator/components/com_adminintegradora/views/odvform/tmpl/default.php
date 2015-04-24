@@ -29,14 +29,6 @@ if ( ! empty( $this->txs ) ) {
 <?php if( is_null($data->confirmacion) ){?>
     <div class="div-formODC">
         <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=odvform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
-            <div class="form-group marcarOrden">
-                <label for="ordenPagada">
-                    <h3><?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
-                        <input type="checkbox" id="ordenPagada" name="ordenPagada" value="1" >
-                    </h3>
-                </label>
-            </div>
-            <div class="clearfix">&nbsp;</div>
 
             <h2><?php echo JText::_('COM_FACTURAS_FROM_ODD_TRANSACCION'); ?></h2>
 
