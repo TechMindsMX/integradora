@@ -13,6 +13,7 @@ jimport('integradora.facturasComision');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosController extends JControllerLegacy {
+    public $factutaComisiones;
 
     public function __construct(){
         parent::__construct();
@@ -569,7 +570,7 @@ class MandatosController extends JControllerLegacy {
 		    $this->factutaComisiones = $factura->generateFact($integrado->Id);
 
 		    if(is_object($this->factutaComisiones)){
-			    $this->sendEmail(__METHOD__);
+			    $this->sendEmail(__METHOD__, $integrado->Id);
 			    echo 'generadas';
 		    }else{
 			    echo 'no se generaron';
@@ -585,8 +586,9 @@ class MandatosController extends JControllerLegacy {
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->select($db->quote('integrado_id ', 'id') )
-			->from($db->quoteName('#__integrado') );
+		$query->select($db->quoteName('integrado_id', 'id') )
+			->from($db->quoteName('#__integrado') )
+        ->where($db->quoteName('status').' = 50');
 		$db->setQuery($query);
 
 		foreach ( $db->loadObjectList() as $integ ) {
@@ -598,14 +600,17 @@ class MandatosController extends JControllerLegacy {
 		return $result;
 	}
 
-    public function sendEmail($param)
+    public function sendEmail($param, $id = null)
     {
-	    $getCurrUser = new IntegradoSimple($this->integradoId);
+        $idIntegrado = is_null($id) ? $this->integradoId : $id;
+
+        $getCurrUser = new IntegradoSimple($idIntegrado);
 
 	    switch ($param) {
 		    case 'MandatosController::generateFactComision':
+                $editTitle = array($this->factutaComisiones->id);
 
-			    $array = array($this->factutaComisiones->getReceptor()->getDisplayName(), $this->factutaComisiones->id, date('d-m-Y'), $this->factutaComisiones->totales->total);
+			    $array = array($this->factutaComisiones->getReceptor()->getDisplayName(), $this->factutaComisiones->id, date('d-m-Y'), '$'.number_format($this->factutaComisiones->totales->total, 2));
 			    $notificationNumber = '19';
 			    break;
 		    case 'MandatosController::saveCliPro':
@@ -623,6 +628,7 @@ class MandatosController extends JControllerLegacy {
 				    $tipo = 'Cliente/Proveedor';
 			    }
 
+                $editTitle = null;
 			    $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
 			    $notificationNumber = '6';
 			    break;
@@ -631,7 +637,7 @@ class MandatosController extends JControllerLegacy {
 	    $send = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
 
-        $infoEmail = $send->sendNotifications($notificationNumber, $array);
+        $infoEmail = $send->sendNotifications($notificationNumber, $array, $editTitle);
         return $infoEmail;
     }
 
