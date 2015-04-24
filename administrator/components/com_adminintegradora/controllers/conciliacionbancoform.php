@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controlleradmin');
 jimport('integradora.validator');
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     protected $data;
@@ -39,7 +40,8 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $dataObj = (object)$this->data;
 
         $db->transactionStart();
-
+$this->sendNotification();
+        exit;
         try {
             if ( is_null( $this->data['id'] ) ) {
                 unset($dataObj->id);
@@ -57,6 +59,8 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
             }
 
             $db->transactionCommit();
+
+            $this->sendNotification();
             $app->enqueueMessage( JText::_( 'LBL_SAVED' ), 'MESSAGE' );
 
         } catch (Exception $e) {
@@ -128,6 +132,33 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         if($result != 200) {
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');
         }
+    }
+
+    private function sendNotification(){
+        $getCurrUser = new IntegradoSimple($this->data['integradoId']);
+        $usuarioIntegradora = new IntegradoSimple(1);
+
+        foreach ($usuarioIntegradora->integrados[0]->datos_bancarios as $dataBank) {
+            if($dataBank->datosBan_id == $this->data['cuenta']){
+                $datosBanco = $dataBank;
+            }
+        }
+
+        $data = array(
+            $getCurrUser->getDisplayName(),
+            '$'.number_format($this->data['amount'], 2),
+            date('d-m-Y',$this->data['date']),
+            $datosBanco->bankName,
+            $datosBanco->bankName, //TODO: cuales son los datos del banco (emisor y receptor)
+            $this->data['referencia'],
+        );
+
+        $send = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $resultado = $send->sendNotifications('20',$data);
+
+        return $resultado;
+
     }
 
 }
