@@ -182,8 +182,8 @@ class IntegradoController extends JControllerLegacy {
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
 
     function uploadFiles(){
-
-        $saveFiles = sendToTimOne::uploadFiles();
+        $data = $this->input->getArray();
+        $saveFiles = sendToTimOne::uploadFiles($data['integradoId']);
 
 	    $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'message') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
 

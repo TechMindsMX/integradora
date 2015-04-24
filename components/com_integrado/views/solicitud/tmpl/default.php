@@ -965,6 +965,16 @@ $token = JSession::getFormToken();
                 'db_banco_file'                 => array(@$datos->datos_bancarios->banco_file, 'LBL_BANCO_FILE')
             );
 
+            if(isset($datos->integrado->pers_juridica)) {
+                if ($datos->integrado->pers_juridica == 2) {
+                    unset($archivos['de_url_rfc']);
+                    unset($archivos['t1_url_instrumento']);
+                    unset($archivos['t2_url_instrumento']);
+                    unset($archivos['pn_url_instrumento']);
+                    unset($archivos['rp_url_instrumento']);
+                }
+            }
+
             foreach ( $archivos as $key => $value ) {
                 ?>
                 <div class="form-group">
