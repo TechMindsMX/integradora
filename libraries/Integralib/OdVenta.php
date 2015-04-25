@@ -8,10 +8,18 @@
 
 namespace Integralib;
 
+use getFromTimOne;
+
 class OdVenta extends Order {
 
 	protected $totalAmount;
 	protected $productos;
+
+	function __construct( $order = null ) {
+		if (isset($order)) {
+			$this->processOrderData( (object)$order );
+		}
+	}
 
 	/**
 	 * @param $id
@@ -19,14 +27,11 @@ class OdVenta extends Order {
 	 * Sets Order parameters
 	 */
 	public function setOrderFromId( $id ) {
-		$tmp = \getFromTimOne::getOrdenesVenta(null, $id);
+		$tmp = getFromTimOne::getOrdenesVenta(null, $id);
 
 		foreach ( $tmp[0] as $key => $val ) {
 			$this->$key = $val;
 		}
-
-		$this->emisor = new \IntegradoSimple($this->integradoId);
-		$this->receptor = new \IntegradoSimple($this->clientId);
 
 		$this->calculateTotalAmount();
 	}
@@ -74,4 +79,71 @@ class OdVenta extends Order {
 		return $this->ieps;
 	}
 
+	/**
+	 * @param $order
+	 *
+	 * @return void
+	 */
+	protected function setEmisor( $order ) {
+		$this->emisor = new \IntegradoSimple($this->integradoId);
+	}
+
+	/**
+	 * @param $order
+	 *
+	 * @return void
+	 */
+	protected function setReceptor( $order ) {
+		$this->receptor = new \IntegradoSimple($this->clientId);
+	}
+
+	private function processOrderData( $order ) {
+		$catalogo = new \Catalogos();
+		$catalogoIva = $catalogo->getCatalogoIVA();
+
+		$this->id             = (INT)$order->id;
+		$this->integradoId    = (INT)$order->integradoId;
+		$this->orderType      = 'odv';
+		$this->numOrden       = (INT)$order->numOrden;
+		$this->proyecto       = (INT)$order->projectId2==0?$order->projectId:$order->projectId2;
+		$this->clientId       = (INT)$order->clientId;
+		$this->account        = (INT)$order->account;
+		$this->paymentMethod   = getFromTimOne::getPaymentMethodName($order->paymentMethod);
+		$this->conditions     = (INT)$order->conditions;
+		$this->placeIssue     = getFromTimOne::getNombreEstado($order->placeIssue);
+		$this->status         = (INT)$order->status;
+		$this->productos      = (STRING)$order->productos;
+		$this->createdDate    = (STRING)$order->createdDate;
+		$this->paymentDate    = (STRING)$order->paymentDate;
+
+		$subTotalOrden        = 0;
+		$subTotalIva          = 0;
+		$subTotalIeps         = 0;
+
+		$this->productosData = json_decode($order->productos);
+
+		foreach ($this->productosData  as $producto ) {
+			$producto->iva = $catalogoIva[$producto->iva]->leyenda;
+
+			$subTotalOrden  = $subTotalOrden + $producto->cantidad * $producto->p_unitario;
+			$subTotalIva    = $subTotalIva + ($producto->cantidad * $producto->p_unitario) * ($producto->iva/100);
+			$subTotalIeps   = $subTotalIeps + ($producto->cantidad * $producto->p_unitario) * ($producto->ieps/100);
+		}
+
+		$this->subTotalAmount = (float)$subTotalOrden;
+		$this->totalAmount    = $subTotalOrden + $subTotalIva + $subTotalIeps;
+		$this->iva      = $subTotalIva;
+		$this->ieps     = $subTotalIeps;
+
+		$o = new OrdenFn();
+		$order->balance = $o->calculateBalance($this);
+
+		$this->setEmisor($order);
+		$this->setReceptor($order);
+
+		$this->setProjectSubprojectFromOrder($order);
+		$this->status = getFromTimOne::getOrderStatusName($order->status);
+
+		getFromTimOne::convierteFechas($this);
+	}
 }

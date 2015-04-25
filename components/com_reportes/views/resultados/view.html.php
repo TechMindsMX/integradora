@@ -16,16 +16,16 @@ class ReportesViewResultados extends JViewLegacy
 	// Overwriting JView display method
 	protected $integradoId;
     protected $permisos;
+	protected $reporte;
+	protected $proyectos;
 
-    function display($tpl = null){
+	function display($tpl = null){
 		$sesion = JFactory::getSession();
 		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
-        $integrado                    = new IntegradoSimple($this->integradoId);
-        $this->integrado              = $integrado->integrados[0];
-        $this->integrado->displayName = $integrado->getDisplayName();
-        $this->reporte                = $this->get('Reporte');
-        $this->proyectos              = $this->get('Proyectos');
+        $this->integrado                    = new IntegradoSimple($this->integradoId);
+        $this->reporte                      = $this->get('Reporte');
+        $this->proyectos                    = $this->get('Proyectos');
 
 		if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

@@ -49,7 +49,4 @@ class ReportesController extends JControllerLegacy {
     }
 
 
-
-    function saveforms(){
-    }
 }

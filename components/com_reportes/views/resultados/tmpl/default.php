@@ -10,6 +10,9 @@ $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto)?$input->proyecto:0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+$ingresos = $report->getIngresos();
+$egresos = $report->getEgresos();
 ?>
     <script>
 
@@ -23,7 +26,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         function filtraProyectos() {
             fechaInicial   = jQuery('#startDate').val();
             fechaFinal     = jQuery('#endDate').val();
-            proyecto       = jQuery(this).val()==0?'':'&proyecto='+jQuery(this).val();
+            proyecto       = jQuery(this).val()==0?'':'&project='+jQuery(this).val();
 
             window.location = 'index.php?option=com_reportes&view=resultados&startDate='+fechaInicial+'&endDate='+fechaFinal+proyecto;
         }
@@ -50,13 +53,13 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
             <div class="span6">
                 <h3>
-                    <?php echo $integ->displayName; ?>
+                    <?php echo $integ->getDisplayName(); ?>
                 </h3>
                 <p>
-                    <?php echo $integ->address; ?>
+                    <?php echo $integ->getAddressFormatted(); ?>
                 </p>
                 <p>
-                    <?php echo $integ->datos_empresa->rfc; ?>
+                    <?php echo $integ->getIntegradoRfc(); ?>
                 </p>
             </div>
         </div>
@@ -115,15 +118,15 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
                         <div class="span6">
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_INGRESOS'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($report->ingresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($ingresos->total,2) ;?></div>
                             </div>
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($report->egresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($egresos->total,2) ;?></div>
                             </div>
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($report->ingresos->total - $report->egresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($ingresos->total - $egresos->total,2) ;?></div>
                             </div>
                         </div>
                     </div>
@@ -140,36 +143,39 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
                 <th><?php echo JText::_('LBL_FECHA'); ?></th>
                 <th><?php echo JText::_('LBL_CLIENTE'); ?></th>
                 <th><?php echo JText::_('LBL_TYPE'); ?></th>
-                <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
-                <th><?php echo JText::_('LBL_IVA'); ?></th>
-                <th><?php echo JText::_('LBL_TOTAL'); ?></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_SUBTOTAL'); ?></div></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_IVA'); ?></div></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_TOTAL'); ?></div></th>
             </tr>
             </thead>
             <tbody>
             <?php
-            foreach ($report->orders->odv as $orden) {
+            foreach ($report->getIncomeOrders() as $orden) {
                 foreach ($orden->txs as $tx)
                 {
                     ?>
                     <tr class="row">
                         <td><?php echo date('d-m-Y', $tx->date); ?></td>
-                        <td><?php echo $orden->proveedor->corporateName; ?></td>
-                        <td>Cobrado</td>
-                        <td>$<?php echo number_format( ($tx->detalleTx->amount - $tx->detalleTx->ivaProporcion), 2); ?></td>
-                        <td>$<?php echo number_format($tx->detalleTx->ivaProporcion,2) ; ?></td>
-                        <td>$<?php echo number_format($tx->detalleTx->amount,2) ; ?></td>
+                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Cobrado'; ?></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net, 2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva, 2) ; ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
                     </tr>
                 <?php
                 }
-                if ($orden->saldo->total > 0) {
+                if ($orden->getStatus()->id <= 13) {
                     ?>
                     <tr class="row">
-                        <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
-                        <td><?php echo $orden->proveedor->corporateName; ?></td>
-                        <td>CXC</td>
-                        <td>$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></td>
-                        <td>$<?php echo number_format($orden->saldo->iva,2); ?></td>
-                        <td>$<?php echo number_format($orden->saldo->total,2); ?></td>
+	                    <?php
+	                        $displayDate = (isset($orden->timestamps->paymentDate) && !empty($orden->timestamps->paymentDate) ) ? $orden->timestamps->paymentDate : $orden->getCreatedDate();
+	                    ?>
+                        <td><?php echo date('d-m-Y', $displayDate); ?></td>
+                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxC'; ?></td>
+                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
                     </tr>
                 <?php
                 }
@@ -177,7 +183,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             ?>
             <tr class="row">
                 <td colspan="5">Total de Ingresos</td>
-                <td>$<?php echo number_format($report->ingresos->total,2); ?></td>
+                <td><div class="text-right">$<?php echo number_format($ingresos->total,2); ?></div></td>
             </tr>
             </tbody>
         </table>
@@ -189,23 +195,23 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
                 <th><?php echo JText::_('LBL_FECHA'); ?></th>
                 <th><?php echo JText::_('LBL_PROVEEDOR'); ?></th>
                 <th><?php echo JText::_('LBL_TYPE'); ?></th>
-                <th><?php echo JText::_('LBL_SUBTOTAL'); ?></th>
-                <th><?php echo JText::_('LBL_IVA'); ?></th>
-                <th><?php echo JText::_('LBL_TOTAL'); ?></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_SUBTOTAL'); ?></div></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_IVA'); ?></div></th>
+                <th><div class="text-right"><?php echo JText::_('LBL_TOTAL'); ?></div></th>
             </tr>
             </thead>
             <tbody>
             <?php
-            foreach ($report->orders->odc as $orden) {
+            foreach ($report->getExpenseOrders() as $orden) {
                 foreach ($orden->txs as $tx) {
                     ?>
                     <tr class="row">
                         <td><?php echo date('d-m-Y', $tx->date); ?></td>
-                        <td><?php echo $orden->proveedor->corporateName; ?></td>
-                        <td>Pagado </td>
-                        <td>$<?php echo number_format($tx->detalleTx->amount - $tx->detalleTx->ivaProporcion,2); ?></td>
-                        <td>$<?php echo number_format($tx->detalleTx->ivaProporcion,2); ?></td>
-                        <td>$<?php echo number_format($tx->detalleTx->amount,2); ?></td>
+	                    <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Pagado'; ?></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net - $tx->detalleTx->iva,2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva,2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2); ?></div></td>
                     </tr>
                 <?php
                 }
@@ -213,11 +219,11 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
                     ?>
                     <tr class="row">
                         <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
-                        <td><?php echo $orden->proveedor->corporateName; ?></td>
-                        <td>CXP</td>
-                        <td>$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></td>
-                        <td>$<?php echo number_format($orden->saldo->iva,2); ?></td>
-                        <td>$<?php echo number_format($orden->saldo->total,2); ?></td>
+                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxC'; ?></td>
+                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
+                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
                     </tr>
                 <?php
                 }
@@ -225,7 +231,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             ?>
             <tr class="row">
                 <td colspan="5">Total de Egresos</td>
-                <td>$<?php echo number_format($report->egresos->total,2); ?></td>
+                <td><div class="text-right">$<?php echo number_format($egresos->total,2); ?></div></td>
 
             </tr>
             </tbody>

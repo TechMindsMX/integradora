@@ -1,4 +1,6 @@
 <?php
+use Integralib\ReportResultados;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.modelitem');
@@ -14,13 +16,19 @@ class ReportesModelResultados extends JModelItem {
     protected $input;
 
     function __construct() {
-        $post        = array('project'=>'INT');
-        $this->input = (object) JFactory::getApplication()->input->getArray($post);
+
+	    $this->input            = (object) JFactory::getApplication()->input->getArray( array (
+		                                                                                    'startDate'   => 'STRING',
+		                                                                                    'endDate'     => 'STRING',
+		                                                                                    'project'     => 'INT'
+	                                                                                    ) );
+	    $this->input->startDate   = ! is_null( $this->input->startDate ) ? strtotime( $this->input->startDate ) : null;
+	    $this->input->endDate     = ! is_null( $this->input->endDate ) ? strtotime( $this->input->endDate ) : null;
 
 	    $session = JFactory::getSession();
 	    $this->input->integradoId = $session->get('integradoId', null, 'integrado');
 
-        parent::__construct();
+	    parent::__construct();
     }
 
     public function getCXC(){
@@ -45,13 +53,14 @@ class ReportesModelResultados extends JModelItem {
         return $integrado;
     }
 
-    public function getReporte(){
-	    $input = $this->getInputDaterangeAndProject();
+	/**
+	 * @return ReportResultados
+	 */
+	public function getReporte(){
 
-       // TODO: quitar hardcoded data
-        $reportResultados      = new ReportResultados($this->input->integradoId , $input->startDate, $input->endDate, $this->input->project);
-        $reportResultados->getIngresos();
-        $reportResultados->getEgresos();
+        $reportResultados      = new ReportResultados($this->input->integradoId , $this->input->startDate, $this->input->endDate, $this->input->project);
+        $reportResultados->calculateIngresos();
+        $reportResultados->calculateEgresos();
         $reportResultados->startPeriod = $reportResultados->getFechaInicio();
         $reportResultados->endPeriod   = $reportResultados->getFechaFin();
 
@@ -59,7 +68,6 @@ class ReportesModelResultados extends JModelItem {
     }
 
     public function getDetalleIngresos($periodStarDate = null, $periodEndDate = null){
-        $input          = $this->getInputDaterangeAndProject();
 
         $retorno        = array();
         $cxc            = $this->getCXC();
@@ -75,15 +83,15 @@ class ReportesModelResultados extends JModelItem {
                 $value->clientName = $integrado->integrados[0]->datos_personales->nom_comercial;
             }
 
-            if(is_null($input->proyecto)) {
+            if(is_null($this->input->proyecto)) {
                 $retorno[] = $value;
             }else{
                 if($value->projectId2 == 0){
-                    if($value->projectId == $input->proyecto){
+                    if($value->projectId == $this->input->proyecto){
                         $retorno[] = $value;
                     }
                 }else{
-                    if($value->projectId2 == $input->proyecto){
+                    if($value->projectId2 == $this->input->proyecto){
                         $retorno[] = $value;
                     }
                 }
@@ -102,15 +110,15 @@ class ReportesModelResultados extends JModelItem {
                     $orden->clientName = $integrado->integrados[0]->datos_personales->nom_comercial;
                 }
                // $retorno[] = $orden;
-                if(is_null($input->proyecto)) {
+                if(is_null($this->input->proyecto)) {
                     $retorno[] = $orden;
                 }else{
                     if($orden->projectId2 == 0){
-                        if($orden->projectId == $input->proyecto){
+                        if($orden->projectId == $this->input->proyecto){
                             $retorno[] = $orden;
                         }
                     }else{
-                        if($orden->projectId2 == $input->proyecto){
+                        if($orden->projectId2 == $this->input->proyecto){
                             $retorno[] = $orden;
                         }
                     }
@@ -118,7 +126,7 @@ class ReportesModelResultados extends JModelItem {
             }
         }
 
-        $retorno = getFromTimOne::filterByDate($retorno,$startPeriod,$endPeriod);
+        $retorno = getFromTimOne::filterByDate($retorno, $this->input->startPeriod, $this->input->endPeriod);
 
         return $retorno;
     }
@@ -175,20 +183,4 @@ class ReportesModelResultados extends JModelItem {
         return $proyectos;
     }
 
-	/**
-	 * @return object
-	 * @throws Exception
-	 */
-	public function getInputDaterangeAndProject() {
-		$input            = (object) JFactory::getApplication()->input->getArray( array (
-			                                                                          'startDate' => 'string',
-			                                                                          'endDate'   => 'STRING',
-			                                                                          'proyecto'  => 'INT'
-		                                                                          ) );
-		$input->startDate = ! is_null( $input->startDate ) ? strtotime( $input->startDate ) : null;
-		$input->endDate   = ! is_null( $input->endDate ) ? strtotime( $input->endDate ) : null;
-		$input->proyecto  = ! is_null( $input->proyecto ) ? strtotime( $input->proyecto ) : null;
-
-		return $input;
-	}
 }

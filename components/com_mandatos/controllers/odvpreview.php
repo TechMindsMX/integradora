@@ -1,6 +1,5 @@
 <?php
 use Integralib\OdVenta;
-use Integralib\OrderFactory;
 
 defined('_JEXEC') or die('Restricted access');
 
@@ -61,7 +60,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                $newOrder = new OdVenta();
 	                $newOrder->setOrderFromId( $this->parametros['idOrden'] );
 
-	                if ( $newOrder->status->id == 5 && is_null($newOrder->urlXML) ) {
+	                if ( $newOrder->getStatus()->id == 5 && is_null($newOrder->urlXML) ) {
                         $factObj = $save->generaObjetoFactura( $newOrder );
 
                         if ( $factObj != false ) {
@@ -169,12 +168,12 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	 *  Create ODC from ODV in case bith parties are Integrado
 	 * @return bool
 	 */
-	private function createOpposingODC($odv) {
+	private function createOpposingODC(OdVenta $odv) {
 
-		$odvObj = new \Integralib\OdVenta();
-		$odvObj->setOrderFromId($odv->getId());
+		$odv = new \Integralib\OdVenta();
+		$odv->setOrderFromId($odv->getId());
 
-		if($odvObj->getReceptor()->isIntegrado()) {
+		if($odv->getReceptor()->isIntegrado()) {
 
 			$save   = new sendToTimOne();
 			$db     = JFactory::getDbo();
@@ -190,7 +189,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 			$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
 			$odc->paymentDate   = $odv->paymentDate;
 			$odc->paymentMethod = $odv->paymentMethod->id;
-			$odc->totalAmount   = $odvObj->getTotalAmount();
+			$odc->totalAmount   = $odv->getTotalAmount();
 			$odc->urlXML        = $odv->urlXML;
 			$odc->observaciones = '';
 			$odc->bankId        = $odv->account;

@@ -1196,7 +1196,7 @@ class getFromTimOne{
             }else{
                 $value->proyecto = $proyectos[$value->proyecto];
                 $value->subproyecto = '';
-            }
+        }
         }
         return $orden;
     }
