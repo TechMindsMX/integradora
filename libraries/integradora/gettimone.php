@@ -1,4 +1,5 @@
 <?php
+use Integralib\OrdenFn;
 use Integralib\TimOneRequest;
 
 defined('JPATH_PLATFORM') or die;
@@ -436,47 +437,7 @@ class getFromTimOne{
         return $results;
     }
 
-    public static function sumaOrders($orders){
-        $neto = 0;
-        $iva = 0;
-        $total = 0;
-
-        $obj = new stdClass();
-        $obj->pagado->total = array();
-        $obj->pagado->iva = array();
-        $obj->pagado->neto = array();
-
-        foreach ( $orders as $order ) {
-            $neto = $neto + $order->subTotalAmount;
-            $iva = $iva + $order->iva;
-            $total = $total + $order->totalAmount;
-
-            $montoTxs = 0;
-            foreach ($order->txs as $tx) {
-                $montoTxs = $montoTxs + $tx->detalleTx->amount;
-                $tx->detalleTx->ivaProporcion = $tx->detalleTx->amount * ($order->iva / $order->subTotalAmount);
-            }
-            //TODO verificar IVA de saldo
-            $order->saldo->total = $order->totalAmount - $montoTxs;
-            $order->saldo->iva   = $montoTxs * ($order->iva / $order->subTotalAmount);
-
-            $obj->pagado->total[] = $montoTxs;
-            $obj->pagado->iva[] = $order->saldo->iva;
-            $obj->pagado->neto[] = $montoTxs - $order->saldo->iva;
-        }
-
-        $obj->pagado->total     = array_sum($obj->pagado->total);
-        $obj->pagado->iva       = array_sum($obj->pagado->iva);
-        $obj->pagado->neto      = array_sum($obj->pagado->neto);
-
-        $obj->neto = $neto;
-        $obj->iva = $iva;
-        $obj->total = $total;
-
-        return $obj;
-    }
-
-    private static function convertDateLength( $date, $int ) {
+	private static function convertDateLength( $date, $int ) {
 
         $length = ceil(log10($date));
         if ($length > $int) {
@@ -487,7 +448,7 @@ class getFromTimOne{
         return $date;
     }
 
-    private static function getNombreEstado( $code ) {
+    public static function getNombreEstado( $code ) {
 
         $where = 'id = '.(int)$code;
         $nombreEstado = getFromTimOne::selectDB('catalog_estados', $where);
@@ -616,7 +577,8 @@ class getFromTimOne{
 
         return $arrayBancos;
     }
-    private static function getDataBankByBankId($bankId){
+
+    public static function getDataBankByBankId($bankId){
         $banco = self::selectDB('integrado_datos_bancarios', 'datosBan_id = '.$bankId);
         $banco = self::getBankName($banco);
 
@@ -718,7 +680,27 @@ class getFromTimOne{
         return $result[0]->idTx;
     }
 
-    public function createNewProject($envio, $integradoId){
+	/**
+	 * @param $paymentMethodId
+	 * @param $names
+	 *
+	 * @return stdClass
+	 * @throws Exception
+	 */
+	private static function getPaymentMethod( $paymentMethodId, $names ) {
+		$payMethod = new stdClass();
+
+		if ( in_array($paymentMethodId, array_keys($names) ) ) {
+			$payMethod->id = $paymentMethodId;
+			$payMethod->name = $names[ $paymentMethodId ]->tag;
+		} else {
+			throw new Exception(JText::_('ERR_PAYMENT_METHOD_INVALID'));
+		}
+
+		return $payMethod;
+	}
+
+	public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -1080,8 +1062,9 @@ class getFromTimOne{
         $resultados = array();
 
         foreach ( $orders as $key => $value ) {
-            if ( isset( $value->status->id ) ) {
-                if (in_array($value->status->id, $statusId)) {
+	        $status = $value->getStatus();
+            if ( isset( $status->id ) ) {
+                if (in_array($status->id, $statusId)) {
                     $resultados[] = $value;
                 }
             }
@@ -1323,13 +1306,10 @@ class getFromTimOne{
         $names = $cat->getPaymentMethods();
 
         try {
-            $payMethod = new stdClass();
-
-            $payMethod->id   = $paymentMethodId;
-            $payMethod->name = $names[ $paymentMethodId ]->tag;
+	        $payMethod = self::getPaymentMethod( $paymentMethodId, $names);
         } catch ( Exception $e) {
             $payMethod = null;
-            JFactory::getApplication()->enqueueMessage('ERR_PAYMENT_METHOD_INVALID');
+            JFactory::getApplication()->enqueueMessage($e->getMessage());
         }
 
         return $payMethod;
@@ -1757,7 +1737,7 @@ class getFromTimOne{
 
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
-            if( is_numeric(strpos(strtolower($key),'date')) ){
+            if( is_numeric(strpos(strtolower($key),'date')) && !empty($value) ){
                 $objeto->$key = date('d-m-Y', ($value) );
 
                 $objeto->timestamps = new stdClass();
@@ -2820,7 +2800,7 @@ class ReportBalance extends IntegradoOrders {
 
     public function getData($Orders){
         $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
-        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
+        $sumaOrdenes = OrdenFn::sumaOrders( $ordenesFiltradas );
 
         return $sumaOrdenes;
     }
@@ -2859,7 +2839,7 @@ class ReportBalance extends IntegradoOrders {
     }
 
     private function sumOrders( $orders ) {
-        return getFromTimOne::sumaOrders($orders);
+        return OrdenFn::sumaOrders( $orders );
     }
 
     public static function getIntegradoExistingBalanceList($integradoId) {
@@ -2991,7 +2971,7 @@ class ReportBalanceTxs extends IntegradoTxs {
 
     public function getData($Orders){
         $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
-        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
+        $sumaOrdenes = OrdenFn::sumaOrders( $ordenesFiltradas );
 
         return $sumaOrdenes;
     }
@@ -3031,7 +3011,7 @@ class ReportBalanceTxs extends IntegradoTxs {
     }
 
     private function sumOrders( $orders ) {
-        return getFromTimOne::sumaOrders($orders);
+        return OrdenFn::sumaOrders( $orders );
     }
 
     public static function getIntegradoExistingBalanceList($integradoId) {
@@ -3045,94 +3025,6 @@ class ReportBalanceTxs extends IntegradoTxs {
     }
 }
 
-/**
- * @property integer ingresos
- * @property integer egresos
- */
-class ReportResultados extends IntegradoOrders {
-
-    protected $fechaInicio;
-    protected $fechaFin;
-    protected $filtroProyect;
-
-    function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
-        $this->fechaInicio  = $fechaInicio;
-        $this->fechaFin     = $fechaFin;
-        $this->filtroProyect = $proyecto;
-
-        parent::__construct($integradoId);
-    }
-
-    public function getIngresos(){
-        $orders = array();
-
-        if($this->filtroProyect != null) {
-            foreach ($this->orders->odv as $orden) {
-                if ($orden->projectId2 == 0) {
-                    if($this->filtroProyect == $orden->projectId){
-                        $orders[] = $orden;
-                    }
-                } else {
-                    if($this->filtroProyect == $orden->projectId2 || $orden->projectId == $this->filtroProyect){
-                        $orders[] = $orden;
-                    }
-                }
-            }
-
-            $this->orders->odv = $orders;
-        }
-
-        $this->orders->odv = getFromTimOne::filterByDate($this->orders->odv, $this->fechaInicio, $this->fechaFin);
-        $this->ingresos = $this->getData($this->orders->odv);
-    }
-
-    public function getEgresos(){
-        $orders = array();
-
-        if($this->filtroProyect != null){
-            foreach ($this->orders->odc as $orden) {
-                if( !isset($orden->sub_proyecto) ) {
-                    if ($orden->proyecto->id_proyecto == $this->filtroProyect) {
-                        $orders[] = $orden;
-                    }
-                }else{
-                    if( $orden->sub_proyecto->id_proyecto == $this->filtroProyect){
-                        $orders[] = $orden;
-                    }
-                }
-            }
-            $this->orders->odc = $orders;
-        }
-
-        $this->orders->odc = getFromTimOne::filterByDate($this->orders->odc, $this->fechaInicio, $this->fechaFin);
-        $this->egresos = $this->getData($this->orders->odc);
-    }
-
-    public function getData($Orders){
-        $ordenesFiltradas = getFromTimOne::filterOrdersByStatus($Orders,array(5,8,13));
-        $sumaOrdenes = getFromTimOne::sumaOrders($ordenesFiltradas);
-
-        return $sumaOrdenes;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaFin()
-    {
-        return $this->fechaFin;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFechaInicio()
-    {
-        return $this->fechaInicio;
-    }
-
-
-}
 
 class ReportFlujo extends IntegradoTxs {
 
@@ -3200,7 +3092,7 @@ class ReportFlujo extends IntegradoTxs {
     }
 
     public function processOrders($orders){
-        $sumaOrdenes = getFromTimOne::sumaOrders($orders);
+        $sumaOrdenes = OrdenFn::sumaOrders( $orders );
 
         return $sumaOrdenes;
     }
@@ -3323,10 +3215,10 @@ class IntegradoOrders {
     }
 
     private function setOrders($integradoId){
-        $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
-        $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
-        $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
-        $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
+//        $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
+//        $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
+//        $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
+//        $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
 
         $mutuosOdps = getFromTimOne::getMutuosODP($integradoId);
         if ( ! empty( $mutuosOdps->acreedor ) ) {
@@ -3977,123 +3869,3 @@ class makeTx {
 
 }
 
-class OrdenFn {
-
-    protected $minAmount;
-    protected $order;
-
-    public static function getStatusIdByName( $string ) {
-        $statusCatalog = getFromTimOne::getOrderStatusCatalogByName();
-
-        return $statusCatalog[ ucfirst(strtolower($string)) ]->id;
-    }
-
-    public static function getMinAmount() {
-        return 0;
-    }
-
-    public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
-        $auth = 0;
-        $cant_auths = new stdClass();
-
-        if( $emisor->isIntegrado() ){
-            $cant_auths->emisor = $auth+$emisor->getOrdersAtuhorizationParams();
-        }
-        if( $receptor->isIntegrado() ){
-            $cant_auths->receptor = $auth+$receptor->getOrdersAtuhorizationParams();
-        }
-
-        $cant_auths->totales = array_sum((array)$cant_auths);
-
-        return $cant_auths;
-    }
-
-    public static function getIdEmisor($order, $orderType) {
-        switch ($orderType){
-            case 'odv':
-                $return = $order->integradoId;
-                break;
-            case 'odc':
-                $return = $order->integradoId;
-                break;
-            case 'odd':
-                $return = $order->integradoId;
-                break;
-            case 'odr':
-                $return = null;
-                break;
-            case 'odp':
-                $return = $order->integradoIdA;
-                break;
-            case 'mutuo':
-                $return = $order->integradoIdE;
-                break;
-            case 'odp':
-                $return = $order->acreedor;
-                break;
-        }
-
-        return $return;
-    }
-
-    public static function getIdReceptor($order, $orderType) {
-        switch ($orderType){
-            case 'odv':
-                $return = $order->clientId;
-                break;
-            case 'odc':
-                $return = $order->proveedor;
-                break;
-            case 'odd':
-                $return = null;
-                break;
-            case 'odr':
-                $return = $order->integradoId;
-                break;
-            case 'odp':
-                $return = $order->integradoIdD;
-                break;
-            case 'mutuo':
-                $return = $order->integradoIdR;
-                break;
-            case 'odp':
-                $return = $order->deudor;
-                break;
-        }
-
-        return $return;
-    }
-
-    public static function getRelatedOdvIdFromOdcId( $id_odc ) {
-        $result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odc = '.(INT)$id_odc);
-        return $result[0]->id_odv;
-    }
-
-    public function calculateBalance( $order ) {
-        $this->order = $order;
-
-        $this->order->sumOrderTxs = 0;
-        $this->order->txs = $this->getOrderTxs();
-        if ( !empty( $this->order->txs ) ) {
-            foreach ( $this->order->txs as $tx ) {
-                $this->order->sumOrderTxs = $this->order->sumOrderTxs + $tx->totalAmountTxs;
-            }
-        }
-
-        return $this->order->totalAmount - $this->order->sumOrderTxs;
-    }
-
-    private function getOrderTxs() {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $query->select('txs.id, txs.idTx, txs.idIntegrado, txs.date, txs.idComision, SUM(piv.amount) AS totalAmountTxs, piv.idOrden, piv.orderType')
-            ->from($db->quoteName('#__txs_timone_mandato', 'txs') )
-            ->join('left', $db->quoteName('#__txs_mandatos', 'piv') . ' ON ( txs.id = piv.id )' )
-            ->where('piv.idOrden = '.$db->quote($this->order->id).' AND piv.orderType = '.$db->quote($this->order->orderType));
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-
-        return $results;
-    }
-}
