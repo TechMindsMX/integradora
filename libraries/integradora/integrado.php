@@ -586,10 +586,6 @@ class IntegradoSimple extends Integrado {
         return $result;
     }
 
-	public function getAccountById( $accountId ) {
-		return $this->integrados[0]->datos_bancarios[$accountId];
-	}
-
     public function getIntegradoEmail() {
         return isset($this->integrados[0]->datos_personales->email) ? $this->integrados[0]->datos_personales->email : $this->user->email;
     }

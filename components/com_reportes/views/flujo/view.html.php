@@ -26,7 +26,6 @@ class ReportesViewFlujo extends JViewLegacy
 
 		$vars = $this->input->getArray(array('startDate' => 'STR', 'endDate' => 'STR'));
 		$vars['integradoId'] = $sesion->get('integradoId', null, 'integrado');
-        $this->integradoId = $vars['integradoId'];
 
 		$model = $this->getModel();
 		// genera el modelo de un reporte nuevo
@@ -41,16 +40,14 @@ class ReportesViewFlujo extends JViewLegacy
 		}
 
 		// verifica el token
-//		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
+		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
-		$integrado = new IntegradoSimple($vars['integradoId']);
-		$this->integrado = $integrado->integrados[0];
-		$this->integrado->displayName = $integrado->getDisplayName();
+		$this->integrado = new IntegradoSimple($vars['integradoId']);
 
 		// boton de impresion
 		$this->loadHelper('Reportes');
 
-		$url            = 'index.php?com_reportes&view=flujo&inicio='.$this->report->period->fechaInicio->format('d-m-Y').'&fechaFin='.$this->report->period->fechaFin->format('d-m-Y').'&'.JSession::getFormToken(true).'=1';
+		$url            = 'index.php?com_reportes&view=flujo&inicio='.$this->report->getFechaInicio().'&fechaFin='.$this->report->getFechaFin().'&'.JSession::getFormToken(true).'=1';
 		$this->printBtn = ReportesHelper::getPrintBtn($url);
 
 		// Check for errors.
@@ -61,7 +58,7 @@ class ReportesViewFlujo extends JViewLegacy
 			return false;
 		}
 
-        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
+        $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $vars['integradoId']);
 		// Display the view
 		parent::display($tpl);
 	}

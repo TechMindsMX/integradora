@@ -105,4 +105,16 @@ abstract class Order {
 
 	}
 
+	public function getProjectName() {
+		$return = isset($this->proyecto->name) ? $this->proyecto->name : '';
+
+		return $return;
+	}
+
+	public function getSubProjectName() {
+		$return = isset($this->subproyecto->name) ? $this->subproyecto->name : '';
+
+		return $return;
+	}
+
 }

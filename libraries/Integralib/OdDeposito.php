@@ -15,25 +15,22 @@ defined('_JEXEC') or die('Restricted access');
 
 class OdDeposito extends Order {
 
-	function __construct($order = null) {
-		if (isset($order)) {
-			$this->id = $order['id'];
-			$this->setOrderFromId();
+	function __construct( $orderData = null, $orderId = null ) {
+		if (isset($orderId)) {
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_deposito');
+			$orderData = $orderData [0];
+		}
+
+		if (isset($orderData)) {
+			$this->processOrderData( (object)$orderData );
 		}
 	}
 
-	function getAll( $integradoId, $idOrden ) {
-		return getFromTimOne::getOrdenes($integradoId, $idOrden, 'ordenes_deposito');
-	}
-
 	/**
-	 * @param $id
-	 *
+	 * @internal param $id Sets Order parameters*
 	 * Sets Order parameters
 	 */
-	public function setOrderFromId() {
-		$order = getFromTimOne::getOrdenes(null, $this->id, 'ordenes_deposito');
-		$order = $order[0];
+	public function processOrderData( $order ) {
 
 		$this->id              = (INT)$order->id;
 		$this->integradoId     = (INT)$order->integradoId;

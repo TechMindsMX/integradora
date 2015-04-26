@@ -16,9 +16,18 @@ class OdCompra extends Order {
 
 	protected $factura;
 
-	function __construct( $order = null ) {
-		if (isset($order)) {
-			$this->processOrderData( (object)$order );
+	/**
+	 * @param null $orderData
+	 * @param null $orderId
+	 */
+	function __construct( $orderData = null, $orderId = null ) {
+		if (isset($orderId)) {
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = $orderData [0];
+		}
+
+		if (isset($orderData)) {
+			$this->processOrderData( (object)$orderData );
 		}
 	}
 
@@ -82,5 +91,8 @@ class OdCompra extends Order {
 		getFromTimOne::convierteFechas($this);
 	}
 
+	public function getFacturaUuid() {
+		return $this->order->factura->complemento['children'][0]['attrs']['UUID'];
+	}
 
 }

@@ -15,9 +15,18 @@ class OdVenta extends Order {
 	protected $totalAmount;
 	protected $productos;
 
-	function __construct( $order = null ) {
-		if (isset($order)) {
-			$this->processOrderData( (object)$order );
+	/**
+	 * @param null $orderId
+	 * @param null $orderData
+	 */
+	function __construct( $orderData = null, $orderId = null ) {
+		if (isset($orderId)) {
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = $orderData [0];
+		}
+
+		if (isset($orderData)) {
+			$this->processOrderData( (object)$orderData );
 		}
 	}
 

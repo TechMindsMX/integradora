@@ -19,9 +19,18 @@ class OdRetiro extends Order {
 	public $paymentMethod;
 	public $paymentDate;
 
-	function __construct( $order = null ) {
-		if (isset($order)) {
-			$this->processOrderData( (object)$order );
+	/**
+	 * @param null $orderData
+	 * @param null $orderId
+	 */
+	function __construct( $orderData = null, $orderId = null ) {
+		if (isset($orderId)) {
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = $orderData [0];
+		}
+
+		if (isset($orderData)) {
+			$this->processOrderData( (object)$orderData );
 		}
 	}
 
@@ -43,7 +52,7 @@ class OdRetiro extends Order {
 		$this->paymentDate      = (STRING)$order->paymentDate;
 		$this->cuentaId         = 0;
 
-		$this->cuenta           = $this->getReceptor()->getAccountById($this->cuentaId);
+		$this->cuenta           = $this->getReceptor()->getAccountData($this->cuentaId);
 
 		getFromTimOne::convierteFechas($this);
 		$o = new OrdenFn();

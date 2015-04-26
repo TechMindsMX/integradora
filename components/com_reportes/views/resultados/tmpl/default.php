@@ -220,7 +220,7 @@ $egresos = $report->getEgresos();
                     <tr class="row">
                         <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
                         <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
-	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxC'; ?></td>
+	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxP'; ?></td>
                         <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
                         <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
                         <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>

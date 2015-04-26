@@ -192,7 +192,7 @@ class OrdenFn {
 		      ->join('INNER', $db->quoteName('#__txs_mandatos', 'piv') . ' ON ( txs.id = piv.id )' )
 		      ->where('piv.idOrden = '.$db->quote( $statusId ).' AND piv.orderType = '.$db->quote( $orderType ));
 		$db->setQuery($query);
-		$results = $db->loadObjectList();
+		$results = $db->loadObjectList('id');
 
 		foreach ( $results as $tx ) {
 			$respose = getFromTimOne::getTxDataByTxId($tx->idTx);

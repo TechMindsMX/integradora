@@ -17,31 +17,19 @@ class ReportFlujo extends \IntegradoOrders {
 	protected $filtroProyect;
 	protected $ingresos;
 	protected $egresos;
+	protected $depositos;
+
+	protected $retiros;
 
 	function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
 		$this->fechaInicio  = $fechaInicio;
 		$this->fechaFin     = $fechaFin;
 		$this->filtroProyect = $proyecto;
 
-		$this->orders = $this->findOrders( $integradoId );
+		$this->txs = $this->findTxsAndOrders( $integradoId );
 	}
-
-	public function calculateIngresos(){
-		$this->ingresos = $this->getData( $this->getIncomeOrders() );
-	}
-
-	public function calculateEgresos(){
-		$this->egresos = $this->getData( $this->getExpenseOrders() );
-	}
-
-	public function getData($orders){
-		$sumaOrdenes = OrdenFn::sumaOrders( $orders );
-
-		return $sumaOrdenes;
-	}
-
-	public function findOrders( $integradoId = null ) {
-		$cond = $this->getConditions( $integradoId );
+	public function findTxsAndOrders( $integradoId = null ) {
+		$cond = $this->getConditions( $integradoId, 'txs' );
 
 		$db = \JFactory::getDbo();
 		$types = array(
@@ -63,12 +51,42 @@ class ReportFlujo extends \IntegradoOrders {
 			),
 		);
 
-		$result                  = new \stdClass();
-		foreach ( $types as $params ) {
-			$result->$params['type'] = $this->queryOrders( $db, $params, $cond );
-		}
+		$result = $this->queryTxs( $db, $cond );
+
+		$result = $this->groupByOrderType($result);
 
 		return $result;
+	}
+
+	public function calculateIngresos(){
+		$this->ingresos = $this->getData( $this->getIncomeTxs() );
+	}
+
+	public function calculateEgresos(){
+		$this->egresos = $this->getData( $this->getExpenseTxs() );
+	}
+
+	public function calculateDepositos(){
+		$this->depositos = $this->getData( $this->getDepositTxs() );
+	}
+
+	public function calculateRetiros(){
+		$this->retiros = $this->getData( $this->getWithdrawTxs() );
+	}
+
+	public function getData( $txs ){
+		$sumaOrders = new \stdClass();
+
+		if ( ! empty( $txs ) ) {
+			foreach ( $txs as $key => $tx ) {
+				$sumaOrders->pagado->total  += $tx->getTotalAmount();
+				$ivaOrderRate = ( $tx->order->iva / $tx->order->subTotalAmount );
+				$sumaOrders->pagado->net = $tx->getTotalAmount() / (1+$ivaOrderRate);
+				$sumaOrders->pagado->iva = $sumaOrders->pagado->net * $ivaOrderRate;
+			}
+		}
+
+		return $sumaOrders;
 	}
 
 	/**
@@ -83,6 +101,20 @@ class ReportFlujo extends \IntegradoOrders {
 	 */
 	public function getEgresos() {
 		return $this->egresos;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getDepositos() {
+		return $this->depositos;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRetiros() {
+		return $this->retiros;
 	}
 
 	/**
@@ -108,24 +140,29 @@ class ReportFlujo extends \IntegradoOrders {
 		return $this->fechaInicio;
 	}
 
-	private function getConditions( $integradoId = null ) {
+	private function getConditions( $integradoId = null, $type = '' ) {
 		$db = \JFactory::getDbo();
 		if (isset($integradoId)) {
-			$cond[] = 'integradoId = '. $db->quote($integradoId);
+			$cond[] = 'idIntegrado = '. $db->quote($integradoId);
 		}
 		if ( (INT)$this->filtroProyect > 0 ) {
 			$cond[] = 'proyecto = '. $db->quote($this->filtroProyect);
 		}
-		if (isset($this->fechaInicio) && isset($this->fechaFin)) {
-			$cond[] = '((paymentDate >= '. $db->quote($this->fechaInicio) .
-			          ' AND paymentDate <= '. $db->quote($this->fechaFin). ') OR ' .
-			          '(createdDate <= '. $db->quote($this->fechaFin).
-			          ' AND createdDate <= '. $db->quote($this->fechaFin). '))';
+		if (isset($this->fechaInicio) && isset($this->fechaFin) && $type == '' ) {
+			$cond[] = ' ((' . $type . 'paymentDate >= ' . $db->quote( $this->getTimestamp( $this->fechaInicio ) ) .
+			          ' AND ' . $type . 'paymentDate <= ' . $db->quote( $this->getTimestamp( $this->fechaFin ) ) . ') OR ' .
+			          ' (' . $type . 'createdDate <= ' . $db->quote( $this->getTimestamp( $this->fechaFin ) ) .
+			          ' AND ' . $type . 'createdDate <= ' . $db->quote( $this->getTimestamp( $this->fechaFin ) ) . '))';
 		}
-		if ( !isset( $cond ) ) {
+		if (isset($this->fechaInicio) && isset($this->fechaFin) && $type == 'txs') {
+			$cond[] = ' ((txs.date >= '. $db->quote( $this->getTimestamp($this->fechaInicio) ) .
+			          ' AND txs.date <= '. $db->quote( $this->getTimestamp($this->fechaFin) ) . ') OR ' .
+			          ' (txs.date <= '. $db->quote( $this->getTimestamp($this->fechaFin ) ) .
+			          ' AND txs.date <= '. $db->quote( $this->getTimestamp($this->fechaFin) ) . '))';
+		}
+		if ( !isset( $cond ) && $type == '' ) {
 			$return = ' status IN (5,8,13)';
 		} else {
-			$cond[] = ' status IN (5,8,13)';
 			$return = implode(' AND ', $cond);
 		}
 
@@ -150,18 +187,60 @@ class ReportFlujo extends \IntegradoOrders {
 		$db->setQuery( $query );
 
 		foreach ( $db->loadAssocList() as $order ) {
-			$result[ $order['id'] ] = OrderFactory::getOrderByIdAndType( $order, $params );
+			$result[ $order['id'] ] = OrderFactory::getOrder( $order, $params );
 		}
 
 		return $result;
 	}
 
-	public function getIncomeOrders() {
-		return array_merge($this->orders->odv, $this->orders->odd);
+	private function queryTxs( $db, $cond ) {
+		$result = null;
+
+		$query = $db->getQuery( true )
+		            ->select( '*' )
+		            ->from( $db->quoteName( '#__txs_timone_mandato', 'txs' ) )
+		            ->join( 'LEFT', $db->quoteName( '#__txs_mandatos', 'piv' ) . ' ON ( txs.id = piv.id )' )
+		            ->where( $cond );
+		$db->setQuery( $query );
+		$result = $db->loadObjectList('id', '\Integralib\Tx');
+
+		foreach ( $result as $tx ) {
+			$tx->order = OrderFactory::getOrder( $tx->idOrden, $tx->orderType);
+		}
+
+		return array_filter($result);
 	}
 
-	public function getExpenseOrders() {
-		return array_merge($this->orders->odc, $this->orders->odr);
+	public function getIncomeTxs() {
+		return $this->txs->odv;
+	}
+
+	public function getDepositTxs() {
+		return $this->txs->odd;
+	}
+
+	public function getExpenseTxs() {
+		return $this->txs->odc;
+	}
+
+	public function getWithdrawTxs() {
+		return $this->txs->odr;
+	}
+
+	private function getTimestamp( $fecha ) {
+		$dateTime = new \DateTime($fecha);
+		return $dateTime->format('U');
+	}
+
+	private function groupByOrderType( $result ) {
+		$txs = new \stdClass();
+
+		foreach ( $result as $key => $val ) {
+			$ot = $val->orderType;
+			$txs->$ot->$key = $val;
+		}
+
+		return $txs;
 	}
 
 }

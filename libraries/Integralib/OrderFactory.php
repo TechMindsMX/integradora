@@ -13,25 +13,26 @@ defined('_JEXEC') or die('Restricted access');
 class OrderFactory {
 
 	/**
-	 * @param $order
+	 * @param $orderId
 	 * @param $orderType
 	 *
-	 * @return OdCompra|OdDeposito|OdRetiro|OdVenta
+	 * @param $orderData
 	 *
+	 * @return OdCompra|OdDeposito|OdRetiro|OdVenta
 	 */
-	public static function getOrderByIdAndType( $order, $params ) {
-		switch ($params['type']) {
+	public static function getOrder( $orderId = null, $orderType, $orderData = null ) {
+		switch ($orderType) {
 			case 'odv':
-				$return = new OdVenta($order);
+				$return = new OdVenta($orderData, $orderId);
 				break;
 			case 'odr':
-				$return = new OdRetiro($order);
+				$return = new OdRetiro($orderData, $orderId);
 				break;
 			case 'odc':
-				$return = new OdCompra($order);
+				$return = new OdCompra($orderData, $orderId);
 				break;
 			case 'odd':
-				$return = new OdDeposito($order);
+				$return = new OdDeposito($orderData, $orderId);
 				break;
 		}
 

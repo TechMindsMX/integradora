@@ -142,7 +142,7 @@ class ReportResultados extends \IntegradoOrders {
 		$db->setQuery( $query );
 
 		foreach ( $db->loadAssocList() as $order ) {
-			$result[ $order['id'] ] = OrderFactory::getOrderByIdAndType( $order, $params );
+			$result[ $order['id'] ] = OrderFactory::getOrder( null, $params['type'], $order);
 		}
 
 		return $result;
