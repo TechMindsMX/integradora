@@ -111,7 +111,7 @@ class ReportResultados extends \IntegradoOrders {
 		if (isset($this->fechaInicio) && isset($this->fechaFin)) {
 			$cond[] = '((paymentDate >= '. $db->quote($this->fechaInicio) .
 			          ' AND paymentDate <= '. $db->quote($this->fechaFin). ') OR ' .
-			          '(createdDate <= '. $db->quote($this->fechaFin).
+			          '(createdDate >= '. $db->quote($this->fechaInicio).
 			          ' AND createdDate <= '. $db->quote($this->fechaFin). '))';
 		}
 		if ( !isset( $cond ) ) {

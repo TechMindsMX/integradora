@@ -180,11 +180,11 @@ class OrdenFn {
 		$query = $db->getQuery(true);
 
 		if (is_a($this->order, 'stdClass')) {
-			$orderType = $this->order->id;
-			$statusId = $this->order->orderType;
+			$statusId = $this->order->id;
+			$orderType= $this->order->orderType;
 		} else {
-			$orderType = $this->order->getId();
-			$statusId = $this->order->getOrderType();
+			$statusId = $this->order->getId();
+			$orderType = $this->order->getOrderType();
 		}
 
 		$query->select('txs.id, txs.idTx, txs.idIntegrado, txs.date, txs.idComision, piv.idOrden, piv.orderType')

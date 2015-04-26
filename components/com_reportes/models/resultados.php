@@ -31,7 +31,21 @@ class ReportesModelResultados extends JModelItem {
 	    parent::__construct();
     }
 
-    public function getCXC(){
+	/**
+	 * @return ReportResultados
+	 */
+	public function getReporte(){
+
+		$reportResultados      = new ReportResultados($this->input->integradoId , $this->input->startDate, $this->input->endDate, $this->input->project);
+		$reportResultados->calculateIngresos();
+		$reportResultados->calculateEgresos();
+		$reportResultados->startPeriod = $reportResultados->getFechaInicio();
+		$reportResultados->endPeriod   = $reportResultados->getFechaFin();
+
+		return $reportResultados;
+	}
+
+/*	public function getCXC(){
         $integradoId   = $this->input->integradoId;
         $cxc           = getFromTimOne::getOrdersCxC($integradoId);
         $cxc           = $cxc->odv;
@@ -39,7 +53,7 @@ class ReportesModelResultados extends JModelItem {
         return $cxc;
     }
 
-    public function getCXP(){
+	public function getCXP(){
         $integradoId = $this->input->integradoId;
         $cxp = getFromTimOne::getOrdersCxP($integradoId);
         $cxp = $cxp->odc;
@@ -47,27 +61,13 @@ class ReportesModelResultados extends JModelItem {
         return $cxp;
     }
 
-    public function getDataIntegrado(){
+	public function getDataIntegrado(){
         $integrado = new IntegradoSimple($this->input->integradoId);
 
         return $integrado;
-    }
+    }*/
 
-	/**
-	 * @return ReportResultados
-	 */
-	public function getReporte(){
-
-        $reportResultados      = new ReportResultados($this->input->integradoId , $this->input->startDate, $this->input->endDate, $this->input->project);
-        $reportResultados->calculateIngresos();
-        $reportResultados->calculateEgresos();
-        $reportResultados->startPeriod = $reportResultados->getFechaInicio();
-        $reportResultados->endPeriod   = $reportResultados->getFechaFin();
-
-        return $reportResultados;
-    }
-
-    public function getDetalleIngresos($periodStarDate = null, $periodEndDate = null){
+/*    public function getDetalleIngresos($periodStarDate = null, $periodEndDate = null){
 
         $retorno        = array();
         $cxc            = $this->getCXC();
@@ -181,6 +181,6 @@ class ReportesModelResultados extends JModelItem {
         $proyectos = getFromTimOne::getProyects($integradoId);
 
         return $proyectos;
-    }
+    }*/
 
 }
