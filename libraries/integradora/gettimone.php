@@ -2485,10 +2485,15 @@ class sendToTimOne {
                 'result' => $return
             ));
 
-            $bitacora = $this->insertDB('bitacora_status_'.$orderType);
+            $return = $this->insertDB('bitacora_status_'.$orderType);
         }
 
-        return $return;
+	    $return = false;
+		    if($return == false) {
+			    throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
+		    }
+
+	        return $return;
     }
 
     private function validStatusChange($order,$orderNewStatus) {
