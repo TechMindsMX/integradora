@@ -161,7 +161,11 @@ class OrdenFn {
 		if ( !empty( $this->order->txs ) ) {
 			foreach ( $this->order->txs as $tx ) {
 				$this->order->sumOrderTxs += $tx->detalleTx->amount;
-				$ivaOrderRate = ( $order->iva / $order->subTotalAmount );
+				if ( isset( $order->subTotalAmount ) ) {
+					$ivaOrderRate = ( $order->iva / $order->subTotalAmount );
+				} else {
+					$ivaOrderRate = 0;
+				}
 				$tx->detalleTx->net = $tx->detalleTx->amount / (1+$ivaOrderRate);
 				$tx->detalleTx->iva = $tx->detalleTx->net * $ivaOrderRate;
 			}
