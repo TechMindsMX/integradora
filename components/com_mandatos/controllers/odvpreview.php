@@ -1,5 +1,7 @@
 <?php
 use Integralib\OdVenta;
+use Integralib\OrdenFn;
+use Integralib\OrderFactory;
 
 defined('_JEXEC') or die('Restricted access');
 
@@ -57,8 +59,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 if ($statusChange){
                     $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-	                $newOrder = new OdVenta();
-	                $newOrder->setOrderFromId( $this->parametros['idOrden'] );
+	                $newOrder = OrderFactory::getOrder( $this->parametros['idOrden'], 'odv' );
 
 	                if ( $newOrder->getStatus()->id == 5 && is_null($newOrder->urlXML) ) {
                         $factObj = $save->generaObjetoFactura( $newOrder );
@@ -169,9 +170,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	 * @return bool
 	 */
 	private function createOpposingODC(OdVenta $odv) {
-
-		$odv = new \Integralib\OdVenta();
-		$odv->setOrderFromId($odv->getId());
 
 		if($odv->getReceptor()->isIntegrado()) {
 
