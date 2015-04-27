@@ -2491,12 +2491,11 @@ class sendToTimOne {
             $return = $this->insertDB('bitacora_status_'.$orderType);
         }
 
-	    $return = false;
-		    if($return == false) {
-			    throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
-		    }
+	    if($return == false) {
+		    throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
+	    }
 
-	        return $return;
+        return $return;
     }
 
     private function validStatusChange($order,$orderNewStatus) {
