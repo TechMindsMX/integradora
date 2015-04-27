@@ -27,7 +27,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
         $this->parametros   = $this->inputVars->getArray($post);
 
         $this->diccionario = array(
-            'totalAmount'   => array('float' => true,  'maxlength' => 10,    'required' => true,    'min' => OrdenFn::getMinAmount()),
+            'totalAmount'   => array('float' => true,  'maxlength' => 10,    'required' => true,    'min' => Integralib\OrdenFn::getMinAmount()),
+
             'paymentDate'   => array('date' => true,   'maxlength' => 10,    'required' => true),
             'paymentMethod' => array('number' => true, 'maxlength' => 1,     'required' => true)
         );
