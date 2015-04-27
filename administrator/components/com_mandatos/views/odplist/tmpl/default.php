@@ -1,4 +1,6 @@
 <?php
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.form.validation');

@@ -1,4 +1,6 @@
 <?php
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -57,59 +59,79 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             if ($check) {
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
-            $resultado = $save->insertDB('auth_odc');
 
-            if ($resultado) {
-                $this->logEvents(__METHOD__,'authorizacion_odc',json_encode($save->set));
+	        $db = JFactory::getDbo();
+	        try {
+		        $db->transactionStart();
 
-                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-                $newStatusId = 5;
+		        $resultado = $save->insertDB( 'auth_odc' );
 
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+		        if ( $resultado ) {
+			        $this->logEvents( __METHOD__, 'authorizacion_odc', json_encode( $save->set ) );
 
-                if ($statusChange) {
+			        $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+			        $newStatusId    = 5;
 
-                    $TxOdc = $this->realizaTx();
+			        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', $newStatusId );
 
-                    if($TxOdc){
-                        $cobroComision = $this->txComision();
+			        if ( $statusChange ) {
 
-                        if($cobroComision) {
-                            $newStatusId = 13;
-                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', $newStatusId);
+				        $TxOdc = $this->realizaTx();
 
-                            if($statusChange){
+				        if ( $TxOdc ) {
+					        $cobroComision = $this->txComision();
 
-	                            $odc= getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
-	                            $odc= $odc[0];
-	                            $proveedor = new IntegradoSimple($odc->proveedor->integrado->integrado_id);
+					        if ( $cobroComision ) {
+						        $newStatusId  = 13;
+						        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc',
+						                                                  $newStatusId );
 
-	                            if( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
-		                            $odvId = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
-		                            $odvStatusChange = $save->changeOrderStatus($odvId, 'odv', $newStatusId);
-	                            }
+						        if ( $statusChange ) {
 
-                                $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
-                            }
-                        }else{
-                            $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
-                        }
-                    }else{
+							        $odc       = getFromTimOne::getOrdenesCompra( null, $this->parametros['idOrden'] );
+							        $odc       = $odc[0];
+							        $proveedor = new IntegradoSimple( $odc->proveedor->integrado->integrado_id );
 
-                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 3);
+							        if ( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
+								        $odvId           = OrdenFn::getRelatedOdvIdFromOdcId( $odc->id );
+								        $odvStatusChange = $save->changeOrderStatus( $odvId, 'odv', $newStatusId );
+							        }
 
-                        if($statusChange) {
-                            $save->deleteDB('auth_odc', 'idOrden = ' . $this->parametros['idOrden']);
-                            $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
-                        }
-                    }
-                }
+							        $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
+							                                                    $catalogoStatus[ $newStatusId ]->name ) );
+						        }
+					        } else {
+						        $this->app->enqueueMessage( JText::sprintf( 'ORDER_PAID_AUTHORIZED',
+						                                                    $catalogoStatus[ $newStatusId ]->name ) );
+					        }
+				        } else {
 
-                $this->sendEmail();
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
-            } else {
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
-            }
+					        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', 3 );
+
+					        if ( $statusChange ) {
+						        $save->deleteDB( 'auth_odc', 'idOrden = ' . $this->parametros['idOrden'] );
+						        $this->app->redirect( $this->returnUrl,
+						                              JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
+					        }
+				        }
+			        }
+
+			        $this->sendEmail();
+
+			        $db->transactionCommit();
+
+			        $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
+		        } else {
+			        $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
+		        }
+	        } catch (Exception $e) {
+		        $db->transactionRollback();
+
+		        $msg = $e->getMessage();
+		        JLog::add( $msg, JLog::ERROR, 'error' );
+		        $this->app->enqueueMessage( $msg, 'error' );
+		        $this->app->redirect( $this->returnUrl );
+	        }
         } else {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
