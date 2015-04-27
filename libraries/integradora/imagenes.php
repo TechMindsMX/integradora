@@ -5,7 +5,7 @@ class manejoImagenes {
     public static function cargar_imagen($tipo, $usuario, $archivos, $key) {
 
         $validaciones =self::validExtension($archivos);
-        $extension =substr($archivos['tmp_name'],-4);
+        $extension =substr($archivos['name'],-4);
 
         if ($validaciones && getimagesize($archivos["tmp_name"])) {
             move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . $extension);
