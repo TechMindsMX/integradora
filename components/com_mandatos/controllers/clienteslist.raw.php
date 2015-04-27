@@ -15,6 +15,8 @@ class MandatosControllerClienteslist extends JControllerAdmin {
         $post       = array('client_id' => 'INT', 'status' => 'INT');
         $data       = $app->input->getArray($post);
         $save       = new sendToTimOne();
+	    $session = JFactory::getSession();
+	    $data['integradoId'] = $session->get('integradoId', null, 'integrado');
 
         $result = $save->changeClientOrProviderStatus($data);
 

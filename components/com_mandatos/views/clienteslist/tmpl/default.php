@@ -58,9 +58,12 @@ jQuery(document).ready(function($){
 		request.done(function (result) {
 			var $row = $this.parentsUntil('table', 'tr');
 			$row.removeClass('status0');
+			$row.find(".status_name").text("<?php echo $status[1]; ?>");
+
 			if(typeof result.success.status != 'undefined'){
 				if(result.success.status == 0) {
-					$row.addClass('status0')
+					$row.addClass('status0');
+					$row.find(".status_name").text("<?php echo $status[0]; ?>");
 				}
 			}
 
@@ -187,9 +190,8 @@ function busquedapor(valor, campo){
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?> </span> </th>
 				<th class="header" style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JSTATUS'); ?> </span> </th>
-<!--				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">--><?php //echo JText::_('COM_MANDATOS_CLIENTES_ACCOUNT_BANK'); ?><!-- </span> </th>-->
                 <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
-				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('JPUBLISHED'); ?></span></th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_CLIENT_STATUS_CHANGE'); ?></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -208,9 +210,7 @@ function busquedapor(valor, campo){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="rz" >'.$corporateName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->contact.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$value->phone.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;">'.$status[$value->status];
-                echo '      <div></div></td>';
-//				echo '	<td style="text-align: center; vertical-align: middle;"><a>visualizar</a></td>';
+				echo '	<td style="text-align: center; vertical-align: middle;"><div class="status_name">', $status[$value->status],'</div></td>';
 				echo '	<td style="text-align: center; vertical-align: middle;">';
 				echo '  	<a class="btn btn-primary" href="index.php?option=com_mandatos&view=clientesform&idCliPro='.$value->id.'">';
 				echo 			JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO');

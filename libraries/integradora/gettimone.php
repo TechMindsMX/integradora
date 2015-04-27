@@ -521,13 +521,14 @@ class getFromTimOne{
         return $datos;
     }
 
-    public static function getClientProvider( $client_id ) {
+    public static function getClientProvider( $data) {
         $client = array();
 
-        $clientes = self::getClientes();
+        $clientes = self::getClientes($data['integradoId']);
+	    JLog::add(json_encode($clientes), JLog::INFO);
 
         foreach ( $clientes as $key => $value ) {
-            if ( $client_id == $value->client_id ) {
+            if ( $data['client_id'] == $value->client_id ) {
                 $client[$key] = $value;
             }
         }
@@ -856,15 +857,15 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getClientes($userId = null, $type = 2){
+    public static function getClientes($integradoId = null, $type = 2){
         $db       = JFactory::getDbo();
         $query    = $db->getQuery(true);
 
-        if( !is_null($userId) ) {
+        if( !is_null($integradoId) ) {
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
             $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integrado_id, status, bancos AS bancoIds')
                 ->from('#__integrado_clientes_proveedor')
-                ->where('integrado_Id = ' . $userId);
+                ->where('integrado_Id = ' . $integradoId);
             try {
                 $db->setQuery($query);
                 $response = $db->loadObjectList();
@@ -2640,12 +2641,12 @@ class sendToTimOne {
         self::formatData(array( 'status' => $data['status'] ));
         $result = self::updateDB('integrado_clientes_proveedor', null, 'id = '.$data['client_id']);
 
-        $client = getFromTimOne::getClientProvider($data['client_id']);
+        $client = getFromTimOne::getClientProvider($data);
         $client = reset($client);
 
         if($result){
             $response['status'] = $client->status;
-            $response['name'] = !empty($client->de_razon_social) ? $client->de_razon_social : $client->dp_con_comercial;
+            $response['name'] = !empty($client->corporateName) ? $client->corporateName : $client->tradeName;
             $response['statusName'] = ($client->status == 0) ? JText::_('JUNPUBLISHED') : JText::_('JPUBLISHED');
         }
 
