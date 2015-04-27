@@ -1224,6 +1224,9 @@ class getFromTimOne{
             $value->createdDate    = (STRING)$value->createdDate;
             $value->paymentDate    = (STRING)$value->paymentDate;
 
+            $value->emisor = new \IntegradoSimple($value->integradoId);
+            $value->receptor = new \IntegradoSimple($value->clientId);
+
             $subTotalOrden        = 0;
             $subTotalIva          = 0;
             $subTotalIeps         = 0;
