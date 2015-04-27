@@ -50,8 +50,8 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_PROY'); ?>
 		</div>
 		<div class="span4">
-			<?php if ( isset( $this->odv->project->name ) ) {
-				echo $this->odv->project->name;
+			<?php if ( isset( $this->odv->proyecto->name ) ) {
+				echo $this->odv->proyecto->name;
 			} ?>
 		</div>
 		<div class="span2 text-right">
@@ -66,7 +66,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SUBPROY'); ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->odv->subproject->name)) { echo $this->odv->subproject->name; } ?>
+			<?php if (isset($this->odv->subproyecto->name)) { echo $this->odv->subproyecto->name; } ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -115,7 +115,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->proveedor->contact; ?>
+			<?php echo $this->odv->getReceptor()->getContactName(); ?>
 		</div>
 	</div>
 	<div>

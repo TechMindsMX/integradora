@@ -1,6 +1,5 @@
 <?php
-use Integralib\OdVenta;
-use Integralib\Project;
+use Integralib\OrderFactory;
 
 defined('_JEXEC') or die('Restricted Access');
 
@@ -20,10 +19,7 @@ class MandatosModelOdvpreview extends JModelItem {
 	public function getOrdenes(){
 
 		if (!isset($odv)) {
-			$odv = new OdVenta();
-			$odv->setOrderFromId($this->inputVars['idOrden']);
-			$odv->project = new Project($odv->projectId);
-			$odv->subproject = new Project($odv->projectId2);
+			$odv = OrderFactory::getOrder($this->inputVars['idOrden'], 'odv');
 
 			$this->odv = $odv;
 		}

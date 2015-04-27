@@ -21,7 +21,7 @@ class OdVenta extends Order {
 	 */
 	function __construct( $orderData = null, $orderId = null ) {
 		if (isset($orderId)) {
-			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_venta');
 			$orderData = $orderData [0];
 		}
 

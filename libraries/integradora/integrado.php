@@ -492,6 +492,24 @@ class IntegradoSimple extends Integrado {
         return $name;
     }
 
+    public function getContactName() {
+// TODO Revisar cuales son los datos de contacto y su prioridad para mostrar
+        if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
+            $name = $this->integrados[0]->datos_empresa->razon_social;
+        }
+        elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
+            $name = $this->integrados[0]->datos_personales->nom_comercial;
+        }
+        elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
+            $name = $this->integrados[0]->datos_personales->nombre_represenante;
+        }
+        else {
+            $name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
+        }
+
+        return $name;
+    }
+
     public function setMainAddressFormatted() {
         $codPostal = null;
         $address = null;
@@ -595,7 +613,7 @@ class IntegradoSimple extends Integrado {
     }
 
     public function getIntegradoPhone() {
-        return $this->integrados[0]->datos_personales->tel_fijo;
+	    return isset($this->integrados[0]->datos_personales->tel_fijo) ? $this->integrados[0]->datos_personales->tel_fijo : $this->integrados[0]->datos_empresa->tel_fijo;
     }
 
     public function isActive() {
