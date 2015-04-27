@@ -3615,6 +3615,8 @@ class transferFunds extends makeTx {
 
         if ( $result === true ) {
             $this->saveTxOrderRelationship();
+        } else {
+	        throw new Exception(JText::_('ERR_411_TRANSFERFUNDS_FAILED'));
         }
 
         return $result;
