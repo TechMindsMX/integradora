@@ -15,7 +15,6 @@ $params 	= $app->input->getArray();
 $integrado 	= $this->integCurrent->integrados[0];
 
 $number2word = new AifLibNumber();
-
 ?>
 
 <div class="hidden-print form-group">
