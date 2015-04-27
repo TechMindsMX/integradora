@@ -25,6 +25,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
         $orden                           = getFromTimOne::getMutuos(null, $this->parametros['idOrden']);
         $this->orden                     = $orden[0];
+        $this->$redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
 
         parent::__construct();
     }
@@ -198,7 +199,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
     private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){
         $integradoSimple->getTimOneData();
         if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
-            $this->app->redirect($this->returnUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
+            $this->app->redirect($this->$redirectUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
         }
     }
 
