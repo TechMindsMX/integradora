@@ -95,7 +95,7 @@ if(is_null($ordenes) || empty($ordenes)){
                     $auth_button = JText::_('LBL_PAID');
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
                 } else {
-                    $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
+                    $auth_button = getFromTimOne::getOrderStatusName($value->status->id)->name;
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
                 }
                 $class = $value->status->id == 1?'':'status1';

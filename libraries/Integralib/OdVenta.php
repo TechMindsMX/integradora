@@ -155,4 +155,8 @@ class OdVenta extends Order {
 
 		getFromTimOne::convierteFechas($this);
 	}
+
+    public function getStatus(){
+        return $this->status;
+    }
 }

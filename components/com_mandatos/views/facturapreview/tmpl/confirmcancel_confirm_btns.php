@@ -6,7 +6,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=facturalist');
 
 <legend class="container botones clearfix form-actions">
 	<?php
-	if ($this->permisos['canAuth'] && $this->factura->status->id < 13):
+	if ($this->permisos['canAuth'] && $this->factura->getStatus()->id < 13):
 		$authorizeURL = JRoute::_('index.php?option=com_mandatos&view=facturapreview&task=facturapreview.cancel&facturanum=' . $this->factura->getId());
 		?>
 		<p class="text-warning">

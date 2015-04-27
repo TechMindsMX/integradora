@@ -27,8 +27,8 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
 			$this->sendEmail();
 
 			$save = new sendToTimOne();
-//			$changeStatus = $save->changeOrderStatus($idODV, 'odv', $this->getStatusId('Cancelada'));
-			$changeStatus= true;
+			$changeStatus = $save->changeOrderStatus($idODV, 'odv', $this->getStatusId('Cancelada'));
+//			$changeStatus= true;
 
 			if($changeStatus) {
 				$orden = new \Integralib\OdVenta();

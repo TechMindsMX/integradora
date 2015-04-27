@@ -2512,7 +2512,7 @@ class sendToTimOne {
                 if($orderNewStatus < $order->status){
                     $return = $orderNewStatus == 3 && $order->hasAllAuths;
                 }else {
-                    $return = $orderNewStatus == 13 && $order->hasAllAuths;
+                    $return = in_array($orderNewStatus, array(55,13)) && $order->hasAllAuths;
                 }
                 break;
             case 8:
