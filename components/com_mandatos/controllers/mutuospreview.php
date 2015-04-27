@@ -14,7 +14,7 @@ jimport('integradora.catalogos');
  */
 class MandatosControllerMutuospreview extends JControllerAdmin {
 
-    function authorize() {
+    function __construct(){
         $session                         = JFactory::getSession();
         $post                            = array('idOrden' => 'INT');
         $this->app 			             = JFactory::getApplication();
@@ -23,7 +23,13 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $this->permisos                  = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
         $this->integradoId               = JFactory::getSession()->get('integradoId', null,'integrado');
         $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
+        $orden                           = getFromTimOne::getMutuos(null, $this->parametros['idOrden']);
+        $this->orden                     = $orden[0];
 
+        parent::__construct();
+    }
+
+    function authorize() {
         $redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
 
         if($this->permisos['canAuth']) {
@@ -43,6 +49,8 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
+
+            $this->checkSaldoSuficienteOrRedirectWithError(new IntegradoSimple($this->orden->integradoIdE));
 
             $resultado = $save->insertDB('auth_mutuo');
 
@@ -185,5 +193,30 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         }
 
         return $txDone;
+    }
+
+    private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){
+        $integradoSimple->getTimOneData();
+        if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
+            $this->app->redirect($this->returnUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
+        }
+    }
+
+    private function totalOperacionOdc(){
+        $orden = $this->orden;
+        $comisiones = getFromTimOne::getComisionesOfIntegrado($orden->integradoIdE);
+
+        $montoComision = 0;
+        if (isset($comisiones)) {
+            $montoComision = getFromTimOne::calculaComision($orden, 'MUTUO', $this->comisiones);
+        }
+
+        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
+
+        return $totalOperacion;
+    }
+
+    private function sendMail(){
+
     }
 }

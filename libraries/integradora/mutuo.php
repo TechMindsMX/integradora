@@ -86,17 +86,17 @@ class mutuo {
             $mutuo->totalInteres = $value->intereses + $mutuo->totalInteres;
         }
 
-        $mutuo->realTotalAmount = $mutuo->totalInteres + $mutuo->totalIva + $mutuo->totalCapital;
+        $mutuo->totalAmount = $mutuo->totalInteres + $mutuo->totalIva + $mutuo->totalCapital;
     }
 
     protected function getSaldoMutuo(){
         $mutuo = $this->mutuo;
         $odps = getFromTimOne::getOrdenesPrestamo($mutuo->id);
-        $mutuo->saldo = $mutuo->realTotalAmount;
+        $mutuo->saldo = $mutuo->totalAmount;
 
         foreach ($odps as $key => $odp) {
             if($key != 0) {
-                if ($odp->status == OrdenFn::getStatusIdByName('Pagada')) {
+                if ($odp->status == Integralib\OrdenFn::getStatusIdByName('Pagada')) {
                     $mutuo->saldo = $mutuo->saldo - $odp->intereses - $odp->iva_intereses - $odp->capital;
                 }
             }
