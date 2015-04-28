@@ -15,6 +15,14 @@ class OdVenta extends Order {
 	protected $totalAmount;
 	protected $productos;
 
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
 	/**
 	 * @param null $orderId
 	 * @param null $orderData

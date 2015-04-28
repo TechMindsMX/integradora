@@ -168,18 +168,20 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function txComision($reverse = false){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden          = $this->getOrden();
-        $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
+        $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', null);
 
         $orden->orderType = 'CCom-'.$orden->orderType;
 
-        if(!$reverse) {
-            $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
-        }else{
-            $txComision = new transferFunds($orden, 1, $orden->integradoId, $montoComision);
-        }
+        if(!is_null($montoComision)) {
+            if (!$reverse) {
+                $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
+            } else {
+                $txComision = new transferFunds($orden, 1, $orden->integradoId, $montoComision);
+            }
 
-        if(!$txComision->sendCreateTx()){
-            throw new Exception(JText::_('ERR_412_TXCOMISION_FAILED'));
+            if (!$txComision->sendCreateTx()) {
+                throw new Exception(JText::_('ERR_412_TXCOMISION_FAILED'));
+            }
         }
     }
 
@@ -241,7 +243,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     }
 
     private function createOpossingOdv(OdCompra $odCompra){
-        var_dump($odCompra);
         if($odCompra->getReceptor()->isIntegrado()){
             $catalogos  = new Catalogos();
             $save       = new sendToTimOne();
@@ -259,6 +260,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $odv->paymentMethod = $odCompra->paymentMethod->id;
             $odv->conditions    = 2;
             $odv->placeIssue    = $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']);
+            $odv->setStatus(3);
 
             foreach ($dataXML->conceptos as $concepto) {
                 foreach ($concepto as $key => $value) {
@@ -301,8 +303,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->parametros) ) ) );
             JLog::add($logdata, JLog::DEBUG, 'bitacora');
-
-            throw new Exception;
         }
     }
 }
