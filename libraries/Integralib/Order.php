@@ -83,7 +83,15 @@ abstract class Order {
 		return $this->status;
 	}
 
-	/**
+    /**
+     * @param mixed $createdDate
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    /**
 	 * @param $order
 	 */
 	protected function setProjectSubprojectFromOrder( $order ) {

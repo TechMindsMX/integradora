@@ -159,4 +159,19 @@ class OdVenta extends Order {
     public function getStatus(){
         return $this->status;
     }
+
+    /**
+     * @param string $productos
+     */
+    public function setProductos($productos){
+        $this->productos = $productos;
+    }
+
+    /**
+     * @param mixed $totalAmount
+     */
+    public function setTotalAmount($totalAmount)
+    {
+        $this->totalAmount = $totalAmount;
+    }
 }

@@ -84,11 +84,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                 if ( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
                     $odvId           = OrdenFn::getRelatedOdvIdFromOdcId( $odc->id );
-//                    if(is_null($odvId)){
-//                        $this->createOpossingOdv(new OdCompra(null,$odc->id));
-//                    }else {
+                    if(is_null($odvId)){
+                        $this->createOpossingOdv(new OdCompra(null,$odc->id));
+                    }else {
                         $save->changeOrderStatus($odvId, 'odv', $newStatusId);
-//                    }
+                    }
                 }
 
                 $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
@@ -110,7 +110,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $msg = $e->getMessage();
                 JLog::add( $msg, JLog::ERROR, 'error' );
                 $this->app->enqueueMessage( $msg, 'error' );
-                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
+//                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
 
             }
         } else {
@@ -243,8 +243,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function createOpossingOdv(OdCompra $odCompra){
         var_dump($odCompra);
         if($odCompra->getReceptor()->isIntegrado()){
-            $save   = new sendToTimOne();
-            $db     = JFactory::getDbo();
+            $catalogos  = new Catalogos();
+            $save       = new sendToTimOne();
+            $db         = JFactory::getDbo();
+            $xml        = new xml2Array();
+            $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
 
             $odv = new OdVenta();
             $odv->integradoId   = $odCompra->getEmisor()->id;
@@ -255,27 +258,51 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $odv->account       = $odCompra->dataBank[0]->datosBan_id;
             $odv->paymentMethod = $odCompra->paymentMethod->id;
             $odv->conditions    = 2;
-            $odv->placeIssue    = 9;
-            $xml = new xml2Array();
-            $dataXML = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+            $odv->placeIssue    = $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']);
 
             foreach ($dataXML->conceptos as $concepto) {
                 foreach ($concepto as $key => $value) {
-                    if($key != 'NOIDENTIFICACION') {
-                        $detalle[strtolower($key)] = $value;
+                    switch($key){
+                        case 'DESCRIPCION':
+                            $detalle['descripcion'] = $value;
+                            break;
+                        case 'UNIDAD':
+                            $detalle['unidad'] = $value;
+                            break;
+                        case 'NOIDENTIFICACION':
+                            $detalle['producto'] = $value;
+                            break;
+                        case 'CANTIDAD':
+                            $detalle['cantidad'] = $value;
+                            break;
+                        case 'VALORUNITARIO':
+                            $detalle['p_unitario'] = $value;
+                            break;
                     }
+                    $detalle['iva']  = $dataXML->impuestos->iva->tasa == 16 ? 3:0;
+                    $detalle['ieps'] = isset($dataXML->impuestos->ieps->tasa) ? $dataXML->impuestos->ieps->tasa : 0;
                 }
                 $productos[] = $detalle;
             }
 
-            throw new Exception('solo por parar');
+            $odv->setProductos(json_encode($productos));
+            $odv->setCreatedDate(time());
+            $odv->setTotalAmount(null);
+            $odv->paymentDate = null;
+            $odv->urlXML      = $odCompra->urlXML;
 
-//            $odv->productos     = 0;
-//            $odv->createdDate   = time();
-//            $odv->paymentDate   = null;
-//            $odv->totalAmount   = null;
-//            $odv->urlXML        = null;
+            $db->insertObject('#__ordenes_venta', $odv);
 
+            $relation = new stdClass();
+            $relation->id_odc = $odCompra->getId();
+            $relation->id_odv = $db->insertid();
+
+            $db->insertObject('#__ordenes_odv_odc_relation', $relation);
+
+            $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->parametros) ) ) );
+            JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
+            throw new Exception;
         }
     }
 }

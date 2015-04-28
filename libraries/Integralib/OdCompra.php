@@ -14,7 +14,9 @@ defined('_JEXEC') or die('Restricted access');
 
 class OdCompra extends Order {
 
-	protected $factura;
+    public $dataBank;
+    public $paymentMethod;
+    protected $factura;
 
 	/**
 	 * @param null $orderData

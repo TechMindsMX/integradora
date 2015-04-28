@@ -599,7 +599,7 @@ class getFromTimOne{
                 $triggerSearch = 'factpagada';
                 break;
             case 'ODC':
-                $triggerSearch = 'factpagada';
+                $triggerSearch = 'odcpagada';
                 break;
             case 'ODD':
                 $triggerSearch = 'oddpagada';
@@ -1901,12 +1901,11 @@ class getFromTimOne{
         $comision = self::getAplicableComision($tipoOrden, $comisiones);
 
         // TODO: verificar $orden->totalAmount con el comprobante del xml
-        // TODO: agregar una variable que indique el IVA que se va a ocupar y quitar el valor harcodeado.
         $catalogo = new Catalogos();
 
         $ivas = (int)$catalogo->getFullIva();
 
-        $montoComision = isset($comision) ? $orden->totalAmount * ($comision->rate / 100) * (1+(ivas/100)) : null;
+        $montoComision = isset($comision) ? (FLOAT) $orden->totalAmount * ((FLOAT)$comision->rate / 100) * (1+($ivas/100)) : null;
 
         return $montoComision;
     }
@@ -2500,8 +2499,6 @@ class sendToTimOne {
         if($return == false) {
             throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
         }
-
-        return $return;
     }
 
     private function validStatusChange($order,$orderNewStatus) {
