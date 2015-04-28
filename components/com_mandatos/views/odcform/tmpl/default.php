@@ -236,7 +236,7 @@ if(!isset($this->datos['confirmacion'])){
 
         <div class="form-group">
             <label for="observaciones"><?php echo JText::_('LBL_OBSERVACIONES'); ?></label>
-            <textarea name="observaciones" id="observaciones" rows="10" cols="50" style="width: 306px"><?php echo $datos->observaciones; ?></textarea>
+            <textarea maxlength="100" name="observaciones" id="observaciones" rows="3" cols="50" style="width: 306px"><?php echo $datos->observaciones; ?></textarea>
         </div>
 
         <div class="form-group">

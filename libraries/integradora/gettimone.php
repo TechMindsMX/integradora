@@ -1063,9 +1063,9 @@ class getFromTimOne{
         $resultados = array();
 
         foreach ( $orders as $key => $value ) {
-            $status = $value->getStatus();
-            if ( isset( $status->id ) ) {
-                if (in_array($status->id, $statusId)) {
+            $status = is_a($value, 'stdClass') ? $value->status->id : $value->getStatus()->id;
+            if ( isset( $status ) ) {
+                if (in_array($status, $statusId)) {
                     $resultados[] = $value;
                 }
             }

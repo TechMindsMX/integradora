@@ -25,7 +25,6 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $this->parametros   = $this->inputVars->getArray($post);
 
-
 	    // TODO: validación del xml que se sube en la plataforma, ACTIVAR
 	    try {
 //		    Factura::validateXml( JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML );
@@ -113,7 +112,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             'paymentDate'   => array('date'   => true,  'maxlength' => 10, 'required' => true),
             'paymentMethod' => array('number' => true,  'maxlength' => 10),
             'bankId'        => array('number' => true,  'required' => true),
-            'observaciones' => array('text'   => true,  'maxlength' => 1000));
+            'observaciones' => array('text'   => true,  'maxlength' => 100));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
         $respuesta['proveedor'] = $parametros['proveedor'] == 0 ? array('success'=>false,'msg'=>'Seleccione el proveedor') : $respuesta['proveedor'];
