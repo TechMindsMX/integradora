@@ -1,4 +1,6 @@
 <?php
+use Integralib\OdCompra;
+use Integralib\OdVenta;
 use Integralib\OrdenFn;
 
 defined('_JEXEC') or die('Restricted access');
@@ -41,7 +43,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $integradoSimple = new IntegradoSimple($this->integradoId);
             $integradoSimple->getTimOneData();
 
-            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
+//            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
 
             // acciones cuando tiene permisos para autorizar
             $user = JFactory::getUser();
@@ -60,78 +62,57 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-	        $db = JFactory::getDbo();
-	        try {
-		        $db->transactionStart();
+            $db = JFactory::getDbo();
+            try {
+                $db->transactionStart();
 
-		        $resultado = $save->insertDB( 'auth_odc' );
+                $save->insertDB( 'auth_odc' );
 
-		        if ( $resultado ) {
-			        $this->logEvents( __METHOD__, 'authorizacion_odc', json_encode( $save->set ) );
+                $this->logEvents( __METHOD__, 'authorizacion_odc', json_encode( $save->set ) );
 
-			        $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-			        $newStatusId    = 5;
+                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
 
-			        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', $newStatusId );
+                $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', 5 );
 
-			        if ( $statusChange ) {
+                $newStatusId  = 13;
+                $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', 13 );
 
-				        $TxOdc = $this->realizaTx();
 
-				        if ( $TxOdc ) {
-					        $cobroComision = $this->txComision();
+                $odc       = getFromTimOne::getOrdenesCompra( null, $this->parametros['idOrden'] );
+                $odc       = $odc[0];
+                $proveedor = new IntegradoSimple( isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id );
 
-					        if ( $cobroComision ) {
-						        $newStatusId  = 13;
-						        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc',
-						                                                  $newStatusId );
+                if ( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
+                    $odvId           = OrdenFn::getRelatedOdvIdFromOdcId( $odc->id );
+//                    if(is_null($odvId)){
+//                        $this->createOpossingOdv(new OdCompra(null,$odc->id));
+//                    }else {
+                        $save->changeOrderStatus($odvId, 'odv', $newStatusId);
+//                    }
+                }
 
-						        if ( $statusChange ) {
+                $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
+                    $catalogoStatus[ $newStatusId ]->name ) );
+                $this->app->enqueueMessage( JText::sprintf( 'ORDER_PAID_AUTHORIZED',
+                    $catalogoStatus[ $newStatusId ]->name ) );
 
-							        $odc       = getFromTimOne::getOrdenesCompra( null, $this->parametros['idOrden'] );
-							        $odc       = $odc[0];
-							        $proveedor = new IntegradoSimple( $odc->proveedor->integrado->integrado_id );
 
-							        if ( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
-								        $odvId           = OrdenFn::getRelatedOdvIdFromOdcId( $odc->id );
-								        $odvStatusChange = $save->changeOrderStatus( $odvId, 'odv', $newStatusId );
-							        }
+                $this->txComision();
+                $this->realizaTx();
 
-							        $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
-							                                                    $catalogoStatus[ $newStatusId ]->name ) );
-						        }
-					        } else {
-						        $this->app->enqueueMessage( JText::sprintf( 'ORDER_PAID_AUTHORIZED',
-						                                                    $catalogoStatus[ $newStatusId ]->name ) );
-					        }
-				        } else {
+                $this->sendEmail();
+                $db->transactionCommit();
 
-					        $statusChange = $save->changeOrderStatus( $this->parametros['idOrden'], 'odc', 3 );
+                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
+            } catch (Exception $e) {
+                $db->transactionRollback();
 
-					        if ( $statusChange ) {
-						        $save->deleteDB( 'auth_odc', 'idOrden = ' . $this->parametros['idOrden'] );
-						        $this->app->redirect( $this->returnUrl,
-						                              JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
-					        }
-				        }
-			        }
+                $msg = $e->getMessage();
+                JLog::add( $msg, JLog::ERROR, 'error' );
+                $this->app->enqueueMessage( $msg, 'error' );
+                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
 
-			        $this->sendEmail();
-
-			        $db->transactionCommit();
-
-			        $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
-		        } else {
-			        $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
-		        }
-	        } catch (Exception $e) {
-		        $db->transactionRollback();
-
-		        $msg = $e->getMessage();
-		        JLog::add( $msg, JLog::ERROR, 'error' );
-		        $this->app->enqueueMessage( $msg, 'error' );
-		        $this->app->redirect( $this->returnUrl );
-	        }
+            }
         } else {
             // acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($this->returnUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
@@ -177,19 +158,29 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $txDone = $txData->sendCreateTx();
         }
 
-        return $txDone;
+        if(!$txDone){
+            $this->txComision(true);//Tx reverso del cobro de comisión (cuando falle la trasferencia de fondos)
+            throw new Exception(JText::_('ERR_411_TRANSFERFUNDS_FAILED'));
+        }
+
     }
 
-    private function txComision(){
+    private function txComision($reverse = false){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden          = $this->getOrden();
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
         $orden->orderType = 'CCom-'.$orden->orderType;
 
-        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
+        if(!$reverse) {
+            $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
+        }else{
+            $txComision = new transferFunds($orden, 1, $orden->integradoId, $montoComision);
+        }
 
-        return $txComision->sendCreateTx();
+        if(!$txComision->sendCreateTx()){
+            throw new Exception(JText::_('ERR_412_TXCOMISION_FAILED'));
+        }
     }
 
     private function getOrden(){
@@ -201,10 +192,10 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
     function logEvents($metodo, $info, $data){
         $logdata = implode(' | ',array(
-            JFactory::getUser()->id,
-            JFactory::getSession()->get('integradoId', null, 'integrado'),
-            $metodo,
-            json_encode( array($info, $data) )
+                JFactory::getUser()->id,
+                JFactory::getSession()->get('integradoId', null, 'integrado'),
+                $metodo,
+                json_encode( array($info, $data) )
             )
         );
         JLog::add($logdata, JLog::DEBUG, 'bitacora_auth');
@@ -247,5 +238,44 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $info[] = $send->sendNotifications('15', $array, $titleArrayAdmin);
 
         return $info;
+    }
+
+    private function createOpossingOdv(OdCompra $odCompra){
+        var_dump($odCompra);
+        if($odCompra->getReceptor()->isIntegrado()){
+            $save   = new sendToTimOne();
+            $db     = JFactory::getDbo();
+
+            $odv = new OdVenta();
+            $odv->integradoId   = $odCompra->getEmisor()->id;
+            $odv->numOrden      = $save->getNextOrderNumber('odv', $odCompra->getReceptor()->id);
+            $odv->projectId     = $odCompra->getProjectName();
+            $odv->projectId2    = $odCompra->getSubProjectName();
+            $odv->clientId      = $odCompra->getReceptor()->id;
+            $odv->account       = $odCompra->dataBank[0]->datosBan_id;
+            $odv->paymentMethod = $odCompra->paymentMethod->id;
+            $odv->conditions    = 2;
+            $odv->placeIssue    = 9;
+            $xml = new xml2Array();
+            $dataXML = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+
+            foreach ($dataXML->conceptos as $concepto) {
+                foreach ($concepto as $key => $value) {
+                    if($key != 'NOIDENTIFICACION') {
+                        $detalle[strtolower($key)] = $value;
+                    }
+                }
+                $productos[] = $detalle;
+            }
+
+            throw new Exception('solo por parar');
+
+//            $odv->productos     = 0;
+//            $odv->createdDate   = time();
+//            $odv->paymentDate   = null;
+//            $odv->totalAmount   = null;
+//            $odv->urlXML        = null;
+
+        }
     }
 }

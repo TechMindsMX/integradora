@@ -18,10 +18,10 @@ jimport('integradora.notifications');
  */
 class MandatosControllerOdvpreview extends JControllerLegacy {
 
-	function authorize() {
+    function authorize() {
         $post               = array('idOrden' => 'INT');
-		$this->app 			= JFactory::getApplication();
-		$this->parametros	= $this->app->input->getArray($post);
+        $this->app 			= JFactory::getApplication();
+        $this->parametros	= $this->app->input->getArray($post);
 
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
@@ -49,71 +49,71 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-	        $db = JFactory::getDbo();
-	        try {
-		        $db->transactionStart();
+            $db = JFactory::getDbo();
+            try {
+                $db->transactionStart();
 
-		        $resultado = $save->insertDB( 'auth_odv' );
+                $resultado = $save->insertDB( 'auth_odv' );
 
-		        if ( $resultado ) {
-			        // autorización guardada
-			        $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-			        $newStatusId    = 5;
-			        $statusChange   = $save->changeOrderStatus( $this->parametros['idOrden'], 'odv', $newStatusId );
-			        if ( $statusChange ) {
-				        $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
-				                                                    $catalogoStatus[ $newStatusId ]->name ) );
+                if ( $resultado ) {
+                    // autorización guardada
+                    $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+                    $newStatusId    = 5;
+                    $statusChange   = $save->changeOrderStatus( $this->parametros['idOrden'], 'odv', $newStatusId );
+                    if ( $statusChange ) {
+                        $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
+                            $catalogoStatus[ $newStatusId ]->name ) );
 
-				        $newOrder = OrderFactory::getOrder( $this->parametros['idOrden'], 'odv' );
+                        $newOrder = OrderFactory::getOrder( $this->parametros['idOrden'], 'odv' );
 
-				        if ( $newOrder->getStatus()->id == 5 && is_null( $newOrder->urlXML ) ) {
-					        $factObj = $save->generaObjetoFactura( $newOrder );
+                        if ( $newOrder->getStatus()->id == 5 && is_null( $newOrder->urlXML ) ) {
+                            $factObj = $save->generaObjetoFactura( $newOrder );
 
-					        if ( $factObj != false ) {
-						        $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-						        try {
-							        $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
-							        $newOrder->XML    = $xmlFactura;
-							        $info             = $this->sendEmail( $newOrder );
-						        }
-						        catch ( Exception $e ) {
-							        $msg = $e->getMessage();
-							        JLog::add( $msg, JLog::ERROR, 'error' );
-							        $this->app->enqueueMessage( $msg, 'error' );
-						        }
-					        }
+                            if ( $factObj != false ) {
+                                $xmlFactura = $save->generateFacturaFromTimone( $factObj );
+                                try {
+                                    $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
+                                    $newOrder->XML    = $xmlFactura;
+                                    $info             = $this->sendEmail( $newOrder );
+                                }
+                                catch ( Exception $e ) {
+                                    $msg = $e->getMessage();
+                                    JLog::add( $msg, JLog::ERROR, 'error' );
+                                    $this->app->enqueueMessage( $msg, 'error' );
+                                }
+                            }
 
-					        if ( isset( $newOrder->urlXML ) ) {
-						        if ( $newOrder->urlXML != false ) {
-							        $save->formatData( array ( 'urlXML' => $newOrder->urlXML ) );
-							        $where = 'id = ' . $newOrder->getId();
-							        $save->updateDB( 'ordenes_venta', null, $where );
+                            if ( isset( $newOrder->urlXML ) ) {
+                                if ( $newOrder->urlXML != false ) {
+                                    $save->formatData( array ( 'urlXML' => $newOrder->urlXML ) );
+                                    $where = 'id = ' . $newOrder->getId();
+                                    $save->updateDB( 'ordenes_venta', null, $where );
 
-							        $this->createOpposingODC( $newOrder );
-						        }
-					        }
-				        }
-			        }
+                                    $this->createOpposingODC( $newOrder );
+                                }
+                            }
+                        }
+                    }
 
-			        $db->transactionCommit();
+                    $db->transactionCommit();
 
-			        $this->app->redirect( $redirectUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
-		        } else {
-			        $this->app->redirect( $redirectUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED' ), 'error' );
-		        }
-	        } catch (Exception $e) {
-		        $db->transactionRollback();
+                    $this->app->redirect( $redirectUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
+                } else {
+                    $this->app->redirect( $redirectUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED' ), 'error' );
+                }
+            } catch (Exception $e) {
+                $db->transactionRollback();
 
-		        $msg = $e->getMessage();
-		        JLog::add( $msg, JLog::ERROR, 'error' );
-		        $this->app->enqueueMessage( $msg, 'error' );
-		        $this->app->redirect( $redirectUrl );
-	        }
+                $msg = $e->getMessage();
+                JLog::add( $msg, JLog::ERROR, 'error' );
+                $this->app->enqueueMessage( $msg, 'error' );
+                $this->app->redirect( $redirectUrl );
+            }
         } else {
             //acciones cuando NO tiene permisos para autorizar
             $this->app->redirect($redirectUrl, JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
-	}
+    }
 
     /**
      * @param $objOdv
@@ -180,55 +180,46 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         return $totalAmount;
     }
 
-	/**
-	 * @param $odv
-	 *  Create ODC from ODV in case bith parties are Integrado
-	 * @return bool
-	 */
-	private function createOpposingODC(OdVenta $odv) {
+    /**
+     * @param $odv
+     *  Create ODC from ODV in case bith parties are Integrado
+     * @return bool
+     */
+    private function createOpposingODC(OdVenta $odv) {
 
-		if($odv->getReceptor()->isIntegrado()) {
+        if($odv->getReceptor()->isIntegrado()) {
 
-			$save   = new sendToTimOne();
-			$db     = JFactory::getDbo();
+            $save   = new sendToTimOne();
+            $db     = JFactory::getDbo();
 
-			$datos['integradoId'] = $this->integradoId;
+            $datos['integradoId'] = $this->integradoId;
 
-			$odc = new OrdenFn();
-			$odc->createdDate   = time();
-			$odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
-			$odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
-			$odc->status        = 3;
-			$odc->proyecto      = $odv->projectId2 !== "0" ? $odv->projectId2 : $odv->projectId;
-			$odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
-			$odc->paymentDate   = $odv->paymentDate;
-			$odc->paymentMethod = $odv->paymentMethod->id;
-			$odc->totalAmount   = $odv->getTotalAmount();
-			$odc->urlXML        = $odv->urlXML;
-			$odc->observaciones = '';
-			$odc->bankId        = $odv->account;
+            $odc = new OrdenFn();
+            $odc->proyecto      = $odv->projectId2 != 0 ? $odv->projectId2 : $odv->projectId;
+            $odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
+            $odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
+            $odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);
+            $odc->createdDate   = time();
+            $odc->paymentDate   = $odv->paymentDate;
+            $odc->paymentMethod = $odv->paymentMethod->id;
+            $odc->totalAmount   = $odv->getTotalAmount();
+            $odc->urlXML        = $odv->urlXML;
+            $odc->observaciones = '';
+            $odc->status        = 3;
+            $odc->bankId        = $odv->account;
 
-			$db->transactionStart();
 
-			try {
-				$db->insertObject('#__ordenes_compra', $odc);
+            $db->insertObject('#__ordenes_compra', $odc);
 
-				$relation = new stdClass();
-				$relation->id_odv = $odv->getId();
-				$relation->id_odc = $db->insertid();
+            $relation = new stdClass();
+            $relation->id_odv = $odv->getId();
+            $relation->id_odc = $db->insertid();
 
-				$db->insertObject('#__ordenes_odv_odc_relation', $relation);
+            $db->insertObject('#__ordenes_odv_odc_relation', $relation);
 
-				$db->transactionCommit();
-			} catch (Exception $e) {
-				$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($e, $this->parametros) ) ) );
-				JLog::add($logdata, JLog::DEBUG, 'bitacora');
-
-				$this->app->enquemessage('LBL_ERROR_CREATING_ODC');
-			}
-		}
-
-		return isset($relation->id_odc);
-	}
+            $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->parametros) ) ) );
+            JLog::add($logdata, JLog::DEBUG, 'bitacora');
+        }
+    }
 
 }

@@ -437,7 +437,7 @@ class getFromTimOne{
         return $results;
     }
 
-	private static function convertDateLength( $date, $int ) {
+    private static function convertDateLength( $date, $int ) {
 
         $length = ceil(log10($date));
         if ($length > $int) {
@@ -525,7 +525,7 @@ class getFromTimOne{
         $client = array();
 
         $clientes = self::getClientes($data['integradoId']);
-	    JLog::add(json_encode($clientes), JLog::INFO);
+        JLog::add(json_encode($clientes), JLog::INFO);
 
         foreach ( $clientes as $key => $value ) {
             if ( $data['client_id'] == $value->client_id ) {
@@ -599,7 +599,7 @@ class getFromTimOne{
                 $triggerSearch = 'factpagada';
                 break;
             case 'ODC':
-                $triggerSearch = 'odcpagada';
+                $triggerSearch = 'factpagada';
                 break;
             case 'ODD':
                 $triggerSearch = 'oddpagada';
@@ -681,27 +681,27 @@ class getFromTimOne{
         return $result[0]->idTx;
     }
 
-	/**
-	 * @param $paymentMethodId
-	 * @param $names
-	 *
-	 * @return stdClass
-	 * @throws Exception
-	 */
-	private static function getPaymentMethod( $paymentMethodId, $names ) {
-		$payMethod = new stdClass();
+    /**
+     * @param $paymentMethodId
+     * @param $names
+     *
+     * @return stdClass
+     * @throws Exception
+     */
+    private static function getPaymentMethod( $paymentMethodId, $names ) {
+        $payMethod = new stdClass();
 
-		if ( in_array($paymentMethodId, array_keys($names) ) ) {
-			$payMethod->id = $paymentMethodId;
-			$payMethod->name = $names[ $paymentMethodId ]->tag;
-		} else {
-			throw new Exception(JText::_('ERR_PAYMENT_METHOD_INVALID'));
-		}
+        if ( in_array($paymentMethodId, array_keys($names) ) ) {
+            $payMethod->id = $paymentMethodId;
+            $payMethod->name = $names[ $paymentMethodId ]->tag;
+        } else {
+            throw new Exception(JText::_('ERR_PAYMENT_METHOD_INVALID'));
+        }
 
-		return $payMethod;
-	}
+        return $payMethod;
+    }
 
-	public function createNewProject($envio, $integradoId){
+    public function createNewProject($envio, $integradoId){
         $jsonData = json_encode($envio);
 
         $route = new servicesRoute();
@@ -1063,7 +1063,7 @@ class getFromTimOne{
         $resultados = array();
 
         foreach ( $orders as $key => $value ) {
-	        $status = $value->getStatus();
+            $status = $value->getStatus();
             if ( isset( $status->id ) ) {
                 if (in_array($status->id, $statusId)) {
                     $resultados[] = $value;
@@ -1190,14 +1190,16 @@ class getFromTimOne{
 
             $proyectos = self::getProyects(null, $value->proyecto);
 
-            if($proyectos[$value->proyecto]->parentId != 0){
-                $value->subproyecto = $proyectos[$value->proyecto];
-                $proyecto = self::getProyects(null, $proyectos[$value->proyecto]->parentId);
-                $value->proyecto = $proyecto[$value->subproyecto->parentId];
-            }else{
-                $value->proyecto = $proyectos[$value->proyecto];
-                $value->subproyecto = '';
-        }
+            if(isset($proyectos[$value->proyecto])) {
+                if ($proyectos[$value->proyecto]->parentId != 0) {
+                    $value->subproyecto = $proyectos[$value->proyecto];
+                    $proyecto = self::getProyects(null, $proyectos[$value->proyecto]->parentId);
+                    $value->proyecto = $proyecto[$value->subproyecto->parentId];
+                } else {
+                    $value->proyecto = $proyectos[$value->proyecto];
+                    $value->subproyecto = '';
+                }
+            }
         }
         return $orden;
     }
@@ -1310,7 +1312,7 @@ class getFromTimOne{
         $names = $cat->getPaymentMethods();
 
         try {
-	        $payMethod = self::getPaymentMethod( $paymentMethodId, $names);
+            $payMethod = self::getPaymentMethod( $paymentMethodId, $names);
         } catch ( Exception $e) {
             $payMethod = null;
             JFactory::getApplication()->enqueueMessage($e->getMessage());
@@ -2443,6 +2445,10 @@ class sendToTimOne {
 
     public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
+        if( is_null($idOrder) || is_null($orderType) || is_null($orderNewStatus) ){
+            throw new Exception(JText::_('ERR_413_CHANGEORDERSTATUS'));
+        }
+
         $return = false;
 
         $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
@@ -2491,9 +2497,9 @@ class sendToTimOne {
             $return = $this->insertDB('bitacora_status_'.$orderType);
         }
 
-	    if($return == false) {
-		    throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
-	    }
+        if($return == false) {
+            throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
+        }
 
         return $return;
     }
@@ -3294,20 +3300,20 @@ class Factura extends makeTx {
         $this->format = 'Xml';
     }
 
-	public static function validateXml( $xmlpath ) {
-		$request = new \Integralib\TimOneRequest();
-		$xmlFileData            = file_get_contents($xmlpath);
-		$data 			        = new xml2Array();
-		$factura                = $data->manejaXML($xmlFileData);
+    public static function validateXml( $xmlpath ) {
+        $request = new \Integralib\TimOneRequest();
+        $xmlFileData            = file_get_contents($xmlpath);
+        $data 			        = new xml2Array();
+        $factura                = $data->manejaXML($xmlFileData);
 
-		$result = $request->sendInvoiceToValidation( Factura::getXmlUUID($factura) );
+        $result = $request->sendInvoiceToValidation( Factura::getXmlUUID($factura) );
 
-		if (substr_count('El sello es correcto', $result->data) === 0) {
-			throw new Exception('ERR_XML_NOT_VALID');
-		}
-	}
+        if (substr_count('El sello es correcto', $result->data) === 0) {
+            throw new Exception('ERR_XML_NOT_VALID');
+        }
+    }
 
-	public function setTestRFC() {
+    public function setTestRFC() {
         $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
         $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }
@@ -3615,8 +3621,6 @@ class transferFunds extends makeTx {
 
         if ( $result === true ) {
             $this->saveTxOrderRelationship();
-        } else {
-	        throw new Exception(JText::_('ERR_411_TRANSFERFUNDS_FAILED'));
         }
 
         return $result;
@@ -3662,27 +3666,17 @@ class makeTx {
         $txsTimoneMandatoObj->date = time();
         $txsTimoneMandatoObj->idComision = $comisionAplicable->id;
 
-        $db->transactionStart();
 
-        try{
-            $db->insertObject('#__txs_timone_mandato',$txsTimoneMandatoObj);
+        $db->insertObject('#__txs_timone_mandato',$txsTimoneMandatoObj);
 
-            $txsMandatosRel = new stdClass();
+        $txsMandatosRel = new stdClass();
 
-            $txsMandatosRel->id = $db->insertid();
-            $txsMandatosRel->amount = $this->objEnvio->amount;
-            $txsMandatosRel->orderType = $this->orden->orderType;
-            $txsMandatosRel->idOrden = $this->orden->id;
+        $txsMandatosRel->id = $db->insertid();
+        $txsMandatosRel->amount = $this->objEnvio->amount;
+        $txsMandatosRel->orderType = $this->orden->orderType;
+        $txsMandatosRel->idOrden = $this->orden->id;
 
-            $db->insertObject('#__txs_mandatos',$txsMandatosRel);
-
-            $resultado = true;
-
-            $db->transactionCommit();
-        }catch (Exception $e){
-            $db->transactionRollback();
-            $resultado = false;
-        }
+        $db->insertObject('#__txs_mandatos',$txsMandatosRel);
 
         JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($request, $resultado) ) ) );
