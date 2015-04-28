@@ -15,12 +15,12 @@ abstract class Order {
 	protected $id;
 	protected $emisor;
 	protected $receptor;
-	protected $createdDate;
-	protected $status;
-	protected $totalAmount;
-	protected $orderType;
+    protected $totalAmount;
+    protected $orderType;
+    public $status;
+    public $createdDate;
 
-	/**
+    /**
 	 * @return mixed
 	 */
 	public function getId() {

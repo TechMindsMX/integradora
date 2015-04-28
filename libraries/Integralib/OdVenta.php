@@ -13,7 +13,7 @@ use getFromTimOne;
 class OdVenta extends Order {
 
 	protected $totalAmount;
-	protected $productos;
+	public $productos;
 
     /**
      * @param mixed $status

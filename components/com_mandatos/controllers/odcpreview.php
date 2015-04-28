@@ -110,7 +110,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $msg = $e->getMessage();
                 JLog::add( $msg, JLog::ERROR, 'error' );
                 $this->app->enqueueMessage( $msg, 'error' );
-//                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
+                $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_NOT_AUTHORIZED', 'error' ) );
 
             }
         } else {
@@ -251,11 +251,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
 
             $odv = new OdVenta();
-            $odv->integradoId   = $odCompra->getEmisor()->id;
+            $odv->integradoId   = $odCompra->getReceptor()->id;
             $odv->numOrden      = $save->getNextOrderNumber('odv', $odCompra->getReceptor()->id);
-            $odv->projectId     = $odCompra->getProjectName();
-            $odv->projectId2    = $odCompra->getSubProjectName();
-            $odv->clientId      = $odCompra->getReceptor()->id;
+            $odv->projectId     = $odCompra->proyecto->id_proyecto;
+            $odv->projectId2    = isset($odCompra->subproyecto->id_proyecto) ? $odCompra->subproyecto->id_proyecto : 0;
+            $odv->clientId      = $odCompra->getEmisor()->id;
             $odv->account       = $odCompra->dataBank[0]->datosBan_id;
             $odv->paymentMethod = $odCompra->paymentMethod->id;
             $odv->conditions    = 2;
