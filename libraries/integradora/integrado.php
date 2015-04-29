@@ -629,7 +629,7 @@ class IntegradoSimple extends Integrado {
         return $result === 1;
     }
 
-    private function getStatus() {
+    public function getStatus() {
         return (int)$this->integrados[0]->integrado->status;
     }
 }
