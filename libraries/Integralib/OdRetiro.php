@@ -25,7 +25,7 @@ class OdRetiro extends Order {
 	 */
 	function __construct( $orderData = null, $orderId = null ) {
 		if (isset($orderId)) {
-			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_retiro');
 			$orderData = $orderData [0];
 		}
 
