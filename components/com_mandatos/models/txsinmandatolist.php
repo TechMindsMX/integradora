@@ -21,7 +21,6 @@ class MandatosModelTxsinmandatolist extends JModelItem {
 			$trans->balance = $this->getTxBalance($trans);
 
             if($trans->balance > 0) {
-
                 $retorno[] = $trans;
             }
 		}

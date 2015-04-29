@@ -34,7 +34,7 @@ $number2string  = new AifLibNumber();
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->razon_social; ?>
+				<?php echo $this->odd->receptor; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>

@@ -60,6 +60,7 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 
 		if ( ! empty( $orders->odd ) ) {
 			foreach ( $orders as $key => $values ) {
+				$values = array_filter($values, function ($v) { return $v->balance > 0;} );
 				$orders->$key = getFromTimOne::filterOrdersByStatus($values, array(5,8));
 			}
 		}

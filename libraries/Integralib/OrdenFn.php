@@ -160,13 +160,13 @@ class OrdenFn {
 		$this->order->txs = $this->getOrderTxs();
 		if ( !empty( $this->order->txs ) ) {
 			foreach ( $this->order->txs as $tx ) {
-				$this->order->sumOrderTxs += $tx->detalleTx->amount;
+				$this->order->sumOrderTxs += $tx->assignedAmount;
 				if ( isset( $order->subTotalAmount ) ) {
 					$ivaOrderRate = ( $order->iva / $order->subTotalAmount );
 				} else {
 					$ivaOrderRate = 0;
 				}
-				$tx->detalleTx->net = $tx->detalleTx->amount / (1+$ivaOrderRate);
+				$tx->detalleTx->net = $tx->assignedAmount / (1+$ivaOrderRate);
 				$tx->detalleTx->iva = $tx->detalleTx->net * $ivaOrderRate;
 			}
 		}
@@ -191,7 +191,7 @@ class OrdenFn {
 			$orderType = $this->order->getOrderType();
 		}
 
-		$query->select('txs.id, txs.idTx, txs.idIntegrado, txs.date, txs.idComision, piv.idOrden, piv.orderType')
+		$query->select($db->quoteName(array('txs.id', 'txs.idTx', 'txs.idIntegrado', 'txs.date', 'txs.idComision', 'piv.idOrden', 'piv.orderType', 'piv.amount'), array('id', 'idTx', 'idIntegrado', 'date', 'idComision', 'idOrden', 'orderType', 'assignedAmount')))
 		      ->from($db->quoteName('#__txs_timone_mandato', 'txs') )
 		      ->join('INNER', $db->quoteName('#__txs_mandatos', 'piv') . ' ON ( txs.id = piv.id )' )
 		      ->where('piv.idOrden = '.$db->quote( $statusId ).' AND piv.orderType = '.$db->quote( $orderType ));
