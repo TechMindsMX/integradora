@@ -47,18 +47,18 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		if(isset($this->vars['idOrden']) && isset($this->vars['orderType'])) {
 			$this->order = $model->getOrderByIdAndType($unpaidOrders, $this->vars['idOrden'], $this->vars['orderType']);
 		} else {
-			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');
+			$this->exitWithRedirect($redirectUrl, 'ERR_413_MANDATOSCONTROLLERASOCIATXMANDATO', 'error');
 		}
 
 		if (!$this->doValidations()){
-			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');
+			$this->exitWithRedirect($redirectUrl, 'ERR_414_MANDATOSCONTROLLERASOCIATXMANDATO', 'error');
 		}
 
 		if($this->saveRelations()) {
 
 			$this->exitWithRedirect($redirectUrl, 'COM_MANDATOS_LBL_SUCCESS');
 		} else {
-			$this->exitWithRedirect($redirectUrl, 'LBL_ERROR', 'error');
+			$this->exitWithRedirect($redirectUrl, 'ERR_415_MANDATOSCONTROLLERASOCIATXMANDATO', 'error');
 		}
 	}
 
