@@ -59,38 +59,36 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                     // autorización guardada
                     $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                     $newStatusId    = 5;
-                    $statusChange   = $save->changeOrderStatus( $this->parametros['idOrden'], 'odv', $newStatusId );
-                    if ( $statusChange ) {
-                        $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
-                            $catalogoStatus[ $newStatusId ]->name ) );
+                    $save->changeOrderStatus( $this->parametros['idOrden'], 'odv', $newStatusId );
+                    $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',
+                        $catalogoStatus[ $newStatusId ]->name ) );
 
-                        $newOrder = OrderFactory::getOrder( $this->parametros['idOrden'], 'odv' );
+                    $newOrder = OrderFactory::getOrder( $this->parametros['idOrden'], 'odv' );
 
-                        if ( $newOrder->getStatus()->id == 5 && is_null( $newOrder->urlXML ) ) {
-                            $factObj = $save->generaObjetoFactura( $newOrder );
+                    if ( $newOrder->getStatus()->id == 5 && is_null( $newOrder->urlXML ) ) {
+                        $factObj = $save->generaObjetoFactura( $newOrder );
 
-                            if ( $factObj != false ) {
-                                $xmlFactura = $save->generateFacturaFromTimone( $factObj );
-                                try {
-                                    $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
-                                    $newOrder->XML    = $xmlFactura;
-                                    $info             = $this->sendEmail( $newOrder );
-                                }
-                                catch ( Exception $e ) {
-                                    $msg = $e->getMessage();
-                                    JLog::add( $msg, JLog::ERROR, 'error' );
-                                    $this->app->enqueueMessage( $msg, 'error' );
-                                }
+                        if ( $factObj != false ) {
+                            $xmlFactura = $save->generateFacturaFromTimone( $factObj );
+                            try {
+                                $newOrder->urlXML = $save->saveXMLFile( $xmlFactura );
+                                $newOrder->XML    = $xmlFactura;
+                                $info             = $this->sendEmail( $newOrder );
                             }
+                            catch ( Exception $e ) {
+                                $msg = $e->getMessage();
+                                JLog::add( $msg, JLog::ERROR, 'error' );
+                                $this->app->enqueueMessage( $msg, 'error' );
+                            }
+                        }
 
-                            if ( isset( $newOrder->urlXML ) ) {
-                                if ( $newOrder->urlXML != false ) {
-                                    $save->formatData( array ( 'urlXML' => $newOrder->urlXML ) );
-                                    $where = 'id = ' . $newOrder->getId();
-                                    $save->updateDB( 'ordenes_venta', null, $where );
+                        if ( isset( $newOrder->urlXML ) ) {
+                            if ( $newOrder->urlXML != false ) {
+                                $save->formatData( array ( 'urlXML' => $newOrder->urlXML ) );
+                                $where = 'id = ' . $newOrder->getId();
+                                $save->updateDB( 'ordenes_venta', null, $where );
 
-                                    $this->createOpposingODC( $newOrder );
-                                }
+                                $this->createOpposingODC( $newOrder );
                             }
                         }
                     }

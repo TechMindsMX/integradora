@@ -132,6 +132,7 @@ class OdVenta extends Order {
 		$this->productos      = (STRING)$order->productos;
 		$this->createdDate    = (STRING)$order->createdDate;
 		$this->paymentDate    = (STRING)$order->paymentDate;
+        $this->urlXML         = (STRING)$order->urlXML;
 
 		$subTotalOrden        = 0;
 		$subTotalIva          = 0;
