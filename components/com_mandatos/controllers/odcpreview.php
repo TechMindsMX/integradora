@@ -84,11 +84,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                 if ( $proveedor->isIntegrado() ) { //operacion de transfer entre integrados
                     $odvId           = OrdenFn::getRelatedOdvIdFromOdcId( $odc->id );
-                    if(is_null($odvId)){
-                        $this->createOpossingOdv(new OdCompra(null,$odc->id));
-                    }else {
+//                    if(is_null($odvId)){
+//                        $this->createOpossingOdv(new OdCompra(null,$odc->id));
+//                    }else {
                         $save->changeOrderStatus($odvId, 'odv', $newStatusId);
-                    }
+//                    }
                 }
 
                 $this->app->enqueueMessage( JText::sprintf( 'ORDER_STATUS_CHANGED',

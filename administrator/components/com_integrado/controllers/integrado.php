@@ -52,13 +52,14 @@ class IntegradoControllerIntegrado extends JControllerForm {
             return true;
         }
 
-        if($datosIntegrado->integrados[0]->integrado->status != $object->status) {
+        if($datosIntegrado->getStatus() != $object->status) {
             // Update their details in the users table using id as the primary key.
             $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
         }
 
         if($object->status == 50 && $result){
             $this->createIntegradoTimoneUUID();
+	        $this->createDefaultProject();
         }
 
         if($result) {
@@ -302,6 +303,18 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         return $info;
     }
+
+	private function createDefaultProject() {
+		$project = new \Integralib\Project();
+
+		$project->setIntegradoId($this->integradoId);
+		$project->name = JText::_('DEFAULT_PTOJECT_NAME');
+		$project->description = JText::_('DEFAULT_PROJECT_DESC');
+		$project->setParentId(0);
+		$save = $project->save();
+
+		JLog::add(json_encode($save), JLog::INFO);
+	}
 }
 
 

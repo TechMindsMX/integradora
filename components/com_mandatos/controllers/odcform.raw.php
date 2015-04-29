@@ -1,4 +1,7 @@
 <?php
+use Integralib\OdCompra;
+use Integralib\OdVenta;
+
 defined('_JEXEC') or die('Restricted access');
 
 jimport('integradora.gettimone');
@@ -8,31 +11,33 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdcform extends JControllerLegacy {
 
+    public $permisos;
+
     public function __construct(){
+
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
-        $post = array('idOrden'  => 'INT',
-                'numOrden'       => 'INT',
-                'proyecto'       => 'STRING',
-                'proveedor'      => 'STRING',
-                'paymentDate'    => 'STRING',
-                'paymentMethod'  => 'STRING',
-                'totalAmount'    => 'STRING',
-                'urlXML'         => 'STRING',
-                'observaciones'  => 'STRING',
-                'bankId'         => 'INT'
-            );
+        $post               = array('idOrden'        => 'INT',
+                                    'numOrden'       => 'INT',
+                                    'proyecto'       => 'STRING',
+                                    'proveedor'      => 'STRING',
+                                    'paymentDate'    => 'STRING',
+                                    'paymentMethod'  => 'STRING',
+                                    'totalAmount'    => 'STRING',
+                                    'urlXML'         => 'STRING',
+                                    'observaciones'  => 'STRING',
+                                    'bankId'         => 'INT');
 
         $this->parametros   = $this->inputVars->getArray($post);
 
-	    // TODO: validación del xml que se sube en la plataforma, ACTIVAR
-	    try {
+        // TODO: validación del xml que se sube en la plataforma, ACTIVAR
+        try {
 //		    Factura::validateXml( JPATH_ROOT.DIRECTORY_SEPARATOR.$this->parametros->urlXML );
 
-	    } catch (Exception $e) {
-		    $this->app->enqueueMessage(JText::_($e->getMessage()), 'error');
-		    $this->app->redirect('index.php?option=com_mandatos&view=odcform');
-	    }
+        } catch (Exception $e) {
+            $this->app->enqueueMessage(JText::_($e->getMessage()), 'error');
+            $this->app->redirect('index.php?option=com_mandatos&view=odcform');
+        }
 
         $session            = JFactory::getSession();
         $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
@@ -42,7 +47,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
     function saveODC() {
         $db = JFactory::getDbo();
-
+        JFactory::getDocument()->setMimeEncoding('application/json');
         $datos = $this->parametros;
         $save  = new sendToTimOne();
         $date  = new DateTime($datos['paymentDate']);
@@ -60,42 +65,57 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
         }
 
-        if( $id === 0 ) {
-            unset($datos['idOrden']);
-            $datos['createdDate'] = time();
-            $datos['numOrden'] = $save->getNextOrderNumber('odc', $this->integradoId);
-            $datos['status'] = 1;
-            $datos['integradoId'] = $this->integradoId;
+        try {
+            $db->transactionStart();
+            if ($id === 0) {
+                unset($datos['idOrden']);
+                $datos['createdDate'] = time();
+                $datos['numOrden'] = $save->getNextOrderNumber('odc', $this->integradoId);
+                $datos['status'] = 1;
+                $datos['integradoId'] = $this->integradoId;
 
-            $save->formatData($datos);
-            $salvado = $save->insertDB('ordenes_compra');
+                $save->formatData($datos);
+                $salvado = $save->insertDB('ordenes_compra');
 
-            $id = $db->insertid();
-        }else{
-            unset($datos['idOrden']);
-            $save->formatData($datos);
-            $salvado = $save->updateDB('ordenes_compra', null,'numOrden = '.$datos['numOrden']);
-        }
+                $id = $db->insertid();
 
-        if($salvado) {
-            $sesion = JFactory::getSession();
-            $sesion->set('msg','Datos Almacenados', 'odcCorrecta');
+                $this->createOpossingOdv(new OdCompra(null, $id));
+            } else {
+                unset($datos['idOrden']);
+                $save->formatData($datos);
+                $salvado = $save->updateDB('ordenes_compra', null, 'numOrden = ' . $datos['numOrden']);
+            }
 
-            $this->sendNotifications($datos);
+            if ($salvado) {
+                $sesion = JFactory::getSession();
+                $sesion->set('msg', 'Datos Almacenados', 'odcCorrecta');
 
+                $this->sendNotifications($datos);
+
+                $respuesta = array(
+                    'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id . '&success=true',
+                    'redireccion' => true
+                );
+            } else {
+                $respuesta = array('redireccion' => false);
+            }
+
+            $respuesta['idOrden'] = $id;
+
+            $db->transactionCommit();
+
+            echo json_encode($respuesta);
+        }catch (Exception $e){
+            $db->transactionRollback();
+
+            $this->app->enqueueMessage('No Fue posible Guardar');
             $respuesta = array(
-                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id .'&success=true',
+                'urlRedireccion' => 'index.php?option=com_mandatos&view=odcform',
                 'redireccion' => true
             );
-        }else{
-            $respuesta = array('redireccion' => false);
+
+            echo json_decode($respuesta);
         }
-
-
-        JFactory::getDocument()->setMimeEncoding('application/json');
-        $respuesta['idOrden']= $id;
-
-        echo json_encode($respuesta);
     }
 
     function valida(){
@@ -167,5 +187,69 @@ class MandatosControllerOdcform extends JControllerLegacy {
             }
         }
         return $nameProveedor;
+    }
+
+    private function createOpossingOdv(OdCompra $odCompra){
+        if($odCompra->getReceptor()->isIntegrado()){
+            $catalogos  = new Catalogos();
+            $save       = new sendToTimOne();
+            $db         = JFactory::getDbo();
+            $xml        = new xml2Array();
+            $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+
+            $odv = new OdVenta();
+            $odv->integradoId   = $odCompra->getReceptor()->id;
+            $odv->numOrden      = $save->getNextOrderNumber('odv', $odCompra->getReceptor()->id);
+            $odv->projectId     = $odCompra->proyecto->id_proyecto;
+            $odv->projectId2    = isset($odCompra->subproyecto->id_proyecto) ? $odCompra->subproyecto->id_proyecto : 0;
+            $odv->clientId      = $odCompra->getEmisor()->id;
+            $odv->account       = $odCompra->dataBank[0]->datosBan_id;
+            $odv->paymentMethod = $odCompra->paymentMethod->id;
+            $odv->conditions    = 2;
+            $odv->placeIssue    = $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']);
+            $odv->setStatus(3);
+
+            foreach ($dataXML->conceptos as $concepto) {
+                foreach ($concepto as $key => $value) {
+                    switch($key){
+                        case 'DESCRIPCION':
+                            $detalle['descripcion'] = $value;
+                            break;
+                        case 'UNIDAD':
+                            $detalle['unidad'] = $value;
+                            break;
+                        case 'NOIDENTIFICACION':
+                            $detalle['producto'] = $value;
+                            break;
+                        case 'CANTIDAD':
+                            $detalle['cantidad'] = $value;
+                            break;
+                        case 'VALORUNITARIO':
+                            $detalle['p_unitario'] = $value;
+                            break;
+                    }
+                    $detalle['iva']  = $dataXML->impuestos->iva->tasa == 16 ? 3:0;
+                    $detalle['ieps'] = isset($dataXML->impuestos->ieps->tasa) ? $dataXML->impuestos->ieps->tasa : 0;
+                }
+                $productos[] = $detalle;
+            }
+
+            $odv->setProductos(json_encode($productos));
+            $odv->setCreatedDate(time());
+            $odv->setTotalAmount(null);
+            $odv->paymentDate = null;
+            $odv->urlXML      = $odCompra->urlXML;
+
+            $db->insertObject('#__ordenes_venta', $odv);
+
+            $relation = new stdClass();
+            $relation->id_odc = $odCompra->getId();
+            $relation->id_odv = $db->insertid();
+
+            $db->insertObject('#__ordenes_odv_odc_relation', $relation);
+
+            $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->parametros) ) ) );
+            JLog::add($logdata, JLog::DEBUG, 'bitacora');
+        }
     }
 }
