@@ -75,6 +75,17 @@ class MandatosControllerOddpreview extends JControllerAdmin {
     private function sendNotifications( ) {
 
         $info           = array();
+        if($this->orden->paymentMethod->id==1){
+            $metodoPago = JText::_('LBL_SPEI');
+        }
+        if($this->orden->paymentMethod->id==2) {
+            $metodoPago = JText::_('LBL_DEPOSIT');
+        }
+        if($this->orden->paymentMethod->id==3) {
+            $metodoPago = JText::_('LBL_CHEQUE');
+        }
+
+
         /*
          * NOTIFICACIONES 31
          */
@@ -82,7 +93,14 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         $getCurrUser         = new IntegradoSimple($this->integradoId);
 
         $titleArray          = array($this->orden->numOrden);
-        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden,  JFactory::getUser()->username, date('d-m-Y'), $this->orden->totalAmount, $this->orden->paymentMethod->name);
+
+        $array           = array(
+            $getCurrUser->getDisplayName(),
+            $this->orden->numOrden,
+            JFactory::getUser()->name,
+            date('d-m-Y'),
+            '$'.number_format($this->orden->totalAmount, 2),
+            $metodoPago );
 
         $send                = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
