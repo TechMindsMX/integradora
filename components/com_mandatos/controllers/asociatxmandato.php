@@ -10,6 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
+jimport('integradora.notifications');
 
 /**
  * metodo de envio a TimOne
@@ -110,11 +111,56 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 
 			$result = false;
 		}
-
+        if($result==true){
+            $this->sendmail();
+        }
 		return $result;
 	}
 
 	private function setAmountTxToAssign() {
 		return $this->tx->balance > $this->order->balance ? $this->order->balance : $this->tx->balance;
 	}
+
+    private function sendmail() {
+
+        /*
+         * NOTIFICACIONES 35
+         */
+
+        $info           = array();
+        if($this->order->paymentMethod->id==1){
+            $metodoPago = JText::_('LBL_SPEI');
+        }
+        if($this->order->paymentMethod->id==2) {
+            $metodoPago = JText::_('LBL_DEPOSIT');
+        }
+        if($this->order->paymentMethod->id==3) {
+            $metodoPago = JText::_('LBL_CHEQUE');
+        }
+
+        $getCurrUser         = new IntegradoSimple($this->integradoId);
+
+        $titleArray          = array($this->orden->numOrden);
+
+        $array           = array(
+            $getCurrUser->getDisplayName(),
+            $this->order->numOrden,
+            date('d-m-Y'),
+            '$'.number_format($this->order->totalAmount, 2),
+            $metodoPago);
+
+        $send                = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info[]              = $send->sendNotifications('35', $array, $titleArray);
+
+        /*
+         * NOTIFICACIONES 32
+         */
+
+        $titleArrayAdmin     = array($getCurrUser->getDisplayName(), $this->orden->numOrden);
+
+        $send->setAdminEmails();
+        $info[]             = $send->sendNotifications('36', $array, $titleArrayAdmin);
+    }
+
 }
