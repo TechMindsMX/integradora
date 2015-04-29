@@ -7,7 +7,7 @@ class MandatosModelOdrpreview extends JModelItem {
 
 	public function __construct()
 	{
-		$this->inputVars 		 = JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
+		$this->inputVars 	= JFactory::getApplication()->input->getArray( array('idOrden' => 'INT') );
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
 
@@ -17,7 +17,7 @@ class MandatosModelOdrpreview extends JModelItem {
 	public function getOrdenes(){
 
 		$odr = getFromTimOne::getOrdenesRetiro($this->integradoId, $this->inputVars['idOrden']);
-		$this->odr = $odr[0];
+		$this->odr = new \Integralib\OdRetiro(null, $odr[0]->id);
 
 		// Verifica si la ODR exite para el integrado o redirecciona
 		if (is_null($this->odr)){

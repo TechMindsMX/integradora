@@ -240,7 +240,6 @@ $subProyects = $this->subprojects;
 
     <fieldset>
         <select name="projectId" id="project">
-            <option value="0">Proyecto</option>
             <?php
             if ( isset( $this->proyectos) ) {
                 foreach ($this->proyectos as $key => $value) {
