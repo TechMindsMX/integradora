@@ -80,17 +80,27 @@ class MandatosControllerOddform extends JControllerLegacy {
          * Notificacion 20
          */
         $info = array();
-        if($datos->paymentMethod==0){
+        if($datos->paymentMethod==1){
             $metodoPago = JText::_('LBL_SPEI');
         }
-        if($datos->paymentMethod) {
+        if($datos->paymentMethod==2) {
+            $metodoPago = JText::_('LBL_DEPOSIT');
+        }
+        if($datos->paymentMethod==3) {
             $metodoPago = JText::_('LBL_CHEQUE');
         }
 
         $getCurrUser = new IntegradoSimple($this->integradoId);
 
         $arrayTitle = array($datos->numOrden);
-        $array      = array($getCurrUser->getUsuarioPrincipal($this->integradoId)->name, $datos->numOrden, JFactory::getUser()->username, date('d-m-Y'),$datos->totalAmount, $metodoPago);
+
+        $array           = array(
+            $getCurrUser->getDisplayName(),
+            $datos->numOrden,
+            JFactory::getUser()->name,
+            date('d-m-Y'),
+            '$'.number_format($datos->totalAmount, 2),
+            $metodoPago );
 
         $send                   = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
@@ -99,7 +109,7 @@ class MandatosControllerOddform extends JControllerLegacy {
         /*
          * Notificaciones 21
          */
-        $titleAdmin = array($getCurrUser->getUsuarioPrincipal($this->integradoId), $datos->numOrden);
+        $titleAdmin = array($getCurrUser->getDisplayName(), $datos->numOrden);
 
         $send                   = new Send_email();
         $send->setAdminEmails();

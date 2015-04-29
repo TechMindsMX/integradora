@@ -25,7 +25,7 @@ class OdRetiro extends Order {
 	 */
 	function __construct( $orderData = null, $orderId = null ) {
 		if (isset($orderId)) {
-			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_compra');
+			$orderData = getFromTimOne::getOrdenes(null, $orderId, 'ordenes_retiro');
 			$orderData = $orderData [0];
 		}
 
@@ -43,8 +43,8 @@ class OdRetiro extends Order {
 
 		$this->orderType       = 'odr';
 		$this->numOrden         = (INT)$order->numOrden;
-		$this->paymentMethod    = getFromTimOne::getPaymentMethodName((INT)$this->paymentMethod);
-		$this->status           = getFromTimOne::getOrderStatusName($this->status);
+		$this->paymentMethod    = getFromTimOne::getPaymentMethodName((INT)$order->paymentMethod);
+		$this->status           = getFromTimOne::getOrderStatusName($order->status);
 		$this->totalAmount      = (FLOAT)$order->totalAmount;
 		$this->iva              = 0;
 		$this->subTotalAmount  = (FLOAT)$order->totalAmount; // subtotal es el mismo que el total por no tener impuesto, el atributo es necesario para calculos
