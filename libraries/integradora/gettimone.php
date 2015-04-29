@@ -2499,6 +2499,7 @@ class sendToTimOne {
         if($return == false) {
             throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED'));
         }
+        return $return;
     }
 
     private function validStatusChange($order,$orderNewStatus) {
