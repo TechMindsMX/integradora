@@ -109,7 +109,7 @@ $token = JSession::getFormToken();
             jQuery('form#solicitud button.btn-primary').click(function(){
                 var boton = jQuery(this).prop('id');
 
-                if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') || (boton == 'params')){
+                if( (boton == 'juridica') || (boton == 'personales') || (boton == 'empresa') ){
                     var serializado = jQuery('.tab-pane.active :input').serialize();
                     datos = serializado;
                     datos += '&tab='+boton;
@@ -211,16 +211,6 @@ $token = JSession::getFormToken();
             });
 
             jQuery('#de_cod_postal').trigger('click');
-            <?php
-            }
-            if(!empty($datos->params)){
-            ?>
-            var params = '<?php echo json_encode($datos->params); ?>';
-            var params = eval ("(" + params + ")");
-
-            jQuery.each(params, function(key, value){
-                jQuery('#au_'+key).val(value);
-            });
             <?php
             }
             if(!empty($datos->datos_bancarios)){
@@ -877,20 +867,6 @@ $token = JSession::getFormToken();
         ?>
         <div class="form-actions">
             <button type="button" class="btn btn-primary span3" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-        </div>
-        <?php
-        echo JHtml::_('bootstrap.endTab');
-        echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'params', JText::_('LBL_TAB_AUTHORIZATIONS'));
-        ?>
-        <fieldset>
-            <div class="form-group">
-                <label for="au_params"><?php echo JText::_('LBL_NUM_AUTHORIZATIONS'); ?> *</label>
-                <input type="text" name="au_params" id="au_params" class="au_params" maxlength="2" />
-            </div>
-
-        </fieldset>
-        <div class="form-actions">
-            <button type="button" class="btn btn-primary span3" id="params"><?php echo JText::_('LBL_ENVIAR'); ?></button>
         </div>
         <?php
         echo JHtml::_('bootstrap.endTab');

@@ -393,12 +393,6 @@ class IntegradoController extends JControllerLegacy {
                 );
                 break;
 
-            case 'params':
-                $diccionario = array(
-            'au_params'                  => array('number' => true,     	    'maxlength' => 2, 'required' => true),
-                );
-                break;
-
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
@@ -486,23 +480,6 @@ class IntegradoController extends JControllerLegacy {
                     }
                 }
 
-                break;
-            case 'params':
-                $table = 'integrado_params';
-                $columnas[] = 'integrado_id';
-                $valores[]  = $integrado_id;
-
-                foreach ($data as $key => $value) {
-                    $columna 	= substr($key, 3);
-                    $clave 		= substr($key, 0,3);
-
-                    if($clave == 'au_'){
-                        $columnas[] = $columna;
-                        $valores[] = $db->quote($value);
-                        $updateSet[]	= $db->quoteName($columna).' = '.$db->quote($value);
-                        $valoresvalidaicon[$columna] = $value;
-                    }
-                }
                 break;
             case 'bancos':
                 $table = 'integrado_datos_bancarios';

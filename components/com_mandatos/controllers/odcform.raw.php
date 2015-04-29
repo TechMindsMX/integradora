@@ -206,7 +206,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $odv->account       = $odCompra->dataBank[0]->datosBan_id;
             $odv->paymentMethod = $odCompra->paymentMethod->id;
             $odv->conditions    = 2;
-            $odv->placeIssue    = $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']);
+            $odv->placeIssue    = isset($dataXML->emisor['children'][1]['attrs']['ESTADO']) ? $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']) : $dataXML->emisor['children'][0]['attrs']['ESTADO'];
             $odv->setStatus(3);
 
             foreach ($dataXML->conceptos as $concepto) {
@@ -214,12 +214,10 @@ class MandatosControllerOdcform extends JControllerLegacy {
                     switch($key){
                         case 'DESCRIPCION':
                             $detalle['descripcion'] = $value;
+                            $detalle['producto'] = $value;
                             break;
                         case 'UNIDAD':
                             $detalle['unidad'] = $value;
-                            break;
-                        case 'NOIDENTIFICACION':
-                            $detalle['producto'] = $value;
                             break;
                         case 'CANTIDAD':
                             $detalle['cantidad'] = $value;
