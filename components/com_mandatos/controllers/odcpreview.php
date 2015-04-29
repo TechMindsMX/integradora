@@ -100,7 +100,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->txComision();
                 $this->realizaTx();
 
-                $this->sendEmail();
                 $db->transactionCommit();
 
                 $this->app->redirect( $this->returnUrl, JText::_( 'LBL_ORDER_AUTHORIZED' ) );
@@ -163,6 +162,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             throw new Exception(JText::_('ERR_411_TRANSFERFUNDS_FAILED'));
         }
 
+        $this->sendEmail($txData);
     }
 
     private function txComision($reverse = false){
@@ -203,7 +203,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         JLog::add($logdata, JLog::DEBUG, 'bitacora_auth');
     }
 
-    public function sendEmail()
+    public function sendEmail($txData)
     {
         /*
          *  NOTIFICACIONES 14&33
@@ -225,10 +225,20 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             '$'.number_format($odc->totalAmount, 2),
             strtoupper($odc->receptor->getDisplayName()) );
 
-        $send            = new Send_email();
+        $arrayNotificacion33 = array(
+            $getCurrUser->getDisplayName(),
+            $odc->numOrden,
+            date('d-m-Y'),
+            '$'.number_format($odc->totalAmount, 2),
+            strtoupper($odc->receptor->getDisplayName()),
+            $txData->orden->pastData
+        );
+
+        $send = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
-        $info[]            = $send->sendNotifications('14', $array, $titleArray);
+        $info[] = $send->sendNotifications('14', $array, $titleArray);
+        $info[] = $send->sendNotifications('33', $arrayNotificacion33, $titleArray);
 
         /*
          * Notificaciones 15&34
@@ -238,6 +248,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('15', $array, $titleArrayAdmin);
+        $info[] = $send->sendNotifications('34', $arrayNotificacion33, $titleArrayAdmin);
 
         return $info;
     }
