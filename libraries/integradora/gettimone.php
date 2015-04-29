@@ -1743,7 +1743,7 @@ class getFromTimOne{
 
     public static function convierteFechas($objeto){
         foreach ($objeto as $key => $value) {
-            if( is_numeric(strpos(strtolower($key),'date')) && !empty($value) ){
+            if( is_numeric(strpos(strtolower($key),'date')) && !empty($value) && !(BOOL)strtotime($value) ){
                 $objeto->$key = date('d-m-Y', ($value) );
 
                 $objeto->timestamps = new stdClass();
