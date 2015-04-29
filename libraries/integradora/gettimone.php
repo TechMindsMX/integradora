@@ -2442,7 +2442,15 @@ class sendToTimOne {
         return strtoupper($this->httpType);
     }
 
-    public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
+	/**
+	 * @param $idOrder
+	 * @param $orderType
+	 * @param $orderNewStatus
+	 *
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
+	public function changeOrderStatus($idOrder, $orderType, $orderNewStatus)
     {
         if( is_null($idOrder) || is_null($orderType) || is_null($orderNewStatus) ){
             throw new Exception(JText::_('ERR_413_CHANGEORDERSTATUS'));

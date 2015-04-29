@@ -8,6 +8,10 @@
 
 namespace Integralib;
 
+use getFromTimOne;
+use JFactory;
+use JText;
+
 class Project {
 
 	protected $id_proyyecto;
@@ -33,6 +37,31 @@ class Project {
 				$this->$key = $val;
 			}
 		}
+	}
+
+	/**
+	 * @param $post
+	 * @param $currentValidations
+	 * @param $integradoId
+	 *
+	 * @return mixed
+	 */
+	public static function checkDuplicatedProjectNameForIntegrado( $post, $currentValidations, $integradoId ) {
+		if ( isset( $integradoId ) ) {
+			$integradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
+		}
+
+		$projects = getFromTimOne::getProyects( $integradoId );
+
+		foreach ( $projects as $value ) {
+			if ( strtoupper( $value->name ) == strtoupper( $post['name'] ) && $value->id_proyecto != $post['id_proyecto'] ) {
+				$validacion['success'] = false;
+				$validacion['msg']     = JText::_( 'ERROR_PROJECT_NAME_DUPLICATED' );
+			}
+		}
+		$validacion = isset( $validacion ) ? $validacion : $currentValidations;
+
+		return $validacion;
 	}
 
 	public function isSubProject() {

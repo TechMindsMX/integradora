@@ -89,7 +89,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                         $comision = $this->txComision();
 
                         if ($statusChange && $comision) {
-                            $this->app->enqueueMessage(JText::_('ORDER_PAID'));
+                            $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
 
                             $this->sendNotifications();
                         }
