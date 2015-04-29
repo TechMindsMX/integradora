@@ -32,11 +32,10 @@ class getFromTimOne{
     }
 
     public static function checkUserAuth($auths){
-        $integradoId = JFactory::getSession()->get('integradoId', null, 'integrado');
         $userAsAuth = false;
 
         foreach ($auths as $auth) {
-            if($auth->integradoId === (INT)$integradoId) {
+            if((INT)$auth->userId === (INT)JFactory::getUser()->id) {
                 $userAsAuth = true;
             }
         }
@@ -2469,7 +2468,7 @@ class sendToTimOne {
                 $order->cantidadAuthNecesarias = $auths->emisor;
                 break;
             case 'odc':
-                $order->cantidadAuthNecesarias = 1;
+                $order->cantidadAuthNecesarias = $auths->emisor;;
                 break;
             default:
                 $order->cantidadAuthNecesarias = $auths->totales;
@@ -2482,8 +2481,14 @@ class sendToTimOne {
         $order->hasAllAuths = $order->cantidadAuthNecesarias == count($order->auths);
         $order->canChangeStatus = $this->validStatusChange($order, $orderNewStatus);
 
-        if ( $order->status == 1 && !$order->canChangeStatus && $orderNewStatus == 5 ) {
-            // pasa de esatus 1 (Nuevo) a 3 (En Autorizacion) en caso que no tiene las autrizaciones completas
+        if ( $order->status == 1 && !$order->canChangeStatus && $orderNewStatus == 3 ) {
+            // pasa de estatus 1 (Nuevo) a 3 (En Autorizacion) en caso que no tiene las autrizaciones completas
+            $orderNewStatus = 3;
+            $order->hasAllAuths = true;
+            $order->canChangeStatus = true;
+        }
+
+        if($order->status == 3 && !$order->canChangeStatus && $orderNewStatus == 3){
             $orderNewStatus = 3;
             $order->hasAllAuths = true;
             $order->canChangeStatus = true;
@@ -2518,7 +2523,7 @@ class sendToTimOne {
                 $return = in_array($orderNewStatus, array(3,5,8)) && $order->hasAllAuths;
                 break;
             case 3:
-                $return = in_array($orderNewStatus, array(5,55)) && $order->hasAllAuths;
+                $return = in_array($orderNewStatus, array(3,5,55)) && $order->hasAllAuths;
                 break;
             case 5:
                 if($orderNewStatus < $order->status){

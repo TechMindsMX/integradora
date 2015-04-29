@@ -51,8 +51,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $user = JFactory::getUser();
             $save = new sendToTimOne();
 
-            $this->parametros['userId'] = (INT)$user->id;
-            $this->parametros['authDate'] = time();
+            $this->parametros['userId']      = (INT)$user->id;
+            $this->parametros['authDate']    = time();
+            $this->parametros['integradoId'] = (INT)$this->integradoId;
 
             $save->formatData($this->parametros);
 
@@ -63,45 +64,66 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $odc = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
-            $odc = $odc[0];
-            $proveedor = new IntegradoSimple(isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id);
-            $odvId = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
+            $odc        = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
+            $odc        = $odc[0];
+            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id);
+            $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
 
-            try {
+            try{
                 $db->transactionStart();
+                $save->insertDB( 'auth_odc' );
 
-                $save->insertDB('auth_odc');
+                $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
+                $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
 
-                $this->logEvents(__METHOD__, 'authorizacion_odc', json_encode($save->set));
-
-                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-
-                $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
-
-                $newStatusId = 13;
-                $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
-
-                if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
-                    $save->changeOrderStatus($odvId, 'odv', $newStatusId);
+                if($auths->emisor == count($numAutOrder)) {
+                    $pagar = true;
+                }else{
+                    $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
+                    $pagar = false;
                 }
 
-                $this->txComision();
-                $this->realizaTx();
-
                 $db->transactionCommit();
-
-                $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[$newStatusId]->name));
-                $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
-            } catch (Exception $e) {
+            }catch (Exception $e){
                 $db->transactionRollback();
+                $this->app->redirect($this->returnUrl, 'no se pudo autorizar', 'error');
+            }
 
-                $msg = $e->getMessage();
-                JLog::add($msg, JLog::ERROR, 'error');
-                $this->app->enqueueMessage($msg, 'error');
-                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
+            if($pagar){
+                try {
+                    $db->transactionStart();
 
+                    $this->logEvents(__METHOD__, 'authorizacion_odc', json_encode($save->set));
+
+                    $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
+
+                    $newStatusId = 13;
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
+
+                    if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
+                        $save->changeOrderStatus($odvId, 'odv', $newStatusId);
+                    }
+
+                    $this->txComision();
+                    $this->realizaTx();
+
+                    $db->transactionCommit();
+
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[$newStatusId]->name));
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
+                    $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
+                } catch (Exception $e) {
+                    $db->transactionRollback();
+
+                    $msg = $e->getMessage();
+                    JLog::add($msg, JLog::ERROR, 'error');
+                    $this->app->enqueueMessage($msg, 'error');
+                    $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
+                }
+            }else{
+                $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY', 'error'));
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
