@@ -183,4 +183,18 @@ class OdVenta extends Order {
     {
         $this->totalAmount = $totalAmount;
     }
+
+	public function getRelatedOdc() {
+		return OrderFactory::getOrder( $this->getRelatedOdcId(), 'odc');
+	}
+	public function getRelatedOdcId() {
+		$db = \JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('id_odc'))
+			->from($db->quoteName('#__ordenes_odv_odc_relation'))
+			->where($db->quoteName('id_odv') . ' = ' . $db->quote($this->id));
+		$db->setQuery($query);
+
+		return $db->loadResult();
+	}
 }

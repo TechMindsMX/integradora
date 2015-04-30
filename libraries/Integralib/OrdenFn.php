@@ -116,25 +116,29 @@ class OrdenFn {
 		$obj->pagado->iva   = array ();
 		$obj->pagado->neto  = array ();
 
-		foreach ( $orders as $order ) {
-			$neto  = $neto + $order->subTotalAmount;
-			$iva   = $iva + $order->iva;
-			$total = $total + $order->getTotalAmount();
+		if ( ! empty( $orders ) ) {
+			foreach ( $orders as $order ) {
+				$neto  = $neto + $order->subTotalAmount;
+				$iva   = $iva + $order->iva;
+				$total = $total + $order->getTotalAmount();
 
-			$montoTxs = 0;
-			foreach ( $order->txs as $tx ) {
-				if ( isset( $tx->detalleTx->amount ) ) {
-					$montoTxs                     = $montoTxs + (FLOAT) $tx->detalleTx->amount;
-					$tx->detalleTx->ivaProporcion = (FLOAT) $tx->detalleTx->amount * ( $order->iva / $order->subTotalAmount );
+				$montoTxs = 0;
+				foreach ( $order->txs as $tx ) {
+					if ( isset( $tx->detalleTx->amount ) ) {
+						$montoTxs                     = $montoTxs + (FLOAT) $tx->detalleTx->amount;
+						$tx->detalleTx->ivaProporcion = (FLOAT) $tx->detalleTx->amount * ( $order->iva / $order->subTotalAmount );
+					}
 				}
-			}
-			//TODO verificar IVA de saldo
-			$order->saldo->total = $order->getTotalAmount() - $montoTxs;
-			$order->saldo->iva   = $montoTxs * ( $order->iva / $order->subTotalAmount );
+				//TODO verificar IVA de saldo
+				$factor = $montoTxs / $order->getTotalAmount();
+				$order->saldo->total = $order->getTotalAmount() - $montoTxs;
+				$order->saldo->iva   = $order->iva - ( $factor * $order->iva);
+				$order->saldo->net   = $order->subTotalAmount - ($factor * $order->subTotalAmount);
 
-			$obj->pagado->total[] = $montoTxs;
-			$obj->pagado->iva[]   = $order->saldo->iva;
-			$obj->pagado->neto[]  = $montoTxs - $order->saldo->iva;
+				$obj->pagado->total[] = $montoTxs;
+				$obj->pagado->iva[]   = $order->saldo->iva;
+				$obj->pagado->neto[]  = $montoTxs - $order->saldo->iva;
+			}
 		}
 
 		$obj->pagado->total = array_sum( $obj->pagado->total );
@@ -191,12 +195,61 @@ class OrdenFn {
 			$orderType = $this->order->getOrderType();
 		}
 
-		$query->select($db->quoteName(array('txs.id', 'txs.idTx', 'txs.idIntegrado', 'txs.date', 'txs.idComision', 'piv.idOrden', 'piv.orderType', 'piv.amount'), array('id', 'idTx', 'idIntegrado', 'date', 'idComision', 'idOrden', 'orderType', 'assignedAmount')))
-		      ->from($db->quoteName('#__txs_timone_mandato', 'txs') )
-		      ->join('INNER', $db->quoteName('#__txs_mandatos', 'piv') . ' ON ( txs.id = piv.id )' )
-		      ->where('piv.idOrden = '.$db->quote( $statusId ).' AND piv.orderType = '.$db->quote( $orderType ));
-		$db->setQuery($query);
-		$results = $db->loadObjectList('id');
+		if ($orderType == 'odv') {
+
+			$orderId = $this->order->getRelatedOdcId();
+
+			$query->select( $db->quoteName( array (
+				                                'txs.id',
+				                                'txs.idTx',
+				                                'txs.idIntegrado',
+				                                'txs.date',
+				                                'txs.idComision',
+				                                'piv.idOrden',
+				                                'piv.orderType',
+				                                'piv.amount'
+			                                ), array (
+				                                'id',
+				                                'idTx',
+				                                'idIntegrado',
+				                                'date',
+				                                'idComision',
+				                                'idOrden',
+				                                'orderType',
+				                                'assignedAmount'
+			                                ) ) )
+			      ->from( $db->quoteName( '#__txs_timone_mandato', 'txs' ) )
+			      ->join( 'INNER', $db->quoteName( '#__txs_mandatos', 'piv' ) . ' ON ( txs.id = piv.id )' )
+			      ->where( 'piv.idOrden = ' . $db->quote( $orderId ) . ' AND piv.orderType = ' . $db->quote( 'odc' ) );
+			$db->setQuery( $query );
+			$results = $db->loadObjectList( 'id' );
+
+		} else {
+			$query->select( $db->quoteName( array (
+				                                'txs.id',
+				                                'txs.idTx',
+				                                'txs.idIntegrado',
+				                                'txs.date',
+				                                'txs.idComision',
+				                                'piv.idOrden',
+				                                'piv.orderType',
+				                                'piv.amount'
+			                                ), array (
+				                                'id',
+				                                'idTx',
+				                                'idIntegrado',
+				                                'date',
+				                                'idComision',
+				                                'idOrden',
+				                                'orderType',
+				                                'assignedAmount'
+			                                ) ) )
+			      ->from( $db->quoteName( '#__txs_timone_mandato', 'txs' ) )
+			      ->join( 'INNER', $db->quoteName( '#__txs_mandatos', 'piv' ) . ' ON ( txs.id = piv.id )' )
+			      ->where( 'piv.idOrden = ' . $db->quote( $statusId ) . ' AND piv.orderType = ' . $db->quote( $orderType ) );
+			$db->setQuery( $query );
+			$results = $db->loadObjectList( 'id' );
+		}
 
 		foreach ( $results as $tx ) {
 			$respose = getFromTimOne::getTxDataByTxId($tx->idTx);

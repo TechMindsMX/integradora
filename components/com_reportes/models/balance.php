@@ -14,12 +14,10 @@ class ReportesModelBalance extends JModelItem {
 	protected $cancelUrl;
 
 	public function generateBalance($vars) {
-		$r = new ReportBalance( array('balanceId'=>null, 'integradoId' => $vars['integradoId']) );
+		$r = new \Integralib\ReportBalance( array('balanceId'=>null, 'integradoId' => $vars['integradoId']) );
 		$r->generateBalance();
 		$report = $r;
 
-		$rtxs = new ReportBalanceTxs( array('balanceId'=>$vars['id'], 'integradoId' => $vars['integradoId']) );
-		$rtxs->generateBalance($vars['year']);
 		return $report;
 	}
 }

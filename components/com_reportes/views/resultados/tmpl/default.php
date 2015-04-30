@@ -2,7 +2,10 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
-JHTML::_('behavior.calendar');
+
+$this->document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
+$this->document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
+$this->document->addStyleSheet('//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css');
 
 $integ      = $this->integrado;
 $report     = $this->reporte;
@@ -32,6 +35,7 @@ $egresos = $report->getEgresos();
         }
 
         jQuery(document).ready(function(){
+	        jQuery('.datepicker').datepicker();
             jQuery('#changePeriod').on('click',cambiarPeriodo);
             jQuery('#proyecto').on('change',filtraProyectos);
         });
@@ -41,13 +45,13 @@ $egresos = $report->getEgresos();
         <div class="header">
             <div class="span6">
                 <h3>
-                    <?php echo JText::_('INTEGRADORA_NAME'); ?>
+                    <?php echo $this->integradora->getDisplayName(); ?>
                 </h3>
                 <p>
-                    <?php echo JText::_('INTEGRADORA_ADDRESS'); ?>
+                    <?php echo $this->integradora->getAddressFormatted(); ?>
                 </p>
                 <p>
-                    <?php echo JText::_('INTEGRADORA RFC'); ?>
+                    <?php echo $this->integradora->getIntegradoRfc(); ?>
                 </p>
             </div>
 
@@ -76,18 +80,22 @@ $egresos = $report->getEgresos();
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d', $report->startPeriod);
-                echo JHTML::_('calendar',$default,'startDate', 'startDate', $format = '%Y-%m-%d', $attsCal);
+                $default = date('d-m-Y', $report->startPeriod);
                 ?>
+	            <div class="form-group">
+		            <input type="text" name="startDate" id="startDate" class="datepicker" value="<?php echo $default; ?>" readonly />
+	            </div>
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('Y-m-d',$report->endPeriod);
-                echo JHTML::_('calendar',$default,'endDate', 'endDate', $format = '%Y-%m-%d', $attsCal);
+                $default = date('d-m-Y',$report->endPeriod);
                 ?>
+	            <div class="form-group">
+		            <input type="text" name="endDate" id="endDate" class="datepicker" value="<?php echo $default; ?>" readonly />
+	            </div>
             </div>
         </div>
         <div class="row-fluid">
@@ -150,35 +158,39 @@ $egresos = $report->getEgresos();
             </thead>
             <tbody>
             <?php
-            foreach ($report->getIncomeOrders() as $orden) {
-                foreach ($orden->txs as $tx)
-                {
-                    ?>
-                    <tr class="row">
-                        <td><?php echo date('d-m-Y', $tx->date); ?></td>
-                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
-	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Cobrado'; ?></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net, 2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva, 2) ; ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
-                    </tr>
-                <?php
-                }
-                if ($orden->getStatus()->id <= 13) {
-                    ?>
-                    <tr class="row">
-	                    <?php
-	                        $displayDate = (isset($orden->timestamps->paymentDate) && !empty($orden->timestamps->paymentDate) ) ? $orden->timestamps->paymentDate : $orden->getCreatedDate();
+            $incomeOrders = $report->getIncomeOrders();
+            if ( ! empty( $incomeOrders ) ) {
+	            foreach ($incomeOrders as $orden) {
+	                foreach ($orden->txs as $tx)
+	                {
 	                    ?>
-                        <td><?php echo date('d-m-Y', $displayDate); ?></td>
-                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
-	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxC'; ?></td>
-                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
-                    </tr>
-                <?php
-                }
+	                    <tr class="row">
+	                        <td><?php echo date('d-m-Y', $tx->date); ?></td>
+	                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+		                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Cobrado'; ?></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net, 2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva, 2) ; ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2) ; ?></div></td>
+	                    </tr>
+	                <?php
+	                }
+	                if ($orden->saldo->total > 0) {
+	                    ?>
+	                    <tr class="row">
+		                    <?php
+		                        $displayDate = (isset($orden->timestamps->paymentDate) && !empty($orden->timestamps->paymentDate) ) ? $orden->timestamps->paymentDate : $orden->getCreatedDate();
+		                        $displayDate = (BOOL)strtotime( $displayDate ) ? $displayDate : date('d-m-Y', $displayDate);
+		                    ?>
+	                        <td><?php echo $displayDate; ?></td>
+	                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+		                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxC'; ?></td>
+	                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
+	                    </tr>
+	                <?php
+	                }
+	            }
             }
             ?>
             <tr class="row">
@@ -202,31 +214,34 @@ $egresos = $report->getEgresos();
             </thead>
             <tbody>
             <?php
-            foreach ($report->getExpenseOrders() as $orden) {
-                foreach ($orden->txs as $tx) {
-                    ?>
-                    <tr class="row">
-                        <td><?php echo date('d-m-Y', $tx->date); ?></td>
-	                    <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
-	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Pagado'; ?></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net - $tx->detalleTx->iva,2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva,2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2); ?></div></td>
-                    </tr>
-                <?php
-                }
-                if($orden->saldo->total > 0){
-                    ?>
-                    <tr class="row">
-                        <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
-                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
-	                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxP'; ?></td>
-                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->total - $orden->saldo->iva), 2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
-                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
-                    </tr>
-                <?php
-                }
+            $expenseOrders = $report->getExpenseOrders();
+            if ( ! empty( $expenseOrders ) ) {
+	            foreach ( $expenseOrders as $orden) {
+	                foreach ($orden->txs as $tx) {
+	                    ?>
+	                    <tr class="row">
+	                        <td><?php echo date('d-m-Y', $tx->date); ?></td>
+		                    <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+		                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - Pagado'; ?></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->net,2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->iva,2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($tx->detalleTx->amount,2); ?></div></td>
+	                    </tr>
+	                <?php
+	                }
+	                if($orden->saldo->total > 0){
+	                    ?>
+	                    <tr class="row">
+	                        <td><?php echo date('d-m-Y', $orden->timestamps->paymentDate); ?></td>
+	                        <td><?php echo $orden->getReceptor()->getDisplayName(); ?></td>
+		                    <td><?php echo $orden->getOrderType() . '-'.$orden->getId() . ' - CxP'; ?></td>
+	                        <td><div class="text-right">$<?php echo number_format( ($orden->saldo->net), 2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($orden->saldo->iva,2); ?></div></td>
+	                        <td><div class="text-right">$<?php echo number_format($orden->saldo->total,2); ?></div></td>
+	                    </tr>
+	                <?php
+	                }
+	            }
             }
             ?>
             <tr class="row">

@@ -14,6 +14,7 @@ jimport('integradora.integrado');
 class ReportesViewResultados extends JViewLegacy
 {
 	// Overwriting JView display method
+	public $integradora;
 	protected $integradoId;
     protected $permisos;
 	protected $reporte;
@@ -24,6 +25,7 @@ class ReportesViewResultados extends JViewLegacy
 		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
         $this->integrado                    = new IntegradoSimple($this->integradoId);
+        $this->integradora                  = new IntegradoSimple(1);
         $this->reporte                      = $this->get('Reporte');
         $this->proyectos                    = $this->get('Proyectos');
 
