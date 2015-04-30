@@ -1,4 +1,6 @@
 <?php
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted Access');
 jimport('joomla.application.component.modelitem');
 jimport('integradora.integrado');
@@ -43,7 +45,8 @@ class MandatosModelMutuoslist extends JModelItem {
             if($this->data->integradoId == $value->integradoIdE){
                 $value->status = getFromTimOne::getOrderStatusName($value->status);
                 $auths = getFromTimOne::getOrdenAuths($value->id, 'mutuo_auth');
-                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths);
+                $authsReq = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $value->integradoIdE ), new IntegradoSimple( $value->integradoIdR ) );
+                $value->integradoHasAuth = count($auths) == $authsReq->totales;
                 $mutuosAcredor[] = $value;
 
             }
@@ -62,7 +65,8 @@ class MandatosModelMutuoslist extends JModelItem {
             if($this->data->integradoId == $value->integradoIdR){
                 $value->status = getFromTimOne::getOrderStatusName($value->status);
                 $auths = getFromTimOne::getOrdenAuths($value->id, 'mutuo_auth');
-                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths);
+                $authsReq = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $value->integradoIdE ), new IntegradoSimple( $value->integradoIdR ) );
+                $value->integradoHasAuth = count($auths) == $authsReq->totales;
                 $mutuosDeudor[] = $value;
             }
         }

@@ -60,6 +60,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Duración</th>
         <th>Estatus</th>
         <th>Autorización / Ordenes de Pago</th>
+        <th>Edición</th>
     </tr>
     </thead>
     <tbody>
@@ -99,8 +100,8 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo round($value->duracion,2); ?> años</td>
             <td><?php echo $value->status->name; ?></td>
+            <td><?php echo $odp; ?>
             <td><?php echo $edit; ?></td>
-            <?php echo $odp; ?>
         </tr>
     <?php }?>
     </tbody>

@@ -70,6 +70,9 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_INSUFFIENT_FUND'), 'error');
             }
 
+            $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
+            $check = getFromTimOne::checkUserAuth($auths);
+
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
