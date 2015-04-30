@@ -12,10 +12,12 @@ $cancelUrl = 'index.php?option=com_mandatos&view=txsinmandatolist';
 
 $order = $this->orders->order;
 
-echo $this->loadTemplate('tx_head');
 ?>
 
 <div class="row">
+	<div class="span6">
+		<?php echo $this->loadTemplate('tx_head'); ?>
+		</div>
 	<div class="span6">
 		<div style="background-color: #eeeeee; padding: 2em;">
 			<h3><?php echo JText::_('COM_MANDATOS_LIST_ORDER_DATA'); ?></h3>
