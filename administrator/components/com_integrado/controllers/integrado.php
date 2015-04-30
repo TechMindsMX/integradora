@@ -310,6 +310,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		$project->setIntegradoId($this->integradoId);
 		$project->name = JText::_('DEFAULT_PTOJECT_NAME');
 		$project->description = JText::_('DEFAULT_PROJECT_DESC');
+		$project->setStatus(1);
 		$project->setParentId(0);
 
 		$create = $project->checkDuplicatedProjectNameForIntegrado((array)$project, 'crear', $this->integradoId);

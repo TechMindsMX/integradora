@@ -14,7 +14,7 @@ use JText;
 
 class Project {
 
-	protected $id_proyyecto;
+	protected $id_proyecto;
 	protected $parentId;
 	public $name;
 	public $description;
