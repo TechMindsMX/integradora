@@ -1,4 +1,7 @@
 <?php
+use Integralib\OdRetiro;
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -45,11 +48,10 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $save                         = new sendToTimOne();
             $this->parametros['userId']   = (INT)$user->id;
             $this->parametros['authDate'] = time();
-            $save->formatData($this->parametros);
-            $auths                        = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
             $check                        = getFromTimOne::checkUserAuth($auths);
+            $db                           = JFactory::getDbo();
 
-            $logdata = implode(
+            $logdata                      = implode(
                 ' | ',
                 array(
                     JFactory::getUser()->id,
@@ -59,58 +61,88 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                     )
                 )
             );
-
             JLog::add($logdata, JLog::DEBUG, 'bitacora');
+
+            $save->formatData($this->parametros);
 
             //Si no tiene Fondos se redirecciona.
             if (!$enoughBalance) {
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_INSUFFIENT_FUND'), 'error');
             }
 
-
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($check, $this->parametros) ) ) );
-            JLog::add($logdata, JLog::DEBUG, 'bitacora');
+            try{
+                $db->transactionStart();
 
-            $resultado = $save->insertDB('auth_odr');
+                $odr        = new OdRetiro(null, $this->parametros['idOrden']);
+                $logdata    = implode(' | ',
+                    array(JFactory::getUser()->id,
+                          JFactory::getSession()->get('integradoId', null, 'integrado'),
+                          __METHOD__,
+                          json_encode( array($check, $this->parametros)
+                          )
+                    )
+                );
+                JLog::add($logdata, JLog::DEBUG, 'bitacora');
 
-            if($resultado) {
-                // autorización guardada
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
+                $resultado = $save->insertDB('auth_odr');
+                $auths     = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
+                $authsReq  = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $odr->getEmisor()->id ), new IntegradoSimple( $odr->getReceptor()->id ) );
 
-                if($statusChange) {
-                    $cashOut = $this->cashout();
-
-                    if ($cashOut) {
-                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
-                        $comision = $this->txComision();
-
-                        if ($statusChange && $comision) {
-                            $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
-
-                            $this->sendNotifications();
-                        }
-                    } else {
-                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
-
-                        if($statusChange) {
-                            $save->deleteDB('flpmu_auth_odr', 'idOrden = ' . $this->parametros['idOrden'], ' AND userId = ' . JFactory::getUser()->id);
-                        }else{
-                            $this->app->enqueueMessage(JText::_('ERROR_PLATAFORM_CONTACT_ADMIN'));
-                        }
-                        $this->app->enqueueMessage(JText::_('ORDER_NO_PAID'));
-                    }
-
-                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                if($authsReq->emisor == count($auths)) {
+                    $pagar = true;
                 }else{
-                    $this->app->enqueueMessage(JText::_('ORDER_NOT_STATUS_CHANGED'));
-                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                    $save->changeOrderStatus($this->parametros['idOrden'],'odr',3);
+                    $pagar = false;
+                }
+
+                $db->transactionCommit();
+            }catch (Exception $e){
+                $db->transactionRollback();
+                exit;
+            }
+
+            if($pagar){
+                if($resultado) {
+                    // autorización guardada
+                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
+
+                    if($statusChange) {
+                        $cashOut = $this->cashout();
+
+                        if ($cashOut) {
+                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
+                            $comision = $this->txComision();
+
+                            if ($statusChange && $comision) {
+                                $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
+
+                                $this->sendNotifications();
+                            }
+                        } else {
+                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
+
+                            if($statusChange) {
+                                $save->deleteDB('flpmu_auth_odr', 'idOrden = ' . $this->parametros['idOrden'], ' AND userId = ' . JFactory::getUser()->id);
+                            }else{
+                                $this->app->enqueueMessage(JText::_('ERROR_PLATAFORM_CONTACT_ADMIN'));
+                            }
+                            $this->app->enqueueMessage(JText::_('ORDER_NO_PAID'));
+                        }
+
+                        $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                    }else{
+                        $this->app->enqueueMessage(JText::_('ORDER_NOT_STATUS_CHANGED'));
+                        $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                    }
+                }else{
+                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
             }else{
-                $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
