@@ -199,7 +199,7 @@ class OrdenFn {
 
 			if (is_a($this->order, 'stdClass')) {
 				$odv = OrderFactory::getOrder($this->order->id, 'odv');
-				$orderId = $odv->getId();
+				$orderId = $odv->getRelatedOdcId();
 			} else {
 				$orderId = $this->order->getRelatedOdcId();
 			}
