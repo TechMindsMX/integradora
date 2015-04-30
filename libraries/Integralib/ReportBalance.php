@@ -14,23 +14,28 @@ class ReportBalance extends \IntegradoOrders {
 	protected $fechaInicio;
 	protected $fechaFin;
 	protected $filtroProyect;
-	protected $ingresos;
-	protected $egresos;
+	protected $activos;
+	protected $pasivos;
+	private $integradoId;
 
 	function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
 		$this->fechaInicio  = $fechaInicio;
 		$this->fechaFin     = $fechaFin;
 		$this->filtroProyect = $proyecto;
+		$this->integradoId = $integradoId;
+
+		$this->setTimoneUserTxs();
+		$this->getOrderForTxs();
 
 		$this->orders = $this->findOrders( $integradoId );
 	}
 
-	public function calculateIngresos(){
-		$this->ingresos = $this->getData( $this->getIncomeOrders() );
+	public function calculateActivos(){
+		$this->activos->banco = $this->getData( $this->getIncomeOrders() )->total - $this->getData( $this->getExpenseOrders() )->total;
 	}
 
-	public function calculateEgresos(){
-		$this->egresos = $this->getData( $this->getExpenseOrders() );
+	public function calculatePasivos(){
+		$this->pasivos = $this->getData( $this->getExpenseOrders() );
 	}
 
 	public function getData($orders){
@@ -49,8 +54,16 @@ class ReportBalance extends \IntegradoOrders {
 				'type' => 'odc'
 			),
 			array(
+				'table' => '#__ordenes_retiro',
+				'type' => 'odr'
+			),
+			array(
 				'table' => '#__ordenes_venta',
 				'type' => 'odv'
+			),
+			array(
+				'table' => '#__ordenes_deposito',
+				'type' => 'odd'
 			),
 		);
 
@@ -65,15 +78,15 @@ class ReportBalance extends \IntegradoOrders {
 	/**
 	 * @return mixed
 	 */
-	public function getIngresos() {
-		return $this->ingresos;
+	public function getActivos() {
+		return $this->activos;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function getEgresos() {
-		return $this->egresos;
+	public function getPasivos() {
+		return $this->pasivos;
 	}
 
 	/**
@@ -153,6 +166,31 @@ class ReportBalance extends \IntegradoOrders {
 
 	public function getExpenseOrders() {
 		return $this->orders->odc;
+	}
+
+	public function setTimoneUserTxs() {
+		$integ = new \IntegradoSimple($this->integradoId);
+		$integ->getTimOneData();
+
+		$req = new TimOneRequest();
+
+		$result = $req->getUserTxs($integ->timoneData->timoneUuid);
+
+		$this->timoneTxs = json_decode($result->data);
+		$this->timoneTxs = json_decode('[{"id":51,"origin":"c2d29e28ac2746ebbb9e9936e20b2a25","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"fb43d0e19ad0495cbc1acb64a972ae7a","reference":null,"timestamp":1430252163205,"type":"TRANSFER","amount":500.00},{"id":53,"origin":"c2d29e28ac2746ebbb9e9936e20b2a25","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"fe39058d641f427fb874db113f4e36ae","reference":null,"timestamp":1430252193722,"type":"TRANSFER","amount":100.00},{"id":56,"origin":"3c095ff8355c4fd88a7f24be74dd8fcc","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"6489b6b69dba4fd8a6ddd84da35104c8","reference":null,"timestamp":1430257595488,"type":"TRANSFER","amount":232.00},{"id":57,"origin":"3c095ff8355c4fd88a7f24be74dd8fcc","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"77dba371fcc440c198cb5a27b66153c8","reference":null,"timestamp":1430257616806,"type":"TRANSFER","amount":348.00},{"id":58,"origin":"3c095ff8355c4fd88a7f24be74dd8fcc","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"38e04a5e3b004c7185cf9cb23365b914","reference":null,"timestamp":1430257627085,"type":"TRANSFER","amount":290.00},{"id":59,"origin":"3c095ff8355c4fd88a7f24be74dd8fcc","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"c8d1de44067c44f08b9705ff9fa11838","reference":null,"timestamp":1430257634139,"type":"TRANSFER","amount":174.00},{"id":67,"origin":"38d021ada4134c34ba5b66dba9665482","destination":"3c095ff8355c4fd88a7f24be74dd8fcc","uuid":"b3bd4d9d72724126b76aaa032eaed2cb","reference":null,"timestamp":1430344301380,"type":"TRANSFER","amount":116.00},{"id":68,"origin":"38d021ada4134c34ba5b66dba9665482","destination":"3c095ff8355c4fd88a7f24be74dd8fcc","uuid":"a2e278427e0a4945a0d807216cfe91b0","reference":null,"timestamp":1430344307593,"type":"TRANSFER","amount":232.00},{"id":69,"origin":"38d021ada4134c34ba5b66dba9665482","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"932c623930004a5bb9334c60740d63e0","reference":null,"timestamp":1430344314708,"type":"CASH_OUT","amount":174.00},{"id":70,"origin":"38d021ada4134c34ba5b66dba9665482","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"c7ae87742f5843b1a215afcc9805f2cc","reference":null,"timestamp":1430344324445,"type":"CASH_OUT","amount":300.00},{"id":71,"origin":"38d021ada4134c34ba5b66dba9665482","destination":"38d021ada4134c34ba5b66dba9665482","uuid":"63595b39b08b4401a028a99f5c5ca430","reference":null,"timestamp":1430344331472,"type":"CASH_OUT","amount":50.00}]');
+	}
+
+	private function getOrderForTxs() {
+		$db = \JFactory::getDbo();
+
+		$query = $db->getQuery(true)
+			->select($db->quoteName(array('txs.*', 'piv.*')))
+			->from($db->quoteName('#__txs_timone_mandato', 'txs'))
+			->join('left', $db->quoteName('#__txs_mandatos', 'piv').' ON ((txs.id = piv.id))')
+			->where(" ((txs.date >= '1427846400' AND txs.date <= '1430352000') OR (txs.date <= '1430352000' AND txs.date <= '1430352000')) AND txs.idTx = '6489b6b69dba4fd8a6ddd84da35104c8' ");
+		$db->setQuery($query);
+
+		$result = $db->loadObjectList();
 	}
 
 }
