@@ -30,9 +30,9 @@ class ReportesModelReporteslistados extends JModelItem {
     }
 
     public function getBalanceList (){
-        $list = \Integralib\ReportBalance::getIntegradoExistingBalanceList( $this->integradoId );
+//        $list = \Integralib\ReportBalance::getIntegradoExistingBalanceList( $this->integradoId );
 
-        return $list;
+//        return $list;
     }
 
     public function getflujo (){

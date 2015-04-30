@@ -197,8 +197,12 @@ class OrdenFn {
 
 		if ($orderType == 'odv') {
 
-			$orderId = $this->order->getRelatedOdcId();
-
+			if (is_a($this->order, 'stdClass')) {
+				$odv = OrderFactory::getOrder($this->order->id, 'odv');
+				$orderId = $odv->getId();
+			} else {
+				$orderId = $this->order->getRelatedOdcId();
+			}
 			$query->select( $db->quoteName( array (
 				                                'txs.id',
 				                                'txs.idTx',
