@@ -1,6 +1,4 @@
 <?php
-use Integralib\OdCompra;
-use Integralib\OdVenta;
 use Integralib\OrdenFn;
 
 defined('_JEXEC') or die('Restricted access');
@@ -61,13 +59,21 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $check = getFromTimOne::checkUserAuth($auths);
 
             if ($check) {
-                $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_USER_AUTHORIZED'), 'error');
+                $this->app->redirect($this->returnUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
             $odc        = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
             $odc        = $odc[0];
             $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id);
             $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
+
+	        if (!is_null($odvId)) {
+		        $odv = \Integralib\OrderFactory::getOrder($odvId, 'odv');
+		        if ( $odv->getStatus() != 5 ) {
+			        $this->app->enquemessage(JText::_('ERR_416_AUTH_ODC'));
+					$this->app->redirect($this->returnUrl);
+		        }
+	        }
 
             try{
                 $db->transactionStart();
