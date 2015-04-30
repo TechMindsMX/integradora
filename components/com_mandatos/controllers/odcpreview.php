@@ -70,7 +70,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 	        if (!is_null($odvId)) {
 		        $odv = \Integralib\OrderFactory::getOrder($odvId, 'odv');
 		        if ( $odv->getStatus()->id != 5 ) {
-			        $this->app->enqueueMessage(JText::_('ERR_416_AUTH_ODC'));
+			        $this->app->enqueueMessage(JText::_('ERR_416_AUTH_ODC'), 'error');
 					$this->app->redirect($this->returnUrl);
 		        }
 	        }
