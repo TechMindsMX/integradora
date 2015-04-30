@@ -100,7 +100,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo $value->quantityPayments; ?></td>
             <td><?php echo round($value->duracion,2); ?> años</td>
             <td><?php echo $value->status->name; ?></td>
-            <td><?php echo $odp; ?>
+            <?php echo $odp; ?>
             <td><?php echo $edit; ?></td>
         </tr>
     <?php }?>

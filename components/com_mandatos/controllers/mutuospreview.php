@@ -48,11 +48,15 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
 
-            $check = getFromTimOne::checkUserAuth($auths);
-            $numAutOrder = getFromTimOne::getOrdenAuths($this->orden->id, 'mutuo_auth');
+//            $check = getFromTimOne::checkUserAuth($auths);
+            $check = false;
 
-            if($auths->totales != count($numAutOrder)) {
-                $check = false;
+            foreach ($auths as $auth) {
+                if( $auth->integradoId == $this->parametros['integradoId'] ){
+                    if( $auth->userId == $user->id ){
+                        $check = true;
+                    }
+                }
             }
 
             if($check){
