@@ -396,7 +396,7 @@ class IntegradoController extends JControllerLegacy {
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
-                    'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 10,  'minlength'=>10,   'required' => true),
+                    'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 11,  'minlength'=>11,   'required' => true),
                     'db_banco_codigo'            => array('alphaNumber' => true,	                    'maxlength' => 3,   'required' => true),
                     'db_banco_sucursal'          => array('alphaNumber' => true,	                    'maxlength' => 10,  'required' => true),
                 );

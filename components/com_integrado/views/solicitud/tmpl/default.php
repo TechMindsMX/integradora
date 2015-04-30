@@ -885,7 +885,7 @@ $token = JSession::getFormToken();
             </div>
             <div class="form-group">
                 <label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?> *</label>
-                <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
+                <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="11" />
             </div>
             <div class="form-group">
                 <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?> *</label>
