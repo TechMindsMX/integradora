@@ -27,7 +27,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
         $orden                           = getFromTimOne::getMutuos(null, $this->parametros['idOrden']);
         $this->orden                     = $orden[0];
-//        $this->$redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
+        $this->redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
 
         parent::__construct();
     }
@@ -47,8 +47,6 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $save->formatData($this->parametros);
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
-
-//            $check = getFromTimOne::checkUserAuth($auths);
             $check = false;
 
             foreach ($auths as $auth) {
@@ -62,7 +60,6 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
-
             $this->checkSaldoSuficienteOrRedirectWithError($integradoE);
             $db = JFactory::getDbo();
 
@@ -86,7 +83,6 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             }catch (Exception $e){
                 $db->transactionRollback();
                 $pagar = false;
-                exit;
             }
 
             if($pagar){
@@ -238,7 +234,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
     private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){
         $integradoSimple->getTimOneData();
         if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
-            $this->app->redirect($this->$redirectUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
+            $this->app->redirect($this->redirectUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
         }
     }
 
@@ -248,7 +244,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
         $montoComision = 0;
         if (isset($comisiones)) {
-            $montoComision = getFromTimOne::calculaComision($orden, 'MUTUO', $this->comisiones);
+            $montoComision = getFromTimOne::calculaComision($orden, 'MUTUO', $comisiones);
         }
 
         $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
