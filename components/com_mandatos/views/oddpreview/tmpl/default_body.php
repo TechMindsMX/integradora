@@ -14,6 +14,7 @@ $params 	    = $app->input->getArray();
 $integrado 	    = $this->integCurrent->integrados[0];
 $number2string  = new AifLibNumber();
 
+$integ = new IntegradoSimple($integrado->integrado->integrado_id);
 ?>
 
 <div class="hidden-print form-group">
@@ -62,7 +63,7 @@ $number2string  = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_empresa->razon_social; ?>
+				<?php echo $integ->getContactName(); ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>

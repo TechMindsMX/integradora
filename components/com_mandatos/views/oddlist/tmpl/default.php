@@ -80,6 +80,10 @@ if(is_null($ordenes) || empty($ordenes)){
                         $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&idOrden=' . $value->id);
                         $auth_button = '<a class="btn btn-primary" id=baja_"' . $value->id . '" name="baja" href="' . $url_auth . '">' . JText::_("LBL_AUTORIZE") . '</a>';
                         $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform&idOrden=' . $value->id . '">' . JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO') . '</a>';
+                    } elseif (($value->status->id == 3) && $this->permisos['canAuth']) {
+                        $url_auth = JRoute::_('index.php?option=com_mandatos&view=oddpreview&layout=confirmauth&idOrden=' . $value->id);
+                        $auth_button = '<a class="btn btn-primary" id=baja_"' . $value->id . '" name="baja" href="' . $url_auth . '">' . JText::_("LBL_AUTORIZE") . '</a>';
+                        $edit_button = JText::_('LBL_NOT_EDITABLE');
                     } elseif ($value->status->id == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']) {
                         $auth_button = JText::_("LBL_CANT_AUTHORIZE");
                         $edit_button = '<a class="btn btn-primary" href="index.php?option=com_mandatos&view=oddform&idOrden=' . $value->id . '">' . JText::_('COM_MANDATOS_PROYECTOS_LISTADO_EDITAR_PROYECTO') . '</a>';

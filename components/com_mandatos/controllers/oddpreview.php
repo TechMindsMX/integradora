@@ -1,4 +1,7 @@
 <?php
+use Integralib\OdDeposito;
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -18,13 +21,13 @@ class MandatosControllerOddpreview extends JControllerAdmin {
     private $orden;
 
     function authorize() {
-        $this->app 			= JFactory::getApplication();
-        $this->parametros['idOrden']	= $this->app->input->get('idOrden', null, 'INT');
+        $this->app 			         = JFactory::getApplication();
+        $session                     = JFactory::getSession();
+        $db                          = JFactory::getDbo();
 
-        $session = JFactory::getSession();
-        $this->integradoId = $session->get('integradoId', null,'integrado');
-
-        $this->permisos     = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+        $this->parametros['idOrden'] = $this->app->input->get('idOrden', null, 'INT');
+        $this->integradoId           = $session->get('integradoId', null,'integrado');
+        $this->permisos              = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -45,9 +48,31 @@ class MandatosControllerOddpreview extends JControllerAdmin {
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $resultado = $save->insertDB('auth_odd');
+            try{
+                $db->transactionStart();
 
-            if($resultado) {
+                $odd        = new OdDeposito(null, $this->parametros['idOrden']);
+                $resultado = $save->insertDB('auth_odd');
+
+                $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $odd->getEmisor()->id ), new IntegradoSimple( $odd->getReceptor()->id ) );
+                $numAutOrder = getFromTimOne::getOrdenAuths($odd->getId(), 'odd_auth');
+
+                if($auths->emisor == count($numAutOrder)) {
+                    $pagar = true;
+                }else{
+                    $save->changeOrderStatus($this->parametros['idOrden'],'odd',3);
+                    $pagar = false;
+                }
+
+                $db->transactionCommit();
+            }catch (Exception $e){
+                $db->transactionRollback();
+                exit;
+            }
+
+
+            if($pagar){
+                if($resultado) {
                 // autorización guardada
 
                 $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
@@ -65,6 +90,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_AUTHORIZED'));
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+            }
+            }else{
+                $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar

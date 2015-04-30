@@ -7,7 +7,7 @@ $returnUrl = JRoute::_('index.php?option=com_mandatos&view=oddlist');
 
         <legend class="container botones clearfix form-actions">
         <?php
-        if($this->permisos['canAuth'] && $this->odd->status->id == 1 ):
+        if($this->permisos['canAuth'] && $this->odd->status->id == 1 || $this->odd->status->id == 3 ):
             $authorizeURL = JRoute::_('index.php?option=com_mandatos&view=oddpreview&task=oddpreview.authorize&idOrden='.$this->odd->id);
         ?>
         	<p class="text-warning">
