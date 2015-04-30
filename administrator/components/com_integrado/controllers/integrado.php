@@ -320,7 +320,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 			$save = "ya existe el proyecto por defecto para el integrado ".$this->integradoId;
 		}
 
-		JLog::add(json_encode($save), JLog::INFO);
+		JLog::add(json_encode($save), JLog::DEBUG);
 	}
 }
 
