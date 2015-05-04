@@ -81,16 +81,12 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
     public function sendEmail()
     {
-        /*NOTIFICACIONES 4*/
+        /*NOTIFICACIONES 5*/
         $getCurrInteg = new IntegradoSimple($this->producto->integradoId);
-
         $sendEmail = new Send_email();
         $array = array($getCurrInteg->user->name, $this->producto->productName, $getCurrInteg->user->username, date('d-m-Y'));
-
         $sendEmail->setIntegradoEmailsArray( $getCurrInteg );
-
-        $reportEmail = $sendEmail->sendNotifications('4', $array);
-
+        $reportEmail = $sendEmail->sendNotifications('5', $array);
     }
 
     /**
