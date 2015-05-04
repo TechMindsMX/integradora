@@ -43,7 +43,7 @@ class MandatosModelMutuoslist extends JModelItem {
             if($this->data->integradoId == $value->integradoIdE){
                 $value->status = getFromTimOne::getOrderStatusName($value->status);
                 $auths = getFromTimOne::getOrdenAuths($value->id, 'mutuo_auth');
-                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths);
+                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths, $this->data->integradoId);
                 $mutuosAcredor[] = $value;
 
             }
@@ -62,7 +62,7 @@ class MandatosModelMutuoslist extends JModelItem {
             if($this->data->integradoId == $value->integradoIdR){
                 $value->status = getFromTimOne::getOrderStatusName($value->status);
                 $auths = getFromTimOne::getOrdenAuths($value->id, 'mutuo_auth');
-                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths);
+                $value->integradoHasAuth = getFromTimOne::checkUserAuth($auths, $this->data->integradoId);
                 $mutuosDeudor[] = $value;
             }
         }

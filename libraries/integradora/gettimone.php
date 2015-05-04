@@ -31,11 +31,11 @@ class getFromTimOne{
         return $authorizations;
     }
 
-    public static function checkUserAuth($auths){
+    public static function checkUserAuth($auths, $integradoId){
         $userAsAuth = false;
 
         foreach ($auths as $auth) {
-            if((INT)$auth->userId === (INT)JFactory::getUser()->id) {
+            if((INT)$auth->userId === (INT)JFactory::getUser()->id && $auth->integradoId == $integradoId) {
                 $userAsAuth = true;
             }
         }

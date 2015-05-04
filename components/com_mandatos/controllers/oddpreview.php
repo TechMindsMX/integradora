@@ -42,7 +42,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odd_auth');
 
-            $check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
 
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
