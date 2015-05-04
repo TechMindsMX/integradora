@@ -310,6 +310,9 @@ class IntegradoController extends JControllerLegacy {
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
 
+        if($response['safeComplete'] == true && $input->get('tab', null, 'STRING')== 'personales'){
+          $this->sendEmail();
+        }
         // Get the document object.
         $document = JFactory::getDocument();
         // Set the MIME type for JSON output.
@@ -735,7 +738,6 @@ class IntegradoController extends JControllerLegacy {
             $this->redirectToSelectIntegrado();
         }
 
-
     }
 
     public function isValidIntegradoIdForUser() {
@@ -758,6 +760,27 @@ class IntegradoController extends JControllerLegacy {
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
 
+    }
+
+    public function sendEmail()
+    {
+        /*
+         *  NOTIFICACIONES 1
+         */
+
+        $getCurrUser = new IntegradoSimple($this->integradoId);
+
+        $array = array(
+            $getCurrUser->user->name,
+            $this->integradoId,
+            date('d-m-Y'));
+
+        $send = new Send_email();
+
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info = $send->sendNotifications('1', $array, '');
+
+        return $info;
     }
 
 }
