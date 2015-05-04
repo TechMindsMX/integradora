@@ -33,8 +33,8 @@ class ReportesModelBalance extends JModelItem {
 
 
 		$r = new \Integralib\ReportBalance( $this->input->integradoId , $this->input->startDate, $this->input->endDate, $this->input->project );
-		$r->calculateIngresos();
-		$r->calculateEgresos();
+		$r->calculateActivos();
+		$r->calculatePasivos();
 		$report = $r;
 
 		return $report;

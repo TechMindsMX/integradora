@@ -101,7 +101,7 @@ class Catalogos {
 		return $bancos;
 	}
 
-	public function getBancosFromTimOne() {
+	public static function getBancosFromTimOne() {
 		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
 
 		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));

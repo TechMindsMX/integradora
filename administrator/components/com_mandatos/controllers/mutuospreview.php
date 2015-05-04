@@ -38,7 +38,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
 
-            $check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths, $this->parametros['integradoId']);
 
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');

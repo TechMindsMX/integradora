@@ -66,6 +66,26 @@ class TimOneRequest {
 		return $result;
 	}
 
+	public function getUserTxs($userUuis) {
+		$rutas = new servicesRoute();
+
+		$params = $rutas->getUrlService('timone','userTxs','list');
+
+		$serviceUrl = str_replace('{uuid}', $userUuis, $params->url);
+		$jsonData = '';
+		$httpType = $params->type;
+
+		$request = new sendToTimOne();
+
+		$request->setServiceUrl($serviceUrl);
+		$request->setJsonData($jsonData);
+		$request->setHttpType($httpType);
+
+		$result = $request->to_timone(); // realiza el envio
+
+		return $result;
+	}
+
 	public function sendCancelFactura($emisorRfc, $facturaUUID) {
 		$this->objEnvio = new \stdClass();
 		$this->objEnvio->uuid = $facturaUUID;
