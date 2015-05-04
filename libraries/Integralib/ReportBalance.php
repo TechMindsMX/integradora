@@ -184,7 +184,7 @@ class ReportBalance extends \IntegradoOrders {
 		$db = \JFactory::getDbo();
 
 		$query = $db->getQuery(true)
-			->select($db->quoteName(array('txs.*', 'piv.*')))
+			->select($db->quoteName(array('txs.idTx', 'txs.idIntegrado', 'txs.date', 'txs.idComision', 'piv.amount', 'piv.idOrden', 'piv.orderType')))
 			->from($db->quoteName('#__txs_timone_mandato', 'txs'))
 			->join('left', $db->quoteName('#__txs_mandatos', 'piv').' ON ((txs.id = piv.id))')
 			->where(" ((txs.date >= '1427846400' AND txs.date <= '1430352000') OR (txs.date <= '1430352000' AND txs.date <= '1430352000')) AND txs.idTx = '6489b6b69dba4fd8a6ddd84da35104c8' ");
