@@ -23,8 +23,8 @@ $rutas = array(
 		array('LBL_MUTUOS' ,'icon-list'  ,JRoute::_('index.php?option=com_mandatos&view=mutuoslist') ),
 	),
 	array(
-		array('COM_MANDATOS_GO_LIQUIDACION' ,'icon-dollar'  ,JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ),
-		array('COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE' ,'icon-stackexchange'  ,JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist') )
+		array('COM_MANDATOS_AUTH_LIQUIDACION' ,'icon-dollar'  ,JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ),
+		array('COM_MANDATOS_AUTH_TX_SIN_MANDATO' ,'icon-stackexchange'  ,JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist') )
 	),
 );
 $perRow = 2;
