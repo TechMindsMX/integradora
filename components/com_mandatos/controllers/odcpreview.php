@@ -56,7 +56,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $save->formatData($this->parametros);
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'], 'odc_auth');
-            $check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
 
             if ($check) {
                 $this->app->redirect($this->returnUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');

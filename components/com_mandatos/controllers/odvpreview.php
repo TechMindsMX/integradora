@@ -45,7 +45,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odv_auth');
 
-            $check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
 
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');

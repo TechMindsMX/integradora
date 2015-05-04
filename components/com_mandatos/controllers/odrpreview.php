@@ -43,19 +43,18 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     function authorize() {
         if($this->permisos['canAuth']) {
-            $enoughBalance                = $this->enoughBalance();
-            $user                         = JFactory::getUser();
-            $save                         = new sendToTimOne();
-            $this->parametros['userId']   = (INT)$user->id;
-            $this->parametros['authDate'] = time();
-            $check                        = getFromTimOne::checkUserAuth($auths);
-            $db                           = JFactory::getDbo();
+	        $enoughBalance                = $this->enoughBalance();
+	        $user                         = JFactory::getUser();
+	        $save                         = new sendToTimOne();
+	        $this->parametros['userId']   = (INT)$user->id;
+	        $this->parametros['authDate'] = time();
+	        $db                           = JFactory::getDbo();
 
-            $logdata                      = implode(
+	        $logdata                      = implode(
                 ' | ',
                 array(
                     JFactory::getUser()->id,
-                    JFactory::getSession()->get('integradoId', null, 'integrado'),
+                    $this->integradoId,
                     __METHOD__,
                     json_encode( array($this->orden->id, $enoughBalance)
                     )
@@ -71,7 +70,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             }
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
-            $check = getFromTimOne::checkUserAuth($auths);
+            $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
 
             if($check){
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
