@@ -769,7 +769,7 @@ class IntegradoController extends JControllerLegacy {
     public function sendEmail($type=null)
     {
         /*
-         *  NOTIFICACIONES 1
+         *  NOTIFICACIONES 0 & 1
          */
     $getCurrUser = new IntegradoSimple($this->integradoId);
 
@@ -787,7 +787,6 @@ class IntegradoController extends JControllerLegacy {
                 $permiso = 'Full';
                 break;
         }
-
 
     if(is_null($type)){
         $array = array(
@@ -809,25 +808,18 @@ class IntegradoController extends JControllerLegacy {
             }
 
      }
-
-
         $titleArray =array ( $typeAlta );
-
         $array = array(
             $typeAlta,
             $dataUser->email,
             $dataUser->username,
             $permiso,
             date('d-m-Y'));
-
         $noEmail = 0;
-
     }
         $send = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
         $info = $send->sendNotifications($noEmail, $array, $titleArray);
-
-
         return $info;
     }
 
