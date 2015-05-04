@@ -43,18 +43,18 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     function authorize() {
         if($this->permisos['canAuth']) {
-	        $enoughBalance                = $this->enoughBalance();
-	        $user                         = JFactory::getUser();
-	        $save                         = new sendToTimOne();
-	        $this->parametros['userId']   = (INT)$user->id;
-	        $this->parametros['authDate'] = time();
-	        $db                           = JFactory::getDbo();
+            $enoughBalance                = $this->enoughBalance();
+            $user                         = JFactory::getUser();
+            $save                         = new sendToTimOne();
+            $this->parametros['userId']   = (INT)$user->id;
+            $this->parametros['authDate'] = time();
+            $db                           = JFactory::getDbo();
 
-	        $logdata                      = implode(
+            $logdata                      = implode(
                 ' | ',
                 array(
                     JFactory::getUser()->id,
-                    $this->integradoId,
+	                $this->integradoId,
                     __METHOD__,
                     json_encode( array($this->orden->id, $enoughBalance)
                     )

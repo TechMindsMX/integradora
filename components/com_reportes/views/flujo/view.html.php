@@ -40,7 +40,7 @@ class ReportesViewFlujo extends JViewLegacy
 		}
 
 		// verifica el token
-		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
+//		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
 		$this->integrado = new IntegradoSimple($vars['integradoId']);
 
