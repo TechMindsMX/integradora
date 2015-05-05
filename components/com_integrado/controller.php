@@ -154,9 +154,13 @@ class IntegradoController extends JControllerLegacy {
 
         if( empty($existe) ){
             self::insertData('integrado_users', $columnas, $valores);
+            $data['type']='new';
         }else{
             self::updateData('integrado_users', $update, $db->quoteName('user_id').' = '.$data['userId']);
+            $data['type']='edit';
         }
+
+        $this->sendEmail($data['type']);
 
         JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
     }
@@ -310,6 +314,9 @@ class IntegradoController extends JControllerLegacy {
         //Se envia el post para manejar la data y realizar el guardado de esta en la base de datos.
         $response = self::manejoDatos($post);
 
+        if($response['safeComplete'] == true && $input->get('tab', null, 'STRING')== 'personales'){
+          $this->sendEmail();
+        }
         // Get the document object.
         $document = JFactory::getDocument();
         // Set the MIME type for JSON output.
@@ -735,7 +742,6 @@ class IntegradoController extends JControllerLegacy {
             $this->redirectToSelectIntegrado();
         }
 
-
     }
 
     public function isValidIntegradoIdForUser() {
@@ -758,6 +764,63 @@ class IntegradoController extends JControllerLegacy {
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
 
+    }
+
+    public function sendEmail($type=null)
+    {
+        /*
+         *  NOTIFICACIONES 0 & 1
+         */
+    $getCurrUser = new IntegradoSimple($this->integradoId);
+
+        switch ($_POST['permission_level']){
+            case 1:
+                $permiso = 'Consulta';
+                break;
+            case 2:
+                $permiso = 'Operaciones';
+                break;
+            case 3:
+                $permiso = 'Autorizador';
+                break;
+            case 4:
+                $permiso = 'Full';
+                break;
+        }
+
+    if(is_null($type)){
+        $array = array(
+            $getCurrUser->user->name,
+            $this->integradoId,
+            date('d-m-Y'));
+            $noEmail = 1;
+        $typeAlta = '';
+    }else{
+        if($type == 'edit'){
+            $typeAlta = 'Edicion';
+        }
+        if($type == 'new'){
+            $typeAlta = 'Alta';
+        }
+        foreach ($getCurrUser->usuarios as $key => $value) {
+            if($value->id == $_POST['userId']){
+                $dataUser = $value;
+            }
+
+     }
+        $titleArray =array ( $typeAlta );
+        $array = array(
+            $typeAlta,
+            $dataUser->email,
+            $dataUser->username,
+            $permiso,
+            date('d-m-Y'));
+        $noEmail = 0;
+    }
+        $send = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info = $send->sendNotifications($noEmail, $array, $titleArray);
+        return $info;
     }
 
 }
