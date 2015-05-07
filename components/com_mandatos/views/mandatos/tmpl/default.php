@@ -1,14 +1,9 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.form.validation');
 jimport('joomla.html.html.bootstrap');
 
 JHtml::_('behavior.keepalive');
-JHtml::_('behavior.formvalidation');
-JHTML::_('behavior.calendar');
-
-$integrados = $this->data;
 
 $rutas = array(
 	array(
@@ -30,31 +25,36 @@ $rutas = array(
 $perRow = 2;
 $rutas = array_chunk($rutas, $perRow, true);
 
-echo '<h2>'.JText::_('COM_MANDATOS_TITULO').'</h2>';
 ?>
 
-<div class="span8" xmlns="http://www.w3.org/1999/html">
+<div class="container">
+	<h2><?php echo JText::_('COM_MANDATOS_TITULO'); ?></h2>
+
 	<div class="row-fluid">
-		<?php
-		foreach ( $rutas as $group ) {
-		foreach ( $group as $fila ) {
-			?>
-			<div class="control-group row-fluid">
-			<?php
-			foreach ( $fila as $item ) {
+		<div class="span8">
+			<div class="row-fluid">
+				<?php
+				foreach ( $rutas as $group ) {
+					foreach ( $group as $fila ) {
+						?>
+						<div class="control-group row-fluid">
+							<?php
+							foreach ( $fila as $item ) {
+								?>
+								<div class="span<?php echo 12 / $perRow; ?>">
+									<a class="btn btn-primary btn-large span11" id="list_proyectos"
+									   href="<?php echo $item[2]; ?>"><i class="<?php echo $item[1]; ?> icon-large"></i><br /><br /><?php echo JText::_( $item[0] ),'<br /><small><small>', JText::_( $item[0].'_SUB' ); ?></small></small></a>
+								</div>
+							<?php
+							}
+							?>
+						</div>
+						<br>
+					<?php
+					}
+				}
 				?>
-				<div class="span<?php echo 12 / $perRow; ?>">
-					<a class="btn btn-primary btn-large span11" id="list_proyectos"
-					   href="<?php echo $item[2]; ?>"><i class="<?php echo $item[1]; ?> icon-large"></i><br /><br /><?php echo JText::_( $item[0] ),'<br /><small><small>', JText::_( $item[0].'_SUB' ); ?></small></small></a>
-				</div>
-			<?php
-			}
-			?>
 			</div>
-			<br>
-		<?php
-		}
-		}
-		?>
+		</div>
 	</div>
 </div>

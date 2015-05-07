@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 	$div.height($alto);
 	$ifr.width($div.width());
 	$ifr.height($alto);
-	
+
 	jQuery('#enviar-registro').attr('disabled', 'disabled');
 	
 	jQuery('#aceptado').click(function() {
@@ -34,6 +34,10 @@ jQuery(document).ready(function() {
 		else {
 			jQuery('#enviar-registro').attr('disabled', 'disabled');
 		}
+	});
+
+	jQuery('#link-terminos').click(function() {
+		jQuery('#aceptarTerminos iframe').contents().find("div.page-header").remove();
 	});
 });
 </script>
@@ -77,7 +81,7 @@ jQuery(document).ready(function() {
 		<div id="terminos" class="checkbox">
 			<input id="aceptado" type="checkbox" value="" name="aceptarTerminos" />
 			<span><label for="aceptarTerminos"><?php echo JText::_('I_ACCEPT');?>
-			<a href="#aceptarTerminos" data-toggle="modal"><?php echo JText::_('TERMS');?></a></label>
+			<a href="#aceptarTerminos" data-toggle="modal" id="link-terminos"><?php echo JText::_('TERMS');?></a></label>
 			</span>
 		</div>
 		<div class="form-actions">
