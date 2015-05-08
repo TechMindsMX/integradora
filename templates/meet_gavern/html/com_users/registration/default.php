@@ -37,7 +37,7 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery('#link-terminos').click(function() {
-		jQuery('#aceptarTerminos iframe').contents().find("div.page-header").remove();
+		jQuery('#aceptarTerminos iframe').contents().find("div.page-header, div#gkSocialAPI").remove();
 	});
 });
 </script>
