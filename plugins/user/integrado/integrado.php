@@ -107,7 +107,7 @@ class PlgUserIntegrado extends JPlugin
 		
 		if ($this->app->getName() == 'site') {
 			if(count($integrados) === 0) {
-				$this->app->redirect(JRoute::_('index.php?option=com_integrado&view=solicitud'), JText::_('NO_INTEGRADO'), 'warning');
+				$this->app->redirect(JRoute::_('index.php?option=com_integrado&view=solicitud&Itemid=207'), JText::_('NO_INTEGRADO'), 'warning');
 			}
 		}
 		return true;

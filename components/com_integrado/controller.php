@@ -8,24 +8,24 @@ jimport('integradora.imagenes');
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 
-$app = JFactory::getApplication();
-$currUser	= JFactory::getUser();
-
-if($currUser->guest){
-    $app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
-}
-
 class IntegradoController extends JControllerLegacy {
     //Revisa si el usaurio existe dado un correo electronico
     protected $integradoId;
     protected $app;
 
     function __construct() {
+	    $this->app = JFactory::getApplication();
+	    $currUser	= JFactory::getUser();
+
+	    if($currUser->guest){
+		    $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+	    }
+
         $this->sesion = JFactory::getSession();
         $this->integradoId = $this->sesion->get('integradoId', null, 'integrado');
 
         $this->document = JFactory::getDocument();
-        $this->input = JFactory::getApplication()->input;
+        $this->input = $this->app->input;
 
         parent::__construct();
     }
@@ -138,9 +138,12 @@ class IntegradoController extends JControllerLegacy {
 
         echo json_encode($response);
     }
-    //Salva la alta de usuarios a un integrado
 
-    function saveAltaNewUserOfInteg(){
+	/**
+	 * Salva la alta de usuarios a un integrado
+	 * @throws Exception
+	 */
+	function saveAltaNewUserOfInteg(){
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
@@ -162,11 +165,14 @@ class IntegradoController extends JControllerLegacy {
 
         $this->sendEmail($data['type']);
 
-        JApplication::redirect('index.php?option=com_integrado&view=altausuarios', false);
+        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
     }
-    //elimina la relacion entre el integrado y el usuario dado de alta
 
-    function deleteUser(){
+	/**
+	 * elimina la relacion entre el integrado y el usuario dado de alta
+	 * @throws Exception
+	 */
+	function deleteUser(){
         $db			= JFactory::getDbo();
         $document	= JFactory::getDocument();
         $input		= JFactory::getApplication()->input;
@@ -183,18 +189,21 @@ class IntegradoController extends JControllerLegacy {
 
         echo json_encode($response);
     }
-    //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
 
-    function uploadFiles(){
+	/**
+	 * carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
+	 * @throws Exception
+	 */
+	function uploadFiles(){
         $data = $this->input->getArray();
         $saveFiles = sendToTimOne::uploadFiles($data['integradoId']);
 
 	    $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'message') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
 
         if($this->integradoId ==''){
-            $url = 'index.php?option=com_integrado&view=solicitud';
+            $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId;
+            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId.'&Itemid=207';
         }
 
 	    $app = JFactory::getApplication();
@@ -202,9 +211,13 @@ class IntegradoController extends JControllerLegacy {
         $app->redirect($url, false);
 
     }
-    //Recibe el post y lo envia a procesar y guardar
 
-    function saveform(){
+	/**
+	 * Recibe el post y lo envia a procesar y guardar
+	 * @return bool
+	 * @throws Exception
+	 */
+	function saveform(){
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
 
         if($data['busqueda_rfc']) {
@@ -718,7 +731,7 @@ class IntegradoController extends JControllerLegacy {
 
     public function createNewSolicitud() {
         $this->sesion->clear('integradoId', 'integrado');
-        JFactory::getApplication()->redirect('index.php?option=com_integrado&view=solicitud');
+        JFactory::getApplication()->redirect('index.php?option=com_integrado&view=solicitud&Itemid=207');
     }
 
     public function select() {
@@ -753,7 +766,7 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public function redirectToSelectIntegrado() {
-        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change', JText::_( 'LBL_ERROR' ), 'error' );
+        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change&Itemid=207', JText::_( 'LBL_ERROR' ), 'error' );
     }
 
     public function agregarBancoSolicitud() {

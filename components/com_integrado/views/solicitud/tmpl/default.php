@@ -483,7 +483,7 @@ $token = JSession::getFormToken();
 				<input type="text" name="dp_fecha_nacimiento" id="dp_fecha_nacimiento" class="datepicker" readonly />
 			</div>
 			<div class="form-group">
-				<label for="dp_rfc"><?php echo JText::_('LBL_RFC'), JText::_('LBL_FIRMA_3'); ?> *</label>
+				<label for="dp_rfc"><?php echo JText::_('LBL_RFC').' '. JText::_('LBL_PER_FISICA').'/'. JText::_('LBL_FIRMA_3'); ?> *</label>
 				<input name="dp_rfc" id="dp_rfc" type="text" maxlength="13" />
 			</div>
 		</fieldset>

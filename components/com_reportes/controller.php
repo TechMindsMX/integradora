@@ -32,13 +32,13 @@ class ReportesController extends JControllerLegacy {
             $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
         if(is_null($this->integradoId)){
-            $this->app->redirect('index.php?option=com_integrado&view=solicitud', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
+            $this->app->redirect('index.php?option=com_integrado&view=solicitud&Itemid=207', JText::_('MSG_REDIRECT_INTEGRADO_PRINCIPAL'), 'Warning');
         }
         else {
             $integrado	    = new IntegradoSimple($this->integradoId);
             $canOperate     = $integrado->canOperate();
             if(!$canOperate){
-                $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
+                $this->app->redirect('index.php?option=com_integrado&view=integrado&Itemid=207', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
             }
         }
     }

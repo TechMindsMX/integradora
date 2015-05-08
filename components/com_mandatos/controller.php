@@ -30,13 +30,13 @@ class MandatosController extends JControllerLegacy {
             $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
         }
         if(is_null($this->integradoId)){
-            $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO'), 'Warning');
+            $this->app->redirect('index.php?option=com_integrado&view=integrado&Itemid=207', JText::_('MSG_REDIRECT_INTEGRADO'), 'Warning');
         }
         else {
             $integrado	    = new IntegradoSimple($this->integradoId);
             $canOperate     = $integrado->canOperate();
             if(!$canOperate){
-                $this->app->redirect('index.php?option=com_integrado&view=integrado', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
+                $this->app->redirect('index.php?option=com_integrado&view=integrado&Itemid=207', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
             }
         }
     }
