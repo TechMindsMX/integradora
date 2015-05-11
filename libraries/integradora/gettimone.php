@@ -2941,7 +2941,6 @@ class Factura extends makeTx {
         }
         $this->setTimbra($timbra);
         $this->setFormat();
-	    $this->setFolio();
     }
     /**
      * @param bool $timbra
@@ -3058,21 +3057,6 @@ class Factura extends makeTx {
         $this->totales = new \Integralib\Totales($orden ,$this->impuestos);
     }
 
-	/**
-	 * Sets folio using getFolioSeries
-	 */
-	private function setFolio() {
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select('*')
-			->from('#__facturas_folios');
-		$db->setQuery($query);
-
-		$result = $db->loadObject();
-
-		return $this->getNextFolio($result);
-	}
-
 	public static function getXmlFolio( $xml ) {
 		$folio = false;
 
@@ -3097,19 +3081,6 @@ class Factura extends makeTx {
 		return $result;
 	}
 
-	private function getFolioSeries() {
-		return 'B';
-	}
-
-	private function getNextFolio( $result ) {
-		$folio = 1;
-
-		if ( ! empty( $result ) ) {
-			$folio = $this->getFolioSeries(). ((int)str_replace($this->getFolioSeries(), '', $result->folio) + 1);
-		}
-
-		return $folio;
-	}
 }
 
 class Concepto
@@ -3352,7 +3323,7 @@ class makeTx {
 
         jimport('joomla.log.log');
 
-        JLog::addLogger(array('text_file' => date('Y-m-d').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora');
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora');
         $this->orden->pastData = $this->resultado->data;

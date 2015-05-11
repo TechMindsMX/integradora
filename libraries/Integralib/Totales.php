@@ -20,6 +20,9 @@ class Totales {
         $this->subtotal = $objOdv->subTotalAmount;
 
         $this->totalImpuestosTrasladados = $this->calculateTotalimpuestosTrasladados($objImpuestos);
+
+	    $this->folio = $this->setFolio();
+
     }
 
     private function calculateTotalimpuestosTrasladados($objImpuestos){
@@ -30,5 +33,35 @@ class Totales {
 
         return $totalImpuestosTrasladados;
     }
+
+	/**
+	 * Sets folio using getFolioSeries
+	 */
+	private function setFolio() {
+		$db = \JFactory::getDbo();
+		$query = $db->getQuery(true)
+		            ->select('*')
+		            ->from('#__facturas_folios');
+		$db->setQuery($query);
+
+		$result = $db->loadObject();
+
+		return $this->getNextFolio($result);
+	}
+
+	private function getNextFolio( $result ) {
+		$series = $this->getFolioSeries();
+		$folio = $series.'1';
+
+		if ( ! empty( $result ) ) {
+			$folio = $series. ((int)str_replace($series, '', $result->folio) + 1);
+		}
+
+		return $folio;
+	}
+
+	private function getFolioSeries() {
+		return 'B';
+	}
 
 }
