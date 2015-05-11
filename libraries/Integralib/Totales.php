@@ -13,6 +13,7 @@ class Totales {
     public $total;
     public $subtotal;
     public $totalImpuestosTrasladados;
+	public $folio;
 
     function __construct(OdVenta $objOdv, $objImpuestos)
     {

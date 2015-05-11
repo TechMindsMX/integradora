@@ -2927,7 +2927,6 @@ class Factura extends makeTx {
     public $impuestos;
     public $timbra;
     public $format;
-	public $folio;
 
 	function __construct( \Integralib\OdVenta $orden, $timbra = false ) {
         $this->emisor = new Emisor( new IntegradoSimple(1) );
