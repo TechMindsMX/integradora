@@ -2574,9 +2574,9 @@ class sendToTimOne {
         // TODO: crear las facturas de comisiones
     }
 
-    public function generaObjetoFactura( $newOrden, $timbra = true ) {
+    public function generaObjetoFactura( $newOrden, $timbra = true, $series = 'B') {
 
-        $data = new Factura( $newOrden , $timbra);
+        $data = new Factura( $newOrden , $timbra, $series );
 
         //TODO: qutar el mock cuando sea produccion
         if( ENVIROMENT_NAME == 'sandbox') {
@@ -2927,8 +2927,9 @@ class Factura extends makeTx {
     public $impuestos;
     public $timbra;
     public $format;
+	public $totales;
 
-	function __construct( \Integralib\OdVenta $orden, $timbra = false ) {
+	function __construct( \Integralib\OdVenta $orden, $timbra = false, $series = 'B' ) {
         $this->emisor = new Emisor( new IntegradoSimple(1) );
         $this->receptor = new Receptor($orden->getReceptor());
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
@@ -2936,7 +2937,7 @@ class Factura extends makeTx {
         if(isset ($orden)) {
             $this->setConceptos($orden);
             $this->setImpuestos($orden);
-            $this->setTotales($orden);
+            $this->setTotales($orden, $series);
         }
         $this->setTimbra($timbra);
         $this->setFormat();
@@ -3052,8 +3053,8 @@ class Factura extends makeTx {
 
     }
 
-    private function setTotales($orden){
-        $this->totales = new \Integralib\Totales($orden ,$this->impuestos);
+    private function setTotales($orden, $series){
+        $this->totales = new \Integralib\Totales($orden ,$this->impuestos, $series);
     }
 
 	public static function getXmlFolio( $xml ) {
@@ -3318,7 +3319,7 @@ class makeTx {
         $request->setJsonData($this->objEnvio);
         $request->setHttpType($datosEnvio->type);
 
-        $this->resultado = $request->to_timone();
+//        $this->resultado = $request->to_timone();
 
         jimport('joomla.log.log');
 

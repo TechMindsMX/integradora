@@ -15,14 +15,14 @@ class Totales {
     public $totalImpuestosTrasladados;
 	public $folio;
 
-    function __construct(OdVenta $objOdv, $objImpuestos)
+    function __construct(OdVenta $objOdv, $objImpuestos, $series)
     {
         $this->total = $objOdv->getTotalAmount();
         $this->subtotal = $objOdv->subTotalAmount;
 
         $this->totalImpuestosTrasladados = $this->calculateTotalimpuestosTrasladados($objImpuestos);
 
-	    $this->folio = $this->setFolio();
+	    $this->folio = $this->setFolio($series);
 
     }
 
@@ -38,7 +38,7 @@ class Totales {
 	/**
 	 * Sets folio using getFolioSeries
 	 */
-	private function setFolio() {
+	private function setFolio( $series ) {
 		$db = \JFactory::getDbo();
 		$query = $db->getQuery(true)
 		            ->select('*')
@@ -47,11 +47,11 @@ class Totales {
 
 		$result = $db->loadObject();
 
-		return $this->getNextFolio($result);
+		return $this->getNextFolio($result, $series);
 	}
 
-	private function getNextFolio( $result ) {
-		$series = $this->getFolioSeries();
+	private function getNextFolio( $result, $series ) {
+		$series = $this->getFolioSeries($series);
 		$folio = $series.'1';
 
 		if ( ! empty( $result ) ) {
@@ -61,8 +61,14 @@ class Totales {
 		return $folio;
 	}
 
-	private function getFolioSeries() {
-		return 'B';
+	private function getFolioSeries($series) {
+		$validSeries = \Catalogos::getValidFacturaFolioSeries();
+
+		if (!in_array($series, $validSeries)) {
+			throw new \Exception( \JText::_('ERR_417_FOLIO') );
+		}
+
+		return $series;
 	}
 
 }

@@ -21,6 +21,10 @@ class Catalogos {
 		$this->db       = JFactory::getDbo();
 	}
 
+	public static function getValidFacturaFolioSeries() {
+		return array('default' => 'B', 'comisiones' => 'C');
+	}
+
 	public function getCurrencies() {
 		$query = $this->db->getQuery(true)
 			->select('*')
