@@ -44,7 +44,7 @@ class facturasComision extends OdVenta{
 
         if( !empty($this->productosData) ) {
             $this->iva  = $this->getIvaComision($this->productosData);
-            $factObj                    = $save->generaObjetoFactura($this);
+            $factObj                    = $save->generaObjetoFactura($this, 'C');
 
             if ($factObj != false) {
                 $fecha = new DateTime();
