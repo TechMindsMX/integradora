@@ -380,4 +380,10 @@ UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_u
 --rollback UPDATE `flpmu_extensions` SET `params`='{\"public_key\":\"\",\"private_key\":\"\",\"theme\":\"clean\"}' WHERE `extension_id`='439';
 --rollback UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_usertype\":\"2\",\"guest_usergroup\":\"9\",\"sendpassword\":\"1\",\"useractivation\":\"1\",\"mail_to_admin\":\"0\",\"captcha\":\"\",\"frontend_userparams\":\"1\",\"site_language\":\"0\",\"change_login_name\":\"0\",\"reset_count\":\"10\",\"reset_time\":\"1\",\"minimum_length\":\"4\",\"minimum_integers\":\"0\",\"minimum_symbols\":\"0\",\"minimum_uppercase\":\"0\",\"save_history\":\"0\",\"history_limit\":5,\"mailSubjectPrefix\":\"\",\"mailBodySuffix\":\"\"}' WHERE `extension_id`='25';
 
-
+--changeset ricardolyon:47
+CREATE TABLE `flpmu_facturas_folios` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `folio` VARCHAR(255),
+  `factura_uuid` VARCHAR(255)
+);
+--rollback DROP TABLE `flpmu_folio_facturas`;

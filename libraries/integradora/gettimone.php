@@ -2927,9 +2927,10 @@ class Factura extends makeTx {
     public $impuestos;
     public $timbra;
     public $format;
+	public $folio;
 
-    function __construct( \Integralib\OdVenta $orden, $timbra = false ) {
-        $this->emisor = new Emisor($orden->getEmisor());
+	function __construct( \Integralib\OdVenta $orden, $timbra = false ) {
+        $this->emisor = new Emisor( new IntegradoSimple(1) );
         $this->receptor = new Receptor($orden->getReceptor());
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
 
@@ -2940,6 +2941,7 @@ class Factura extends makeTx {
         }
         $this->setTimbra($timbra);
         $this->setFormat();
+	    $this->setFolio();
     }
     /**
      * @param bool $timbra
@@ -2966,8 +2968,8 @@ class Factura extends makeTx {
     }
 
     public function setTestRFC() {
-        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
-        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+//        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+//        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }
 
     public function setConceptos($orden) {
@@ -3056,7 +3058,52 @@ class Factura extends makeTx {
         $this->totales = new \Integralib\Totales($orden ,$this->impuestos);
     }
 
+	/**
+	 * Sets folio using getFolioSeries
+	 */
+	private function setFolio() {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select('*')
+			->from('#__facturas_folios');
+		$db->setQuery($query);
 
+		$result = $db->loadObject();
+
+		return $this->getNextFolio($result);
+	}
+
+	public static function getXmlFolio( $xml ) {
+		$folio = false;
+
+		$parse  = new xml2Array();
+		$objXml = $parse->manejaXML( $xml );
+
+		if( isset( $objXml->comprobante['FOLIO'] )) {
+			$folio = $objXml->comprobante['FOLIO'];
+		}
+
+		return $folio;
+	}
+
+	public static function saveFolio($xml) {
+
+		$save = new stdClass();
+		$save->folio = self::getXmlFolio($xml);
+		$save->factura_uuid = self::getXmlUUID($xml);
+
+		$result = JFactory::getDbo()->insertObject('#__facturas_folios', $save);
+
+		return $result;
+	}
+
+	private function getFolioSeries() {
+		return 'B';
+	}
+
+	private function getNextFolio( $result ) {
+		return $this->getFolioSeries(). ((int)str_replace($this->getFolioSeries(), '', $result->folio) + 1);
+	}
 }
 
 class Concepto
