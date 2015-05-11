@@ -632,6 +632,11 @@ class IntegradoSimple extends Integrado {
     public function getStatus() {
         return (int)$this->integrados[0]->integrado->status;
     }
+
+	public function hasAllDataForValidation() {
+		// TODO: Crear metodo para verificar si el integrado ya lleno todos los datos para ser verificado
+		return true;
+	}
 }
 
 class integrado_datos_personales {

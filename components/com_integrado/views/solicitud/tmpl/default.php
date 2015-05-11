@@ -13,8 +13,8 @@ $user		= JFactory::getUser();
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
 $optionBancos = '';
 
-$a = JRoute::
 $cancelUrl = JRoute::_('index.php?option=com_integrado');
+$finishUrl = $cancelUrl. '&task=finish';
 
 $document = JFactory::getDocument();
 $document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
@@ -697,6 +697,8 @@ $token = JSession::getFormToken();
 
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 		<?php
 		echo JHtml::_('bootstrap.endTab');
@@ -843,6 +845,8 @@ $token = JSession::getFormToken();
 
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
 		<?php
@@ -876,6 +880,8 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="button" class="btn btn-success span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
+				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 
 			<div>
@@ -897,6 +903,8 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="button" class="btn btn-primary span3" id="nextTab"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>
 		<?php
@@ -958,6 +966,8 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_ENVIAR_SOLICITUD'); ?></button>
+				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>
 		<?php

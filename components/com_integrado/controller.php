@@ -836,4 +836,17 @@ class IntegradoController extends JControllerLegacy {
         return $info;
     }
 
+	public function finish( ){
+		if ( isset( $this->integradoId ) ) {
+			$integrado = new IntegradoSimple($this->integradoId);
+
+			if ( $integrado->hasAllDataForValidation() ) {
+				$this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+			} else {
+				$this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
+			}
+		}
+
+		$this->app->redirect(JRoute::_('index.php?option=com_integrado'));
+	}
 }

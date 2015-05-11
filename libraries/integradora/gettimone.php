@@ -1842,7 +1842,7 @@ class getFromTimOne{
         $facturas = array();
 
         foreach ($odvs as $odv) {
-            if($odv->status->name === 'Autorizada'){
+            if($odv->status->name === 'Autorizada' && !is_null($odv->urlXML) ){
                 $facturas[] = $odv;
             }
         }
@@ -3319,7 +3319,7 @@ class makeTx {
         $request->setJsonData($this->objEnvio);
         $request->setHttpType($datosEnvio->type);
 
-//        $this->resultado = $request->to_timone();
+        $this->resultado = $request->to_timone();
 
         jimport('joomla.log.log');
 
