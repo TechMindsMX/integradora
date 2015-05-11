@@ -3102,7 +3102,13 @@ class Factura extends makeTx {
 	}
 
 	private function getNextFolio( $result ) {
-		return $this->getFolioSeries(). ((int)str_replace($this->getFolioSeries(), '', $result->folio) + 1);
+		$folio = 1;
+
+		if ( ! empty( $result ) ) {
+			$folio = $this->getFolioSeries(). ((int)str_replace($this->getFolioSeries(), '', $result->folio) + 1);
+		}
+
+		return $folio;
 	}
 }
 
