@@ -107,20 +107,20 @@ class OrdenFn {
 	}
 
 	public static function sumaOrders( $orders ) {
-		$neto  = 0;
-		$iva   = 0;
-		$total = 0;
-
 		$obj                = new stdClass();
-		$obj->pagado->total = array ();
-		$obj->pagado->iva   = array ();
-		$obj->pagado->neto  = array ();
+
+		$obj->nominal->neto     = array ();
+		$obj->nominal->iva      = array ();
+		$obj->nominal->total    = array ();
+		$obj->pagado->total     = array ();
+		$obj->pagado->iva       = array ();
+		$obj->pagado->neto      = array ();
 
 		if ( ! empty( $orders ) ) {
 			foreach ( $orders as $order ) {
-				$neto  = $neto + $order->subTotalAmount;
-				$iva   = $iva + $order->iva;
-				$total = $total + $order->getTotalAmount();
+				$obj->nominal->neto[]   = $order->subTotalAmount;
+				$obj->nominal->iva[]    = $order->iva;
+				$obj->nominal->total[]   = $order->getTotalAmount();
 
 				$montoTxs = 0;
 				foreach ( $order->txs as $tx ) {
@@ -136,8 +136,8 @@ class OrdenFn {
 				$order->saldo->net   = $order->subTotalAmount - ($factor * $order->subTotalAmount);
 
 				$obj->pagado->total[] = $montoTxs;
-				$obj->pagado->iva[]   = $order->saldo->iva;
-				$obj->pagado->neto[]  = $montoTxs - $order->saldo->iva;
+				$obj->pagado->iva[]   = $order->iva - $order->saldo->iva;
+				$obj->pagado->neto[]  = $montoTxs - ($order->iva - $order->saldo->iva);
 			}
 		}
 
@@ -145,9 +145,13 @@ class OrdenFn {
 		$obj->pagado->iva   = array_sum( $obj->pagado->iva );
 		$obj->pagado->neto  = array_sum( $obj->pagado->neto );
 
-		$obj->neto  = $neto;
-		$obj->iva   = $iva;
-		$obj->total = $total;
+		$obj->nominal->neto  = array_sum($obj->nominal->neto );
+		$obj->nominal->iva   = array_sum($obj->nominal->iva  );
+		$obj->nominal->total = array_sum($obj->nominal->total);
+
+		$obj->saldo->neto  = $obj->nominal->neto  - $obj->pagado->neto ;
+		$obj->saldo->iva   = $obj->nominal->iva   - $obj->pagado->iva  ;
+		$obj->saldo->total = $obj->nominal->total - $obj->pagado->total;
 
 		return $obj;
 	}
