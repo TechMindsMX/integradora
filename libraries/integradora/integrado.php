@@ -634,8 +634,14 @@ class IntegradoSimple extends Integrado {
     }
 
 	public function hasAllDataForValidation() {
-		// TODO: Crear metodo para verificar si el integrado ya lleno todos los datos para ser verificado
-		return true;
+		if ( $this->integrados[0]->integrado->pers_juridica == 1 ) {
+			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->datos_empresa) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
+		} else {
+			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
+
+		}
+
+		return ($hasAll);
 	}
 }
 
