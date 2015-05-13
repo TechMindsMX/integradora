@@ -45,7 +45,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<?php echo JText::_('LBL_PROY'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $orden->proyecto->name; ?>
+				<?php echo isset($orden->proyecto->name) ? $orden->proyecto->name : ''; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_PAYMENT_DATE'); ?>

@@ -386,4 +386,5 @@ CREATE TABLE `flpmu_facturas_folios` (
   `folio` VARCHAR(255),
   `factura_uuid` VARCHAR(255)
 );
+
 --rollback DROP TABLE `flpmu_folio_facturas`;

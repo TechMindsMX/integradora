@@ -81,13 +81,15 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                         $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                         $newStatusId = 5;
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
-                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',
-                            $catalogoStatus[$newStatusId]->name));
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
                         $newOrder = OrderFactory::getOrder($this->parametros['idOrden'], 'odv');
 
                         if ($newOrder->getStatus()->id == 5 && $newOrder->urlXML == '') {
-                            $factObj = $save->generaObjetoFactura($newOrder);
+                            $receptor = $newOrder->getReceptor();
+                            $timbrar = $receptor->isIntegrado() ? false : true;
+
+                            $factObj = $save->generaObjetoFactura($newOrder, $timbrar);
 
                             if ($factObj != false) {
                                 $xmlFactura = $save->generateFacturaFromTimone($factObj);

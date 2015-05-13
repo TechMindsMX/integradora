@@ -2609,6 +2609,10 @@ class sendToTimOne {
 
         $uuid = Factura::getXmlUUID($data);
 
+        if(!$uuid){
+            $uuid = 'tmp_'.time();
+        }
+
         $filename = $xmlpath.$uuid.'.xml';
         $handle = fopen($filename, 'w');
         $write = fwrite($handle, $data);
@@ -2967,8 +2971,8 @@ class Factura extends makeTx {
     }
 
     public function setTestRFC() {
-//        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
-//        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }
 
     public function setConceptos($orden) {

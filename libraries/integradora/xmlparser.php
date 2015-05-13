@@ -78,12 +78,19 @@ class xml2Array {
             $datosXML->impuestos->totalTrasladados = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE']+ (FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE'];
         }
 
-        $datosXML->impuestos->iva->tasa         = (INT)$impuestos['children'][0]['children'][0]['attrs']['TASA'];
-        $datosXML->impuestos->iva->importe      = (FLOAT)$impuestos['children'][0]['children'][0]['attrs']['IMPORTE'];
+        foreach($impuestos['children'][0]['children'] as $key => $value){
+            if($value['attrs']['IMPUESTO'] == 'IVA' && $value['attrs']['TASA'] != 0){
+                $datosXML->impuestos->iva->tasa    += (INT)$value['attrs']['TASA'];
+                $datosXML->impuestos->iva->importe += (FLOAT)$value['attrs']['IMPORTE'];
+            }elseif($value['attrs']['IMPUESTO'] == 'IEPS' && $value['attrs']['TASA'] != 0){
+                $datosXML->impuestos->ieps->tasa    += (INT)$value['attrs']['TASA'];
+                $datosXML->impuestos->ieps->importe += (FLOAT)$value['attrs']['IMPORTE'];
+            }
+        }
 
-        $datosXML->impuestos->ieps->tasa        = isset($impuestos['children'][0]['children'][1]['attrs']['TASA'])?(INT)$impuestos['children'][0]['children'][1]['attrs']['TASA']:0;
-        $datosXML->impuestos->ieps->importe     = isset($impuestos['children'][0]['children'][1]['attrs']['IMPORTE'])?(FLOAT)$impuestos['children'][0]['children'][1]['attrs']['IMPORTE']:0;
-
-
+        if( !isset($datosXML->impuestos->ieps) ){
+            $datosXML->impuestos->ieps->tasa    = 0;
+            $datosXML->impuestos->ieps->importe = 0;
+        }
     }
 }

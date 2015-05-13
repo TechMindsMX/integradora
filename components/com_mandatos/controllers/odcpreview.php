@@ -84,6 +84,30 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                 if($auths->emisor == count($numAutOrder)) {
                     $pagar = true;
+
+                    if (isset($odv)) {
+                        $factObj = $save->generaObjetoFactura($odv);
+
+                        if ($factObj != false) {
+                            $xmlFactura = $save->generateFacturaFromTimone($factObj);
+                            try {
+                                $urlXML = $save->saveXMLFile($xmlFactura);
+                                $dataUpdate = new stdClass();
+
+                                $dataUpdate->id = $odc->id;
+                                $dataUpdate->urlXML = $urlXML;
+
+                                $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
+
+                                $factObj->saveFolio($xmlFactura);
+                            } catch (Exception $e) {
+                                $msg = $e->getMessage();
+                                JLog::add($msg, JLog::ERROR, 'error');
+                                $this->app->enqueueMessage($msg, 'error');
+                            }
+                        }
+                    }
+
                 }else{
                     $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
                     $pagar = false;
