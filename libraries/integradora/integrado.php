@@ -649,6 +649,10 @@ class IntegradoSimple extends Integrado {
 
 		return ($hasAll);
 	}
+
+	public function hasRfc() {
+		return !is_null( $this->getIntegradoRfc() );
+	}
 }
 
 class integrado_datos_personales {

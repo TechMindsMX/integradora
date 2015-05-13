@@ -44,7 +44,7 @@ class IntegradoModelIntegrados extends JModelList
 	{
 		$items = parent::getItems();
 
-		$items = $this->filterEmpty($items);
+		$items = Integralib\IntegradoHelper::filterEmptyIntegrados($items);
 
 		return $items;
 	}
@@ -62,15 +62,4 @@ class IntegradoModelIntegrados extends JModelList
 		return $catalog;
 	}
 
-	private function filterEmpty( $items ) {
-		foreach ( $items as $k => $i ) {
-			$tmp = new IntegradoSimple($i->integrado_id);
-			$check = $tmp->getIntegradoRfc();
-			if ( is_null( $check ) ) {
-				unset($items[$k]);
-			};
-		}
-
-		return $items;
-	}
 }
