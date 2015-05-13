@@ -609,7 +609,13 @@ class IntegradoSimple extends Integrado {
     }
 
     public function getIntegradoRfc() {
-        return isset($this->integrados[0]->datos_empresa->rfc) ? $this->integrados[0]->datos_empresa->rfc : $this->integrados[0]->datos_personales->rfc;
+	    if ( isset($this->integrados[0]->datos_empresa->rfc) OR isset($this->integrados[0]->datos_personales->rfc) ) {
+		    $return = isset($this->integrados[0]->datos_empresa->rfc) ? $this->integrados[0]->datos_empresa->rfc : $this->integrados[0]->datos_personales->rfc;
+	    } else {
+		    $return = null;
+	    }
+
+	    return $return;
     }
 
     public function getIntegradoPhone() {
@@ -642,6 +648,10 @@ class IntegradoSimple extends Integrado {
 		}
 
 		return ($hasAll);
+	}
+
+	public function hasRfc() {
+		return !is_null( $this->getIntegradoRfc() );
 	}
 }
 

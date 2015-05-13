@@ -3,6 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
 jimport('integradora.catalogos');
+jimport('integradora.gettimone');
 
 
 class IntegradoModelIntegrados extends JModelList
@@ -43,19 +44,22 @@ class IntegradoModelIntegrados extends JModelList
 	{
 		$items = parent::getItems();
 
+		$items = Integralib\IntegradoHelper::filterEmptyIntegrados($items);
+
 		return $items;
 	}
 	protected function populateState($ordering = null, $direction = null) {
-    	parent::populateState('a.status', 'ASC');
+    	parent::populateState('a.integrado_id', 'desc');
 	}
 
 	public function getCatalogos() {
 		$catalog = new Catalogos();
 
-		$pers_juridicas = $catalog->getPesonalidadesJuridicas();
+		$catalog->getPesonalidadesJuridicas();
 
-		$solicitudStatus = $catalog->getStatusSolicitud();
+		$catalog->getStatusSolicitud();
 
 		return $catalog;
 	}
+
 }
