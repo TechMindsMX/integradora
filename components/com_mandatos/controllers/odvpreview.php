@@ -220,7 +220,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             $datos['integradoId'] = $this->integradoId;
 
             $odc = new OrdenFn();
-            $odc->proyecto      = $odv->projectId2 != 0 ? $odv->projectId2 : $odv->projectId;
+            $odc->proyecto      = $odv->subproyecto == '' ? $odv->proyecto->id_proyecto : $odv->subproyecto->id_proyecto;
             $odc->proveedor     = $odc->getIdEmisor($odv, 'odv');
             $odc->integradoId   = $odc->getIdReceptor($odv, 'odv');
             $odc->numOrden      = $save->getNextOrderNumber('odc', $odc->integradoId);

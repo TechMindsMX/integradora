@@ -86,24 +86,28 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     $pagar = true;
 
                     if (isset($odv)) {
-                        $factObj = $save->generaObjetoFactura($odv);
+                        $verificador = explode('/',$odv->urlXML);
 
-                        if ($factObj != false) {
-                            $xmlFactura = $save->generateFacturaFromTimone($factObj);
-                            try {
-                                $urlXML = $save->saveXMLFile($xmlFactura);
-                                $dataUpdate = new stdClass();
+                        if ($verificador[1] == 'facturas') {
+                            $factObj = $save->generaObjetoFactura($odv);
 
-                                $dataUpdate->id = $odc->id;
-                                $dataUpdate->urlXML = $urlXML;
+                            if ($factObj != false) {
+                                $xmlFactura = $save->generateFacturaFromTimone($factObj);
+                                try {
+                                    $urlXML = $save->saveXMLFile($xmlFactura);
+                                    $dataUpdate = new stdClass();
 
-                                $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
+                                    $dataUpdate->id = $odc->id;
+                                    $dataUpdate->urlXML = $urlXML;
 
-                                $factObj->saveFolio($xmlFactura);
-                            } catch (Exception $e) {
-                                $msg = $e->getMessage();
-                                JLog::add($msg, JLog::ERROR, 'error');
-                                $this->app->enqueueMessage($msg, 'error');
+                                    $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
+
+                                    $factObj->saveFolio($xmlFactura);
+                                } catch (Exception $e) {
+                                    $msg = $e->getMessage();
+                                    JLog::add($msg, JLog::ERROR, 'error');
+                                    $this->app->enqueueMessage($msg, 'error');
+                                }
                             }
                         }
                     }

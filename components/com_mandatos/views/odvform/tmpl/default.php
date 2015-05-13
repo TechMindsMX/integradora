@@ -71,15 +71,15 @@ $subProyects = $this->subprojects;
 
     function addrow(){
 
-	    $insertedRow = $inputRow.attr('id', 'content'+nextinput+'').clone().appendTo('#odv');
-	    $insertedRow.find('input').each(function () {
-		    var $input = jQuery(this);
-		    var $id = $input.attr('id');
-		    $input.attr('id', $id + nextinput);
-	    });
-	    triggersProductsTable($insertedRow);
+        $insertedRow = $inputRow.attr('id', 'content'+nextinput+'').clone().appendTo('#odv');
+        $insertedRow.find('input').each(function () {
+            var $input = jQuery(this);
+            var $id = $input.attr('id');
+            $input.attr('id', $id + nextinput);
+        });
+        triggersProductsTable($insertedRow);
 
-	    nextinput++;
+        nextinput++;
     }
 
     function llenasubproject() {
@@ -129,7 +129,7 @@ $subProyects = $this->subprojects;
                 campoIva.val(datos.iva);
                 campoIeps.val(datos.ieps);
 
-	            jQuery(this).parents('.contenidos').find('#cantidad1');
+                jQuery(this).parents('.contenidos').find('#cantidad1');
             }
         });
     }
@@ -147,9 +147,9 @@ $subProyects = $this->subprojects;
                 result = jQuery.parseJSON(result);
             }
             if(result.success){
-	            jQuery('#altaODV').prop('action', 'index.php?option=com_mandatos&task=odvform.saveODV').submit();
+                jQuery('#altaODV').prop('action', 'index.php?option=com_mandatos&task=odvform.saveODV').submit();
 
-           } else if (!result.success) {
+            } else if (!result.success) {
                 mensajesValidaciones(result);
             }
         });
@@ -175,57 +175,57 @@ $subProyects = $this->subprojects;
         }
     }
 
-
     function triggersProductsTable($insertedRow) {
-	    jQuery('#altaODV').on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
+        jQuery('#altaODV').on('change', '.cantidad, .iva, .ieps, .p_unit', sum);
 
-	    var tahead = $insertedRow.find('input.typeahead');
+        var tahead = $insertedRow.find('input.typeahead');
         tahead.typeahead({
-			    minLength: 3,
-			    highlight: true
-		    },
-		    {
-			    name: 'productsTypeahead',
-			    displayKey: 'value',
-			    source: substringMatcher(productsTypeahead)
-		    });
-	    tahead.on('typeahead:selected', llenatabla);
-	    tahead.on('typeahead:opened', function() {
-		    jQuery('.typeahead').css('z-index', 99);
-	    });
+                minLength: 3,
+                highlight: true
+            },
+            {
+                name: 'productsTypeahead',
+                displayKey: 'value',
+                source: substringMatcher(productsTypeahead)
+            });
+        tahead.on('typeahead:selected', llenatabla);
+        tahead.on('typeahead:opened', function() {
+            jQuery('.typeahead').css('z-index', 99);
+        });
     }
 
     jQuery(document).ready(function() {
-	    jQuery('#clientId').on('change',muestraBotonOtro);
+        jQuery('#clientId').on('change',muestraBotonOtro);
+        jQuery('#project').on('change', llenasubproject);
+        jQuery('#add_row').on('click', addrow);
+        jQuery('#ordenVenta').on('click', envio);
+        jQuery('#clear_form').on('click', function(){
+            jQuery('#altaODV').clearForm();
+        });
 
-	    jQuery('#project').on('change', llenasubproject);
-	    jQuery('#add_row').on('click', addrow);
-	    jQuery('#ordenVenta').on('click', envio);
-	    jQuery('#clear_form').on('click', function(){
-		    jQuery('#altaODV').clearForm();
-	    });
+        jQuery.each(arrayProd, function (key, value) {
+            jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
+        });
 
-	    jQuery.each(arrayProd, function (key, value) {
-		    jQuery('#productos').append('<option value="' + value.id_producto + '">' + value.productName + '</option>');
-	    });
+        $inputRow = jQuery('#contenidos').detach();
 
-	    $inputRow = jQuery('#contenidos').detach();
-
-	    <?php
+        <?php
    if($orden->projectId != ''){
    ?>
-	    jQuery('#project').trigger('change');
-	    jQuery('.cantidad').trigger('change');
-	    jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
-	    <?php
-	   }
+        jQuery('#project').trigger('change');
+        jQuery('.cantidad').trigger('change');
+        jQuery('#subproject').val(<?php echo $orden->projectId2; ?>);
+        <?php
+       }
 
-		if ($orden->id > 0) {
-		?>
-	    jQuery('#odv .contenidos').each(function() { triggersProductsTable(jQuery(this)); });
-	    <?php
-	}
-	?>
+        if ($orden->id > 0) {
+        ?>
+        jQuery('#odv .contenidos').each(function() { triggersProductsTable(jQuery(this)); });
+        <?php
+    }
+    ?>
+
+        jQuery('#project').trigger('change');
     });
 
 </script>
@@ -376,12 +376,12 @@ $subProyects = $this->subprojects;
                         </div>
                         <div id="columna2">
                             <div id="subtotal">
-	                            <?php echo $value->subTotal; ?>
+                                <?php echo $value->subTotal; ?>
                             </div>
                         </div>
                         <div id="columna2">
                             <select id="iva<?php echo $key; ?>" name="iva[]" class="iva cantidades">
-                            <?php echo $options; ?>
+                                <?php echo $options; ?>
                             </select>
                         </div>
                         <div id="columna2">
@@ -393,9 +393,9 @@ $subProyects = $this->subprojects;
                         </div>
                         <div id="columna2">
                             <div id="total">
-	                            <?php
-	                                echo $value->total;
-	                            ?>
+                                <?php
+                                echo $value->total;
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -414,9 +414,9 @@ $subProyects = $this->subprojects;
                 <div id="columna2"><div id="subtotal"></div></div>
                 <!--                <div id="columna2"><input id="iva" type="text" name="iva[]" value="0" class="iva cantidades"></div>-->
                 <div id="columna2"><select id="iva<?php echo $key; ?>" name="iva[]" class="iva cantidades">
-                    <?php foreach ($this->catalogoIva as $indice => $valor) {?>
-                        <option value="<?php echo $indice; ?>" ><?php echo $valor->leyenda; ?></option>
-                    <?php } ?>
+                        <?php foreach ($this->catalogoIva as $indice => $valor) {?>
+                            <option value="<?php echo $indice; ?>" ><?php echo $valor->leyenda; ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                 <div id="columna2"><input id="ieps" type="text" name="ieps[]" value="0" class="ieps cantidades" /></div>
