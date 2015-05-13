@@ -14,6 +14,7 @@ class OdVenta extends Order {
 
 	protected $totalAmount;
 	public $productos;
+    public $id;
 
     /**
      * @param mixed $status
@@ -122,7 +123,7 @@ class OdVenta extends Order {
 		$this->integradoId    = (INT)$order->integradoId;
 		$this->orderType      = 'odv';
 		$this->numOrden       = (INT)$order->numOrden;
-		$this->proyecto       = (INT)$order->projectId2==0?$order->projectId:$order->projectId2;
+		$this->proyecto       = (INT)$order->projectId2 == 0 ? $order->projectId : $order->projectId2;
 		$this->clientId       = (INT)$order->clientId;
 		$this->account        = (INT)$order->account;
 		$this->paymentMethod   = getFromTimOne::getPaymentMethodName($order->paymentMethod);
@@ -197,4 +198,8 @@ class OdVenta extends Order {
 
 		return $db->loadResult();
 	}
+
+    public function setId($id){
+        $this->id = $id;
+    }
 }

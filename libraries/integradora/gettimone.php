@@ -1175,7 +1175,7 @@ class getFromTimOne{
 
             $value->subTotalAmount  = (float)$value->factura->comprobante['SUBTOTAL'];
             $value->totalAmount     = $value->factura->comprobante['TOTAL'];
-            $value->iva             = $value->factura->impuestos->iva->importe;
+            $value->iva             = isset($value->factura->impuestos->iva) ? $value->factura->impuestos->iva->importe : 0;
             $value->ieps            = $value->factura->impuestos->ieps->importe;
 
             $o = new OrdenFn();

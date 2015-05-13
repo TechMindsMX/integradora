@@ -106,6 +106,11 @@ class OrdenFn {
 		return $result[0]->id_odv;
 	}
 
+    public static function getRelatedOdcIdFromOdvId( $id_odv ) {
+        $result = getFromTimOne::selectDB('ordenes_odv_odc_relation', 'id_odv = '.(INT)$id_odv);
+        return $result[0]->id_odc;
+    }
+
 	public static function sumaOrders( $orders ) {
 		$obj                = new stdClass();
 

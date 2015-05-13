@@ -70,16 +70,15 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 $this->app->redirect($redirectUrl, 'no se pudo autorizar', 'error');
             }
 
-
             if($pagar){
                 try {
                     $db->transactionStart();
 
-
                     if ($resultado) {
                         // autorización guardada
                         $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-                        $newStatusId = 5;
+                        $newStatusId    = 5;
+
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
                         $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
@@ -114,6 +113,14 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                                     $this->createOpposingODC($newOrder);
                                 }
                             }
+                        }else{
+                            $idOdcRelated = OrdenFn::getRelatedOdcIdFromOdvId($newOrder->getId());
+
+                            $changeStatusOdc = new stdClass();
+                            $changeStatusOdc->id = $idOdcRelated;
+                            $changeStatusOdc->status = 3;
+
+                            $db->updateObject('#__ordenes_compra',$changeStatusOdc, 'id');
                         }
 
                         $db->transactionCommit();

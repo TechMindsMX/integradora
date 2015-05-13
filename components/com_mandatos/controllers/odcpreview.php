@@ -102,6 +102,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
 
+                                    $odvUPdate = new stdClass();
+                                    $odvUPdate->id = $odv->getId();
+                                    $odvUPdate->urlXML = $urlXML;
+
+                                    $db->updateObject('#__ordenes_venta', $odvUPdate, 'id');
+
                                     $factObj->saveFolio($xmlFactura);
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();

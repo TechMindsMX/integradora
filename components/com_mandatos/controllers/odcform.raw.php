@@ -1,6 +1,7 @@
 <?php
 use Integralib\OdCompra;
 use Integralib\OdVenta;
+use Integralib\OrdenFn;
 
 defined('_JEXEC') or die('Restricted access');
 
@@ -84,6 +85,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 unset($datos['idOrden']);
                 $save->formatData($datos);
                 $salvado = $save->updateDB('ordenes_compra', null, 'numOrden = ' . $datos['numOrden']);
+
+                $this->updateOpossingOdv(new OdCompra(null, $id));
             }
 
             if ($salvado) {
@@ -248,6 +251,60 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
             $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->parametros) ) ) );
             JLog::add($logdata, JLog::DEBUG, 'bitacora');
+        }
+    }
+
+    private function updateOpossingOdv(OdCompra $odCompra){
+        if($odCompra->getReceptor()->isIntegrado()){
+            $idOdvRelated = OrdenFn::getRelatedOdvIdFromOdcId($odCompra->getId());
+            $catalogos  = new Catalogos();
+            $save       = new sendToTimOne();
+            $db         = JFactory::getDbo();
+            $xml        = new xml2Array();
+            $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+
+            $odv = new OdVenta();
+            $odv->setId($idOdvRelated);
+            $odv->integradoId   = $odCompra->getReceptor()->id;
+            $odv->projectId     = $odCompra->proyecto->id_proyecto;
+            $odv->projectId2    = isset($odCompra->subproyecto->id_proyecto) ? $odCompra->subproyecto->id_proyecto : 0;
+            $odv->clientId      = $odCompra->getEmisor()->id;
+            $odv->account       = $odCompra->dataBank[0]->datosBan_id;
+            $odv->paymentMethod = $odCompra->paymentMethod->id;
+            $odv->conditions    = 2;
+            $odv->placeIssue    = isset($dataXML->emisor['children'][1]['attrs']['ESTADO']) ? $catalogos->getStateIdByName($dataXML->emisor['children'][1]['attrs']['ESTADO']) : $dataXML->emisor['children'][0]['attrs']['ESTADO'];
+            $odv->setStatus(3);
+
+            foreach ($dataXML->conceptos as $concepto) {
+                foreach ($concepto as $key => $value) {
+                    switch($key){
+                        case 'DESCRIPCION':
+                            $detalle['descripcion'] = $value;
+                            $detalle['producto'] = $value;
+                            break;
+                        case 'UNIDAD':
+                            $detalle['unidad'] = $value;
+                            break;
+                        case 'CANTIDAD':
+                            $detalle['cantidad'] = $value;
+                            break;
+                        case 'VALORUNITARIO':
+                            $detalle['p_unitario'] = $value;
+                            break;
+                    }
+                    $detalle['iva']  = $dataXML->impuestos->iva->tasa == 16 ? 3:0;
+                    $detalle['ieps'] = isset($dataXML->impuestos->ieps->tasa) ? $dataXML->impuestos->ieps->tasa : 0;
+                }
+                $productos[] = $detalle;
+            }
+
+            $odv->setProductos(json_encode($productos));
+            $odv->setCreatedDate(time());
+            $odv->setTotalAmount(null);
+            $odv->paymentDate = null;
+            $odv->urlXML      = $odCompra->urlXML;
+
+            $db->updateObject('#__ordenes_venta', $odv, 'id');
         }
     }
 }

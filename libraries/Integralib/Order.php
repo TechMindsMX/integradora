@@ -95,7 +95,15 @@ abstract class Order {
 	 * @param $order
 	 */
 	protected function setProjectSubprojectFromOrder( $order ) {
-		$order->proyecto = isset($order->proyecto) ? $order->proyecto : $order->projectId;
+        if(isset($order->proyecto)) {
+            $order->proyecto = $order->proyecto;
+        }else{
+            if($order->projectId2 == 0){
+                $order->proyecto = $order->projectId;
+            }else{
+                $order->proyecto = $order->projectId2;
+            }
+        }
 
 		$proyectos = \getFromTimOne::getProyects( null, $order->proyecto );
 
