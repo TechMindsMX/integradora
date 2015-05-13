@@ -49,9 +49,7 @@ class ReportesViewBalance extends JViewLegacy
 		// verifica el token
 //		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
-		$integrado = new IntegradoSimple($vars['integradoId']);
-		$this->integrado = $integrado->integrados[0];
-		$this->integrado->displayName = $integrado->getDisplayName();
+		$this->integrado = new IntegradoSimple($vars['integradoId']);
 
 		// boton de impresion
 		$this->loadHelper('Reportes');

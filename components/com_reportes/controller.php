@@ -37,6 +37,7 @@ class ReportesController extends JControllerLegacy {
         else {
             $integrado	    = new IntegradoSimple($this->integradoId);
             $canOperate     = $integrado->canOperate();
+            $canOperate     = true;
             if(!$canOperate){
                 $this->app->redirect('index.php?option=com_integrado&view=integrado&Itemid=207', JText::_('MSG_REDIRECT_INTEGRADO_CANT_OPERATE'), 'Warning');
             }

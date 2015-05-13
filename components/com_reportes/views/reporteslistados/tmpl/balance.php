@@ -56,11 +56,11 @@ $url_resultados = 'index.php?option=com_reportes&view=resultados&'.$formToken;
 
 			<div class="form-group" style="margin-left: 31px;">
 				<div>
-					<label for="created"><?php echo JText::_('LBL_DUP'); ?></label>
-					<input id="startDate" class="monthYearPicker" type="text" readonly />
+					<label for="startDate"><?php echo JText::_('LBL_DUP'); ?></label>
+					<input id="startDate" name="startDate" class="monthYearPicker" type="text" readonly />
 				</div>
 				<div>
-					<button id="greporte" class="btn btn-primary span2" type="submit" disabled><?php echo JText::_('LBL_GENERAR_REPORTE'); ?></button>
+					<button id="greporte" class="btn btn-primary span2" type="submit" ><?php echo JText::_('LBL_GENERAR_REPORTE'); ?></button>
 					<a class="btn btn-danger" href="<?php echo 'index.php?option=com_reportes&view=reporteslistados'; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 				</div>
 

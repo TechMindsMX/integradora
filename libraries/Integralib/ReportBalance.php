@@ -30,17 +30,35 @@ class ReportBalance extends \IntegradoOrders {
 		$this->timoneTxsOrders = $this->getOrderForTxs();
 
 		$this->orders = $this->findOrders( $integradoId );
+
+		$this->income = $this->getData( $this->getIncomeOrders() );
+		$this->deposit = $this->getData( $this->getDepositOrders() );
+		$this->withdraw = $this->getData( $this->getWithdrawalOrders() );
+		$this->expense = $this->getData( $this->getExpenseOrders() );
 	}
 
 	public function calculateActivos(){
-		$this->activos->ixc     = $this->calculateIxC()->saldo->total;
-		$this->activos->dxc     = $this->calculateDxC()->saldo->total;
-		$this->activos->banco   = $this->getData( $this->getIncomeOrders() )->pagado->total - $this->getData( $this->getExpenseOrders() )->pagado->total;
-		$this->activos->total   = $this->activos->ixc + $this->activos->dxc + $this->activos->banco;
+		$this->activos->ivaCompras          = $this->expense->pagado->iva;
+		$this->activos->netoSaldoVentas     = $this->income->saldo->neto;
+
+		$this->activos->banco   = $this->income->pagado->total + $this->deposit->pagado->total - $this->expense->pagado->total - $this->withdraw->pagado->total;
+		$this->activos->total   = $this->activos->ivaCompras + $this->activos->netoSaldoVentas + $this->activos->banco;
 	}
 
 	public function calculatePasivos(){
-		$this->pasivos = $this->getData( $this->getExpenseOrders() );
+		$this->pasivos->cuentasPorPagar = $this->expense->saldo->neto;
+		$this->pasivos->ivaEnVentas     = $this->income->pagado->iva;
+
+		$this->pasivos->resultado       = $this->income->nominal->neto - $this->expense->nominal->neto;
+
+		$this->pasivos->depositos       = $this->deposit->pagado->total;
+		$this->pasivos->retiros         = $this->withdraw->pagado->total;
+
+		$this->pasivos->total           = $this->pasivos->cuentasPorPagar + $this->pasivos->ivaEnVentas + $this->pasivos->resultado + $this->pasivos->depositos - $this->pasivos->retiros;
+	}
+
+	public function calculateCapital(){
+		$this->capital = $this->getResultadoAnterior() + $this->pasivos->resultado;
 	}
 
 	public function getData($orders){
@@ -169,8 +187,16 @@ class ReportBalance extends \IntegradoOrders {
 		return $this->orders->odv;
 	}
 
+	public function getDepositOrders() {
+		return $this->orders->odd;
+	}
+
 	public function getExpenseOrders() {
 		return $this->orders->odc;
+	}
+
+	public function getWithdrawalOrders() {
+		return $this->orders->odr;
 	}
 
 	public function setTimoneUserTxsIds() {
@@ -225,6 +251,11 @@ class ReportBalance extends \IntegradoOrders {
 		$ordersFiltered = \getFromTimOne::filterOrdersByStatus($this->orders->odd, array(5));
 
 		return OrdenFn::sumaOrders($ordersFiltered);
+	}
+
+	private function getResultadoAnterior() {
+		// TODO: traer el resultado anterior
+		return 0;
 	}
 
 }
