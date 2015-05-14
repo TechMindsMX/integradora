@@ -86,4 +86,10 @@ abstract class ReportOrders {
 		return $result;
 	}
 
+	public function getData( $orders ) {
+		$sumaOrdenes = OrdenFn::sumaOrders( $orders );
+
+		return $sumaOrdenes;
+	}
+
 }

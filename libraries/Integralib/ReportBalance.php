@@ -81,12 +81,6 @@ class ReportBalance extends ReportOrders {
 		return 0;
 	}
 
-	public function getData($orders){
-		$sumaOrdenes = OrdenFn::sumaOrders( $orders );
-
-		return $sumaOrdenes;
-	}
-
 	/**
 	 * @return mixed
 	 */
@@ -107,7 +101,6 @@ class ReportBalance extends ReportOrders {
 	public function getOrders() {
 		return $this->orders;
 	}
-
 
 	public function getIncomeOrders() {
 		return $this->orders->odv;
