@@ -41,7 +41,7 @@ class ReportesViewBalance extends JViewLegacy
 		}
 
 		$timezone = new DateTimeZone('America/Mexico_City');
-		$fechaFin = new DateTime($this->report->period->endDate, $timezone);
+		$fechaFin = new DateTime($this->report->getFechaFin(), $timezone);
 		$fechaFin->modify('-1 second');
 
 		$this->report->period->endDate = $fechaFin->format('d-m-Y');
@@ -54,8 +54,8 @@ class ReportesViewBalance extends JViewLegacy
 		// boton de impresion
 		$this->loadHelper('Reportes');
 
-		$url            = 'index.php?com_reportes&view=balance&id='.$this->report->id.'1&'.JSession::getFormToken(true).'=1';;
-		$this->printBtn = ReportesHelper::getPrintBtn($url);
+//		$url            = 'index.php?com_reportes&view=balance&id='.$this->report->id.'1&'.JSession::getFormToken(true).'=1';;
+//		$this->printBtn = ReportesHelper::getPrintBtn($url);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))

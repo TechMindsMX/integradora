@@ -11,6 +11,8 @@ namespace Integralib;
 
 class ReportBalance extends \IntegradoOrders {
 
+	public $capital;
+	public $depositos;
 	protected $fechaInicio;
 	protected $fechaFin;
 	protected $filtroProyect;
@@ -58,7 +60,21 @@ class ReportBalance extends \IntegradoOrders {
 	}
 
 	public function calculateCapital(){
-		$this->capital = $this->getResultadoAnterior() + $this->pasivos->resultado;
+		$this->capital->total = $this->getResultadoAnterior() + $this->pasivos->resultado;
+	}
+
+	public function calculatePastExcersises() {
+		$this->pasivos->ejecicioAnterior = $this->getResultadoAnterior();
+		$this->depositos->ejecicioAnterior = $this->calculatePastDeposits();
+		$this->retiros->ejecicioAnterior = $this->calculatePastWithdrwals();
+	}
+
+	public function calculatePastDeposits() {
+		return 0;
+	}
+
+	private function calculatePastWithdrwals() {
+		return 0;
 	}
 
 	public function getData($orders){

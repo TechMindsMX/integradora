@@ -9,7 +9,7 @@ $integ = $this->integrado;
 
 ?>
 <div class="hidden-print form-group">
-	<?php echo $this->printBtn; ?>
+<!--	--><?php //echo $this->printBtn; ?>
 </div>
 
 <div class="clearfix" id="logo">
@@ -52,11 +52,11 @@ $integ = $this->integrado;
 		<h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
 		<div class="row-fluid">
 			<div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
-			<div class="span6"><?php echo $report->getFechaInicio(); ?></div>
+			<div class="span6"><?php echo date('d-m-Y',$report->getFechaInicio()); ?></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
-			<div class="span6"><?php echo $report->getFechaFin(); ?></div>
+			<div class="span6"><?php echo date('d-m-Y',$report->getFechaFin()); ?></div>
 		</div>
 	</div>
 	<div class="span6">
