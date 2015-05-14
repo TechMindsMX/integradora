@@ -79,15 +79,15 @@ $integ = $this->integrado;
 			<div class="span6">
 				<div class="row-fluid">
 					<div class="span6"><?php echo JText::_('LBL_PASIVOS'); ?></div>
-					<div class="span6 num"><?php echo number_format($report->getPasivos()->total,2) ;?></div>
+					<div class="span6 num"><?php echo number_format($report->getPasivos()->cuentasPorPagar + $report->getPasivos()->ivaEnVentas,2) ;?></div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6"><?php echo JText::_('LBL_CAPITAL'); ?></div>
-					<div class="span6 num"><?php echo number_format($report->capital->total,2) ;?></div>
+					<div class="span6 num"><?php echo number_format($report->capital->total + ($report->getPasivos()->depositos - $report->getPasivos()->retiros),2) ;?></div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6"><?php echo JText::_('LBL_TOTAL'); ?></div>
-					<div class="span6 num"><?php echo number_format($report->getPasivos()->total + $report->capital->total,2) ;?></div>
+					<div class="span6 num"><?php echo number_format($report->getPasivos()->cuentasPorPagar + $report->getPasivos()->ivaEnVentas + $report->capital->total + ($report->getPasivos()->depositos - $report->getPasivos()->retiros),2) ;?></div>
 				</div>
 			</div>
 		</div>
@@ -157,14 +157,14 @@ $integ = $this->integrado;
 		</div>
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_RETIROS'); ?></div>
-			<div class="span6 num"><?php echo number_format($report->getPasivos()->retiros,2); ?></div>
+			<div class="span6 num"> - <?php echo number_format($report->getPasivos()->retiros,2); ?></div>
 		</div>
 
 		<br class="row-separator clearfix">
 
 		<div class="row-fluid">
 			<div class="span6 "><?php echo JText::_('LBL_TOTAL'); ?></div>
-			<div class="span6 num"><?php echo number_format($report->capital->total,2); ?></div>
+			<div class="span6 num"><?php echo number_format($report->capital->total + ($report->getPasivos()->depositos - $report->getPasivos()->retiros),2); ?></div>
 		</div>
 	</div>
 </div>

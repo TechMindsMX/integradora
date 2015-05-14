@@ -2696,50 +2696,6 @@ class comisionEvent {
     }
 }
 
-class IntegradoOrders {
-
-    public $orders;
-
-    function __construct($integradoId){
-        self::setOrders($integradoId);
-    }
-
-    private function setOrders($integradoId) {
-//        $this->orders->odv = getFromTimOne::getOrdenesVenta($integradoId);
-//        $this->orders->odc = getFromTimOne::getOrdenesCompra($integradoId);
-//        $this->orders->odd = getFromTimOne::getOrdenesDeposito($integradoId);
-//        $this->orders->odr = getFromTimOne::getOrdenesRetiro($integradoId);
-
-        $mutuosOdps = getFromTimOne::getMutuosODP($integradoId);
-        if ( ! empty( $mutuosOdps->acreedor ) ) {
-            $this->orders->odp_acreedor = $mutuosOdps->acreedor;
-        }
-        if ( ! empty( $mutuosOdps->deudor ) ) {
-            $this->orders->odp_deudor   = $mutuosOdps->deudor;
-        }
-
-        $this->getTxs();
-    }
-
-    private function getTxs(){
-        foreach ($this->orders as $key => $value) {
-            foreach ($value as $orden) {
-                $orden->txs = getFromTimOne::getTxbyOrderTypeAndOrderId($orden->integradoId, $key, $orden->id);
-                $this->getTxDetails($orden->txs);
-            }
-        }
-    }
-
-    /**
-     * @param $txs
-     */
-    public function getTxDetails($txs)
-    {
-        foreach ($txs as $tx) {
-            $tx->detalleTx = getFromTimOne::getTxDataByTxId($tx->idTx);
-        }
-    }
-}
 
 class IntegradoTxs {
 
