@@ -10,7 +10,7 @@ namespace Integralib;
 
 defined('_JEXEC') or die('Restricted access');
 
-class ReportFlujo extends \IntegradoOrders {
+class ReportFlujo extends ReportOrders {
 
 	protected $fechaInicio;
 	protected $fechaFin;
@@ -25,9 +25,15 @@ class ReportFlujo extends \IntegradoOrders {
 		$this->fechaInicio  = $fechaInicio;
 		$this->fechaFin     = $fechaFin;
 		$this->filtroProyect = $proyecto;
+		$this->integradoId = $integradoId;
+
+		$this->timoneTxs = $this->getTimoneUserTxsIds();
+		$this->timoneTxsOrders = $this->getOrderForTxs();
 
 		$this->txs = $this->findTxsAndOrders( $integradoId );
+
 	}
+
 	public function findTxsAndOrders( $integradoId = null ) {
 		$cond = $this->getConditions( $integradoId, 'txs' );
 
@@ -140,7 +146,7 @@ class ReportFlujo extends \IntegradoOrders {
 		return $this->fechaInicio;
 	}
 
-	private function getConditions( $integradoId = null, $type = '' ) {
+	protected function getConditions( $integradoId = null, $type = '' ) {
 		$db = \JFactory::getDbo();
 		if (isset($integradoId)) {
 			$cond[] = 'idIntegrado = '. $db->quote($integradoId);
@@ -177,7 +183,7 @@ class ReportFlujo extends \IntegradoOrders {
 	 * @return null
 	 * @internal param $result
 	 */
-	private function queryOrders( $db, $params, $cond ) {
+	protected function queryOrders( $db, $params, $cond ) {
 		$result = null;
 
 		$query = $db->getQuery( true )

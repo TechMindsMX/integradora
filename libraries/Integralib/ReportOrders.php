@@ -14,6 +14,9 @@ abstract class ReportOrders {
 	protected $fechaInicio;
 	protected $fechaFin;
 	protected $filtroProyect;
+	protected $integradoId;
+	protected $timoneTxs;
+	protected $timoneTxsOrders;
 
 	public function findOrders( $integradoId = null ) {
 		$cond = $this->getConditions( $integradoId );
@@ -90,6 +93,55 @@ abstract class ReportOrders {
 		$sumaOrdenes = OrdenFn::sumaOrders( $orders );
 
 		return $sumaOrdenes;
+	}
+
+	public function getTimoneUserTxsIds() {
+		$integ = new \IntegradoSimple( $this->integradoId );
+		$integ->getTimOneData();
+
+		$req = new TimOneRequest();
+
+		$result = $req->getUserTxs( $integ->timoneData->timoneUuid );
+
+		$timoneTxs = json_decode( $result->data );
+
+		return $timoneTxs;
+	}
+
+	protected function getOrderForTxs() {
+		$orders = array ();
+		$db     = \JFactory::getDbo();
+
+		$query = $db->getQuery( true )
+		            ->select( $db->quoteName( array (
+			                                      'txs.idTx',
+			                                      'txs.idIntegrado',
+			                                      'txs.date',
+			                                      'txs.idComision',
+			                                      'piv.amount',
+			                                      'piv.idOrden',
+			                                      'piv.orderType'
+		                                      ) ) )
+		            ->from( $db->quoteName( '#__txs_timone_mandato', 'txs' ) )
+		            ->join( 'left', $db->quoteName( '#__txs_mandatos', 'piv' ) . ' ON (txs.id = piv.id)' )
+		            ->where( "txs.idTx IN (" . $this->getArrayOfTxs() . ") AND piv.idOrden IS NOT NULL" );
+		$db->setQuery( $query );
+
+		$result = $db->loadObjectList();
+
+		foreach ( $result as $val ) {
+			$orders[] = OrderFactory::getOrder( $val->idOrden, $val->orderType );
+		}
+
+		return $orders;
+	}
+
+	protected function getArrayOfTxs() {
+		foreach ( $this->timoneTxs as $tx ) {
+			$array[] = $tx->uuid;
+		}
+
+		return "'" . implode( "', '", $array ) . "'";
 	}
 
 }

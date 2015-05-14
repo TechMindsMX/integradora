@@ -15,9 +15,6 @@ class ReportBalance extends ReportOrders {
 	public $depositos;
 	protected $activos;
 	protected $pasivos;
-	protected $timoneTxs;
-	protected $timoneTxsOrders;
-	private $integradoId;
 
 	function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
 		$this->fechaInicio  = !is_null($fechaInicio) ? $fechaInicio : strtotime(date('01-01-Y'));
@@ -116,47 +113,6 @@ class ReportBalance extends ReportOrders {
 
 	public function getWithdrawalOrders() {
 		return $this->orders->odr;
-	}
-
-	public function getTimoneUserTxsIds() {
-		$integ = new \IntegradoSimple($this->integradoId);
-		$integ->getTimOneData();
-
-		$req = new TimOneRequest();
-
-		$result = $req->getUserTxs($integ->timoneData->timoneUuid);
-
-		$timoneTxs = json_decode($result->data);
-
-		return $timoneTxs;
-	}
-
-	private function getOrderForTxs() {
-		$orders = array();
-		$db = \JFactory::getDbo();
-
-		$query = $db->getQuery(true)
-			->select($db->quoteName(array('txs.idTx', 'txs.idIntegrado', 'txs.date', 'txs.idComision', 'piv.amount', 'piv.idOrden', 'piv.orderType')))
-			->from($db->quoteName('#__txs_timone_mandato', 'txs'))
-			->join('left', $db->quoteName('#__txs_mandatos', 'piv').' ON (txs.id = piv.id)')
-			->where(" (txs.date >= ".$db->quote($this->fechaInicio)." AND txs.date <= ".$db->quote($this->fechaFin).") AND txs.idTx IN (".$this->getArrayOfTxs().") AND piv.idOrden IS NOT NULL");
-		$db->setQuery($query);
-
-		$result = $db->loadObjectList();
-
-		foreach ( $result as $val ) {
-			$orders[] = OrderFactory::getOrder($val->idOrden, $val->orderType);
-		}
-
-		return $orders;
-	}
-
-	private function getArrayOfTxs() {
-		foreach ( $this->timoneTxs as $tx ) {
-			$array[] = $tx->uuid;
-		}
-
-		return "'".implode("', '", $array)."'";
 	}
 
 	protected function getConditions( $integradoId = null ) {
