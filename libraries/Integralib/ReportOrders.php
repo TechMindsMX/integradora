@@ -108,8 +108,7 @@ abstract class ReportOrders {
 		return $timoneTxs;
 	}
 
-	protected function getOrderForTxs() {
-		$orders = array ();
+	protected function getOrderForTxs($txs) {
 		$db     = \JFactory::getDbo();
 
 		$query = $db->getQuery( true )
@@ -124,20 +123,16 @@ abstract class ReportOrders {
 		                                      ) ) )
 		            ->from( $db->quoteName( '#__txs_timone_mandato', 'txs' ) )
 		            ->join( 'left', $db->quoteName( '#__txs_mandatos', 'piv' ) . ' ON (txs.id = piv.id)' )
-		            ->where( "txs.idTx IN (" . $this->getArrayOfTxs() . ") AND piv.idOrden IS NOT NULL" );
+		            ->where( "txs.idTx IN (" . $this->prepareArray($txs) . ")" );
 		$db->setQuery( $query );
 
-		$result = $db->loadObjectList();
+		$result = $db->loadObjectList('idTx');
 
-		foreach ( $result as $val ) {
-			$orders[] = OrderFactory::getOrder( $val->idOrden, $val->orderType );
-		}
-
-		return $orders;
+		return $result;
 	}
 
-	protected function getArrayOfTxs() {
-		foreach ( $this->timoneTxs as $tx ) {
+	protected function prepareArray($txs) {
+		foreach ( $txs as $tx ) {
 			$array[] = $tx->uuid;
 		}
 

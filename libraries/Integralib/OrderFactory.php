@@ -34,6 +34,8 @@ class OrderFactory {
 			case 'odd':
 				$return = new OdDeposito($orderData, $orderId);
 				break;
+			default:
+				$return = null;
 		}
 
 		return $return;

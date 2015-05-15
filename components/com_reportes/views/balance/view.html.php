@@ -40,11 +40,11 @@ class ReportesViewBalance extends JViewLegacy
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
 		}
 
-		$timezone = new DateTimeZone('America/Mexico_City');
-		$fechaFin = new DateTime($this->report->getFechaFin(), $timezone);
-		$fechaFin->modify('-1 second');
-
-		$this->report->period->endDate = $fechaFin->format('d-m-Y');
+//		$timezone = new DateTimeZone('America/Mexico_City');
+//		$fechaFin = new DateTime($this->report->getFechaFin(), $timezone);
+//		$fechaFin->modify('-1 second');
+//
+//		$this->report->period->endDate = $fechaFin->format('d-m-Y');
 
 		// verifica el token
 //		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');

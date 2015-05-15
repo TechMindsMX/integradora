@@ -27,8 +27,24 @@ class ReportFlujo extends ReportOrders {
 		$this->filtroProyect = $proyecto;
 		$this->integradoId = $integradoId;
 
+		$this->integrado = new \IntegradoSimple($this->integradoId);
+		$this->integrado->getTimOneData();
+
 		$this->timoneTxs = $this->getTimoneUserTxsIds();
-		$this->timoneTxsOrders = $this->getOrderForTxs();
+
+		$expenseTxs = $this->getExpenseTxs();
+		$incomeTxs = $this->getIncomeTxs();
+
+		$expenseOrders    = $this->getOrderForTxs($expenseTxs);
+		foreach ( $expenseTxs as $val ) {
+			$order = OrderFactory::getOrder( $expenseOrders[$val->uuid]->idOrden, $expenseOrders[$val->uuid]->orderType );
+			$val->order = $order;
+		}
+
+		$this->expenseOrders = $expenseTxs;
+
+
+		$this->inomeOrders      = $this->getOdvs( $this->getOrderForTxs($incomeTxs) );
 
 		$this->txs = $this->findTxsAndOrders( $integradoId );
 
@@ -218,7 +234,11 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	public function getIncomeTxs() {
-		return $this->txs->odv;
+		return array_filter($this->timoneTxs, array($this, 'filterIncomeTxs' ) );
+	}
+
+	public function filterIncomeTxs($val) {
+		return $val->destination == $this->integrado->timoneData->timoneUuid && $val->type !== 'CASH_OUT';
 	}
 
 	public function getDepositTxs() {
@@ -226,7 +246,11 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	public function getExpenseTxs() {
-		return $this->txs->odc;
+		return array_filter($this->timoneTxs, array($this, 'filterExpenseTxs' ) );
+	}
+
+	public function filterExpenseTxs($val) {
+		return $val->origin == $this->integrado->timoneData->timoneUuid;
 	}
 
 	public function getWithdrawTxs() {
@@ -247,6 +271,16 @@ class ReportFlujo extends ReportOrders {
 		}
 
 		return $txs;
+	}
+
+	private function getOdvs( $getOrderForTxs ) {
+		foreach ( $getOrderForTxs as $key => $order ) {
+			if ( is_a($order, 'Integralib\OdCompra') ) {
+				$getOrderForTxs[$key] = OrderFactory::getOrder( OrdenFn::getRelatedOdvIdFromOdcId($order->getId()), 'odv') ;
+			}
+		}
+
+		return $getOrderForTxs;
 	}
 
 }

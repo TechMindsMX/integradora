@@ -38,10 +38,10 @@ class ReportesModelFlujo extends JModelItem {
 	 */
 	public function generateFlujo($vars) {
 		$report = new ReportFlujo( $vars['integradoId'], $vars['startDate'], $vars['endDate'] );
-		$report->calculateIngresos();
-		$report->calculateEgresos();
-		$report->calculateDepositos();
-		$report->calculateRetiros();
+//		$report->calculateIngresos();
+//		$report->calculateEgresos();
+//		$report->calculateDepositos();
+//		$report->calculateRetiros();
 		$report->startPeriod = $report->getFechaInicio();
 		$report->endPeriod   = $report->getFechaFin();
 

@@ -23,7 +23,13 @@ class ReportBalance extends ReportOrders {
 		$this->integradoId = $integradoId;
 
 		$this->timoneTxs = $this->getTimoneUserTxsIds();
-		$this->timoneTxsOrders = $this->getOrderForTxs();
+		$result = $this->getOrderForTxs($this->timoneTxs);
+
+		foreach ( $result as $val ) {
+			$orders[] = OrderFactory::getOrder( $val->idOrden, $val->orderType );
+		}
+
+		$this->timoneTxsOrders = $orders;
 
 		$this->orders = $this->findOrders( $integradoId );
 
