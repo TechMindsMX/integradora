@@ -16,7 +16,7 @@ class IntegradoHelper {
 			if ( !is_a( $i , 'IntegradoSimple') ) {
 				$i = new \IntegradoSimple($i->integrado_id);
 			}
-			if ( $i->hasRfc() ) {
+			if ( !$i->hasRfc() ) {
 				unset($items[$k]);
 			};
 		}
