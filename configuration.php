@@ -21,14 +21,14 @@ class JConfig {
 	public $secret = 'BXlWOWZqNLPVESnP';
 	public $gzip = '0';
 	public $error_reporting = 'default';
-	public $helpurl = 'http://help.joomla.org/proxy/index.php?option=com_help&keyref=Help{major}{minor}:{keyref}';
+	public $helpurl = 'https://help.joomla.org/proxy/index.php?option=com_help&keyref=Help{major}{minor}:{keyref}';
 	public $ftp_host = '';
 	public $ftp_port = '';
 	public $ftp_user = 'Thor';
 	public $ftp_pass = 'ADMINt1m2014';
 	public $ftp_root = '';
 	public $ftp_enable = '0';
-	public $offset = 'UTC';
+	public $offset = 'America/Mexico_City';
 	public $mailonline = '1';
 	public $mailer = 'mail';
 	public $mailfrom = 'aguilar_2001@hotmail.com';
@@ -83,4 +83,10 @@ class JConfig {
 	public $cookie_domain = '';
 	public $cookie_path = '';
 	public $asset_id = '1';
+	public $redis_persist = '1';
+	public $redis_server_host = 'localhost';
+	public $redis_server_port = '6379';
+	public $redis_server_auth = '';
+	public $redis_server_db = '0';
+	public $massmailoff = '0';
 }

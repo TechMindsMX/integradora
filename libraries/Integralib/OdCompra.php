@@ -94,7 +94,7 @@ class OdCompra extends Order {
 	}
 
 	public function getFacturaUuid() {
-		return $this->order->factura->complemento['children'][0]['attrs']['UUID'];
+		return $this->factura->complemento['children'][0]['attrs']['UUID'];
 	}
 
 }

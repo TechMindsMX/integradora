@@ -32,29 +32,17 @@ class ReportFlujo extends ReportOrders {
 
 		$this->timoneTxs = $this->getTimoneUserTxsIds();
 
-		$this->calculateExpenses();
+		if (!empty($this->timoneTxs) ) {
+			$this->calculateExpenses();
 
-		$this->calculateIncome();
+			$this->calculateIncome();
 
-		$this->calculateIngresos();
-		$this->calculateEgresos();
-		$this->calculateDepositos();
-		$this->calculateRetiros();
+			$this->calculateIngresos();
+			$this->calculateEgresos();
+			$this->calculateDepositos();
+			$this->calculateRetiros();
+		}
 
-		$this->txs = $this->findTxsAndOrders( $integradoId );
-
-	}
-
-	public function findTxsAndOrders( $integradoId = null ) {
-		$cond = $this->getConditions( $integradoId, 'txs' );
-
-		$db = \JFactory::getDbo();
-
-		$result = $this->queryTxs( $db, $cond );
-
-		$result = $this->groupByOrderType($result);
-
-		return $result;
 	}
 
 	public function calculateIngresos(){

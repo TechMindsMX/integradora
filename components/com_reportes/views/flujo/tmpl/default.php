@@ -17,8 +17,6 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 <script src="libraries/integradora/js/tim-datepicker-defaults.js"> </script>
 
 <script>
-    var integradoId = <?php echo $integ->integrado->integrado_id; ?>;
-
     function cambiarPeriodo() {
         fechaInicial   = jQuery('#startDate').val();
         fechaFinal     = jQuery('#endDate').val();
@@ -40,13 +38,13 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <div class="header">
         <div class="span6">
             <h3>
-                <?php echo JText::_('INTEGRADORA_NAME'); ?>
+                <?php echo $this->integradora->getDisplayName(); ?>
             </h3>
             <p>
-                <?php echo JText::_('INTEGRADORA_ADDRESS'); ?>
+                <?php echo $this->integradora->getAddressFormatted(); ?>
             </p>
             <p>
-                <?php echo JText::_('INTEGRADORA RFC'); ?>
+                <?php echo $this->integradora->getIntegradoRfc(); ?>
             </p>
         </div>
 
@@ -75,14 +73,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <div class="span6"><label for="startDate"><?php echo JText::_('LBL_FROM_DATE'); ?></label></div>
             <div class="span6 visible-print-block"><?php echo $report->getFechaInicio(); ?></div>
             <div class="span6 hidden-print">
-	            <input class="datepicker" id="startDate" name="startDate" type="text" readonly />
+	            <input class="datepicker" id="startDate" name="startDate" type="text" value="<?php echo $report->getFechaInicio(); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6"><label for="endDate"><?php echo JText::_('LBL_TO_DATE'); ?></label></div>
             <div class="span6 visible-print-block"><?php echo $report->getFechaFin(); ?></div>
             <div class="span6">
-	            <input class="datepicker" id="endDate" name="endDate" type="text" readonly />
+	            <input class="datepicker" id="endDate" name="endDate" type="text" value="<?php echo $report->getFechaFin(); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
@@ -155,8 +153,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
 	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
-	            <td><?php echo @$tx->order->numOrder; ?></td>
-	            <td><?php echo @$tx->order->proyectName.' '.@$tx->order->subProyectName;  ?></td>
+	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
+	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->iva,2) ; ?></div></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->amount,2) ; ?></div></td>
@@ -186,8 +184,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    if ( isset( $report->txs->odd ) ) {
-	    foreach ($report->txs->odd as $k => $tx) {
+    if ( !empty( $report->incomeTxs ) ) {
+	    foreach ($report->getTxs('Integralib\OdDeposito') as $k => $tx) {
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->date); ?></td>
@@ -221,14 +219,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    if ( isset( $report->expenseTxs ) ) {
+    if ( !empty( $report->expenseTxs ) ) {
 	    foreach ($report->getTxs('Integralib\OdCompra') as $k => $tx) {
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
 	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
-	            <td><?php echo @$tx->order->getFacturaUuid(); ?></td>
-	            <td><?php echo @$tx->order->getProjectName().' '.@$tx->order->getSubProjectName();  ?></td>
+	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
+	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->iva,2) ; ?></div></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->amount,2) ; ?></div></td>
@@ -260,8 +258,8 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    if ( isset( $report->txs->odr ) ) {
-	    foreach ($report->getWithdrawTxs() as $k => $tx) {
+    if ( !empty( $report->expenseTxs ) ) {
+	    foreach ($report->getTxs('Integralib\OdRetiro') as $k => $tx) {
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
