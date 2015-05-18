@@ -12,6 +12,7 @@ defined('_JEXEC') or die('Restricted access');
 
 abstract class Order {
 
+	public $txs;
 	protected $id;
 	protected $emisor;
 	protected $receptor;
@@ -133,4 +134,11 @@ abstract class Order {
 		return $return;
 	}
 
+	public function setTxsByUuid() {
+		foreach ( $this->txs as $key => $val ) {
+			$this->txs[$val->idTx] = $val;
+			unset($this->txs[$key]);
+		}
+
+	}
 }

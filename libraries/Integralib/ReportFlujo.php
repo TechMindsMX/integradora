@@ -32,19 +32,14 @@ class ReportFlujo extends ReportOrders {
 
 		$this->timoneTxs = $this->getTimoneUserTxsIds();
 
-		$expenseTxs = $this->getExpenseTxs();
-		$incomeTxs = $this->getIncomeTxs();
+		$this->calculateExpenses();
 
-		$expenseOrders    = $this->getOrderForTxs($expenseTxs);
-		foreach ( $expenseTxs as $val ) {
-			$order = OrderFactory::getOrder( $expenseOrders[$val->uuid]->idOrden, $expenseOrders[$val->uuid]->orderType );
-			$val->order = $order;
-		}
+		$this->calculateIncome();
 
-		$this->expenseOrders = $expenseTxs;
-
-
-		$this->inomeOrders      = $this->getOdvs( $this->getOrderForTxs($incomeTxs) );
+		$this->calculateIngresos();
+		$this->calculateEgresos();
+		$this->calculateDepositos();
+		$this->calculateRetiros();
 
 		$this->txs = $this->findTxsAndOrders( $integradoId );
 
@@ -54,24 +49,6 @@ class ReportFlujo extends ReportOrders {
 		$cond = $this->getConditions( $integradoId, 'txs' );
 
 		$db = \JFactory::getDbo();
-		$types = array(
-			array(
-				'table' => '#__ordenes_compra',
-				'type' => 'odc'
-			),
-			array(
-				'table' => '#__ordenes_venta',
-				'type' => 'odv'
-			),
-			array(
-				'table' => '#__ordenes_deposito',
-				'type' => 'odd'
-			),
-			array(
-				'table' => '#__ordenes_retiro',
-				'type' => 'odr'
-			),
-		);
 
 		$result = $this->queryTxs( $db, $cond );
 
@@ -81,34 +58,27 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	public function calculateIngresos(){
-		$this->ingresos = $this->getData( $this->getIncomeTxs() );
+		$txs = $this->getTxs('Integralib\OdVenta');
+
+		$this->ingresos = $this->sumTxs( $txs );
 	}
 
 	public function calculateEgresos(){
-		$this->egresos = $this->getData( $this->getExpenseTxs() );
+		$txs = $this->getTxs('Integralib\OdCompra');
+
+		$this->egresos = $this->sumTxs( $txs );
 	}
 
 	public function calculateDepositos(){
-		$this->depositos = $this->getData( $this->getDepositTxs() );
+		$txs = $this->getTxs('Integralib\OdDeposito');
+
+		$this->depositos = $this->sumTxs( $txs );
 	}
 
 	public function calculateRetiros(){
-		$this->retiros = $this->getData( $this->getWithdrawTxs() );
-	}
+		$txs = $this->getTxs('Integralib\OdRetiro');
 
-	public function getData( $txs ){
-		$sumaOrders = new \stdClass();
-
-		if ( ! empty( $txs ) ) {
-			foreach ( $txs as $key => $tx ) {
-				$sumaOrders->pagado->total  += $tx->getTotalAmount();
-				$ivaOrderRate = ( $tx->order->iva / $tx->order->subTotalAmount );
-				$sumaOrders->pagado->net = $tx->getTotalAmount() / (1+$ivaOrderRate);
-				$sumaOrders->pagado->iva = $sumaOrders->pagado->net * $ivaOrderRate;
-			}
-		}
-
-		return $sumaOrders;
+		$this->retiros = $this->sumTxs( $txs );
 	}
 
 	/**
@@ -192,6 +162,55 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function calculateExpenses() {
+		$expenseTxs = $this->getExpenseTxs();
+
+		$expenseOrders = $this->getOrderForTxs( $expenseTxs );
+		foreach ( $expenseTxs as $val ) {
+			$val->order = OrderFactory::getOrder( $expenseOrders[ $val->uuid ]->idOrden,
+			                                      $expenseOrders[ $val->uuid ]->orderType );
+			if ( isset( $val->order ) ) {
+				$val->order->setTxsByUuid();
+			}
+		}
+
+		$this->expenseTxs = $expenseTxs;
+	}
+
+	public function calculateIncome() {
+		$incomeTxs = $this->getIncomeTxs();
+
+		$orders = $this->getOrderForTxs( $incomeTxs );
+		foreach ( $incomeTxs as $val ) {
+			$order      = OrderFactory::getOrder( $orders[ $val->uuid ]->idOrden, $orders[ $val->uuid ]->orderType );
+			$val->order = $this->getOdvFromOdc( $order );
+			if ( isset( $val->order ) ) {
+				$val->order->setTxsByUuid();
+			}
+		}
+
+		$this->incomeTxs = $incomeTxs;
+	}
+
+	/**
+	 * @param $txs
+	 *
+	 * @return \stdClass
+	 */
+	public function sumTxs( $txs ) {
+		$obj = new \stdClass();
+		foreach ( $txs as $k => $tx ) {
+			$obj->net += $tx->order->txs[ $k ]->detalleTx->net;
+			$obj->iva += $tx->order->txs[ $k ]->detalleTx->iva;
+			$obj->amount += $tx->order->txs[ $k ]->detalleTx->amount;
+		}
+
+		return $obj;
+	}
+
+	/**
 	 * @param $db
 	 * @param $params
 	 * @param $cond
@@ -234,11 +253,10 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	public function getIncomeTxs() {
-		return array_filter($this->timoneTxs, array($this, 'filterIncomeTxs' ) );
-	}
-
-	public function filterIncomeTxs($val) {
-		return $val->destination == $this->integrado->timoneData->timoneUuid && $val->type !== 'CASH_OUT';
+		$uuid = $this->integrado->timoneData->timoneUuid;
+		return array_filter($this->timoneTxs, function ($val) use ($uuid) {
+			return $val->destination == $uuid && $val->type !== 'CASH_OUT';
+		});
 	}
 
 	public function getDepositTxs() {
@@ -246,15 +264,17 @@ class ReportFlujo extends ReportOrders {
 	}
 
 	public function getExpenseTxs() {
-		return array_filter($this->timoneTxs, array($this, 'filterExpenseTxs' ) );
-	}
-
-	public function filterExpenseTxs($val) {
-		return $val->origin == $this->integrado->timoneData->timoneUuid;
+		$uuid = $this->integrado->timoneData->timoneUuid;
+		return array_filter($this->timoneTxs, function ($val) use ($uuid) {
+			return $val->origin == $uuid;
+		});
 	}
 
 	public function getWithdrawTxs() {
-		return $this->txs->odr;
+		$uuid = $this->integrado->timoneData->timoneUuid;
+		return array_filter($this->timoneTxs, function ($val) use ($uuid) {
+			return $val->origin == $uuid && $val->destination == $uuid && $val->type == 'CASH_OUT';
+		});
 	}
 
 	private function getTimestamp( $fecha ) {
@@ -273,14 +293,23 @@ class ReportFlujo extends ReportOrders {
 		return $txs;
 	}
 
-	private function getOdvs( $getOrderForTxs ) {
-		foreach ( $getOrderForTxs as $key => $order ) {
-			if ( is_a($order, 'Integralib\OdCompra') ) {
-				$getOrderForTxs[$key] = OrderFactory::getOrder( OrdenFn::getRelatedOdvIdFromOdcId($order->getId()), 'odv') ;
-			}
+	private function getOdvFromOdc( $order ) {
+		if ( is_a($order, 'Integralib\OdCompra') ) {
+			$order = OrderFactory::getOrder( OrdenFn::getRelatedOdvIdFromOdcId($order->getId()), 'odv') ;
 		}
 
-		return $getOrderForTxs;
+		return $order;
+	}
+
+	/**
+	 * @param string $objName
+	 *
+	 * @return array
+	 */
+	public function getTxs( $objName ) {
+		return array_filter(array_merge($this->expenseTxs, $this->incomeTxs), function($tx) use ($objName) {
+			return is_a($tx->order, $objName);
+		});
 	}
 
 }

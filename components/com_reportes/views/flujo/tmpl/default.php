@@ -100,29 +100,29 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
             <div class="span6">
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_INGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getIngresos()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getIngresos()->amount,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_DEPOSITOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getDepositos()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getDepositos()->amount,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getIngresos()->pagado->total + @$report->getDepositos()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getIngresos()->amount + @$report->getDepositos()->amount,2) ;?></div>
                 </div>
             </div>
             <div class="span6">
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getEgresos()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getEgresos()->amount ,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_RETIROS'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getRetiros()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getRetiros()->amount,2) ;?></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                    <div class="span6 num">$<?php echo number_format(@$report->getEgresos()->pagado->total + @$report->getRetiros()->pagado->total,2) ;?></div>
+                    <div class="span6 num">$<?php echo number_format(@$report->getEgresos()->amount + @$report->getRetiros()->amount,2) ;?></div>
                 </div>
             </div>
         </div>
@@ -149,13 +149,13 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    if ( isset( $report->txs->odv ) ) {
-	    foreach ($report->txs->odv as $k => $tx) {
+    if ( !empty( $report->incomeTxs ) ) {
+	    foreach ($report->getTxs('Integralib\OdVenta') as $k => $tx) {
 	        ?>
 	        <tr class="row">
-	            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
 	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
-	            <td><?php echo @$tx->order->folio; ?></td>
+	            <td><?php echo @$tx->order->numOrder; ?></td>
 	            <td><?php echo @$tx->order->proyectName.' '.@$tx->order->subProyectName;  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->iva,2) ; ?></div></td>
@@ -167,9 +167,9 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     ?>
     <tr class="row">
         <td colspan="4"><?php echo JText::_('LBL_INGRESOS_TOTAL'); ?></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->pagado->net,2); ?></div></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->pagado->iva,2); ?></div></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->pagado->total,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->net,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->iva,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getIngresos()->amount,2); ?></div></td>
     </tr>
     </tbody>
 </table>
@@ -200,7 +200,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     ?>
     <tr class="row">
         <td colspan="2"><?php echo JText::_('LBL_DEPOSITOS_TOTAL'); ?></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getDepositos()->pagado->total,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getDepositos()->amount,2); ?></div></td>
     </tr>
     </tbody>
 </table>
@@ -221,17 +221,17 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     </thead>
     <tbody>
     <?php
-    if ( isset( $report->txs->odc ) ) {
-	    foreach ($report->txs->odc as $k => $tx) {
+    if ( isset( $report->expenseTxs ) ) {
+	    foreach ($report->getTxs('Integralib\OdCompra') as $k => $tx) {
 	        ?>
 	        <tr class="row">
-	            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
 	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><?php echo @$tx->order->getFacturaUuid(); ?></td>
 	            <td><?php echo @$tx->order->getProjectName().' '.@$tx->order->getSubProjectName();  ?></td>
-	            <td><div class="text-right">$<?php echo number_format($tx->getTxData()->net, 2); ?></div></td>
-	            <td><div class="text-right">$<?php echo number_format($tx->getTxData()->iva,2) ; ?></div></td>
-	            <td><div class="text-right">$<?php echo number_format($tx->getTxData()->amount,2) ; ?></div></td>
+	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
+	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->iva,2) ; ?></div></td>
+	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->amount,2) ; ?></div></td>
 	        </tr>
 	    <?php
 	    }
@@ -239,9 +239,9 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     ?>
     <tr class="row">
         <td colspan="4"><?php echo JText::_('LBL_EGRESOS_TOTAL'); ?></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->pagado->net,2); ?></div></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->pagado->iva,2); ?></div></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->pagado->total,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->net,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->iva,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getEgresos()->amount,2); ?></div></td>
     </tr>
     </tbody>
 
@@ -261,10 +261,10 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     <tbody>
     <?php
     if ( isset( $report->txs->odr ) ) {
-	    foreach ($report->txs->odr as $k => $tx) {
+	    foreach ($report->getWithdrawTxs() as $k => $tx) {
 	        ?>
 	        <tr class="row">
-	            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
 	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->amount,2) ; ?></div></td>
 	        </tr>
@@ -274,7 +274,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
     ?>
     <tr class="row">
         <td colspan="2"><?php echo JText::_('LBL_RETIROS_TOTAL'); ?></td>
-        <td><div class="text-right">$<?php echo number_format(@$report->getRetiros()->pagado->total,2); ?></div></td>
+        <td><div class="text-right">$<?php echo number_format(@$report->getRetiros()->amount,2); ?></div></td>
     </tr>
     </tbody>
 </table>

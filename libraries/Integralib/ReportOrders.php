@@ -95,6 +95,9 @@ abstract class ReportOrders {
 		return $sumaOrdenes;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getTimoneUserTxsIds() {
 		$integ = new \IntegradoSimple( $this->integradoId );
 		$integ->getTimOneData();
@@ -103,7 +106,14 @@ abstract class ReportOrders {
 
 		$result = $req->getUserTxs( $integ->timoneData->timoneUuid );
 
-		$timoneTxs = json_decode( $result->data );
+		$tmp = json_decode( $result->data );
+
+		$timoneTxs = array();
+		foreach ( $tmp as $tx ) {
+			if ($tx->timestamp >= $this->getTimestamp($this->fechaInicio) && $tx->timestamp <= $this->getTimestamp($this->fechaFin)) {
+				$timoneTxs[$tx->uuid] = $tx;
+			}
+		}
 
 		return $timoneTxs;
 	}
@@ -137,6 +147,14 @@ abstract class ReportOrders {
 		}
 
 		return "'" . implode( "', '", $array ) . "'";
+	}
+
+	private function getTimestamp( $fecha ) {
+		$tzone = \JFactory::getConfig()->get('offset');
+		$timeZone = new \DateTimeZone($tzone);
+		$date = new \DateTime($fecha, $timeZone);
+
+		return $date->getTimestamp() * 1000;
 	}
 
 }
