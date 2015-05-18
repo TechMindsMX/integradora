@@ -879,9 +879,7 @@ $token = JSession::getFormToken();
 			</div>
 
 			<div class="form-actions">
-				<button type="button" class="btn btn-success span3" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
-				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
-				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
+				<button type="button" class="btn btn-success" id="agregarBanco"><?php echo JText::_('LBL_CARGAR'); ?></button>
 			</div>
 
 			<div>
@@ -902,7 +900,7 @@ $token = JSession::getFormToken();
 			</div>
 
 			<div class="form-actions">
-				<button type="button" class="btn btn-primary span3" id="nextTab"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_ENVIAR'); ?></button>
 				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
