@@ -70,7 +70,7 @@ class MandatosModelOdcform extends JModelItem {
             move_uploaded_file($_FILES['factura']['tmp_name'], "media/archivosJoomla/" . $_FILES['factura']['name']);
             $urlFile = "media/archivosJoomla/" . $_FILES['factura']['name'];
         }
-        $xmlFileData    = file_get_contents($urlFile);
+        $xmlFileData    = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$urlFile);
         $data 			= new xml2Array();
         $datos 			= $data->manejaXML($xmlFileData);
         $datos->urlXML = $urlFile;

@@ -70,7 +70,7 @@ class getFromTimOne{
 
     public static function getDataFactura($orden) {
         $urlXML = $orden->urlXML;
-        $xmlFileData  = file_get_contents(JPATH_SITE.DIRECTORY_SEPARATOR.$urlXML);
+        $xmlFileData  = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$urlXML);
         $manejadorXML = new xml2Array();
         $datos 		  = $manejadorXML->manejaXML($xmlFileData);
 
@@ -2043,7 +2043,7 @@ class sendToTimOne {
                     break;
                 case 't1_':
                     if($integrado->integrado->pers_juridica == 1) {
-                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta compribante del testimonio 1 o el formato del archivo es incorrecto') : '';
+                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 1 o el formato del archivo es incorrecto') : '';
                     }
                     break;
                 case 't2_':
@@ -2915,7 +2915,7 @@ class Factura extends makeTx {
 
     public static function validateXml( $xmlpath ) {
         $request = new \Integralib\TimOneRequest();
-        $xmlFileData            = file_get_contents($xmlpath);
+        $xmlFileData            = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$xmlpath);
         $data 			        = new xml2Array();
         $factura                = $data->manejaXML($xmlFileData);
 

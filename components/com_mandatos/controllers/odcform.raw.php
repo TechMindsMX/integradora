@@ -198,7 +198,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $save       = new sendToTimOne();
             $db         = JFactory::getDbo();
             $xml        = new xml2Array();
-            $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+            $dataXML    = $xml->manejaXML(file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$odCompra->urlXML));
 
             $odv = new OdVenta();
             $odv->integradoId   = $odCompra->getReceptor()->id;
@@ -261,7 +261,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $save       = new sendToTimOne();
             $db         = JFactory::getDbo();
             $xml        = new xml2Array();
-            $dataXML    = $xml->manejaXML(file_get_contents($odCompra->urlXML));
+            $dataXML    = $xml->manejaXML(file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$odCompra->urlXML));
 
             $odv = new OdVenta();
             $odv->setId($idOdvRelated);

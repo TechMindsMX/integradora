@@ -460,7 +460,7 @@ $token = JSession::getFormToken();
 		echo JHtml::_('bootstrap.addTab', 'tabs-solicitud', 'empresa', JText::_('LBL_TAB_EMPRESA'));
 		?>
 		<fieldset>
-			<h3><?php echo JText::_('LBL_DIRECCION_FISCAL'); ?></h3>
+			<h3><?php echo JText::_('LBL_SLIDE_GENERALES'); ?></h3>
 			<div class="form-group">
 				<label for="de_razon_social"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?> *</label>
 				<input name="de_razon_social" id="de_razon_social" type="text" maxlength="100" />

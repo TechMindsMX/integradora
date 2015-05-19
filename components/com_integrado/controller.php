@@ -152,7 +152,6 @@ class IntegradoController extends JControllerLegacy {
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
         $valores	= array($this->integradoId, $data['userId'], 0, $data['permission_level']);
 
-
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
 
         if( empty($existe) ){
@@ -781,59 +780,58 @@ class IntegradoController extends JControllerLegacy {
 
     public function sendEmail($type=null)
     {
-        /*
-         *  NOTIFICACIONES 0 & 1
-         */
-    $getCurrUser = new IntegradoSimple($this->integradoId);
+    /*
+	 *  NOTIFICACIONES 0 & 1
+	 */
+	    $getCurrUser = new IntegradoSimple($this->integradoId);
 
-        switch ($_POST['permission_level']){
-            case 1:
-                $permiso = 'Consulta';
-                break;
-            case 2:
-                $permiso = 'Operaciones';
-                break;
-            case 3:
-                $permiso = 'Autorizador';
-                break;
-            case 4:
-                $permiso = 'Full';
-                break;
-        }
+	    switch ($_POST['permission_level']){
+		    case 1:
+			    $permiso = 'Consulta';
+			    break;
+		    case 2:
+			    $permiso = 'Operaciones';
+			    break;
+		    case 3:
+			    $permiso = 'Autorizador';
+			    break;
+		    case 4:
+			    $permiso = 'Full';
+			    break;
+	    }
 
-    if(is_null($type)){
-        $array = array(
-            $getCurrUser->user->name,
-            $this->integradoId,
-            date('d-m-Y'));
-            $noEmail = 1;
-        $typeAlta = '';
-    }else{
-        if($type == 'edit'){
-            $typeAlta = 'Edicion';
-        }
-        if($type == 'new'){
-            $typeAlta = 'Alta';
-        }
-        foreach ($getCurrUser->usuarios as $key => $value) {
-            if($value->id == $_POST['userId']){
-                $dataUser = $value;
-            }
-
-     }
-        $titleArray =array ( $typeAlta );
-        $array = array(
-            $typeAlta,
-            $dataUser->email,
-            $dataUser->username,
-            $permiso,
-            date('d-m-Y'));
-        $noEmail = 0;
-    }
-        $send = new Send_email();
-        $send->setIntegradoEmailsArray($getCurrUser);
-        $info = $send->sendNotifications($noEmail, $array, $titleArray);
-        return $info;
+	    if(is_null($type)){
+		    $array = array(
+			    $getCurrUser->user->name,
+			    $this->integradoId,
+			    date('d-m-Y'));
+		    $noEmail = 1;
+		    $typeAlta = '';
+	    }else{
+		    if($type == 'edit'){
+			    $typeAlta = 'Edicion';
+		    }
+		    if($type == 'new'){
+			    $typeAlta = 'Alta';
+		    }
+		    foreach ($getCurrUser->usuarios as $key => $value) {
+			    if($value->id == $_POST['userId']){
+				    $dataUser = $value;
+			    }
+		    }
+		    $titleArray =array ( $typeAlta );
+		    $array = array(
+			    $typeAlta,
+			    $dataUser->email,
+			    $dataUser->username,
+			    $permiso,
+			    date('d-m-Y'));
+		    $noEmail = 0;
+	    }
+	    $send = new Send_email();
+	    $send->setIntegradoEmailsArray($getCurrUser);
+	    $info = $send->sendNotifications($noEmail, $array, $titleArray);
+	    return $info;
     }
 
 	public function finish( ){
