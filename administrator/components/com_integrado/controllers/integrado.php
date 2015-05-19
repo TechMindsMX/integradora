@@ -316,9 +316,9 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		$create = $project->checkDuplicatedProjectNameForIntegrado((array)$project, 'crear', $this->integradoId);
 
 		if($create === 'crear') {
-			$save = $project->save();
+			$save = __METHOD__.' | '.$project->save();
 		} else {
-			$save = "ya existe el proyecto por defecto para el integrado ".$this->integradoId;
+			$save = __METHOD__." | ya existe el proyecto por defecto para el integrado ".$this->integradoId;
 		}
 
 		JLog::add(json_encode($save), JLog::DEBUG);
