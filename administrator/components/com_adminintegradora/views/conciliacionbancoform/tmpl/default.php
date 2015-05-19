@@ -21,7 +21,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
                 foreach ($integrados as $key => $value) {
                     if ($value->integrado->status == 50 ) {
 	                    echo 'integradosArray['.$key.'] = "'.$value->displayName.'";'."\n";
-	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integrado_id.';'."\n";
+	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integradoId.';'."\n";
                     }
                 }
             ?>
@@ -80,7 +80,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
         <div class="form-group">
             <p><?php echo JText::_('LBL_REGISTRO_TX_BANCO_INTRO'); ?></p>
         </div>
-        <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&view=conciliacionbancoform&confirmacion=1" method="post">
+        <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&view=conciliacionbancoform&confirmacion=1" method="post" autocomplete="off">
             <input type="hidden" name="id" id="id" value="<?php $data->id; ?>" />
 
             <div>
@@ -135,7 +135,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
 
     </div>
 <?php }else { ?>
-    <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&task=conciliacionbancoform.save" method="post">
+    <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&task=conciliacionbancoform.save" method="post" autocomplete="off">
         <input type="hidden" name="integradoId" value="<?php echo $data->integradoId; ?>" />
         <input type="hidden" name="cuenta" value="<?php echo $data->cuenta; ?>" />
         <input type="hidden" name="referencia" value="<?php echo $data->referencia; ?>" />

@@ -9,6 +9,6 @@ class IntegradoTableIntegrado extends JTable
 	 */
 	public function __construct(&$db)
 	{
-		parent::__construct('#__integrado', 'integrado_id', $db);
+		parent::__construct('#__integrado', 'integradoId', $db);
 	}
 }

@@ -25,7 +25,7 @@ abstract class Order {
 	 * @return mixed
 	 */
 	public function getId() {
-		return $this->id;
+		return (INT)$this->id;
 	}
 
 	/**

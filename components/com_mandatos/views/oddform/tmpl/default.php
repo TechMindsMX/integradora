@@ -76,7 +76,7 @@ $datos = $this->datos;
 if(!$this->confirmacion){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODDFORM_TITLE'); ?></h1>
-    <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
+    <form id="oddform" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" name="id" id="id" value="<?php echo $datos->id; ?>" />
         <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
 
@@ -157,7 +157,7 @@ if(!$this->confirmacion){
     <div class="clearfix">&nbsp;</div>
 
     <div class="form-group">
-        <form id="oddform" method="post" action="index.php?option=com_mandatos&view=oddform&task=oddform.saveODD">
+        <form id="oddform" method="post" action="index.php?option=com_mandatos&view=oddform&task=oddform.saveODD" autocomplete="off">
 
             <input type="hidden" value='<?php echo json_encode($datos); ?>' name="datos" />
             <input type="button" class="btn btn-primary" id="envio" value="<?php echo JText::_('LBL_ENVIAR'); ?>">

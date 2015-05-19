@@ -130,7 +130,7 @@ class MandatosController extends JControllerLegacy {
 			    // se busca la relacion del cliente y el integrado
 			    $tableRelacion 		= 'integrado_clientes_proveedor';
 			    $db = JFactory::getDbo();
-			    $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+			    $whereRelacion      = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
 			    $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
 
 			    if ( ! empty( $relacion[0] ) ) {
@@ -147,7 +147,7 @@ class MandatosController extends JControllerLegacy {
 
 				    $save = new sendToTimOne();
 				    $save->formatData($datos);
-				    $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+				    $where = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
 				    $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
 
 				    $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
@@ -175,7 +175,7 @@ class MandatosController extends JControllerLegacy {
         $post       = array('datosBan_id' => 'INT');
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $where      = $db->quoteName('integradoId').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
@@ -310,17 +310,17 @@ class MandatosController extends JControllerLegacy {
 //            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
             if($idCliPro == 0){
-                $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
+                $idCliPro = getFromTimOne::saveNewIntegradoIdAndReturnIt($data['pj_pers_juridica']);
                 $data['idCliPro'] = $idCliPro;
             }
 
             switch($data['tab']){
                 case 'tipoAlta_btn':
                     $table 		= 'integrado_clientes_proveedor';
-                    $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
+                    $where      = $db->quoteName('integradoIdCliente').' = '. $db->quote($idCliPro) .' && integradoId = '. $db->quote($this->integradoId);
                     $existe     = getFromTimOne::selectDB($table,$where);
 
-                    $columnas[] = 'integrado_id';
+                    $columnas[] = 'integradoId';
                     $valores[]	= $this->integradoId;
                     $columnas[] = 'integradoIdCliente';
                     $valores[]	= $idCliPro;
@@ -333,7 +333,7 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'juridica':
                     $table 		= 'integrado';
-                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe     = getFromTimOne::selectDB($table, $where);
 
                     $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
@@ -341,10 +341,10 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'personales':
                     $table 		= 'integrado_datos_personales';
-                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe     = getFromTimOne::selectDB($table, $where);
 
-                    $columnas[] = 'integrado_id';
+                    $columnas[] = 'integradoId';
                     $valores[]	= $idCliPro;
 
                     $datosQuery['columnas'] = $columnas;
@@ -362,9 +362,9 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'empresa':
                     $table = 'integrado_datos_empresa';
-                    $where = $db->quoteName('integrado_id').' = '.$idCliPro;
+                    $where = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe = getFromTimOne::selectDB($table, $where);
-                    $columnas[] = 'integrado_id';
+                    $columnas[] = 'integradoId';
                     $valores[]	= $idCliPro;
 
                     //self::saveInstrumentos($data);
@@ -415,7 +415,9 @@ class MandatosController extends JControllerLegacy {
     function uploadFiles(){
 
         $idCliPro	= JFactory::getApplication()->input->get('idCliPro', null, 'INT');
-        $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoIdCliente = '.$idCliPro);
+
+	    $dbq = JFactory::getDbo();
+	    $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoIdCliente = '. $dbq->quote($idCliPro) );
         $integrado_id = $result[0]->integradoIdCliente;
 
         $resultado = sendToTimOne::uploadFiles($integrado_id);
@@ -435,11 +437,11 @@ class MandatosController extends JControllerLegacy {
         $save       = new sendToTimOne();
         $datosQuery = array('setUpdate'=>array());
         $table 		= 'integrado_contacto';
-        $where      = $db->quoteName('integrado_id').' = '.$integradoId;
+        $where      = $db->quoteName('integradoId').' = '. $db->quote($integradoId);
         $existe     = getFromTimOne::selectDB($table, $where);
 
-        $columnas[] = 'integrado_id';
-        $valores[]	= $integradoId;
+        $columnas[] = 'integradoId';
+        $valores[]	= $db->quote($integradoId);
 
         $datosQuery['columnas'] = $columnas;
         $datosQuery['valores']  = $valores;
@@ -457,7 +459,7 @@ class MandatosController extends JControllerLegacy {
             $columnas = array();
             $valores = array();
 
-            $columnas[] = 'integrado_id';
+            $columnas[] = 'integradoId';
             $columnas[] = 'telefono';
             $columnas[] = 'movil';
             $columnas[] = 'ext';
@@ -468,7 +470,7 @@ class MandatosController extends JControllerLegacy {
             $ext = 'tel_fijo_extension'.($i+1);
             $correo = 'email'.($i+1);
 
-            $valores[] = $integradoId;
+            $valores[] = $db->quote($integradoId);
             $valores[] = $arreglo[$tel];
             $valores[] = $arreglo[$movil];
             $valores[] = $arreglo[$ext];
@@ -486,7 +488,7 @@ class MandatosController extends JControllerLegacy {
         $campos = array('productName'=>'STRING');
         $data   = $this->input_data->getArray($campos);
 
-        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$this->integradoId.' AND '.$db->quoteName('status').' = 1';
+        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' AND '.$db->quoteName('status').' = 1';
 
         $producto = getFromTimOne::selectDB('integrado_products',$where);
 
@@ -499,19 +501,6 @@ class MandatosController extends JControllerLegacy {
         }
 
         echo json_encode($respuesta);
-    }
-
-    public function envioTimOne($envio)
-    {
-        $request = new sendToTimOne();
-        $serviceUrl = new IntRoute();
-
-        $request->setServiceUrl($serviceUrl->saveComisionServiceUrl());
-        $request->setJsonData($envio);
-
-        $respuesta = $request->to_timone(); // realiza el envio
-
-        return $respuesta;
     }
 
     public function cancelOdv(){
@@ -534,15 +523,15 @@ class MandatosController extends JControllerLegacy {
         switch($data['type']){
             case 'proyecto':
                 $table = 'integrado_proyectos';
-                $where = 'id_proyecto = '.$data['id'];
+                $where = 'id_proyecto = '. (INT)$data['id'];
                 break;
             case 'producto':
                 $table = 'integrado_products';
-                $where = 'id_producto = '.$data['id'];
+                $where = 'id_producto = '. (INT)$data['id'];
                 break;
             case 'cliente';
                 $table = 'integrado_clientes_proveedor';
-                $where = 'id = '.$data['id'];
+                $where = 'id = '. (INT)$data['id'];
                 break;
         }
 

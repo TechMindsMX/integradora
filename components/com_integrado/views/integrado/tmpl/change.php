@@ -5,7 +5,7 @@ defined('_JEXEC') or die('Restricted access');
 <h1><?php echo JText::_('COM_INTEGRADO_CHANGE_TITLE'); ?></h1>
 <p><?php echo JText::_('COM_INTEGRADO_CHANGE_DESCRIPTION'); ?></p>
 
-<form id="form_listados" method="post" action="index.php?option=com_integrado&task=select">
+<form id="form_listados" method="post" action="index.php?option=com_integrado&task=select" autocomplete="off">
 	<div class="form-group">
 		<select name="integradoId" id="integradoId" class="span3">
 			<option value="0">Seleccione Integrado</option>

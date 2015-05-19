@@ -12,6 +12,7 @@ JHtml::_('behavior.tooltip');
 		form.filter_order_Dir.value = dir;
 		document.adminForm.submit(task);
 	}
+
 	jQuery(document).ready(function() {
 		jQuery("input:checkbox").click(function(){
 	        var group = "input:checkbox[name='"+jQuery(this).prop("name")+"']";
@@ -21,7 +22,7 @@ JHtml::_('behavior.tooltip');
 </script>
 
 
-<form action="<?php echo JRoute::_('index.php?option=com_integrado'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_integrado'); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
 
 <table class="adminlist table">
  	<thead>
@@ -55,10 +56,10 @@ JHtml::_('behavior.tooltip');
 		<?php foreach($this->items as $i => $item): ?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td>
-			<?php echo JHtml::_('grid.id', $i, $item -> integrado_id); ?>
+			<?php echo JHtml::_('options', $i, $item -> integradoId); ?>
 			</td>
 			<td>
-			<?php echo $item -> integrado_id; ?>
+			<?php echo $item -> integradoId; ?>
 			</td>
 			<td>
 			<?php $nombre = ($item -> razon_social) ? $item -> razon_social : $item -> nombre_representante;

@@ -128,7 +128,7 @@ foreach ($this->proyectos as $key => $proyecto) {
             <?php
             foreach ($this->proveedores as $providerData) {
                 $bancos = $providerData->integrados[0]->datos_bancarios;
-                echo 'arregloIntegrado['.$providerData->integrados[0]->integrado->integrado_id.'] = '.json_encode($bancos).';'."\n";
+                echo 'arregloIntegrado['.$providerData->integrados[0]->integrado->integradoId.'] = '.json_encode($bancos).';'."\n";
                 if(isset($this->orden->bankId)){
                     echo 'var optionSelected = '.$this->orden->bankId.';'."\n";
                 }
@@ -163,7 +163,7 @@ if(!isset($this->datos['confirmacion'])){
     ?>
     <h1><?php echo JText::_('COM_MANDATOS_ODC_FORM_TITULO'); ?></h1>
 
-    <form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&confirmacion=1') ?>" role="form" enctype="multipart/form-data">
+    <form id="generaODC" method="post" action="<?php echo JRoute::_('index.php?option=com_mandatos&view=odcform&confirmacion=1') ?>" role="form" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" name="integradoId" id="integradiId" value="<?php echo $this->integradoId; ?>" />
         <input type="hidden" name="numOrden" id="numOrden" value="<?php echo $datos->numOrden; ?>" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $datos->id; ?>" />
@@ -378,7 +378,7 @@ if(!isset($this->datos['confirmacion'])){
         </div>
     </div>
 
-    <form id="generaODC" action="#" method="post">
+    <form id="generaODC" action="#" method="post" autocomplete="off">
         <input type="hidden" name="integradoId"   value="<?php echo $datos['integradoId']; ?>" />
         <input type="hidden" name="idOrden"       value="<?php echo $datos['idOrden']; ?>" />
         <input type="hidden" name="numOrden"      value="<?php echo $datos['numOrden'] ?>" />

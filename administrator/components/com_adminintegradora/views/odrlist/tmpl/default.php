@@ -50,7 +50,7 @@ $odrs = $this->ordenes;
     <?php echo $this->sidebar; ?>
 </div>
 <div id="j-main-container" class="span10">
-    <form action="" method="post" name="adminForm" id="adminForm">
+    <form action="" method="post" name="adminForm" id="adminForm" autocomplete="off">
         <div  class="integrado-id" id="odv">
             <div class="head2" id="head" >
                 <div class="filtros" id="columna1" >
@@ -59,7 +59,7 @@ $odrs = $this->ordenes;
                         <option value="0" selected="selected">Seleccione el filtro</option>
                         <?php
                         foreach ($this->usuarios as $key => $value) {
-                            echo '<option value="'.$value->integrado_id.'">'.$value->name.'</option>';
+                            echo '<option value="'.$value->integradoId.'">'.$value->name.'</option>';
                         }
                         ?>
                     </select>

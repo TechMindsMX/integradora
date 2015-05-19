@@ -196,7 +196,7 @@ $existe = is_null($datos->id)?'false':'true';
     <div class="span6"><h4>SALDO EN CUENTA: $<?php echo number_format($this->montoSaldo->saldoDisponible,2); ?></h4></div>
 </div>
 <div class="clearfix">&nbsp;</div>
-<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
+<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data" autocomplete="off">
     <div>
         <input type="hidden" name="existe"       id="existe"       value="<?php echo $existe; ?>">
         <input type="hidden" name="id"           id="id"           value="<?php echo $datos->id; ?>" />

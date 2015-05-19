@@ -445,7 +445,7 @@ echo $this->integradoId;
 </fieldset>
 
 <div id="container-form" class="form-actions">
-	<form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data" >
+	<form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data"  autocomplete="off">
 		<input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
 		<?php

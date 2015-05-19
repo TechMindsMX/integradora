@@ -425,9 +425,9 @@ $token = JSession::getFormToken();
 
 	<div class="msgs_plataforma" id="msgs_plataforma"></div>
 
-	<form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
-		<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
-		<input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
+    <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
+        <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
 
 		<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));

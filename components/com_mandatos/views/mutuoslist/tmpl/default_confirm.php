@@ -112,7 +112,7 @@ foreach ($bancos as $value) {
     </div>
 <?php } ?>
 
-<form id="confirmForm" method="post" action="">
+<form id="confirmForm" method="post" action="" autocomplete="off">
     <input type="hidden" id="idMutuo"          name="idMutuo"          value="<?php echo $datos->idMutuo; ?>" />
     <input type="hidden" id="integradoId"      name="integradoId"      value="<?php echo $datos->integradoId; ?>" />
     <input type="hidden" id="integradoIdR"     name="integradoIdR"     value="<?php echo $datos->integradoIdR; ?>" />

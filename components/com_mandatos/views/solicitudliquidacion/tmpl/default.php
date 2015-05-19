@@ -73,7 +73,7 @@ $saldo = $this->saldo;
 </script>
 
 <h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></h1>
-<form id="form_solicitudLiquidacion">
+<form id="form_solicitudLiquidacion" autocomplete="off">
     <div>
         <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $<span id="saldoNuevo">'.number_format($saldo->subtotalTotalOperaciones,2); ?></span></h4>
         <h4><?php echo JText::_('COM_MANDATOS_SALDO_IMPUESTOS').': $'.number_format($saldo->totalImpuestos,2); ?></h4>

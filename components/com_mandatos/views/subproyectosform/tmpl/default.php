@@ -57,7 +57,7 @@ $selected 	= '';
 		window.history.back();
 	}
 </script>
-<form id="form_alta" method="post" action="">
+<form id="form_alta" method="post" action="" autocomplete="off">
 	<input type="hidden" name="id_proyecto" value="<?php echo $proyecto->id_proyecto; ?>" />
 	<input type="hidden" name="integradoId" value="<?php echo $proyecto->integradoId; ?>" />
 	<input type="hidden" name="status" value="<?php echo $proyecto->status; ?>" />

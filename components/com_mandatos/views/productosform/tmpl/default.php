@@ -74,7 +74,7 @@ $producto 	= $this->producto;
 </script>
 <script src="libraries/integradora/js/tim-validation.js"> </script>
 
-<form id="formProduct" class="form col-lg-6 col-md-12" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw">
+<form id="formProduct" class="form col-lg-6 col-md-12" role="form" method="post" action="index.php?option=com_mandatos&task=productosform.saveProducts&format=raw" autocomplete="off">
     <div id="formulario">
         <h1><?php echo ucwords(JText::_($this->titulo)); ?></h1>
 

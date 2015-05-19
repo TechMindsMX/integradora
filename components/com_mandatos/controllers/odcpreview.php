@@ -19,8 +19,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 {
 
 
-    function __construct()
-    {
+    function __construct(){
         $post = array('idOrden' => 'INT');
         $this->app = JFactory::getApplication();
         $this->parametros = $this->app->input->getArray($post);
@@ -199,6 +198,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function realizaTx()
     {
         $orden = $this->getOrden();
+        $idProveedor = isset($orden->proveedor->integrado_id)?$orden->proveedor->integrado_id:$orden->proveedor->integrado->integrado_id;
 
         $idProveedor = $orden->receptor->id;
 

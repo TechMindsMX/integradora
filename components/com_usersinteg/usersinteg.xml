@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.2.0" method="upgrade">
+
+    <name>UsersInteg</name>
+    <creationDate>April 2015</creationDate>
+    <author>Ricardo Lyon</author>
+    <authorEmail>ricardolyon@gmail.com</authorEmail>
+    <authorUrl></authorUrl>
+    <copyright>Copyright Info</copyright>
+    <license>License Info</license>
+    <version>0.1</version>
+    <description>Componente de preguntas de seguridad para resetear la contrasea joomla</description>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>usersinteg.php</filename>
+        <filename>controller.php</filename>
+        <folder>views</folder>
+    </files>
+
+</extension>

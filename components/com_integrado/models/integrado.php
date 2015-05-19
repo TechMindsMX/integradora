@@ -15,15 +15,14 @@ class IntegradoModelIntegrado extends JModelItem {
 
 		foreach ( $integ->integrados as $key => $value ) {
 
-			$integrado = new IntegradoSimple($value->integrado_id);
+			$integrado = new IntegradoSimple( $value->integradoId );
 
 			if ( $integrado->isIntegrado() && $integrado->hasRfc() ) {
-				$integrados[$value->integrado_id]               = new stdClass();
-				$integrados[$value->integrado_id]->id           = $integrado->getId();
-				$integrados[$value->integrado_id]->displayName  = $integrado->getDisplayName();
+				$integrados[$value->integradoId]               = new stdClass();
+				$integrados[$value->integradoId]->id           = $integrado->getId();
+				$integrados[$value->integradoId]->displayName  = $integrado->getDisplayName();
 			}
 		}
-
 		return $integrados;
 	}
 }
