@@ -35,7 +35,7 @@ class Txs {
 
 		$query->select( '*' )
 		      ->from( '#__txs_mandatos' )
-		      ->where( 'id = ' . $db->quote( $this->tx->id ) );
+		      ->where( 'id = ' . $db->quote( $this->tx->id ).' AND IdOrden IS NOT NULL' );
 		$db->setQuery( $query );
 		$resutls = $db->loadObjectList();
 

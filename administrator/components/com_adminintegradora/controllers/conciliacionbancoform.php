@@ -51,10 +51,9 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
             $id_tx_banco = $db->insertid();
             $txTimone    = $this->makeTxTimone();
-            $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
 
             if ( $txTimone->code == 200 ) {
-                $this->makeTransferIntegradoraIntegrado( $dataObj );
+                $transfer = $this->makeTransferIntegradoraIntegrado( $dataObj );
             }
 
             $db->transactionCommit();
@@ -125,12 +124,17 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
      * @param $dataObj
      */
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
-        $transfer = new transferFunds( '', 1, $dataObj->integradoId, $dataObj->amount );
+        $orden = new stdClass();
+        $orden->integradoId = $dataObj->integradoId;
+
+        $transfer = new transferFunds( $orden, 1, $dataObj->integradoId, $dataObj->amount );
         $result = $transfer->sendCreateTx();
 
         if($result != 200) {
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');
         }
+
+        return $result;
     }
 
     private function sendNotification(){
