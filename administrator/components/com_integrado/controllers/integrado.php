@@ -89,6 +89,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $verified = $this->hasAllVerifications();
 
         $catalogos = $this->getCatalogos();
+
         switch (intval($oldStatus)) {
             case 0: // Nueva solicitud
                 $validos = array(0,2,3,99);

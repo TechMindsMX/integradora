@@ -237,7 +237,7 @@ class MandatosController extends JControllerLegacy {
         $save       = new sendToTimOne();
         $datosQuery = array();
         $arrayPost  = array(
-            'idCliPro'                      => 'INT',
+            'idCliPro'                      => 'STRING',
             'co_email1'                     => 'STRING',
             'co_email2'                     => 'STRING',
             'co_email3'                     => 'STRING',
@@ -295,10 +295,10 @@ class MandatosController extends JControllerLegacy {
             'tp_status'                     => 'STRING',
             'tp_monto'                      => 'FLOAT');
 
-        $tab        = 'tipo_alta';
-        $data       = $this->input_data->getArray($arrayPost);
-        $data['integradoId'] = $this->integradoId;
-        $idCliPro   = $data['idCliPro'];
+        $tab                     = 'tipo_alta';
+        $data                    = $this->input_data->getArray($arrayPost);
+        $idCliPro                = $data['idCliPro'];
+        $data['integradoId']     = $this->integradoId;
         $datosQuery['setUpdate'] = array();
 
         $this->dataCliente  = (object) $data;
@@ -310,7 +310,7 @@ class MandatosController extends JControllerLegacy {
 //            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
             if($idCliPro == 0){
-                $idCliPro = getFromTimOne::saveNewIntegradoIdAndReturnIt($data['pj_pers_juridica']);
+                $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
                 $data['idCliPro'] = $idCliPro;
             }
 
@@ -321,9 +321,9 @@ class MandatosController extends JControllerLegacy {
                     $existe     = getFromTimOne::selectDB($table,$where);
 
                     $columnas[] = 'integradoId';
-                    $valores[]	= $this->integradoId;
+                    $valores[]	= $db->quote($this->integradoId);
                     $columnas[] = 'integradoIdCliente';
-                    $valores[]	= $idCliPro;
+                    $valores[]	= $db->quote($idCliPro);
 
                     $datosQuery['columnas']  = $columnas;
                     $datosQuery['valores']   = $valores;
@@ -712,7 +712,7 @@ class MandatosController extends JControllerLegacy {
         }
 
         $diccionarioDefault  = array(
-            'integradoId'                => array('number' => true,		    	'maxlength' => 10),
+            'integradoId'                => array('alphaNumber' => true,		    	'maxlength' => 32),
         );
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 

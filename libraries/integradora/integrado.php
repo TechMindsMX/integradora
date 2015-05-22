@@ -332,7 +332,7 @@ class Integrado {
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('#__integrado_users'))
-			->where($db->quoteName('integradoId') . '=' . $integradoId . ' AND '.$db->quoteName('user_id') . '=' .$userId);
+			->where($db->quoteName('integradoId') . '=' . $db->quote($integradoId) . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
 
 		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos

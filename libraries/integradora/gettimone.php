@@ -871,7 +871,7 @@ class getFromTimOne{
             //Obtiene todos los id de los clientes/proveedores dados de alta para un integrado
             $query->select('id AS client_id, integradoIdCliente AS id, tipo_alta AS type, integradoId, status, bancos AS bancoIds')
                 ->from('#__integrado_clientes_proveedor')
-                ->where('integradoId = ' . $integradoId);
+                ->where('integradoId = ' . $db->quote($integradoId));
             try {
                 $db->setQuery($query);
                 $response = $db->loadObjectList();
@@ -1777,7 +1777,7 @@ class getFromTimOne{
 
         $query->insert($db->quoteName('#__integrado'))
 		          ->columns($db->quoteName('integradoId'). ', '. $db->quoteName('status').', '.$db->quoteName('pers_juridica').', '.$db->quoteName('createdDate'))
-		          ->values($db->quote( $newUUID ). ', ' .$db->quote(0).','.$db->quote($envio).', '.$createdDate);
+		          ->values( $db->quote( $newUUID ). ', '       . $db->quote(0).','            .$db->quote($envio).', '             .$createdDate);
 
         $db->setQuery($query);
         $db->execute();

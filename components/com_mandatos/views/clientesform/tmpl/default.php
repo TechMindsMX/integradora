@@ -29,13 +29,11 @@ if (isset($datos->rfc)) {
 echo '<script src="libraries/integradora/js/sepomex.js"> </script>';
 echo '<script src="libraries/integradora/js/tim-validation.js"> </script>';
 echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
-
-echo $this->integradoId;
 ?>
 
 <script xmlns="http://www.w3.org/1999/html">
     var catalogoBancos = [];
-    var integradoId	= <?php echo $this->integradoId; ?>;
+    var integradoId	= '<?php echo $this->integradoId; ?>';
     var formulario = '';
 
     <?php
