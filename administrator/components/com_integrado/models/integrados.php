@@ -16,6 +16,7 @@ class IntegradoModelIntegrados extends JModelList
         );
         parent::__construct($config);
 	}
+
     public function getListQuery()
     {
         $db = JFactory::getDBO();
@@ -40,7 +41,8 @@ class IntegradoModelIntegrados extends JModelList
 
 		return $query;
     }
-	public function getItems()
+
+    public function getItems()
 	{
 		$items = parent::getItems();
 
@@ -48,8 +50,9 @@ class IntegradoModelIntegrados extends JModelList
 
 		return $items;
 	}
-	protected function populateState($ordering = null, $direction = null) {
-    	parent::populateState('a.integrado_id', 'desc');
+
+    protected function populateState($ordering = null, $direction = null) {
+    	parent::populateState('a.createdDate', 'desc');
 	}
 
 	public function getCatalogos() {

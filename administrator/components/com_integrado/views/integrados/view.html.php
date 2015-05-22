@@ -44,8 +44,12 @@ class IntegradoViewIntegrados extends JViewLegacy {
     protected function addToolBar()
     {
         JToolBarHelper::title(JText::_('COM_INTEGRADO_MANAGER_TITULO'));
-        JToolBarHelper::editList('integrado.edit', JText::_('COM_INTEGRADO_VALIDACION_INTEGRADOS'));
-        JToolBarHelper::editList('integradoparams.edit',JText::_('COM_INTEGRADO_PARAMETRIZACION'));
+//        JToolBarHelper::editList('integrado.edit', JText::_('COM_INTEGRADO_VALIDACION_INTEGRADOS'));
+//        JToolBarHelper::editList('integradoparams.edit',JText::_('COM_INTEGRADO_PARAMETRIZACION'));
+//
+//        if (JFactory::getUser()->authorise('core.admin', 'com_integrado')) {
+//            JToolBarHelper::preferences('com_integrado');
+//        }
     }
 
     protected function setDocument()

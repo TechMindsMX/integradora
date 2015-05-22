@@ -12,40 +12,111 @@ use JFactory;
 use JLog;
 
 class TimOneRequest extends TimOneCurl {
-	public $resultado;
-	protected $objEnvio;
-	protected $url;
-	protected $type;
+    protected   $url;
+    protected   $type;
+    public      $resultado;
+    protected   $integradoId;
+    public      $objEnvio;
 
-	function __construct( \urlAndType $datosEnvio, $objEnvio ) {
-		$this->url = $datosEnvio->url;
-		$this->type = $datosEnvio->type;
-
-		$this->objEnvio = $objEnvio;
-	}
+    function __construct() {
+        $this->rutas = new servicesRoute();
+    }
 
 	/**
 	 * @return mixed
 	 */
-	public function makeRequest(){
-		unset($this->options);
+    public function makeRequest($datosEnvio){
+        unset($this->options);
 
-		$token = $this->getAccessToken();
+        $request = new sendToTimOne();
+        $request->setServiceUrl($datosEnvio->url);
+        $request->setJsonData($this->objEnvio);
+        $request->setHttpType($datosEnvio->type);
 
-		$this->setServiceUrl($this->url);
-		$this->setJsonData(json_encode($this->objEnvio));
-		$this->setHttpType($this->type);
+        $this->resultado = $request->to_timone();
 
-		$this->resultado = $this->to_timone( $token );
+        jimport('joomla.log.log');
 
-		jimport('joomla.log.log');
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora_txs');
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
-		JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora_txs');
-		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $this) ) ) );
-		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
+        return $this->resultado->code == 200;
+    }
 
-		return $this->resultado;
-	}
+    public function getTxDetails($txUUID) {
+        $rutas = new servicesRoute();
+
+        $params = $rutas->getUrlService('timone','txDetails','details');
+
+        $serviceUrl = str_replace('{uuid}', $txUUID, $params->url);
+        $jsonData = '';
+        $httpType = $params->type;
+
+        $request = new sendToTimOne();
+
+        $request->setServiceUrl($serviceUrl);
+        $request->setJsonData($jsonData);
+        $request->setHttpType($httpType);
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    public function getUserTxs($userUuis) {
+        $rutas = new servicesRoute();
+
+        $params = $rutas->getUrlService('timone','userTxs','list');
+
+        $serviceUrl = str_replace('{uuid}', $userUuis, $params->url);
+        $jsonData = '';
+        $httpType = $params->type;
+
+        $request = new sendToTimOne();
+
+        $request->setServiceUrl($serviceUrl);
+        $request->setJsonData($jsonData);
+        $request->setHttpType($httpType);
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    public function sendCancelFactura($emisorRfc, $facturaUUID) {
+        $this->objEnvio = new \stdClass();
+        $this->objEnvio->uuid = $facturaUUID;
+        $this->objEnvio->rfcContribuyente = $emisorRfc;
+        $this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
+
+        return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+    }
+
+    /**
+     * @param $uuidReceptor
+     * @param $amount
+     *
+     * @return object resultado
+     */
+    public function sendCashInTx($uuidReceptor, $amount) {
+        $this->objEnvio = new \stdClass();
+        $this->objEnvio->uuid = $uuidReceptor;
+        $this->objEnvio->amount = $amount;
+
+        $this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
+
+        return $this->resultado;
+    }
+
+    public function sendInvoiceToValidation( $uuid ) {
+        $this->objEnvio = new \stdClass();
+        $this->objEnvio->xmlName = $uuid;
+
+        $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaValidate', 'create'));
+
+        return $this->resultado;
+    }
 
 	public function getAccessToken() {
 		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');

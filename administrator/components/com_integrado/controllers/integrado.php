@@ -15,8 +15,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
     protected $data;
     protected $integradoId;
     private $tabla_db;
+    public $db;
 
     function __construct( ) {
+        $this->db = JFactory::getDbo();
         $this->data = JFactory::getApplication()->input->getArray();
         $this->tabla_db = 'integrado_verificacion_solicitud';
         $this->save = new sendToTimOne();
@@ -40,7 +42,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $object->integradoId = $this->data['id'];
         $object->status = $this->data['status'];
 
-        $datosIntegrado = new IntegradoSimple($object->integradoId);
+        $datosIntegrado = new IntegradoSimple($this->data['id']);
         $valido = $this->cambioStatusValido( $datosIntegrado->integrados[0]->integrado->status, $object->status);
 
         if (!$valido) {
@@ -48,7 +50,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             $this->setRedirect(
                 JRoute::_(
                     'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($object->integradoId, 'id' ) , false
+                    . $this->getRedirectToItemAppend($this->data['id'], 'id' ) , false
                 )
             );
             return true;
@@ -189,7 +191,6 @@ class IntegradoControllerIntegrado extends JControllerForm {
     }
 
     private function saveVerifications() {
-
         $retorno = null;
 
         $data = $this->groupVerifications();
@@ -204,7 +205,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             }
             $set['integradoId'] = $this->integradoId;
 
-            $condition = 'integradoId = ' . $this->integradoId;
+            $condition = 'integradoId = ' . $this->db->quote($this->integradoId);
             $this->save->deleteDB($this->tabla_db, $condition);
 
             $this->save->formatData($set);
@@ -225,10 +226,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
     private function checkExistIntegrado() {
 
-        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $this->data['id']);
+        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $this->db->quote($this->data['id']));
 
         if(empty($integrado)) {
-            $this->save->formatData(array('integradoId' => $this->data['id']));
+            $this->save->formatData( array( 'integradoId' => $this->data['id'] ) );
             $result = $this->save->insertDB($this->tabla_db);
 
             if(!$result) {

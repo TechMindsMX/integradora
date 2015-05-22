@@ -11,7 +11,7 @@ $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->
 $verifications = $this->verifications;
 ?>
 
-    <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integrado&layout=edit&id=' . (int)$this -> item -> id); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
+    <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integrado&layout=edit&id=' . (STRING)$this -> item -> id); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
         <div class="form-horizontal">
             <fieldset class="adminform">
                 <legend><?php echo JText::_('COM_INTEGRADO_INTEGRADO_DETAILS').' - '.$nombre; ?></legend>

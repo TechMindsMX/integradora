@@ -14,8 +14,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 	public function getItem($pk = null)
 	{
         $input = JFactory::getApplication()->input;
-        var_dump($input->getArray());
-        $this->integ_id = ($input->get('integradoId', 0, 'string') ? $input->get('integradoId', 0, 'string') : $input->get('integradoId', 0, 'string'));
+        $this->integ_id = ($input->get('integradoId', 0, 'string') ? $input->get('integradoId', 0, 'string') : $input->get('id', 0, 'string'));
 
 		$integrado = new IntegradoSimple($this->integ_id);
 		$item = $integrado;

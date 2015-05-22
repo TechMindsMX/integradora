@@ -233,7 +233,7 @@ class Integrado {
 		}
 		$integradoId 					= isset($this->gral->integradoId) ? $this->gral->integradoId : $integ_id;
 
-		if(!is_null($integradoId) && $integradoId != 0){
+		if(!is_null($integradoId) && $integradoId != ''){
 			$this->integrados[$key] = new stdClass();
 			$this->integrados[$key]->integrado 			= self::selectDataSolicitud('integrado', 'integradoId', $integradoId);
 			$this->integrados[$key]->datos_personales 	= self::selectDataSolicitud('integrado_datos_personales', 'integradoId', $integradoId);

@@ -11,7 +11,7 @@ class IntegradoController extends JControllerLegacy {
 	function display($cacheable = false, $urlparams = false) {
 		
 		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->get('view', 'Integrados'));
+		$input->set('view', $input->get('view', 'integrados'));
 		
 		parent::display($cacheable);
 		
