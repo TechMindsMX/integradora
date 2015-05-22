@@ -19,7 +19,6 @@ class TimOneRequest extends TimOneCurl {
     public      $objEnvio;
 
     function __construct() {
-        $this->rutas = new servicesRoute();
     }
 
 	/**
@@ -119,7 +118,7 @@ class TimOneRequest extends TimOneCurl {
     }
 
 	public function getAccessToken() {
-		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
+//		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
 
 		$this->setServiceUrl("http://api-qa.timone.mx/timone/oauth/token");
 		$this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');

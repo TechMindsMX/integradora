@@ -112,6 +112,11 @@ class UUID
 		                  '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1;
 	}
 
+    public static function v4SinGuion(){
+        $uuid = self::v4();
+
+        return str_replace('-','',$uuid);
+    }
 }
 
 // Usage

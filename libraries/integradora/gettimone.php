@@ -1768,7 +1768,7 @@ class getFromTimOne{
     }
 
     public static function newintegradoId($envio){
-	    $newUUID = UUID::v4();
+	    $newUUID = UUID::v4SinGuion();
         $createdDate = time();
 
 	    try {
@@ -2328,6 +2328,8 @@ class sendToTimOne {
     }
 
     public function to_timone() {
+        $getToken = new TimOneRequest();
+        $token = $getToken->getAccessToken();
 
         $verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
@@ -2351,6 +2353,7 @@ class sendToTimOne {
                         'Accept: application/json',
                         'Content-Type: application/json',
                         'charset=utf-8',
+                        'Authorization: Bearer '.$token->access_token,
                         'Content-Length: ' . strlen($this->jsonData)
                     )
                 );

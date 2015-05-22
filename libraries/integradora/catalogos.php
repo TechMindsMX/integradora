@@ -1,4 +1,7 @@
 <?php
+use Integralib\TimOneCurl;
+use Integralib\TimOneRequest;
+
 defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.factory');
@@ -106,9 +109,11 @@ class Catalogos {
 	}
 
 	public static function getBancosFromTimOne() {
-		$context = stream_context_create(array('http' => array('header'=>'Connection: close')));
+        $oAuth2 = new TimOneRequest();
+        $token = $oAuth2->getAccessToken();
 
-		$catalogo = json_decode(@file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context));
+		$context = stream_context_create(array('http' => array('header'=>'Authorization: Bearer '.$token->access_token)));
+		$catalogo = json_decode ( @file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context) );
 
 		if(empty($catalogo)) {
 			JFactory::getApplication()->enqueueMessage('El servicio '.MIDDLE.TIMONE.'stp/listBankCodes NO esta funcionando', 'error');
