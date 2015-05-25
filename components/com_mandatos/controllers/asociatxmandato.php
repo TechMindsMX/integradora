@@ -92,7 +92,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$db->transactionStart();
 
 		try {
-			$db->insertObject( '#__txs_mandatos', $objToInsert );
+			$db->updateObject( '#__txs_mandatos', $objToInsert, 'id' );
 
 			if ( ($this->order->balance - $objToInsert->amount) === 0 ) {
 				$ststus = new sendToTimOne;
