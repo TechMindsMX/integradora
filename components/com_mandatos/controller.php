@@ -345,7 +345,7 @@ class MandatosController extends JControllerLegacy {
                     $existe     = getFromTimOne::selectDB($table, $where);
 
                     $columnas[] = 'integradoId';
-                    $valores[]	= $idCliPro;
+                    $valores[]	= $db->quote($idCliPro);
 
                     $datosQuery['columnas'] = $columnas;
                     $datosQuery['valores']  = $valores;
@@ -365,9 +365,9 @@ class MandatosController extends JControllerLegacy {
                     $where = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe = getFromTimOne::selectDB($table, $where);
                     $columnas[] = 'integradoId';
-                    $valores[]	= $idCliPro;
+                    $valores[]	= $db->quote($idCliPro);
 
-                    //self::saveInstrumentos($data);
+//                    self::saveInstrumentos($data);
 
                     $datosQuery['columnas'] = $columnas;
                     $datosQuery['valores']  = $valores;

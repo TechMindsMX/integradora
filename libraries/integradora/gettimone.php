@@ -887,7 +887,7 @@ class getFromTimOne{
                 $querygral->select('DE.rfc, DP.rfc as pRFC, DP.nom_comercial AS tradeName, DE.razon_social AS corporateName, DP.nombre_representante AS contact, DP.tel_fijo AS phone')
                     ->from('#__integrado_datos_personales AS DP')
                     ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'DE') . ' ON (' . $db->quoteName('DE.integradoId') . ' = ' . $db->quoteName('DP.integradoId') . ')')
-                    ->where('DP.integradoId = ' . $value->id);
+                    ->where('DP.integradoId = ' . $db->quote($value->id));
 
                 try {
                     $db->setQuery($querygral);
@@ -909,7 +909,7 @@ class getFromTimOne{
 
                 $queryphone->select('*')
                     ->from('#__integrado_contacto')
-                    ->where('integradoId = ' . $value->id);
+                    ->where('integradoId = ' . $db->quote($value->id));
 
                 try {
                     $db->setQuery($queryphone);

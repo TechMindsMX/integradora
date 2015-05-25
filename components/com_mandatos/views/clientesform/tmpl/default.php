@@ -111,7 +111,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 	    });
     }
 
-
     function ajax(parametros){
 		
 		var request = jQuery.ajax({
@@ -217,6 +216,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			}
 		});
 	}
+
     function llenatablabancos(obj) {
         var fieldset = jQuery('fieldset#datosBancarios');
         fieldset.find('input:not(.eliminaBanco)').val('');
@@ -284,7 +284,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         });
     }
 
-
     function mensajes(msg, tipo){
 		var spanError = jQuery('#errorRFC');
 
@@ -344,6 +343,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 			jQuery("#tp_monto").val(objeto.monto);
 		}
 	}
+
     function saveCliente(){
         var tab = jQuery(this).prop('id');
 
