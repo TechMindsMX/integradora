@@ -519,9 +519,9 @@ class getFromTimOne{
 
         $request = IntFactory::getTimoneRequest($urlAndType,null);
 
-        $resultado = $request->makeRequest();
+        $resultado = $request->makeRequest($urlAndType);
 
-        return json_decode($resultado->data);
+        return json_decode($request->resultado->data);
     }
 
     public static function getClientProvider( $data) {
@@ -1159,9 +1159,9 @@ class getFromTimOne{
             $value->id              = (INT)$value->id;
             $value->orderType       = 'odc';
             $value->proyecto        = (INT)$value->proyecto;
-            $value->clientId        = (INT)$value->proveedor;
-            $value->proveedor       = (INT)$value->proveedor;
-            $value->integradoId     = (INT)$value->integradoId;
+            $value->clientId        = (STRING)$value->proveedor;
+            $value->proveedor       = (STRING)$value->proveedor;
+            $value->integradoId     = (STRING)$value->integradoId;
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
@@ -1219,11 +1219,11 @@ class getFromTimOne{
         //Cambio el tipo de dato para las validaciones con (===)
         foreach ($orden as $key => $value) {
             $value->id             = (INT)$value->id;
-            $value->integradoId    = (INT)$value->integradoId;
+            $value->integradoId    = (STRING)$value->integradoId;
             $value->orderType      = 'odv';
             $value->numOrden       = (INT)$value->numOrden;
             $value->proyecto       = (INT)$value->projectId2==0?$value->projectId:$value->projectId2;
-            $value->clientId       = (INT)$value->clientId;
+            $value->clientId       = (STRING)$value->clientId;
             $value->account        = (INT)$value->account;
             $value->paymentMethod   = self::getPaymentMethodName($value->paymentMethod);
             $value->conditions     = (INT)$value->conditions;
@@ -2371,6 +2371,7 @@ class sendToTimOne {
                     CURLOPT_STDERR		   => $verbose,
                     CURLOPT_HTTPHEADER	   => array(
                         'Content-Type: application/json',
+                        'Authorization: Bearer '.$token->access_token,
                         'Content-Length: ' . strlen($this->jsonData)
                     )
                 );
@@ -2388,6 +2389,7 @@ class sendToTimOne {
                     CURLOPT_STDERR		   => $verbose,
                     CURLOPT_HTTPHEADER	   => array(
                         'Content-Type: application/json',
+                        'Authorization: Bearer '.$token->access_token,
                         'Content-Length: ' . strlen($this->jsonData)
                     )
                 );
@@ -2405,6 +2407,7 @@ class sendToTimOne {
                     CURLOPT_STDERR		   => $verbose,
                     CURLOPT_HTTPHEADER	   => array(
                         'Accept: application/json',
+                        'Authorization: Bearer '.$token->access_token,
                         'Content-Type: application/json'
                     )
                 );
@@ -3219,7 +3222,7 @@ class makeTx {
 
         $txsTimoneMandatoObj = new stdClass();
         $txsTimoneMandatoObj->idTx = $this->resultado->data;
-        $txsTimoneMandatoObj->idIntegrado = $this->orden->integradoId;
+        $txsTimoneMandatoObj->integradoId = $this->orden->integradoId;
         $txsTimoneMandatoObj->date = time();
         $txsTimoneMandatoObj->idComision = $comisionAplicable->id;
 

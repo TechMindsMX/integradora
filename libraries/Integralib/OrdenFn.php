@@ -215,7 +215,7 @@ class OrdenFn {
 			$query->select( $db->quoteName( array (
 				                                'txs.id',
 				                                'txs.idTx',
-				                                'txs.idIntegrado',
+				                                'txs.integradoId',
 				                                'txs.date',
 				                                'txs.idComision',
 				                                'piv.idOrden',
@@ -241,7 +241,7 @@ class OrdenFn {
 			$query->select( $db->quoteName( array (
 				                                'txs.id',
 				                                'txs.idTx',
-				                                'txs.idIntegrado',
+				                                'txs.integradoId',
 				                                'txs.date',
 				                                'txs.idComision',
 				                                'piv.idOrden',
@@ -264,8 +264,10 @@ class OrdenFn {
 			$results = $db->loadObjectList( 'id' );
 		}
 
+        $timoneRequest = new TimOneRequest();
+
 		foreach ( $results as $tx ) {
-			$respose = getFromTimOne::getTxDataByTxId($tx->idTx);
+			$respose = $timoneRequest->getTxDetails($tx->idTx);
 			$tx->detalleTx = json_decode($respose->data);;
 		}
 

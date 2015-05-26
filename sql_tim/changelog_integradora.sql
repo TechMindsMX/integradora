@@ -547,3 +547,9 @@ INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad o pueblo fu
 INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre del lugar de la recepción de su boda?';
 INSERT `flpmu_security_questions` SET `question` = 'Cuál es el nombre de una universidad a la que aplicó a pero no asistió?';
 --rollback TRUNCATE `flpmu_security_questions`;
+
+--changeset  lutek:58
+ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` VARCHAR(32) NULL DEFAULT NULL ;
+ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` VARCHAR(32) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` INT(100) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` INT(100) NULL DEFAULT NULL ;

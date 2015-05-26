@@ -10,6 +10,8 @@ namespace Integralib;
 
 use JFactory;
 use JLog;
+use sendToTimOne;
+use servicesRoute;
 
 class TimOneRequest extends TimOneCurl {
     protected   $url;

@@ -45,6 +45,7 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public function search_rfc_cliente() {
+        $db = JFactory::getDbo();
         $this->document->setMimeEncoding( 'application/json' );
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
         $tipo_rfc = $this->rfc_type($data['rfc']);
@@ -53,7 +54,7 @@ class IntegradoController extends JControllerLegacy {
 
         if(!empty($existe)){
             // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
-            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoId = '. $dbq->quote($this->integradoId) .' AND integradoIdCliente = '.$existe );
+            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoId = '. $db->quote($this->integradoId) .' AND integradoIdCliente = '.$db->quote($existe) );
 
             $datos = new IntegradoSimple($existe);
             $datos->integrados[0]->success = true;

@@ -23,12 +23,12 @@ class Txs {
 
 		$params = IntFactory::getServiceRoute('timone','txDetails','details');
 
-		$params->url = str_replace('{uuid}', $txUUID, $params->url);
+        $params->url = str_replace('{uuid}', $txUUID, $params->url);
 		$jsonData = '';
 
 		$request = IntFactory::getTimoneRequest($params, $jsonData);
 
-		return $request->makeRequest();
+		return $request->makeRequest($params);
 	}
 
 	public function sendCashInTx($uuidReceptor, $amount) {

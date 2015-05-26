@@ -544,8 +544,9 @@ class IntegradoSimple extends Integrado {
     public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
+        $db = JFactory::getDbo();
 
-        $timoneData = getFromTimOne::selectDB('integrado_timone', 'integradoId = '.$this->getId());
+        $timoneData = getFromTimOne::selectDB( 'integrado_timone', 'integradoId = '.$db->quote($this->getId()) );
 		if(!empty($timoneData)) {
 			$timoneData = $timoneData[0];
 

@@ -307,7 +307,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     function llenaForm(objeto){
 
         if(objeto.integrado != null){
-            jQuery('#idCliPro').val(objeto.integrado.integrado_id);
+            jQuery('#idCliPro').val(objeto.integrado.integradoId);
 
 			jQuery.each(objeto.integrado, function(key,value){
                 if(key == 'pers_juridica') {

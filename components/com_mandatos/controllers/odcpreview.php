@@ -50,7 +50,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $this->parametros['userId']      = (INT)$user->id;
             $this->parametros['authDate']    = time();
-            $this->parametros['integradoId'] = (INT)$this->integradoId;
+            $this->parametros['integradoId'] = (STRING)$this->integradoId;
 
             $save->formatData($this->parametros);
 
@@ -198,7 +198,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     private function realizaTx()
     {
         $orden = $this->getOrden();
-        $idProveedor = isset($orden->proveedor->integrado_id)?$orden->proveedor->integrado_id:$orden->proveedor->integrado->integrado_id;
 
         $idProveedor = $orden->receptor->id;
 
@@ -222,17 +221,19 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
     private function txComision($reverse = false)
     {
+        $integradora = new \Integralib\Integrado();
+
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden = $this->getOrden();
-        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', null);
+        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
         $orden->orderType = 'CCom-' . $orden->orderType;
 
         if (!is_null($montoComision)) {
             if (!$reverse) {
-                $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
+                $txComision = new transferFunds($orden, $orden->integradoId, $integradora->getIntegradoraUuid(), $montoComision);
             } else {
-                $txComision = new transferFunds($orden, 1, $orden->integradoId, $montoComision);
+                $txComision = new transferFunds($orden, $integradora->getIntegradoraUuid(), $orden->integradoId, $montoComision);
             }
 
             if (!$txComision->sendCreateTx()) {

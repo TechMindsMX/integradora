@@ -12,11 +12,11 @@ class MandatosViewOdcform extends JViewLegacy {
         $app	            = JFactory::getApplication();
         $post               = array(
             'idOrden'       => 'INT',
-            'integradoId'   => 'INT',
+            'integradoId'   => 'STRING',
             'confirmacion'  => 'INT',
             'numOrden'      => 'INT',
             'proyecto'      => 'INT',
-            'proveedor'     => 'INT',
+            'proveedor'     => 'STRING',
             'bankId'        => 'INT',
             'paymentDate'   => 'STRING',
             'paymentMethod' => 'STRING',

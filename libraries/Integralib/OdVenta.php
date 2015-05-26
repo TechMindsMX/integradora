@@ -120,11 +120,11 @@ class OdVenta extends Order {
 		$catalogoIva = $catalogo->getCatalogoIVA();
 
 		$this->id             = (INT)$order->id;
-		$this->integradoId    = (INT)$order->integradoId;
+		$this->integradoId    = (STRING)$order->integradoId;
 		$this->orderType      = 'odv';
 		$this->numOrden       = (INT)$order->numOrden;
 		$this->proyecto       = (INT)$order->projectId2 == 0 ? $order->projectId : $order->projectId2;
-		$this->clientId       = (INT)$order->clientId;
+		$this->clientId       = (STRING)$order->clientId;
 		$this->account        = (INT)$order->account;
 		$this->paymentMethod   = getFromTimOne::getPaymentMethodName($order->paymentMethod);
 		$this->conditions     = (INT)$order->conditions;

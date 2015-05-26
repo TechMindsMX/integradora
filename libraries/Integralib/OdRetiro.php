@@ -37,7 +37,7 @@ class OdRetiro extends Order {
 	public function processOrderData( $order ){
 
 		$this->id               = (INT)$order->id;
-		$this->integradoId      = (INT)$order->integradoId;
+		$this->integradoId      = (STRING)$order->integradoId;
 		$this->setEmisor($order);
 		$this->setReceptor($order);
 
