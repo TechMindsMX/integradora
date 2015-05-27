@@ -61,7 +61,8 @@ class OdRetiro extends Order {
 	}
 
 	protected function setEmisor( $order ) {
-		$this->emisor = new IntegradoSimple(1);
+        $integradora = new Integrado();
+		$this->emisor = new IntegradoSimple($integradora->getIntegradoraUuid());
 	}
 
 	protected function setReceptor( $order ) {

@@ -99,16 +99,19 @@ class IntegradoraservicesController extends JControllerLegacy {
     function processData($json){
         $save           = new sendToTimOne();
         $post           = $json;
-        $data_integrado = getFromTimOne::getIntegradoId($post->timoneUuid);
+        $data_integrado = getFromTimOne::getIntegradoId($post->uuid);
 
-        $simula= new stdClass();
-        $simula->integradoId = 4;
-        $simula->timOneId = '2671T821TQWGHDBJF';
-        $simula->account = '7364234298402';
-        $data_integrado[0] = $simula;
+//        $simula= new stdClass();
+//        $simula->integradoId = 4;
+//        $simula->timOneId = '2671T821TQWGHDBJF';
+//        $simula->account = '7364234298402';
+//        $data_integrado[0] = $simula;
 
         if ( ! empty( $data_integrado ) ) {
-            $data_integrado = $data_integrado[0];
+            $integrado = new IntegradoSimple($data_integrado[0]->integradoId);
+            $integrado->getTimOneData();
+
+            $data_integrado = $integrado;
         } else {
             // error no existe el integrado
             return array('code' => '2');
@@ -116,25 +119,23 @@ class IntegradoraservicesController extends JControllerLegacy {
 
 
         //TODO se deben traer solamente las ordenes no pagadas
-        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado->integradoId);
+        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado->id);
         getFromTimOne::convierteFechas($post);
 
         foreach ($odds as $value) {
-            if( ($post->timestamps->date === $value->timestamps->paymentDate) && ($post->totalAmount == $value->totalAmount) ){
+            if( ((INT)$post->timestamp === $value->timestamps->paymentDate) && ($post->amount == $value->totalAmount) ){
                 $dataTXMandato = array(
-                    'idTx'        => $post->idTx,
-                    'idOrden'     => $value->id,
-                    'idIntegrado' => $value->integradoId,
+                    'idTx'        => $post->reference,
+                    'integradoId' => $value->integradoId,
                     'date'        => time(),
-                    'tipoOrden'   => 'odd',
                     'idComision'  => 1
                 );
                 $save->formatData($dataTXMandato);
 
                 $salvado = $save->insertDB('txs_timone_mandato');
                 if($salvado){
-                    //$cambioStatus = $save->changeOrderStatus($value->id,'odd',1);
-                    $return = array('code' => '2');
+                    $cambioStatus = $save->changeOrderStatus($value->id,'odd',13);
+                    $return = array('code' => '1');
                 }else{
                     $return = array('code' => '7');
                 }

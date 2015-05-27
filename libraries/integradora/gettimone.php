@@ -27,7 +27,7 @@ class getFromTimOne{
             foreach($authorizations as $key => $value){
                 $value->idOrden     = (INT)$value->idOrden;
                 $value->userId      = (INT)$value->userId;
-                $value->integradoId = (INT)$value->integradoId;
+                $value->integradoId = (STRING)$value->integradoId;
                 $value->authDate    = (STRING)$value->authDate;
             }
         }
@@ -1103,7 +1103,7 @@ class getFromTimOne{
 
         foreach ($orden as $value) {
             $value->id              = (INT)$value->id;
-            $value->integradoId     = (INT)$value->integradoId;
+            $value->integradoId     = (STRING)$value->integradoId;
             $value->orderType       = 'odd';
             $value->numOrden        = (INT)$value->numOrden;
             $value->status          = (INT)$value->status;
@@ -1131,7 +1131,7 @@ class getFromTimOne{
 
         foreach ($orden as $value) {
             $value->id              = (INT)$value->id;
-            $value->integradoId     = (INT)$value->integradoId;
+            $value->integradoId     = (STRING)$value->integradoId;
             $value->orderType       = 'odr';
             $value->numOrden        = (INT)$value->numOrden;
             $value->paymentMethod   = (INT)$value->paymentMethod;
@@ -3119,7 +3119,7 @@ class Cashout extends makeTx{
         foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
             if($accountId == $banco->datosBan_id){
                 $this->objEnvio->clabe    = $banco->banco_clabe;
-                $this->objEnvio->bankCode = (INT)$banco->banco_codigo;
+                $this->objEnvio->bankCode = (STRING)$banco->banco_codigo;
             }
         }
     }

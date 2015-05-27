@@ -28,7 +28,7 @@ class TimOneRequest extends TimOneCurl {
      */
     public function makeRequest($datosEnvio){
         unset($this->options);
-        $this->objEnvio = is_null($this->objEnvio)?$datosEnvio->objEnvio:$this->objEnvio;
+        $this->objEnvio = isset($this->objEnvio)?$datosEnvio->objEnvio:$this->objEnvio;
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
