@@ -330,7 +330,8 @@ class getFromTimOne{
     }
 
     public static function getIntegradoId($timOneId){
-        $data = self::selectDB('integrado_timone','timoneUuid = '.$timOneId);
+        $db = JFactory::getDbo();
+        $data = self::selectDB('integrado_timone','timoneUuid = '.$db->quote($timOneId));
 
         return $data;
     }
