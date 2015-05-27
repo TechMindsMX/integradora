@@ -2637,7 +2637,7 @@ class sendToTimOne {
         fclose($handle);
 
         if($write) {
-            $return = $filename;
+            $return = str_replace(JPATH_BASE.'/','',$filename);
         } else {
             $return = false;
         }
@@ -2795,7 +2795,8 @@ class Factura extends makeTx {
 	public $totales;
 
 	function __construct( \Integralib\OdVenta $orden, $timbra = false, $series = 'B' ) {
-        $this->emisor = new Emisor( new IntegradoSimple(1) );
+        $integradora = new \Integralib\Integrado();
+        $this->emisor = new Emisor( new IntegradoSimple($integradora->getIntegradoraUuid()) );
         $this->receptor = new Receptor($orden->getReceptor());
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
 
@@ -2878,13 +2879,11 @@ class Factura extends makeTx {
      */
     public function sendCreateFactura()
     {
-		$objEnvio = $this->setObjEnvio();
+        $this->objEnvio = $this->setObjEnvio();
 
-		$urlAndType = IntFactory::getServiceRoute('facturacion', 'factura', 'create');
+        $rutas = new servicesRoute();
 
-		$request = IntFactory::getTimoneRequest($urlAndType, $objEnvio);
-
-		$result = $request->makeRequest();
+        $result = parent::create($rutas->getUrlService('facturacion', 'factura', 'create'));
 
         if ($result === true) {
             $result = $this->returnXML();

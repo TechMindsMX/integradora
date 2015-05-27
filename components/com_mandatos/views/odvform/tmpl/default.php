@@ -114,7 +114,7 @@ $subProyects = $this->subprojects;
             url: "index.php?option=com_mandatos&task=searchProducts&format=raw",
             data: {
                 'productName': valorCampo,
-                'integradoId': <?php echo $this->integradoId; ?>
+                'integradoId': '<?php echo $this->integradoId; ?>'
             },
             type: 'get',
             async: false

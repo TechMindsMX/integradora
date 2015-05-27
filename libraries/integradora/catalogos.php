@@ -7,9 +7,9 @@ defined('JPATH_PLATFORM') or die;
 jimport('joomla.factory');
 
 class CatalogoFactory {
-	public static function create() {
-		return new Catalogos();
-	}
+    public static function create() {
+        return new Catalogos();
+    }
 }
 
 /**
@@ -17,51 +17,51 @@ class CatalogoFactory {
  */
 class Catalogos {
 
-	public $basic;
+    public $basic;
 
-	function __construct() {
-		$this->basic    = $this->getBasicStatus();
-		$this->db       = JFactory::getDbo();
-	}
+    function __construct() {
+        $this->basic    = $this->getBasicStatus();
+        $this->db       = JFactory::getDbo();
+    }
 
-	public static function getValidFacturaFolioSeries() {
-		return array('default' => 'B', 'comisiones' => 'C');
-	}
+    public static function getValidFacturaFolioSeries() {
+        return array('default' => 'B', 'comisiones' => 'C');
+    }
 
-	public function getCurrencies() {
-		$query = $this->db->getQuery(true)
-			->select('*')
-			->from( $this->db->quoteName('#__catalog_currencies') )
-			->order( $this->db->quoteName('money_name').' ASC')
-			->where( $this->db->quoteName('code'). ' IN (' . getFromTimOne::acceptedCurrenciesList() . ')' );
-		$currencies = $this->db->setQuery($query)->loadObjectList();
+    public function getCurrencies() {
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from( $this->db->quoteName('#__catalog_currencies') )
+            ->order( $this->db->quoteName('money_name').' ASC')
+            ->where( $this->db->quoteName('code'). ' IN (' . getFromTimOne::acceptedCurrenciesList() . ')' );
+        $currencies = $this->db->setQuery($query)->loadObjectList();
 
-		return $currencies;
-	}
+        return $currencies;
+    }
 
-	public function getNacionalidades()
-	{
-		$query = $this->db->getQuery(true)
-			->select('*')
-			->from($this->db->quoteName('#__catalog_paises'))
-			->order('nombre ASC');
-		$result = $this->db->setQuery($query)->loadObjectList();
-		
-		$this->nacionalidades = $result;
-	}
-	
-	public function getEstados()
-	{
-		$query = $this->db->getQuery(true)
-			->select('*')
-			->from($this->db->quoteName('#__catalog_estados'))
-			->order('nombre ASC');
-		$result = $this->db->setQuery($query)->loadObjectList();
+    public function getNacionalidades()
+    {
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from($this->db->quoteName('#__catalog_paises'))
+            ->order('nombre ASC');
+        $result = $this->db->setQuery($query)->loadObjectList();
 
-		$this->estados = $result;
+        $this->nacionalidades = $result;
+    }
+
+    public function getEstados()
+    {
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from($this->db->quoteName('#__catalog_estados'))
+            ->order('nombre ASC');
+        $result = $this->db->setQuery($query)->loadObjectList();
+
+        $this->estados = $result;
 
         return $result;
-	}
+    }
 
     public function getStateIdByName($stateName){
         $estados = $this->getEstados();
@@ -84,85 +84,93 @@ class Catalogos {
         return str_replace($a, $b, $str);
     }
 
-	public function permisionLevels()
-	{
+    public function permisionLevels()
+    {
 
 
-		$query = $this->db->getQuery(true)
-			->select(array($this->db->quoteName('id'),$this->db->quoteName('name')))
-			->from($this->db->quoteName('#__catalog_permission_levels'));
-		$result = $this->db->setQuery($query)->loadObjectList('id');
+        $query = $this->db->getQuery(true)
+            ->select(array($this->db->quoteName('id'),$this->db->quoteName('name')))
+            ->from($this->db->quoteName('#__catalog_permission_levels'));
+        $result = $this->db->setQuery($query)->loadObjectList('id');
 
-		$this->permissionLevels = $result;
+        $this->permissionLevels = $result;
 
         return $result;
-	}
+    }
 
-	public function getBancos(){
-		$cache = & JFactory::getCache();
+    public function getBancos(){
+        $cache = & JFactory::getCache();
 
-		$bancos  = $cache->call( array( 'Catalogos', 'getBancosFromTimOne' ) );
+        $bancos  = $cache->call( array( 'Catalogos', 'getBancosFromTimOne' ) );
 
-		$this->bancos = $bancos;
+        $this->bancos = $bancos;
 
-		return $bancos;
-	}
+        return $bancos;
+    }
 
-	public static function getBancosFromTimOne() {
-        $oAuth2 = new TimOneRequest();
-        $token = $oAuth2->getAccessToken();
+    public static function getBancosFromTimOne() {
+        $session = JFactory::getSession();
 
-		$context = stream_context_create(array('http' => array('header'=>'Authorization: Bearer '.$token->access_token)));
-		$catalogo = json_decode ( @file_get_contents(MIDDLE.TIMONE.'stp/listBankCodes',false,$context) );
+        $cat = $session->get('bancos', null, 'catalogos');
 
-		if(empty($catalogo)) {
-			JFactory::getApplication()->enqueueMessage('El servicio '.MIDDLE.TIMONE.'stp/listBankCodes NO esta funcionando', 'error');
-			$cat = null;
-		} else {
-			foreach ($catalogo as $indice => $objeto) {
-				$catalogo2[$objeto->bankCode] = $objeto->name;
-			}
-			natsort($catalogo2);
+        if( is_null($cat) ) {
+            $oAuth2 = new TimOneRequest();
+            $token = $oAuth2->getAccessToken();
 
-			foreach ($catalogo2 as $key=>$value) {
-				$objeto = new stdClass;
+            $context = stream_context_create(array('http' => array('header' => 'Authorization: Bearer ' . $token->access_token)));
+            $catalogo = json_decode(@file_get_contents(MIDDLE . TIMONE . 'stp/listBankCodes', false, $context));
 
-				$objeto->banco = $value;
-				$objeto->clave = $key;
-				$objeto->claveClabe = substr($key, -3);
+            if (empty($catalogo)) {
+                JFactory::getApplication()->enqueueMessage('El servicio ' . MIDDLE . TIMONE . 'stp/listBankCodes NO esta funcionando', 'error');
+                $cat = null;
+            } else {
+                foreach ($catalogo as $indice => $objeto) {
+                    $catalogo2[$objeto->bankCode] = $objeto->name;
+                }
+                natsort($catalogo2);
 
-				$cat[] = $objeto;
-			}
-		}
+                foreach ($catalogo2 as $key => $value) {
+                    $objeto = new stdClass;
 
-		return $cat;
-	}
+                    $objeto->banco = $value;
+                    $objeto->clave = $key;
+                    $objeto->claveClabe = substr($key, -3);
 
-	public function getStatusSolicitud()
-	{
-		$query = $this->db->getQuery(true)
-			->select('*')
-			->from($this->db->quoteName('#__integrado_status_catalog'));
-		$status = $this->db->setQuery($query)->loadObjectList();
+                    $cat[] = $objeto;
+                }
+            }
 
-		$this->statusSolicitud = $status;
+            $session->set('bancos', $cat, 'catalogos');
+        }
 
-		return $status;
-	}
+        return $cat;
+    }
 
-	public function getComisionesTypes () {
-		return array('Fija - Recurrente', 'Variable - Por transacción');
-	}
+    public function getStatusSolicitud()
+    {
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from($this->db->quoteName('#__integrado_status_catalog'));
+        $status = $this->db->setQuery($query)->loadObjectList();
 
-	public function getBasicStatus () {
-		return array('Desabilitado', 'Habilitado');
-	}
+        $this->statusSolicitud = $status;
 
-	public function getComisionesFrecuencyTimes () {
-		return array(7,15,30,60,90,120,180,360);
-	}
+        return $status;
+    }
 
-	public function getTiposPeriodos(){
+    public function getComisionesTypes () {
+        return array('Fija - Recurrente', 'Variable - Por transacción');
+    }
+
+    public function getBasicStatus () {
+        return array('Desabilitado', 'Habilitado');
+    }
+
+    public function getComisionesFrecuencyTimes () {
+        return array(7,15,30,60,90,120,180,360);
+    }
+
+    public function getTiposPeriodos(){
 
         $query = $this->db->getQuery(true)
             ->select('*')
@@ -173,47 +181,47 @@ class Catalogos {
         return $tipos;
     }
 
-	public function getCatalogoIVA(){
-		$query = $this->db->getQuery(true)
-			->select('*')
-			->from($this->db->quoteName('#__catalogo_ivas'));
+    public function getCatalogoIVA(){
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from($this->db->quoteName('#__catalogo_ivas'));
 
-		$catIva = $this->db->setQuery($query)->loadObjectList('valor');
+        $catIva = $this->db->setQuery($query)->loadObjectList('valor');
 
-		return $catIva;
-	}
+        return $catIva;
+    }
 
-	public function getFullIva() {
-		$ivas = $this->getCatalogoIVA();
+    public function getFullIva() {
+        $ivas = $this->getCatalogoIVA();
 
-		return $ivas['3']->leyenda;
-	}
+        return $ivas['3']->leyenda;
+    }
 
-	public function getPesonalidadesJuridicas() {
-		$this->pers_juridica = array( 1 => 'Moral', 2 => 'Física');
+    public function getPesonalidadesJuridicas() {
+        $this->pers_juridica = array( 1 => 'Moral', 2 => 'Física');
 
-		return $this->pers_juridica;
-	}
+        return $this->pers_juridica;
+    }
 
-	public function clientTypes(){
-		return array(0,2);
-	}
+    public function clientTypes(){
+        return array(0,2);
+    }
 
-	public function providerTypes(){
-		return array(1,2);
-	}
+    public function providerTypes(){
+        return array(1,2);
+    }
 
-	public function getPaymentMethods( $onlyActive = true ) {
-		$where = $onlyActive ? 'published = 1' : 'id NOT NULL';
+    public function getPaymentMethods( $onlyActive = true ) {
+        $where = $onlyActive ? 'published = 1' : 'id NOT NULL';
 
-		$query = $this->db->getQuery(true)
-			->select('*')
-		    ->from($this->db->quoteName('#__catalog_payment_methods'))
-			->where($where);
+        $query = $this->db->getQuery(true)
+            ->select('*')
+            ->from($this->db->quoteName('#__catalog_payment_methods'))
+            ->where($where);
 
-		$cat = $this->db->setQuery($query)->loadObjectList('id');
+        $cat = $this->db->setQuery($query)->loadObjectList('id');
 
-		return $cat;
-	}
+        return $cat;
+    }
 }
 	

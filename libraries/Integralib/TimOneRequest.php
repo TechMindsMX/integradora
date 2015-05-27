@@ -23,11 +23,12 @@ class TimOneRequest extends TimOneCurl {
     function __construct() {
     }
 
-	/**
-	 * @return mixed
-	 */
+    /**
+     * @return mixed
+     */
     public function makeRequest($datosEnvio){
         unset($this->options);
+        $this->objEnvio = is_null($this->objEnvio)?$datosEnvio->objEnvio:$this->objEnvio;
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
@@ -119,16 +120,16 @@ class TimOneRequest extends TimOneCurl {
         return $this->resultado;
     }
 
-	public function getAccessToken() {
+    public function getAccessToken() {
 //		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
 
-		$this->setServiceUrl("http://api-qa.timone.mx/timone/oauth/token");
-		$this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
-		$this->setHttpType('POST');
+        $this->setServiceUrl("http://api-qa.timone.mx/timone/oauth/token");
+        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setHttpType('POST');
 
-		$token = $this->to_timone();
+        $token = $this->to_timone();
 
-		return json_decode($token->data);
-	}
+        return json_decode($token->data);
+    }
 
 }
