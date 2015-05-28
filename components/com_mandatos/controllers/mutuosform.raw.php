@@ -12,9 +12,9 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $this->app          = JFactory::getApplication();
         $this->inputVars    = $this->app->input;
         $post               = array(
-            'integradoId'       => 'INT',
+            'integradoId'       => 'STRING',
             'id'                => 'INT',
-            'integradoIdR'      => 'INT',
+            'integradoIdR'      => 'STRING',
             'paymentPeriod'     => 'INT',
             'idCuenta'          => 'INT',
             'cuotaOcapital'     => 'INT',
@@ -43,7 +43,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
         $datos = $this->parametros;
         $save  = new sendToTimOne();
 
-        if($datos->integradoIdR == 0){
+        if($datos->integradoIdR == ''){
             $id = getFromTimOne::saveNewIntegradoIdAndReturnIt(0);
             $data_integrado = array(
                 'nombre_representante' => $datos->beneficiario,

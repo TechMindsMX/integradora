@@ -445,6 +445,46 @@ class getFromTimOne{
         return $results;
     }
 
+    public static function sumaOrders($orders){
+        $neto = 0;
+        $iva = 0;
+        $total = 0;
+
+        $obj = new stdClass();
+        $obj->pagado->total = array();
+        $obj->pagado->iva = array();
+        $obj->pagado->neto = array();
+
+        foreach ( $orders as $order ) {
+            $neto = $neto + $order->subTotalAmount;
+            $iva = $iva + $order->iva;
+            $total = $total + $order->totalAmount;
+
+            $montoTxs = 0;
+            foreach ($order->txs as $tx) {
+                $montoTxs = $montoTxs + $tx->detalleTx->amount;
+                $tx->detalleTx->ivaProporcion = $tx->detalleTx->amount * ($order->iva / $order->subTotalAmount);
+            }
+            //TODO verificar IVA de saldo
+            $order->saldo->total = $order->totalAmount - $montoTxs;
+            $order->saldo->iva   = $montoTxs * ($order->iva / $order->subTotalAmount);
+
+            $obj->pagado->total[] = $montoTxs;
+            $obj->pagado->iva[] = $order->saldo->iva;
+            $obj->pagado->neto[] = $montoTxs - $order->saldo->iva;
+        }
+
+        $obj->pagado->total     = array_sum($obj->pagado->total);
+        $obj->pagado->iva       = array_sum($obj->pagado->iva);
+        $obj->pagado->neto      = array_sum($obj->pagado->neto);
+
+        $obj->neto = $neto;
+        $obj->iva = $iva;
+        $obj->total = $total;
+
+        return $obj;
+    }
+
     private static function convertDateLength( $date, $int ) {
 
         $length = ceil(log10($date));
@@ -488,13 +528,13 @@ class getFromTimOne{
             $orden->tasa              = (FLOAT)$value->tasa;
             $orden->tipo_movimiento   = (STRING)$value->tipo_movimiento;
 
-            $orden->integradoIdA      = (INT)$value->integradoIdA;
+            $orden->integradoIdA      = (STRING)$value->integradoIdA;
             $integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
             $orden->acreedor          = (STRING)$value->acreedor;
             $orden->a_rfc             = (STRING)$value->a_rfc;
             $orden->acreedorDataBank  = $integradoAcreedor->integrados[0]->datos_bancarios[0];
 
-            $orden->integradoIdD      = (INT)$value->integradoIdD;
+            $orden->integradoIdD      = (STRING)$value->integradoIdD;
             $integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
             $orden->deudor            = (STRING)$value->deudor;
             $orden->d_rfc             = (STRING)$value->d_rfc;

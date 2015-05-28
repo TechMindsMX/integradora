@@ -19,7 +19,7 @@ $existe = is_null($datos->id)?'false':'true';
 <script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
     var catalogoBancos = new Array();
-    var integradoId	= <?php echo $this->integradoId; ?>;
+    var integradoId	= '<?php echo $this->integradoId; ?>';
 
     <?php
     foreach ($this->catalogos->bancos as $key => $value){
@@ -38,7 +38,7 @@ $existe = is_null($datos->id)?'false':'true';
 
         <?php echo (!is_null($datos->integradoDeudor->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
 
-        jQuery('#rfc').trigger('change');
+        //jQuery('#rfc').trigger('change');
     });
 
     function ajax(parametros){
@@ -71,7 +71,7 @@ $existe = is_null($datos->id)?'false':'true';
                 beneficiario.val(data.nom_comercial);
                 beneficiario.prop('readOnly', true);
 
-                jQuery('#integradoIdR').val(data.integrado_id);
+                jQuery('#integradoIdR').val(data.integradoId);
                 jQuery('#dataBanco').hide();
                 jQuery('#existe').val(true);
             }else{

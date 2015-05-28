@@ -553,3 +553,7 @@ ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` VARCHAR
 ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` VARCHAR(32) NULL DEFAULT NULL ;
 --rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` INT(100) NULL DEFAULT NULL ;
 --rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` INT(100) NULL DEFAULT NULL ;
+
+--changeset lutek:59
+ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `integradoIdA` `integradoIdA` VARCHAR(32) NULL DEFAULT NULL , CHANGE COLUMN `integradoIdD` `integradoIdD` VARCHAR(32) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `integradoIdA` `integradoIdA` INT(11) NULL DEFAULT NULL , CHANGE COLUMN `integradoIdD` `integradoIdD` INT(11) NULL DEFAULT NULL ;
