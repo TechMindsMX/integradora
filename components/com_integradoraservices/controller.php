@@ -39,7 +39,8 @@ class IntegradoraservicesController extends JControllerLegacy {
             4 => array('HTTP Response' => 401, 'Message' => 'Authentication Failed'),
             5 => array('HTTP Response' => 404, 'Message' => 'Invalid Request'),
             6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format'),
-            7 => array('HTTP Response' => 405, 'Message' => 'No se guardo en Base de datos')
+            7 => array('HTTP Response' => 405, 'Message' => 'No se guardo en Base de datos'),
+            8 => array('HTTP Response' => 406, 'Message' => 'Integrado desconocido'),
         );
 
         $response['code']   = 0;
@@ -85,8 +86,6 @@ class IntegradoraservicesController extends JControllerLegacy {
         }
 
         $this->deliver_response($formato, $response);
-
-
         exit;
     }
 
@@ -102,21 +101,20 @@ class IntegradoraservicesController extends JControllerLegacy {
         $data_integrado = getFromTimOne::getIntegradoId($post->uuid);
 
         if ( ! empty( $data_integrado ) ) {
-            $integrado = new IntegradoSimple($data_integrado);
+            $integrado = new IntegradoSimple($data_integrado[0]->integradoId);
             $integrado->getTimOneData();
             $data_integrado = $integrado;
         } else {
             // error no existe el integrado
-            return array('code' => '2');
+            return array('code' => 0);
         }
-
 
         //TODO se deben traer solamente las ordenes no pagadas
         $odds           = getFromTimOne::getOrdenesDeposito($data_integrado->id);
-        getFromTimOne::convierteFechas($post);
 
+        $post->fecha = date('d-m-Y', ($post->timestamp/1000) );
         foreach ($odds as $value) {
-            if( ($post->timestamps->date === $value->timestamps->paymentDate) && ($post->totalAmount == $value->totalAmount) ){
+            if( ($post->fecha === $value->paymentDate) && ($post->amount == $value->totalAmount) && ($value->status->id == 5) ){
                 $dataTXMandato = array(
                     'idTx'        => $post->reference,
                     'idIntegrado' => $value->integradoId,
@@ -128,16 +126,18 @@ class IntegradoraservicesController extends JControllerLegacy {
                 $salvado = $save->insertDB('txs_timone_mandato');
                 if($salvado){
                     $cambioStatus = $save->changeOrderStatus($value->id,'odd',13);
-                    $return = array('code' => '1');
+                    $return = array('code' => 1);
+                    break;
                 }else{
-                    $return = array('code' => '7');
+                    $return = array('code' => 7);
+                    break;
                 }
 
             }
         }
 
         if( !isset($return) ){
-            $return = array('code' => '0');
+            $return = array('code' => 0);
         }
 
         return $return;
