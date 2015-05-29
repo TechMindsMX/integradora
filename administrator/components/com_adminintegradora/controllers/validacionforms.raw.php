@@ -42,7 +42,7 @@ class AdminintegradoraControllerValidacionForms extends JControllerAdmin{
         $data = $this->input->getArray($post);
 
         $diccionario = array(
-            'integradoId' => array('number'       => true, 'maxlength' => 10),
+            'integradoId' => array('alphaNumber'  => true, 'maxlength' => 32),
             'cuenta'      => array('number'       => true, 'maxlength' => 3,  'required' => true),
             'referencia'  => array('alphaNumber'  => true, 'maxlength' => 21, 'required' => true),
             'date'        => array('date'         => true, 'maxlength' => 10, 'required' => true),

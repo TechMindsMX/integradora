@@ -28,7 +28,7 @@ class TimOneRequest extends TimOneCurl {
      */
     public function makeRequest($datosEnvio){
         unset($this->options);
-        $this->objEnvio = isset($this->objEnvio)?$datosEnvio->objEnvio:$this->objEnvio;
+        @$this->objEnvio = isset($this->objEnvio) || is_null($this->objEnvio) ? $datosEnvio->objEnvio : $this->objEnvio;
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
@@ -102,11 +102,14 @@ class TimOneRequest extends TimOneCurl {
      * @return object resultado
      */
     public function sendCashInTx($uuidReceptor, $amount) {
-        $this->objEnvio = new \stdClass();
-        $this->objEnvio->uuid = $uuidReceptor;
-        $this->objEnvio->amount = $amount;
+        $servicesRoute = new servicesRoute();
+        $url = $servicesRoute->getUrlService('timone', 'txCashIn', 'create');
 
-        $this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
+        $url->objEnvio->uuid = $uuidReceptor;
+        $url->objEnvio->amount = $amount;
+
+
+        $this->makeRequest($url);
 
         return $this->resultado;
     }

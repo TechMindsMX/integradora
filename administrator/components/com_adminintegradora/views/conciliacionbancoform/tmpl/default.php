@@ -21,7 +21,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
                 foreach ($integrados as $key => $value) {
                     if ($value->integrado->status == 50 ) {
 	                    echo 'integradosArray['.$key.'] = "'.$value->displayName.'";'."\n";
-	                    echo 'integradoNon_id["'.$value->displayName.'"] = '.$value->integrado->integradoId.';'."\n";
+	                    echo 'integradoNon_id["'.$value->displayName.'"] = "'.$value->integrado->integradoId.'";'."\n";
                     }
                 }
             ?>
@@ -164,6 +164,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
             <div>Transaccion no Identificada.</div>
         <?php } ?>
 
+        <div class="clearfix">&nbsp;</div>
         <div>
             <input type="submit" class="btn btn-primary" id="send" value="Guardar" />
             <input type="submit" class="btn btn-danger" id="cancel" value="<?php echo JText::_('LBL_CANCELAR'); ?>" />

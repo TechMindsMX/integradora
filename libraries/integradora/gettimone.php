@@ -3159,7 +3159,7 @@ class Cashout extends makeTx{
         foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
             if($accountId == $banco->datosBan_id){
                 $this->objEnvio->clabe    = $banco->banco_clabe;
-                $this->objEnvio->bankCode = (STRING)$banco->banco_codigo;
+                $this->objEnvio->bankCode = (INT)$banco->banco_codigo;
             }
         }
     }
@@ -3213,12 +3213,12 @@ class transferFunds extends makeTx {
         $this->objEnvio->amount           = (float)$totalAmount;
     }
 
-    public function sendCreateTx()
+    public function sendCreateTx($saveTx = true)
     {
         $rutas = new servicesRoute();
         $result = parent::create($rutas->getUrlService('timone', 'transferFunds', 'create'));
 
-        if ( $result === true ) {
+        if ( $result === true && $saveTx) {
             $this->saveTxOrderRelationship();
         }
 
@@ -3250,6 +3250,7 @@ class makeTx {
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
         JLog::add($logdata, JLog::DEBUG, 'bitacora');
         $this->orden->pastData = $this->resultado->data;
+
         return $this->resultado->code == 200;
     }
 

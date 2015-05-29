@@ -13,7 +13,7 @@ class AdminintegradoraViewConciliacionBancoform extends JViewLegacy {
         $post = array(
             'id'            => 'INT',
             'confirmacion'  => 'INT',
-            'integradoId'   => 'INT',
+            'integradoId'   => 'STRING',
             'cuenta'        => 'STRING',
             'referencia'    => 'STRING',
             'date'          => 'STRING',
@@ -25,7 +25,7 @@ class AdminintegradoraViewConciliacionBancoform extends JViewLegacy {
         $this->bancosIntegradora    = $this->get('BancosIntegradora');
         $this->data                 = (object) $data;
 
-        if (is_numeric($data['integradoId'])) {
+        if (is_string($data['integradoId'])) {
             $integ = new IntegradoSimple($data['integradoId']);
             $this->nombreIntegrado = $integ->getDisplayName();
         }

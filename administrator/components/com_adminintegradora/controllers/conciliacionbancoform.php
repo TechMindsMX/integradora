@@ -24,7 +24,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $app = JFactory::getApplication();
         $post = array(
             'id'            => 'INT',
-            'integradoId'   => 'INT',
+            'integradoId'   => 'STRING',
             'cuenta'        => 'STRING',
             'referencia'    => 'STRING',
             'date'          => 'STRING',
@@ -73,15 +73,17 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     private function verifyIntegrado() {
+        $integradora = new \Integralib\Integrado();
         $integrados = Integrado::getAllIds();
         if (!array_key_exists($this->data['integradoId'], $integrados)) {
             // Si el id de integrado no es correcto, se asocia la TX con la Integradora
-            $this->data['integradoId'] = 1;
+            $this->data['integradoId'] = $integradora->getIntegradoraUuid();
         }
     }
 
     private function makeTxTimone() {
-        $this->receptor = new IntegradoSimple(1);
+        $integradora = new \Integralib\Integrado();
+        $this->receptor = new IntegradoSimple($integradora->getIntegradoraUuid());
         $this->receptor->getTimOneData();
 
         $send = new \Integralib\TimOneRequest();
@@ -102,7 +104,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $values = array($db->quote($txTimone), $db->quote(time()), $db->quote($this->data['integradoId']));
 
         $query->insert($db->quoteName('#__txs_timone_mandato'));
-        $query->columns($db->quoteName(array('idTx', 'date', 'idIntegrado')));
+        $query->columns($db->quoteName(array('idTx', 'date', 'integradoId')));
         $query->values(implode(',',$values));
 
         $db->setQuery($query);
@@ -125,7 +127,8 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
      * @param $dataObj
      */
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
-        $transfer = new transferFunds( '', 1, $dataObj->integradoId, $dataObj->amount );
+        $integradora = new \Integralib\Integrado();
+        $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
         $result = $transfer->sendCreateTx();
 
         if($result != 200) {

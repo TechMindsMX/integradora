@@ -109,40 +109,40 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             }
 
             if($pagar){
-                if($resultado) {
-                    // autorización guardada
-                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
+                $db->transactionStart();
+                try {
+                    if ($resultado) {// autorización guardada
+                        $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '5');
 
-                    if($statusChange) {
-                        $cashOut = $this->cashout();
+                        if ($statusChange) {// Se Cambio a estatus Autorizada
+                            $cashOut = $this->cashout();
 
-                        if ($cashOut) {
-                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
-                            $comision = $this->txComision();
+                            if ($cashOut) {// Se realizo en pago de la Orden
+                                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
+                                $comision = $this->txComision();
 
-                            if ($statusChange && $comision) {
-                                $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
+                                if ($statusChange && $comision) { //Se realizo el cobro de la comision
+                                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
 
-                                $this->sendNotifications();
+                                    $this->sendNotifications();
+                                }
+                            } else {
+                                throw new Exception( JText::_('ORDER_NO_PAID') );
                             }
-                        } else {
-                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
-
-                            if($statusChange) {
-                                $save->deleteDB('flpmu_auth_odr', 'idOrden = ' . $this->parametros['idOrden'], ' AND userId = ' . JFactory::getUser()->id);
-                            }else{
-                                $this->app->enqueueMessage(JText::_('ERROR_PLATAFORM_CONTACT_ADMIN'));
-                            }
-                            $this->app->enqueueMessage(JText::_('ORDER_NO_PAID'));
                         }
-
-                        $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
-                    }else{
-                        $this->app->enqueueMessage(JText::_('ORDER_NOT_STATUS_CHANGED'));
-                        $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
                     }
-                }else{
-                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+
+                    $db->transactionCommit();
+
+                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist');
+                }catch (Exception $e){
+                    $db->transactionRollback();
+
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '3');
+
+                    $save->deleteDB('auth_odr', 'idOrden = ' . $this->parametros['idOrden'], ' AND userId = ' . JFactory::getUser()->id);
+
+                    $this->app->redirect('index.php?option=com_mandatos&view=odrlist', $e->getMessage(), 'error');
                 }
             }else{
                 $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
@@ -207,19 +207,21 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         if($this->orden->status->id == 5){
             $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
-            $tranfer->sendCreateTx();
+            $resultado = $tranfer->sendCreateTx();
         }
-        return $tranfer;
+
+        return $resultado == 200;
     }
 
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
+        $integradora    = new \Integralib\Integrado();
         $orden          = $this->orden;
         $montoComision  = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
 
         $orden->orderType = 'CCom-'.$orden->orderType;
 
-        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
+        $txComision     = new transferFunds($orden,$orden->integradoId,$integradora->getIntegradoraUuid(),$montoComision);
 
         return $txComision->sendCreateTx();
     }
