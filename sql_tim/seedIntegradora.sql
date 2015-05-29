@@ -1,8 +1,8 @@
-INSERT INTO `flpmu_integrado` (`integradoId`, `status`, `pers_juridica`) 
-VALUES ('d9e9f5c4fe2e4a0ebfbfeaa46c0bc528', '1', '1');
+INSERT INTO `flpmu_integrado` (`integradoId`, `status`, `pers_juridica`, `createdDate`) 
+VALUES ('d9e9f5c4fe2e4a0ebfbfeaa46c0bc528', '1', '1', 1354492800);
 
 INSERT INTO `flpmu_integrado_users` (`integradoId`, `user_id`, `integrado_principal`, `integrado_permission_level`) 
-VALUES ('d9e9f5c4fe2e4a0ebfbfeaa46c0bc528', '93', b'1', '3');
+VALUES ('d9e9f5c4fe2e4a0ebfbfeaa46c0bc528', '93', '1', '3');
 
 INSERT INTO `flpmu_integrado_datos_personales` (`integradoId`, `nombre_representante`, `nacionalidad`, `sexo`, `fecha_nacimiento`, `rfc`, `calle`, `num_exterior`, `num_interior`, `cod_postal`, `curp`, `email`, `tel_fijo`, `tel_fijo_extension`, `tel_movil`, `nom_comercial`, `url_identificacion`, `url_rfc`, `url_comprobante_domicilio`) 
 VALUES ('d9e9f5c4fe2e4a0ebfbfeaa46c0bc528', 'Integradora', NULL, NULL, NULL, NULL, 'Tiburcio Montiel', '80', 'B3', '11810', NULL, NULL, NULL, NULL, NULL, 'Integradora de Emprendimiento culturales S.A. de C.V.', NULL, NULL, NULL);
