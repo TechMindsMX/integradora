@@ -103,7 +103,7 @@ class getFromTimOne{
         if (!is_null($idTX)) {
             $where = 'id = ' . $dbq->quote($idTX);
         } elseif (!is_null($integradoId)) {
-            $where = 'idIntegrado = ' . $dbq->quote($integradoId) ;
+            $where = 'integradoId = ' . $dbq->quote($integradoId) ;
         }
 
         $txs = self::selectDB('txs_timone_mandato',$where);
@@ -556,6 +556,7 @@ class getFromTimOne{
     public static function getTimoneUserDetalis($uuidTimone){
         $urlAndType = IntFactory::getServiceRoute('timone', 'user', 'details');
         $urlAndType->url = str_replace('{uuid}',$uuidTimone,$urlAndType->url);
+        $urlAndType->objEnvio = $uuidTimone;
 
         $request = IntFactory::getTimoneRequest($urlAndType,null);
 

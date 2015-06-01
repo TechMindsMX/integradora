@@ -83,11 +83,15 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function makeTxTimone() {
         $integradora = new \Integralib\Integrado();
-        $this->receptor = new IntegradoSimple($integradora->getIntegradoraUuid());
-        $this->receptor->getTimOneData();
+
+        $emisor = new IntegradoSimple($integradora->getIntegradoraUuid());
+        $emisor->getTimOneData();
+
+        $receptor = new IntegradoSimple($this->data['integradoId']);
+        $receptor->getTimOneData();
 
         $send = new \Integralib\TimOneRequest();
-        $result = $send->sendCashInTx($this->receptor->timoneData->timoneUuid, $this->data['amount']);
+        $result = $send->sendCashInTx($emisor->timoneData->timoneUuid, $receptor->timoneData->timoneUuid, $this->data['amount'], $this->data['reference']);
 
         if ($result->code != 200) {
             throw new Exception('Error en '.__METHOD__.' = '.$result->code);

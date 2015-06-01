@@ -101,7 +101,7 @@ class TimOneRequest extends TimOneCurl {
      *
      * @return object resultado
      */
-    public function sendCashInTx($uuidReceptor, $amount) {
+    public function sendCashInTx($uuidEmisor,$uuidReceptor, $amount, $reference) {
         $servicesRoute = new servicesRoute();
         $url = $servicesRoute->getUrlService('timone', 'txCashIn', 'create');
 
