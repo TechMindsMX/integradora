@@ -1776,11 +1776,10 @@ class getFromTimOne{
     public static function getTxDataByTxId($txUUID) {
 
         // TODO: traer los datos de la Tx desde TimOne
-        $timone = new Txs();
+        $timonRequest = new TimOneRequest();
+        $txDetails = $timonRequest->getTxDetails($txUUID);
 
-        $results = $timone->getTxDetails($txUUID);
-
-        return $results;
+        return $txDetails;
     }
 
     public static function getMedidas(){
@@ -3224,6 +3223,10 @@ class transferFunds extends makeTx {
         }
 
         return $result;
+    }
+
+    public function getTransferData(){
+        return $this->resultado->data;
     }
 
 }

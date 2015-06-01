@@ -16,6 +16,7 @@ jimport('integradora.gettimone');
 jimport('integradora.notifications');
 
 class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
+    public $id_tx_banco;
     protected $data;
     private $receptor;
 
@@ -50,10 +51,11 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
             }
 
             $id_tx_banco = $db->insertid();
-            $txTimone    = $this->makeTxTimone();
-            $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
+            $txTimone    = $this->makeTxTimone();//pasa el Saldo a Integradora antens de enviarlo al usuario
+//            $this->saveTxsRelation( $txTimone->data, $id_tx_banco );
 
             if ( $txTimone->code == 200 ) {
+                $this->id_tx_banco = $id_tx_banco;
                 $this->makeTransferIntegradoraIntegrado( $dataObj );
             }
 
@@ -68,6 +70,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
             JLog::add($e->getMessage(), JLog::ERROR);
 
             $app->enqueueMessage( JText::_( 'LBL_NO_SAVED' ), 'WARNING' );
+            exit;
         }
         $app->redirect('index.php?option=com_adminintegradora&view=conciliacionbancoform');
     }
@@ -91,7 +94,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $receptor->getTimOneData();
 
         $send = new \Integralib\TimOneRequest();
-        $result = $send->sendCashInTx($emisor->timoneData->timoneUuid, $receptor->timoneData->timoneUuid, $this->data['amount'], $this->data['reference']);
+        $result = $send->sendCashInTx($emisor->timoneData->timoneUuid, $receptor->timoneData->timoneUuid, $this->data['amount'], $this->data['referencia']);
 
         if ($result->code != 200) {
             throw new Exception('Error en '.__METHOD__.' = '.$result->code);
@@ -127,13 +130,12 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $db->execute();
     }
 
-    /**
-     * @param $dataObj
-     */
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
         $integradora = new \Integralib\Integrado();
         $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
-        $result = $transfer->sendCreateTx();
+        $result = $transfer->sendCreateTx(false);
+
+        $this->saveTxsRelation( $transfer->getTransferData(), $this->id_tx_banco );
 
         if($result != 200) {
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');

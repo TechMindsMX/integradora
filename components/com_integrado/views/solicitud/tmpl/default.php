@@ -542,7 +542,7 @@ $token = JSession::getFormToken();
 				<select name="pais" id="de_pais" >
 					<?php
 					foreach ($this->catalogos->nacionalidades as $key => $value) {
-						echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
+						echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
 					}
 					?>
 				</select>
