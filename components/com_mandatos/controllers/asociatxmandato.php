@@ -96,7 +96,7 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		try {
 			$db->insertObject( '#__txs_mandatos', $objToInsert );
 
-			if ( ($this->order->balance - $objToInsert->amount) === 0 ) {
+			if ( ($this->order->balance - $objToInsert->amount) == 0 ) {
 				$ststus = new sendToTimOne;
 				if (!$ststus->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
 					throw new Exception('LBL_CHANGE_STATUS_FAILED');
