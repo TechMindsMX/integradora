@@ -8,6 +8,8 @@ $orden   = $this->orden;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
+var_dump($orden, $data);
+
 $option = '';
 foreach ($this->txs as $txs) {
     if($txs->balance == $txs->amount){
@@ -85,11 +87,10 @@ foreach ($this->txs as $txs) {
 
         <h3>Esta seguro de guardar los siguientes datos de conciliación</h3>
 
-        <div>Orden pagada: <?php echo is_null($data->ordenPagada)?'No':'Si'; ?></div>
         <div>Cuenta: <?php echo $data->cuenta; ?></div>
         <div>Referencia: <?php echo $data->referencia; ?></div>
         <div>Fecha: <?php echo $data->date; ?></div>
-        <div>Monto: $<?php echo number_format($data->balance, 2); ?></div>
+        <div>Monto: $<?php echo number_format($data->amount, 2); ?></div>
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">
