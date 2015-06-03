@@ -63,7 +63,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $odc        = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
             $odc        = $odc[0];
-            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id);
+            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integradoId) ? $odc->proveedor->integrado->integradoId : $odc->proveedor->id);
             $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
 
 	        if (!is_null($odvId)) {
