@@ -71,6 +71,7 @@ if(!empty($this->item->dataSaved)){
             <?php
             foreach ($comisiones as $comision) {
                 $selected = '';
+                $rate = $comision->type == 0 ? '$'.number_format($comision->monto,2) : $comision->rate.'%';
                 if( in_array($comision->id,$idComisionSelected) ){
                     $selected = 'checked="checked"';
                 }
@@ -80,7 +81,7 @@ if(!empty($this->item->dataSaved)){
                         <input type="checkbox" class="input-group" name="comision[]" value="<?php echo $comision->id.'" '.$selected; ?>>
                         <?php echo $comision->description; ?>
                     </div>
-                    <div class="span10"><?php echo $comision->rate; ?>%</div>
+                    <div class="span10"><?php echo $rate ?></div>
                 </div>
             <?php } ?>
         </div>
