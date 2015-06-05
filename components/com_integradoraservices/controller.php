@@ -26,12 +26,16 @@ class IntegradoraservicesController extends JControllerLegacy {
     public function cashin() {
         $data = JFactory::getApplication()->input->getArray();
 
-        $json                       = json_decode($data['tx']);
-        $formato                    = 'json';
-        $getMethod                  = 'hello';
-        $HTTPS_required             = false;
-        $authentication_required    = false;
-        $api_response_code          = array(
+        $objeto                  = new stdClass();
+        $objeto->uuid            = $data['uuid'];
+        $objeto->reference       = $data['reference'];
+        $objeto->amount          = $data['amount'];
+        $objeto->timestamp       = $data['timestamp'];
+        $formato                 = 'json';
+        $getMethod               = 'hello';
+        $HTTPS_required          = false;
+        $authentication_required = false;
+        $api_response_code       = array(
             0 => array('HTTP Response' => 400, 'Message' => 'Unknown Error'),
             1 => array('HTTP Response' => 200, 'Message' => 'Success'),
             2 => array('HTTP Response' => 403, 'Message' => 'HTTPS Required'),
@@ -72,7 +76,7 @@ class IntegradoraservicesController extends JControllerLegacy {
         }
 
         if( strcasecmp($getMethod,'hello') == 0){
-            $response = $this->processData($json);
+            $response = $this->processData($objeto);
 
             if(isset($response['error'])) {
                 $response['status'] = $api_response_code[$response['code']]['HTTP Response'];
@@ -94,51 +98,58 @@ class IntegradoraservicesController extends JControllerLegacy {
      * Deliver HTTP Response
      * @param string $format The desired HTTP response content type: [json, html, xml]
      * @param string $api_response The desired HTTP response data
-     * @return void
+     * @return array
      **/
     function processData($json){
+        $db             = JFactory::getDbo();
         $save           = new sendToTimOne();
         $post           = $json;
         $data_integrado = getFromTimOne::getIntegradoId($post->uuid);
 
-//        $simula= new stdClass();
-//        $simula->integradoId = 4;
-//        $simula->timOneId = '2671T821TQWGHDBJF';
-//        $simula->account = '7364234298402';
-//        $data_integrado[0] = $simula;
-
-        if ( ! empty( $data_integrado ) ) {
-            $integrado = new IntegradoSimple($data_integrado[0]->integradoId);
-            $integrado->getTimOneData();
-
-            $data_integrado = $integrado;
-        } else {
+        if ( empty( $data_integrado ) ) {
             // error no existe el integrado
             return array('code' => '2');
         }
 
 
         //TODO se deben traer solamente las ordenes no pagadas
-        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado->id);
-        getFromTimOne::convierteFechas($post);
+        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado[0]->integradoId);
 
         foreach ($odds as $value) {
-            if( ((INT)$post->timestamp === $value->timestamps->paymentDate) && ($post->amount == $value->totalAmount) ){
-                $dataTXMandato = array(
-                    'idTx'        => $post->reference,
-                    'integradoId' => $value->integradoId,
-                    'date'        => time(),
-                    'idComision'  => 1
-                );
-                $save->formatData($dataTXMandato);
+            if( ($post->timestamp == $value->timestamps->paymentDate) && ($post->amount == $value->totalAmount) && ($value->status->id == 5) ){
 
-                $salvado = $save->insertDB('txs_timone_mandato');
-                if($salvado){
-                    $cambioStatus = $save->changeOrderStatus($value->id,'odd',13);
-                    $return = array('code' => '1');
-                }else{
-                    $return = array('code' => '7');
+                $dataTXMandato = new stdClass();
+                $dataTXMandato->idTx        = $post->reference;
+                $dataTXMandato->integradoId = $value->integradoId;
+                $dataTXMandato->date        = time();
+                $dataTXMandato->idComision  = 1;
+
+                $db->transactionStart();
+
+                try {
+                    $db->insertObject('#__txs_timone_mandato',$dataTXMandato);
+                    $idTx = $db->insertid();
+
+                    $txs_mandatos = new stdClass();
+                    $txs_mandatos->id = $idTx;
+                    $txs_mandatos->amount = $post->amount;
+                    $txs_mandatos->orderType = 'oddTim1STP';
+                    $txs_mandatos->idOrden = $value->id;
+
+                    $db->insertObject('#__txs_mandatos', $txs_mandatos);
+
+                    $save->changeOrderStatus($value->id, 'odd', 13);
+
+                    $db->transactionCommit();
+
+                    $return = array('code' => '1');//succes
+                    break;
+                }catch (Exception $e) {
+                    $db->transactionRollback();
+                    $return = array('code' => '7');//fail
+                    break;
                 }
+
 
             }
         }
@@ -157,7 +168,8 @@ class IntegradoraservicesController extends JControllerLegacy {
             400 => 'Bad Request',
             401 => 'Unauthorized',
             403 => 'Forbidden',
-            404 => 'Not Found'
+            404 => 'Not Found',
+            405 => 'Not Date Saved'
         );
 
         header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);
@@ -172,10 +184,10 @@ class IntegradoraservicesController extends JControllerLegacy {
         }elseif( strcasecmp($format,'xml') == 0 ){
             header('Content-Type: application/xml; charset=utf-8');
             $xml_response = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
-                            '<response>'."\n".
-                            "\t".'<code>'.$api_response['code'].'</code>'."\n".
-                            "\t".'<data>'.$api_response['data'].'</data>'."\n".
-                            '</response>';
+                '<response>'."\n".
+                "\t".'<code>'.$api_response['code'].'</code>'."\n".
+                "\t".'<data>'.$api_response['data'].'</data>'."\n".
+                '</response>';
             echo $xml_response;
         }else{
             header('Content-Type: text/html; charset=utf-8');
