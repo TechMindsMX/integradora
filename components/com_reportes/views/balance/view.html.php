@@ -40,31 +40,22 @@ class ReportesViewBalance extends JViewLegacy
 			JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_REPORT_NOT_FOUND'), 'error');
 		}
 
-//		$timezone = new DateTimeZone('America/Mexico_City');
-//		$fechaFin = new DateTime($this->report->getFechaFin(), $timezone);
-//		$fechaFin->modify('-1 second');
-//
-//		$this->report->period->endDate = $fechaFin->format('d-m-Y');
-
-		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
+//		$sesion->checkToken('get') or JFactory::getApplication()->redirect($this->getCancelUrl(), JText::_('LBL_ERROR_COD_403'), 'error');
 
 		$this->integrado = new IntegradoSimple($vars['integradoId']);
 
 		// boton de impresion
 		$this->loadHelper('Reportes');
 
-//		$url            = 'index.php?com_reportes&view=balance&id='.$this->report->id.'1&'.JSession::getFormToken(true).'=1';;
-//		$this->printBtn = ReportesHelper::getPrintBtn($url);
-
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
+		if (count($errors = $this->get('Errors'))) {
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
 
 			return false;
 		}
 
         $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $this->integradoId);
+
 		// Display the view
 		parent::display($tpl);
 	}

@@ -78,7 +78,7 @@ class AdminIntegradoraModelOddform extends JModelList {
 
         foreach ($result as $tx) {
             $tx->balance = $this->getTxBalance($tx);
-            if( (($orden->integradoId == $tx->integradoId) || ($tx->idIntegrado == 0)) && ($tx->balance > 0) ) {
+            if( (($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0)) && ($tx->balance > 0) ) {
                 $return[] = $tx;
             }
         }

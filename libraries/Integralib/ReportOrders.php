@@ -110,7 +110,11 @@ abstract class ReportOrders {
 
 		$timoneTxs = array();
 		foreach ( $tmp as $tx ) {
-			if ($tx->timestamp >= $this->getTimestamp($this->fechaInicio) && $tx->timestamp <= $this->getTimestamp($this->fechaFin)) {
+            $fechaInicio = $this->getTimestamp($this->fechaInicio);
+            $fechaFin = $this->getTimestamp($this->fechaFin);
+            $txTimestamp = $tx->timestamp/1000;
+
+			if ($txTimestamp >= $fechaInicio  && $txTimestamp <= $fechaFin) {
 				$timoneTxs[$tx->uuid] = $tx;
 			}
 		}
@@ -124,7 +128,7 @@ abstract class ReportOrders {
 		$query = $db->getQuery( true )
 		            ->select( $db->quoteName( array (
 			                                      'txs.idTx',
-			                                      'txs.idIntegrado',
+			                                      'txs.integradoId',
 			                                      'txs.date',
 			                                      'txs.idComision',
 			                                      'piv.amount',
@@ -152,9 +156,9 @@ abstract class ReportOrders {
 	private function getTimestamp( $fecha ) {
 		$tzone = \JFactory::getConfig()->get('offset');
 		$timeZone = new \DateTimeZone($tzone);
-		$date = new \DateTime($fecha, $timeZone);
+		$date = new \DateTime(date('d-m-Y',$fecha), $timeZone);
 
-		return $date->getTimestamp() * 1000;
+		return $date->getTimestamp();
 	}
 
 }

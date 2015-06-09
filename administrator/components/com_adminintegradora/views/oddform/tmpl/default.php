@@ -8,8 +8,6 @@ $orden   = $this->orden;
 $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
-var_dump($orden, $data);
-
 $option = '';
 foreach ($this->txs as $txs) {
     if($txs->balance == $txs->amount){

@@ -188,7 +188,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	    foreach ($report->getTxs('Integralib\OdDeposito') as $k => $tx) {
 	        ?>
 	        <tr class="row">
-	            <td><?php echo date('d-m-Y', $tx->date); ?></td>
+	            <td><?php echo date('d-m-Y', $tx->timestamp/1000); ?></td>
 	            <td><?php echo $tx->order->getOrderType(); ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->amount, 2) ; ?></div></td>
 	        </tr>

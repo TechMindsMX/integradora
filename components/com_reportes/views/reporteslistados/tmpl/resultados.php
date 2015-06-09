@@ -70,7 +70,7 @@ $url_resultados = 'index.php?option=com_reportes&view=resultados&'.$formToken;
 		            </select>
 	            </div>
 	            <div>
-                    <button id="greporte" class="btn btn-primary span2" type="submit" disabled><?php echo JText::_('LBL_GENERAR_REPORTE'); ?></button>
+                    <button id="greporte" class="btn btn-primary span2" type="submit" ><?php echo JText::_('LBL_GENERAR_REPORTE'); ?></button>
 		            <a class="btn btn-danger" href="<?php echo 'index.php?option=com_reportes&view=reporteslistados'; ?>"><?php echo JText::_('JCANCEL'); ?></a>
                 </div>
 

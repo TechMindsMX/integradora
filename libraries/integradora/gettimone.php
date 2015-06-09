@@ -103,7 +103,14 @@ class getFromTimOne{
         if (!is_null($idTX)) {
             $where = 'id = ' . $dbq->quote($idTX);
         } elseif (!is_null($integradoId)) {
-            $where = 'integradoId = ' . $dbq->quote($integradoId) ;
+            $txsMandatos = self::selectDB('txs_mandatos',null, 'id');
+            $ids = array();
+
+            foreach ($txsMandatos as $tx) {
+                $ids[] = $tx->id;
+            }
+
+            $where = 'integradoId = ' . $dbq->quote($integradoId).'AND id NOT IN ('.join(',',$ids).')';
         }
 
         $txs = self::selectDB('txs_timone_mandato',$where);
