@@ -51,6 +51,12 @@ class MandatosViewOdvform extends JViewLegacy {
             return false;
         }
 
+        $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
+
+        if(!$this->permisos['canAuth'] && !$this->permisos['canEdit'] ){
+            JFactory::getApplication()->enqueueMessage(JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
+            JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odvlist');
+        }
         parent::display($tpl);
     }
 }
