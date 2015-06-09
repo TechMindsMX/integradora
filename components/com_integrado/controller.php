@@ -151,7 +151,7 @@ class IntegradoController extends JControllerLegacy {
 
         $columnas	= array('integradoId','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($this->integradoId, $data['userId'], 0, $data['permission_level']);
+        $valores	= array($db->quote($this->integradoId), $data['userId'], 0, $data['permission_level']);
 
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
 
