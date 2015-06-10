@@ -92,7 +92,7 @@ class Enviroment {
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
-        define("integradoraUuid", 'a4ac6c870f9411e5aaf3bc764e10ce72');
+        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 
     public function produccion() {
