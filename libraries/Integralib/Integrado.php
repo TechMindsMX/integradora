@@ -12,7 +12,7 @@ namespace Integralib;
 class Integrado {
 
     public $integrado;
-    public $integradoraUuid = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
+    public $integradoraUuid = INTEGRADORA_UUID;
 
     public function setInstance(\IntegradoSimple $integradoSimple){
         $this->integrado = $integradoSimple;

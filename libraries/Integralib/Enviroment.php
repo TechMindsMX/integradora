@@ -55,6 +55,8 @@ class Enviroment {
         define( 'XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
+
+        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 
     public function qaintegradora() {
@@ -71,6 +73,8 @@ class Enviroment {
         define( 'XML_FILES_PATH', JPATH_BASE.'/media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
+
+        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 
     public function produccion_sandbox() {
@@ -87,6 +91,8 @@ class Enviroment {
         define( 'XML_FILES_PATH', 'media/facturas/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+
+        define("integradoraUuid", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 
     public function produccion() {
@@ -103,6 +109,8 @@ class Enviroment {
 
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+
+        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 
 
@@ -120,5 +128,7 @@ class Enviroment {
         define( 'XML_FILES_PATH', 'media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
+
+        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
     }
 }
