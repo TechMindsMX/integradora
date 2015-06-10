@@ -17,7 +17,7 @@ class UserSecurity {
 		$query = $db->getQuery(true);
 		$query->select( array( $db->quoteName('question_id'), $db->quoteName('answer') ) )
 			->from('#__users_security_questions')
-			->where($db->quote('user_id'). ' = '. $instance->id);
+			->where($db->quoteName('user_id'). ' = '. $instance->id);//TODO: Modificado por Lutek
 		$db->setQuery($query);
 
 		$results = $db->loadObjectList();

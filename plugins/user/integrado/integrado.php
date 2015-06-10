@@ -207,7 +207,7 @@ class PlgUserIntegrado extends JPlugin
 		$user = JFactory::getUser();
 
 		if ($this->app->getName() == 'site') {
-			if ( count( $user->security->questions ) == 0 ) {
+			if ( count( $user->security ) == 0 ) {//TODO: Modificado por Lutek
 				$this->app->redirect( JRoute::_( 'index.php?option=com_usersinteg&view=usersinteg&layout=questions' ),
 				                      JText::_( 'NO_SECURITY_QUESTIONS' ), 'warning' );
 			}

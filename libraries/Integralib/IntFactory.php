@@ -30,6 +30,8 @@ class IntFactory {
 	}
 
 	public static function getsUserSecurity( $instance ) {
-		return new UserSecurity($instance);
+        //TODO: Modificado por Lutek
+		$userSecurity = new UserSecurity();
+        return $userSecurity->getUserAnswers($instance);
 	}
 }
