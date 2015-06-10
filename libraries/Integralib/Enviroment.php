@@ -73,7 +73,7 @@ class Enviroment {
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
     }
 
-    public function produccion() {
+    public function produccion_sandbox() {
         $middle           = "integra.trama.mx/";
         $puertoTimOne     = "";
         $controllerTimOne = "timone/services/";
@@ -88,6 +88,23 @@ class Enviroment {
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
     }
+
+    public function produccion() {
+        $middle           = "api.iecce.mx";
+        $puertoTimOne     = "";
+        $controllerTimOne = "/timone/services/";
+
+        define( "MIDDLE", 'http://' . $middle );
+        define( "PUERTO", $puertoTimOne );
+        define( "TIMONE", $controllerTimOne );
+        define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+        define( "FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/' );
+        define('XML_FILES_PATH', 'media/facturas/');
+
+
+        define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
+    }
+
 
     public function localhost() {
         $middle           = "api-stage.timone.mx/";
