@@ -18,7 +18,7 @@ class ReportBalance extends ReportOrders {
 
 	function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
 		$this->fechaInicio  = $fechaInicio ? $fechaInicio : strtotime(date('01-m-Y'));
-		$this->fechaFin     = !is_null($fechaFin) ? $fechaFin : strtotime('last day of this month');
+		$this->fechaFin     = !is_null($fechaFin) ? $fechaFin : strtotime('today +23 hours');
 		$this->filtroProyect = $proyecto;
 		$this->integradoId = $integradoId;
 

@@ -25,7 +25,7 @@ $integ = $this->integrado;
 				<?php echo JText::_('INTEGRADORA_ADDRESS'); ?>
 			</p>
 			<p>
-				<?php echo JText::_('INTEGRADORA RFC'); ?>
+				<?php echo JText::_('INTEGRADORA_RFC'); ?>
 			</p>
 		</div>
 
