@@ -74,8 +74,8 @@ class MandatosViewOdcform extends JViewLegacy {
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if (!$this->permisos['canEdit']) {
-            $url = 'index.php?option=com_mandatos&view=odclist&integradoId='.$this->integradoId;
-            $msg = JText::_('JERROR_ALERTNOAUTHOR');
+            $url = 'index.php?option=com_mandatos&view=odclist';
+            $msg = JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS');
             $app->redirect(JRoute::_($url), $msg, 'error');
         }
 

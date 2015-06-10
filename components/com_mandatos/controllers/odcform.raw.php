@@ -58,12 +58,12 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
-        if($this->permisos['canAuth']) {
+        if($this->permisos['canEdit']) {
             // acciones cuando tiene permisos para autorizar
             $this->app->enqueueMessage('aqui enviamos a timone la autorizacion y redireccion con mensaje');
         } else {
             // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
+            $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
 
         try {
