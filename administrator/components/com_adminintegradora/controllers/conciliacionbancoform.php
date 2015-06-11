@@ -144,9 +144,10 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function sendNotification(){
         $getCurrUser = new IntegradoSimple($this->data['integradoId']);
-        $usuarioIntegradora = new IntegradoSimple(1);
+        $integradora = new \Integralib\Integrado();
+        $integradora->getIntegradora();
 
-        foreach ($usuarioIntegradora->integrados[0]->datos_bancarios as $dataBank) {
+        foreach ($integradora->integrado->integrados[0]->datos_bancarios as $dataBank) {
             if($dataBank->datosBan_id == $this->data['cuenta']){
                 $datosBanco = $dataBank;
             }
