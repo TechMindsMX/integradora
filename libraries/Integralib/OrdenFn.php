@@ -34,10 +34,10 @@ class OrdenFn {
 		$cant_auths = new \stdClass();
 
 		if( $emisor->isIntegrado() ){
-			$cant_auths->emisor = $auth+$emisor->getOrdersAtuhorizationParams();
+			$cant_auths->emisor = $emisor->getOrdersAtuhorizationParams();
 		}
 		if( $receptor->isIntegrado() ){
-			$cant_auths->receptor = $auth+$receptor->getOrdersAtuhorizationParams();
+			$cant_auths->receptor = $receptor->getOrdersAtuhorizationParams();
 		}
 
 		$cant_auths->totales = array_sum((array)$cant_auths);
