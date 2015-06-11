@@ -309,7 +309,7 @@ class MandatosController extends JControllerLegacy {
             // verificación que no sea el mismo integrado
 //            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
-            if($idCliPro == 0){
+            if(empty($idCliPro)){
                 $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
                 $data['idCliPro'] = $idCliPro;
             }
