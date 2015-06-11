@@ -469,7 +469,7 @@ class IntegradoSimple extends Integrado {
 	 * @param mixed $ordersAtuhorizationParams
 	 */
 	public function setOrdersAtuhorizationParams( ) {
-		$result = getFromTimOne::selectDB('integrado_params', 'integradoId');
+		$result = getFromTimOne::selectDB('integrado_params', 'integradoId = '.JFactory::getDbo()->quote($this->getId()));
 		$this->ordersAtuhorizationParams = !empty($result)?$result[0]->params:array();
 	}
 
