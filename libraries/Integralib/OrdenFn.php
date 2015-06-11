@@ -30,7 +30,6 @@ class OrdenFn {
 	}
 
 	public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
-		$auth = 0;
 		$cant_auths = new \stdClass();
 
 		if( $emisor->isIntegrado() ){
