@@ -31,8 +31,10 @@ class IntegradoraservicesController extends JControllerLegacy {
         $objeto->reference       = $data['reference'];
         $objeto->amount          = $data['amount'];
         $objeto->timestamp       = $data['timestamp'];
+
         $formato                 = 'json';
         $getMethod               = 'hello';
+
         $HTTPS_required          = false;
         $authentication_required = false;
         $api_response_code       = array(
@@ -43,7 +45,9 @@ class IntegradoraservicesController extends JControllerLegacy {
             4 => array('HTTP Response' => 401, 'Message' => 'Authentication Failed'),
             5 => array('HTTP Response' => 404, 'Message' => 'Invalid Request'),
             6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format'),
-            7 => array('HTTP Response' => 405, 'Message' => 'No se guardo en Base de datos')
+            7 => array('HTTP Response' => 405, 'Message' => 'No se pudo Almacenar'),
+            8 => array('HTTP Response' => 406, 'Message' => 'No existe el usuario'),
+            9 => array('HTTP Response' => 407, 'Message' => 'No hay Ordenes generadas.')
         );
 
         $response['code']   = 0;
@@ -90,7 +94,6 @@ class IntegradoraservicesController extends JControllerLegacy {
 
         $this->deliver_response($formato, $response);
 
-
         exit;
     }
 
@@ -108,7 +111,7 @@ class IntegradoraservicesController extends JControllerLegacy {
 
         if ( empty( $data_integrado ) ) {
             // error no existe el integrado
-            return array('code' => '2');
+            return array('code' => '8');
         }
 
 
@@ -133,7 +136,7 @@ class IntegradoraservicesController extends JControllerLegacy {
                     $txs_mandatos = new stdClass();
                     $txs_mandatos->id = $idTx;
                     $txs_mandatos->amount = $post->amount;
-                    $txs_mandatos->orderType = 'oddTim1STP';
+                    $txs_mandatos->orderType = 'odd';
                     $txs_mandatos->idOrden = $value->id;
 
                     $db->insertObject('#__txs_mandatos', $txs_mandatos);
@@ -155,7 +158,7 @@ class IntegradoraservicesController extends JControllerLegacy {
         }
 
         if( !isset($return) ){
-            $return = array('code' => '0');
+            $return = array('code' => '9');
         }
 
         return $return;
@@ -169,7 +172,9 @@ class IntegradoraservicesController extends JControllerLegacy {
             401 => 'Unauthorized',
             403 => 'Forbidden',
             404 => 'Not Found',
-            405 => 'Not Date Saved'
+            405 => 'Not Data Saved',
+            406 => 'User not exist',
+            407 => 'Not Orders generated'
         );
 
         header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);
@@ -183,14 +188,17 @@ class IntegradoraservicesController extends JControllerLegacy {
 
         }elseif( strcasecmp($format,'xml') == 0 ){
             header('Content-Type: application/xml; charset=utf-8');
+
             $xml_response = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
                 '<response>'."\n".
                 "\t".'<code>'.$api_response['code'].'</code>'."\n".
                 "\t".'<data>'.$api_response['data'].'</data>'."\n".
                 '</response>';
+
             echo $xml_response;
         }else{
             header('Content-Type: text/html; charset=utf-8');
+
             echo $api_response['data'];
 
         }
