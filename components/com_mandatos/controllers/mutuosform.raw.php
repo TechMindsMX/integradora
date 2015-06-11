@@ -111,10 +111,10 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'integradoIdR'      => array('string'       => true, 'maxlength' => '100'),
                 'beneficiario'      => array('alphaNumber'  => true, 'maxlength' => '100',  'required' => true),
                 'expirationDate'    => array('date'         => true, 'maxlength' => '10'),
-                'payments'          => array('string'       => true, 'maxlength' => '10'),
+                'payments'          => array('number'       => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
-                'interes'           => array('float'        => true, 'maxlength' => '5',  'notEmpty' => true),
-                'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3,      'required' => true),
+                'interes'           => array('float'        => true, 'maxlength' => '5',     'notEmpty' => true),
+                'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3,       'required' => true),
                 'banco_cuenta'      => array('required'     => true),
                 'banco_sucursal'    => array('required'     => true),
                 'banco_clabe'       => array('banco_clabe'  => $parametros->banco_codigo, 'length' => 18, 'required' => true));
@@ -122,7 +122,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
             $diccionario = array(
                 'integradoIdE'      => array('string' => true, 'maxlength' => '100'),
                 'expirationDate'    => array('date'   => true, 'maxlength' => '10'),
-                'payments'          => array('string' => true, 'maxlength' => '10'),
+                'payments'          => array('number' => true, 'maxlength' => '10'),
                 'totalAmount'       => array('float'  => true, 'maxlength' => '100'),
                 'interes'           => array('float'  => true, 'maxlength' => '5',  'notEmpty' => true));
         }
@@ -159,10 +159,10 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 		$validacion = new validador();
 
 		$diccionario = array(
-			'quantityPayments' => array('float' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
-			'paymentPeriod'    => array('int'   => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
-			'totalAmount'      => array('float' => true, 'maxlength' => '100', 'required' => true),
-			'interes'          => array('float' => true, 'maxlength' => '5', 'notEmpty' => true));
+			'quantityPayments' => array('number' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
+			'paymentPeriod'    => array('int'    => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
+			'totalAmount'      => array('float'  => true, 'maxlength' => '100', 'required' => true),
+			'interes'          => array('float'  => true, 'maxlength' => '5',   'notEmpty' => true));
 
 		$respuesta = $validacion->procesamiento($data,$diccionario);
 
@@ -177,6 +177,4 @@ class MandatosControllerMutuosform extends JControllerLegacy {
 
 		echo json_encode($tabla);
 	}
-
-
 }
