@@ -138,7 +138,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
             'observaciones' => array('text'        => true,  'maxlength' => 100));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
-        $respuesta['proveedor'] = $parametros['proveedor'] == 0 ? array('success'=>false,'msg'=>'Seleccione el proveedor') : $respuesta['proveedor'];
+
+        $respuesta['proveedor'] = empty($parametros['proveedor']) ? array('success'=>false,'msg'=>'Seleccione el proveedor') : $respuesta['proveedor'];
 
         $document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
