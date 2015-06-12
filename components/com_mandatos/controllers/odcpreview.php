@@ -93,6 +93,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                             if ($factObj != false) {
                                 $xmlFactura = $save->generateFacturaFromTimone($factObj);
+
                                 try {
                                     $urlXML = $save->saveXMLFile($xmlFactura);
                                     $dataUpdate = new stdClass();
@@ -126,6 +127,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $db->transactionCommit();
             }catch (Exception $e){
                 $db->transactionRollback();
+                $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
                 $this->app->redirect($this->returnUrl, 'no se pudo autorizar', 'error');
             }
 

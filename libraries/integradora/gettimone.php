@@ -2937,6 +2937,8 @@ class Factura extends makeTx {
 
         if ($result === true) {
             $result = $this->returnXML();
+        }else{
+            throw new Exception;
         }
         return $result;
     }
