@@ -110,7 +110,7 @@ class Enviroment {
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
-        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
+        define("INTEGRADORA_UUID", '36763e75138011e5aaf3bc764e10ce72');
     }
 
 
