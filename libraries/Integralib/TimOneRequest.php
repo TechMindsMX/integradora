@@ -135,4 +135,20 @@ class TimOneRequest extends TimOneCurl {
         return json_decode($token->data);
     }
 
+	public function getListBankCodes( ){
+		$serviceUrl = MIDDLE . TIMONE . 'stp/listBankCodes';
+		$jsonData = '';
+		$httpType = 'GET';
+
+		$request = new sendToTimOne();
+
+		$request->setServiceUrl($serviceUrl);
+		$request->setJsonData($jsonData);
+		$request->setHttpType($httpType);
+
+		$result = $request->to_timone(); // realiza el envio
+
+		return json_decode($result->data);
+	}
+
 }

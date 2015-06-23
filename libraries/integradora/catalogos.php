@@ -111,16 +111,15 @@ class Catalogos {
     public static function getBancosFromTimOne() {
         $session = JFactory::getSession();
 
-        $cat = $session->get('bancos', null, 'catalogos');
+	    $cat = $session->get('bancos', null, 'catalogos');
+	    $cat = null;
 
-        if( is_null($cat) ) {
-            $oAuth2 = new TimOneRequest();
-            $token = $oAuth2->getAccessToken();
+	    if( is_null($cat) ) {
+            $curlRequest = new TimOneRequest();
 
-            $context = stream_context_create(array('http' => array('header' => 'Authorization: Bearer ' . $token->access_token)));
-            $catalogo = json_decode(@file_get_contents(MIDDLE . TIMONE . 'stp/listBankCodes', false, $context));
+            $catalogo = $curlRequest->getListBankCodes();
 
-            if (empty($catalogo)) {
+	        if (empty($catalogo)) {
                 JFactory::getApplication()->enqueueMessage('El servicio ' . MIDDLE . TIMONE . 'stp/listBankCodes NO esta funcionando', 'error');
                 $cat = null;
             } else {
