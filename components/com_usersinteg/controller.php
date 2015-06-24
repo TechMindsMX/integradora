@@ -122,7 +122,7 @@ class UsersIntegController extends JControllerLegacy {
 
 		}
 
-		$app->enqueueMessage('LBL_SAVE_SUCCESSFUL');
+		$app->enqueueMessage( JText::_('LBL_SAVE_SUCCESSFUL') );
 		$app->redirect($this->homeUrl);
 
 	}
