@@ -17,7 +17,7 @@ $optionBancos = '';
 <script src="../libraries/integradora/js/tim-validation.js"> </script>
 <script>
     var catalogoBancos = new Array();
-    var integradoId	= <?php echo $this->integradoId; ?>;
+    var integradoId	= '<?php echo $this->integradoId; ?>';
 
     <?php
     foreach ($this->catalogos->bancos as $key => $value){

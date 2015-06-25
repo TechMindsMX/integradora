@@ -112,7 +112,6 @@ class Catalogos {
         $session = JFactory::getSession();
 
 	    $cat = $session->get('bancos', null, 'catalogos');
-	    $cat = null;
 
 	    if( is_null($cat) ) {
             $curlRequest = new TimOneRequest();

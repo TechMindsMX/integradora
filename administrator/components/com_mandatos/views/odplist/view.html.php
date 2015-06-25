@@ -5,8 +5,9 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOdplist extends JViewLegacy {
 	function display($tpl = null){
+        $this->integradora = new \Integralib\Integrado();
 		$data   	       = $this->get('InputData');
-        $data->integradoId = JFactory::getSession()->get('integradoId', 1, 'integrado');
+        $data->integradoId = JFactory::getSession()->get('integradoId', $this->integradora->getIntegradoraUuid(), 'integrado');
         $this->integradoId = $data->integradoId;
 		$this->ordenes     = $this->get('ordenes');
         $this->mutuo       = $this->get('DataMutuo');

@@ -1,4 +1,6 @@
 <?php
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -14,17 +16,26 @@ jimport('integradora.catalogos');
  */
 class MandatosControllerMutuospreview extends JControllerAdmin {
 
-    function authorize() {
+    function __construct(){
+        $this->integradora               = new \Integralib\Integrado();
         $session                         = JFactory::getSession();
         $post                            = array('idOrden' => 'INT');
         $this->app 			             = JFactory::getApplication();
         $this->parametros	             = $this->app->input->getArray($post);
-        $this->parametros['integradoId'] = $session->get('integradoId', 1, 'integrado');
+        $this->parametros['integradoId'] = $session->get('integradoId', $this->integradora->getIntegradoraUuid(), 'integrado');
         $this->permisos                  = MandatosHelper::checkPermisos(__CLASS__, $this->parametros['integradoId']);
-        $this->integradoId               = JFactory::getSession()->get('integradoId', null,'integrado');
+        $this->integradoId               = JFactory::getSession()->get('integradoId', $this->integradora->getIntegradoraUuid(),'integrado');
         $this->integradoId               = isset($this->integradoId) ? $this->integradoId : $this->parametros['integradoId'];
+        $orden                           = getFromTimOne::getMutuos(null, $this->parametros['idOrden']);
+        $this->orden                     = $orden[0];
+        $this->redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
 
+        parent::__construct();
+    }
+
+    function authorize() {
         $redirectUrl ='index.php?option=com_mandatos&view=mutuoslist';
+        $integradoE = new IntegradoSimple($this->orden->integradoIdE);
 
         if($this->permisos['canAuth']) {
             // acciones cuando tiene permisos para autorizar
@@ -37,41 +48,75 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $save->formatData($this->parametros);
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'mutuo_auth');
+            $check = false;
 
-            $check = getFromTimOne::checkUserAuth($auths, $this->parametros['integradoId']);
+            foreach ($auths as $auth) {
+                if( $auth->integradoId == $this->parametros['integradoId'] ){
+                    if( $auth->userId == $user->id ){
+                        $check = true;
+                    }
+                }
+            }
 
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
+            $this->checkSaldoSuficienteOrRedirectWithError($integradoE);
+            $db = JFactory::getDbo();
 
-            $resultado = $save->insertDB('auth_mutuo');
+            try{
+                $db->transactionStart();
 
-            if($resultado) {
-                // autorización guardada
-                $newStatusId  = 5;
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', $newStatusId);
+                $mutuo = $this->orden;
+                $resultado = $save->insertDB('auth_mutuo');
 
-                if ($statusChange) {
-                    $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
+                $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $mutuo->integradoIdE ), new IntegradoSimple( $mutuo->integradoIdR ) );
+                $numAutOrder = getFromTimOne::getOrdenAuths($mutuo->id, 'mutuo_auth');
 
-                    if ($generateOdps) {
-                        $tx = $this->paymentFirstOdp();
+                if($auths->totales == count($numAutOrder)) {
+                    $pagar = true;
+                }else{
+                    $save->changeOrderStatus($this->parametros['idOrden'],'mutuo',3);
+                    $pagar = false;
+                }
 
-                        if($tx) {
-                            $msgOdps = JText::_('LBL_ODPS_GENERATED');
-                            $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
-                        }else{
-                            $msgOdps = JText::_('LBL_ODPS_GENERATED');
-                            $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', 3);
-                            $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
+                $db->transactionCommit();
+            }catch (Exception $e){
+                $db->transactionRollback();
+                $pagar = false;
+            }
+
+            if($pagar){
+                if($resultado) {
+                    // autorización guardada
+                    $newStatusId  = 5;
+                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', $newStatusId);
+
+                    if ($statusChange) {
+                        $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
+
+                        if ($generateOdps) {
+                            $tx = $this->paymentFirstOdp();
+
+                            if($tx) {
+                                $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                                $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
+                            }else{
+                                $msgOdps = JText::_('LBL_ODPS_GENERATED');
+                                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', 3);
+                                $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
+                            }
+                        } else {
+                            $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
+                            $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY').'<br />'.$msgOdps, 'notice');
                         }
-                    } else {
-                        $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
-                        $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY').'<br />'.$msgOdps, 'notice');
                     }
+                }else{
+                    $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
             }else{
-                $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
+                // acciones cuando NO tiene permisos para autorizar
+                $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY'), 'warning');
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
@@ -185,5 +230,30 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         }
 
         return $txDone;
+    }
+
+    private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){
+        $integradoSimple->getTimOneData();
+        if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
+            $this->app->redirect($this->redirectUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
+        }
+    }
+
+    private function totalOperacionOdc(){
+        $orden = $this->orden;
+        $comisiones = getFromTimOne::getComisionesOfIntegrado($orden->integradoIdE);
+
+        $montoComision = 0;
+        if (isset($comisiones)) {
+            $montoComision = getFromTimOne::calculaComision($orden, 'MUTUO', $comisiones);
+        }
+
+        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
+
+        return $totalOperacion;
+    }
+
+    private function sendMail(){
+
     }
 }

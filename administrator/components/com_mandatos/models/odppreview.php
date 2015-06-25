@@ -14,10 +14,11 @@ class MandatosModelodppreview extends JModelItem {
 
 
 	public function __construct(){
+        $this->integradora            = new \Integralib\Integrado();
         $session                      = JFactory::getSession();
         $post                         = array('id' => 'INT');
         $this->inputVars 		      = (object) JFactory::getApplication()->input->getArray($post);
-        $this->inputVars->integradoId = $session->get('integradoId',1, 'integrado');
+        $this->inputVars->integradoId = $session->get('integradoId',$this->integradora->getIntegradoraUuid(), 'integrado');
 
 		parent::__construct();
 	}
