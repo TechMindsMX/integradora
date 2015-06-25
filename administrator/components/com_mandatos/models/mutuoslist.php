@@ -7,12 +7,12 @@ jimport('integradora.mutuo');
 
 class MandatosModelMutuoslist extends JModelItem {
     public function __construct(){
-        $session            = JFactory::getSession();
-        $app 				= JFactory::getApplication();
-        $post               = array('layout' => 'string');
-        $this->catalogos    = $this->get('catalogos');
-        $this->data			= (object) $app->input->getArray($post);
-        $this->data->integradoId = 1;
+        $integradora             = new \Integralib\Integrado();
+        $app 				     = JFactory::getApplication();
+        $post                    = array('layout' => 'string');
+        $this->catalogos         = $this->get('catalogos');
+        $this->data			     = (object) $app->input->getArray($post);
+        $this->data->integradoId = $integradora->getIntegradoraUuid();
 
         parent::__construct();
     }
