@@ -104,6 +104,7 @@ class Enviroment {
         define( "PUERTO", $puertoTimOne );
         define( "TIMONE", $controllerTimOne );
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
+        define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/' );
         define('XML_FILES_PATH', 'media/facturas/');
 
