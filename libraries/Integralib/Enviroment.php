@@ -96,9 +96,9 @@ class Enviroment {
     }
 
     public function produccion() {
-        $middle           = "api.iecce.mx";
+        $middle           = "api.iecce.mx/";
         $puertoTimOne     = "";
-        $controllerTimOne = "/timone/services/";
+        $controllerTimOne = "timone/services/";
 
         define( "MIDDLE", 'http://' . $middle );
         define( "PUERTO", $puertoTimOne );
