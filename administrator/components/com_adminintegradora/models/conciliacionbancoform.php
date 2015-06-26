@@ -22,10 +22,12 @@ class AdminintegradoraModelConciliacionBancoForm extends JModelLegacy {
         $integrados = Integrado::getActiveIntegrados();
         $integradosArray = array();
 
-        foreach ($integrados as $value) {
+        if(!is_null($integrados)) {
+            foreach ($integrados as $value) {
 
-            if($this->integradora->getIntegradoraUuid() != $value->integrado->integradoId){
-                $integradosArray[] = $value;
+                if ($this->integradora->getIntegradoraUuid() != $value->integrado->integradoId) {
+                    $integradosArray[] = $value;
+                }
             }
         }
 
