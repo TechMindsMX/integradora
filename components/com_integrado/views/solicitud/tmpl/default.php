@@ -279,15 +279,21 @@ $token = JSession::getFormToken();
 				if (isset($datos->integrado->pers_juridica)) {
 					if ($datos->integrado->pers_juridica == 1) {
 						$readonlyRfc = '#de_rfc';
+						$idRFC = 'de_rfc';
 					} elseif ($datos->integrado->pers_juridica == 2) {
 						$readonlyRfc = '#dp_rfc';
+						$idRFC = 'dp_rfc';
 					}
 					?>
 			var $rfc_not_editable = jQuery('<?php echo $readonlyRfc; ?>');
 			var $value_rfc_not_editable = $rfc_not_editable.val();
-			$rfc_not_editable.after('<p>' + $value_rfc_not_editable + '</p>').remove();
-			nextTab();
-			jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
+
+
+			$rfc_not_editable.after('<p>' + $value_rfc_not_editable + '</p><input type="hidden" name="<?php echo $idRFC; ?>" id="<?php echo $idRFC; ?>" value="' + $value_rfc_not_editable + '" /> ').remove();
+
+            nextTab();
+
+            jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
 			<?php
 				}
 			}

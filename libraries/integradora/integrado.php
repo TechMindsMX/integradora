@@ -586,7 +586,7 @@ class IntegradoSimple extends Integrado {
 	}
 
 	public function getId() {
-		return $this->integrados[0]->integrado->integradoId;
+		return @$this->integrados[0]->integrado->integradoId;
 	}
 
     public function isIntegrado(){
