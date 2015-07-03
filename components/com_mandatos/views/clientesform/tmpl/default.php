@@ -801,7 +801,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 				<div class="form-group">
 					<label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
-					<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
+					<input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="10" />
 				</div>
 
 				<div class="form-group">
@@ -809,7 +809,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 					<select name="t1_instrum_estado" id="t1_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
-							$default = ($value->nombre == 'México') ? 'selected' : '';
+							$default = ($value->nombre == 'Distrito Federal') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -835,7 +835,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 				<div class="form-group">
 					<label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-					<input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="3" />
+					<input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="10" />
 				</div>
 
 				<div class="form-group">
@@ -868,7 +868,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 				<div class="form-group">
 					<label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-					<input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="3" />
+					<input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="10" />
 				</div>
 
 				<div class="form-group">

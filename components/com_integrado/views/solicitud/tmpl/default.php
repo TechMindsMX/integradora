@@ -548,6 +548,7 @@ $token = JSession::getFormToken();
 				<select name="pais" id="de_pais" >
 					<?php
 					foreach ($this->catalogos->nacionalidades as $key => $value) {
+                        $selected = $value->id == 146? ' selected="selected"' : '';
 						echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
 					}
 					?>
@@ -590,6 +591,7 @@ $token = JSession::getFormToken();
 					<select name="t1_instrum_estado" id="t1_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -623,6 +625,7 @@ $token = JSession::getFormToken();
 					<select name="t2_instrum_estado" id="t2_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -655,6 +658,7 @@ $token = JSession::getFormToken();
 					<select name="pn_instrum_estado" id="pn_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -687,6 +691,7 @@ $token = JSession::getFormToken();
 					<select name="rp_instrum_estado" id="rp_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
