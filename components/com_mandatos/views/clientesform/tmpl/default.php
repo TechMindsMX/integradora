@@ -901,7 +901,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 				</div>
 				<div class="form-group">
 					<label for="rp_instrum_num_instrumento"><?php echo JText::_('LBL_NUMERO'); ?></label>
-					<input name="rp_instrum_num_instrumento" id="rp_instrum_num_instrumento" type="text" maxlength="3" />
+					<input name="rp_instrum_num_instrumento" id="rp_instrum_num_instrumento" type="text" maxlength="10" />
 				</div>
 
 				<div class="form-group">
