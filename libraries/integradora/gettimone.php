@@ -47,7 +47,7 @@ class getFromTimOne{
         return $userAsAuth;
     }
 
-    public static function getintegrados(){
+    public static function getintegrados($status = null){
         $db		= JFactory::getDbo();
         $query 	= $db->getQuery(true);
 
@@ -66,7 +66,11 @@ class getFromTimOne{
         foreach ($results as $value) {
             $integrado = new IntegradoSimple($value->integradoId);
             $integrado->integrados[0]->displayName = $integrado->getDisplayName();
-            $integradosArray[] = $integrado->integrados[0];
+            if( is_null($status) ) {
+                $integradosArray[] = $integrado->integrados[0];
+            }elseif( $status == $integrado->integrados[0]->integrado->status ){
+                $integradosArray[] = $integrado->integrados[0];
+            }
         }
 
         return $integradosArray;
@@ -1414,7 +1418,7 @@ class getFromTimOne{
             }
         }
 
-        $orden->proveedor = $proveedores[$orden->clientId];
+        $orden->proveedor = @$proveedores[$orden->clientId];
 
         return $orden;
     }
