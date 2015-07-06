@@ -71,7 +71,8 @@ class FacturasporcobrarModelFacturas extends JModelList {
     }
 
     public function getIntegrados(){
-        $integrados = getFromTimOne::getintegrados();
+        $integrados = getFromTimOne::getintegrados(50);
+
         return $integrados;
     }
 

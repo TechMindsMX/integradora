@@ -1036,9 +1036,9 @@ class getFromTimOne{
             }
             $response = $listAllCliPro;
         }
-        $catalogo = new Catalogos();
 
-        $clientes = array();
+        $catalogo    = new Catalogos();
+        $clientes    = array();
         $proveedores = array();
 
         if(!empty($response)){
