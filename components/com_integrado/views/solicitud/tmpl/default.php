@@ -87,7 +87,6 @@ $token = JSession::getFormToken();
 			activeTab(nextTabObj);
 		}
 
-
 		jQuery(document).ready(function(){
 
 			jQuery('input[type="file"]').on('change' ,{
@@ -248,7 +247,9 @@ $token = JSession::getFormToken();
 			var testimonio_2 = eval ("(" + testimonio_2 + ")");
 
 			jQuery.each(testimonio_2, function(key, value){
-				jQuery('#t2_'+key).val(value);
+                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                    jQuery('#t2_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -258,7 +259,9 @@ $token = JSession::getFormToken();
 			var poder = eval ("(" + poder + ")");
 
 			jQuery.each(poder, function(key, value){
-				jQuery('#pn_'+key).val(value);
+                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                    jQuery('#pn_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -268,7 +271,9 @@ $token = JSession::getFormToken();
 			var reg_propiedad = eval ("(" + reg_propiedad + ")");
 
 			jQuery.each(reg_propiedad, function(key, value){
-				jQuery('#rp_'+key).val(value);
+                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                    jQuery('#rp_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -411,7 +416,7 @@ $token = JSession::getFormToken();
 			var id		 = jQuery(campo).prop('id');
 			var idCliPro = jQuery('#integradoId').val();
 			var parametros = {
-				'link'  : 'index.php?option=com_integrado&view=clientesform&task=deleteBanco&format=raw',
+				'link'  : 'index.php?option=com_integrado&task=deleteBanco&format=raw',
 				'datos' : {
 					'datosBan_id' : id,
 					'integradoId' : idCliPro
@@ -549,7 +554,7 @@ $token = JSession::getFormToken();
 					<?php
 					foreach ($this->catalogos->nacionalidades as $key => $value) {
                         $selected = $value->id == 146? ' selected="selected"' : '';
-						echo '<option value="'.$value->id.'">'.$value->nombre.'</option>';
+						echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
 					}
 					?>
 				</select>

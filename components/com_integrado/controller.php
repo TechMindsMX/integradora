@@ -862,4 +862,25 @@ class IntegradoController extends JControllerLegacy {
 
         $this->app->redirect(JRoute::_('index.php?option=com_integrado'));
     }
+
+    function deleteBanco(){
+        $input_data = JFactory::getApplication()->input;
+        $db	        = JFactory::getDbo();
+        $save       = new sendToTimOne();
+        $post       = array('datosBan_id' => 'INT');
+        $data 		= $input_data->getArray($post);
+        $table 		= 'integrado_datos_bancarios';
+        $where      = $db->quoteName('integradoId').' = '.$db->quote($this->integradoId).' && '.$db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
+
+        $respuesta['msg'] = $save->deleteDB($table,$where);
+
+        if($respuesta['msg']) {
+            $respuesta['success'] = true;
+        }else{
+            $respuesta['success'] = false;
+        }
+
+        $this->document->setMimeEncoding('application/json');
+        echo json_encode($respuesta);
+    }
 }
