@@ -157,7 +157,7 @@ $token = JSession::getFormToken();
 										a_empresa.insertBefore(jQuery('a[href="#basic-details"]').parent());
 									}
 
-//									jQuery('#wrap_dp_nom_comercial').hide();
+									jQuery('#wrap_dp_nom_comercial').hide();
 									$filesContent.find('input, label').prop('disabled', false).show();
 								}
 								else if (juridica.pj_pers_juridica == 2) {
