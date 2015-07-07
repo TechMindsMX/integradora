@@ -953,8 +953,10 @@ class getFromTimOne{
                     $db->setQuery($querygral);
                     $general = $db->loadObject();
 
-                    foreach ($general as $key => $val) {
-                        $value->$key = @$val;
+                    if(!is_null($general)) {
+                        foreach ($general as $key => $val) {
+                            $value->$key = @$val;
+                        }
                     }
 
                 } catch (Exception $e) {

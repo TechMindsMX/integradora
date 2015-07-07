@@ -46,7 +46,14 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         jQuery(document).ready(function(){
 
             jQuery('#search').on('click', busqueda_rfc);
-
+            <?php
+            if(!empty($datos->bancos)){
+                echo "var objeto = ".json_encode($datos->bancos).';';
+                echo "jQuery.each(objeto, function(key, value){
+                    llenatablabancos(value);
+                });";
+            }
+            ?>
             tabs = jQuery('#tabs-clientesTabs li');
             detached = [];
 
@@ -63,12 +70,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             activeTab( tabs.first() );
 
             <?php
-            }
-            if(!empty($datos->bancos)){
-                echo "var objeto = ".json_encode($datos->bancos).';';
-                echo "jQuery.each(objeto, function(key, value){
-                    llenatablabancos(value);
-                })";
             }
             ?>
         });
@@ -218,9 +219,11 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         }
 
         function llenatablabancos(obj) {
+
             var fieldset = jQuery('fieldset#datosBancarios');
             fieldset.find('input:not(.eliminaBanco)').val('');
             fieldset.find('select').val(0);
+
             var $html = '<tr id="' + obj.datosBan_id + '">';
             $html += '<td>' + catalogoBancos[obj.banco_codigo] + '</td>';
             $html += '<td>' + obj.banco_cuenta + '</td>';
@@ -228,7 +231,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             $html += '<td>' + obj.banco_clabe + '</td>';
             $html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
             $html += '</tr>';
-
+            console.log(fieldset, $html);
             jQuery('#banco').find('table.tableBancos tbody').append($html);
         }
 

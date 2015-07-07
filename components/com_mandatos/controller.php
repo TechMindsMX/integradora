@@ -98,7 +98,6 @@ class MandatosController extends JControllerLegacy {
     }
 
     function agregarBancoCliente(){
-
 	    $validator   = new validador();
 	    $diccionario = array (
 		    'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
@@ -419,11 +418,13 @@ class MandatosController extends JControllerLegacy {
     }
 
     public function saveSaveCLiPro(){
-        $db         = JFactory::getDbo();
-        $session    = JFactory::getSession();
-        $save       = new sendToTimOne();
-        $dataToSave = $session->get('dataCliPro',array(),'integrado');
-        $idCliPro   = $dataToSave['idCliPro'];
+        $db             = JFactory::getDbo();
+        $session        = JFactory::getSession();
+        $save           = new sendToTimOne();
+        $dataToSave     = $session->get('dataCliPro',array(),'integrado');
+        $idCliPro       = $dataToSave['idCliPro'];
+        $integradoCli   = new IntegradoSimple($idCliPro);
+        $currIntegrado  = new IntegradoSimple($this->integradoId);
 
         foreach ($dataToSave as $key => $value) {
             $salir = false;
@@ -459,6 +460,7 @@ class MandatosController extends JControllerLegacy {
             }
 
             if(!$salir) {
+
                 if (empty($existe)) {
                     $save->insertDB($value[0], $value[1], $value[2]);
 
@@ -468,7 +470,11 @@ class MandatosController extends JControllerLegacy {
                 } else {
                     $save->updateDB($value[0], $value[3], $where);
                 }
+            }else {
+                $where = $db->quoteName('integradoId') . ' = ' . $db->quote($currIntegrado->id) . ' AND ' . $db->quoteName('integradoIdCliente') . ' = ' . $db->quote($integradoCli->id);
+                $save->updateDB('integrado_clientes_proveedor', array($db->quoteName('bancos') . ' = '.$db->quote('['.$integradoCli->integrados[0]->datos_bancarios[0]->datosBan_id.']')), $where);
             }
+
         }
 
         $response = array('success' => true);

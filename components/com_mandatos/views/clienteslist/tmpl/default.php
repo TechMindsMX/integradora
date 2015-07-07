@@ -200,8 +200,8 @@ function busquedapor(valor, campo){
 			foreach ($clientes as $key => $value) {
 				$selected 		= $value->status == 0 ? '' :'checked';
 				$class 			= $value->status == 1 ? '' :'status0';
-				$rfc 			= is_null($value->rfc)?$value->pRFC:$value->rfc;
-				$corporateName 	= is_null($value->corporateName)?'Sin Denominación Social':$value->corporateName;
+				$rfc 			= @is_null($value->rfc) ? $value->pRFC : $value->rfc;
+				$corporateName 	= @is_null($value->corporateName)?'Sin Denominación Social':$value->corporateName;
 
 				echo '<tr class="type_'.$value->type.' '.$class.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;">'.$type[$value->type].'</td>';

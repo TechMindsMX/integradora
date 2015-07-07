@@ -59,7 +59,7 @@ class Integrado {
 
 		$datosQuery = array ( 'setUpdate' => array () );
 		$post       = array (
-			'integradoId'       => 'INT',
+			'integradoId'       => 'STRING',
 			'datosBan_id'       => 'INT',
 			'db_banco_codigo'   => 'STRING',
 			'db_banco_cuenta'   => 'STRING',
