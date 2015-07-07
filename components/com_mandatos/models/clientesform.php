@@ -14,7 +14,7 @@ class MandatosModelClientesform extends JModelItem {
         $app			= JFactory::getApplication();
         $currUser		= JFactory::getUser();
         $input   		= JFactory::getApplication()->input;
-        $post           = array( 'idCliPro' => 'INT');
+        $post           = array( 'idCliPro' => 'STRING');
         $data			= $input->getArray($post);
 
         $sesion             = JFactory::getSession();

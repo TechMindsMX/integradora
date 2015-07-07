@@ -66,10 +66,15 @@ class getFromTimOne{
         foreach ($results as $value) {
             $integrado = new IntegradoSimple($value->integradoId);
             $integrado->integrados[0]->displayName = $integrado->getDisplayName();
+
             if( is_null($status) ) {
+                $integrado->integrados[0]->integradoId = $value->integradoId;
                 $integradosArray[] = $integrado->integrados[0];
+
             }elseif( $status == $integrado->integrados[0]->integrado->status ){
+                $integrado->integrados[0]->integradoId = $value->integradoId;
                 $integradosArray[] = $integrado->integrados[0];
+
             }
         }
 

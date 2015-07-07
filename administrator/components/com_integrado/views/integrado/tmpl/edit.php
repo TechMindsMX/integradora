@@ -32,6 +32,11 @@ $verifications = $this->verifications;
                                     </label>
                                 <?php endforeach; ?>
                             </div>
+
+                            <div class="control-label">Comentarios</div>
+                            <div class="controls">
+                                <textarea name="comments"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>

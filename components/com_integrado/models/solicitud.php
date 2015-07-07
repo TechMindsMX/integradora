@@ -30,11 +30,12 @@ class IntegradoModelSolicitud extends JModelItem {
 //			$this->dataModelo = $integrado->newInstance($this->integradoId);
 			$this->dataModelo = new IntegradoSimple($this->integradoId);
 
-            $status = array(3,50,99);
-            if( in_array($this->dataModelo->integrados[0]->integrado->status, $status) ){
-
-                JFactory::getApplication()->redirect('index.php?option=com_mandatos', 'El status de la solicitud no permite edición');
-            }
+//            $status = array(3,50,99);
+//            if(isset($this->dataModelo->integrados[0]->integrado->status)) {
+//                if (in_array($this->dataModelo->integrados[0]->integrado->status, $status)) {
+//                    JFactory::getApplication()->redirect('index.php?option=com_mandatos', 'El status de la solicitud no permite edición');
+//                }
+//            }
 		}
 		$this->dataModelo->user->integradoId = $this->integradoId;
 		$this->dataModelo->integrados = $this->dataModelo->integrados[0];

@@ -60,7 +60,7 @@ class MandatosModelOdvform extends JModelItem {
 	        $subprojects[$proyect->id_proyecto] = getFromTimOne::getActiveSubProyects($proyect->id_proyecto);
         }
 
-        return $subprojects;
+        return @$subprojects;
     }
 
 	public function getestados(){

@@ -18,13 +18,14 @@ class IntegradoControllerIntegrado extends JControllerForm {
     public $db;
 
     function __construct( ) {
-        $this->db = JFactory::getDbo();
-        $this->data = JFactory::getApplication()->input->getArray();
-        $this->tabla_db = 'integrado_verificacion_solicitud';
-        $this->save = new sendToTimOne();
-
+        $this->db          = JFactory::getDbo();
+        $this->catalogos   = new Catalogos();
+        $this->save        = new sendToTimOne();
+        $this->tabla_db    = 'integrado_verificacion_solicitud';
+        $this->data        = JFactory::getApplication()->input->getArray();
         $this->integradoId = $this->data['id'];
-        $this->catalogos = new Catalogos();
+        $this->comments    = $this->data['comments'];
+        unset($this->data['comments']);
 
         parent::__construct();
     }
@@ -130,8 +131,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         return $catalogos;
     }
 
-    private function hasAllVerifications()
-    {
+    private function hasAllVerifications(){
 
         $verificacionObj = $this->groupVerifications();
 
@@ -239,8 +239,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         }
     }
 
-    private function createIntegradoTimoneUUID()
-    {
+    private function createIntegradoTimoneUUID(){
         $db = JFactory::getDbo();
         $integradoData = new UserTimone(new IntegradoSimple($this->integradoId));
 
@@ -300,17 +299,40 @@ class IntegradoControllerIntegrado extends JControllerForm {
     private function notification() {
         $catalogoStatusSolicitud = $this->catalogos->getStatusSolicitud();
         $getCurrUser             = new IntegradoSimple($this->data['id']);
+
         foreach ($catalogoStatusSolicitud as $value){
             if($value->status == $getCurrUser->integrados[0]->integrado->status){
                 $status = $value->status_name;
             }
         }
 
-        $array                   = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
-        $send                    = new Send_email();
+        switch($status){
+            case 'Revisión':
+                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $notificacion = '3-1';
+                break;
+            case 'Devuelto':
+                $array = array($status,date('d-m-Y'),$this->comments);
+                $notificacion = '3-2';
+                break;
+            case 'Para contrato':
+                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $notificacion = '3-3';
+                break;
+            case 'Integrado':
+                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $notificacion = '3-4';
+                break;
+            case 'Cancelado':
+                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $notificacion = '3-5';
+                break;
+        }
+
+        $send  = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
-        $info = $send->sendNotifications('3', $array);
+        $info = $send->sendNotifications($notificacion, $array);
 
         return $info;
     }
