@@ -22,7 +22,7 @@ class Integrado {
      * @param $db
      * @return mixed
      */
-    public static function getUsuarioPrincipal($integ_id, $userJoomla = null)
+    public static function getUsuarioPrincipal($integ_id)
     {
         $db 		= JFactory::getDbo();
 
@@ -31,17 +31,7 @@ class Integrado {
             ->from($db->quoteName('#__integrado_users'))
             ->where($db->quoteName('integradoId') . ' = ' . $db->quote($integ_id) . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
 
-        $result = $db->setQuery($query)->loadObjectList();
-
-        foreach ($result as $value) {
-            $array[] = $value->user_id;
-        }
-
-        if(!is_null($userJoomla)){
-            $result = in_array($userJoomla,$array) ? $userJoomla : null;
-        }else{
-            $result = $result[0]->user_id;
-        }
+        $result = $db->setQuery($query)->loadResult();
 
         $result = JFactory::getUser($result);
         return $result;
@@ -375,10 +365,10 @@ class Integrado {
 		$isValid 	= true;
 
 		if(!is_null($integ_id) ){
-            $result = self::getUsuarioPrincipal($integ_id, $userJoomla);
+            $result = self::getUsuarioPrincipal($integ_id);
 			
 			if( !is_null($result->id) ){
-				$isValid = $result->id == $userJoomla ? true : false;
+				$isValid = $result->id==$userJoomla?true:false;
 			}
 		}
 		return $isValid;
