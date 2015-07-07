@@ -362,14 +362,22 @@ class Integrado {
 	}
 	
 	public static function isValidPrincipal($integ_id, $userJoomla){
-		$isValid 	= true;
+		$isValid = true;
+        $integrado = new IntegradoSimple($integ_id);
+        $usuarios = $integrado->getUsersOfIntegrado($integ_id);
 
-		if(!is_null($integ_id) ){
+        if(!is_null($integ_id) ){
             $result = self::getUsuarioPrincipal($integ_id);
 			
 			if( !is_null($result->id) ){
 				$isValid = $result->id==$userJoomla?true:false;
 			}
+
+            foreach ($usuarios as $value) {
+                if( ($value->id == $userJoomla) && ($value->permission_level == 4) ){
+                    $isValid = true;
+                }
+            }
 		}
 		return $isValid;
 	}
