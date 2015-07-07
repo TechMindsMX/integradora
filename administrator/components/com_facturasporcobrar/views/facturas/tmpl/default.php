@@ -62,7 +62,7 @@ JSubMenuHelper::addEntry(
                     <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
                     foreach ($this->integrados as $key => $value) {
-                        echo '<option value="'.$value->integrado->integradoId.'">'.$value->datos_personales->nom_comercial.'</option>';
+                        echo '<option value="'.$value->integrado->integradoId.'">'.$value->displayName.'</option>';
                     }
                     ?>
                 </select>

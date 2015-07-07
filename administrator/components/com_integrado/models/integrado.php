@@ -144,7 +144,7 @@ class IntegradoModelIntegrado extends JModelAdmin
 		);
 
 		$campos->LBL_TAB_BANCO = array(
-			'banco_codigo',
+			'bankName',
 			'banco_cuenta',
 			'banco_sucursal',
 			'banco_clabe'

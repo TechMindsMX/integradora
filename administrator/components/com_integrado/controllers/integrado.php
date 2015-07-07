@@ -260,6 +260,8 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 	        $banco = new stdClass();
             $banco->integradoId    = $result->integradoId;
+            $banco->banco_codigo   = 646;
+            $banco->banco_sucursal = 180;
             $banco->banco_cuenta   = $result->account;
             $banco->banco_clabe    = $result->stpClabe;
 
