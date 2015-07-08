@@ -174,7 +174,7 @@ class MandatosController extends JControllerLegacy {
         $post       = array('datosBan_id' => 'INT');
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integradoId').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
+        $where      = $db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
@@ -381,24 +381,22 @@ class MandatosController extends JControllerLegacy {
                     break;
             }
 
+            $cliente = new IntegradoSimple($idCliPro);
+
+            if( $cliente->isIntegrado() && $table == 'integrado_clientes_proveedor' && empty($existe) ) {
+                $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
+            }elseif( $cliente->isIntegrado() && $table == 'integrado_clientes_proveedor' && !empty($existe) ){
+                $save->updateDB($table,$datosQuery['setUpdate'],$where);
+            }
+
             $update   = isset($datosQuery['setUpdate']) ? $datosQuery['setUpdate'] : array();
-            $columnas = isset($datosQuery['columnas']) ? $datosQuery['columnas'] : array();
-            $valores  = isset($datosQuery['valores']) ? $datosQuery['valores'] : array();
+            $columnas = isset($datosQuery['columnas'])  ? $datosQuery['columnas']  : array();
+            $valores  = isset($datosQuery['valores'])   ? $datosQuery['valores']   : array();
 
             $varSession[$data['tab']] = array($table,$columnas, $valores,$update);
-            $varSession['idCliPro'] = $idCliPro;
+            $varSession['idCliPro']   = $idCliPro;
 
             $session->set('dataCliPro',$varSession,'integrado');
-
-//            if(empty($existe)) {
-//                $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
-//
-//                if( $table == 'integrado_datos_personales'){
-//                    $this->sendEmail(__METHOD__);
-//                }
-//            }else{
-//                $save->updateDB($table,$datosQuery['setUpdate'],$where);
-//            }
 
             if($data['pj_pers_juridica'] == 2){
                 $tab = 'banco';
