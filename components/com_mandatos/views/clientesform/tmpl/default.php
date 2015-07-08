@@ -351,7 +351,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         function saveCliente(){
             var tab = jQuery(this).prop('id');
 
-            if(tab != 'agregarBanco' && tab != 'files'){
+            if(tab != 'agregarBanco' && tab != 'files' && tab != 'fin'){
                 var campos = jQuery('#altaC_P').serialize();
                 campos += '&tab='+tab;
                 campos += '&integradoId='+integradoId;
@@ -384,8 +384,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 });
             }
 
-            if(tab == 'files'){
-                var parametros = {
+            if(tab == 'files' || tab == 'fin'){
+                parametros = {
                     'link'  : 'index.php?option=com_mandatos&view=clientesform&task=saveSaveCliPro&format=raw',
                     'datos' : campos
                 };
@@ -399,7 +399,10 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 });
             }
 
-            habilita_fin();
+            var tabJuridica = jQuery('a[href="#pers-juridica"]').prop('href');
+            if( tabJuridica == undefined ) {
+                habilita_fin();
+            }
         }
 
         function attachTab(campo) {
@@ -447,7 +450,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
         }
 
         function habilita_fin() {
-            jQuery('#btn_fin').prop('href', 'index.php?option=com_mandatos&view=clienteslist').removeClass('disabled');
+            jQuery('#fin').prop('disabled', false);
         }
 
     </script>
@@ -463,7 +466,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     </fieldset>
 
     <div id="container-form" class="form-actions">
-        <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data"  autocomplete="off">
+        <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data"  autocomplete="on">
             <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
 
             <?php
@@ -1069,7 +1072,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     </div>
     <div class="form-actions">
         <a class="btn btn-danger" href="index.php?option=com_mandatos&view=clienteslist"><?php echo JText::_('JCANCEL'); ?></a>
-        <a class="btn btn-success disabled" id="btn_fin"><?php echo JText::_('LBL_FIN'); ?></a>
+        <button type="button" class="btn btn-success envio" id="fin" disabled="disabled"><?php echo JText::_('LBL_FIN'); ?></button>
     </div>
 
 <?php

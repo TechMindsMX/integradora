@@ -462,9 +462,9 @@ class MandatosController extends JControllerLegacy {
                 if (empty($existe)) {
                     $save->insertDB($value[0], $value[1], $value[2]);
 
-                    if ($table == 'integrado_datos_personales') {
-                        $this->sendEmail(__METHOD__);
-                    }
+//                    if ($table == 'integrado_datos_personales') {
+//                        $this->sendEmail(__METHOD__);
+//                    }
                 } else {
                     $save->updateDB($value[0], $value[3], $where);
                 }
