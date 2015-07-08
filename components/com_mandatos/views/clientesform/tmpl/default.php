@@ -231,7 +231,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             $html += '<td>' + obj.banco_clabe + '</td>';
             $html += '<td><input type="button" class="btn btn-primary eliminaBanco" onClick="bajaBanco(this)" id="'+obj.datosBan_id+'" value="elimina Banco" /></td>';
             $html += '</tr>';
-            console.log(fieldset, $html);
+
             jQuery('#banco').find('table.tableBancos tbody').append($html);
         }
 
@@ -281,6 +281,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             envioajax.done(function(response){
                 if(response.success) {
                     jQuery('#' + id).remove();
+                    habilita_fin();
                 }else{
                     alert(response.msg);
                 }
@@ -397,11 +398,12 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     }
                 });
             }
+
+            habilita_fin();
         }
 
         function attachTab(campo) {
             var tabs = jQuery(formulario).find('#tabs-clientesTabs li');
-            console.log(tabs.length);
             var lastTab = jQuery('#tabs-clientesTabs li:last-of-type');
 
             jQuery.each(tabs, function (key, value) {
