@@ -2107,7 +2107,7 @@ class sendToTimOne {
 
             switch($clave){
                 case 'dp_':
-                    is_null($integrado->datos_personales->$columna)?JFactory::getApplication()->enqueueMessage('Falta '.$columna.' o el formato del archivo es incorrecto'):'';
+                    is_null($integrado->datos_personales->$columna)?JFactory::getApplication()->enqueueMessage('Falta '.JText::_(strtoupper($columna)).' o el formato del archivo es incorrecto'):'';
                     break;
                 case 'de_':
                     if($integrado->integrado->pers_juridica == 1){
@@ -2116,7 +2116,7 @@ class sendToTimOne {
                     break;
                 case 't1_':
                     if($integrado->integrado->pers_juridica == 1) {
-                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta compribante del testimonio 1 o el formato del archivo es incorrecto') : '';
+                        is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 1 o el formato del archivo es incorrecto') : '';
                     }
                     break;
                 case 't2_':

@@ -417,6 +417,7 @@ class MandatosController extends JControllerLegacy {
 
     public function saveSaveCLiPro(){
         $db             = JFactory::getDbo();
+        $input          = JFactory::getApplication()->input->getArray();
         $session        = JFactory::getSession();
         $save           = new sendToTimOne();
         $dataToSave     = $session->get('dataCliPro',array(),'integrado');
@@ -469,8 +470,10 @@ class MandatosController extends JControllerLegacy {
                     $save->updateDB($value[0], $value[3], $where);
                 }
             }else {
-                $where = $db->quoteName('integradoId') . ' = ' . $db->quote($currIntegrado->id) . ' AND ' . $db->quoteName('integradoIdCliente') . ' = ' . $db->quote($integradoCli->id);
-                $save->updateDB('integrado_clientes_proveedor', array($db->quoteName('bancos') . ' = '.$db->quote('['.$integradoCli->integrados[0]->datos_bancarios[0]->datosBan_id.']')), $where);
+                if($dataToSave['tipoAlta_btn'][2][2] != 0) {
+                    $where = $db->quoteName('integradoId') . ' = ' . $db->quote($currIntegrado->id) . ' AND ' . $db->quoteName('integradoIdCliente') . ' = ' . $db->quote($integradoCli->id);
+                    $save->updateDB('integrado_clientes_proveedor', array($db->quoteName('bancos') . ' = ' . $db->quote('[' . $integradoCli->integrados[0]->datos_bancarios[0]->datosBan_id . ']')), $where);
+                }
             }
 
         }
@@ -494,7 +497,7 @@ class MandatosController extends JControllerLegacy {
 
         $app = JFactory::getApplication();
         if ($resultado) {
-            $app->enqueueMessage('LBL_DATOS_GUARDADOS');
+            $app->enqueueMessage(JText::_('LBL_SAVE_SUCCESSFUL'));
         }
         $url = 'index.php?option=com_mandatos&view=clienteslist';
 
