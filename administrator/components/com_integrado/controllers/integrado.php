@@ -310,23 +310,46 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         switch($status){
             case 'Revisión':
-                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y')
+                );
                 $notificacion = '3-1';
                 break;
             case 'Devuelto':
-                $array = array($status,date('d-m-Y'),$this->comments);
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y'),
+                    $this->comments
+                );
                 $notificacion = '3-2';
                 break;
             case 'Para contrato':
-                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y')
+                );
                 $notificacion = '3-3';
                 break;
             case 'Integrado':
-                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $array = array(
+                    $getCurrUser->getUserPrincipal()->name,
+                    date('d-m-Y'),
+                    $this->data['id'],
+                    $status
+                );
                 $notificacion = '3-4';
                 break;
             case 'Cancelado':
-                $array = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y'),
+                    $this->comments
+                );
                 $notificacion = '3-5';
                 break;
         }

@@ -246,8 +246,8 @@ class IntegradoController extends JControllerLegacy {
         switch ($input->get('tab', null, 'STRING')) {
             case 'juridica':
                 $arrayPost = array(
-                    'pj_pers_juridica'          => 'STRING',
-                    'busqueda_rfc'              => 'STRING',
+                    'pj_pers_juridica' => 'STRING',
+                    'busqueda_rfc'     => 'STRING',
                 );
                 break;
             case 'personales':
@@ -316,8 +316,8 @@ class IntegradoController extends JControllerLegacy {
                 break;
         }
         $arrayDefaults = array(
-            'tab'                         => 'STRING',
-            'integradoId'                 => 'STRING'
+            'tab'         => 'STRING',
+            'integradoId' => 'STRING'
         );
 
         $post 	= $input->getArray( array_merge($arrayPost, $arrayDefaults) );
@@ -359,27 +359,25 @@ class IntegradoController extends JControllerLegacy {
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
-
             case 'personales':
                 $diccionario = array(
-                    'dp_tel_fijo'                => array('phone' => true,            	'maxlength' => 10,  'minlength'=>10,    'required' => true),
-                    'dp_tel_movil'               => array('number' => true,     	    'maxlength' => 13,  'minlength'=>13,    'required' => true),
+                    'dp_tel_fijo'                => array('phone'       => true,       	'maxlength' => 10,  'minlength'=>10,    'required' => true),
+                    'dp_tel_movil'               => array('number'      => true,   	    'maxlength' => 13,  'minlength'=>13,    'required' => true),
                     'dp_nacionalidad'            => array('alphaNumber' => true,      	'maxlength' => 45,  'required' => true),
                     'dp_sexo'                    => array('alphaNumber' => true,	   	'maxlength' => 45,  'required' => true),
-                    'dp_rfc'                     => array('rfc_fisica' => true,      	'maxlength' => 13,  'required' => true),
+                    'dp_rfc'                     => array('rfc_fisica'  => true,      	'maxlength' => 13,  'required' => true),
                     'dp_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100, 'required' => true),
                     'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
-                    'dp_cod_postal'              => array('number' => true,		        'maxlength' => 13,  'required' => true),
-                    'dp_email'                   => array('email' => true,		    	'maxlength' => 100, 'required' => true),
-                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150, 'required' => true),
-                    'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10,  'required' => true),
+                    'dp_cod_postal'              => array('number'      => true,        'maxlength' => 13,  'required' => true),
+                    'dp_email'                   => array('email'       => true,    	'maxlength' => 100, 'required' => true),
+                    'dp_nombre_representante'    => array('string'      => true,   	    'maxlength' => 150, 'required' => true),
+                    'dp_fecha_nacimiento'        => array('date'        => true,       	'maxlength' => 10,  'required' => true),
                     'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,  'required' => true),
                     'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10),
                     'dp_tel_fijo_extension'      => array('alphaNumber' => true,	    'maxlength' => 5),
                     'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
                 );
                 break;
-
             case 'empresa':
                 $diccionario = array(
                     'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
@@ -397,22 +395,21 @@ class IntegradoController extends JControllerLegacy {
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
                     'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       ),
-                    't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    't2_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      ),
                     't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 18,      ),
-                    'pn_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'pn_instrum_fecha'           => array('date'        => true,      	'maxlength' => 10,      ),
                     'pn_instrum_notaria'         => array('alphaNumber' => true, 	    'maxlength' => 18,      ),
                     'pn_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 255,     ),
                     'pn_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     'pn_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
-                    'rp_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'rp_instrum_fecha'           => array('date'        => true,      	'maxlength' => 10,      ),
                     'rp_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                     'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                 );
                 break;
-
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
