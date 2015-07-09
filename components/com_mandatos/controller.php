@@ -888,13 +888,13 @@ class MandatosController extends JControllerLegacy {
 			 */
 			    $tipo = '';
 
-			    if ($this->tipoAlta == 0) {
+			    if ($this->tipoAlta == "0") {
 				    $tipo = 'Cliente';
 			    }
-			    if ($this->tipoAlta == 1) {
+			    if ($this->tipoAlta == "1") {
 				    $tipo = 'Proveedor';
 			    }
-			    if ($this->tipoAlta == 2) {
+			    if ($this->tipoAlta == "2") {
 				    $tipo = 'Cliente/Proveedor';
 			    }
 
