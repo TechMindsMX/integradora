@@ -367,7 +367,7 @@ class MandatosController extends JControllerLegacy {
                     $columnas[] = 'integradoId';
                     $valores[]	= $db->quote($idCliPro);
 
-//                    self::saveInstrumentos($data);
+                    self::saveInstrumentos($data);
 
                     $datosQuery['columnas'] = $columnas;
                     $datosQuery['valores']  = $valores;
@@ -482,6 +482,209 @@ class MandatosController extends JControllerLegacy {
         $this->document->setMimeEncoding('application/json');
 
         echo json_encode($response);
+    }
+
+    public static function insertData($tabla, $columnas, $valores){
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->insert($db->quoteName('#__'.$tabla))
+                ->columns($db->quoteName($columnas))
+                ->values(implode(',',$valores));
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Almacenados correctamente');
+
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
+            echo json_encode($response);
+        }
+    }
+
+    public static function updateData($table, $columnas, $condicion){
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->update($db->quoteName('#__'.$table))
+                ->set(implode(',', $columnas))
+                ->where($condicion);
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error al Actualizar intente nuevamente');
+            echo json_encode($response);
+        }
+    }
+
+    public static function deleteData($table, $where){
+        try{
+            $db		= JFactory::getDbo();
+            $query	= $db->getQuery(true);
+
+            $query->delete($db->quoteName('#__'.$table));
+            $query->where($where);
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
+        }
+        catch(Exception $e){
+            return array('success' => false , 'msg' => 'Error al eliminar el usuario');
+        }
+    }
+
+    public static function saveInstrumentos($data){
+        $db				= JFactory::getDbo();
+        $columnast1[] 	= 'integradoId';
+        $columnast2[] 	= 'integradoId';
+        $columnasPN[] 	= 'integradoId';
+        $columnasRP[]	= 'integradoId';
+        $columnast1[] 	= 'instrum_type';
+        $columnast2[] 	= 'instrum_type';
+        $columnasPN[] 	= 'instrum_type';
+        $columnasRP[]	= 'instrum_type';
+
+        $valort1[]		= $db->quote($data['idCliPro']);
+        $valort2[]		= $db->quote($data['idCliPro']);
+        $valorPN[]		= $db->quote($data['idCliPro']);
+        $valorRP[]		= $db->quote($data['idCliPro']);
+        $valort1[]		= 1;
+        $valort2[]		= 2;
+        $valorPN[]		= 3;
+        $valorRP[]		= 4;
+
+        foreach ($data as $key => $value) {
+            $columna 	= substr($key, 3);
+            $clave 		= substr($key, 0,3);
+
+            switch ($clave) {
+                case 't1_':
+                    $columnast1[] 	= $columna;
+                    $valort1[]		= $db->quote($value);
+                    $updateSett1[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 't2_':
+                    $columnast2[] 	= $columna;
+                    $valort2[]		= $db->quote($value);
+                    $updateSett2[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 'pn_':
+                    $columnasPN[] 	= $columna;
+                    $valorPN[]		= $db->quote($value);
+                    $updateSetpn[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 'rp_':
+                    $columnasRP[] 	= $columna;
+                    $valorRP[]		= $db->quote($value);
+                    $updateSetrp[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 1';
+        $existet1 = self::checkData('integrado_instrumentos', $where);
+        if(empty($existet1) ){
+            self::insertData('integrado_instrumentos', $columnast1, $valort1);
+            $existet1 = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSett1, $where);
+            $existet1 = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existet1)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existet1[0]->id, 'testimonio_1');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 2';
+        $existet2 = self::checkData('integrado_instrumentos', $where);
+        if(empty($existet2) ){
+            self::insertData('integrado_instrumentos', $columnast2, $valort2);
+            $existet2 = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSett2, $where);
+            $existet2 = self::checkData('integrado_instrumentos', $where);
+        }
+
+        if (!empty($existet2)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existet2[0]->id, 'testimonio_2');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 3';
+        $existepn = self::checkData('integrado_instrumentos', $where);
+        if(empty($existepn) ){
+            self::insertData('integrado_instrumentos', $columnasPN, $valorPN);
+            $existepn = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSetpn, $where);
+            $existepn = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existepn)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existepn[0]->id, 'poder');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 4';
+        $existerp = self::checkData('integrado_instrumentos', $where);
+        if(empty($existerp) ){
+            self::insertData('integrado_instrumentos', $columnasRP, $valorRP);
+            $existerp = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSetrp, $where);
+            $existerp = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existerp[0])) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existerp[0]->id, 'reg_propiedad');
+        }
+    }
+
+    public static function saveInstrumentosEmpresa($integrado_id, $id_instrumento, $campo){
+        $db				= JFactory::getDbo();
+        $where			= $db->quoteName('integradoId').' = '. $db->quote($integrado_id) ;
+        $dataEmpresa 	= self::checkData('integrado_datos_empresa', $where);
+        $columna[] 		= $campo;
+        $columna[]		= 'integradoId';
+        $valor[]		= $id_instrumento;
+        $valor[]		= $db->quote($integrado_id);
+        $updateSet[] 	= $db->quoteName($campo).' = '.$db->quote($id_instrumento);
+
+        if(empty($dataEmpresa)){
+            self::insertData('integrado_datos_empresa', $columna, $valor);
+        }else{
+            self::updateData('integrado_datos_empresa', $updateSet, $where);
+        }
+    }
+
+    public static function checkData($table, $where){
+        $results = false;
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->select('*')
+                ->from($db->quoteName('#__'.$table))
+                ->where($where);
+
+            $db->setQuery($query);
+
+            $results = $db->loadObjectList();
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error en checkData');
+            echo json_encode($response);
+        }
+
+        return $results;
     }
 
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
@@ -716,7 +919,6 @@ class MandatosController extends JControllerLegacy {
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
-
             case 'personales':
                 $diccionario = array(
                     'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
@@ -744,7 +946,6 @@ class MandatosController extends JControllerLegacy {
                     'co_tel_movil3'              => array('number' => true,     	    'minlength' => 13,  'maxlength' => 13),
                 );
                 break;
-
             case 'empresa':
                 $diccionario = array(
                     'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
@@ -773,7 +974,6 @@ class MandatosController extends JControllerLegacy {
                     'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                 );
                 break;
-
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
@@ -784,9 +984,7 @@ class MandatosController extends JControllerLegacy {
                 break;
         }
 
-        $diccionarioDefault  = array(
-            'integradoId'                => array('alphaNumber' => true,		    	'maxlength' => 32),
-        );
+        $diccionarioDefault  = array('integradoId' => array('alphaNumber' => true, 'maxlength' => 32));
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 
         //envia la data a validacion y regresa un arreglo con los resultados para cada uno de los campos que esten llenados

@@ -159,19 +159,21 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             var rfcBusqueda	=  jQuery('#bu_rfc').val();
 
             var envio = {
-                'link'			:'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
-                'datos'			:{'rfc': rfcBusqueda, 'integradoId':integradoId}
+                'link'	: 'index.php?option=com_integrado&task=search_rfc_cliente&format=raw',
+                'datos'	: {'rfc': rfcBusqueda, 'integradoId':integradoId}
             };
 
             var resultado = ajax(envio);
 
             resultado.done(function(response){
+                var containerForm = jQuery('#container-form');
 
-                jQuery('#container-form').empty().append(formulario);
+                containerForm.empty().append(formulario);
                 makeBinds();
 
                 if(response.success == true){
-                    <?php //Existe el rfc y se llena el form ?>
+                    <?php
+                    //Existe el rfc y se llena el form ?>
                     llenaForm(response);
                     var campo = ['#pers-juridica', '#basic-details', '#empresa', '#files'];
                     jQuery.each(campo, function(k,v) {
@@ -179,14 +181,13 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     });
                     activeTab( '#tipo_alta' );
 
-                } else if (response.bu_rfc.success == 'invalid') {
-                    <?php //RFC MAL ?>
+                } else if (response.bu_rfc.success == 'invalid') { <?php //RFC MAL?>
                     jQuery('input, select, textarea').prop("readonly", false);
 
-                    <?php /* override para la fincion de mensajes de validacion */ ?>
+                    <?php /* override para la función de mensajes de validacion */ ?>
                     response.bu_rfc.success = false;
                     mensajesValidaciones(response);
-                    jQuery('#container-form').empty();
+                    containerForm.empty();
 
                 } else {
                     <?php //No existe el RFC DESEA DARLO DE ALTA? ?>
@@ -198,19 +199,24 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     if (response.bu_rfc == 1) {
                         jQuery('#tipo_pers_juridica').html('Personalidad juridica: Moral');
                         jQuery('#de_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
+                        jQuery('#dp_nom_comercial').parent().hide();
                         $filesContent.find('input, label').prop('disabled', false).show();
                     }
                     else {
                         jQuery('#tipo_pers_juridica').html('Personalidad juridica: Física');
                         jQuery('#dp_rfc').val(jQuery('#bu_rfc').val()).attr('readonly', 'readonly');
+                        jQuery('#dp_nom_comercial').parent().show();
                         $filesContent.find('input, label').prop('disabled', true).hide();
                         $filesContent.find('input[name*="dp_"], input[name="db_banco_file"], label[for*="dp_"], label[for="db_banco_file"]').prop('disabled', false).show();
                         extractTab('#empresa');
                     }
+
                     var msg = '<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo JText::_('LBL_NUEVO_CLIENTE'); ?></div>';
+
                     jQuery('#tipo_alta').prepend(msg);
 
                     var the_tabs = jQuery('#tabs-clientesTabs');
+
                     the_tabs.find('li').addClass('disabled');
                     the_tabs.find('a').attr("data-toggle", "");
                     activeTab( '#tipo_alta' );
@@ -466,9 +472,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
     </fieldset>
 
     <div id="container-form" class="form-actions">
-        <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data"  autocomplete="on">
+        <form action="index.php?option=com_mandatos&task=uploadFiles" class="form" id="altaC_P" name="altaC_P" method="post" enctype="multipart/form-data"  autocomplete="off">
             <input type="hidden" name="idCliPro" value="<?php echo $datos->id; ?>" id="idCliPro">
-
             <?php
             echo JHtml::_('bootstrap.startTabSet', 'tabs-clientes', array('active' => JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') ));
             echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') );
@@ -490,9 +495,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     <input type="text" name="tp_monto" id="tp_monto" />
                 </div>
             </fieldset>
-
             <div class="form-actions">
-                <button type="button" class="btn btn-primary envio" id="tipoAlta_btn"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+                <button type="button" class="btn btn-primary envio" id="tipoAlta_btn"><?php echo JText::_('LBL_GUARDAR'); ?></button>
             </div>
             <?php
             echo JHtml::_('bootstrap.endTab');
@@ -512,205 +516,9 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                 </div>
             </fieldset>
-
             <div class="form-actions">
-                <button type="button" class="btn btn-primary envio" id="juridica"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+                <button type="button" class="btn btn-primary envio" id="juridica"><?php echo JText::_('LBL_GUARDAR'); ?></button>
             </div>
-
-            <?php
-            echo JHtml::_('bootstrap.endTab');
-
-            echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'basic-details', JText::_('LBL_SLIDE_BASIC'));
-            echo JHtml::_('bootstrap.startAccordion', 'slide-basic', array('active' => 'basic-persona'));
-            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_BASIC'), 'basic-persona');
-            ?>
-            <fieldset>
-                <div class="form-group">
-                    <label for="nombre"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?></label>
-                    <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="50" value="" />
-                </div>
-                <div class="form-group">
-                    <label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?> *</label>
-                    <select name="dp_nacionalidad" id="dp_nacionalidad">
-                        <?php
-                        foreach ($this->catalogos->nacionalidades as $key => $value) {
-                            $default = ($value->nombre == 'México') ? 'selected' : '';
-                            echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?> *</label>
-                    <select name="dp_sexo" id="dp_sexo">
-                        <option value="masculino" ><?php echo JText::_('SEXO_MASCULINO'); ?></option>
-                        <option value="femenino" ><?php echo JText::_('SEXO_FEMENINO'); ?></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
-                    <input type="text" name="dp_fecha_nacimiento" id="dp_fecha_nacimiento" class="datepicker" readonly />
-                </div>
-                <div class="form-group">
-                    <label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
-                    <input name="dp_rfc" id="dp_rfc" type="text" maxlength="18" />
-                </div>
-            </fieldset>
-            <?php
-            echo JHtml::_('bootstrap.endSlide');
-            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_DIRECCION'), 'basic-direccion');
-            ?>
-            <fieldset>
-                <div class="form-group">
-                    <label for="dp_calle"><?php echo JText::_('LBL_CALLE'); ?> *:</label>
-                    <input
-                        name		="dp_calle"
-                        class		="validate[required,custom[onlyLetterNumber]]"
-                        type		="text"
-                        id			="dp_calle"
-                        maxlength	="70" />
-                </div>
-
-                <div class="form-group">
-                    <label for="dp_num_exterior"><?php echo JText::_('NUM_EXT'); ?>*:</label>
-                    <input
-                        name		="dp_num_exterior"
-                        class		="validate[required,custom[onlyLetterNumber]]"
-                        type		="text"
-                        id			="dp_num_exterior"
-                        size		="10"
-                        maxlength	="5" />
-                </div>
-
-                <div class="form-group">
-                    <label for="dp_num_interior"><?php echo JText::_('NUM_INT'); ?>:</label>
-                    <input
-                        name		="dp_num_interior"
-                        class		="validate[custom[onlyLetterNumber]]"
-                        type		="text"
-                        id			="dp_num_interior"
-                        size		="10"
-                        maxlength	="5" />
-                </div>
-
-                <div class="form-group">
-                    <label for="dp_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
-                    <input
-                        type		= "text"
-                        name		= "dp_cod_postal"
-                        class		= "validate[required,custom[onlyNumberSp]] input_chica"
-                        id			= "dp_cod_postal"
-                        size		= "10"
-                        maxlength	= "5" />
-                </div>
-                <div class="form-group">
-                    <label for="dp_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
-                    <select name="colonia" id="dp_colonia" ></select>
-                </div>
-
-                <div class="form-group">
-                    <label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
-                    <input
-                        type	= "text"
-                        name	= "delegacion"
-                        id		= "dp_delegacion" />
-                </div>
-
-                <div class="form-group">
-                    <label for="dp_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
-                    <input
-                        type	= "text"
-                        name	= "estado"
-                        id		= "dp_estado" />
-                </div>
-
-                <div class="form-group">
-                    <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
-                    <select name="pais" id="pais" >
-                        <?php
-                        foreach ($this->catalogos->nacionalidades as $key => $value) {
-                            $selected = $value->id == 146?'selected':'';
-                            echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
-
-            </fieldset>
-
-            <?php
-            echo JHtml::_('bootstrap.endSlide');
-            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_EXTRAS'), 'ext-details');
-            ?>
-            <fieldset>
-                <div class="form-group">
-                    <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOMBRE_COMPLETO'); ?> *</label>
-                    <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" />
-                </div>
-                <div class="form-group">
-                    <label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?> *</label>
-                    <input name="dp_curp" id="dp_curp" type="text" maxlength="18" />
-                </div>
-
-                <div class="form-group">
-                    <label for="co_tel_fijo1"><?php echo JText::_('LBL_TEL_FIJO'); ?> 1 *</label>
-                    <input name="co_tel_fijo1" id ="co_tel_fijo1" type="text" maxlength="10" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_fijo_extension1"><?php echo JText::_('LBL_EXT'); ?> 1</label>
-                    <input name="co_tel_fijo_extension1" id="co_tel_fijo_extension1" type="text" maxlength="5" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_movil1"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 1</label>
-                    <input name="co_tel_movil1" id ="co_tel_movil1" type="text" maxlength="13" />
-                </div>
-                <div class="form-group">
-                    <label for="co_email1"><?php echo JText::_('LBL_CORREO'); ?> 1 *</label>
-                    <input name="co_email1" id="co_email1" type="email" maxlength="100" />
-                </div>
-
-                <div class="form-group">
-                    <label for="co_tel_fijo2"><?php echo JText::_('LBL_TEL_FIJO'); ?> 2</label>
-                    <input name="co_tel_fijo2" id ="co_tel_fijo2" type="text" maxlength="10" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_fijo_extension2"><?php echo JText::_('LBL_EXT'); ?> 2</label>
-                    <input name="co_tel_fijo_extension2" id="co_tel_fijo_extension2" type="text" maxlength="5" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_movil2"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 2</label>
-                    <input name="co_tel_movil2" id ="co_tel_movil2" type="text" maxlength="13" />
-                </div>
-                <div class="form-group">
-                    <label for="co_email2"><?php echo JText::_('LBL_CORREO'); ?> 2</label>
-                    <input name="co_email2" id="co_email2" type="email1" maxlength="100" />
-                </div>
-
-                <div class="form-group">
-                    <label for="co_tel_fijo3"><?php echo JText::_('LBL_TEL_FIJO'); ?> 3</label>
-                    <input name="co_tel_fijo3" id ="co_tel_fijo3" type="text" maxlength="10" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_fijo_extension3"><?php echo JText::_('LBL_EXT'); ?> 3</label>
-                    <input name="co_tel_fijo_extension3" id="co_tel_fijo_extension3" type="text" maxlength="5" />
-                </div>
-                <div class="form-group">
-                    <label for="co_tel_movil3"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 3</label>
-                    <input name="co_tel_movil3" id ="co_tel_movil3" type="text" maxlength="13" />
-                </div>
-                <div class="form-group">
-                    <label for="co_email3"><?php echo JText::_('LBL_CORREO'); ?> 3</label>
-                    <input name="co_email3" id="co_email3" type="email" maxlength="100" />
-                </div>
-            </fieldset>
-            <?php
-            echo JHtml::_('bootstrap.endSlide');
-            echo JHtml::_('bootstrap.endAccordion');
-            ?>
-            <div class="form-actions">
-                <button type="button" class="btn btn-primary envio" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-            </div>
-
             <?php
             echo JHtml::_('bootstrap.endTab');
 
@@ -730,6 +538,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             </fieldset>
             <?php
             echo JHtml::_('bootstrap.endSlide');
+
             echo JHtml::_('bootstrap.addSlide', 'empresa', JText::_('LBL_SLIDE_DIRECCION'), 'empresa-direccion');
             ?>
             <fieldset>
@@ -810,9 +619,9 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 </div>
 
             </fieldset>
-
             <?php
             echo JHtml::_('bootstrap.endSlide');
+
             echo JHtml::_('bootstrap.addSlide', 'empresa', JText::_('LBL_SLIDE_TESTIMONIOS'), 'empresa-testimonios');
             ?>
             <fieldset>
@@ -943,15 +752,213 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                         <label><input type="checkbox" id="tramiteRegistro"><?php echo JText::_('LBL_EN_TRAMITE'); ?></label>
                     </div>
                 </div>
-
-
             </fieldset>
             <?php
             echo JHtml::_('bootstrap.endSlide');
             echo JHtml::_('bootstrap.endAccordion');
             ?>
             <div class="form-actions">
-                <button type="button" class="btn btn-primary envio" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+                <button type="button" class="btn btn-primary envio" id="empresa"><?php echo JText::_('LBL_GUARDAR'); ?></button>
+            </div>
+            <?php
+            echo JHtml::_('bootstrap.endTab');
+
+            echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'basic-details', JText::_('LBL_SLIDE_BASIC'));
+            echo JHtml::_('bootstrap.startAccordion', 'slide-basic', array('active' => 'basic-persona'));
+            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_BASIC'), 'basic-persona');
+            ?>
+            <fieldset>
+                <div class="form-group">
+                    <label for="dp_nombre_representante"><?php echo JText::_('LBL_NOMBRE_COMPLETO'); ?></label>
+                    <input name="dp_nombre_representante" id="dp_nombre_representante" type="text" maxlength="100" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_nacionalidad"><?php echo JText::_('LBL_NACIONALIDAD'); ?> *</label>
+                    <select name="dp_nacionalidad" id="dp_nacionalidad">
+                        <?php
+                        foreach ($this->catalogos->nacionalidades as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
+                            echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_sexo"><?php echo JText::_('LBL_SEXO'); ?> *</label>
+                    <select name="dp_sexo" id="dp_sexo">
+                        <option value="masculino" ><?php echo JText::_('SEXO_MASCULINO'); ?></option>
+                        <option value="femenino" ><?php echo JText::_('SEXO_FEMENINO'); ?></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_fecha_nacimiento"><?php echo JText::_('LBL_FECHA_NACIMIENTO'); ?> *</label>
+                    <input type="text" name="dp_fecha_nacimiento" id="dp_fecha_nacimiento" class="datepicker" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_rfc"><?php echo JText::_('LBL_RFC'); ?> *</label>
+                    <input name="dp_rfc" id="dp_rfc" type="text" maxlength="18" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_curp"><?php echo JText::_('LBL_CURP'); ?> *</label>
+                    <input name="dp_curp" id="dp_curp" type="text" maxlength="18" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_nom_comercial"><?php echo JText::_('LBL_NOM_COMERCIAL'); ?> </label>
+                    <input name="dp_nom_comercial" id="dp_nom_comercial" type="text" maxlength="50" value="" />
+                </div>
+            </fieldset>
+            <?php
+            echo JHtml::_('bootstrap.endSlide');
+
+            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_DIRECCION'), 'basic-direccion');
+            ?>
+            <fieldset>
+                <div class="form-group">
+                    <label for="dp_calle"><?php echo JText::_('LBL_CALLE'); ?> *:</label>
+                    <input
+                        name		="dp_calle"
+                        class		="validate[required,custom[onlyLetterNumber]]"
+                        type		="text"
+                        id			="dp_calle"
+                        maxlength	="70" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_num_exterior"><?php echo JText::_('NUM_EXT'); ?>*:</label>
+                    <input
+                        name		="dp_num_exterior"
+                        class		="validate[required,custom[onlyLetterNumber]]"
+                        type		="text"
+                        id			="dp_num_exterior"
+                        size		="10"
+                        maxlength	="5" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_num_interior"><?php echo JText::_('NUM_INT'); ?>:</label>
+                    <input
+                        name		="dp_num_interior"
+                        class		="validate[custom[onlyLetterNumber]]"
+                        type		="text"
+                        id			="dp_num_interior"
+                        size		="10"
+                        maxlength	="5" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_cod_postal"><?php echo JText::_('LBL_CP'); ?> *:</label>
+                    <input
+                        type		= "text"
+                        name		= "dp_cod_postal"
+                        class		= "validate[required,custom[onlyNumberSp]] input_chica"
+                        id			= "dp_cod_postal"
+                        size		= "10"
+                        maxlength	= "5" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_colonia"><?php echo JText::_('LBL_COLONIA'); ?> *:</label>
+                    <select name="colonia" id="dp_colonia" ></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="delegacion"><?php echo JText::_('LBL_DELEGACION'); ?> *:</label>
+                    <input
+                        type	= "text"
+                        name	= "delegacion"
+                        id		= "dp_delegacion" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dp_estado"><?php echo JText::_('LBL_ESTADO'); ?> *:</label>
+                    <input
+                        type	= "text"
+                        name	= "estado"
+                        id		= "dp_estado" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pais"><?php echo JText::_('LBL_PAIS'); ?> *:</label>
+                    <select name="pais" id="pais" >
+                        <?php
+                        foreach ($this->catalogos->nacionalidades as $key => $value) {
+                            $selected = $value->id == 146?'selected':'';
+                            echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+
+            </fieldset>
+            <?php
+            echo JHtml::_('bootstrap.endSlide');
+
+            echo JHtml::_('bootstrap.addSlide', 'slide-basic', JText::_('LBL_SLIDE_EXTRAS'), 'ext-details');
+            ?>
+            <fieldset>
+                <div class="form-group">
+                    <label for="co_tel_fijo1"><?php echo JText::_('LBL_TEL_FIJO'); ?> 1 *</label>
+                    <input name="co_tel_fijo1" id ="co_tel_fijo1" type="text" maxlength="10" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_fijo_extension1"><?php echo JText::_('LBL_EXT'); ?> 1</label>
+                    <input name="co_tel_fijo_extension1" id="co_tel_fijo_extension1" type="text" maxlength="5" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_movil1"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 1</label>
+                    <input name="co_tel_movil1" id ="co_tel_movil1" type="text" maxlength="13" />
+                </div>
+                <div class="form-group">
+                    <label for="co_email1"><?php echo JText::_('LBL_CORREO'); ?> 1 *</label>
+                    <input name="co_email1" id="co_email1" type="email" maxlength="100" />
+                </div>
+
+                <div class="form-group">
+                    <label for="co_tel_fijo2"><?php echo JText::_('LBL_TEL_FIJO'); ?> 2</label>
+                    <input name="co_tel_fijo2" id ="co_tel_fijo2" type="text" maxlength="10" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_fijo_extension2"><?php echo JText::_('LBL_EXT'); ?> 2</label>
+                    <input name="co_tel_fijo_extension2" id="co_tel_fijo_extension2" type="text" maxlength="5" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_movil2"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 2</label>
+                    <input name="co_tel_movil2" id ="co_tel_movil2" type="text" maxlength="13" />
+                </div>
+                <div class="form-group">
+                    <label for="co_email2"><?php echo JText::_('LBL_CORREO'); ?> 2</label>
+                    <input name="co_email2" id="co_email2" type="email1" maxlength="100" />
+                </div>
+
+                <div class="form-group">
+                    <label for="co_tel_fijo3"><?php echo JText::_('LBL_TEL_FIJO'); ?> 3</label>
+                    <input name="co_tel_fijo3" id ="co_tel_fijo3" type="text" maxlength="10" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_fijo_extension3"><?php echo JText::_('LBL_EXT'); ?> 3</label>
+                    <input name="co_tel_fijo_extension3" id="co_tel_fijo_extension3" type="text" maxlength="5" />
+                </div>
+                <div class="form-group">
+                    <label for="co_tel_movil3"><?php echo JText::_('LBL_TEL_MOVIL'); ?> 3</label>
+                    <input name="co_tel_movil3" id ="co_tel_movil3" type="text" maxlength="13" />
+                </div>
+                <div class="form-group">
+                    <label for="co_email3"><?php echo JText::_('LBL_CORREO'); ?> 3</label>
+                    <input name="co_email3" id="co_email3" type="email" maxlength="100" />
+                </div>
+            </fieldset>
+            <?php
+            echo JHtml::_('bootstrap.endSlide');
+            echo JHtml::_('bootstrap.endAccordion');
+            ?>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary envio" id="personales"><?php echo JText::_('LBL_GUARDAR'); ?></button>
             </div>
             <?php
             echo JHtml::_('bootstrap.endTab');
@@ -1005,6 +1012,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             </fieldset>
             <?php
             echo JHtml::_('bootstrap.endTab');
+
             echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'files', JText::_('LBL_TAB_ARCHIVOS'));
             ?>
             <fieldset>
@@ -1058,7 +1066,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-primary envio" id="files"><?php echo JText::_('LBL_ENVIAR'); ?></button>
+                    <button type="button" class="btn btn-primary envio" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
                 </div>
             </fieldset>
             <?php
@@ -1067,7 +1075,6 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
 
             echo JHtml::_('form.token');
             ?>
-
         </form>
     </div>
     <div class="form-actions">
