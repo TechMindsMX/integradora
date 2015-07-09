@@ -399,13 +399,14 @@ $token = JSession::getFormToken();
 
 			resultado.done(function(response){
 				var obj = response;
+                console.log(response);
 
 				if(obj.success === true) {
 					llenatablabancos(obj);
 				}else{
-					if (obj.msg.db_banco_codigo !== true) {
-						obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
-					}
+//					if (obj.msg.db_banco_codigo !== true) {
+//						obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+//					}
 					mensajesValidaciones(obj.msg);
 				}
 			});
@@ -875,7 +876,7 @@ $token = JSession::getFormToken();
 				<input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
 				<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *</label>
 				<select name="db_banco_codigo" id="db_banco_codigo">
-					<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+					<option value=""><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 					<?php
 					echo $optionBancos;
 					?>

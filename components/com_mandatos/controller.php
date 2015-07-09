@@ -424,6 +424,8 @@ class MandatosController extends JControllerLegacy {
         $idCliPro       = $dataToSave['idCliPro'];
         $integradoCli   = new IntegradoSimple($idCliPro);
         $currIntegrado  = new IntegradoSimple($this->integradoId);
+        $nombre         = !isset($dataToSave['empresa']) ? $dataToSave['personales'][2][6] : $dataToSave['empresa'][2][5];
+        $this->tipoAlta = $dataToSave['tipoAlta_btn'][2][2];
 
         foreach ($dataToSave as $key => $value) {
             $salir = false;
@@ -463,9 +465,9 @@ class MandatosController extends JControllerLegacy {
                 if (empty($existe)) {
                     $save->insertDB($value[0], $value[1], $value[2]);
 
-//                    if ($table == 'integrado_datos_personales') {
-//                        $this->sendEmail(__METHOD__);
-//                    }
+                    if ($table == 'integrado_datos_personales') {
+                        $this->sendEmail(__METHOD__, null, $nombre);
+                    }
                 } else {
                     $save->updateDB($value[0], $value[3], $where);
                 }
@@ -865,8 +867,10 @@ class MandatosController extends JControllerLegacy {
 		return $result;
 	}
 
-    public function sendEmail($param, $id = null)
+    public function sendEmail($param, $id = null, $nombre = null)
     {
+        $session = JFactory::getSession();
+        $dataToSave     = $session->get('dataCliPro',array(),'integrado');
         $idIntegrado = is_null($id) ? $this->integradoId : $id;
 
         $getCurrUser = new IntegradoSimple($idIntegrado);
@@ -878,23 +882,24 @@ class MandatosController extends JControllerLegacy {
 			    $array = array($this->factutaComisiones->getReceptor()->getDisplayName(), $this->factutaComisiones->id, date('d-m-Y'), '$'.number_format($this->factutaComisiones->totales->total, 2));
 			    $notificationNumber = '19';
 			    break;
-		    case 'MandatosController::saveCliPro':
+		    case 'MandatosController::saveSaveCLiPro':
 			    /*
 			 * Notificaciones 6
 			 */
 			    $tipo = '';
-			    if ($this->dataCliente->tp_tipo_alta == 0) {
+
+			    if ($this->tipoAlta == 0) {
 				    $tipo = 'Cliente';
 			    }
-			    if ($this->dataCliente->tp_tipo_alta == 1) {
+			    if ($this->tipoAlta == 1) {
 				    $tipo = 'Proveedor';
 			    }
-			    if ($this->dataCliente->tp_tipo_alta == 2) {
+			    if ($this->tipoAlta == 2) {
 				    $tipo = 'Cliente/Proveedor';
 			    }
 
                 $editTitle = null;
-			    $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
+			    $array = array($getCurrUser->user->name, $tipo, $nombre, JFactory::getUser()->name, date('d-m-Y'));
 			    $notificationNumber = '6';
 			    break;
 	    }
