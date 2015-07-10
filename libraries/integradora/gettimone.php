@@ -2894,8 +2894,8 @@ class Factura extends makeTx {
     }
 
     public function setTestRFC() {
-//        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
-//        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
+        $this->emisor->datosFiscales->rfc = 'AAD990814BP7';
+        $this->receptor->datosFiscales->rfc = 'AAD990814BP7';
     }
 
     public function setConceptos($orden) {

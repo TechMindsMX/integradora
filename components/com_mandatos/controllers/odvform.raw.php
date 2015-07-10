@@ -56,7 +56,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
                 'projectId'     => array('number' => true),
                 'projectId2'    => array('number' => true),
                 'clientId'      => array('number' => true, 'required' => true),
-                'account'       => array('number' => true, 'required' => true),
+                'account'       => array('number' => true),
                 'paymentMethod' => array('number' => true, 'required' => true),
                 'conditions'    => array('number' => true, 'required' => true),
                 'placeIssue'    => array('number' => true, 'required' => true),
