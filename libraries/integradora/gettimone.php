@@ -2426,9 +2426,8 @@ class sendToTimOne {
                     CURLOPT_VERBOSE        => $verboseflag,
                     CURLOPT_STDERR		   => $verbose,
                     CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json',
-                        'Content-Type: application/json',
-                        'charset=utf-8',
+                        'Accept: application/json; cherset:utf-8',
+                        'Content-Type: application/json; charset=utf-8',
                         'Authorization: Bearer '.$token->access_token,
                         'Content-Length: ' . strlen($this->jsonData)
                     )
@@ -2507,6 +2506,7 @@ class sendToTimOne {
         curl_close($ch);
 
         JLog::add(json_encode($this), JLog::DEBUG);
+        JLog::add($verbose, JLog::DEBUG);
 
         switch ($this->result->code) {
             case 200:
@@ -2964,7 +2964,7 @@ class Factura extends makeTx {
         if ($result === true) {
             $result = $this->returnXML();
         }else{
-            throw new Exception;
+            throw new Exception('No fue posible crear la factura, intente más tarde');
         }
         return $result;
     }
