@@ -620,7 +620,7 @@ class getFromTimOne{
     }
 
     private static function getClientProviderName($clientProvider){
-        $clientProvider->frontName = $clientProvider->corporateName == '' ? $clientProvider->tradeName : $clientProvider->corporateName;
+        $clientProvider->frontName = @$clientProvider->corporateName == '' ? $clientProvider->tradeName : $clientProvider->corporateName;
     }
 
     public static function getBankName($arrayBancos){
@@ -2377,7 +2377,22 @@ class sendToTimOne {
      * @param mixed $jsonData
      */
     public function setJsonData ($jsonData) {
+        $array = array();
+//        $jsonData = self::objToArray($jsonData, $array);
         $jsonData = json_encode($jsonData);
+
+        $jsonData = preg_replace_callback(
+            '/\\\\u([0-9a-f]{4})/i',
+            function ($matches) {
+                $sym = mb_convert_encoding(
+                    pack('H*', $matches[1]),
+                    'UTF-8',
+                    'UTF-16'
+                );
+                return $sym;
+            },
+            $jsonData
+        );
         $this->jsonData = $jsonData;
     }
 
