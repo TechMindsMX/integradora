@@ -288,6 +288,19 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
             }
 
+        }else{
+            $object = new stdClass();
+            $object->integradoId = $this->data['id'];
+            $object->status = 3;
+
+            $db->updateObject('#__integrado', $object, 'integradoId');
+
+            $this->notificationErrors($resultado);
+
+            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, $resultado->message ) );
+            JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
+            JFactory::getApplication()->enqueueMessage('No fue posible crear integrado intente mas tarde', 'error');
+            JFactory::getApplication()->redirect('index.php?option=com_integrado&view=integrados');
         }
 
         if ( isset( $resultado ) ) {
@@ -381,6 +394,25 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
 		JLog::add(json_encode($save), JLog::DEBUG);
 	}
+
+    private function notificationErrors($error){
+        $mailer = JFactory :: getMailer ();
+        $Config = JFactory :: getConfig ();
+
+        $remitente = array (
+            $Config['mailfrom'],
+            $Config['fromname']);
+        $mailer->setSender($remitente);
+
+        $mailer->addRecipient( array('luis.magana@techminds.com.mx') ) ;
+        $body   = 'Se presento el siguiente error en la plataforma TIMONE '.__METHOD__.'<br /> codigo: '.$error->code.'<br />'.$error->message;
+        $title  = 'Error de comunicacion con servicios TimOne';
+        $mailer->isHTML(true);
+        $mailer->Encoding = 'base64';
+        $mailer->setSubject($title);
+        $mailer->setBody($body);
+        $send = $mailer->Send();
+    }
 }
 
 
