@@ -259,7 +259,8 @@ $subProyects = $this->subprojects;
             <?php
             foreach ($this->clientes as $key => $value) {
                 $selectedCli = ($value->id == $orden->clientId) ? 'selected' : '';
-                echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$value->tradeName.'</option>';
+                $name = $value->tradeName == '' ? $value->corporateName : $value->tradeName;
+                echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$name.'</option>';
             }
             ?>
             <option value="other">Otro</option>

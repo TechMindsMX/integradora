@@ -92,6 +92,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                             if ($factObj != false) {
                                 $xmlFactura = $save->generateFacturaFromTimone($factObj);
+
                                 try {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);

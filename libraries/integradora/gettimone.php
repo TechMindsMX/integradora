@@ -15,6 +15,7 @@ jimport('integradora.rutas');
 jimport('integradora.xmlparser');
 jimport('integradora.integrado');
 jimport('integradora.mutuo');
+jimport('integradora.notifications');
 
 class getFromTimOne{
     public static function getOrdenAuths($idOrden, $tipo){
@@ -432,6 +433,7 @@ class getFromTimOne{
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/bootstrap.css' );
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/template.css' );
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/override.css' );
+        $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/font-awesome.css' );
         if ( $isModal ) {
             $href = '"#" onclick="window.print(); return false;"';
         } else {
@@ -1908,12 +1910,14 @@ class getFromTimOne{
         return $respuesta;
     }
 
-    public static function getFacturasVenta($integradoId){
+    public static function getFacturasVenta($integradoId, $all = false){
         $odvs = self::getOrdenesVenta($integradoId);
         $facturas = array();
 
         foreach ($odvs as $odv) {
             if($odv->status->name === 'Autorizada' && !is_null($odv->urlXML) ){
+                $facturas[] = $odv;
+            }elseif($all && !is_null($odv->urlXML)){
                 $facturas[] = $odv;
             }
         }
@@ -2405,121 +2409,132 @@ class sendToTimOne {
 
     public function to_timone() {
         $getToken = new TimOneRequest();
-        $token = $getToken->getAccessToken();
+        $token    = $getToken->getAccessToken();
+        $send     = new Send_email();
 
-        $verboseflag = true;
+        if(!is_null($token)) {
+            $verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
-        $verbose = fopen(JFactory::getConfig()->get('log_path').'/curl-'.date('d-m-y').'.log', 'a+');
-        $ch = curl_init();
+            $verbose = fopen(JFactory::getConfig()->get('log_path') . '/curl-' . date('d-m-y') . '.log', 'a+');
+            $ch = curl_init();
 
-        switch($this->getHttpType()) {
-            case ('POST'):
-                $options = array(
-                    CURLOPT_POST 		    => true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_POSTFIELDS     => $this->jsonData,
-                    CURLOPT_HEADER         => false,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json; cherset:utf-8',
-                        'Content-Type: application/json; charset=utf-8',
-                        'Authorization: Bearer '.$token->access_token,
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            case ('PUT'):
-                $options = array(
-                    CURLOPT_PUT 			=> true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => true,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Content-Type: application/json',
-                        'Authorization: Bearer '.$token->access_token,
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            case 'DELETE':
-                $options = array(
-                    CURLOPT_CUSTOMREQUEST => "DELETE",
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => true,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Content-Type: application/json',
-                        'Authorization: Bearer '.$token->access_token,
-                        'Content-Length: ' . strlen($this->jsonData)
-                    )
-                );
-                break;
-            default:
-                $options = array(
-                    CURLOPT_HTTPGET			=> true,
-                    CURLOPT_URL            => $this->serviceUrl,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HEADER         => false,
-                    //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_VERBOSE        => $verboseflag,
-                    CURLOPT_STDERR		   => $verbose,
-                    CURLOPT_HTTPHEADER	   => array(
-                        'Accept: application/json',
-                        'Authorization: Bearer '.$token->access_token,
-                        'Content-Type: application/json'
-                    )
-                );
-                break;
+            switch ($this->getHttpType()) {
+                case ('POST'):
+                    $options = array(
+                        CURLOPT_POST => true,
+                        CURLOPT_URL => $this->serviceUrl,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_POSTFIELDS => $this->jsonData,
+                        CURLOPT_HEADER => false,
+                        //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                        CURLOPT_FOLLOWLOCATION => false,
+                        CURLOPT_VERBOSE => $verboseflag,
+                        CURLOPT_STDERR => $verbose,
+                        CURLOPT_HTTPHEADER => array(
+                            'Accept: application/json; cherset:utf-8',
+                            'Content-Type: application/json; charset=utf-8',
+                            'Authorization: Bearer ' . $token->access_token,
+                            'Content-Length: ' . strlen($this->jsonData)
+                        )
+                    );
+                    break;
+                case ('PUT'):
+                    $options = array(
+                        CURLOPT_PUT => true,
+                        CURLOPT_URL => $this->serviceUrl,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_HEADER => true,
+                        //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                        CURLOPT_FOLLOWLOCATION => false,
+                        CURLOPT_VERBOSE => $verboseflag,
+                        CURLOPT_STDERR => $verbose,
+                        CURLOPT_HTTPHEADER => array(
+                            'Content-Type: application/json',
+                            'Authorization: Bearer ' . $token->access_token,
+                            'Content-Length: ' . strlen($this->jsonData)
+                        )
+                    );
+                    break;
+                case 'DELETE':
+                    $options = array(
+                        CURLOPT_CUSTOMREQUEST => "DELETE",
+                        CURLOPT_URL => $this->serviceUrl,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_HEADER => true,
+                        //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                        CURLOPT_FOLLOWLOCATION => false,
+                        CURLOPT_VERBOSE => $verboseflag,
+                        CURLOPT_STDERR => $verbose,
+                        CURLOPT_HTTPHEADER => array(
+                            'Content-Type: application/json',
+                            'Authorization: Bearer ' . $token->access_token,
+                            'Content-Length: ' . strlen($this->jsonData)
+                        )
+                    );
+                    break;
+                default:
+                    $options = array(
+                        CURLOPT_HTTPGET => true,
+                        CURLOPT_URL => $this->serviceUrl,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_HEADER => false,
+                        //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
+                        CURLOPT_FOLLOWLOCATION => false,
+                        CURLOPT_VERBOSE => $verboseflag,
+                        CURLOPT_STDERR => $verbose,
+                        CURLOPT_HTTPHEADER => array(
+                            'Accept: application/json',
+                            'Authorization: Bearer ' . $token->access_token,
+                            'Content-Type: application/json'
+                        )
+                    );
+                    break;
+            }
+
+            curl_setopt_array($ch, $options);
+
+            if ($verboseflag === true) {
+                $headers = curl_getinfo($ch,
+                    CURLINFO_HEADER_OUT);
+                $this->result->data = curl_exec($ch);
+
+                rewind($verbose);
+                $verboseLog = stream_get_contents($verbose);
+                //echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
+            }
+
+            $this->result->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->result->info = curl_getinfo($ch);
+            curl_close($ch);
+
+            JLog::add(json_encode($this), JLog::DEBUG);
+            JLog::add($verbose, JLog::DEBUG);
+
+            switch ($this->result->code) {
+                case 200:
+                    $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
+                    break;
+                case 401:
+                    $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
+                    break;
+                case 503:
+                    $this->result->message = JText::_('SERVICE_UNABLE');
+                    break;
+                default:
+                    $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
+                    break;
+            }
+
+            if ($this->result->code != 200) {
+                $send->notificationErrors($this->result, $this->serviceUrl);
+            }
+        }else{
+            $send->notificationErrors($this->result, $this->serviceUrl);
         }
-
-        curl_setopt_array($ch,$options);
-
-        if($verboseflag === true) {
-            $headers = curl_getinfo( $ch,
-                CURLINFO_HEADER_OUT );
-            $this->result->data = curl_exec($ch);
-
-            rewind( $verbose );
-            $verboseLog = stream_get_contents( $verbose );
-            //echo "Verbose information:\n<pre>", htmlspecialchars( $verboseLog ), "</pre>\n" . curl_errno( $ch ) . curl_error( $ch );
-        }
-
-        $this->result->code = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
-        $this->result->info = curl_getinfo ($ch);
-        curl_close($ch);
-
-        JLog::add(json_encode($this), JLog::DEBUG);
-        JLog::add($verbose, JLog::DEBUG);
-
-        switch ($this->result->code) {
-            case 200:
-                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_GRANTED');
-                break;
-            case 401:
-                $this->result->message = JText::_('JGLOBAL_AUTH_ACCESS_DENIED');
-                break;
-            default:
-                $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
-                break;
-        }
-
         return $this->result;
     }
 

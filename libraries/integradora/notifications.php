@@ -53,6 +53,25 @@ class Send_email{
         return $info;
     }
 
+    public function notificationErrors($error, $servicio){
+        $mailer = JFactory :: getMailer ();
+        $Config = JFactory :: getConfig ();
+
+        $remitente = array (
+            $Config['mailfrom'],
+            $Config['fromname']);
+        $mailer->setSender($remitente);
+
+        $mailer->addRecipient( array('luis.magana@techminds.com.mx') ) ;
+        $body   = 'Se presento el siguiente error en la plataforma TIMONE llamando al servicio: '.$servicio.'<br /> Código: '.$error->code.'<br /> Mensaje: '.$error->message;
+        $title  = 'Error de comunicacion con servicios TimOne';
+        $mailer->isHTML(true);
+        $mailer->Encoding = 'base64';
+        $mailer->setSubject($title);
+        $mailer->setBody($body);
+        $send = $mailer->Send();
+    }
+
     private function envia()
     {
         $mailer = JFactory :: getMailer ();
