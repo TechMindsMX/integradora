@@ -38,7 +38,8 @@ jQuery(document).ready(function(){
 			3:{ sorter: false },
 			4:{ sorter: false },
             5:{ sorter: false }
-		} 
+            6:{ sorter: false }
+		}
 	});
 });
 
@@ -90,6 +91,7 @@ function filtro(){
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
 				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"></span> </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -129,6 +131,7 @@ function filtro(){
 
 				}
 				$class = $value->status->id == 1 ? '' : 'status1';
+                $nombreArchivo = explode('/',$value->urlXML);
 				
 				echo '<tr class="type_'.$value->status->id.'" data-tipo="'.$value->status->id.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
@@ -137,6 +140,7 @@ function filtro(){
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a download="'.$nombreArchivo[2].'" href="'.$value->urlXML.'">Descargar XML</a></td>';
 				echo '</tr>';
 			}
 		}else{

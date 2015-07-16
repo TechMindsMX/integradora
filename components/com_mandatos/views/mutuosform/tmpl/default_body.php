@@ -66,9 +66,11 @@ $existe = is_null($datos->id)?'false':'true';
         resultado.done(function(response){
             var beneficiario = jQuery('#beneficiario');
             if(response.success){
-                var data = response.datos_personales;
+                var data             = response.datos_personales;
+                var dataE            = response.datos_empresa;
+                var nameBeneficiario = data.nom_comercial != '' ? data.nom_comercial : dataE.razon_social ;
 
-                beneficiario.val(data.nom_comercial);
+                beneficiario.val(nameBeneficiario);
                 beneficiario.prop('readOnly', true);
 
                 jQuery('#integradoIdR').val(data.integradoId);

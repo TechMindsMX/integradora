@@ -166,7 +166,7 @@ $number2word = new AifLibNumber();
 			array_push($ivasProd, floatval($prod->iva) );
 			?>
 			<tr>
-				<td><?php echo $key; ?></td>
+				<td><?php echo $key+1; ?></td>
 				<td><?php echo $prod->cantidad; ?></td>
 				<td><?php echo $prod->descripcion; ?></td>
 				<td><?php echo $prod->unidad; ?></td>
