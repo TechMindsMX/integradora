@@ -58,15 +58,13 @@ $number2word = new AifLibNumber();
 			<?php echo 'Sub-proyecto'; ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->sub_proyecto->name)) {
-				echo $this->factura->sub_proyecto->name;
-			} ?>
+			<?php echo isset($this->factura->sub_proyecto->name) ? $this->factura->sub_proyecto->name : ''; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo 'Forma de pago'; ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->paymentMethod->name; ?>
+			<?php echo JText::_($this->factura->paymentMethod->name); ?>
 		</div>
 	</div>
 	<div>
@@ -99,9 +97,7 @@ $number2word = new AifLibNumber();
 			<?php echo 'Banco'; ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->banco)) {
-				echo $this->factura->banco;
-			} ?>
+			<?php echo isset($this->factura->banco) ? $this->factura->banco : ''; ?>
 		</div>
 	</div>
 	<div>
@@ -115,9 +111,7 @@ $number2word = new AifLibNumber();
 			<?php echo 'Número de cuenta'; ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->cuenta)) {
-				echo $this->factura->cuenta;
-			} ?>
+			<?php echo isset($this->factura->cuenta) ? $this->factura->cuenta : '' ?>
 		</div>
 	</div>
 	<div>
@@ -131,9 +125,7 @@ $number2word = new AifLibNumber();
 			<?php echo 'CLABE'; ?>
 		</div>
 		<div class="span4">
-			<?php if (isset($this->factura->clabe)) {
-				echo $this->factura->clabe;
-			} ?>
+			<?php echo isset($this->factura->clabe) ? $this->factura->clabe : ''; ?>
 		</div>
 	</div>
 	<div class="clearfix">
