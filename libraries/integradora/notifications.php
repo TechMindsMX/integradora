@@ -24,7 +24,7 @@ class Send_email{
             $this->customEmail = array();
         }
     }
-	/**
+    /**
      * @param $notificationNumber
      * @param $data                 array  Un arreglo de datos indexado que contiene la informacion a sustituir en el contenido
      *
@@ -62,8 +62,27 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $mailer->addRecipient( array('luis.magana@techminds.com.mx') ) ;
-        $body   = 'Se presento el siguiente error en la plataforma TIMONE llamando al servicio: '.$servicio.'<br /> Código: '.$error->code.'<br /> Mensaje: '.$error->message;
+        $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+        if(isset($error->code)){
+            switch($error->code){
+                case 400:
+                    $correos = array('luis.magana@techminds.com.mx');
+                    break;
+                case 503:
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    break;
+                case 0:
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    break;
+                default:
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    break;
+
+            }
+        }
+
+        $mailer->addRecipient( $correos ) ;
+        $body   = 'Se presento el siguiente error en la plataforma TIMONE llamando al servicio: '.@$servicio.'<br /> Código: '.@$error->code.'<br /> Mensaje: '.$error->message;
         $title  = 'Error de comunicacion con servicios TimOne';
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';

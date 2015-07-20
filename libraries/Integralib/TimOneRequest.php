@@ -148,7 +148,7 @@ class TimOneRequest extends TimOneCurl {
 
 		$result = $request->to_timone(); // realiza el envio
 
-		return json_decode($result->data);
+		return json_decode(@$result->data);
 	}
 
 }

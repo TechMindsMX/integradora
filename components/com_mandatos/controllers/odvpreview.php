@@ -98,6 +98,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
                                     $info = $this->sendEmail($newOrder);
+
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
                                     JLog::add($msg, JLog::ERROR, 'error');
@@ -134,6 +135,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                     $db->transactionRollback();
                     $save->deleteDB('auth_odv',$db->quoteName('id').' = '.$db->quote($resultado));
                     $msg = $e->getMessage();
+
                     JLog::add($msg, JLog::ERROR, 'error');
                     $this->app->enqueueMessage($msg, 'error');
                     $this->app->redirect($redirectUrl);

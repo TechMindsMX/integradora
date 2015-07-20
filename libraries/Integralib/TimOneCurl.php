@@ -11,6 +11,7 @@ namespace Integralib;
 use JFactory;
 use JLog;
 use JText;
+use Send_email;
 
 class TimOneCurl {
 	public $result;
@@ -67,6 +68,7 @@ class TimOneCurl {
 	}
 
 	public function to_timone($token = null) {
+        $send = new Send_email();
 
 		$verboseflag = true;
 //		$credentials = array('username' => '' ,'password' => '');
@@ -183,6 +185,10 @@ class TimOneCurl {
 				$this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
 				break;
 		}
+
+        if ($this->result->code != 200) {
+            $send->notificationErrors($this->result, $this->serviceUrl);
+        }
 
 		return $this->result;
 	}

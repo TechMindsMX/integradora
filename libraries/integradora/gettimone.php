@@ -2413,7 +2413,6 @@ class sendToTimOne {
 
         if(!is_null($token)) {
             $verboseflag = true;
-//		$credentials = array('username' => '' ,'password' => '');
             $verbose = fopen(JFactory::getConfig()->get('log_path') . '/curl-' . date('d-m-y') . '.log', 'a+');
             $ch = curl_init();
 
@@ -2531,8 +2530,6 @@ class sendToTimOne {
             if ($this->result->code != 200) {
                 $send->notificationErrors($this->result, $this->serviceUrl);
             }
-        }else{
-            $send->notificationErrors($this->result, $this->serviceUrl);
         }
         return $this->result;
     }
@@ -2620,6 +2617,9 @@ class sendToTimOne {
         if($return == false) {
             throw new Exception(JText::_('ERR_410_CHANGEORDERSTATUS_FAILED').' - '.$orderType);
         }
+
+        $this->paymentDateOrder($integradoId, $idOrder, $orderType);
+
         return $return;
     }
 
@@ -2649,6 +2649,19 @@ class sendToTimOne {
         }
 
         return $return;
+    }
+
+    private function paymentDateOrder($integradoId, $idOrder, $orderType){
+        $db    = JFactory::getDbo();
+        $order = getFromTimOne::getOrdenes($integradoId, $idOrder, self::getTableByType($orderType));
+        $order = $order[0];
+
+        if( ($orderType == 'odv' || $orderType == 'odc' ) && $order->status == 13){
+            $order->paymentDate = time();
+            $order->createdDate  = $order->timestamps->createdDate;
+            $tabla = $orderType == 'odv' ? '#__ordenes_venta' : '#__ordenes_compra';
+            $db->updateObject($tabla, $order, 'id');
+        }
     }
 
     public static function referenciaTxMandato($txObject, $idOrden, $orderType) {

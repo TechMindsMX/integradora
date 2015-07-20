@@ -255,57 +255,60 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $resultado = $request->to_timone(); // realiza el envio
         $result = json_decode($resultado->data);
 
-        if($resultado->code == 200) {
-            $result->integradoId = $result->integraUuid;
+        $integrado = new IntegradoSimple($integradoData->uuid);
+        $integrado->getTimOneData();
 
-	        $banco = new stdClass();
-            $banco->integradoId    = $result->integradoId;
-            $banco->banco_codigo   = 646;
-            $banco->banco_sucursal = 180;
-            $banco->banco_cuenta   = $result->account;
-            $banco->banco_clabe    = $result->stpClabe;
+        if( is_null($integrado->timoneData->timoneUuid) ) {
+            if ($resultado->code == 200) {
+                $result->integradoId = $result->integraUuid;
 
-            $db->transactionStart();
+                $banco = new stdClass();
+                $banco->integradoId = $result->integradoId;
+                $banco->banco_codigo = 646;
+                $banco->banco_sucursal = 180;
+                $banco->banco_cuenta = $result->account;
+                $banco->banco_clabe = $result->stpClabe;
 
-            try {
-                $db->insertObject( '#__integrado_datos_bancarios', $banco );
+                $db->transactionStart();
 
-                unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance, $result->account);
-                $db->insertObject( '#__integrado_timone', $result );
+                try {
+                    $db->insertObject('#__integrado_datos_bancarios', $banco);
 
-                $db->transactionCommit();
-            } catch (Exception $e) {
-                $db->transactionRollback();
-                // Create an object for the record we are going to update.
+                    unset($result->id, $result->integraUuid, $result->name, $result->email, $result->balance, $result->account);
+                    $db->insertObject('#__integrado_timone', $result);
+
+                    $db->transactionCommit();
+                } catch (Exception $e) {
+                    $db->transactionRollback();
+                    // Create an object for the record we are going to update.
+                    $object = new stdClass();
+                    $object->integradoId = $this->data['id'];
+                    $object->status = 3;
+
+                    $db->updateObject('#__integrado', $object, 'integradoId');
+
+                    $logdata = implode(' | ', array(JFactory::getUser()->id, $this->integradoId, __METHOD__ . ':' . __LINE__, json_encode($e->getMessage())));
+                    JLog::add($logdata, JLog::ERROR, 'Error INTEGRADORA DB');
+
+                }
+
+            } else {
                 $object = new stdClass();
                 $object->integradoId = $this->data['id'];
                 $object->status = 3;
 
                 $db->updateObject('#__integrado', $object, 'integradoId');
 
-                $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
-                JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
-
+                $logdata = implode(' | ', array(JFactory::getUser()->id, $this->integradoId, __METHOD__ . ':' . __LINE__, $resultado->message));
+                JLog::add($logdata, JLog::ERROR, 'Error INTEGRADORA DB');
+                JFactory::getApplication()->enqueueMessage('No fue posible crear integrado intente mas tarde', 'error');
+                JFactory::getApplication()->redirect('index.php?option=com_integrado&view=integrados');
             }
 
-        }else{
-            $object = new stdClass();
-            $object->integradoId = $this->data['id'];
-            $object->status = 3;
-
-            $db->updateObject('#__integrado', $object, 'integradoId');
-
-            $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, $resultado->message ) );
-            JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
-            JFactory::getApplication()->enqueueMessage('No fue posible crear integrado intente mas tarde', 'error');
-            JFactory::getApplication()->redirect('index.php?option=com_integrado&view=integrados');
+            if (isset($resultado)) {
+                echo $resultado->data;
+            }
         }
-
-        if ( isset( $resultado ) ) {
-            echo $resultado->data;
-        }
-
-
         return $integradoData;
     }
 

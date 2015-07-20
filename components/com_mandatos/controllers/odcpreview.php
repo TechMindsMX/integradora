@@ -77,7 +77,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $db->transactionStart();
 
             try{
-                $save->insertDB( 'auth_odc' );
+                $idAuth_odc = $save->insertDB( 'auth_odc',null,null,true );
 
                 $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
                 $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
@@ -120,13 +120,13 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     }
 
                 }else{
-                    $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
-                    $pagar = false;
+                    throw new Exception;
                 }
 
                 $db->transactionCommit();
             }catch (Exception $e){
                 $db->transactionRollback();
+                $pagar = false;
                 $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
                 $this->app->redirect($this->returnUrl, 'no se pudo autorizar', 'error');
             }
