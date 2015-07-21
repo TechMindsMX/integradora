@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+jimport('integradora.integrado');
+
 defined('_JEXEC') or die;
 $session = JFactory::getSession();
 $integradoId = $session->get('integradoId',null,'integrado');
