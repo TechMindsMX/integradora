@@ -58,7 +58,9 @@ if(!empty($this->item->dataSaved)){
 
 <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integradoparams&layout=edit&id='.(STRING)$this -> item -> id); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
     <div class="form-vertical">
-        <legend><?php echo JText::_('COM_INTEGRADO_MANAGER_PARAMETRIZACION').' - '.$nombre; ?> <span id="loading" style="display: none;"><img style="height: 33px;" src="../media/media/images/loading.gif" </span> </legend>
+        <legend><?php echo JText::_('COM_INTEGRADO_MANAGER_PARAMETRIZACION').' - '.$nombre; ?>
+            <span id="loading" style="display: none;"><img style="height: 33px;" src="../media/media/images/loading.gif" </span>
+        </legend>
 
         <div class="input-group">
             <label for="params">Número de Autorizaciones</label>
