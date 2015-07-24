@@ -247,7 +247,9 @@ $token = JSession::getFormToken();
 			var testimonio_2 = eval ("(" + testimonio_2 + ")");
 
 			jQuery.each(testimonio_2, function(key, value){
-                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                if(key != 'instrum_fecha') {
+                    jQuery('#t2_' + key).val(value);
+                }else if( (key == 'instrum_fecha') && (value != '0000-00-00') ){
                     jQuery('#t2_' + key).val(value);
                 }
 			});
@@ -259,7 +261,9 @@ $token = JSession::getFormToken();
 			var poder = eval ("(" + poder + ")");
 
 			jQuery.each(poder, function(key, value){
-                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                if(key != 'instrum_fecha') {
+                    jQuery('#pn_' + key).val(value);
+                }else if(key == 'instrum_fecha' && value != '0000-00-00') {
                     jQuery('#pn_' + key).val(value);
                 }
 			});
@@ -271,7 +275,9 @@ $token = JSession::getFormToken();
 			var reg_propiedad = eval ("(" + reg_propiedad + ")");
 
 			jQuery.each(reg_propiedad, function(key, value){
-                if(key == 'instrum_fecha' && value != '0000-00-00') {
+                if(key != 'instrum_fecha') {
+                    jQuery('#rp_' + key).val(value);
+                }else if(key == 'instrum_fecha' && value != '0000-00-00') {
                     jQuery('#rp_' + key).val(value);
                 }
 			});
@@ -980,7 +986,7 @@ $token = JSession::getFormToken();
 			?>
 
 			<div class="form-actions">
-				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_ENVIAR_SOLICITUD'); ?></button>
+				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
 				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>

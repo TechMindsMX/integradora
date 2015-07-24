@@ -350,7 +350,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
                 break;
             case 'Integrado':
                 $array = array(
-                    $getCurrUser->getUserPrincipal()->name,
+                    $getCurrUser->getDisplayName(),
                     date('d-m-Y'),
                     $this->data['id'],
                     $status

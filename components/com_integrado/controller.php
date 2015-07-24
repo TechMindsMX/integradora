@@ -203,7 +203,7 @@ class IntegradoController extends JControllerLegacy {
         if($this->integradoId ==''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId.'&Itemid=207';
+            $url = 'index.php?option=com_integrado';
         }
 
         $app = JFactory::getApplication();
@@ -847,11 +847,22 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public function finish( ){
+        $db = JFactory::getDbo();
         if ( isset( $this->integradoId ) ) {
             $integrado = new IntegradoSimple($this->integradoId);
 
             if ( $integrado->hasAllDataForValidation() ) {
                 $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+                $integrado->integrados[0]->integrado->status = 1;
+                $db->updateObject('#__integrado',$integrado->integrados[0]->integrado,'integradoId');
+
+                $notifications = new Send_email();
+                $notifications->setIntegradoEmailsArray($integrado);
+                $notifications->sendNotifications( 40, array( date('d-m-Y') ) );
+                $notificationAdmin = new Send_email();
+                $notificationAdmin->setAdminEmails();
+                $notifications->sendNotifications( 41, array( $integrado->getDisplayName(),date('d-m-Y') ) );
+
             } else {
                 $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
             }
