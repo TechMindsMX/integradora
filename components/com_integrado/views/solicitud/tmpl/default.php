@@ -948,7 +948,7 @@ $token = JSession::getFormToken();
 				't2_url_instrumento'            => array(@$datos->testimonio2->url_instrumento, 'LBL_TESTIMONIO2_FILE'),
 				'pn_url_instrumento'            => array(@$datos->poder->url_instrumento, 'LBL_TESTIMONIO3_FILE'),
 				'rp_url_instrumento'            => array(@$datos->reg_propiedad->url_instrumento, 'LBL_RPP_FILE'),
-				'db_banco_file'                 => array(@$datos->datos_bancarios->banco_file, 'LBL_BANCO_FILE')
+				'db_banco_file'                 => array(@$datos->datos_bancarios[0]->banco_file, 'LBL_BANCO_FILE')
 			);
 
 			if(isset($datos->integrado->pers_juridica)) {
