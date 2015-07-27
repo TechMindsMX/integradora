@@ -46,12 +46,10 @@ $token = JSession::getFormToken();
 ?>
 	<script>
 		var catalogoBancos = new Array();
-		<?php
-	   foreach ($this->catalogos->bancos as $key => $value){
+		<?php foreach ($this->catalogos->bancos as $key => $value){
 		   $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
 		   echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
-	   }
-	   ?>
+	    }?>
 
 		function toUpper() {
 			jQuery(this).val(jQuery(this).val().toUpperCase());
@@ -142,6 +140,7 @@ $token = JSession::getFormToken();
 						}
 
 						if(obj.safeComplete){
+                            jQuery(document).scrollTop(0);
 							messageInfo('Datos Almacenados', 'info');
 							nextTab();
 							if(boton == 'juridica') {
@@ -223,6 +222,10 @@ $token = JSession::getFormToken();
 			}
 			if(!empty($datos->datos_bancarios)){
 			?>
+            var finishBtn = jQuery('#finishBtn');
+            finishBtn.prop('href', '<?php echo $finishUrl; ?>');
+            finishBtn.removeClass('disabled');
+
 			var datos_bancarios = '<?php echo json_encode($datos->datos_bancarios); ?>';
 			var datos_bancarios = eval ("(" + datos_bancarios + ")");
 
@@ -334,8 +337,6 @@ $token = JSession::getFormToken();
 				changeMonth: true,
 				changeYear: true
 			});
-
-
 		});
 
 		function busqueda_rfc() {
@@ -720,7 +721,7 @@ $token = JSession::getFormToken();
 
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 		<?php
@@ -868,7 +869,7 @@ $token = JSession::getFormToken();
 
 		<div class="form-actions">
 			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
@@ -924,7 +925,7 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+<!--				<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>
@@ -987,7 +988,7 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<a class="btn btn-success disabled" id="finishBtn" href="" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>

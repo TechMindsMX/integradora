@@ -2122,21 +2122,6 @@ class sendToTimOne {
                         is_null($integrado->testimonio1->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 1 o el formato del archivo es incorrecto') : '';
                     }
                     break;
-                case 't2_':
-                    if($integrado->integrado->pers_juridica == 1) {
-                        is_null($integrado->testimonio2->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del testimonio 2 o el formato del archivo es incorrecto') : '';
-                    }
-                    break;
-                case 'pn_':
-                    if($integrado->integrado->pers_juridica == 1) {
-                        is_null($integrado->poder->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del poder notarial o el formato del archivo es incorrecto') : '';
-                    }
-                    break;
-                case 'rp_':
-                    if($integrado->integrado->pers_juridica == 1) {
-                        is_null($integrado->reg_propiedad->url_instrumento) ? JFactory::getApplication()->enqueueMessage('Falta comprobante del Registro publico de propiedad o el formato del archivo es incorrecto ') : '';
-                    }
-                    break;
                 default:
                     break;
             }

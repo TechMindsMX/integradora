@@ -195,19 +195,19 @@ class IntegradoController extends JControllerLegacy {
      * @throws Exception
      */
     function uploadFiles(){
+        $app = JFactory::getApplication();
         $data = $this->input->getArray();
         $saveFiles = sendToTimOne::uploadFiles($data['integradoId']);
 
-        $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'message') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
+        $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'notice') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
 
-        if($this->integradoId ==''){
+        if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
             $url = 'index.php?option=com_integrado';
         }
 
-        $app = JFactory::getApplication();
-        $app->enqueueMessage($msg['mag'], $msg['type']);
+        $app->enqueueMessage($msg['msg'], $msg['type']);
         $app->redirect($url, false);
 
     }
