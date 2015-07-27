@@ -274,7 +274,8 @@ $subProyects = $this->subprojects;
         <?php
         ?>
         <select name="account">
-            <option value="0">Cuenta</option>
+            <option>Cuenta Bancaria</option>
+            <option>Sin Identificar</option>
             <?php
             foreach ($this->cuentas as $datosCuenta) {
                 $selectedCuentas = ( $datosCuenta->datosBan_id == $orden->account) ? 'selected' : '';
