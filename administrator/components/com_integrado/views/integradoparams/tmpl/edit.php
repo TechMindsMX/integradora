@@ -80,7 +80,11 @@ if(!empty($this->item->dataSaved)){
             ?>
                 <div class="span12">
                     <div class="span2">
-                        <input type="checkbox" class="input-group" name="comision[]" value="<?php echo $comision->id.'" '.$selected; ?>>
+                        <?php
+                        $idCheckbox = strtolower($comision->description);
+                        $idCheckbox = str_replace(' ', '_',$idCheckbox);
+                        ?>
+                        <input type="checkbox" class="input-group" id="<?php echo $idCheckbox; ?>" name="comision[]" value="<?php echo $comision->id.'" '.$selected; ?>>
                         <?php echo $comision->description; ?>
                     </div>
                     <div class="span10"><?php echo $rate ?></div>

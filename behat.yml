@@ -1,0 +1,8 @@
+default:
+  autoload:
+    '': %paths.base%/features/bootstrap
+  extensions:
+    Behat\MinkExtension:
+      base_url: http://localhost/integradora
+      goutte: ~
+      selenium2: ~
