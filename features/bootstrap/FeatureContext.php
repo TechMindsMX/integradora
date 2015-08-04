@@ -28,7 +28,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     }
 
     /**
-     * @Given I am logged whith user :Usuario and pass :Contraseña
+     * @Given I am logged whith user :usuario and pass :password
      */
     public function iAmLoggedWhithUserAndPass($usuario, $password){
         $this->visit('index.php?option=com_users&view=login');

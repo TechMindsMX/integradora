@@ -6,9 +6,9 @@ Feature: Administrator test
   Scenario: Login into administrator page
     Given I am on "/administrator/index.php"
     When I fill in "username" with "Thor"
-    And I fill in "passwd" with "ADMINt1m2014"
-    And I press "Conectar"
-    And I wating for a "algo"
+      And I fill in "passwd" with "ADMINt1m2014"
+      And I press "Conectar"
+      And I wating for a "algo"
     Then Yo deberia de ir a esta pinche pagina "administrator"
 
   @javascript
