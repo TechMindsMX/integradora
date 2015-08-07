@@ -21,7 +21,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     public function iShouldGoTo($arg1){
         $currUrl = explode('/', $this->getSession()->getCurrentUrl());
 
-        echo $currUrl[4];
         if(strpos($currUrl[4],$arg1) === false) {
             throw new \Symfony\Component\Config\Definition\Exception\Exception;
         }

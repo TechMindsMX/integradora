@@ -38,7 +38,7 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
                 $query = $db->getQuery(true);
 
                 $conditions = array(
-                    $db->quoteName('integradoId') . ' = '.$this->integradoId
+                    $db->quoteName('integradoId') . ' = '.$db->quote($this->integradoId)
                 );
 
                 $query->delete($db->quoteName('#__integrado_params'));
@@ -49,7 +49,7 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
 
                 $query = $db->getQuery(true);
                 $conditions = array(
-                    $db->quoteName('integradoId') . ' = '.$this->integradoId
+                    $db->quoteName('integradoId') . ' = '.$db->quote($this->integradoId)
                 );
 
                 $query->delete($db->quoteName('#__integrado_comisiones'));
