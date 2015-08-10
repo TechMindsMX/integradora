@@ -10,7 +10,7 @@ namespace Integralib;
 
 defined('_JEXEC') or die('Restricted access');
 
-class ReportResultados extends \IntegradoOrders {
+class ReportResultados {
 
 	protected $fechaInicio;
 	protected $fechaFin;
@@ -41,22 +41,31 @@ class ReportResultados extends \IntegradoOrders {
 	}
 
 	public function findOrders( $integradoId = null ) {
-		$cond = $this->getConditions( $integradoId );
+        $cond = $this->getConditions( $integradoId );
 
-		$db = \JFactory::getDbo();
-		$types = array(
+        $db = \JFactory::getDbo();
+        $types = array(
 			array(
 				'table' => '#__ordenes_compra',
-				'type' => 'odc'
+				'type'  => 'odc'
 			),
 			array(
 				'table' => '#__ordenes_venta',
-				'type' => 'odv'
+				'type'  => 'odv'
 			),
 		);
 
-		$result                  = new \stdClass();
-		foreach ( $types as $params ) {
+        $result = new \stdClass();
+
+        foreach ( $types as $params ) {
+            switch ($params['type']){
+                case 'odc':
+                    $cond = str_replace('proyecto','proyecto',$cond);
+                    break;
+                case 'odv':
+                    $cond = str_replace('proyecto','projectId',$cond);
+                    break;
+            }
 			$result->$params['type'] = $this->queryOrders( $db, $params, $cond );
 		}
 
