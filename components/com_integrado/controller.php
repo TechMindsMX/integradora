@@ -14,12 +14,12 @@ class IntegradoController extends JControllerLegacy {
     protected $app;
 
     function __construct() {
-        $this->app = JFactory::getApplication();
-        $currUser	= JFactory::getUser();
+	    $this->app = JFactory::getApplication();
+	    $currUser	= JFactory::getUser();
 
-        if($currUser->guest){
-            $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
-        }
+	    if($currUser->guest){
+		    $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+	    }
 
         $this->sesion = JFactory::getSession();
         $this->integradoId = $this->sesion->get('integradoId', null, 'integrado');
@@ -359,6 +359,7 @@ class IntegradoController extends JControllerLegacy {
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
+
             case 'personales':
                 $diccionario = array(
                     'dp_tel_fijo'                => array('phone'       => true,       	'maxlength' => 10,  'minlength'=>10,    'required' => true),
@@ -367,23 +368,24 @@ class IntegradoController extends JControllerLegacy {
                     'dp_sexo'                    => array('alphaNumber' => true,	   	'maxlength' => 45,  'required' => true),
                     'dp_rfc'                     => array('rfc_fisica'  => true,      	'maxlength' => 13,  'required' => true),
                     'dp_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100, 'required' => true),
-                    'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
-                    'dp_cod_postal'              => array('number'      => true,        'maxlength' => 13,  'required' => true),
-                    'dp_email'                   => array('email'       => true,    	'maxlength' => 100, 'required' => true),
-                    'dp_nombre_representante'    => array('string'      => true,   	    'maxlength' => 150, 'required' => true),
-                    'dp_fecha_nacimiento'        => array('date'        => true,       	'maxlength' => 10,  'required' => true),
+                    'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 20,  'required' => true),
+                    'dp_cod_postal'              => array('number' => true,		        'maxlength' => 13,  'required' => true),
+                    'dp_email'                   => array('email' => true,		    	'maxlength' => 100, 'required' => true),
+                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150, 'required' => true),
+                    'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10,  'required' => true),
                     'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,  'required' => true),
                     'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10),
                     'dp_tel_fijo_extension'      => array('alphaNumber' => true,	    'maxlength' => 5),
                     'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
                 );
                 break;
+
             case 'empresa':
                 $diccionario = array(
                     'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     'de_rfc'                     => array('rfc_moral' => true,	    	'maxlength' => 12,      'required' => true),
                     'de_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
-                    'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
+                    'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 20,      'required' => true),
                     'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     'de_tel_fijo'                => array('alphaNumber' => true,        'maxlength' => 10,      'required' => true),
                     'de_tel_fijo_extension'      => array('alphaNumber' => true,        'maxlength' => 10,      ),
@@ -410,6 +412,7 @@ class IntegradoController extends JControllerLegacy {
                     'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                 );
                 break;
+
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
@@ -787,63 +790,58 @@ class IntegradoController extends JControllerLegacy {
 
     public function sendEmail($type=null)
     {
-        /*
-         *  NOTIFICACIONES 0 & 1
+    /*
+	 *  NOTIFICACIONES 0 & 1
+	 */
+	    $getCurrUser = new IntegradoSimple($this->integradoId);
 
-        $getCurrUser = new IntegradoSimple($this->integradoId);
+	    switch ($_POST['permission_level']){
+		    case 1:
+			    $permiso = 'Consulta';
+			    break;
+		    case 2:
+			    $permiso = 'Operaciones';
+			    break;
+		    case 3:
+			    $permiso = 'Autorizador';
+			    break;
+		    case 4:
+			    $permiso = 'Full';
+			    break;
+	    }
 
-        if (isset($_POST['permission_level'])) {
-            switch ($_POST['permission_level']){
-                case 1:
-                    $permiso = 'Consulta';
-                    break;
-                case 2:
-                    $permiso = 'Operaciones';
-                    break;
-                case 3:
-                    $permiso = 'Autorizador';
-                    break;
-                case 4:
-                    $permiso = 'Full';
-                    break;
-            }
-        }else{
-            $permiso = 'Full';
-        }
-
-        if(is_null($type)){
-            $array = array(
-                $getCurrUser->user->name,
-                $this->integradoId,
-                date('d-m-Y'));
-            $noEmail = 1;
-            $typeAlta = '';
-        }else{
-            if($type == 'edit'){
-                $typeAlta = 'Edicion';
-            }
-            if($type == 'new'){
-                $typeAlta = 'Alta';
-            }
-            foreach ($getCurrUser->usuarios as $key => $value) {
-                if($value->id == $_POST['userId']){
-                    $dataUser = $value;
-                }
-
-            }
-            $titleArray =array ( $typeAlta );
-            $array = array(
-                $typeAlta,
-                $dataUser->email,
-                $dataUser->username,
-                $permiso,
-                date('d-m-Y'));
-            $noEmail = 0;
-        }
-        $send = new Send_email();
-        $send->setIntegradoEmailsArray($getCurrUser);
-        $info = $send->sendNotifications($noEmail, $array, $titleArray);
-        return $info;*/
+	    if(is_null($type)){
+		    $array = array(
+			    $getCurrUser->user->name,
+			    $this->integradoId,
+			    date('d-m-Y'));
+		    $noEmail = 1;
+		    $typeAlta = '';
+	    }else{
+		    if($type == 'edit'){
+			    $typeAlta = 'Edicion';
+		    }
+		    if($type == 'new'){
+			    $typeAlta = 'Alta';
+		    }
+		    foreach ($getCurrUser->usuarios as $key => $value) {
+			    if($value->id == $_POST['userId']){
+				    $dataUser = $value;
+			    }
+		    }
+		    $titleArray =array ( $typeAlta );
+		    $array = array(
+			    $typeAlta,
+			    $dataUser->email,
+			    $dataUser->username,
+			    $permiso,
+			    date('d-m-Y'));
+		    $noEmail = 0;
+	    }
+	    $send = new Send_email();
+	    $send->setIntegradoEmailsArray($getCurrUser);
+	    $info = $send->sendNotifications($noEmail, $array, $titleArray);
+	    return $info;
     }
 
     public function finish( ){
