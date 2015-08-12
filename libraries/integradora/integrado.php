@@ -490,8 +490,8 @@ class IntegradoSimple extends Integrado {
 		elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
 			$name = $this->integrados[0]->datos_personales->nom_comercial;
 		}
-		elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
-			$name = $this->integrados[0]->datos_personales->nombre_represenante;
+		elseif ( isset($this->integrados[0]->datos_personales->nombre_representante) && !empty($this->integrados[0]->datos_personales->nombre_representante) ) {
+			$name = $this->integrados[0]->datos_personales->nombre_representante;
 		}
 		else {
 			$name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
@@ -499,24 +499,6 @@ class IntegradoSimple extends Integrado {
 
 		return $name;
 	}
-
-    public function getContactName() {
-// TODO Revisar cuales son los datos de contacto y su prioridad para mostrar
-        if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
-            $name = $this->integrados[0]->datos_empresa->razon_social;
-        }
-        elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
-            $name = $this->integrados[0]->datos_personales->nom_comercial;
-        }
-        elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
-            $name = $this->integrados[0]->datos_personales->nombre_represenante;
-        }
-        else {
-            $name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
-        }
-
-        return $name;
-    }
 
     public function setMainAddressFormatted() {
         $codPostal = null;
@@ -652,7 +634,7 @@ class IntegradoSimple extends Integrado {
 		if ( $this->integrados[0]->integrado->pers_juridica == 1 ) {
 			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->datos_empresa) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
 		} else {
-			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
+			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->datos_personales->url_comprobante_domicilio) && isset($this->integrados[0]->datos_personales->url_identificacion) && isset($this->integrados[0]->datos_personales->url_rfc) && isset($this->integrados[0]->datos_bancarios);
 
 		}
 

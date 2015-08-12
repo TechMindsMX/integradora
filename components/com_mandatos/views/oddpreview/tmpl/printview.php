@@ -49,7 +49,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
     </tr>
     <tr>
         <td style="text-align: right;"><?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?></td>
-        <td style="text-align: left;"><?php echo $integ->getContactName(); ?></td>
+        <td style="text-align: left;"><?php echo $integ->getDisplayName(); ?></td>
         <td style="text-align: right;"><?php echo JText::_('LBL_FORMA_PAGO'); ?></td>
         <td style="text-align: left;"><?php echo JText::_($this->odd->paymentMethod->name); ?></td>
     </tr>

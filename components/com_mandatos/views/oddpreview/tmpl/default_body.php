@@ -63,7 +63,7 @@ $integ = new IntegradoSimple($integrado->integrado->integradoId);
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integ->getContactName(); ?>
+				<?php echo $integ->getDisplayName(); ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
