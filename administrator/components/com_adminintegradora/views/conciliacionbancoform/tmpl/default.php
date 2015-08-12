@@ -158,7 +158,7 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
         <div>Referencia : <?php echo $data->referencia ?></div>
         <div>Fecha : <?php echo $data->date ?></div>
         <div>Monto: $<?php echo number_format($data->amount,2); ?></div>
-        <?php if($data->integradoId != 0){ ?>
+        <?php if($data->integradoId !== '0'){ ?>
             <div>Integrado: <?php echo $this->nombreIntegrado; ?></div>
         <?php }else{ ?>
             <div>Transaccion no Identificada.</div>
