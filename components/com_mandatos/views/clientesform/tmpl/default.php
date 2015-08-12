@@ -479,7 +479,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             echo JHtml::_('bootstrap.addTab', 'tabs-clientes', 'tipo_alta', JText::_('COM_MANDATOS_CLIENT_ALTA_TYPE') );
             ?>
             <fieldset id="tipo_alta_cp">
-                <input type="hidden" name="tp_status" id="tp_status" value="<?php echo $datos->status ?>">
+                <input type="hidden" name="tp_status" id="tp_status" value="<?php echo is_null($datos->status)?1:$datos->status; ?>">
                 <div class="radio">
                     <label><input type="radio" name="tp_tipo_alta" id="tipoAlta0" value="0" ><?php echo JText::_('LBL_CLIENTE'); ?></label>
                 </div>
