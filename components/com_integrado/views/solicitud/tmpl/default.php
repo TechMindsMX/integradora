@@ -510,7 +510,7 @@ $token = JSession::getFormToken();
 					type		="text"
 					id			="de_num_exterior"
 					size		="10"
-					maxlength	="5" />
+					maxlength	="20" />
 			</div>
 
 			<div class="form-group">
@@ -786,7 +786,7 @@ $token = JSession::getFormToken();
 					type		="text"
 					id			="dp_num_exterior"
 					size		="10"
-					maxlength	="5" />
+					maxlength	="20" />
 			</div>
 
 			<div class="form-group">

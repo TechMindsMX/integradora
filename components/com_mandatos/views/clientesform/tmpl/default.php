@@ -560,7 +560,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                         type		="text"
                         id			="de_num_exterior"
                         size		="10"
-                        maxlength	="5" />
+                        maxlength	="20" />
                 </div>
 
                 <div class="form-group">
@@ -837,7 +837,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                         type		="text"
                         id			="dp_num_exterior"
                         size		="10"
-                        maxlength	="5" />
+                        maxlength	="20" />
                 </div>
 
                 <div class="form-group">
