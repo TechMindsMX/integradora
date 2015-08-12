@@ -9,6 +9,7 @@
 namespace Integralib;
 
 use getFromTimOne;
+use Joomla\String\String;
 
 class OdVenta extends Order {
 
@@ -125,7 +126,7 @@ class OdVenta extends Order {
 		$this->numOrden       = (INT)$order->numOrden;
 		$this->proyecto       = (INT)$order->projectId2 == 0 ? $order->projectId : $order->projectId2;
 		$this->clientId       = (STRING)$order->clientId;
-		$this->account        = (INT)$order->account;
+		$this->account        = (STRING)$order->account;
 		$this->paymentMethod   = getFromTimOne::getPaymentMethodName($order->paymentMethod);
 		$this->conditions     = (INT)$order->conditions;
 		$this->placeIssue     = getFromTimOne::getNombreEstado($order->placeIssue);

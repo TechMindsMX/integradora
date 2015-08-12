@@ -273,18 +273,10 @@ $subProyects = $this->subprojects;
     <fieldset>
         <?php
         ?>
-        <select name="account">
-            <option>Cuenta Bancaria</option>
-            <option>Sin Identificar</option>
-            <?php
-            foreach ($this->cuentas as $datosCuenta) {
-                $selectedCuentas = ( $datosCuenta->datosBan_id == $orden->account) ? 'selected' : '';
-                echo '<option value="' . $datosCuenta->datosBan_id . '" '.$selectedCuentas.'>' . $datosCuenta->banco_cuenta_xxx . '</option>';
-            }
-            ?>
-        </select>
+        <label for="account">Cuenta de Banco</label>
+        <input class="" name="account" id="account" value="Sin identificar">
 
-        <select name="paymentMethod">
+        <select name="paymentMethod" id="paymentMethod">
             <option value="0" <?php echo $orden->paymentMethod->id == 0 ? 'selected' : ''; ?>>Método de pago</option>
             <option value="1" <?php echo $orden->paymentMethod->id == 1 ? 'selected' : ''; ?>>Cheque</option>
             <option value="2" <?php echo $orden->paymentMethod->id == 2 ? 'selected' : ''; ?>>Transferencia</option>
