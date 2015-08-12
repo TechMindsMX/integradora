@@ -652,7 +652,7 @@ class IntegradoSimple extends Integrado {
 		if ( $this->integrados[0]->integrado->pers_juridica == 1 ) {
 			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->datos_empresa) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
 		} else {
-			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->testimonio1) && isset($this->integrados[0]->datos_bancarios);
+			$hasAll = isset($this->integrados[0]->datos_personales) && isset($this->integrados[0]->datos_personales->url_comprobante_domicilio) && isset($this->integrados[0]->datos_personales->url_identificacion) && isset($this->integrados[0]->datos_personales->url_rfc) && isset($this->integrados[0]->datos_bancarios);
 
 		}
 
