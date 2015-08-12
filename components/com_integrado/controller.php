@@ -795,21 +795,6 @@ class IntegradoController extends JControllerLegacy {
 	 */
 	    $getCurrUser = new IntegradoSimple($this->integradoId);
 
-	    switch ($_POST['permission_level']){
-		    case 1:
-			    $permiso = 'Consulta';
-			    break;
-		    case 2:
-			    $permiso = 'Operaciones';
-			    break;
-		    case 3:
-			    $permiso = 'Autorizador';
-			    break;
-		    case 4:
-			    $permiso = 'Full';
-			    break;
-	    }
-
 	    if(is_null($type)){
 		    $array = array(
 			    $getCurrUser->user->name,
@@ -817,6 +802,7 @@ class IntegradoController extends JControllerLegacy {
 			    date('d-m-Y'));
 		    $noEmail = 1;
 		    $typeAlta = '';
+            $titleArray = array();
 	    }else{
 		    if($type == 'edit'){
 			    $typeAlta = 'Edicion';
@@ -829,12 +815,12 @@ class IntegradoController extends JControllerLegacy {
 				    $dataUser = $value;
 			    }
 		    }
-		    $titleArray =array ( $typeAlta );
+		    $titleArray = array ( $typeAlta );
 		    $array = array(
 			    $typeAlta,
 			    $dataUser->email,
 			    $dataUser->username,
-			    $permiso,
+			    $this->getPermisoString(),
 			    date('d-m-Y'));
 		    $noEmail = 0;
 	    }
@@ -888,5 +874,26 @@ class IntegradoController extends JControllerLegacy {
 
         $this->document->setMimeEncoding('application/json');
         echo json_encode($respuesta);
+    }
+
+    function getPermisoString() {
+        $permiso = '';
+        if ( isset( $_POST['permission_level'] ) ) {
+            switch ($_POST['permission_level']){
+                case 1:
+                    $permiso = 'Consulta';
+                    break;
+                case 2:
+                    $permiso = 'Operaciones';
+                    break;
+                case 3:
+                    $permiso = 'Autorizador';
+                    break;
+                case 4:
+                    $permiso = 'Full';
+                    break;
+            }
+        }
+        return $permiso;
     }
 }
