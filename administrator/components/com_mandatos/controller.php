@@ -35,14 +35,15 @@ class MandatosController extends JControllerLegacy {
 
     public function search_rfc_cliente() {
         $this->document->setMimeEncoding( 'application/json' );
-        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
+        $data = $this->input->getArray( array( 'integradoId' => 'STRING', 'rfc' => 'STRING' ) );
         $tipo_rfc = $this->rfc_type($data['rfc']);
 
         $existe = $this->search_rfc_exists( $data['rfc'] );
 
         if(!empty($existe)){
             // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
-            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe );
+	        $dbq = JFactory::getDbo();
+            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoId = '. $dbq->quote($this->integradoId) .' AND integradoIdCliente = '.$dbq->quote($existe) );
 
             $datos = new IntegradoSimple($existe);
             $datos->integrados[0]->success = true;
@@ -95,12 +96,12 @@ class MandatosController extends JControllerLegacy {
         $db        = JFactory::getDbo();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
         $db->setQuery($query);
         $personales = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
         $db->setQuery($query);
         $empresa = $db->loadResult();
 
@@ -127,7 +128,7 @@ class MandatosController extends JControllerLegacy {
             'quantityPayments' => array('float' => true, 'maxlength' => '10',  'required' => true, 'plazoMaximo' => true),
             'paymentPeriod'    => array('int'   => true, 'maxlength' => '10',  'required' => true, 'tipoPlazo'   => true),
             'totalAmount'      => array('float' => true, 'maxlength' => '100', 'required' => true),
-            'interes'          => array('float' => true, 'maxlength' => '100', 'required' => true));
+            'interes'          => array('float' => true, 'maxlength' => '100', 'notEmpty' => true));
 
         $respuesta = $validacion->procesamiento($data,$diccionario);
 

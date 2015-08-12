@@ -9,10 +9,11 @@ class AdminintegradoraViewOdvlist extends JViewLegacy {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
         AdminintegradoraHelper::addSubmenu('listadoODV');
 
-        $this->sidebar = JHtmlSidebar::render();
-        $this->ordenes = $this->get('Ordenes');
-        $this->usuarios = $this->get('UserIntegrado');
-        $this->integradi = $this->get('Solicitud');
+        $this->sidebar    = JHtmlSidebar::render();
+        $this->ordenes    = $this->get('Ordenes');
+        $this->usuarios   = $this->get('UserIntegrado');
+        $this->integradi  = $this->get('Solicitud');
+        $this->integrados = $this->get('Integrados');
 
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
@@ -22,8 +23,6 @@ class AdminintegradoraViewOdvlist extends JViewLegacy {
 
         parent::display($tpl);
     }
-
-
 
     protected function addToolbar() {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';

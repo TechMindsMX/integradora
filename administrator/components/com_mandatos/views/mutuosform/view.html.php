@@ -26,23 +26,23 @@ class MandatosViewMutuosform extends JViewLegacy {
         }elseif($this->idMutuo == 0 && $this->data->layout != 'confirm'){
             $objeto = new stdClass();
 
-            $objeto->id                 = null;
-            $objeto->integradoIdE       = null;
-            $objeto->integradoIdR       = null;
-            $objeto->idCuenta           = null;
-            $objeto->paymentPeriod      = null;
-            $objeto->quantityPayments   = null;
-            $objeto->jsonTabla          = null;
-            $objeto->totalAmount        = null;
-            $objeto->interes            = null;
-            $objeto->cuotaOcapital      = null;
-            $objeto->status             = null;
-            $objeto->integradoAcredor   = new stdClass();
-            $objeto->integradoAcredor->nombre           = null;
-            $objeto->integradoAcredor->rfc              = null;
-            $objeto->integradoAcredor->datosBancarios   = array();
+            $objeto->id                               = null;
+            $objeto->integradoIdE                     = null;
+            $objeto->integradoIdR                     = null;
+            $objeto->idCuenta                         = null;
+            $objeto->paymentPeriod                    = null;
+            $objeto->quantityPayments                 = null;
+            $objeto->jsonTabla                        = null;
+            $objeto->totalAmount                      = null;
+            $objeto->interes                          = null;
+            $objeto->cuotaOcapital                    = null;
+            $objeto->status                           = null;
+            $objeto->integradoAcredor                 = new stdClass();
+            $objeto->integradoAcredor->nombre         = null;
+            $objeto->integradoAcredor->rfc            = null;
+            $objeto->integradoAcredor->datosBancarios = array();
 
-            $objeto->integradoDeudor    = new stdClass();
+            $objeto->integradoDeudor                   = new stdClass();
             $objeto->integradoDeudor->nombre           = null;
             $objeto->integradoDeudor->rfc              = null;
             $objeto->integradoDeudor->datosBancarios   = array();

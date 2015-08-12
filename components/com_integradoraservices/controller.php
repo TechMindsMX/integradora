@@ -1,5 +1,5 @@
 <?php
-defined('_JEXEC');// or die('Restricted access');
+defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
 jimport('integradora.validator');
@@ -31,8 +31,10 @@ class IntegradoraservicesController extends JControllerLegacy {
         $objeto->reference       = $data['reference'];
         $objeto->amount          = $data['amount'];
         $objeto->timestamp       = $data['timestamp'];
+
         $formato                 = 'json';
         $getMethod               = 'hello';
+
         $HTTPS_required          = false;
         $authentication_required = false;
         $api_response_code       = array(
@@ -43,8 +45,9 @@ class IntegradoraservicesController extends JControllerLegacy {
             4 => array('HTTP Response' => 401, 'Message' => 'Authentication Failed'),
             5 => array('HTTP Response' => 404, 'Message' => 'Invalid Request'),
             6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format'),
-            7 => array('HTTP Response' => 405, 'Message' => 'No se guardo en Base de datos'),
-            8 => array('HTTP Response' => 406, 'Message' => 'Integrado desconocido'),
+            7 => array('HTTP Response' => 405, 'Message' => 'No se pudo Almacenar'),
+            8 => array('HTTP Response' => 406, 'Message' => 'No existe el usuario'),
+            9 => array('HTTP Response' => 407, 'Message' => 'No hay Ordenes generadas.')
         );
 
         $response['code']   = 0;
@@ -82,13 +85,15 @@ class IntegradoraservicesController extends JControllerLegacy {
             if(isset($response['error'])) {
                 $response['status'] = $api_response_code[$response['code']]['HTTP Response'];
                 $response['Message'] = $api_response_code[$response['code']]['Message'];
-            } else {
+            }
+            else {
                 $response['status'] = $api_response_code[$response['code']]['HTTP Response'];
                 $response['Message'] = $api_response_code[$response['code']]['Message'];
             }
         }
 
         $this->deliver_response($formato, $response);
+
         exit;
     }
 
@@ -98,105 +103,63 @@ class IntegradoraservicesController extends JControllerLegacy {
      * @param string $api_response The desired HTTP response data
      * @return array
      **/
-    public function processData($json){
-        $file           = fopen("logs/requestFromTimone2.txt", "w+");
+    function processData($json){
+        $db             = JFactory::getDbo();
         $save           = new sendToTimOne();
         $post           = $json;
-        $post->fecha    = date('d-m-Y', ($post->timestamp/1000) );
         $data_integrado = getFromTimOne::getIntegradoId($post->uuid);
 
-        fwrite($file,
-            'Los Datos que llegaron:'.PHP_EOL.
-            'Uuid timone: '.$post->uuid.PHP_EOL.
-            'Referencia: '.$post->reference.PHP_EOL.
-            'Monto: '.$post->amount.PHP_EOL.
-            'Fecha: '.$post->fecha.PHP_EOL.
-            PHP_EOL
-        );
-
-        if ( ! empty( $data_integrado ) ) {
-            fwrite($file,PHP_EOL.PHP_EOL.
-                'Integrado id: '.$data_integrado[0]->integradoId.PHP_EOL.
-                'CLABE: '.$data_integrado[0]->stpClabe.PHP_EOL.
-                'Timone UUID: '.$data_integrado[0]->timoneUuid.PHP_EOL
-            );
-
-        } else {
-            fwrite($file,PHP_EOL.PHP_EOL.'No encontro el integrado id: '.$data_integrado[0]->integradoId.PHP_EOL);
+        if ( empty( $data_integrado ) ) {
             // error no existe el integrado
-            return array('code' => 0);
+            return array('code' => '8');
         }
 
+
         //TODO se deben traer solamente las ordenes no pagadas
-        $odds        = getFromTimOne::getOrdenesDeposito($data_integrado[0]->integradoId);
-        $post->fecha = date('d-m-Y', ($post->timestamp/1000) );
+        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado[0]->integradoId);
 
         foreach ($odds as $value) {
-            $value->paymentDate = date('d-m-Y', ($value->paymentDate) );
+            if( ($post->timestamp == $value->timestamps->paymentDate) && ($post->amount == $value->totalAmount) && ($value->status->id == 5) ){
 
-            fwrite($file,
-                PHP_EOL.
-                'Inicia el foreach'.PHP_EOL.
-                'Fecha de pago de la orden: '.$value->paymentDate.PHP_EOL.
-                'Monto de la orden :'.$value->totalAmount.PHP_EOL.
-                'Estatus de la orden: '.$value->status->id
-            );
+                $dataTXMandato = new stdClass();
+                $dataTXMandato->idTx        = $post->reference;
+                $dataTXMandato->integradoId = $value->integradoId;
+                $dataTXMandato->date        = time();
+                $dataTXMandato->idComision  = 1;
 
-            if( ($post->fecha === $value->paymentDate) && ($post->amount == $value->totalAmount) && ($value->status->id == 5) ){
-                fwrite($file,
-                    PHP_EOL.
-                    'Se encontro una coicidencia con una orden'.PHP_EOL
-                );
+                $db->transactionStart();
 
-                $dataTXMandato = array(
-                    'idTx'        => $post->reference,
-                    'idIntegrado' => $value->integradoId,
-                    'date'        => time(),
-                    'idComision'  => 1
-                );
+                try {
+                    $db->insertObject('#__txs_timone_mandato',$dataTXMandato);
+                    $idTx = $db->insertid();
 
-                fwrite($file,
-                    PHP_EOL.
-                    'Los Datos Son:'.PHP_EOL.
-                    'Id de la transaccion: '.$dataTXMandato['idTx'].PHP_EOL.
-                    'integradoId: '.$dataTXMandato['idIntegrado'].PHP_EOL.
-                    'Fecha: '.$dataTXMandato['date'].PHP_EOL.
-                    'id Comision: '.$dataTXMandato['idComision'].PHP_EOL
-                );
+                    $txs_mandatos = new stdClass();
+                    $txs_mandatos->id = $idTx;
+                    $txs_mandatos->amount = $post->amount;
+                    $txs_mandatos->orderType = 'odd';
+                    $txs_mandatos->idOrden = $value->id;
 
-                $save->formatData($dataTXMandato);
+                    $db->insertObject('#__txs_mandatos', $txs_mandatos);
 
-                $salvado = $save->insertDB('txs_timone_mandato');
+                    $save->changeOrderStatus($value->id, 'odd', 13);
 
-                if($salvado){
-                    fwrite($file,PHP_EOL.'Si se Salvo'.PHP_EOL);
+                    $db->transactionCommit();
 
-                    $cambioStatus = $save->changeOrderStatus($value->id,'odd',13);
-                    $return = array('code' => 1);
+                    $return = array('code' => '1');//succes
                     break;
-                }else{
-                    fwrite($file,PHP_EOL.'No se Salvo'.PHP_EOL);
-
-                    $return = array('code' => 7);
+                }catch (Exception $e) {
+                    $db->transactionRollback();
+                    $return = array('code' => '7');//fail
                     break;
                 }
 
-            }
 
-            fwrite($file, PHP_EOL.'Termina el foreach'.PHP_EOL);
+            }
         }
 
         if( !isset($return) ){
-            fwrite($file,PHP_EOL.'No se encontraron Coicidencia con ODD'.PHP_EOL);
-
-            $return = array('code' => 0);
+            $return = array('code' => '9');
         }
-
-        fwrite($file,PHP_EOL.
-            'Codigo: '.$return['code']
-        );
-
-        fclose($file);
 
         return $return;
     }
@@ -209,7 +172,9 @@ class IntegradoraservicesController extends JControllerLegacy {
             401 => 'Unauthorized',
             403 => 'Forbidden',
             404 => 'Not Found',
-            405 => 'Not Data Saved'
+            405 => 'Not Data Saved',
+            406 => 'User not exist',
+            407 => 'Not Orders generated'
         );
 
         header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);
@@ -219,22 +184,21 @@ class IntegradoraservicesController extends JControllerLegacy {
 
             $json_response = json_encode($api_response);
 
-            $archivo = fopen('logs/respuestadelserviciocashIn.txt', 'w+');
-            fwrite($archivo, $json_response);
-            fclose($archivo);
-
             echo $json_response;
 
         }elseif( strcasecmp($format,'xml') == 0 ){
             header('Content-Type: application/xml; charset=utf-8');
+
             $xml_response = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
-                            '<response>'."\n".
-                            "\t".'<code>'.$api_response['code'].'</code>'."\n".
-                            "\t".'<data>'.$api_response['data'].'</data>'."\n".
-                            '</response>';
+                '<response>'."\n".
+                "\t".'<code>'.$api_response['code'].'</code>'."\n".
+                "\t".'<data>'.$api_response['data'].'</data>'."\n".
+                '</response>';
+
             echo $xml_response;
         }else{
             header('Content-Type: text/html; charset=utf-8');
+
             echo $api_response['data'];
 
         }

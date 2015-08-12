@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `integradb`.`_temp_flpmu_integrado_datos_personales`;
 
 CREATE TABLE `integradb`.`_temp_flpmu_integrado_datos_personales` (
- `integrado_id` int(10) NOT NULL,
+ `integradoId` int(10) NOT NULL,
  `nacionalidad` varchar(45) DEFAULT NULL,
  `sexo` varchar(45) DEFAULT NULL,
  `fecha_nacimiento` date DEFAULT NULL,
@@ -28,7 +28,7 @@ INSERT INTO `integradb`.`_temp_flpmu_integrado_datos_personales`(
                `calle`,
                `cod_postal`,
                `fecha_nacimiento`,
-               `integrado_id`,
+               `integradoId`,
                `nacionalidad`,
                `nom_comercial`,
                `num_exterior`,
@@ -44,7 +44,7 @@ INSERT INTO `integradb`.`_temp_flpmu_integrado_datos_personales`(
    SELECT `calle`,
           `cod_postal`,
           `fecha_nacimiento`,
-          `integrado_id`,
+          `integradoId`,
           `nacionalidad`,
           `nom_comercial`,
           `num_exterior`,

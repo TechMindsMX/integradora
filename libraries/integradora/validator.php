@@ -274,7 +274,7 @@ class validador{
     }
 
 	protected function text(){
-        $regex = '/[A-Za-z0-9_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
+        $regex = '/[A-Za-z0-9  ñ Ñ á Á éÉ íÍ óÓ úÚ äÄ ëË ïÏ öÖ üÜ . \- \_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;

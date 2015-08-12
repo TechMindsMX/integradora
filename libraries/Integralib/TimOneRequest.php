@@ -13,47 +13,132 @@ use JLog;
 use sendToTimOne;
 use servicesRoute;
 
-class TimOneRequest {
-	public $resultado;
-	protected $integradoId;
-	public $objEnvio;
+class TimOneRequest extends TimOneCurl {
+    protected   $url;
+    protected   $type;
+    public      $resultado;
+    protected   $integradoId;
+    public      $objEnvio;
 
-	function __construct() {
-		$this->rutas = new servicesRoute();
-	}
+    function __construct() {
+    }
 
-	/**
-	 * @param $txUUID
-	 *
-	 * @return mixed
-	 */
-	public function makeRequest($datosEnvio){
-		unset($this->options);
+    /**
+     * @return mixed
+     */
+    public function makeRequest($datosEnvio){
+        unset($this->options);
+        @$this->objEnvio = isset($this->objEnvio) || is_null($this->objEnvio) ? $datosEnvio->objEnvio : $this->objEnvio;
 
-		$request = new sendToTimOne();
-		$request->setServiceUrl($datosEnvio->url);
-		$request->setJsonData($this->objEnvio);
-		$request->setHttpType($datosEnvio->type);
+        $request = new sendToTimOne();
+        $request->setServiceUrl($datosEnvio->url);
+        $request->setJsonData($this->objEnvio);
+        $request->setHttpType($datosEnvio->type);
 
-		$this->resultado = $request->to_timone();
+        $this->resultado = $request->to_timone();
 
-		jimport('joomla.log.log');
+        jimport('joomla.log.log');
 
-		JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora_txs');
-		$logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
-		JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
+        JLog::addLogger(array('text_file' => date('d-m-Y').'_bitacora_makeTxs.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::INFO + JLog::DEBUG, 'bitacora_txs');
+        $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__, json_encode( array($this->objEnvio, $request) ) ) );
+        JLog::add($logdata, JLog::DEBUG, 'bitacora_txs');
 
-		return $this->resultado->code == 200;
-	}
+        return $this->resultado->code == 200;
+    }
 
-	public function getTxDetails($txUUID) {
-		$rutas = new servicesRoute();
+    public function getTxDetails($txUUID) {
+        $rutas = new servicesRoute();
 
-		$params = $rutas->getUrlService('timone','txDetails','details');
+        $params = $rutas->getUrlService('timone','txDetails','details');
 
-		$serviceUrl = str_replace('{uuid}', $txUUID, $params->url);
+        $serviceUrl = str_replace('{uuid}', $txUUID, $params->url);
+        $jsonData = '';
+        $httpType = $params->type;
+
+        $request = new sendToTimOne();
+
+        $request->setServiceUrl($serviceUrl);
+        $request->setJsonData($jsonData);
+        $request->setHttpType($httpType);
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    public function getUserTxs($userUuis) {
+        $rutas = new servicesRoute();
+
+        $params = $rutas->getUrlService('timone','userTxs','list');
+
+        $serviceUrl = str_replace('{uuid}', $userUuis, $params->url);
+        $jsonData = '';
+        $httpType = $params->type;
+
+        $request = new sendToTimOne();
+
+        $request->setServiceUrl($serviceUrl);
+        $request->setJsonData($jsonData);
+        $request->setHttpType($httpType);
+
+        $result = $request->to_timone(); // realiza el envio
+
+        return $result;
+    }
+
+    public function sendCancelFactura($emisorRfc, $facturaUUID) {
+        $this->objEnvio = new \stdClass();
+        $this->objEnvio->uuid = $facturaUUID;
+        $this->objEnvio->rfcContribuyente = $emisorRfc;
+        $this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
+
+        return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+    }
+
+    /**
+     * @param $uuidReceptor
+     * @param $amount
+     *
+     * @return object resultado
+     */
+    public function sendCashInTx($uuidEmisor,$uuidReceptor, $amount, $reference) {
+        $servicesRoute = new servicesRoute();
+        $url = $servicesRoute->getUrlService('timone', 'txCashIn', 'create');
+
+        $url->objEnvio->uuid = $uuidEmisor;
+        $url->objEnvio->amount = $amount;
+
+
+        $this->makeRequest($url);
+
+        return $this->resultado;
+    }
+
+    public function sendInvoiceToValidation( $uuid ) {
+        $this->objEnvio = new \stdClass();
+        $this->objEnvio->xmlName = $uuid;
+
+        $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaValidate', 'create'));
+
+        return $this->resultado;
+    }
+
+    public function getAccessToken() {
+//		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
+
+        $this->setServiceUrl(TOKEN_ROUTE."token");
+        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setHttpType('POST');
+
+        $token = $this->to_timone();
+
+        return json_decode($token->data);
+    }
+
+	public function getListBankCodes( ){
+		$serviceUrl = MIDDLE . TIMONE . 'stp/listBankCodes';
 		$jsonData = '';
-		$httpType = $params->type;
+		$httpType = 'GET';
 
 		$request = new sendToTimOne();
 
@@ -63,61 +148,7 @@ class TimOneRequest {
 
 		$result = $request->to_timone(); // realiza el envio
 
-		return $result;
-	}
-
-	public function getUserTxs($userUuis) {
-		$rutas = new servicesRoute();
-
-		$params = $rutas->getUrlService('timone','userTxs','list');
-
-		$serviceUrl = str_replace('{uuid}', $userUuis, $params->url);
-		$jsonData = '';
-		$httpType = $params->type;
-
-		$request = new sendToTimOne();
-
-		$request->setServiceUrl($serviceUrl);
-		$request->setJsonData($jsonData);
-		$request->setHttpType($httpType);
-
-		$result = $request->to_timone(); // realiza el envio
-
-		return $result;
-	}
-
-	public function sendCancelFactura($emisorRfc, $facturaUUID) {
-		$this->objEnvio = new \stdClass();
-		$this->objEnvio->uuid = $facturaUUID;
-		$this->objEnvio->rfcContribuyente = $emisorRfc;
-		$this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
-
-		return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
-	}
-
-	/**
-	 * @param $uuidReceptor
-	 * @param $amount
-	 *
-	 * @return object resultado
-	 */
-	public function sendCashInTx($uuidReceptor, $amount) {
-		$this->objEnvio = new \stdClass();
-		$this->objEnvio->uuid = $uuidReceptor;
-		$this->objEnvio->amount = $amount;
-
-		$this->makeRequest($this->rutas->getUrlService('timone', 'txCashIn', 'create'));
-
-		return $this->resultado;
-	}
-
-	public function sendInvoiceToValidation( $uuid ) {
-		$this->objEnvio = new \stdClass();
-		$this->objEnvio->xmlName = $uuid;
-
-		$this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaValidate', 'create'));
-
-		return $this->resultado;
+		return json_decode(@$result->data);
 	}
 
 }

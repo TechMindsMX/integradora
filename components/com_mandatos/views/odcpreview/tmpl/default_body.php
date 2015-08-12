@@ -119,7 +119,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 				<div class="span4">
 					<?php
                     if (isset($orden->dataBank)) {
-                        $banco = is_null($orden->dataBank[0]->banco_cuenta) ? 'Cuenta STP' : $orden->dataBank[0]->banco_cuenta;
+                        $banco = !isset($orden->dataBank[0]->banco_cuenta) ? 'Cuenta STP' : $orden->dataBank[0]->banco_cuenta;
                         echo $banco;
                     }
                     ?>
@@ -136,7 +136,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 				</div>
 				<div class="span4">
-					<?php if (isset($orden->dataBank)) { echo $orden->dataBank[0]->banco_clabe; } ?>
+					<?php echo !empty($orden->dataBank) ? $orden->dataBank[0]->banco_clabe : ''; ?>
 				</div>
 			</div>
 			<div class="clearfix">

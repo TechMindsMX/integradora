@@ -30,14 +30,13 @@ class OrdenFn {
 	}
 
 	public static function getCantidadAutRequeridas(IntegradoSimple $emisor, IntegradoSimple $receptor){
-		$auth = 0;
 		$cant_auths = new \stdClass();
 
 		if( $emisor->isIntegrado() ){
-			$cant_auths->emisor = $auth+$emisor->getOrdersAtuhorizationParams();
+			$cant_auths->emisor = $emisor->getOrdersAtuhorizationParams();
 		}
 		if( $receptor->isIntegrado() ){
-			$cant_auths->receptor = $auth+$receptor->getOrdersAtuhorizationParams();
+			$cant_auths->receptor = $receptor->getOrdersAtuhorizationParams();
 		}
 
 		$cant_auths->totales = array_sum((array)$cant_auths);
@@ -215,7 +214,7 @@ class OrdenFn {
 			$query->select( $db->quoteName( array (
 				                                'txs.id',
 				                                'txs.idTx',
-				                                'txs.idIntegrado',
+				                                'txs.integradoId',
 				                                'txs.date',
 				                                'txs.idComision',
 				                                'piv.idOrden',
@@ -241,7 +240,7 @@ class OrdenFn {
 			$query->select( $db->quoteName( array (
 				                                'txs.id',
 				                                'txs.idTx',
-				                                'txs.idIntegrado',
+				                                'txs.integradoId',
 				                                'txs.date',
 				                                'txs.idComision',
 				                                'piv.idOrden',
@@ -264,8 +263,10 @@ class OrdenFn {
 			$results = $db->loadObjectList( 'id' );
 		}
 
+        $timoneRequest = new TimOneRequest();
+
 		foreach ( $results as $tx ) {
-			$respose = getFromTimOne::getTxDataByTxId($tx->idTx);
+			$respose = $timoneRequest->getTxDetails($tx->idTx);
 			$tx->detalleTx = json_decode($respose->data);;
 		}
 

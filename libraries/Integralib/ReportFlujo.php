@@ -22,8 +22,8 @@ class ReportFlujo extends ReportOrders {
 	protected $retiros;
 
 	function __construct( $integradoId, $fechaInicio, $fechaFin, $proyecto=null ) {
-		$this->fechaInicio  = $fechaInicio;
-		$this->fechaFin     = $fechaFin;
+		$this->fechaInicio  = strtotime($fechaInicio);
+		$this->fechaFin     = strtotime($fechaFin);
 		$this->filtroProyect = $proyecto;
 		$this->integradoId = $integradoId;
 

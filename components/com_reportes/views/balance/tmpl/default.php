@@ -19,13 +19,13 @@ $integ = $this->integrado;
 	<div class="header">
 		<div class="span6">
 			<h3>
-				<?php echo JText::_('INTEGRADORA_NAME'); ?>
+				<?php echo JText::_('LBL_INTEGRADORA'); ?>
 			</h3>
 			<p>
-				<?php echo JText::_('INTEGRADORA_ADDRESS'); ?>
+				<?php echo JText::_('LBL_INTEGRADORA_DIRECCION'); ?>
 			</p>
 			<p>
-				<?php echo JText::_('INTEGRADORA RFC'); ?>
+				<?php echo JText::_('LBL_NTEGRADORA_RFC'); ?>
 			</p>
 		</div>
 

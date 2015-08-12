@@ -59,8 +59,9 @@ class PreviewHelper {
 			$isModal = $app->input->get('print') == 1; // 'print=1' will only be present in the url of the modal window, not in the presentation of the page
 			$template = $app->getTemplate();
 			if ($isModal) {
-				$document->addStyleSheet(JURI::base() . 'templates/' . $template . '/css/bootstrap.css');
-				$document->addStyleSheet(JURI::base() . 'templates/' . $template . '/css/override.css');
+				$document->addStyleSheet('../templates/meet_gavern/css/bootstrap.css');
+				$document->addStyleSheet('../templates/meet_gavern/css/override.css');
+
 				$href = '"#" onclick="window.print(); return false;"';
 			} else {
 				$href = 'status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=640,height=480,directories=no,location=no';

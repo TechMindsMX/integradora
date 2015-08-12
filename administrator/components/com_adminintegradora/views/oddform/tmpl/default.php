@@ -58,7 +58,7 @@ foreach ($this->txs as $txs) {
     </div>
     <div class="clearfix">&nbsp;</div>
 
-    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>">
+    <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=oddform&confirmacion=1&idOrden=<?php echo $orden->id; ?>" autocomplete="off">
         <div class="clearfix">&nbsp;</div>
 
         <h2><?php echo JText::_('COM_FACTURAS_FROM_ODD_TRANSACCION'); ?></h2>
@@ -77,7 +77,7 @@ foreach ($this->txs as $txs) {
         </div>
     </form>
 <?php }else{ ?>
-    <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save">
+    <form id="confirmacion" method="post" action="index.php?option=com_adminintegradora&task=conciliatxorder.save" autocomplete="off">
         <input type="hidden" name="orderType" id="orderType" value="odd" />
         <input type="hidden" name="idOrden" id="idOrden" value="<?php echo $orden->id; ?>" />
         <input type="hidden" name="idTx" id="idTx" value="<?php echo $data->idTx; ?>" />
@@ -85,11 +85,10 @@ foreach ($this->txs as $txs) {
 
         <h3>Esta seguro de guardar los siguientes datos de conciliación</h3>
 
-        <div>Orden pagada: <?php echo is_null($data->ordenPagada)?'No':'Si'; ?></div>
         <div>Cuenta: <?php echo $data->cuenta; ?></div>
         <div>Referencia: <?php echo $data->referencia; ?></div>
         <div>Fecha: <?php echo $data->date; ?></div>
-        <div>Monto: $<?php echo number_format($data->balance, 2); ?></div>
+        <div>Monto: $<?php echo number_format($data->amount, 2); ?></div>
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">

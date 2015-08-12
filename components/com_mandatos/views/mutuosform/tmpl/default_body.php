@@ -19,7 +19,7 @@ $existe = is_null($datos->id)?'false':'true';
 <script src="libraries/integradora/js/tim-validation.js"> </script>
 <script>
     var catalogoBancos = new Array();
-    var integradoId	= <?php echo $this->integradoId; ?>;
+    var integradoId	= '<?php echo $this->integradoId; ?>';
 
     <?php
     foreach ($this->catalogos->bancos as $key => $value){
@@ -38,7 +38,7 @@ $existe = is_null($datos->id)?'false':'true';
 
         <?php echo (!is_null($datos->integradoDeudor->rfc)&& !isset($datos->id))?"jQuery('#rfc').trigger('change');":""; ?>
 
-        jQuery('#rfc').trigger('change');
+        //jQuery('#rfc').trigger('change');
     });
 
     function ajax(parametros){
@@ -66,12 +66,14 @@ $existe = is_null($datos->id)?'false':'true';
         resultado.done(function(response){
             var beneficiario = jQuery('#beneficiario');
             if(response.success){
-                var data = response.datos_personales;
+                var data             = response.datos_personales;
+                var dataE            = response.datos_empresa;
+                var nameBeneficiario = data.nom_comercial != '' ? data.nom_comercial : dataE.razon_social ;
 
-                beneficiario.val(data.nom_comercial);
+                beneficiario.val(nameBeneficiario);
                 beneficiario.prop('readOnly', true);
 
-                jQuery('#integradoIdR').val(data.integrado_id);
+                jQuery('#integradoIdR').val(data.integradoId);
                 jQuery('#dataBanco').hide();
                 jQuery('#existe').val(true);
             }else{
@@ -196,7 +198,7 @@ $existe = is_null($datos->id)?'false':'true';
     <div class="span6"><h4>SALDO EN CUENTA: $<?php echo number_format($this->montoSaldo->saldoDisponible,2); ?></h4></div>
 </div>
 <div class="clearfix">&nbsp;</div>
-<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data">
+<form id="generaODC" method="post" action="index.php?option=com_mandatos&view=mutuosform&layout=confirm" role="form" enctype="multipart/form-data" autocomplete="off">
     <div>
         <input type="hidden" name="existe"       id="existe"       value="<?php echo $existe; ?>">
         <input type="hidden" name="id"           id="id"           value="<?php echo $datos->id; ?>" />

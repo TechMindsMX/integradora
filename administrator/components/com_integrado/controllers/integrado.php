@@ -1,4 +1,6 @@
 <?php
+use Integralib\IntFactory;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('joomla.application.component.controllerform');
@@ -13,14 +15,17 @@ class IntegradoControllerIntegrado extends JControllerForm {
     protected $data;
     protected $integradoId;
     private $tabla_db;
+    public $db;
 
     function __construct( ) {
-        $this->data = JFactory::getApplication()->input->getArray();
-        $this->tabla_db = 'integrado_verificacion_solicitud';
-        $this->save = new sendToTimOne();
-
+        $this->db          = JFactory::getDbo();
+        $this->catalogos   = new Catalogos();
+        $this->save        = new sendToTimOne();
+        $this->tabla_db    = 'integrado_verificacion_solicitud';
+        $this->data        = JFactory::getApplication()->input->getArray();
         $this->integradoId = $this->data['id'];
-        $this->catalogos = new Catalogos();
+        $this->comments    = $this->data['comments'];
+        unset($this->data['comments']);
 
         parent::__construct();
     }
@@ -35,10 +40,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         // Create an object for the record we are going to update.
         $object = new stdClass();
-        $object->integrado_id = $this->data['id'];
+        $object->integradoId = $this->data['id'];
         $object->status = $this->data['status'];
 
-        $datosIntegrado = new IntegradoSimple($object->integrado_id);
+        $datosIntegrado = new IntegradoSimple($this->data['id']);
         $valido = $this->cambioStatusValido( $datosIntegrado->integrados[0]->integrado->status, $object->status);
 
         if (!$valido) {
@@ -46,7 +51,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             $this->setRedirect(
                 JRoute::_(
                     'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($object->integrado_id, 'id' ) , false
+                    . $this->getRedirectToItemAppend($this->data['id'], 'id' ) , false
                 )
             );
             return true;
@@ -54,7 +59,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
         if($datosIntegrado->getStatus() != $object->status) {
             // Update their details in the users table using id as the primary key.
-            $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integrado_id');
+            $result = JFactory::getDbo()->updateObject('#__integrado', $object, 'integradoId');
         }
 
         if($object->status == 50 && $result){
@@ -85,6 +90,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $verified = $this->hasAllVerifications();
 
         $catalogos = $this->getCatalogos();
+
         switch (intval($oldStatus)) {
             case 0: // Nueva solicitud
                 $validos = array(0,2,3,99);
@@ -125,8 +131,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         return $catalogos;
     }
 
-    private function hasAllVerifications()
-    {
+    private function hasAllVerifications(){
 
         $verificacionObj = $this->groupVerifications();
 
@@ -187,7 +192,6 @@ class IntegradoControllerIntegrado extends JControllerForm {
     }
 
     private function saveVerifications() {
-
         $retorno = null;
 
         $data = $this->groupVerifications();
@@ -202,7 +206,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
             }
             $set['integradoId'] = $this->integradoId;
 
-            $condition = 'integradoId = ' . $this->integradoId;
+            $condition = 'integradoId = ' . $this->db->quote($this->integradoId);
             $this->save->deleteDB($this->tabla_db, $condition);
 
             $this->save->formatData($set);
@@ -223,10 +227,10 @@ class IntegradoControllerIntegrado extends JControllerForm {
 
     private function checkExistIntegrado() {
 
-        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $this->data['id']);
+        $integrado = getFromTimOne::selectDB($this->tabla_db, 'integradoId ='. $this->db->quote($this->data['id']));
 
         if(empty($integrado)) {
-            $this->save->formatData(array('integradoId' => $this->data['id']));
+            $this->save->formatData( array( 'integradoId' => $this->data['id'] ) );
             $result = $this->save->insertDB($this->tabla_db);
 
             if(!$result) {
@@ -235,8 +239,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
         }
     }
 
-    private function createIntegradoTimoneUUID()
-    {
+    private function createIntegradoTimoneUUID(){
         $db = JFactory::getDbo();
         $integradoData = new UserTimone(new IntegradoSimple($this->integradoId));
 
@@ -252,54 +255,123 @@ class IntegradoControllerIntegrado extends JControllerForm {
         $resultado = $request->to_timone(); // realiza el envio
         $result = json_decode($resultado->data);
 
-        if($resultado->code == 200) {
-            $result->integradoId = $result->integraUuid;
+        $integrado = new IntegradoSimple($integradoData->uuid);
+        $integrado->getTimOneData();
 
-            $banco = new stdClass();
-            $banco->integrado_id    = $result->integradoId;
-            $banco->banco_clabe     = $result->stpClabe;
+        if( is_null($integrado->timoneData->timoneUuid) ) {
+            if ($resultado->code == 200) {
+                $result->integradoId = $result->integraUuid;
 
-            $db->transactionStart();
+                $banco = new stdClass();
+                $banco->integradoId = $result->integradoId;
+                $banco->banco_codigo = 646;
+                $banco->banco_sucursal = 180;
+                $banco->banco_cuenta = $result->account;
+                $banco->banco_clabe = $result->stpClabe;
 
-            try {
-                $db->insertObject( '#__integrado_datos_bancarios', $banco );
+                $db->transactionStart();
 
-                unset( $result->id, $result->integraUuid, $result->name, $result->email, $result->balance);
-                $db->insertObject( '#__integrado_timone', $result );
+                try {
+                    $db->insertObject('#__integrado_datos_bancarios', $banco);
 
-                $db->transactionCommit();
-            } catch (Exception $e) {
-                $db->transactionRollback();
+                    unset($result->id, $result->integraUuid, $result->name, $result->email, $result->balance, $result->account);
+                    $db->insertObject('#__integrado_timone', $result);
 
-                $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
-                JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
+                    $db->transactionCommit();
+                } catch (Exception $e) {
+                    $db->transactionRollback();
+                    // Create an object for the record we are going to update.
+                    $object = new stdClass();
+                    $object->integradoId = $this->data['id'];
+                    $object->status = 3;
 
+                    $db->updateObject('#__integrado', $object, 'integradoId');
+
+                    $logdata = implode(' | ', array(JFactory::getUser()->id, $this->integradoId, __METHOD__ . ':' . __LINE__, json_encode($e->getMessage())));
+                    JLog::add($logdata, JLog::ERROR, 'Error INTEGRADORA DB');
+
+                }
+
+            } else {
+                $object = new stdClass();
+                $object->integradoId = $this->data['id'];
+                $object->status = 3;
+
+                $db->updateObject('#__integrado', $object, 'integradoId');
+
+                $logdata = implode(' | ', array(JFactory::getUser()->id, $this->integradoId, __METHOD__ . ':' . __LINE__, $resultado->message));
+                JLog::add($logdata, JLog::ERROR, 'Error INTEGRADORA DB');
+                JFactory::getApplication()->enqueueMessage('No fue posible crear integrado intente mas tarde', 'error');
+                JFactory::getApplication()->redirect('index.php?option=com_integrado&view=integrados');
             }
 
+            if (isset($resultado)) {
+                echo $resultado->data;
+            }
         }
-
-        if ( isset( $resultado ) ) {
-            echo $resultado->data;
-        }
-
-
         return $integradoData;
     }
 
     private function notification() {
         $catalogoStatusSolicitud = $this->catalogos->getStatusSolicitud();
         $getCurrUser             = new IntegradoSimple($this->data['id']);
+
         foreach ($catalogoStatusSolicitud as $value){
             if($value->status == $getCurrUser->integrados[0]->integrado->status){
                 $status = $value->status_name;
             }
         }
 
-        $array                   = array($getCurrUser->getUserPrincipal()->name, date('d-m-Y'), $this->data['id'], $status);
-        $send                    = new Send_email();
+        switch($status){
+            case 'Revisión':
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y')
+                );
+                $notificacion = '3-1';
+                break;
+            case 'Devuelto':
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y'),
+                    $this->comments
+                );
+                $notificacion = '3-2';
+                break;
+            case 'Para contrato':
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y')
+                );
+                $notificacion = '3-3';
+                break;
+            case 'Integrado':
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    date('d-m-Y'),
+                    $this->data['id'],
+                    $status
+                );
+                $notificacion = '3-4';
+                break;
+            case 'Cancelado':
+                $array = array(
+                    $getCurrUser->getDisplayName(),
+                    $status,
+                    date('d-m-Y'),
+                    $this->comments
+                );
+                $notificacion = '3-5';
+                break;
+        }
+
+        $send  = new Send_email();
 
         $send->setIntegradoEmailsArray($getCurrUser);
-        $info = $send->sendNotifications('3', $array);
+        $info = $send->sendNotifications($notificacion, $array);
 
         return $info;
     }

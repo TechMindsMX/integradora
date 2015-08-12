@@ -22,10 +22,11 @@ class ReportesViewResultados extends JViewLegacy
 
 	function display($tpl = null){
 		$sesion = JFactory::getSession();
+        $integradora = new \Integralib\Integrado();
 		$this->integradoId = $sesion->get('integradoId', null, 'integrado');
 
         $this->integrado                    = new IntegradoSimple($this->integradoId);
-        $this->integradora                  = new IntegradoSimple(1);
+        $this->integradora                  = new IntegradoSimple($integradora->getIntegradoraUuid());
         $this->reporte                      = $this->get('Reporte');
         $this->proyectos                    = $this->get('Proyectos');
 

@@ -126,15 +126,15 @@ $egresos = $report->getEgresos();
                         <div class="span6">
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_INGRESOS'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($ingresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($ingresos->nominal->total,2) ;?></div>
                             </div>
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_EGRESOS'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($egresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($egresos->nominal->total,2) ;?></div>
                             </div>
                             <div class="row-fluid">
                                 <div class="span6"><?php echo JText::_('LBL_RESULTADO'); ?></div>
-                                <div class="span6 num">$<?php echo number_format($ingresos->total - $egresos->total,2) ;?></div>
+                                <div class="span6 num">$<?php echo number_format($ingresos->nominal->total - $egresos->nominal->total,2) ;?></div>
                             </div>
                         </div>
                     </div>
@@ -195,7 +195,7 @@ $egresos = $report->getEgresos();
             ?>
             <tr class="row">
                 <td colspan="5">Total de Ingresos</td>
-                <td><div class="text-right">$<?php echo number_format($ingresos->total,2); ?></div></td>
+                <td><div class="text-right">$<?php echo number_format($ingresos->pagado->total,2); ?></div></td>
             </tr>
             </tbody>
         </table>
@@ -246,7 +246,7 @@ $egresos = $report->getEgresos();
             ?>
             <tr class="row">
                 <td colspan="5">Total de Egresos</td>
-                <td><div class="text-right">$<?php echo number_format($egresos->total,2); ?></div></td>
+                <td><div class="text-right">$<?php echo number_format($egresos->pagado->total,2); ?></div></td>
 
             </tr>
             </tbody>

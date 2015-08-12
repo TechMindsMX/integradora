@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Integralib\IntFactory;
+
 defined('_JEXEC') or die;
 
 /**
@@ -85,6 +87,11 @@ class PlgUserIntegrado extends JPlugin
 		
 		// extiende los datos de usuario con los de integrados
 		$integrados = $this->getIntegradosCurrUser($instance);
+		$instance->set('integrados', $integrados);
+
+		// extiende los datos de usuario con las presuntas de seguridad
+		$securityQuestions = $this->getSecurityQuestions($instance);
+		$instance->set('security', $securityQuestions);
 
 		// Register the needed session variables
 		$session = JFactory::getSession();
@@ -174,7 +181,7 @@ class PlgUserIntegrado extends JPlugin
 	function getIntegradosCurrUser($instance)
 	{
 		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('integrado_id'))
+			->select($this->db->quoteName('integradoId'))
 			->from($this->db->quoteName('#__integrado_users'))
 			->where($this->db->quoteName('user_id') . '=' . $this->db->quote($instance->id));
 		$result = $this->db->setQuery($query)->loadObjectList();
@@ -186,6 +193,29 @@ class PlgUserIntegrado extends JPlugin
 		$usuario->intergrado->ids = $result;
 		
 		return $result;
+	}
+
+	private function getSecurityQuestions( $instance ) {
+		return IntFactory::getsUserSecurity($instance);
+	}
+
+	/**
+	 * @param $instance
+	 */
+	public function onUserAfterLogin( ) {
+
+		$user = JFactory::getUser();
+
+		if ($this->app->getName() == 'site') {
+			if ( count( $user->security ) == 0 ) {//TODO: Modificado por Lutek
+				$this->app->redirect( JRoute::_( 'index.php?option=com_usersinteg&view=usersinteg&layout=questions' ),
+				                      JText::_( 'NO_SECURITY_QUESTIONS' ), 'warning' );
+			}
+
+			if(count($user->integrados) === 0) {
+				$this->app->redirect(JRoute::_('index.php?option=com_integrado&view=solicitud'), JText::_('NO_INTEGRADO'), 'warning');
+			}
+		}
 	}
 
 }

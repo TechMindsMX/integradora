@@ -97,7 +97,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
 				echo '<tr class="client_'.$value->clientId.'">';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$preview_button.$value->id.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->createdDate.'</td>';
-				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->clientName.'</td>';
+				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->proveedor->frontName.'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->totalAmount,2).'</td>';
 				echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$btn.'</td>';
 				echo '</tr>';

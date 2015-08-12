@@ -12,6 +12,36 @@ jimport('integradora.gettimone');
 
 class Txs {
 	public $tx;
+	protected $rutas;
+
+	/**
+	 * @param $txUUID
+	 *
+	 * @return mixed
+	 */
+	public function getTxDetails($txUUID) {
+
+		$params = IntFactory::getServiceRoute('timone','txDetails','details');
+
+        $params->url = str_replace('{uuid}', $txUUID, $params->url);
+		$jsonData = '';
+
+		$request = IntFactory::getTimoneRequest($params, $jsonData);
+
+		return $request->makeRequest($params);
+	}
+
+	public function sendCashInTx($uuidReceptor, $amount) {
+		$objEnvio = new \stdClass();
+		$objEnvio->uuid = $uuidReceptor;
+		$objEnvio->amount = $amount;
+
+		$urlAndType = IntFactory::getServiceRoute('timone', 'txCashIn', 'create');
+
+		$request = IntFactory::getTimoneRequest($urlAndType, $objEnvio);
+
+		return $request->makeRequest();
+	}
 
 	public function calculateBalance( $tx ) {
 		$this->tx = $tx;

@@ -16,6 +16,7 @@ $rutas = array(
 	),
 	array(
 		array('LBL_MUTUOS' ,'icon-list'  ,JRoute::_('index.php?option=com_mandatos&view=mutuoslist') ),
+        array('COM_MANDATOS_FACTURAS' ,'icon-list'  ,JRoute::_('index.php?option=com_mandatos&view=facturalist&layout=listFact') )
 	),
 	array(
 		array('COM_MANDATOS_AUTH_LIQUIDACION' ,'icon-dollar'  ,JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ),

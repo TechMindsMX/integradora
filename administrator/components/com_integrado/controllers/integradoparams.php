@@ -9,8 +9,8 @@ jimport('integradora.integrado');
  */
 class IntegradoControllerIntegradoParams extends JControllerForm {
 
-    protected $data;
-    protected $integradoId;
+    public $data;
+    public $integradoId;
     private $tabla_db;
 
     function __construct( ) {
@@ -30,7 +30,7 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
         $db->transactionStart();
 
         $params = new stdClass();
-        $params->integrado_id = $this->integradoId;
+        $params->integradoId = $this->integradoId;
         $params->params = $this->data['params'];
 
         try {
@@ -38,7 +38,7 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
                 $query = $db->getQuery(true);
 
                 $conditions = array(
-                    $db->quoteName('integrado_id') . ' = '.$this->integradoId
+                    $db->quoteName('integradoId') . ' = '.$db->quote($this->integradoId)
                 );
 
                 $query->delete($db->quoteName('#__integrado_params'));
@@ -49,7 +49,7 @@ class IntegradoControllerIntegradoParams extends JControllerForm {
 
                 $query = $db->getQuery(true);
                 $conditions = array(
-                    $db->quoteName('integradoId') . ' = '.$this->integradoId
+                    $db->quoteName('integradoId') . ' = '.$db->quote($this->integradoId)
                 );
 
                 $query->delete($db->quoteName('#__integrado_comisiones'));

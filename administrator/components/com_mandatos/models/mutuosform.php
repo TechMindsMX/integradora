@@ -11,8 +11,8 @@ class MandatosModelMutuosform extends JModelItem {
         $app                          = JFactory::getApplication();
         $post                         = array(
             'id'                => 'INT',
-            'integradoId'       => 'INT',
-            'integradoIdR'      => 'INT',
+            'integradoId'       => 'STRING',
+            'integradoIdR'      => 'STRING',
             'paymentPeriod'     => 'INT',
             'cuotaOcapital'     => 'INT',
             'quantityPayments'  => 'FLOAT',
@@ -27,8 +27,9 @@ class MandatosModelMutuosform extends JModelItem {
             'banco_clabe'       => 'STRING'
         );
         $this->inputData              = (object)$app->input->getArray($post);
-        $integradoId                  = $session->get('integradoId', 1, 'integrado');
-        $this->inputData->integradoId = is_null($integradoId)?$this->inputData->integradoId:$integradoId;
+        $integradora                  = new \Integralib\Integrado();
+        $integradoId                  = $session->get('integradoId', $integradora->getIntegradoraUuid(), 'integrado');
+        $this->inputData->integradoId = is_null($integradoId)?$this->inputData->integradoId : $integradoId;
 
         parent::__construct();
     }

@@ -46,12 +46,10 @@ $token = JSession::getFormToken();
 ?>
 	<script>
 		var catalogoBancos = new Array();
-		<?php
-	   foreach ($this->catalogos->bancos as $key => $value){
+		<?php foreach ($this->catalogos->bancos as $key => $value){
 		   $optionBancos .= '<option value="'.$value->claveClabe.'">'.$value->banco.'</option>';
 		   echo 'catalogoBancos["'.$value->claveClabe.'"] = "'.$value->banco.'";'." \n";
-	   }
-	   ?>
+	    }?>
 
 		function toUpper() {
 			jQuery(this).val(jQuery(this).val().toUpperCase());
@@ -86,7 +84,6 @@ $token = JSession::getFormToken();
 			});
 			activeTab(nextTabObj);
 		}
-
 
 		jQuery(document).ready(function(){
 
@@ -143,6 +140,7 @@ $token = JSession::getFormToken();
 						}
 
 						if(obj.safeComplete){
+                            jQuery(document).scrollTop(0);
 							messageInfo('Datos Almacenados', 'info');
 							nextTab();
 							if(boton == 'juridica') {
@@ -224,6 +222,10 @@ $token = JSession::getFormToken();
 			}
 			if(!empty($datos->datos_bancarios)){
 			?>
+            var finishBtn = jQuery('#finishBtn');
+            finishBtn.prop('href', '<?php echo $finishUrl; ?>');
+            finishBtn.removeClass('disabled');
+
 			var datos_bancarios = '<?php echo json_encode($datos->datos_bancarios); ?>';
 			var datos_bancarios = eval ("(" + datos_bancarios + ")");
 
@@ -248,7 +250,11 @@ $token = JSession::getFormToken();
 			var testimonio_2 = eval ("(" + testimonio_2 + ")");
 
 			jQuery.each(testimonio_2, function(key, value){
-				jQuery('#t2_'+key).val(value);
+                if(key != 'instrum_fecha') {
+                    jQuery('#t2_' + key).val(value);
+                }else if( (key == 'instrum_fecha') && (value != '0000-00-00') ){
+                    jQuery('#t2_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -258,7 +264,11 @@ $token = JSession::getFormToken();
 			var poder = eval ("(" + poder + ")");
 
 			jQuery.each(poder, function(key, value){
-				jQuery('#pn_'+key).val(value);
+                if(key != 'instrum_fecha') {
+                    jQuery('#pn_' + key).val(value);
+                }else if(key == 'instrum_fecha' && value != '0000-00-00') {
+                    jQuery('#pn_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -268,7 +278,11 @@ $token = JSession::getFormToken();
 			var reg_propiedad = eval ("(" + reg_propiedad + ")");
 
 			jQuery.each(reg_propiedad, function(key, value){
-				jQuery('#rp_'+key).val(value);
+                if(key != 'instrum_fecha') {
+                    jQuery('#rp_' + key).val(value);
+                }else if(key == 'instrum_fecha' && value != '0000-00-00') {
+                    jQuery('#rp_' + key).val(value);
+                }
 			});
 			<?php
 			}
@@ -279,15 +293,21 @@ $token = JSession::getFormToken();
 				if (isset($datos->integrado->pers_juridica)) {
 					if ($datos->integrado->pers_juridica == 1) {
 						$readonlyRfc = '#de_rfc';
+						$idRFC = 'de_rfc';
 					} elseif ($datos->integrado->pers_juridica == 2) {
 						$readonlyRfc = '#dp_rfc';
+						$idRFC = 'dp_rfc';
 					}
 					?>
 			var $rfc_not_editable = jQuery('<?php echo $readonlyRfc; ?>');
 			var $value_rfc_not_editable = $rfc_not_editable.val();
-			$rfc_not_editable.after('<p>' + $value_rfc_not_editable + '</p>').remove();
-			nextTab();
-			jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
+
+
+			$rfc_not_editable.after('<p>' + $value_rfc_not_editable + '</p><input type="hidden" name="<?php echo $idRFC; ?>" id="<?php echo $idRFC; ?>" value="' + $value_rfc_not_editable + '" /> ').remove();
+
+            nextTab();
+
+            jQuery('#tabs-solicitudTabs li:first').addClass('disabled').find('a').attr('data-toggle', 'disabled');
 			<?php
 				}
 			}
@@ -317,8 +337,6 @@ $token = JSession::getFormToken();
 				changeMonth: true,
 				changeYear: true
 			});
-
-
 		});
 
 		function busqueda_rfc() {
@@ -388,13 +406,14 @@ $token = JSession::getFormToken();
 
 			resultado.done(function(response){
 				var obj = response;
+                console.log(response);
 
 				if(obj.success === true) {
 					llenatablabancos(obj);
 				}else{
-					if (obj.msg.db_banco_codigo !== true) {
-						obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
-					}
+//					if (obj.msg.db_banco_codigo !== true) {
+//						obj.msg.db_banco_codigo.msg = 'Debe seleccionar un banco';
+//					}
 					mensajesValidaciones(obj.msg);
 				}
 			});
@@ -405,7 +424,7 @@ $token = JSession::getFormToken();
 			var id		 = jQuery(campo).prop('id');
 			var idCliPro = jQuery('#integradoId').val();
 			var parametros = {
-				'link'  : 'index.php?option=com_integrado&view=clientesform&task=deleteBanco&format=raw',
+				'link'  : 'index.php?option=com_integrado&task=deleteBanco&format=raw',
 				'datos' : {
 					'datosBan_id' : id,
 					'integradoId' : idCliPro
@@ -425,9 +444,9 @@ $token = JSession::getFormToken();
 
 	<div class="msgs_plataforma" id="msgs_plataforma"></div>
 
-	<form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" >
-		<input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
-		<input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
+    <form action="index.php?option=com_integrado&task=uploadFiles" class="form" id="solicitud" name="solicitud" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" name="user_id" value="<?php echo $this->data->user->id; ?>" />
+        <input type="hidden" name="integradoId" id="integradoId" value="<?php echo $this->data->user->integradoId; ?>" />
 
 		<?php
 		echo JHtml::_('bootstrap.startTabSet', 'tabs-solicitud', array('active' => 'pers-juridica'));
@@ -450,7 +469,7 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary disabled" id="juridica" disabled><?php echo JText::_('LBL_ENVIAR'); ?></button>
+			<button type="button" class="btn btn-primary disabled" id="juridica" disabled><?php echo JText::_('LBL_GUARDAR'); ?></button>
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
@@ -542,6 +561,7 @@ $token = JSession::getFormToken();
 				<select name="pais" id="de_pais" >
 					<?php
 					foreach ($this->catalogos->nacionalidades as $key => $value) {
+                        $selected = $value->id == 146? ' selected="selected"' : '';
 						echo '<option value="'.$value->id.'" '.$selected.'>'.$value->nombre.'</option>';
 					}
 					?>
@@ -552,7 +572,7 @@ $token = JSession::getFormToken();
 		<fieldset>
 			<div class="form-group">
 				<label for="de_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
-				<input name="de_tel_fijo" id ="de_tel_fijo" type="text" maxlength="10" placeholder="5512345678" />
+				<input name="de_tel_fijo" id ="de_tel_fijo" type="text" maxlength="10" placeholder="Ej: 5512345678" />
 			</div>
 			<div class="form-group">
 				<label for="de_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
@@ -560,7 +580,7 @@ $token = JSession::getFormToken();
 			</div>
 			<div class="form-group">
 				<label for="de_tel_fax"><?php echo JText::_('LBL_TEL_FAX'); ?></label>
-				<input name="de_tel_fax" id ="de_tel_fax" type="text" maxlength="10" placeholder="5512345678" />
+				<input name="de_tel_fax" id ="de_tel_fax" type="text" maxlength="10" placeholder="Ej: 5512345678" />
 			</div>
 			<div class="form-group">
 				<label for="de_sitio_web"><?php echo JText::_('LBL_SITIO_WEB'); ?></label>
@@ -584,6 +604,7 @@ $token = JSession::getFormToken();
 					<select name="t1_instrum_estado" id="t1_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -617,6 +638,7 @@ $token = JSession::getFormToken();
 					<select name="t2_instrum_estado" id="t2_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -649,6 +671,7 @@ $token = JSession::getFormToken();
 					<select name="pn_instrum_estado" id="pn_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -681,6 +704,7 @@ $token = JSession::getFormToken();
 					<select name="rp_instrum_estado" id="rp_instrum_estado">
 						<?php
 						foreach ($this->catalogos->estados as $key => $value) {
+                            $default = ($value->nombre == 'México') ? 'selected' : '';
 							echo '<option value="'.$value->id.'" '.$default.'>'.$value->nombre.'</option>';
 						}
 						?>
@@ -696,8 +720,8 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_GUARDAR'); ?></button>
+<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 		<?php
@@ -823,7 +847,7 @@ $token = JSession::getFormToken();
 		<fieldset>
 			<div class="form-group">
 				<label for="dp_tel_fijo"><?php echo JText::_('LBL_TEL_FIJO'); ?> *</label>
-				<input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" placeholder="5512345678" />
+				<input name="dp_tel_fijo" id ="dp_tel_fijo" type="text" maxlength="10" placeholder="Ej: 5512345678" />
 			</div>
 			<div class="form-group">
 				<label for="dp_tel_fijo_extension"><?php echo JText::_('LBL_EXT'); ?></label>
@@ -831,7 +855,7 @@ $token = JSession::getFormToken();
 			</div>
 			<div class="form-group">
 				<label for="dp_tel_movil"><?php echo JText::_('LBL_TEL_MOVIL'); ?> *</label>
-				<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" placeholder="0445512345678" />
+				<input name="dp_tel_movil" id ="dp_tel_movil" type="text" maxlength="13" placeholder="Ej: 0445512345678" />
 			</div>
 			<div class="form-group">
 				<label for="email"><?php echo JText::_('LBL_CORREO'); ?> *</label>
@@ -844,8 +868,8 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-			<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_GUARDAR'); ?></button>
+<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
@@ -859,7 +883,7 @@ $token = JSession::getFormToken();
 				<input type="hidden" id="datosBan_id" name="datosBan_id" value="" />
 				<label for="db_banco_codigo"><?php echo JText::_('LBL_BANCOS'); ?> *</label>
 				<select name="db_banco_codigo" id="db_banco_codigo">
-					<option value="0"><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
+					<option value=""><?php echo JText::_('LBL_SELECCIONE_OPCION'); ?></option>
 					<?php
 					echo $optionBancos;
 					?>
@@ -900,8 +924,8 @@ $token = JSession::getFormToken();
 			</div>
 
 			<div class="form-actions">
-				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_ENVIAR'); ?></button>
-				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_GUARDAR'); ?></button>
+<!--				<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>
@@ -925,7 +949,7 @@ $token = JSession::getFormToken();
 				't2_url_instrumento'            => array(@$datos->testimonio2->url_instrumento, 'LBL_TESTIMONIO2_FILE'),
 				'pn_url_instrumento'            => array(@$datos->poder->url_instrumento, 'LBL_TESTIMONIO3_FILE'),
 				'rp_url_instrumento'            => array(@$datos->reg_propiedad->url_instrumento, 'LBL_RPP_FILE'),
-				'db_banco_file'                 => array(@$datos->datos_bancarios->banco_file, 'LBL_BANCO_FILE')
+				'db_banco_file'                 => array(@$datos->datos_bancarios[0]->banco_file, 'LBL_BANCO_FILE')
 			);
 
 			if(isset($datos->integrado->pers_juridica)) {
@@ -963,8 +987,8 @@ $token = JSession::getFormToken();
 			?>
 
 			<div class="form-actions">
-				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_ENVIAR_SOLICITUD'); ?></button>
-				<a class="btn btn-success" href="<?php echo $finishUrl; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
+				<a class="btn btn-success disabled" id="finishBtn" href="" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>

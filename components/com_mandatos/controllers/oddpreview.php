@@ -36,7 +36,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
             $this->parametros['userId']      = (INT)$user->id;
             $this->parametros['authDate']    = time();
-            $this->parametros['integradoId'] = (INT)$this->integradoId;
+            $this->parametros['integradoId'] = (STRING)$this->integradoId;
 
             $save->formatData($this->parametros);
 

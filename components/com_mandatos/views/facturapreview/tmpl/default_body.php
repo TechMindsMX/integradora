@@ -108,7 +108,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_BANCOS'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->bankName; ?>
+			<?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->bankName; ?>
 		</div>
 	</div>
 	<div>
@@ -122,7 +122,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_BANCO_CUENTA'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->banco_cuenta; ?>
+			<?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->banco_cuenta; ?>
 		</div>
 	</div>
 	<div>
@@ -136,7 +136,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_NUMERO_CLABE'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->getEmisor()->getAccountData($this->factura->account)->banco_clabe; ?>
+			<?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->banco_clabe; ?>
 		</div>
 	</div>
 	<div class="clearfix">
@@ -166,7 +166,7 @@ $number2word = new AifLibNumber();
 			array_push($ivasProd, floatval($prod->iva) );
 			?>
 			<tr>
-				<td><?php echo $key; ?></td>
+				<td><?php echo $key+1; ?></td>
 				<td><?php echo $prod->cantidad; ?></td>
 				<td><?php echo $prod->descripcion; ?></td>
 				<td><?php echo $prod->unidad; ?></td>

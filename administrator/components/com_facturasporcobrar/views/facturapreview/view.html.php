@@ -40,7 +40,7 @@ class FacturasporcobrarViewFacturapreview extends JViewLegacy {
 		$this->factura->proveedor   = PreviewHelper::getClientsFromID($this->factura->clientId, $this->integradoId);
 
 		// Boton de impresion
-		$url = 'index.php?option=com_facturasporcobrar&view=facturapreview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
+		$url = 'index.php?option=com_facturasporcobrar&view=facturapreview&layout=printview&integradoId=' . $this->integradoId . '&facturanum=' . $data['facturanum'];
 		$this->printBtn = PreviewHelper::getPrintButton($url);
 
 		parent::display($tpl);

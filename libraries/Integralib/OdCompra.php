@@ -55,9 +55,9 @@ class OdCompra extends Order {
 		$this->id              = (INT)$order->id;
 		$this->orderType       = 'odc';
 		$this->proyecto        = (INT)$order->proyecto;
-		$this->clientId        = (INT)$order->proveedor;
-		$this->proveedor       = (INT)$order->proveedor;
-		$this->integradoId     = (INT)$order->integradoId;
+		$this->clientId        = (STRING)$order->proveedor;
+		$this->proveedor       = (STRING)$order->proveedor;
+		$this->integradoId     = (STRING)$order->integradoId;
 		$this->numOrden        = (INT)$order->numOrden;
 		$this->paymentMethod   = (INT)$order->paymentMethod;
 		$this->paymentMethod   = getFromTimOne::getPaymentMethodName($order->paymentMethod);

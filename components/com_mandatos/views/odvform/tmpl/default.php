@@ -114,7 +114,7 @@ $subProyects = $this->subprojects;
             url: "index.php?option=com_mandatos&task=searchProducts&format=raw",
             data: {
                 'productName': valorCampo,
-                'integradoId': <?php echo $this->integradoId; ?>
+                'integradoId': '<?php echo $this->integradoId; ?>'
             },
             type: 'get',
             async: false
@@ -230,7 +230,7 @@ $subProyects = $this->subprojects;
 
 </script>
 
-<form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data" >
+<form action="" class="form" id="altaODV" name="altaODV" method="post" enctype="multipart/form-data"  autocomplete="off">
     <h1>Generación de Orden de Venta</h1>
     <h3>Número de Orden: <span id="numOrden"><?php echo $orden->numOrden; ?></span></h3>
 
@@ -259,7 +259,8 @@ $subProyects = $this->subprojects;
             <?php
             foreach ($this->clientes as $key => $value) {
                 $selectedCli = ($value->id == $orden->clientId) ? 'selected' : '';
-                echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$value->tradeName.'</option>';
+                $name = $value->tradeName == '' ? $value->corporateName : $value->tradeName;
+                echo '<option value="'.$value->id.'" '.$selectedCli.'>'.$name.'</option>';
             }
             ?>
             <option value="other">Otro</option>
@@ -273,7 +274,8 @@ $subProyects = $this->subprojects;
         <?php
         ?>
         <select name="account">
-            <option value="0">Cuenta</option>
+            <option>Cuenta Bancaria</option>
+            <option>Sin Identificar</option>
             <?php
             foreach ($this->cuentas as $datosCuenta) {
                 $selectedCuentas = ( $datosCuenta->datosBan_id == $orden->account) ? 'selected' : '';

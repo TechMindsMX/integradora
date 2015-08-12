@@ -12,6 +12,7 @@ $cancelUrl = 'index.php?option=com_mandatos&view=txsinmandatolist';
 
 $order = $this->orders->order;
 
+echo $this->loadTemplate('tx_head');
 ?>
 
 <div class="row">
@@ -44,7 +45,7 @@ $order = $this->orders->order;
 		</div>
 	</div>
 	<div class="span6">
-		<form action="<?php echo $accion; ?>" method="post" enctype="application/x-www-form-urlencoded">
+		<form action="<?php echo $accion; ?>" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
 
 			<input type="hidden" name="idOrden" value="<?php echo $order->id; ?>">
 			<input type="hidden" name="orderType" value="<?php echo $order->orderType; ?>">

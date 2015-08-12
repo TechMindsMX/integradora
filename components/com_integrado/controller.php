@@ -14,12 +14,12 @@ class IntegradoController extends JControllerLegacy {
     protected $app;
 
     function __construct() {
-	    $this->app = JFactory::getApplication();
-	    $currUser	= JFactory::getUser();
+        $this->app = JFactory::getApplication();
+        $currUser	= JFactory::getUser();
 
-	    if($currUser->guest){
-		    $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
-	    }
+        if($currUser->guest){
+            $this->app->redirect('index.php?option=com_users&view=login', JText::_('MSG_REDIRECT_LOGIN'), 'Warning');
+        }
 
         $this->sesion = JFactory::getSession();
         $this->integradoId = $this->sesion->get('integradoId', null, 'integrado');
@@ -45,6 +45,7 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public function search_rfc_cliente() {
+        $db = JFactory::getDbo();
         $this->document->setMimeEncoding( 'application/json' );
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'rfc' => 'STRING' ) );
         $tipo_rfc = $this->rfc_type($data['rfc']);
@@ -53,7 +54,7 @@ class IntegradoController extends JControllerLegacy {
 
         if(!empty($existe)){
             // Busca si existe la relacion entre el integrado actual y el resultado de la busqueda
-            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integrado_id = '.$this->integradoId.' AND integradoIdCliente = '.$existe );
+            $relation = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoId = '. $db->quote($this->integradoId) .' AND integradoIdCliente = '.$db->quote($existe) );
 
             $datos = new IntegradoSimple($existe);
             $datos->integrados[0]->success = true;
@@ -106,12 +107,12 @@ class IntegradoController extends JControllerLegacy {
         $db        = JFactory::getDbo();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
         $db->setQuery($query);
         $personales = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('integrado_id'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
+        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
         $db->setQuery($query);
         $empresa = $db->loadResult();
 
@@ -139,20 +140,20 @@ class IntegradoController extends JControllerLegacy {
         echo json_encode($response);
     }
 
-	/**
-	 * Salva la alta de usuarios a un integrado
-	 * @throws Exception
-	 */
-	function saveAltaNewUserOfInteg(){
+    /**
+     * Salva la alta de usuarios a un integrado
+     * @throws Exception
+     */
+    function saveAltaNewUserOfInteg(){
         $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
 
-        $columnas	= array('integrado_id','user_id', 'integrado_principal', 'integrado_permission_level');
+        $columnas	= array('integradoId','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($this->integradoId, $data['userId'], 0, $data['permission_level']);
+        $valores	= array($db->quote($this->integradoId), $data['userId'], 0, $data['permission_level']);
 
-        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '.$data['userId'].' AND '.$db->quoteName('integrado_id').' = '.$data['integrado_id']);
+        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
 
         if( empty($existe) ){
             self::insertData('integrado_users', $columnas, $valores);
@@ -167,17 +168,17 @@ class IntegradoController extends JControllerLegacy {
         $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
     }
 
-	/**
-	 * elimina la relacion entre el integrado y el usuario dado de alta
-	 * @throws Exception
-	 */
-	function deleteUser(){
+    /**
+     * elimina la relacion entre el integrado y el usuario dado de alta
+     * @throws Exception
+     */
+    function deleteUser(){
         $db			= JFactory::getDbo();
         $document	= JFactory::getDocument();
         $input		= JFactory::getApplication()->input;
 
         $user		= $input->getArray();
-        $where 		= array($db->quoteName('user_id') . ' = ' . $user['data']);
+        $where 		= array($db->quoteName('user_id') . ' = ' . (INT)$user['data']);
 
         $response 	= self::deleteData('integrado_users', $where);
         $response['delete']	= true;
@@ -189,34 +190,34 @@ class IntegradoController extends JControllerLegacy {
         echo json_encode($response);
     }
 
-	/**
-	 * carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
-	 * @throws Exception
-	 */
-	function uploadFiles(){
+    /**
+     * carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
+     * @throws Exception
+     */
+    function uploadFiles(){
+        $app = JFactory::getApplication();
         $data = $this->input->getArray();
         $saveFiles = sendToTimOne::uploadFiles($data['integradoId']);
 
-	    $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'message') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
+        $msg = $saveFiles ? array('msg' => JText::_('LBL_SAVE_SUCCESSFUL'), 'type' => 'notice') : array('msg' => JText::_('LBL_SAVE_FAILED'), 'type' => 'error');
 
-        if($this->integradoId ==''){
+        if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado&view=solicitud&integradoId='.$this->integradoId.'&Itemid=207';
+            $url = 'index.php?option=com_integrado';
         }
 
-	    $app = JFactory::getApplication();
-	    $app->enqueueMessage($msg['mag'], $msg['type']);
+        $app->enqueueMessage($msg['msg'], $msg['type']);
         $app->redirect($url, false);
 
     }
 
-	/**
-	 * Recibe el post y lo envia a procesar y guardar
-	 * @return bool
-	 * @throws Exception
-	 */
-	function saveform(){
+    /**
+     * Recibe el post y lo envia a procesar y guardar
+     * @return bool
+     * @throws Exception
+     */
+    function saveform(){
         $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
 
         if($data['busqueda_rfc']) {
@@ -245,8 +246,8 @@ class IntegradoController extends JControllerLegacy {
         switch ($input->get('tab', null, 'STRING')) {
             case 'juridica':
                 $arrayPost = array(
-                    'pj_pers_juridica'          => 'STRING',
-                    'busqueda_rfc'              => 'STRING',
+                    'pj_pers_juridica' => 'STRING',
+                    'busqueda_rfc'     => 'STRING',
                 );
                 break;
             case 'personales':
@@ -267,7 +268,7 @@ class IntegradoController extends JControllerLegacy {
                     'dp_fecha_nacimiento'         => 'STRING',
                     'dp_nombre_representante'     => 'STRING',
                 );
-                 break;
+                break;
             case 'empresa':
                 $arrayPost = array(
                     'de_razon_social'             => 'STRING',
@@ -315,8 +316,8 @@ class IntegradoController extends JControllerLegacy {
                 break;
         }
         $arrayDefaults = array(
-            'tab'                         => 'STRING',
-            'integradoId'                 => 'STRING'
+            'tab'         => 'STRING',
+            'integradoId' => 'STRING'
         );
 
         $post 	= $input->getArray( array_merge($arrayPost, $arrayDefaults) );
@@ -327,7 +328,7 @@ class IntegradoController extends JControllerLegacy {
         $response = self::manejoDatos($post);
 
         if($response['safeComplete'] == true && $input->get('tab', null, 'STRING')== 'personales'){
-          $this->sendEmail();
+            $this->sendEmail();
         }
         // Get the document object.
         $document = JFactory::getDocument();
@@ -358,27 +359,25 @@ class IntegradoController extends JControllerLegacy {
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
-
             case 'personales':
                 $diccionario = array(
-                    'dp_tel_fijo'                => array('phone' => true,            	'maxlength' => 10,  'minlength'=>10,    'required' => true),
-                    'dp_tel_movil'               => array('number' => true,     	    'maxlength' => 13,  'minlength'=>13,    'required' => true),
+                    'dp_tel_fijo'                => array('phone'       => true,       	'maxlength' => 10,  'minlength'=>10,    'required' => true),
+                    'dp_tel_movil'               => array('number'      => true,   	    'maxlength' => 13,  'minlength'=>13,    'required' => true),
                     'dp_nacionalidad'            => array('alphaNumber' => true,      	'maxlength' => 45,  'required' => true),
                     'dp_sexo'                    => array('alphaNumber' => true,	   	'maxlength' => 45,  'required' => true),
-                    'dp_rfc'                     => array('rfc_fisica' => true,      	'maxlength' => 13,  'required' => true),
+                    'dp_rfc'                     => array('rfc_fisica'  => true,      	'maxlength' => 13,  'required' => true),
                     'dp_calle'                   => array('alphaNumber' => true,	    'maxlength' => 100, 'required' => true),
                     'dp_num_exterior'            => array('alphaNumber' => true,        'maxlength' => 10,  'required' => true),
-                    'dp_cod_postal'              => array('number' => true,		        'maxlength' => 13,  'required' => true),
-                    'dp_email'                   => array('email' => true,		    	'maxlength' => 100, 'required' => true),
-                    'dp_nombre_representante'    => array('string' => true,     	    'maxlength' => 150, 'required' => true),
-                    'dp_fecha_nacimiento'        => array('date' => true,	        	'maxlength' => 10,  'required' => true),
+                    'dp_cod_postal'              => array('number'      => true,        'maxlength' => 13,  'required' => true),
+                    'dp_email'                   => array('email'       => true,    	'maxlength' => 100, 'required' => true),
+                    'dp_nombre_representante'    => array('string'      => true,   	    'maxlength' => 150, 'required' => true),
+                    'dp_fecha_nacimiento'        => array('date'        => true,       	'maxlength' => 10,  'required' => true),
                     'dp_curp'                    => array('alphaNumber' => true,	    'maxlength' => 18,  'required' => true),
                     'dp_num_interior'            => array('alphaNumber' => true,        'maxlength' => 10),
                     'dp_tel_fijo_extension'      => array('alphaNumber' => true,	    'maxlength' => 5),
                     'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
                 );
                 break;
-
             case 'empresa':
                 $diccionario = array(
                     'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
@@ -396,22 +395,21 @@ class IntegradoController extends JControllerLegacy {
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
                     'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       ),
-                    't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    't2_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      ),
                     't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 18,      ),
-                    'pn_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'pn_instrum_fecha'           => array('date'        => true,      	'maxlength' => 10,      ),
                     'pn_instrum_notaria'         => array('alphaNumber' => true, 	    'maxlength' => 18,      ),
                     'pn_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 255,     ),
                     'pn_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     'pn_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
-                    'rp_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
+                    'rp_instrum_fecha'           => array('date'        => true,      	'maxlength' => 10,      ),
                     'rp_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                     'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                 );
                 break;
-
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
@@ -420,19 +418,19 @@ class IntegradoController extends JControllerLegacy {
                     'db_banco_sucursal'          => array('alphaNumber' => true,	                    'maxlength' => 10,  'required' => true),
                 );
                 break;
-            }
+        }
 
         $diccionarioDefault  = array(
-            'integradoId'                => array('number' => true,		    	'maxlength' => 10),
-            'tab'                        => array('string' => true,   	    	'maxlength' => 18),
+            'integradoId'                => array('alohaNum' => true,   'maxlength' => 36),
+            'tab'                        => array('string' => true,     'maxlength' => 18),
         );
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 
         if($integrado_id === null){
             $integrado_id = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
 
-            $columnas 		= array('user_id', 'integrado_id', 'integrado_principal', 'integrado_permission_level');
-            $valores 		= array(JFactory::getUser()->id, $integrado_id, 1, 3);
+            $columnas 		= array('user_id', 'integradoId', 'integrado_principal', 'integrado_permission_level');
+            $valores 		= array(JFactory::getUser()->id, $db->quote($integrado_id), 1, 3);
 
             $saveUserIntegRealtion = self::insertData('integrado_users', $columnas, $valores);
 
@@ -458,14 +456,14 @@ class IntegradoController extends JControllerLegacy {
             case 'juridica':
                 $createdDate  = time();
                 $table 		  = 'integrado';
-                $columnas 	  = array('integrado_id','status','pers_juridica', 'createdDate');
-                $valores	  = array( $integrado_id, '0', $data['pj_pers_juridica'], $createdDate );
+                $columnas 	  = array('integradoId','status','pers_juridica', 'createdDate');
+                $valores	  = array( $db->quote($integrado_id), '0', $data['pj_pers_juridica'], $createdDate );
                 $updateSet 	  = array($db->quoteName('pers_juridica').' = '.$data['pj_pers_juridica'] );
                 break;
             case 'personales':
                 $table 		= 'integrado_datos_personales';
-                $columnas[] = 'integrado_id';
-                $valores[]	= $integrado_id;
+                $columnas[] = 'integradoId';
+                $valores[]	= $db->quote($integrado_id);
                 $valoresvalidaicon['integradoId']= $integrado_id;
 
                 foreach ($data as $key => $value) {
@@ -482,8 +480,8 @@ class IntegradoController extends JControllerLegacy {
                 break;
             case 'empresa':
                 $table = 'integrado_datos_empresa';
-                $columnas[] = 'integrado_id';
-                $valores[]	= $integrado_id;
+                $columnas[] = 'integradoId';
+                $valores[]	= $db->quote($integrado_id);
 
                 self::saveInstrumentos($data);
 
@@ -502,8 +500,8 @@ class IntegradoController extends JControllerLegacy {
                 break;
             case 'bancos':
                 $table = 'integrado_datos_bancarios';
-                $columnas[] = 'integrado_id';
-                $valores[]	= $integrado_id;
+                $columnas[] = 'integradoId';
+                $valores[]	= $db->quote($integrado_id);
 
                 foreach ($data as $key => $value) {
                     $columna 	= substr($key, 3);
@@ -519,13 +517,12 @@ class IntegradoController extends JControllerLegacy {
                 break;
         }
 
-        $existe = self::checkData($table, $db->quoteName('integrado_id').' = '.$integrado_id);
-
+        $existe = self::checkData($table, $db->quoteName('integradoId').' = '. $db->quote($integrado_id) );
 
         if( empty($existe) ){
             $respuesta = self::insertData($table, $columnas, $valores);
         }else{
-            $condicion 	= array($db->quoteName('integrado_id').' = '.$integrado_id );
+            $condicion 	= array($db->quoteName('integradoId').' = '. $db->quote($integrado_id) );
             $respuesta = self::updateData($table, $updateSet, $condicion);
         }
 
@@ -536,6 +533,7 @@ class IntegradoController extends JControllerLegacy {
     }
 
     public static function checkData($table, $where){
+        $results = false;
         try{
             $db		= JFactory::getDbo();
             $query 	= $db->getQuery(true);
@@ -547,13 +545,13 @@ class IntegradoController extends JControllerLegacy {
             $db->setQuery($query);
 
             $results = $db->loadObjectList();
-
-            return $results;
         }
         catch(Exception $e){
-            $response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
+            $response = array('success' => false , 'msg' => 'Error en checkData');
             echo json_encode($response);
         }
+
+        return $results;
     }
 
     public static function insertData($tabla, $columnas, $valores){
@@ -617,19 +615,19 @@ class IntegradoController extends JControllerLegacy {
 
     public static function saveInstrumentos($data){
         $db				= JFactory::getDbo();
-        $columnast1[] 	= 'integrado_id';
-        $columnast2[] 	= 'integrado_id';
-        $columnasPN[] 	= 'integrado_id';
-        $columnasRP[]	= 'integrado_id';
+        $columnast1[] 	= 'integradoId';
+        $columnast2[] 	= 'integradoId';
+        $columnasPN[] 	= 'integradoId';
+        $columnasRP[]	= 'integradoId';
         $columnast1[] 	= 'instrum_type';
         $columnast2[] 	= 'instrum_type';
         $columnasPN[] 	= 'instrum_type';
         $columnasRP[]	= 'instrum_type';
 
-        $valort1[]		= $data['integradoId'];
-        $valort2[]		= $data['integradoId'];
-        $valorPN[]		= $data['integradoId'];
-        $valorRP[]		= $data['integradoId'];
+        $valort1[]		= $db->quote($data['integradoId']);
+        $valort2[]		= $db->quote($data['integradoId']);
+        $valorPN[]		= $db->quote($data['integradoId']);
+        $valorRP[]		= $db->quote($data['integradoId']);
         $valort1[]		= 1;
         $valort2[]		= 2;
         $valorPN[]		= 3;
@@ -666,7 +664,7 @@ class IntegradoController extends JControllerLegacy {
             }
         }
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 1';
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 1';
         $existet1 = self::checkData('integrado_instrumentos', $where);
         if(empty($existet1) ){
             self::insertData('integrado_instrumentos', $columnast1, $valort1);
@@ -675,9 +673,11 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_instrumentos', $updateSett1, $where);
             $existet1 = self::checkData('integrado_instrumentos', $where);
         }
-        self::saveInstrumentosEmpresa($data['integradoId'], $existet1[0]->id, 'testimonio_1');
+        if (!empty($existet1)) {
+            self::saveInstrumentosEmpresa($data['integradoId'], $existet1[0]->id, 'testimonio_1');
+        }
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 2';
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 2';
         $existet2 = self::checkData('integrado_instrumentos', $where);
         if(empty($existet2) ){
             self::insertData('integrado_instrumentos', $columnast2, $valort2);
@@ -686,9 +686,12 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_instrumentos', $updateSett2, $where);
             $existet2 = self::checkData('integrado_instrumentos', $where);
         }
-        self::saveInstrumentosEmpresa($data['integradoId'], $existet2[0]->id, 'testimonio_2');
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 3';
+        if (!empty($existet2)) {
+            self::saveInstrumentosEmpresa($data['integradoId'], $existet2[0]->id, 'testimonio_2');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 3';
         $existepn = self::checkData('integrado_instrumentos', $where);
         if(empty($existepn) ){
             self::insertData('integrado_instrumentos', $columnasPN, $valorPN);
@@ -697,9 +700,11 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_instrumentos', $updateSetpn, $where);
             $existepn = self::checkData('integrado_instrumentos', $where);
         }
-        self::saveInstrumentosEmpresa($data['integradoId'], $existepn[0]->id, 'poder');
+        if (!empty($existepn)) {
+            self::saveInstrumentosEmpresa($data['integradoId'], $existepn[0]->id, 'poder');
+        }
 
-        $where = $db->quoteName('integrado_id').' = '.$data['integradoId'].' AND '.$db->quoteName('instrum_type').' = 4';
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['integradoId']) .' AND '.$db->quoteName('instrum_type').' = 4';
         $existerp = self::checkData('integrado_instrumentos', $where);
         if(empty($existerp) ){
             self::insertData('integrado_instrumentos', $columnasRP, $valorRP);
@@ -708,17 +713,19 @@ class IntegradoController extends JControllerLegacy {
             self::updateData('integrado_instrumentos', $updateSetrp, $where);
             $existerp = self::checkData('integrado_instrumentos', $where);
         }
-        self::saveInstrumentosEmpresa($data['integradoId'], $existerp[0]->id, 'reg_propiedad');
+        if (!empty($existerp[0])) {
+            self::saveInstrumentosEmpresa($data['integradoId'], $existerp[0]->id, 'reg_propiedad');
+        }
     }
 
     public static function saveInstrumentosEmpresa($integrado_id, $id_instrumento, $campo){
         $db				= JFactory::getDbo();
-        $where			= $db->quoteName('integrado_id').' = '.$integrado_id;
+        $where			= $db->quoteName('integradoId').' = '. $db->quote($integrado_id) ;
         $dataEmpresa 	= self::checkData('integrado_datos_empresa', $where);
         $columna[] 		= $campo;
-        $columna[]		= 'integrado_id';
+        $columna[]		= 'integradoId';
         $valor[]		= $id_instrumento;
-        $valor[]		= $integrado_id;
+        $valor[]		= $db->quote($integrado_id);
         $updateSet[] 	= $db->quoteName($campo).' = '.$db->quote($id_instrumento);
 
         if(empty($dataEmpresa)){
@@ -739,14 +746,14 @@ class IntegradoController extends JControllerLegacy {
         if (!JSession::checkToken()) {
             $this->redirectToSelectIntegrado();
         } else {
-            $this->id = $this->app->input->get('integradoId', null, 'INT');
+            $this->id = $this->app->input->get('integradoId', null, 'STRING');
 
             list($valid, $integrado) = $this->isValidIntegradoIdForUser();
             if ($valid) {
 
                 $sesion = JFactory::getSession();
                 $sesion->set('integradoId', $this->id, 'integrado');
-	            $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
+                $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
 
                 $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
             }
@@ -780,71 +787,108 @@ class IntegradoController extends JControllerLegacy {
 
     public function sendEmail($type=null)
     {
-    /*
-	 *  NOTIFICACIONES 0 & 1
-	 */
-	    $getCurrUser = new IntegradoSimple($this->integradoId);
+        /*
+         *  NOTIFICACIONES 0 & 1
 
-	    switch ($_POST['permission_level']){
-		    case 1:
-			    $permiso = 'Consulta';
-			    break;
-		    case 2:
-			    $permiso = 'Operaciones';
-			    break;
-		    case 3:
-			    $permiso = 'Autorizador';
-			    break;
-		    case 4:
-			    $permiso = 'Full';
-			    break;
-	    }
+        $getCurrUser = new IntegradoSimple($this->integradoId);
 
-	    if(is_null($type)){
-		    $array = array(
-			    $getCurrUser->user->name,
-			    $this->integradoId,
-			    date('d-m-Y'));
-		    $noEmail = 1;
-		    $typeAlta = '';
-	    }else{
-		    if($type == 'edit'){
-			    $typeAlta = 'Edicion';
-		    }
-		    if($type == 'new'){
-			    $typeAlta = 'Alta';
-		    }
-		    foreach ($getCurrUser->usuarios as $key => $value) {
-			    if($value->id == $_POST['userId']){
-				    $dataUser = $value;
-			    }
-		    }
-		    $titleArray =array ( $typeAlta );
-		    $array = array(
-			    $typeAlta,
-			    $dataUser->email,
-			    $dataUser->username,
-			    $permiso,
-			    date('d-m-Y'));
-		    $noEmail = 0;
-	    }
-	    $send = new Send_email();
-	    $send->setIntegradoEmailsArray($getCurrUser);
-	    $info = $send->sendNotifications($noEmail, $array, $titleArray);
-	    return $info;
+        if (isset($_POST['permission_level'])) {
+            switch ($_POST['permission_level']){
+                case 1:
+                    $permiso = 'Consulta';
+                    break;
+                case 2:
+                    $permiso = 'Operaciones';
+                    break;
+                case 3:
+                    $permiso = 'Autorizador';
+                    break;
+                case 4:
+                    $permiso = 'Full';
+                    break;
+            }
+        }else{
+            $permiso = 'Full';
+        }
+
+        if(is_null($type)){
+            $array = array(
+                $getCurrUser->user->name,
+                $this->integradoId,
+                date('d-m-Y'));
+            $noEmail = 1;
+            $typeAlta = '';
+        }else{
+            if($type == 'edit'){
+                $typeAlta = 'Edicion';
+            }
+            if($type == 'new'){
+                $typeAlta = 'Alta';
+            }
+            foreach ($getCurrUser->usuarios as $key => $value) {
+                if($value->id == $_POST['userId']){
+                    $dataUser = $value;
+                }
+
+            }
+            $titleArray =array ( $typeAlta );
+            $array = array(
+                $typeAlta,
+                $dataUser->email,
+                $dataUser->username,
+                $permiso,
+                date('d-m-Y'));
+            $noEmail = 0;
+        }
+        $send = new Send_email();
+        $send->setIntegradoEmailsArray($getCurrUser);
+        $info = $send->sendNotifications($noEmail, $array, $titleArray);
+        return $info;*/
     }
 
-	public function finish( ){
-		if ( isset( $this->integradoId ) ) {
-			$integrado = new IntegradoSimple($this->integradoId);
+    public function finish( ){
+        $db = JFactory::getDbo();
+        if ( isset( $this->integradoId ) ) {
+            $integrado = new IntegradoSimple($this->integradoId);
 
-			if ( $integrado->hasAllDataForValidation() ) {
-				$this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
-			} else {
-				$this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
-			}
-		}
+            if ( $integrado->hasAllDataForValidation() ) {
+                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+                $integrado->integrados[0]->integrado->status = 1;
+                $db->updateObject('#__integrado',$integrado->integrados[0]->integrado,'integradoId');
 
-		$this->app->redirect(JRoute::_('index.php?option=com_integrado'));
-	}
+                $notifications = new Send_email();
+                $notifications->setIntegradoEmailsArray($integrado);
+                $notifications->sendNotifications( 40, array( date('d-m-Y') ) );
+                $notificationAdmin = new Send_email();
+                $notificationAdmin->setAdminEmails();
+                $notifications->sendNotifications( 41, array( $integrado->getDisplayName(),date('d-m-Y') ) );
+
+            } else {
+                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
+            }
+        }
+
+        $this->app->redirect(JRoute::_('index.php?option=com_integrado'));
+    }
+
+    function deleteBanco(){
+        $input_data = JFactory::getApplication()->input;
+        $db	        = JFactory::getDbo();
+        $save       = new sendToTimOne();
+        $post       = array('datosBan_id' => 'INT');
+        $data 		= $input_data->getArray($post);
+        $table 		= 'integrado_datos_bancarios';
+        $where      = $db->quoteName('integradoId').' = '.$db->quote($this->integradoId).' && '.$db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
+
+        $respuesta['msg'] = $save->deleteDB($table,$where);
+
+        if($respuesta['msg']) {
+            $respuesta['success'] = true;
+        }else{
+            $respuesta['success'] = false;
+        }
+
+        $this->document->setMimeEncoding('application/json');
+        echo json_encode($respuesta);
+    }
 }

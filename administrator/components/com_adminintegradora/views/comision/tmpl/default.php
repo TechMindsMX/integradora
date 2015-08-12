@@ -22,7 +22,7 @@ $accion = 'index.php?option=com_adminintegradora';
 		<button id="toolbar-cancel" class="btn btn-small btn-danger"><span class=""></span><?php echo JText::_( 'LBL_CANCEL' ); ?></button>
 	</div>
 
-	<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="comision-form" class="form-validate">
+	<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="comision-form" class="form-validate" autocomplete="off">
 
 		<div class="control-group">
 			<div class="control-group">

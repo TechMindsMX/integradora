@@ -33,7 +33,7 @@ class OdDeposito extends Order {
 	public function processOrderData( $order ) {
 
 		$this->id              = (INT)$order->id;
-		$this->integradoId     = (INT)$order->integradoId;
+		$this->integradoId     = (STRING)$order->integradoId;
 		$this->orderType       = 'odd';
 		$this->numOrden        = (INT)$order->numOrden;
 		$this->status          = (INT)$order->status;

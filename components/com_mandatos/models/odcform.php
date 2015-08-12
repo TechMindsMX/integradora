@@ -13,9 +13,9 @@ jimport('integradora.xmlparser');
  */
 class MandatosModelOdcform extends JModelItem {
     protected $dataModelo;
-	protected $catalogos;
+    protected $catalogos;
 
-	public function __construct(){
+    public function __construct(){
         $post              = array( 'idOrden' => 'INT');
         $this->inputVars   = JFactory::getApplication()->input->getArray($post);
         $this->id          = $this->inputVars['idOrden'];
@@ -55,14 +55,20 @@ class MandatosModelOdcform extends JModelItem {
     public function getProviders(){
         $proveedores = getFromTimOne::getClientes($this->integradoId,1);
         //TODO: traer siempre los clientes/proveedores como objetos integrado
+        $respuesta = array();
 
         foreach ( $proveedores as $key =>$value ) {
             $integ = new IntegradoSimple($value->id);
             $integ->displayName = $integ->getDisplayName();
 
             $proveedores[$key] = $integ;
+
+            if($value->status != 0) {
+                $respuesta[$key] = $proveedores[$key];
+            }
         }
-        return $proveedores;
+
+        return $respuesta;
     }
 
     public function getdata2xml($urlFile = null){
@@ -84,9 +90,9 @@ class MandatosModelOdcform extends JModelItem {
         return $this->catalogos->getBancos();
     }
 
-	public function getCatalogos( ){
-		return $this->catalogos->getPaymentMethods();
+    public function getCatalogos( ){
+        return $this->catalogos->getPaymentMethods();
 
-	}
+    }
 }
 

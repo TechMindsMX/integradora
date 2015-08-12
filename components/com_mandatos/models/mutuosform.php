@@ -11,8 +11,8 @@ class MandatosModelMutuosform extends JModelItem {
         $app                          = JFactory::getApplication();
         $post                         = array(
             'id'                => 'INT',
-            'integradoId'       => 'INT',
-            'integradoIdR'      => 'INT',
+            'integradoId'       => 'STRING',
+            'integradoIdR'      => 'STRING',
             'paymentPeriod'     => 'INT',
             'cuotaOcapital'     => 'INT',
             'quantityPayments'  => 'FLOAT',

@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 // import joomla controller library
 jimport('joomla.application.component.controller');
 
-if (!JFactory::getUser()->authorise('core.manage', 'com_integrado')) 
+if (!JFactory::getUser()->authorise('core.manage', 'com_mandatos'))
 {
         return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }

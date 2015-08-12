@@ -51,12 +51,12 @@ class facturasComision extends OdVenta{
                 $xmlFactura = $save->generateFacturaFromTimone($factObj);
                 $factComDB = new stdClass();
 
-                $factComDB->integradoId = $integradoId;
-                $factComDB->status = 0;
-                $factComDB->urlXML = $save->saveXMLFile($xmlFactura);
-                $factComDB->createdDate = $fecha->getTimestamp();
-
-                $db->transactionStart();
+	            $factComDB->integradoId = $integradoId;
+	            $factComDB->status      = 0;
+	            $factComDB->urlXML      = $save->saveXMLFile($xmlFactura);
+	            $factComDB->createdDate = $fecha->getTimestamp();
+	
+	            $db->transactionStart();
 
                 try {
                     $db->insertObject('#__facturas_comisiones', $factComDB);

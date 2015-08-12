@@ -11,8 +11,7 @@ $nombre = (isset($integ->datos_empresa->razon_social)) ? $integ->datos_empresa->
 $verifications = $this->verifications;
 ?>
 
-    <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integrado&layout=edit&id=' . (int)$this -> item -> id); ?>"
-          method="post" name="adminForm" id="adminForm">
+    <form action="<?php echo JRoute::_('index.php?option=com_integrado&view=integrado&layout=edit&id=' . (STRING)$this -> item -> id); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off">
         <div class="form-horizontal">
             <fieldset class="adminform">
                 <legend><?php echo JText::_('COM_INTEGRADO_INTEGRADO_DETAILS').' - '.$nombre; ?></legend>
@@ -33,6 +32,11 @@ $verifications = $this->verifications;
                                     </label>
                                 <?php endforeach; ?>
                             </div>
+
+                            <div class="control-label">Comentarios</div>
+                            <div class="controls">
+                                <textarea name="comments"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -51,9 +55,9 @@ $verifications = $this->verifications;
 
                     tabValores($integ->datos_personales, 	$this->item->campos, 	$dat_pers, $jhtml_group, 'LBL_SLIDE_BASIC');
                     tabValores($integ->datos_empresa, 		$this->item->campos, 	$dat_empr, $jhtml_group, 'LBL_TAB_EMPRESA');
-                            foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
-                                tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
-                            }
+                    foreach ( $integ->datos_bancarios as $key => $datos_banco ) {
+                        tabValores($datos_banco, 	$this->item->campos, 	$dat_banc, $jhtml_group, 'LBL_TAB_BANCO', $key);
+                    }
                     tabValores($integ->params,  $this->item->campos,    $dat_para, $jhtml_group,  'LBL_TAB_AUTHORIZATIONS');
 
                     echo JHtml::_('bootstrap.endAccordion');

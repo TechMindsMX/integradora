@@ -52,14 +52,14 @@ class AdminIntegradoraModelOddform extends JModelList {
         $integrados = $this->getIntegrados();
 
         foreach ($integrados as $value) {
-            if($value->integrado->integrado_id == $integardoId){
+            if($value->integrado->integradoId == $integardoId){
                 $return = $value->datos_personales->nom_comercial;
             }
         }
         return $return;
     }
 
-    public function getTransacciones($integradoId=null){
+    public function getTransacciones($integradoId = null){
         $orden      = $this->getOrden();
 //        $respuesta  = getFromTimOne::getTxIntegradoSinMandato();
         $db         = JFactory::getDbo();
@@ -78,7 +78,7 @@ class AdminIntegradoraModelOddform extends JModelList {
 
         foreach ($result as $tx) {
             $tx->balance = $this->getTxBalance($tx);
-            if( (($orden->integradoId == $tx->idIntegrado) || ($tx->idIntegrado == 0)) && ($tx->balance > 0) ) {
+            if( (($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0)) && ($tx->balance > 0) ) {
                 $return[] = $tx;
             }
         }

@@ -14,7 +14,7 @@ $params 	    = $app->input->getArray();
 $integrado 	    = $this->integCurrent->integrados[0];
 $number2string  = new AifLibNumber();
 
-$integ = new IntegradoSimple($integrado->integrado->integrado_id);
+$integ = new IntegradoSimple($integrado->integrado->integradoId);
 ?>
 
 <div class="hidden-print form-group">

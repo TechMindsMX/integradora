@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `integradb`.`_temp_flpmu_integrado_datos_empresa`;
 
 CREATE TABLE `integradb`.`_temp_flpmu_integrado_datos_empresa` (
- `integrado_id` int(10) NOT NULL,
+ `integradoId` int(10) NOT NULL,
  `razon_social` varchar(255) DEFAULT NULL,
  `rfc` varchar(45) DEFAULT NULL,
  `calle` varchar(45) DEFAULT NULL,
@@ -25,7 +25,7 @@ ROW_FORMAT = COMPACT;
 INSERT INTO `integradb`.`_temp_flpmu_integrado_datos_empresa`(
                `calle`,
                `cod_postal`,
-               `integrado_id`,
+               `integradoId`,
                `num_exterior`,
                `num_interior`,
                `poder`,
@@ -40,7 +40,7 @@ INSERT INTO `integradb`.`_temp_flpmu_integrado_datos_empresa`(
                `testimonio_2`)
    SELECT `calle`,
           `cod_postal`,
-          `integrado_id`,
+          `integradoId`,
           `num_exterior`,
           `num_interior`,
           `poder`,

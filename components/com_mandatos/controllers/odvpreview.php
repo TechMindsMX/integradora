@@ -53,7 +53,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
             try{
                 $db->transactionStart();
-                $resultado   = $save->insertDB( 'auth_odv' );
+                $resultado   = $save->insertDB( 'auth_odv',null,null,true);
                 $auths       = OrdenFn::getCantidadAutRequeridas(new IntegradoSimple( OrdenFn::getIdEmisor($order, 'odv') ), new IntegradoSimple( OrdenFn::getIdReceptor($order, 'odv') ));
                 $numAutOrder = getFromTimOne::getOrdenAuths($order->getId(), 'odv_auth');
 
@@ -74,13 +74,13 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                 try {
                     $db->transactionStart();
 
-                    if ($resultado) {
+                    if ($resultado != false) {
                         // autorización guardada
                         $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
                         $newStatusId    = 5;
 
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
-                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+
 
                         $newOrder = OrderFactory::getOrder($this->parametros['idOrden'], 'odv');
 
@@ -92,11 +92,13 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                             if ($factObj != false) {
                                 $xmlFactura = $save->generateFacturaFromTimone($factObj);
+
                                 try {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
                                     $info = $this->sendEmail($newOrder);
+
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
                                     JLog::add($msg, JLog::ERROR, 'error');
@@ -124,15 +126,16 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                         }
 
                         $db->transactionCommit();
-
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
                         $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED'));
                     } else {
                         $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                     }
                 } catch (Exception $e) {
                     $db->transactionRollback();
-
+                    $save->deleteDB('auth_odv',$db->quoteName('id').' = '.$db->quote($resultado));
                     $msg = $e->getMessage();
+
                     JLog::add($msg, JLog::ERROR, 'error');
                     $this->app->enqueueMessage($msg, 'error');
                     $this->app->redirect($redirectUrl);

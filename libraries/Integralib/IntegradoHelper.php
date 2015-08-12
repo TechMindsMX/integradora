@@ -14,7 +14,7 @@ class IntegradoHelper {
 	public static function filterEmptyIntegrados( $items ) {
 		foreach ( $items as $k => $i ) {
 			if ( !is_a( $i , 'IntegradoSimple') ) {
-				$i = new \IntegradoSimple($i->integrado_id);
+				$i = new \IntegradoSimple($i->integradoId);
 			}
 			if ( !$i->hasRfc() ) {
 				unset($items[$k]);

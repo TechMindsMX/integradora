@@ -11,8 +11,25 @@ jimport('integradora.integrado');
 jimport('integradora.catalogos');
 
 class AdminintegradoraModelConciliacionBancoForm extends JModelLegacy {
+
+    function __construct(){
+        $this->integradora = new \Integralib\Integrado();
+
+        parent::__construct();
+    }
+
     public function getIntegrados(){
-        $integradosArray = Integrado::getActiveIntegrados();
+        $integrados = Integrado::getActiveIntegrados();
+        $integradosArray = array();
+
+        if(!is_null($integrados)) {
+            foreach ($integrados as $value) {
+
+                if ($this->integradora->getIntegradoraUuid() != $value->integrado->integradoId) {
+                    $integradosArray[] = $value;
+                }
+            }
+        }
 
         return $integradosArray;
     }
@@ -30,8 +47,8 @@ class AdminintegradoraModelConciliacionBancoForm extends JModelLegacy {
     }
 
     public function getBancosIntegradora(){
-        $integradora = new IntegradoSimple(1);
+        $this->integradora->getIntegradora();
 
-        return $integradora->integrados[0]->datos_bancarios;
+        return $this->integradora->integrado->integrados[0]->datos_bancarios;
     }
 }

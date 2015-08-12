@@ -58,12 +58,12 @@ class MandatosControllerOdcform extends JControllerLegacy {
 
         $this->permisos  = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
-        if($this->permisos['canAuth']) {
+        if($this->permisos['canEdit']) {
             // acciones cuando tiene permisos para autorizar
             $this->app->enqueueMessage('aqui enviamos a timone la autorizacion y redireccion con mensaje');
         } else {
             // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect(JRoute::_(''), JText::_(''), 'error');
+            $this->app->redirect('index.php?option=com_mandatos&view=odclist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
 
         try {
@@ -128,17 +128,18 @@ class MandatosControllerOdcform extends JControllerLegacy {
         $parametros = $this->parametros;
 
         $diccionario = array(
-            'integradoId'   => array('number' => true,  'maxlength' => 10),
-            'numOrden'      => array('number' => true,  'maxlength' => 10),
-            'proveedor'     => array('number' => true,  'maxlength' => 10, 'required' => true),
-            'proyecto'      => array('number' => true,  'maxlength' => 10, 'required' => true),
-            'paymentDate'   => array('date'   => true,  'maxlength' => 10, 'required' => true),
-            'paymentMethod' => array('number' => true,  'maxlength' => 10),
-            'bankId'        => array('number' => true,  'required' => true),
-            'observaciones' => array('text'   => true,  'maxlength' => 100));
+            'integradoId'   => array('alphaNumber' => true,  'maxlength' => 32),
+            'numOrden'      => array('number'      => true,  'maxlength' => 10),
+            'proveedor'     => array('alphaNumber' => true,  'maxlength' => 32, 'required' => true),
+            'proyecto'      => array('number'      => true,  'maxlength' => 10, 'required' => true),
+            'paymentDate'   => array('date'        => true,  'maxlength' => 10, 'required' => true),
+            'paymentMethod' => array('number'      => true,  'maxlength' => 10),
+            'bankId'        => array('number'      => true,  'required'  => true),
+            'observaciones' => array('text'        => true,  'maxlength' => 100));
 
         $respuesta = $validacion->procesamiento($parametros,$diccionario);
-        $respuesta['proveedor'] = $parametros['proveedor'] == 0 ? array('success'=>false,'msg'=>'Seleccione el proveedor') : $respuesta['proveedor'];
+
+        $respuesta['proveedor'] = empty($parametros['proveedor']) ? array('success'=>false,'msg'=>'Seleccione el proveedor') : $respuesta['proveedor'];
 
         $document->setMimeEncoding('application/json');
         echo json_encode($respuesta);

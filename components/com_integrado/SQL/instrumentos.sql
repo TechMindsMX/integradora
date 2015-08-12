@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `integradb`.`_temp_flpmu_integrado_instrumentos`;
 
 CREATE TABLE `integradb`.`_temp_flpmu_integrado_instrumentos` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
- `integrado_id` int(11) NOT NULL,
+ `integradoId` int(11) NOT NULL,
  `instrum_type` tinyint(4) DEFAULT NULL,
  `instrum_fecha` date DEFAULT NULL,
  `instrum_notaria` int(3) DEFAULT NULL,

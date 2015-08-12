@@ -29,5 +29,22 @@ class MandatosModelFacturalist extends JModelItem {
 
         return $listado;
 	}
+
+    public function getAllFacturas( $integradoId = null ){
+
+        $listado = getFromTimOne::getFacturasVenta($integradoId, true);
+        $clientes = getFromTimOne::getClientes($integradoId);
+
+        foreach ($listado as $k => $v) {
+            foreach ($clientes as $key => $value) {
+                if($value->id == $v->clientId){
+                    $v->clientName = $value->tradeName;
+                }
+            }
+
+        }
+
+        return $listado;
+    }
 }
 

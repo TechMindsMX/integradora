@@ -17,7 +17,8 @@ class MandatosModelMutuospreview extends JModelItem {
         $session                      = JFactory::getSession();
         $post                         = array('idMutuo'=> 'INT');
         $this->inputVars 		      = (object)JFactory::getApplication()->input->getArray($post);
-        $this->inputVars->integradoId = $session->get('integradoId', 1, 'integrado');
+        $integradora                  = new \Integralib\Integrado();
+        $this->inputVars->integradoId = $session->get('integradoId', $integradora->getIntegradoraUuid(), 'integrado');
 
 		parent::__construct();
 	}

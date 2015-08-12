@@ -45,15 +45,15 @@ class MandatosControllerProductosform extends JControllerLegacy {
 
     function saveProducts(){
         $campos      = array(
-            'id_producto'=>'INT',
-            'productName'=>'STRING',
-            'measure'=>'STRING',
-            'price'=>'STRING',
-            'iva'=>'STRING',
-            'ieps'=>'STRING',
-            'currency'=>'STRING',
-            'status'=>'STRING',
-            'description'=>'STRING');
+            'id_producto' => 'INT',
+            'productName' => 'STRING',
+            'measure'     => 'STRING',
+            'price'       => 'STRING',
+            'iva'         => 'STRING',
+            'ieps'        => 'STRING',
+            'currency'    => 'STRING',
+            'status'      => 'STRING',
+            'description' => 'STRING');
 
         $data                = $this->inputVars->getArray($campos);
         $data['price']       = round( (float)$data['price'], 2 );
@@ -96,18 +96,13 @@ class MandatosControllerProductosform extends JControllerLegacy {
         $validacion  = new validador();
         $parametros  = $this->parametros;
         $diccionario = array (
-            'productName' => array ( 'alphaNumber' => true, 'maxlength' => '100', 'required' => true ),
-            'measure'     => array ( 'string' => true, 'maxlength' => '100', 'required' => true ),
-            'price'       => array ( 'float' => true, 'maxlength' => '10', 'required' => true ),
-            'iva'         => array ( 'number' => true, 'maxlength' => '10', 'required' => true ),
-            'ieps'        => array ( 'float'     => true,
-                                     'maxlength' => '5',
-                                     'minlength' => '1',
-                                     'max'       => '100',
-                                     'min'       => '0'
-            ),
-            'currency'    => array ( 'string' => true, 'maxlength' => '100', 'required' => true ),
-            'description' => array ( 'text' => true, 'maxlength' => '1000', 'required' => true )
+            'productName' => array ( 'alphaNumber' => true, 'maxlength' => '100',  'required'  => true ),
+            'measure'     => array ( 'string'      => true, 'maxlength' => '100',  'required'  => true ),
+            'price'       => array ( 'float'       => true, 'maxlength' => '10',   'required'  => true ),
+            'iva'         => array ( 'number'      => true, 'maxlength' => '10',   'required'  => true ),
+            'ieps'        => array ( 'float'       => true, 'maxlength' => '5',    'minlength' => '1', 'max' => '100', 'min' => '0' ),
+            'currency'    => array ( 'string'      => true, 'maxlength' => '100',  'required'  => true ),
+            'description' => array ( 'text'        => true, 'maxlength' => '1000', 'required'  => true )
         );
 
         $respuesta = $validacion->procesamiento( $parametros, $diccionario );

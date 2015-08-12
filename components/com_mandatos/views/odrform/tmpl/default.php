@@ -106,7 +106,7 @@ if(!$this->confirmacion){
 	</h4>
 </div>
 
-<form id="generaODR" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data">
+<form id="generaODR" action="<?php echo $this->actionUrl; ?>" method="post" enctype="multipart/form-data" autocomplete="off">
 	<div class="form-group">
 		<label for="paymentDate"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></label>
 		<?php
@@ -167,7 +167,7 @@ if(!$this->confirmacion){
 	</div>
 	<div class="clearfix">&nbsp;</div>
 
-	<form id="generaODR">
+	<form id="generaODR" autocomplete="off">
 		<div class="form-group">
 			<input type="hidden" value="<?php echo $this->integradoId; ?>" name="integradoId" />
 			<input type="hidden" value="<?php echo $datos['paymentMethod']; ?>" name="paymentMethod" />

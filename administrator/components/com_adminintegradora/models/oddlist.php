@@ -44,7 +44,7 @@ class AdminintegradoraModelOddlist extends JModelList {
     }
 
     public function getIntegrados(){
-        $integrados = getFromTimOne::getintegrados();
+        $integrados = getFromTimOne::getintegrados(50);
 
         return $integrados;
     }
@@ -53,7 +53,7 @@ class AdminintegradoraModelOddlist extends JModelList {
         $integrados = $this->getIntegrados();
 
         foreach ($integrados as $value) {
-            if($value->integrado->integrado_id == $integardoId){
+            if($value->integrado->integradoId == $integardoId){
                 $return = $value->datos_personales->nom_comercial;
             }
         }

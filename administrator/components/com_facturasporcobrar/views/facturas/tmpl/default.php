@@ -62,7 +62,7 @@ JSubMenuHelper::addEntry(
                     <option value="0" selected="selected">Seleccione el filtro</option>
                     <?php
                     foreach ($this->integrados as $key => $value) {
-                        echo '<option value="'.$value->integrado->integrado_id.'">'.$value->datos_personales->nom_comercial.'</option>';
+                        echo '<option value="'.$value->integrado->integradoId.'">'.$value->displayName.'</option>';
                     }
                     ?>
                 </select>
@@ -110,7 +110,7 @@ JSubMenuHelper::addEntry(
                 <th>Total Factura</th>
                 <th>Comision</th>
                 <th>Total Fact+Comision</th>
-                <th>Cobrada</th>
+                <th>Estatus</th>
                 <th>Detalle</th>
             </tr>
             </thead>
@@ -131,7 +131,8 @@ JSubMenuHelper::addEntry(
                         <td>$<?php echo number_format($value->totalAmount, 2); ?></td>
                         <td>$<?php echo number_format($value->comision, 2); ?></td>
                         <td>$<?php echo number_format($value->totalAmount + $value->comision, 2); ?></td>
-                        <td><input value="<?php echo $value->id; ?>" type="checkbox" id=""></td>
+                        <td><?php echo $value->status->name; ?></td>
+<!--                        <td><input value="--><?php //echo $value->id; ?><!--" type="checkbox" id=""></td>-->
                         <?php
 
                         $url_preview = JRoute::_('index.php?option=com_facturasporcobrar&view=facturapreview&integradoId=' . $value->integradoId . '&facturanum=' . $value->id);

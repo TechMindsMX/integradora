@@ -19,8 +19,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 {
 
 
-    function __construct()
-    {
+    function __construct(){
         $post = array('idOrden' => 'INT');
         $this->app = JFactory::getApplication();
         $this->parametros = $this->app->input->getArray($post);
@@ -51,7 +50,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $this->parametros['userId']      = (INT)$user->id;
             $this->parametros['authDate']    = time();
-            $this->parametros['integradoId'] = (INT)$this->integradoId;
+            $this->parametros['integradoId'] = (STRING)$this->integradoId;
 
             $save->formatData($this->parametros);
 
@@ -64,7 +63,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $odc        = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
             $odc        = $odc[0];
-            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integrado_id) ? $odc->proveedor->integrado->integrado_id : $odc->proveedor->id);
+            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integradoId) ? $odc->proveedor->integrado->integradoId : $odc->proveedor->id);
             $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
 
 	        if (!is_null($odvId)) {
@@ -75,9 +74,10 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 		        }
 	        }
 
+            $db->transactionStart();
+
             try{
-                $db->transactionStart();
-                $save->insertDB( 'auth_odc' );
+                $idAuth_odc = $save->insertDB( 'auth_odc',null,null,true );
 
                 $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
                 $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
@@ -93,6 +93,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                             if ($factObj != false) {
                                 $xmlFactura = $save->generateFacturaFromTimone($factObj);
+
                                 try {
                                     $urlXML = $save->saveXMLFile($xmlFactura);
                                     $dataUpdate = new stdClass();
@@ -119,46 +120,49 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     }
 
                 }else{
-                    $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
-                    $pagar = false;
+                    throw new Exception;
                 }
 
                 $db->transactionCommit();
             }catch (Exception $e){
                 $db->transactionRollback();
+                $pagar = false;
+                $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
                 $this->app->redirect($this->returnUrl, 'no se pudo autorizar', 'error');
             }
 
             if($pagar){
+                $db->transactionStart();
                 try {
-                    $db->transactionStart();
-
                     $this->logEvents(__METHOD__, 'authorizacion_odc', json_encode($save->set));
 
                     $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
 
                     $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
 
-                    $newStatusId = 13;
-                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
-
-                    if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
-                        $save->changeOrderStatus($odvId, 'odv', $newStatusId);
-                    }
-
                     $this->txComision();
                     $this->realizaTx();
 
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
+
+                    if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
+                        $save->changeOrderStatus($odvId, 'odv', 13);
+                    }
+
                     $db->transactionCommit();
 
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[$newStatusId]->name));
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[$newStatusId]->name));
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[13]->name));
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[13]->name));
                     $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
                 } catch (Exception $e) {
                     $db->transactionRollback();
 
+                    $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
+                    $save->deleteDB('auth_odc', 'idOrden = '.$odc->id.' AND integradoId = '.$db->quote($this->integradoId));
+
                     $msg = $e->getMessage();
                     JLog::add($msg, JLog::ERROR, 'error');
+
                     $this->app->enqueueMessage($msg, 'error');
                     $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED', 'error'));
                 }
@@ -222,20 +226,24 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
     private function txComision($reverse = false)
     {
+        $saveTx = true;
+        $integradora = new \Integralib\Integrado();
+
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden = $this->getOrden();
-        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', null);
+        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
 
         $orden->orderType = 'CCom-' . $orden->orderType;
 
         if (!is_null($montoComision)) {
             if (!$reverse) {
-                $txComision = new transferFunds($orden, $orden->integradoId, 1, $montoComision);
+                $txComision = new transferFunds($orden, $orden->integradoId, $integradora->getIntegradoraUuid(), $montoComision);
             } else {
-                $txComision = new transferFunds($orden, 1, $orden->integradoId, $montoComision);
+                $txComision = new transferFunds($orden, $integradora->getIntegradoraUuid(), $orden->integradoId, $montoComision);
+                $saveTx = false;
             }
 
-            if (!$txComision->sendCreateTx()) {
+            if (!$txComision->sendCreateTx($saveTx)) {
                 throw new Exception(JText::_('ERR_412_TXCOMISION_FAILED'));
             }
         }

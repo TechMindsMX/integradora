@@ -386,5 +386,174 @@ CREATE TABLE `flpmu_facturas_folios` (
   `folio` VARCHAR(255),
   `factura_uuid` VARCHAR(255)
 );
+--changeset ricardolyon:48
+ALTER TABLE `flpmu_integrado` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `flpmu_auth_mutuo` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_auth_mutuo_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_auth_odc` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_auth_odc_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_auth_odd` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_auth_odd_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_auth_odr` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_auth_odr_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_auth_mutuo` DROP FOREIGN KEY `flpmu_auth_mutuo_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_mutuo` DROP INDEX flpmu_auth_mutuo_ibfk_1;
+--rollback ALTER TABLE `flpmu_auth_mutuo` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_auth_odc` DROP FOREIGN KEY `flpmu_auth_odc_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odc` DROP INDEX `flpmu_auth_odc_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odc` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_auth_odd` DROP FOREIGN KEY `flpmu_auth_odd_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odd` DROP INDEX `flpmu_auth_odd_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odd` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_auth_odr` DROP FOREIGN KEY `flpmu_auth_odr_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odr` DROP INDEX `flpmu_auth_odr_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odr` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
 
---rollback DROP TABLE `flpmu_folio_facturas`;
+--rollback DROP TABLE `flpmu_folio_facturas`;--changeset ricardolyon:49
+ALTER TABLE `flpmu_auth_odv` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_auth_odv_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_facturas_comisiones` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY flpmu_facturas_comisiones_ibfk_1 (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_clientes_proveedor` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_Id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_clientes_proveedor` COLLATE utf8_general_ci, CHANGE COLUMN `integradoIdCliente` `integradoIdCliente` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_comisiones` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_auth_odv` DROP FOREIGN KEY `flpmu_auth_odv_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odv` DROP INDEX `flpmu_auth_odv_ibfk_1`;
+--rollback ALTER TABLE `flpmu_auth_odv` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_facturas_comisiones` DROP FOREIGN KEY `flpmu_facturas_comisiones_ibfk_1`;
+--rollback ALTER TABLE `flpmu_facturas_comisiones` DROP INDEX `flpmu_facturas_comisiones_ibfk_1`;
+--rollback ALTER TABLE `flpmu_facturas_comisiones` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` DROP FOREIGN KEY `flpmu_integrado_clientes_proveedor_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` DROP FOREIGN KEY `flpmu_integrado_clientes_proveedor_ibfk_2`;
+--rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` CHANGE COLUMN `integradoId` `integrado_Id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_clientes_proveedor` CHANGE COLUMN `integradoIdCliente` `integradoIdCliente` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_comisiones` DROP FOREIGN KEY `flpmu_integrado_comisiones_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_comisiones` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+
+--changeset ricardolyon:50
+ALTER TABLE `flpmu_integrado_contacto` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_datos_bancarios` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_datos_empresa` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_datos_personales` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_instrumentos` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_integrado_contacto` DROP FOREIGN KEY `flpmu_integrado_contacto_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_contacto` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_datos_bancarios` DROP FOREIGN KEY `flpmu_integrado_datos_bancarios_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_datos_bancarios` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_datos_empresa` DROP FOREIGN KEY `flpmu_integrado_datos_empresa_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_datos_empresa` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_datos_personales` DROP FOREIGN KEY `flpmu_integrado_datos_personales_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_datos_personales` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_instrumentos` DROP FOREIGN KEY `flpmu_integrado_instrumentos_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_instrumentos` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+
+--changeset ricardolyon:51
+ALTER TABLE `flpmu_integrado_params` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_products` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_proyectos` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_status_log` COLLATE utf8_general_ci, CHANGE COLUMN `status_log_integrado_id` `status_log_integrado_id` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`status_log_integrado_id`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_timone` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_integrado_params` DROP FOREIGN KEY `flpmu_integrado_params_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_params` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_products` DROP FOREIGN KEY `flpmu_integrado_products_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_products` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_proyectos` DROP FOREIGN KEY `flpmu_integrado_proyectos_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_proyectos` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_status_log` DROP FOREIGN KEY `flpmu_integrado_status_log_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_status_log` CHANGE COLUMN `status_log_integrado_id` `status_log_integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_timone` DROP FOREIGN KEY `flpmu_integrado_timone_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_timone` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+
+--changeset ricardolyon:52
+ALTER TABLE `flpmu_integrado_users` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_integrado_verificacion_solicitud` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_mandatos_clientes` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_mandatos_mutuos` COLLATE utf8_general_ci, CHANGE COLUMN `integradoIdE` `integradoIdE` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoIdE`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_mandatos_mutuos` COLLATE utf8_general_ci, CHANGE COLUMN `integradoIdR` `integradoIdR` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoIdR`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_integrado_users` DROP FOREIGN KEY `flpmu_integrado_users_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_users` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado_verificacion_solicitud` DROP FOREIGN KEY `flpmu_integrado_verificacion_solicitud_ibfk_1`;
+--rollback ALTER TABLE `flpmu_integrado_verificacion_solicitud` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_mandatos_clientes` DROP FOREIGN KEY `flpmu_mandatos_clientes_ibfk_1`;
+--rollback ALTER TABLE `flpmu_mandatos_clientes` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_mandatos_mutuos` DROP FOREIGN KEY `flpmu_mandatos_mutuos_ibfk_1`;
+--rollback ALTER TABLE `flpmu_mandatos_mutuos` DROP FOREIGN KEY `flpmu_mandatos_mutuos_ibfk_2`;
+--rollback ALTER TABLE `flpmu_mandatos_mutuos` CHANGE COLUMN `integradoIdE` `integradoIdE` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_mandatos_mutuos` CHANGE COLUMN `integradoIdR` `integradoIdR` INT(11) NOT NULL;
+
+--changeset ricardolyon:53
+ALTER TABLE `flpmu_mandatos_productos` COLLATE utf8_general_ci, CHANGE COLUMN `integrado_id` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_ordenes_compra` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_ordenes_deposito` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_ordenes_retiro` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_ordenes_venta` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_mandatos_productos` DROP FOREIGN KEY `flpmu_mandatos_productos_ibfk_1`;
+--rollback ALTER TABLE `flpmu_mandatos_productos` CHANGE COLUMN `integradoId` `integrado_id` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_ordenes_compra` DROP FOREIGN KEY `flpmu_ordenes_compra_ibfk_1`;
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_ordenes_deposito` DROP FOREIGN KEY `flpmu_ordenes_deposito_ibfk_1`;
+--rollback ALTER TABLE `flpmu_ordenes_deposito` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_ordenes_retiro` DROP FOREIGN KEY `flpmu_ordenes_retiro_ibfk_1`;
+--rollback ALTER TABLE `flpmu_ordenes_retiro` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_ordenes_venta` DROP FOREIGN KEY `flpmu_ordenes_venta_ibfk_1`;
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+
+--changeset ricardolyon:54
+ALTER TABLE `flpmu_reportes_balance` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_txs_banco_integrado` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_txs_liquidacion_saldo` COLLATE utf8_general_ci, CHANGE COLUMN `integradoId` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+ALTER TABLE `flpmu_txs_timone_mandato` COLLATE utf8_general_ci, CHANGE COLUMN `idIntegrado` `integradoId` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, ADD FOREIGN KEY (`integradoId`) REFERENCES `flpmu_integrado` (`integradoId`);
+--rollback ALTER TABLE `flpmu_reportes_balance` DROP FOREIGN KEY `flpmu_reportes_balance_ibfk_1`;
+--rollback ALTER TABLE `flpmu_reportes_balance` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_txs_banco_integrado` DROP FOREIGN KEY `flpmu_txs_banco_integrado_ibfk_1`;
+--rollback ALTER TABLE `flpmu_txs_banco_integrado` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_txs_liquidacion_saldo` DROP FOREIGN KEY `flpmu_txs_liquidacion_saldo_ibfk_1`;
+--rollback ALTER TABLE `flpmu_txs_liquidacion_saldo` CHANGE COLUMN `integradoId` `integradoId` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_txs_timone_mandato` DROP FOREIGN KEY `flpmu_txs_timone_mandato_ibfk_1`;
+--rollback ALTER TABLE `flpmu_txs_timone_mandato` CHANGE COLUMN `integradoId` `idIntegrado` INT(11) NOT NULL;
+--rollback ALTER TABLE `flpmu_integrado` CHANGE COLUMN `integradoId` `integrado_id` INT(11) AUTO_INCREMENT NOT NULL;
+
+--changeset ricardolyon:55
+CREATE TABLE `flpmu_users_security_questions` (
+  `user_id` INT NOT NULL,
+  `question_id` INT NOT NULL,
+  `answer` VARCHAR(255) NOT NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `flpmu_users`(id)
+
+);
+--rollback DROP TABLE `flpmu_users_security_questions`;
+
+--changeset ricardolyon:56
+CREATE TABLE `flpmu_security_questions` (
+  `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `question` VARCHAR(255) NOT NULL
+);
+--rollback DROP TABLE `flpmu_security_questions`;
+
+--changeset  ricardolyon:57
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue su apodo de la infancia?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad se conocieron su cónyuge / pareja?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre de tu amigo favorito de la infancia?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué calle vivía usted en el tercer grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cual es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el segundo nombre de su hijo mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el segundo nombre de su hermano mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿A qué escuela fue usted al sexto grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue su número de teléfono de la niñez incluyendo código de área? (Por ejemplo, 000-000-0000)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre y apellido de su primo mayor?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál era el nombre de su primer animal de peluche?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad o pueblo conocieron su madre y su padre?';
+INSERT `flpmu_security_questions` SET `question` = '¿Dónde estabas cuando tuviste tu primer beso?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el primer nombre del niño o niña que primero besaste?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál fue el apellido de su maestra de tercer grado?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad vive su hermano más cercano?';
+INSERT `flpmu_security_questions` SET `question` = '¿Qué es el mes del cumpleaños de su hermano mayor y el año? (Por ejemplo, Enero de 1900)';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el apellido de soltera de su abuela materna?';
+INSERT `flpmu_security_questions` SET `question` = '¿En qué ciudad o pueblo fue tu primer trabajo?';
+INSERT `flpmu_security_questions` SET `question` = '¿Cuál es el nombre del lugar de la recepción de su boda?';
+INSERT `flpmu_security_questions` SET `question` = 'Cuál es el nombre de una universidad a la que aplicó a pero no asistió?';
+--rollback TRUNCATE `flpmu_security_questions`;
+
+--changeset  lutek:58
+ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` VARCHAR(32) NULL DEFAULT NULL ;
+ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` VARCHAR(32) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_compra` CHANGE COLUMN `proveedor` `proveedor` INT(100) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_venta` CHANGE COLUMN `clientId` `clientId` INT(100) NULL DEFAULT NULL ;
+
+--changeset lutek:59
+ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `integradoIdA` `integradoIdA` VARCHAR(32) NULL DEFAULT NULL , CHANGE COLUMN `integradoIdD` `integradoIdD` VARCHAR(32) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_ordenes_prestamo` CHANGE COLUMN `integradoIdA` `integradoIdA` INT(11) NULL DEFAULT NULL , CHANGE COLUMN `integradoIdD` `integradoIdD` INT(11) NULL DEFAULT NULL ;

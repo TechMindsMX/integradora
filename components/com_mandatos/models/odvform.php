@@ -60,7 +60,7 @@ class MandatosModelOdvform extends JModelItem {
 	        $subprojects[$proyect->id_proyecto] = getFromTimOne::getActiveSubProyects($proyect->id_proyecto);
         }
 
-        return $subprojects;
+        return @$subprojects;
     }
 
 	public function getestados(){
@@ -95,7 +95,8 @@ class MandatosModelOdvform extends JModelItem {
     }
 
 	public function getCuentas(){
-        $cuentas = getFromTimOne::selectDB('integrado_datos_bancarios', 'integrado_id = '.$this->integradoId);
+		$dbq = JFactory::getDbo();
+        $cuentas = getFromTimOne::selectDB('integrado_datos_bancarios', 'integradoId = '. $dbq->quote($this->integradoId));
         foreach ($cuentas as $objeto) {
             $objeto->banco_cuenta_xxx = 'XXXXXX' . substr($objeto->banco_cuenta, -4, 4);
         }

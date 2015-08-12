@@ -98,7 +98,6 @@ class MandatosController extends JControllerLegacy {
     }
 
     function agregarBancoCliente(){
-
 	    $validator   = new validador();
 	    $diccionario = array (
 		    'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
@@ -118,8 +117,8 @@ class MandatosController extends JControllerLegacy {
 			    $existe = (OBJECT)$respuesta;
 			    $existe->datosBan_id = $newId;
 		    } else {
-			    $respuesta['success'] = true;
-			    $respuesta = array_merge( $respuesta, (array)$existe );
+                $respuesta['success'] = false;
+                $respuesta['msg'] = array('db_banco_clabe' => array('success' => false,'msg' => 'Esta cuenta ya fue dada de alta') );
 		    }
 
 		    if($respuesta['success'] == true) {
@@ -130,7 +129,7 @@ class MandatosController extends JControllerLegacy {
 			    // se busca la relacion del cliente y el integrado
 			    $tableRelacion 		= 'integrado_clientes_proveedor';
 			    $db = JFactory::getDbo();
-			    $whereRelacion      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+			    $whereRelacion      = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
 			    $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
 
 			    if ( ! empty( $relacion[0] ) ) {
@@ -147,7 +146,7 @@ class MandatosController extends JControllerLegacy {
 
 				    $save = new sendToTimOne();
 				    $save->formatData($datos);
-				    $where = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('integradoIdCliente').' = '.$this->post['integradoId'];
+				    $where = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
 				    $update = $save->updateDB('integrado_clientes_proveedor', null, $where );
 
 				    $idClipro = isset($newId) ? $newId : $existe->datosBan_id;
@@ -175,7 +174,7 @@ class MandatosController extends JControllerLegacy {
         $post       = array('datosBan_id' => 'INT');
         $data 		= $this->input_data->getArray($post);
         $table 		= 'integrado_datos_bancarios';
-        $where      = $db->quoteName('integrado_id').' = '.$this->integradoId.' && '.$db->quoteName('datosBan_id').' = '.$data['datosBan_id'];
+        $where      = $db->quoteName('datosBan_id').' = '. (INT)$data['datosBan_id'];
 
         $respuesta['msg'] = $save->deleteDB($table,$where);
 
@@ -233,11 +232,12 @@ class MandatosController extends JControllerLegacy {
     }
 
     public function saveCliPro(){
-        $db	        = JFactory::getDbo();
-        $save       = new sendToTimOne();
-        $datosQuery = array();
-        $arrayPost  = array(
-            'idCliPro'                      => 'INT',
+        $db	                     = JFactory::getDbo();
+        $session                 = JFactory::getSession();
+        $save                    = new sendToTimOne();
+        $datosQuery              = array();
+        $arrayPost               = array(
+            'idCliPro'                      => 'STRING',
             'co_email1'                     => 'STRING',
             'co_email2'                     => 'STRING',
             'co_email3'                     => 'STRING',
@@ -294,22 +294,22 @@ class MandatosController extends JControllerLegacy {
             'tp_tipo_alta'                  => 'STRING',
             'tp_status'                     => 'STRING',
             'tp_monto'                      => 'FLOAT');
-
-        $tab        = 'tipo_alta';
-        $data       = $this->input_data->getArray($arrayPost);
-        $data['integradoId'] = $this->integradoId;
-        $idCliPro   = $data['idCliPro'];
+        $tab                     = 'tipo_alta';
+        $data                    = $this->input_data->getArray($arrayPost);
+        $idCliPro                = $data['idCliPro'];
+        $data['integradoId']     = $this->integradoId;
         $datosQuery['setUpdate'] = array();
+        $varSession              = $session->get('dataCliPro',array(),'integrado');
 
         $this->dataCliente  = (object) $data;
 
         $validations = $this->validatePost($data);
         if($validations->allPassed()) {
 
-            // verificación que no sea el mismo integrado
+//             verificación que no sea el mismo integrado
 //            $currentIntegrado = new IntegradoSimple($this->integradoId);
 
-            if($idCliPro == 0){
+            if(empty($idCliPro)){
                 $idCliPro = getFromTimOne::newintegradoId($data['pj_pers_juridica']);
                 $data['idCliPro'] = $idCliPro;
             }
@@ -317,13 +317,13 @@ class MandatosController extends JControllerLegacy {
             switch($data['tab']){
                 case 'tipoAlta_btn':
                     $table 		= 'integrado_clientes_proveedor';
-                    $where      = $db->quoteName('integradoIdCliente').' = '.$idCliPro.' && integrado_Id = '.$this->integradoId;
+                    $where      = $db->quoteName('integradoIdCliente').' = '. $db->quote($idCliPro) .' && integradoId = '. $db->quote($this->integradoId);
                     $existe     = getFromTimOne::selectDB($table,$where);
 
-                    $columnas[] = 'integrado_id';
-                    $valores[]	= $this->integradoId;
+                    $columnas[] = 'integradoId';
+                    $valores[]	= $db->quote($this->integradoId);
                     $columnas[] = 'integradoIdCliente';
-                    $valores[]	= $idCliPro;
+                    $valores[]	= $db->quote($idCliPro);
 
                     $datosQuery['columnas']  = $columnas;
                     $datosQuery['valores']   = $valores;
@@ -333,7 +333,7 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'juridica':
                     $table 		= 'integrado';
-                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe     = getFromTimOne::selectDB($table, $where);
 
                     $datosQuery['setUpdate'] = array($db->quoteName('pers_juridica').' = '.$db->quote($data['pj_pers_juridica']));
@@ -341,11 +341,11 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'personales':
                     $table 		= 'integrado_datos_personales';
-                    $where      = $db->quoteName('integrado_Id').' = '.$idCliPro;
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe     = getFromTimOne::selectDB($table, $where);
 
-                    $columnas[] = 'integrado_id';
-                    $valores[]	= $idCliPro;
+                    $columnas[] = 'integradoId';
+                    $valores[]	= $db->quote($idCliPro);
 
                     $datosQuery['columnas'] = $columnas;
                     $datosQuery['valores']  = $valores;
@@ -362,12 +362,12 @@ class MandatosController extends JControllerLegacy {
                     break;
                 case 'empresa':
                     $table = 'integrado_datos_empresa';
-                    $where = $db->quoteName('integrado_id').' = '.$idCliPro;
+                    $where = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
                     $existe = getFromTimOne::selectDB($table, $where);
-                    $columnas[] = 'integrado_id';
-                    $valores[]	= $idCliPro;
+                    $columnas[] = 'integradoId';
+                    $valores[]	= $db->quote($idCliPro);
 
-                    //self::saveInstrumentos($data);
+                    self::saveInstrumentos($data);
 
                     $datosQuery['columnas'] = $columnas;
                     $datosQuery['valores']  = $valores;
@@ -381,18 +381,22 @@ class MandatosController extends JControllerLegacy {
                     break;
             }
 
-            if(empty($existe)) {
+            $cliente = new IntegradoSimple($idCliPro);
+
+            if( $cliente->isIntegrado() && $table == 'integrado_clientes_proveedor' && empty($existe) ) {
                 $save->insertDB($table, $datosQuery['columnas'], $datosQuery['valores']);
-
-                if( $table == 'integrado_datos_personales'){
-
-                    $this->sendEmail(__METHOD__);
-
-                }
-
-            }else{
+            }elseif( $cliente->isIntegrado() && $table == 'integrado_clientes_proveedor' && !empty($existe) ){
                 $save->updateDB($table,$datosQuery['setUpdate'],$where);
             }
+
+            $update   = isset($datosQuery['setUpdate']) ? $datosQuery['setUpdate'] : array();
+            $columnas = isset($datosQuery['columnas'])  ? $datosQuery['columnas']  : array();
+            $valores  = isset($datosQuery['valores'])   ? $datosQuery['valores']   : array();
+
+            $varSession[$data['tab']] = array($table,$columnas, $valores,$update);
+            $varSession['idCliPro']   = $idCliPro;
+
+            $session->set('dataCliPro',$varSession,'integrado');
 
             if($data['pj_pers_juridica'] == 2){
                 $tab = 'banco';
@@ -411,18 +415,294 @@ class MandatosController extends JControllerLegacy {
         echo json_encode($response);
     }
 
+    public function saveSaveCLiPro(){
+        $db             = JFactory::getDbo();
+        $input          = JFactory::getApplication()->input->getArray();
+        $session        = JFactory::getSession();
+        $save           = new sendToTimOne();
+        $dataToSave     = $session->get('dataCliPro',array(),'integrado');
+        $idCliPro       = $dataToSave['idCliPro'];
+        $integradoCli   = new IntegradoSimple($idCliPro);
+        $currIntegrado  = new IntegradoSimple($this->integradoId);
+        $nombre         = !isset($dataToSave['empresa']) ? $dataToSave['personales'][2][6] : $dataToSave['empresa'][2][5];
+        $this->tipoAlta = $dataToSave['tipoAlta_btn'][2][2];
+
+        foreach ($dataToSave as $key => $value) {
+            $salir = false;
+            switch($key){
+                case 'tipoAlta_btn':
+                    $table 		= 'integrado_clientes_proveedor';
+                    $where      = $db->quoteName('integradoIdCliente').' = '. $db->quote($idCliPro) .' && integradoId = '. $db->quote($this->integradoId);
+                    $existe     = getFromTimOne::selectDB($table,$where);
+                    break;
+                case 'juridica':
+                    $table 		= 'integrado';
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
+                    $existe     = getFromTimOne::selectDB($table, $where);
+                    break;
+                case 'personales':
+                    $table 		= 'integrado_datos_personales';
+                    $where      = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
+                    $existe     = getFromTimOne::selectDB($table, $where);
+                    break;
+                case 'empresa':
+                    $table = 'integrado_datos_empresa';
+                    $where = $db->quoteName('integradoId').' = '. $db->quote($idCliPro);
+                    $existe = getFromTimOne::selectDB($table, $where);
+                    break;
+                default:
+                    $table  = null;
+                    $where  = null;
+                    $existe = array();
+                    $salir = true;
+                    $varSession = array();
+                    $session->set('dataCliPro',$varSession,'integrado');
+                    break;
+            }
+
+            if(!$salir) {
+
+                if (empty($existe)) {
+                    $save->insertDB($value[0], $value[1], $value[2]);
+
+                    if ($table == 'integrado_datos_personales') {
+                        $this->sendEmail(__METHOD__, null, $nombre);
+                    }
+                } else {
+                    $save->updateDB($value[0], $value[3], $where);
+                }
+            }else {
+                if($dataToSave['tipoAlta_btn'][2][2] != 0) {
+                    $where = $db->quoteName('integradoId') . ' = ' . $db->quote($currIntegrado->id) . ' AND ' . $db->quoteName('integradoIdCliente') . ' = ' . $db->quote($integradoCli->id);
+                    $save->updateDB('integrado_clientes_proveedor', array($db->quoteName('bancos') . ' = ' . $db->quote('[' . $integradoCli->integrados[0]->datos_bancarios[0]->datosBan_id . ']')), $where);
+                }
+            }
+
+        }
+
+        $response = array('success' => true);
+        $this->document->setMimeEncoding('application/json');
+
+        echo json_encode($response);
+    }
+
+    public static function insertData($tabla, $columnas, $valores){
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->insert($db->quoteName('#__'.$tabla))
+                ->columns($db->quoteName($columnas))
+                ->values(implode(',',$valores));
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Almacenados correctamente');
+
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error al guardar intente nuevamente');
+            echo json_encode($response);
+        }
+    }
+
+    public static function updateData($table, $columnas, $condicion){
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->update($db->quoteName('#__'.$table))
+                ->set(implode(',', $columnas))
+                ->where($condicion);
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error al Actualizar intente nuevamente');
+            echo json_encode($response);
+        }
+    }
+
+    public static function deleteData($table, $where){
+        try{
+            $db		= JFactory::getDbo();
+            $query	= $db->getQuery(true);
+
+            $query->delete($db->quoteName('#__'.$table));
+            $query->where($where);
+
+            $db->setQuery($query);
+            $db->execute();
+
+            return array('success' => true , 'msg' => 'Datos Actualizados correctamente');
+        }
+        catch(Exception $e){
+            return array('success' => false , 'msg' => 'Error al eliminar el usuario');
+        }
+    }
+
+    public static function saveInstrumentos($data){
+        $db				= JFactory::getDbo();
+        $columnast1[] 	= 'integradoId';
+        $columnast2[] 	= 'integradoId';
+        $columnasPN[] 	= 'integradoId';
+        $columnasRP[]	= 'integradoId';
+        $columnast1[] 	= 'instrum_type';
+        $columnast2[] 	= 'instrum_type';
+        $columnasPN[] 	= 'instrum_type';
+        $columnasRP[]	= 'instrum_type';
+
+        $valort1[]		= $db->quote($data['idCliPro']);
+        $valort2[]		= $db->quote($data['idCliPro']);
+        $valorPN[]		= $db->quote($data['idCliPro']);
+        $valorRP[]		= $db->quote($data['idCliPro']);
+        $valort1[]		= 1;
+        $valort2[]		= 2;
+        $valorPN[]		= 3;
+        $valorRP[]		= 4;
+
+        foreach ($data as $key => $value) {
+            $columna 	= substr($key, 3);
+            $clave 		= substr($key, 0,3);
+
+            switch ($clave) {
+                case 't1_':
+                    $columnast1[] 	= $columna;
+                    $valort1[]		= $db->quote($value);
+                    $updateSett1[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 't2_':
+                    $columnast2[] 	= $columna;
+                    $valort2[]		= $db->quote($value);
+                    $updateSett2[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 'pn_':
+                    $columnasPN[] 	= $columna;
+                    $valorPN[]		= $db->quote($value);
+                    $updateSetpn[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                case 'rp_':
+                    $columnasRP[] 	= $columna;
+                    $valorRP[]		= $db->quote($value);
+                    $updateSetrp[]	= $db->quoteName($columna).' = '.$db->quote($value);
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 1';
+        $existet1 = self::checkData('integrado_instrumentos', $where);
+        if(empty($existet1) ){
+            self::insertData('integrado_instrumentos', $columnast1, $valort1);
+            $existet1 = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSett1, $where);
+            $existet1 = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existet1)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existet1[0]->id, 'testimonio_1');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 2';
+        $existet2 = self::checkData('integrado_instrumentos', $where);
+        if(empty($existet2) ){
+            self::insertData('integrado_instrumentos', $columnast2, $valort2);
+            $existet2 = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSett2, $where);
+            $existet2 = self::checkData('integrado_instrumentos', $where);
+        }
+
+        if (!empty($existet2)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existet2[0]->id, 'testimonio_2');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 3';
+        $existepn = self::checkData('integrado_instrumentos', $where);
+        if(empty($existepn) ){
+            self::insertData('integrado_instrumentos', $columnasPN, $valorPN);
+            $existepn = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSetpn, $where);
+            $existepn = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existepn)) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existepn[0]->id, 'poder');
+        }
+
+        $where = $db->quoteName('integradoId').' = '. $db->quote($data['idCliPro']) .' AND '.$db->quoteName('instrum_type').' = 4';
+        $existerp = self::checkData('integrado_instrumentos', $where);
+        if(empty($existerp) ){
+            self::insertData('integrado_instrumentos', $columnasRP, $valorRP);
+            $existerp = self::checkData('integrado_instrumentos', $where);
+        }else{
+            self::updateData('integrado_instrumentos', $updateSetrp, $where);
+            $existerp = self::checkData('integrado_instrumentos', $where);
+        }
+        if (!empty($existerp[0])) {
+            self::saveInstrumentosEmpresa($data['idCliPro'], $existerp[0]->id, 'reg_propiedad');
+        }
+    }
+
+    public static function saveInstrumentosEmpresa($integrado_id, $id_instrumento, $campo){
+        $db				= JFactory::getDbo();
+        $where			= $db->quoteName('integradoId').' = '. $db->quote($integrado_id) ;
+        $dataEmpresa 	= self::checkData('integrado_datos_empresa', $where);
+        $columna[] 		= $campo;
+        $columna[]		= 'integradoId';
+        $valor[]		= $id_instrumento;
+        $valor[]		= $db->quote($integrado_id);
+        $updateSet[] 	= $db->quoteName($campo).' = '.$db->quote($id_instrumento);
+
+        if(empty($dataEmpresa)){
+            self::insertData('integrado_datos_empresa', $columna, $valor);
+        }else{
+            self::updateData('integrado_datos_empresa', $updateSet, $where);
+        }
+    }
+
+    public static function checkData($table, $where){
+        $results = false;
+        try{
+            $db		= JFactory::getDbo();
+            $query 	= $db->getQuery(true);
+
+            $query->select('*')
+                ->from($db->quoteName('#__'.$table))
+                ->where($where);
+
+            $db->setQuery($query);
+
+            $results = $db->loadObjectList();
+        }
+        catch(Exception $e){
+            $response = array('success' => false , 'msg' => 'Error en checkData');
+            echo json_encode($response);
+        }
+
+        return $results;
+    }
+
     //carga los archivos y guarda en la base las url donde estan guardadas, al final hace una redirección.
     function uploadFiles(){
 
         $idCliPro	= JFactory::getApplication()->input->get('idCliPro', null, 'INT');
-        $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoIdCliente = '.$idCliPro);
+
+	    $dbq = JFactory::getDbo();
+	    $result     = getFromTimOne::selectDB('integrado_clientes_proveedor', 'integradoIdCliente = '. $dbq->quote($idCliPro) );
         $integrado_id = $result[0]->integradoIdCliente;
 
         $resultado = sendToTimOne::uploadFiles($integrado_id);
 
         $app = JFactory::getApplication();
         if ($resultado) {
-            $app->enqueueMessage('LBL_DATOS_GUARDADOS');
+            $app->enqueueMessage(JText::_('LBL_SAVE_SUCCESSFUL'));
         }
         $url = 'index.php?option=com_mandatos&view=clienteslist';
 
@@ -435,11 +715,11 @@ class MandatosController extends JControllerLegacy {
         $save       = new sendToTimOne();
         $datosQuery = array('setUpdate'=>array());
         $table 		= 'integrado_contacto';
-        $where      = $db->quoteName('integrado_id').' = '.$integradoId;
+        $where      = $db->quoteName('integradoId').' = '. $db->quote($integradoId);
         $existe     = getFromTimOne::selectDB($table, $where);
 
-        $columnas[] = 'integrado_id';
-        $valores[]	= $integradoId;
+        $columnas[] = 'integradoId';
+        $valores[]	= $db->quote($integradoId);
 
         $datosQuery['columnas'] = $columnas;
         $datosQuery['valores']  = $valores;
@@ -457,7 +737,7 @@ class MandatosController extends JControllerLegacy {
             $columnas = array();
             $valores = array();
 
-            $columnas[] = 'integrado_id';
+            $columnas[] = 'integradoId';
             $columnas[] = 'telefono';
             $columnas[] = 'movil';
             $columnas[] = 'ext';
@@ -468,7 +748,7 @@ class MandatosController extends JControllerLegacy {
             $ext = 'tel_fijo_extension'.($i+1);
             $correo = 'email'.($i+1);
 
-            $valores[] = $integradoId;
+            $valores[] = $db->quote($integradoId);
             $valores[] = $arreglo[$tel];
             $valores[] = $arreglo[$movil];
             $valores[] = $arreglo[$ext];
@@ -486,7 +766,7 @@ class MandatosController extends JControllerLegacy {
         $campos = array('productName'=>'STRING');
         $data   = $this->input_data->getArray($campos);
 
-        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '.$this->integradoId.' AND '.$db->quoteName('status').' = 1';
+        $where  = $db->quoteName('productName').' = '.$db->quote($data['productName']).' AND '.$db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' AND '.$db->quoteName('status').' = 1';
 
         $producto = getFromTimOne::selectDB('integrado_products',$where);
 
@@ -499,19 +779,6 @@ class MandatosController extends JControllerLegacy {
         }
 
         echo json_encode($respuesta);
-    }
-
-    public function envioTimOne($envio)
-    {
-        $request = new sendToTimOne();
-        $serviceUrl = new IntRoute();
-
-        $request->setServiceUrl($serviceUrl->saveComisionServiceUrl());
-        $request->setJsonData($envio);
-
-        $respuesta = $request->to_timone(); // realiza el envio
-
-        return $respuesta;
     }
 
     public function cancelOdv(){
@@ -534,15 +801,15 @@ class MandatosController extends JControllerLegacy {
         switch($data['type']){
             case 'proyecto':
                 $table = 'integrado_proyectos';
-                $where = 'id_proyecto = '.$data['id'];
+                $where = 'id_proyecto = '. (INT)$data['id'];
                 break;
             case 'producto':
                 $table = 'integrado_products';
-                $where = 'id_producto = '.$data['id'];
+                $where = 'id_producto = '. (INT)$data['id'];
                 break;
             case 'cliente';
                 $table = 'integrado_clientes_proveedor';
-                $where = 'id = '.$data['id'];
+                $where = 'id = '. (INT)$data['id'];
                 break;
         }
 
@@ -600,8 +867,10 @@ class MandatosController extends JControllerLegacy {
 		return $result;
 	}
 
-    public function sendEmail($param, $id = null)
+    public function sendEmail($param, $id = null, $nombre = null)
     {
+        $session = JFactory::getSession();
+        $dataToSave     = $session->get('dataCliPro',array(),'integrado');
         $idIntegrado = is_null($id) ? $this->integradoId : $id;
 
         $getCurrUser = new IntegradoSimple($idIntegrado);
@@ -613,23 +882,24 @@ class MandatosController extends JControllerLegacy {
 			    $array = array($this->factutaComisiones->getReceptor()->getDisplayName(), $this->factutaComisiones->id, date('d-m-Y'), '$'.number_format($this->factutaComisiones->totales->total, 2));
 			    $notificationNumber = '19';
 			    break;
-		    case 'MandatosController::saveCliPro':
+		    case 'MandatosController::saveSaveCLiPro':
 			    /*
 			 * Notificaciones 6
 			 */
 			    $tipo = '';
-			    if ($this->dataCliente->tp_tipo_alta == 0) {
+
+			    if ($this->tipoAlta == "0") {
 				    $tipo = 'Cliente';
 			    }
-			    if ($this->dataCliente->tp_tipo_alta == 1) {
+			    if ($this->tipoAlta == "1") {
 				    $tipo = 'Proveedor';
 			    }
-			    if ($this->dataCliente->tp_tipo_alta == 2) {
+			    if ($this->tipoAlta == "2") {
 				    $tipo = 'Cliente/Proveedor';
 			    }
 
                 $editTitle = null;
-			    $array = array($getCurrUser->user->name, $tipo, $this->dataCliente->dp_nom_comercial, JFactory::getUser()->name, date('d-m-Y'));
+			    $array = array($getCurrUser->user->name, $tipo, $nombre, JFactory::getUser()->name, date('d-m-Y'));
 			    $notificationNumber = '6';
 			    break;
 	    }
@@ -654,7 +924,6 @@ class MandatosController extends JControllerLegacy {
                     'pj_pers_juridica'           => array('number' => true,     'required' => true, 'maxlength' => 1),
                 );
                 break;
-
             case 'personales':
                 $diccionario = array(
                     'dp_nom_comercial'           => array('alphaNumber' => true,  	    'maxlength' => 150),
@@ -682,7 +951,6 @@ class MandatosController extends JControllerLegacy {
                     'co_tel_movil3'              => array('number' => true,     	    'minlength' => 13,  'maxlength' => 13),
                 );
                 break;
-
             case 'empresa':
                 $diccionario = array(
                     'de_razon_social'            => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
@@ -711,7 +979,6 @@ class MandatosController extends JControllerLegacy {
                     'rp_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 10,      ),
                 );
                 break;
-
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
@@ -722,9 +989,7 @@ class MandatosController extends JControllerLegacy {
                 break;
         }
 
-        $diccionarioDefault  = array(
-            'integradoId'                => array('number' => true,		    	'maxlength' => 10),
-        );
+        $diccionarioDefault  = array('integradoId' => array('alphaNumber' => true, 'maxlength' => 32));
         $diccionario = array_merge($diccionario, $diccionarioDefault);
 
         //envia la data a validacion y regresa un arreglo con los resultados para cada uno de los campos que esten llenados
