@@ -29,9 +29,6 @@ class MandatosModelOdvpreview extends JModelItem {
 			JFactory::getApplication()->redirect(JRoute::_('index.php?option=com_mandatos'), JText::_('ODV_INVALID'), 'error');
 		}
 
-		$dbq = JFactory::getDbo();
-		$this->odv->account = getFromTimOne::selectDB('integrado_datos_bancarios', 'datosBan_id = '. $dbq->quote($this->odv->account) );
-
 		return $this->odv;
 	}
 
