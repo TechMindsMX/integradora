@@ -119,7 +119,7 @@ class Catalogos {
             $catalogo = $curlRequest->getListBankCodes();
 
 	        if (empty($catalogo)) {
-                JFactory::getApplication()->enqueueMessage('El servicio ' . MIDDLE . TIMONE . 'stp/listBankCodes NO esta funcionando', 'error');
+                JFactory::getApplication()->enqueueMessage('Los Servicios ' . MIDDLE . TIMONE . 'stp/listBankCodes NO esta funcionando', 'error');
                 $cat = null;
             } else {
                 foreach ($catalogo as $indice => $objeto) {
