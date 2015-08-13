@@ -224,10 +224,10 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_CON_FACTURA'); ?>
+				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
 			</div>
 			<div class="container text-uppercase control-group">
-				<?php echo JText::_('LBL_AUTORIZO_FACTURA'); ?>
+				<?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
 			</div>
 		</div>
 		<div class="text-center">
