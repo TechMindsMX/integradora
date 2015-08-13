@@ -49,12 +49,44 @@ class IntegradoModelIntegrado extends JModelAdmin
 		$item->integrados[0]->datos_personales->nacionalidad = $this->getNacionalidad($item->integrados[0]->datos_personales->nacionalidad);
 
         if(!is_null($item->integrados[0]->datos_empresa)) {
-            $item->getUrlsTestimonions();
+            $item->getDataTestimonions();
+	        $this->setTestimoniosDataForView($item);
         }
 
 		$item->campos = $this->getCampos();
 
 		return $item;
+	}
+
+	public function setTestimoniosDataForView($item) {
+		$item->integrados[0]->datos_empresa->testimonio_1_instrum_type = '';
+		$item->integrados[0]->datos_empresa->testimonio_1_instrum_fecha = $item->integrados[0]->datos_empresa->testimonio_1->instrum_fecha;
+		$item->integrados[0]->datos_empresa->testimonio_1_instrum_notaria= $item->integrados[0]->datos_empresa->testimonio_1->instrum_notaria;
+		$item->integrados[0]->datos_empresa->testimonio_1_instrum_num_instrumento = $item->integrados[0]->datos_empresa->testimonio_1->instrum_num_instrumento;
+		$item->integrados[0]->datos_empresa->testimonio_1_instrum_nom_notario = $item->integrados[0]->datos_empresa->testimonio_1->instrum_nom_notario;
+		$item->integrados[0]->datos_empresa->testimonio_1 = $item->integrados[0]->datos_empresa->testimonio_1->url_instrumento;
+
+		$item->integrados[0]->datos_empresa->testimonio_2_instrum_type = '';
+		$item->integrados[0]->datos_empresa->testimonio_2_instrum_fecha = $item->integrados[0]->datos_empresa->testimonio_2->instrum_fecha;
+		$item->integrados[0]->datos_empresa->testimonio_2_instrum_notaria= $item->integrados[0]->datos_empresa->testimonio_2->instrum_notaria;
+		$item->integrados[0]->datos_empresa->testimonio_2_instrum_num_instrumento = $item->integrados[0]->datos_empresa->testimonio_2->instrum_num_instrumento;
+		$item->integrados[0]->datos_empresa->testimonio_2_instrum_nom_notario = $item->integrados[0]->datos_empresa->testimonio_2->instrum_nom_notario;
+		$item->integrados[0]->datos_empresa->testimonio_2 = $item->integrados[0]->datos_empresa->testimonio_2->url_instrumento;
+
+		$item->integrados[0]->datos_empresa->poder_instrum_type = '';
+		$item->integrados[0]->datos_empresa->poder_instrum_fecha = $item->integrados[0]->datos_empresa->poder->instrum_fecha;
+		$item->integrados[0]->datos_empresa->poder_instrum_notaria= $item->integrados[0]->datos_empresa->poder->instrum_notaria;
+		$item->integrados[0]->datos_empresa->poder_instrum_num_instrumento = $item->integrados[0]->datos_empresa->poder->instrum_num_instrumento;
+		$item->integrados[0]->datos_empresa->poder_instrum_nom_notario = $item->integrados[0]->datos_empresa->poder->instrum_nom_notario;
+		$item->integrados[0]->datos_empresa->poder = $item->integrados[0]->datos_empresa->poder->url_instrumento;
+
+		$item->integrados[0]->datos_empresa->reg_propiedad_instrum_type = '';
+		$item->integrados[0]->datos_empresa->reg_propiedad_instrum_fecha = $item->integrados[0]->datos_empresa->reg_propiedad->instrum_fecha;
+		$item->integrados[0]->datos_empresa->reg_propiedad_instrum_notaria= $item->integrados[0]->datos_empresa->reg_propiedad->instrum_notaria;
+		$item->integrados[0]->datos_empresa->reg_propiedad_instrum_num_instrumento = $item->integrados[0]->datos_empresa->reg_propiedad->instrum_num_instrumento;
+		$item->integrados[0]->datos_empresa->reg_propiedad_instrum_nom_notario = $item->integrados[0]->datos_empresa->reg_propiedad->instrum_nom_notario;
+		$item->integrados[0]->datos_empresa->reg_propiedad = $item->integrados[0]->datos_empresa->reg_propiedad->url_instrumento;
+
 	}
 
 	public function getCatalogos()
@@ -121,7 +153,8 @@ class IntegradoModelIntegrado extends JModelAdmin
 		$campos->attach_LBL_SLIDE_BASIC = array(
 			'url_identificacion',
 			'url_rfc',
-			'url_comprobante_domicilio');
+			'url_comprobante_domicilio'
+		);
 
 		$campos->LBL_TAB_EMPRESA = array(
 			'razon_social',
@@ -133,8 +166,29 @@ class IntegradoModelIntegrado extends JModelAdmin
 			'tel_fijo',
 			'tel_fijo_extension',
 			'tel_fax',
-			'sitio_web'
+			'sitio_web',
+			'testimonio_1_instrum_type',
+			'testimonio_1_instrum_fecha',
+			'testimonio_1_instrum_notari',
+			'testimonio_1_instrum_num_instrumento',
+			'testimonio_1_instrum_nom_notario',
+			'testimonio_2_instrum_type',
+			'testimonio_2_instrum_fecha',
+			'testimonio_2_instrum_notari',
+			'testimonio_2_instrum_num_instrumento',
+			'testimonio_2_instrum_nom_notario',
+			'poder_instrum_type',
+			'poder_instrum_fecha',
+			'poder_instrum_notari',
+			'poder_instrum_num_instrumento',
+			'poder_instrum_nom_notario',
+			'reg_propiedad_instrum_type',
+			'reg_propiedad_instrum_fecha',
+			'reg_propiedad_instrum_notari',
+			'reg_propiedad_instrum_num_instrumento',
+			'reg_propiedad_instrum_nom_notario',
 		);
+
 		$campos->attach_LBL_TAB_EMPRESA = array(
 			'url_rfc',
 			'testimonio_1',

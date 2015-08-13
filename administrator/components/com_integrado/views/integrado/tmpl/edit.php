@@ -107,7 +107,7 @@ function tabValores($obj, $campos, $verificacion, $jhtml_group, $jtext_label, $k
                 $attachCampos = 'attach_' . $jtext_label;
                 $attachments  = $campos->$attachCampos;
                 foreach ( $obj as $label => $field ) {
-                    if ( in_array( $label, $attachments ) ) {
+	                    if ( in_array( $label, $attachments ) ) {
                         echo '<div class="control-group">';
                         if ( isset( $field ) ) {
                             echo '<a class="label label-success" target="_blank" href="' . '../' . $field . '">' . JText::_( $label ) . '</a>';
