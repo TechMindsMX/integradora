@@ -10,10 +10,10 @@ $document = JFactory::getDocument();
 $app = JFactory::getApplication();
 
 // Datos
-$params = $app->input->getArray();
-
-$integrado = $this->integCurrent->integrados[0];
-
+$params      = $app->input->getArray();
+$integrado   = $this->integCurrent->integrados[0];
+$integradora = new \Integralib\Integrado();
+$integradora = new IntegradoSimple( $integradora->getIntegradoraUuid() );
 $number2word = new AifLibNumber();
 
 ?>
@@ -39,7 +39,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->integCurrent->getDisplayName(); ?>
+			<?php echo $integradora->getDisplayName(); ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
@@ -227,7 +227,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
 			</div>
 			<div class="container text-uppercase control-group">
-				<?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
+				<?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
 			</div>
 		</div>
 		<div class="text-center">

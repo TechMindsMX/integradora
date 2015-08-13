@@ -13,7 +13,8 @@ $app = JFactory::getApplication();
 $params = $app->input->getArray();
 
 $integrado = $this->integCurrent->integrados[0];
-
+$integradora = new \Integralib\Integrado();
+$integradora = new IntegradoSimple( $integradora->getIntegradoraUuid() );
 $number2word = new AifLibNumber();
 $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
 ?>
@@ -38,7 +39,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
     </tr>
     <tr>
         <td style="text-align: right; width: 17%;"><?php echo JText::_('LBL_SOCIO_INTEG'); ?></td>
-        <td style="text-align: left;"><?php echo $this->integCurrent->getDisplayName(); ?></td>
+        <td style="text-align: left;"><?php echo $integradora->getDisplayName(); ?></td>
         <td style="text-align: right;"><?php echo JText::_('LBL_DATE_CREATED'); ?></td>
         <td style="text-align: left; width: 20%;"><?php echo $this->factura->getCreatedDate(); ?></td>
     </tr>
@@ -178,7 +179,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
         </td></tr>
     <tr>
         <td>
-            <?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
+            <?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
         </td>
     </tr>
     <tr>
