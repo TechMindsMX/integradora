@@ -87,11 +87,15 @@ $uri = JURI::getInstance();
 		        <div id="errorDescription">
 		            <h2><?php echo JText::_('TPL_GK_LANG_ERROR_INFO'); ?> <strong><?php echo $this->error->getCode(); ?></strong></h2>
 		            <h3><?php echo JText::_('TPL_GK_LANG_ERROR_DESC'); ?></h3>
-						<blockquote>
-							<?php
-							// TODO: 12-08-2015 Solo mostrar mensaje de error en local enviroment ?>
+			        <?php
+			        if (ENVIROMENT_INTEGRA != 'produccion') :
+			        ?>
+				        <blockquote>
 							<span class="label label-inverse"><?php echo $this->error->getCode(); ?></span> <?php echo $this->error->getMessage();?>
 						</blockquote>
+			        <?php
+			        endif;
+			        ?>
 		        </div>
 		        <div id="errorboxbody">
 		            <a href="<?php echo $this->baseurl; ?>/index.php" title="<?php echo JText::_('JERROR_LAYOUT_GO_TO_THE_HOME_PAGE'); ?>"><?php echo JText::_('JERROR_LAYOUT_HOME_PAGE'); ?></a>

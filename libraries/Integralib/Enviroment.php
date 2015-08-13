@@ -20,7 +20,8 @@ class Enviroment {
 	    define( 'XML_FILES_PATH', 'media/facturas/');
 
 	    if ( method_exists($this, $enviroment['AMBIENTE']) ) {
-            define('ENVIROMENT_NAME', $enviroment['AMBIENTE_TIMONE'] );
+            define('ENVIROMENT_INTEGRA', $enviroment['AMBIENTE']);
+            define('ENVIROMENT_TIMONE', $enviroment['AMBIENTE_TIMONE'] );
             call_user_func( array($this, strtolower( $enviroment['AMBIENTE']) ) );
         } else {
             $this->produccion();
@@ -88,7 +89,6 @@ class Enviroment {
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
 	    define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'factura.trama.mx/facturacion/' );
-        define( 'XML_FILES_PATH', 'media/facturas/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
@@ -106,7 +106,6 @@ class Enviroment {
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
         define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/' );
-        define('XML_FILES_PATH', 'media/facturas/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
@@ -124,8 +123,6 @@ class Enviroment {
         define( "TIMONE_ROUTE", $middle.$controllerTimOne.'integra/' );
 	    define( "TOKEN_ROUTE", $middle.'timone/oauth/' );
         define( "FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/' );
-
-        define( 'XML_FILES_PATH', 'media/facturas/');
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 
