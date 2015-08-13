@@ -10,13 +10,18 @@ $document = JFactory::getDocument();
 $app = JFactory::getApplication();
 
 // Datos
-$params = $app->input->getArray();
-
-$integrado = $this->integCurrent->integrados[0];
+$params      = $app->input->getArray();
+$integrado   = $this->integCurrent->integrados[0];
+$xml         = $this->factura->datosXML;
 $integradora = new \Integralib\Integrado();
 $integradora = new IntegradoSimple( $integradora->getIntegradoraUuid() );
 $number2word = new AifLibNumber();
 $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
+$fechaHOra = explode('T',$xml->comprobante['FECHA']);
+$fecha = explode('-',$fechaHOra[0]);
+$fecha = $fecha[2].'/'.$fecha[1].'/'.$fecha[0];
+$hora = $fechaHOra[1];
+
 ?>
 
 <div class="hidden-print form-group">
@@ -38,64 +43,31 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
         <td colspan="4"><h4><?php echo JText::_('LBL_FACTURA_DE_VENTA'); ?></h4></td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 17%;"><?php echo JText::_('LBL_SOCIO_INTEG'); ?></td>
-        <td style="text-align: left;"><?php echo $integradora->getDisplayName(); ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_DATE_CREATED'); ?></td>
-        <td style="text-align: left; width: 20%;"><?php echo $this->factura->getCreatedDate(); ?></td>
+        <td style="text-align: left; padding-left: 35px;" colspan="4"><h4><?php echo $integradora->getDisplayName(); ?></h4></td>
     </tr>
     <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_PROY'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->project->name; ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_PAYMENT_DATE'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->paymentDate; ?></td>
+        <td style="text-align: right; width: 17%;"><?php echo $integradora->integrados[0]->datos_empresa->rfc ?></td>
+        <td style="text-align: left;"></td>
+        <td style="text-align: right;">Folio: </td>
+        <td style="text-align: left; width: 20%;"><?php echo $xml->comprobante['FOLIO']; ?></td>
     </tr>
     <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_SUBPROY'); ?></td>
-        <td style="text-align: left;"><?php echo isset($this->factura->subProject->name) ?  $this->factura->subProject->name : '';  ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_FORMA_PAGO'); ?></td>
-        <td style="text-align: left;"><?php echo JText::_($this->factura->paymentMethod->name); ?></td>
+        <td style="text-align: left; padding-left: 35px;" colspan="2"><?php echo $integradora->integrados[0]->address; ?></td>
+        <td style="text-align: right;">Elaboraci&oacute;n</td>
+        <td style="text-align: left;"><?php echo $fecha ?></td>
     </tr>
     <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_MONEDA'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->currency; ?></td>
+        <td style="text-align: left;padding-left: 35px;" colspan="2"><?php echo JText::_('LBL_MONEDA').': '.$this->factura->currency; ?></td>
         <td style="text-align: right;">&nbsp;</td>
-        <td style="text-align: left;">&nbsp;</td>
+        <td style="text-align: left;"><?php echo $hora; ?></td>
     </tr>
     <tr>
-        <td colspan="5"><h5><?php echo JText::_('LBL_HEADER_DATOS_CLIENTE'); ?></h5></td>
-    </tr>
-    <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_RAZON_SOCIAL'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->proveedor->frontName; ?></td>
-        <td style="text-align: right;"></td>
-        <td style="text-align: left;"></td>
-    </tr>
-    <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_RFC'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->getReceptor()->getIntegradoRfc();; ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_BANCOS'); ?></td>
-        <td style="text-align: left;"><?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->bankName; ?></td>
-    </tr>
-    <tr>
-        <td style="text-align: right;"><?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->proveedor->contact; ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></td>
-        <td style="text-align: left;"><?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->banco_cuenta; ?></td>
-    </tr>
-    <tr>
-        <td style="text-align: right;"><?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->proveedor->phone; ?></td>
-        <td style="text-align: right;"><?php echo JText::_('LBL_NUMERO_CLABE'); ?></td>
-        <td style="text-align: left;"><?php echo @$this->factura->getEmisor()->getAccountData($this->factura->account)->banco_clabe; ?></td>
-    </tr>
-    <tr>
-        <td style="text-align: right;"><?php echo JText::_('LBL_CORREO'); ?></td>
-        <td style="text-align: left;"><?php echo $this->factura->getEmisor()->getIntegradoEmail(); ?></td>
-        <td style="text-align: right;"></td>
-        <td style="text-align: left;"></td>
-    </tr>
-    <tr>
-        <td colspan="4"><h6><?php echo JText::_('LBL_DESCRIP_PRODUCTOS'); ?></h6></td>
+        <td style="text-align: left; padding-left: 36px; padding-top: 15px;" colspan="4">
+            <p><?php echo $this->factura->getReceptor()->getIntegradoRfc().' - '.$this->factura->proveedor->frontName; ?></p>
+            <p>
+                <?php echo $xml->receptor['children'][0]['attrs']['CALLE']; ?>
+            </p>
+        </td>
     </tr>
 </table>
 
@@ -174,18 +146,50 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
 
 <table class="table" id="printFooter">
     <tr>
-        <td>
-            <?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
-        </td></tr>
-    <tr>
-        <td>
+        <td colspan="4">
             <?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
         </td>
     </tr>
     <tr>
-        <td>
-            <p class="text-capitalize"><?php echo JText::_('LBL_INTEGRADORA'); ?></p>
-            <p><?php echo JText::_('LBL_INTEGRADORA_DIRECCION'); ?></p>
+        <td colspan="4" style="border-top: 1px solid rgba(0, 0, 0, 0.21); margin-top: 2px;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="text-align: right; width: 20%;"><strong>Folio fiscal:</strong> </td>
+        <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['UUID']; ?></td>
+        <td style="text-align: right;" colspan="2" rowspan="5"></td>
+    </tr>
+    <tr>
+        <td style="text-align: right; width: 20%;"><strong>No. serie de CSD del emisor:</strong> </td>
+        <td style="text-align: left;"><?php echo $xml->comprobante['NOCERTIFICADO']; ?></td>
+    </tr>
+    <tr>
+        <td style="text-align: right; width: 20%;"><strong>Fecha y hora de certificaci&oacute;n</strong>:</td>
+        <td style="text-align: left;"><?php echo $fecha.' '.$hora; ?></td>
+    </tr>
+    <tr>
+        <td style="text-align: right; width: 20%;"><strong>Fecha y hora de emisi&oacute;n:</strong> </td>
+        <td style="text-align: left;"><?php echo $fecha.' '.$hora; ?></td>
+    </tr>
+    <tr>
+        <td style="text-align: right; width: 20%;"><strong>No. serie del CSD del SAT:</strong> </td>
+        <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['NOCERTIFICADOSAT']; ?></td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <p><span><strong>Sello Digital del CFDI:</strong></span></p>
+            <p style="font-size: 5px;"><?php echo $xml->complemento['children'][0]['attrs']['SELLOCFD']; ?></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <p><span><strong>Cadena Original del COmplemento de Certificaci&oacute;n digital del SAT:</strong></span></p>
+            <p style="font-size: 5px;"><?php echo chunk_split($xml->comprobante['CERTIFICADO'], 200); ?></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <p><span><strong>Sello del SAT:</strong></span></p>
+            <p style="font-size: 5px;"><?php echo $xml->complemento['children'][0]['attrs']['SELLOSAT']; ?></p>
         </td>
     </tr>
 </table>
