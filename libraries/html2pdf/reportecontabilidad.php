@@ -50,7 +50,6 @@ class reportecontabilidad{
         $number2word = new AifLibNumber();
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
         $html = "
-        <body class=\"contentpane\">
         <table class=\"table\">
             <tr>
                 <td>
@@ -142,8 +141,109 @@ class reportecontabilidad{
                     <td style="text-align: left;">&nbsp;</td>
                 </tr>';
 
-       $html .= '</table>
-</body>';
+       $html .= '</table>';
+
+        $html .= '<div class="clearfix"><h6>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h6></div>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="span1">#</th>
+                            <th class="span2">'.JText::_('LBL_CANTIDAD').'</th>
+                            <th class="span4">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+                            <th class="span1">'.JText::_('LBL_UNIDAD').'</th>
+                            <th class="span2">'.JText::_('LBL_P_UNITARIO').'</th>
+                            <th class="span2">'.JText::_('LBL_IMPORTE').'</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+
+                        foreach ($data->productosData as $key => $prod){
+                            $html .='<tr>
+                                <td>'; echo $key+1; $html .='</td>
+                                <td>';
+                                if ( ! empty( $prod->cantidad ) ) {
+                                    $html .=$prod->cantidad;
+                                }
+
+                            $html .='</td>
+                                <td>';
+                                if ( ! empty( $prod->descripcion ) ) {
+                                    $html .= '<strong>'. $prod->producto .'</strong><br />'. $prod->descripcion;
+                                }
+                            $html .='</td>
+                                <td>';
+                                if ( ! empty( $prod ) ) {
+                                    $html .= $prod->unidad;
+                                }
+                            $html .='</td>
+                                <td><div class="text-right">$';
+
+                                if ( ! empty( $prod->p_unitario ) ) {
+                                    $html .=number_format($prod->p_unitario,2);
+                                }
+                            $html .='</div></td>
+                                <td><div class="text-right">$';
+
+                                if ( ! empty( $prod->cantidad ) ) {
+                                    $html .=number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2);
+                                }
+                            $html .='</div></td>
+                            </tr>';
+                        }
+
+                        $html .='<tr>
+                            <td colspan="4" rowspan="4">
+                                '.JText::_('LBL_MONTO_LETRAS').' <span>'.$number2word->toCurrency('$'.number_format($data->totalAmount, 2)).'</span>
+                            </td>
+                            <td class="span2">
+                                '.JText::_('LBL_SUBTOTAL').'
+                            </td>
+                            <td><div class="text-right">
+                                    $'.number_format($data->subTotalAmount,2).'
+                                </div></td>
+                        </tr>
+                        <tr>
+                            <td class="span2">
+                                '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'
+                            </td>
+                            <td><div class="text-right">
+                                    $'.number_format($data->iva, 2).'
+                                </div></td>
+                        </tr>
+                        <tr>
+                            <td class="span2">
+                                '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS').'
+                            </td>
+                            <td><div class="text-right">
+                                    $'.number_format($data->ieps, 2).'
+                                </div></td>
+                        </tr>
+                        <tr>
+                            <td class="span2">
+                                '.JText::_('LBL_TOTAL').'
+                            </td>
+                            <td><div class="text-right">
+                                    $'.number_format($data->totalAmount, 2).'
+                                </div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table" id="printFooter">
+                        <tr>
+                            <td>'.JText::_('LBL_CON_FACTURA').'</td>
+                        </tr>
+                        <tr>
+                            <td>'.JText::_('LBL_AUTORIZO_FACTURA').'</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <p class="text-capitalize">'.JText::_('LBL_INTEGRADORA').'</p>
+                                <p>'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
+                            </td>
+                        </tr>
+                    </table>';
+
+
 
         return $html;
     }
