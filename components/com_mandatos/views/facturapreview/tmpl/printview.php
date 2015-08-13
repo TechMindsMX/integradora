@@ -174,13 +174,15 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
 <table class="table" id="printFooter">
     <tr>
         <td>
-            <?php echo JText::_('LBL_CON_FACTURA'); ?>
+            <?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
         </td></tr>
     <tr>
-        <td><?php echo JText::_('LBL_AUTORIZO_FACTURA'); ?></td>
+        <td>
+            <?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
+        </td>
     </tr>
     <tr>
-        <td sty>
+        <td>
             <p class="text-capitalize"><?php echo JText::_('LBL_INTEGRADORA'); ?></p>
             <p><?php echo JText::_('LBL_INTEGRADORA_DIRECCION'); ?></p>
         </td>

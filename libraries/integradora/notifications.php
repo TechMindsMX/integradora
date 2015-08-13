@@ -62,20 +62,20 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+        $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
         if(isset($error->code)){
             switch($error->code){
                 case 400:
                     $correos = array('luis.magana@techminds.com.mx');
                     break;
                 case 503:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
                     break;
                 case 0:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
                     break;
                 default:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx');
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
                     break;
 
             }
