@@ -8,6 +8,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
+jimport('phpqrcode.qrlib');
 
 /**
  * metodo de envio a TimOne
@@ -97,6 +98,18 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
+                                    if($timbrar){
+                                        $xml = new xml2Array();
+                                        $factura = $xml->manejaXML($xmlFactura);
+
+                                        $qrData = '?re=&rr=&tt=&id=';
+                                        $tmpPath = JPATH_BASE.'/media/qrcodes';
+
+                                        $filename = date('dmY').'-.png';
+                                        $pngPath = $tmpPath.'/'.$filename;
+
+                                        QRcode::png('holamundo',$pngPath);
+                                    }
                                     $info = $this->sendEmail($newOrder);
 
                                 } catch (Exception $e) {

@@ -21,7 +21,6 @@ $fechaHOra = explode('T',$xml->comprobante['FECHA']);
 $fecha = explode('-',$fechaHOra[0]);
 $fecha = $fecha[2].'/'.$fecha[1].'/'.$fecha[0];
 $hora = $fechaHOra[1];
-
 ?>
 
 <div class="hidden-print form-group">
@@ -32,10 +31,6 @@ $hora = $fechaHOra[1];
         <td>
             <div><img width="200" src="<?php echo JUri::base() . 'images/logo_iecce.png'; ?>"/></div>
         </td>
-        <td style="text-align: right">
-            <h3 class="text-right">No. <?php echo $this->factura->getId(); ?></h3>
-        </td>
-    </tr>
 </table>
 
 <table class="table" id="data">
@@ -156,7 +151,9 @@ $hora = $fechaHOra[1];
     <tr>
         <td style="text-align: right; width: 20%;"><strong>Folio fiscal:</strong> </td>
         <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['UUID']; ?></td>
-        <td style="text-align: right;" colspan="2" rowspan="5"></td>
+        <td style="text-align: right;" colspan="2" rowspan="5">
+            <?php echo '<img src="media/qrcodes/'.$this->factura->createdDate.'-'.$this->factura->integradoId.'-'.$this->factura->id.'.png">' ?>
+        </td>
     </tr>
     <tr>
         <td style="text-align: right; width: 20%;"><strong>No. serie de CSD del emisor:</strong> </td>

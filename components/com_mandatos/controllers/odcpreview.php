@@ -6,7 +6,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
-
+jimport('phpqrcode.qrlib');
 /**
  * metodo de envio a TimOne
  * @property mixed parametros
@@ -108,6 +108,28 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                     $odvUPdate->urlXML = $urlXML;
 
                                     $db->updateObject('#__ordenes_venta', $odvUPdate, 'id');
+
+                                    //Codigo QR
+                                    $xml = new xml2Array();
+                                    $factura = $xml->manejaXML($xmlFactura);
+
+                                    $qrData = '?re='.$factura->emisor['attrs']['RFC'].'&rr='.$factura->receptor['attrs']['RFC'].'&tt='.$factura->comprobante['TOTAL'].'&id='.$factura->complemento['children'][0]['attrs']['UUID'];
+                                    $tmpPath = JPATH_BASE.'/media/qrcodes';
+
+                                    $filename = $odv->createdDate.'-'.$odv->integradoId.'-'.$odvId.'.png';
+                                    $pngPath = $tmpPath.'/'.$filename;
+
+                                    QRcode::png($qrData,$pngPath);
+                                    if(file_exists($pngPath)){
+                                       $saveqrname = new stdClass();
+
+                                        $saveqrname->integradoId = $odv->integradoId;
+                                        $saveqrname->qrName      = $filename;
+                                        $saveqrname->createdDate = time();
+
+                                        $db->insertObject('#__integrado_pdf_qr',$saveqrname);
+                                    }
+                                    //fin codigo qr
 
                                     $factObj->saveFolio($xmlFactura);
                                 } catch (Exception $e) {

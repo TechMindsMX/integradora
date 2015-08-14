@@ -1,7 +1,7 @@
 ﻿--liquibase formatted sql
 
 --changeset ricardolyon:1
-CREATE TABLE `flpmu_catalog_order_status` (
+CREATE TABLE IF NOT EXISTS `flpmu_catalog_order_status`  (
   `id` int(11) NOT NULL,
   `statusName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -18,8 +18,7 @@ INSERT INTO flpmu_catalog_order_status (id, statusName) VALUES (55, 'Cancelada')
 --rollback DROP TABLE `flpmu_catalog_order_status`;
 
 --changeset lutek:2
-DROP TABLE IF EXISTS `flpmu_mandatos_mutuos`;
-CREATE TABLE `flpmu_mandatos_mutuos` (
+CREATE TABLE IF NOT EXISTS `flpmu_mandatos_mutuos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `integradoIdE` int(11) DEFAULT NULL,
   `integradoIdR` int(11) DEFAULT NULL,
@@ -52,8 +51,7 @@ ALTER TABLE `flpmu_catalog_order_status` CHANGE COLUMN `statusName` `name` VARCH
 --rollback ALTER TABLE `flpmu_catalog_order_status` CHANGE COLUMN `name` `statusName` VARCHAR(45) NOT NULL ,DROP INDEX `name_UNIQUE`;
 
 --changeset lutek:5
-DROP TABLE IF EXISTS `flpmu_catalog_tipoperiodos`;
-CREATE TABLE `flpmu_catalog_tipoperiodos` (
+CREATE TABLE IF NOT EXISTS `flpmu_catalog_tipoperiodos` (
   `IdTipo` INT(11) NULL,
   `nombre` VARCHAR(45) NULL,
   `periodosAnio` INT(11) NULL);
@@ -69,8 +67,7 @@ INSERT INTO `flpmu_catalog_tipoperiodos` (`IdTipo`,`nombre`,`periodosAnio`)VALUE
 --rollback ALTER TABLE `flpmu_mandatos_mutuos` DROP `status`;
 
 --changeset lutek:6
-DROP TABLE IF EXISTS `flpmu_integrado_timone`;
-CREATE TABLE `flpmu_integrado_timone` (
+CREATE TABLE IF NOT EXISTS `flpmu_integrado_timone` (
   `integradoId` INT NOT NULL,
   `timOneId` INT NULL,
   `account` BIGINT NULL,
@@ -78,8 +75,7 @@ CREATE TABLE `flpmu_integrado_timone` (
 --rollback DROP TABLE `flpmu_integrado_timone`;
 
 --changeset ricardolyon:7
-DROP TABLE IF EXISTS `flpmu_reportes_balance`;
-CREATE TABLE `flpmu_reportes_balance` (
+CREATE TABLE IF NOT EXISTS `flpmu_reportes_balance` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `integradoId` VARCHAR(45) NOT NULL,
   `year` INT(4) NOT NULL,
@@ -93,7 +89,6 @@ CREATE TABLE `flpmu_reportes_balance` (
 --rollback DROP TABLE `flpmu_reportes_balance`;
 
 --changeset nestor:8
-DROP TABLE IF EXISTS `flpmu_ordenes_prestamo`;
 CREATE TABLE IF NOT EXISTS `flpmu_ordenes_prestamo` (
 `id` int(11) NOT NULL,
   `fecha_elaboracion` BIGINT NOT NULL,
@@ -141,7 +136,7 @@ ALTER TABLE `flpmu_ordenes_prestamo` ADD `idMutuo` INT NOT NULL AFTER `id`;
 --rollback ALTER TABLE `flpmu_ordenes_prestamo` DROP `idMutuo`;
 
 --changeset lutek:13
-CREATE TABLE `flpmu_bitacora_status_mutuo` (
+CREATE TABLE IF NOT EXISTS `flpmu_bitacora_status_mutuo` (
   `idOrden` INT NULL,
   `userId` INT NULL,
   `changeDate` BIGINT NULL,
@@ -195,7 +190,7 @@ ALTER TABLE  `flpmu_bitacora_status_odv` CHANGE  `id`  `id` INT( 11 ) NOT NULL A
 --rollback ALTER TABLE `flpmu_bitacora_status_odv` CHANGE  `id`  `id` INT( 11 ) NOT NULL;
 
 --changeset ricardolyon:19
-CREATE TABLE `flpmu_integrado_verificacion_solicitud` (
+CREATE TABLE IF NOT EXISTS `flpmu_integrado_verificacion_solicitud` (
   `integradoId` INT NOT NULL,
 `datos_personales` VARCHAR(1024) NOT NULL,
 `datos_empresa` VARCHAR(1024) NOT NULL,
@@ -214,7 +209,7 @@ CHANGE  `account`  `stpClabe` BIGINT( 20 ) NULL DEFAULT NULL
 --rollback ALTER TABLE  `flpmu_integrado_timone` CHANGE  `timoneUuid`  `timOneId` INT( 11 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE  `stpClabe`  `account` BIGINT( 20 ) NULL DEFAULT NULL
 
 --changeset ricardolyon:22
-CREATE TABLE `flpmu_catalog_permission_levels` (
+CREATE TABLE IF NOT EXISTS `flpmu_catalog_permission_levels` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(1024) NOT NULL
 );
@@ -226,7 +221,7 @@ INSERT INTO `flpmu_catalog_permission_levels` (id, name) VALUES (4, 'Full');
 --rollback DROP TABLE `flpmu_catalog_permission_levels`;
 
 --changeset lutek:23
-CREATE TABLE `flpmu_catalogo_ivas` (
+CREATE TABLE IF NOT EXISTS `flpmu_catalogo_ivas` (
   `valor` int(11) NOT NULL,
   `leyenda` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -311,7 +306,7 @@ UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = 24, multiplicador = 15, nom
 --rollback UPDATE flpmu_catalog_tipoperiodos SET periodosAnio = 104, multiplicador = NULL, nombreCiclo = NULL WHERE IdTipo=2;
 
 --changeset ricardolyon:38
-CREATE TABLE `flpmu_txs_banco_timone_relation` (
+CREATE TABLE IF NOT EXISTS `flpmu_txs_banco_timone_relation` (
   `id_txs_banco` INT,
   `id_txs_timone` INT,
   FOREIGN KEY (`id_txs_banco`) REFERENCES `flpmu_txs_banco_integrado`(id),
@@ -320,7 +315,7 @@ CREATE TABLE `flpmu_txs_banco_timone_relation` (
 --rollback DROP TABLE `flpmu_txs_banco_timone_relation`;
 
 --changeset ricardolyon:39
-CREATE TABLE `flpmu_txs_mandatos` (
+CREATE TABLE IF NOT EXISTS `flpmu_txs_mandatos` (
   `id` INT NOT NULL,
   `amount` FLOAT,
   `orderType` VARCHAR(10),
@@ -336,7 +331,7 @@ ALTER TABLE `flpmu_txs_timone_mandato` DROP COLUMN tipoOrden;
 --rollback ALTER TABLE `flpmu_txs_timone_mandato` ADD COLUMN tipoOrden VARCHAR(45);
 
 --changeset ricardolyon:41
-CREATE TABLE `flpmu_ordenes_odv_odc_relation` (
+CREATE TABLE IF NOT EXISTS `flpmu_ordenes_odv_odc_relation` (
   `id_odv` INT NOT NULL,
   `id_odc` INT NOT NULL,
   FOREIGN KEY (`id_odv`) REFERENCES `flpmu_ordenes_venta`(id),
@@ -350,7 +345,7 @@ INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_
 
 --changeset ricardolyon:43
 UPDATE `flpmu_modules` SET `published`='0' WHERE `id`='101';
-CREATE TABLE `flpmu_catalog_payment_methods` (
+CREATE TABLE IF NOT EXISTS `flpmu_catalog_payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `tag` varchar(25) NOT NULL,
   `published` BOOLEAN
@@ -362,7 +357,7 @@ INSERT `flpmu_catalog_payment_methods` SET `tag` = 'LBL_CHEQUE', `published` = 0
 --rollback DROP TABLE `flpmu_catalog_payment_methods`;
 
 --changeset ricardolyon:44
-CREATE TABLE `flpmu_txs_liquidacion_saldo` (
+CREATE TABLE IF NOT EXISTS `flpmu_txs_liquidacion_saldo` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `amount` FLOAT NOT NULL,
   `integradoId` INT(11) NOT NULL,
@@ -381,7 +376,7 @@ UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_u
 --rollback UPDATE `flpmu_extensions` SET `params`='{\"allowUserRegistration\":\"1\",\"new_usertype\":\"2\",\"guest_usergroup\":\"9\",\"sendpassword\":\"1\",\"useractivation\":\"1\",\"mail_to_admin\":\"0\",\"captcha\":\"\",\"frontend_userparams\":\"1\",\"site_language\":\"0\",\"change_login_name\":\"0\",\"reset_count\":\"10\",\"reset_time\":\"1\",\"minimum_length\":\"4\",\"minimum_integers\":\"0\",\"minimum_symbols\":\"0\",\"minimum_uppercase\":\"0\",\"save_history\":\"0\",\"history_limit\":5,\"mailSubjectPrefix\":\"\",\"mailBodySuffix\":\"\"}' WHERE `extension_id`='25';
 
 --changeset ricardolyon:47
-CREATE TABLE `flpmu_facturas_folios` (
+CREATE TABLE IF NOT EXISTS `flpmu_facturas_folios` (
   `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `folio` VARCHAR(255),
   `factura_uuid` VARCHAR(255)
@@ -508,7 +503,7 @@ ALTER TABLE `flpmu_txs_timone_mandato` COLLATE utf8_general_ci, CHANGE COLUMN `i
 --rollback ALTER TABLE `flpmu_integrado` CHANGE COLUMN `integradoId` `integrado_id` INT(11) AUTO_INCREMENT NOT NULL;
 
 --changeset ricardolyon:55
-CREATE TABLE `flpmu_users_security_questions` (
+CREATE TABLE IF NOT EXISTS `flpmu_users_security_questions` (
   `user_id` INT NOT NULL,
   `question_id` INT NOT NULL,
   `answer` VARCHAR(255) NOT NULL,
@@ -518,7 +513,7 @@ CREATE TABLE `flpmu_users_security_questions` (
 --rollback DROP TABLE `flpmu_users_security_questions`;
 
 --changeset ricardolyon:56
-CREATE TABLE `flpmu_security_questions` (
+CREATE TABLE IF NOT EXISTS `flpmu_security_questions` (
   `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `question` VARCHAR(255) NOT NULL
 );
@@ -566,3 +561,14 @@ INSERT INTO `flpmu_content` (`id`, `asset_id`, `title`, `alias`, `introtext`, `f
 --changeset ricardolyon:61
 UPDATE flpmu_extensions SET `enabled` = '0' WHERE name = 'plg_system_remember';
 --rollback UPDATE flpmu_extensions SET `enabled` = '1' WHERE name = 'plg_system_remember';
+
+--changeset lutek: 62
+CREATE TABLE IF NOT EXISTS `flpmu_integrado_pdf_qr` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT,
+  `integradoId` VARCHAR(45) NULL,
+  `qrName` VARCHAR(100) NULL,
+  `pdfName` VARCHAR(100) NULL,
+  `createdDate` BIGINT NULL,
+  `lastUpdate` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+--rollback DROP TABLE `flpmu_integrado_pdf_qr`;
