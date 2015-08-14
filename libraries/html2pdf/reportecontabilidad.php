@@ -25,7 +25,12 @@ class reportecontabilidad{
 
     public  function readCss(){
         $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
-
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap-responsive.css');
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/bootstrap.css');
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/template.css');
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/override.css');
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/printviewcss.css');
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/print.css');
     }
 
     function odv($data){
