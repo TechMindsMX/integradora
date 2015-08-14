@@ -10,28 +10,27 @@ require('html2pdf.class.php');
 
 class reportecontabilidad{
 
+
+
     public function createPDF($data, $tipo){
 
         if($tipo = 'odv'){
             $html = $this->odv($data);
         }
-
-        $ch = curl_init();
-        $timeout = 5;
-        curl_setopt($ch, CURLOPT_URL, "");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        $contenido = curl_exec($ch);
-        curl_close($ch);
-
-
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output('respaldosPDF/sexemple.pdf', 'F');
         exit;
     }
 
+    public  function readCss(){
+        $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
+
+    }
+
     function odv($data){
+        $this->readCss();
+
         $document	= JFactory::getDocument();
         $app 		= JFactory::getApplication();
         $template = $app->getTemplate();
@@ -46,10 +45,44 @@ class reportecontabilidad{
                 'Itemid' => NULL,
             );
 
-
         $number2word = new AifLibNumber();
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
-        $html = "
+        $html = "<style>
+
+
+".$this->css."
+        html{
+            font-size = 10px;
+        }
+        .table-bordered {
+                    border: 1px solid #ddd;
+                }
+                .table {
+                    margin-bottom: 20px;
+                    max-width: 100%;
+                    width: 100%;
+                }
+                .table-bordered {
+                    border-radius: 4px;
+                }
+                table {
+                    clear: both;
+                }
+                table {
+                    background-color: transparent;
+                }
+                table {
+                    border-spacing: 0;
+                }
+                table {
+                }
+                * {
+                    box-sizing: border-box;
+                }
+                body, table{
+                    max-width: 665px;
+                }
+        </style>
         <table class=\"table\">
             <tr>
                 <td>
@@ -159,7 +192,7 @@ class reportecontabilidad{
 
                         foreach ($data->productosData as $key => $prod){
                             $html .='<tr>
-                                <td>'; echo $key+1; $html .='</td>
+                                <td>';  $html .=$key+1; $html .='</td>
                                 <td>';
                                 if ( ! empty( $prod->cantidad ) ) {
                                     $html .=$prod->cantidad;
@@ -199,7 +232,7 @@ class reportecontabilidad{
                                 '.JText::_('LBL_SUBTOTAL').'
                             </td>
                             <td><div class="text-right">
-                                    $'.number_format($data->subTotalAmount,2).'
+                                    $'; $html .=number_format($data->subTotalAmount,2); $html .='
                                 </div></td>
                         </tr>
                         <tr>
@@ -207,7 +240,7 @@ class reportecontabilidad{
                                 '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'
                             </td>
                             <td><div class="text-right">
-                                    $'.number_format($data->iva, 2).'
+                                    $'; $html .= number_format($data->iva, 2); $html .='
                                 </div></td>
                         </tr>
                         <tr>
@@ -215,7 +248,7 @@ class reportecontabilidad{
                                 '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS').'
                             </td>
                             <td><div class="text-right">
-                                    $'.number_format($data->ieps, 2).'
+                                    $'; $html .=number_format($data->ieps, 2); $html .='
                                 </div></td>
                         </tr>
                         <tr>
@@ -223,7 +256,7 @@ class reportecontabilidad{
                                 '.JText::_('LBL_TOTAL').'
                             </td>
                             <td><div class="text-right">
-                                    $'.number_format($data->totalAmount, 2).'
+                                    $'; $html .=number_format($data->totalAmount, 2); $html .='
                                 </div></td>
                         </tr>
                         </tbody>
@@ -242,9 +275,16 @@ class reportecontabilidad{
                             </td>
                         </tr>
                     </table>';
-
-
-
         return $html;
+    }
+
+    public  function readFile ($url){
+        $this->css = '';
+        $file = fopen($url, "r") or exit("Unable to open file!");
+        while(!feof($file)) {
+            $this->css .= fgets($file);
+            $this->css = str_replace("inherit", "", $this->css);
+        }
+        fclose($file);
     }
 }
