@@ -15,12 +15,9 @@ class MandatosViewFacturapreview extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray();
-
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
 		$this->factura		= $this->get('facturas');
-
 		$this->integCurrent = $this->get('integrado');
 
         if (count($errors = $this->get('Errors'))) {

@@ -8,6 +8,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
+jimport('phpqrcode.qrlib');
 
 /**
  * metodo de envio a TimOne
@@ -97,6 +98,29 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
+                                    if($timbrar){
+                                        //Codigo QR
+                                        $xml = new xml2Array();
+                                        $factura = $xml->manejaXML($xmlFactura);
+
+                                        $qrData = '?re='.$factura->emisor['attrs']['RFC'].'&rr='.$factura->receptor['attrs']['RFC'].'&tt='.$factura->comprobante['TOTAL'].'&id='.$factura->complemento['children'][0]['attrs']['UUID'];
+                                        $tmpPath = JPATH_BASE.'/media/qrcodes';
+
+                                        $filename = $newOrder->createdDate.'-'.$this->integradoId.'-'.$newOrder->id.'.png';
+                                        $pngPath = $tmpPath.'/'.$filename;
+
+                                        QRcode::png($qrData,$pngPath);
+                                        if(file_exists($pngPath)){
+                                            $saveqrname = new stdClass();
+
+                                            $saveqrname->integradoId = $newOrder->integradoId;
+                                            $saveqrname->qrName      = $filename;
+                                            $saveqrname->createdDate = time();
+
+                                            $db->insertObject('#__integrado_pdf_qr',$saveqrname);
+                                        }
+                                        //fin codigo qr
+                                    }
                                     $info = $this->sendEmail($newOrder);
 
                                 } catch (Exception $e) {
