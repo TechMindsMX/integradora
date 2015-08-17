@@ -114,7 +114,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->odv->getReceptor()->getContactName(); ?>
+			<?php echo $this->odv->getReceptor()->getDisplayName(); ?>
 		</div>
 	</div>
 	<div>

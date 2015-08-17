@@ -76,7 +76,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
     </tr>
     <tr>
         <td style="text-align: right;"><?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?></td>
-        <td style="text-align: left;"><?php echo $this->odv->getReceptor()->getContactName(); ?></td>
+        <td style="text-align: left;"><?php echo $this->odv->getReceptor()->getDisplayName(); ?></td>
         <td style="text-align: right;">&nbsp;</td>
         <td style="text-align: left;">&nbsp;</td>
     </tr>
