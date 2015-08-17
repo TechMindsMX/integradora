@@ -195,6 +195,10 @@ class IntegradoController extends JControllerLegacy {
      * @throws Exception
      */
     function uploadFiles(){
+        if (JSession::checkToken() === false) {
+            $this->redirectToSelectIntegrado();
+        }
+
         $app = JFactory::getApplication();
         $data = $this->input->getArray();
         $saveFiles = sendToTimOne::uploadFiles($data['integradoId']);
@@ -204,7 +208,7 @@ class IntegradoController extends JControllerLegacy {
         if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado';
+            $url = 'index.php?option=com_integrado&view=solicitud&task=validate_all&Itemid=207';
         }
 
         $app->enqueueMessage($msg['msg'], $msg['type']);
@@ -896,4 +900,12 @@ class IntegradoController extends JControllerLegacy {
         }
         return $permiso;
     }
+
+    public function validate_all() {
+
+        $url = 'index.php?option=com_integrado&view=validation&Itemid=207';
+
+        $this->app->redirect($url);
+    }
+
 }
