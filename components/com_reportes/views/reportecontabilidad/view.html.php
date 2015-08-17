@@ -31,12 +31,15 @@ class ReportesViewReportecontabilidad extends JViewLegacy
         $this->integradora                  = new IntegradoSimple($integradora->getIntegradoraUuid());
         $ordenes                            = new getFromTimOne();
 
-        $this->ordenes                      = $ordenes->getOrdenesVenta();
-        $odvPdf                             = new reportecontabilidad();
+        $this->odv                      = $ordenes->getOrdenesVenta();
+        $createPdf                          = new reportecontabilidad();
 
-        foreach($this->ordenes as $orden){
-            $this->odvPdf                   = $odvPdf->createPDF($orden, 'odv');
+
+
+        foreach($this->odv as $orden){
+            $createPdf->createPDF($orden, 'odv');
         }
+
 
         if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

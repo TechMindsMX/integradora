@@ -12,25 +12,21 @@ class reportecontabilidad{
 
 
 
-    public function createPDF($data, $tipo){
+    public function createPDF($data, $tipo)
+    {
 
-        if($tipo = 'odv'){
+        if ($tipo = 'odv') {
             $html = $this->odv($data);
         }
+
+
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
-        $html2pdf->Output('respaldosPDF/sexemple.pdf', 'F');
-        exit;
+        $html2pdf->Output('respaldosPDF/ODV-Num-'.$data->numOrden.'.pdf', 'F');
     }
 
     public  function readCss(){
         $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap-responsive.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/bootstrap.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/template.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/override.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/printviewcss.css');
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/css/print.css');
     }
 
     function odv($data){
@@ -53,40 +49,7 @@ class reportecontabilidad{
         $number2word = new AifLibNumber();
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
         $html = "<style>
-
-
-".$this->css."
-        html{
-            font-size = 10px;
-        }
-        .table-bordered {
-                    border: 1px solid #ddd;
-                }
-                .table {
-                    margin-bottom: 20px;
-                    max-width: 100%;
-                    width: 100%;
-                }
-                .table-bordered {
-                    border-radius: 4px;
-                }
-                table {
-                    clear: both;
-                }
-                table {
-                    background-color: transparent;
-                }
-                table {
-                    border-spacing: 0;
-                }
-                table {
-                }
-                * {
-                    box-sizing: border-box;
-                }
-                body, table{
-                    max-width: 665px;
-                }
+        ".$this->css."
         </style>
         <table class=\"table\">
             <tr>
@@ -133,18 +96,18 @@ class reportecontabilidad{
                     <td style="text-align: right;">'.JText::_('LBL_MONEDA').'</td>
                     <td style="text-align: left;">';
 
-                    isset($data->currency) ? $html .=$data->currency : 'MXN';
+                    isset($data->currency) ? $html .=$data->currency : $html .='MXN';
 
         $html .='</td>
                     <td style="text-align: right;">'.JText::_('LBL_BANCO_CUENTA').'</td>
                     <td style="text-align: left;">';
-                        isset($data->account[0]->banco_cuenta) ? $html .='XXXXXX' . substr($data->account[0]->banco_cuenta, -4, 4) : '';
+                        isset($data->account[0]->banco_cuenta) ? $html .='XXXXXX' . substr($data->account[0]->banco_cuenta, -4, 4) : $html .= 'Sin Identificar';
 
         $receptor = $data->receptor->integrados[0]->datos_empresa;
         $html .='</td>
                 </tr>
                 <tr>
-                    <td colspan="5"><h5>'.JText::_('LBL_HEADER_DATOS_CLIENTE').'</h5></td>
+                    <td colspan="4"><h5>'.JText::_('LBL_HEADER_DATOS_CLIENTE').'</h5></td>
                 </tr>
                 <tr>
                     <td style="text-align: right;">'.JText::_('LBL_RAZON_SOCIAL').'</td>
@@ -182,23 +145,23 @@ class reportecontabilidad{
        $html .= '</table>';
 
         $html .= '<div class="clearfix"><h6>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h6></div>
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="span1">#</th>
-                            <th class="span2">'.JText::_('LBL_CANTIDAD').'</th>
-                            <th class="span4">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
-                            <th class="span1">'.JText::_('LBL_UNIDAD').'</th>
-                            <th class="span2">'.JText::_('LBL_P_UNITARIO').'</th>
-                            <th class="span2">'.JText::_('LBL_IMPORTE').'</th>
+                    <table style="border: 1px solid #ddd; width: 500px !important" class="table table-bordered">
+                        <thead style="border: 1px solid #ddd">
+                        <tr style="border: 1px solid #ddd">
+                            <th >#</th>
+                            <th >'.JText::_('LBL_CANTIDAD').'</th>
+                            <th >'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+                            <th >'.JText::_('LBL_UNIDAD').'</th>
+                            <th >'.JText::_('LBL_P_UNITARIO').'</th>
+                            <th >'.JText::_('LBL_IMPORTE').'</th>
                         </tr>
                         </thead>
-                        <tbody>';
+                        <tbody style="border: 1px solid #ddd">';
 
                         foreach ($data->productosData as $key => $prod){
                             $html .='<tr>
-                                <td>';  $html .=$key+1; $html .='</td>
-                                <td>';
+                                <td>';  $html .=$key+1;
+                            $html .='</td><td>';
                                 if ( ! empty( $prod->cantidad ) ) {
                                     $html .=$prod->cantidad;
                                 }
@@ -214,54 +177,71 @@ class reportecontabilidad{
                                     $html .= $prod->unidad;
                                 }
                             $html .='</td>
-                                <td><div class="text-right">$';
+                                <td><span>$';
 
                                 if ( ! empty( $prod->p_unitario ) ) {
                                     $html .=number_format($prod->p_unitario,2);
                                 }
-                            $html .='</div></td>
-                                <td><div class="text-right">$';
+                            $html .='</span></td>
+                                <td><span >$';
 
                                 if ( ! empty( $prod->cantidad ) ) {
-                                    $html .=number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2);
+                                    $valor = number_format(floatval($prod->cantidad) * floatval($prod->p_unitario),2);
+                                    $html .=$valor;
                                 }
-                            $html .='</div></td>
+                            $html .='</span></td>
                             </tr>';
                         }
 
                         $html .='<tr>
-                            <td colspan="4" rowspan="4">
+                            <td colspan="4">
                                 '.JText::_('LBL_MONTO_LETRAS').' <span>'.$number2word->toCurrency('$'.number_format($data->totalAmount, 2)).'</span>
                             </td>
                             <td class="span2">
                                 '.JText::_('LBL_SUBTOTAL').'
                             </td>
                             <td><div class="text-right">
-                                    $'; $html .=number_format($data->subTotalAmount,2); $html .='
+                                    $';
+                        $html .=number_format($data->subTotalAmount,2);
+
+                        $html .='
                                 </div></td>
                         </tr>
                         <tr>
+                            <td colspan="4"></td>
                             <td class="span2">
                                 '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'
                             </td>
+
                             <td><div class="text-right">
-                                    $'; $html .= number_format($data->iva, 2); $html .='
+                                    $';
+                        $html .= number_format($data->iva, 2);
+
+                        $html .='
                                 </div></td>
                         </tr>
                         <tr>
+                        <td colspan="4"></td>
                             <td class="span2">
                                 '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS').'
                             </td>
                             <td><div class="text-right">
-                                    $'; $html .=number_format($data->ieps, 2); $html .='
+                                    $';
+                        $html .=number_format($data->ieps, 2);
+
+                        $html .='
                                 </div></td>
                         </tr>
                         <tr>
+                        <td colspan="4"></td>
                             <td class="span2">
                                 '.JText::_('LBL_TOTAL').'
                             </td>
-                            <td><div class="text-right">
-                                    $'; $html .=number_format($data->totalAmount, 2); $html .='
+                            <td><div>
+                                    $';
+                        $html .=number_format($data->totalAmount, 2);
+
+                        $html .='
                                 </div></td>
                         </tr>
                         </tbody>
