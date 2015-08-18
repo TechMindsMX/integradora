@@ -35,16 +35,19 @@ class MandatosViewOdcform extends JViewLegacy {
         //si la confirmacion es diferente de nulo se hace el parseo del XML
         if(!is_null($data['confirmacion'])){
             $this->datos = $data;
-            if($_FILES['factura']['size'] === 0){
-                $sesion = JFactory::getSession();
-                $objeto = (object)$data;
-	            $objeto->id = $objeto->idOrden;
-                //$sesion->set('datos',$objeto, 'misdatos');
-                $sesion->set('msg','Falta el Archivo XML', 'misdatos');
-
-                JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden='.$data['idOrden']);
+            //validación del XML
+            if($_FILES['factura']['size'] === 0 && $_FILES['factura']['type'] === 'text/xml'){
+                $this->redirectforNotfiles($data);
             }else {
                 $this->dataXML = $this->get('data2xml');
+            }
+
+            //Validación del PDF
+            if($_FILES['facturaPdf']['size'] === 0 && $_FILES['factura']['type'] === 'application/pdf'){
+                $this->redirectforNotfiles($data);
+            }else{
+                move_uploaded_file($_FILES['facturaPdf']['tmp_name'], "media/pdf_facturas/" . $_FILES['facturaPdf']['name']);
+                $this->datos['urlPDF'] = "media/pdf_facturas/" . $_FILES['facturaPdf']['name'];
             }
         }else {
             if (!is_null($data['idOrden']) && $data['idOrden'] != 0) {
@@ -80,5 +83,15 @@ class MandatosViewOdcform extends JViewLegacy {
         }
 
         parent::display($tpl);
+    }
+
+    private function redirectforNotfiles($data){
+        $sesion = JFactory::getSession();
+        $objeto = (object)$data;
+        $objeto->id = $objeto->idOrden;
+        //$sesion->set('datos',$objeto, 'misdatos');
+        $sesion->set('msg','Falta el Archivo XML', 'misdatos');
+
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden='.$data['idOrden']);
     }
 }

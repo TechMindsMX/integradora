@@ -424,7 +424,11 @@ class MandatosController extends JControllerLegacy {
         $idCliPro       = $dataToSave['idCliPro'];
         $integradoCli   = new IntegradoSimple($idCliPro);
         $currIntegrado  = new IntegradoSimple($this->integradoId);
-        $nombre         = !isset($dataToSave['empresa']) ? $dataToSave['personales'][2][6] : $dataToSave['empresa'][2][5];
+        if(!empty($dataToSave)) {
+            $nombre = !isset($dataToSave['empresa']) ? $dataToSave['personales'][2][6] : $dataToSave['empresa'][2][5];
+        }else{
+            $nombre = $currIntegrado->integrados[0]->datos_personales->nombre_representante;
+        }
         $this->tipoAlta = $dataToSave['tipoAlta_btn'][2][2];
 
         foreach ($dataToSave as $key => $value) {

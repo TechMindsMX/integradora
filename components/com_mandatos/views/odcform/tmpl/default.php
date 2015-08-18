@@ -231,7 +231,11 @@ if(!isset($this->datos['confirmacion'])){
         <div class="form-group">
             <label for="factura"><?php echo JText::_('LBL_FACTURA'); ?></label>
             <input type="file" name="factura" id="factura" />
+        </div>
 
+        <div class="form-group">
+            <label for="facturaPdf"><?php echo JText::_('LBL_FACTURA_PDF'); ?></label>
+            <input type="file" name="facturaPdf" id="facturaPdf" />
         </div>
 
         <div class="form-group">
