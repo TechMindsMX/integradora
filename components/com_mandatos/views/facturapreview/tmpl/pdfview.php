@@ -28,7 +28,21 @@ $css = new reportecontabilidad();
 
 $style = $css->readCss();
 
-$html =$style.'
+$html ='<style>
+.table-bordered, {
+    border: 1px solid #ddd;
+    font-size: 10px;
+}
+.cantidad{
+    border: 1px solid #ddd;
+}
+
+.cuadro{
+    border: 1px solid #ddd;
+}
+
+</style>
+
 <table class="table">
     <tr>
         <td>
@@ -74,12 +88,12 @@ $html =$style.'
 $html .= '<table class="table table-bordered">
     <thead>
     <tr>
-        <th class="span1">#</th>
-        <th class="span1">'.JText::_('LBL_CANTIDAD').'</th>
-        <th class="span4">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
-        <th class="span2">'.JText::_('LBL_UNIDAD').'</th>
-        <th class="span2">'.JText::_('LBL_P_UNITARIO').'</th>
-        <th class="span2">'.JText::_('LBL_IMPORTE').'</th>
+        <th class="span1" class="cuadro">#</th>
+        <th class="span1" class="cuadro">'.JText::_('LBL_CANTIDAD').'</th>
+        <th class="span4" class="cuadro">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+        <th class="span2" class="cuadro">'.JText::_('LBL_UNIDAD').'</th>
+        <th class="span2" class="cuadro" style="width: 50px">'.JText::_('LBL_P_UNITARIO').'</th>
+        <th class="span2" class="cuadro" style="width: 50px">'.JText::_('LBL_IMPORTE').'</th>
     </tr>
     </thead>
     <tbody>';
@@ -89,55 +103,54 @@ $html .= '<table class="table table-bordered">
         array_push($ivasProd, floatval($prod->iva) );
 
         $html .='<tr>
-            <td>';
+            <td class="cuadro">';
             $html .= $key+1;
         $html .='</td>
-            <td>'.$prod->cantidad.'</td>
-            <td>'.$prod->descripcion.'</td>
-            <td>'.$prod->unidad.'</td>
-            <td>
+            <td class="cuadro">'.$prod->cantidad.'</td>
+            <td class="cuadro">'.$prod->descripcion.'</td>
+            <td class="cuadro">'.$prod->unidad.'</td>
+            <td class="cuadro" style="text-align: left;  padding-left: 1px; width: 95px;">
                 <div class="text-right">
                     '.number_format($prod->p_unitario, 2).'
                 </div>
             </td>
-            <td>
-                <div class="text-right">
+            <td class="cuadro" >
+                <div class="text-right" style="text-align: left;  padding-left: 1px; width: 20px;" >
                     '.number_format(floatval($prod->cantidad) * floatval($prod->p_unitario), 2).'
                 </div>
             </td>
         </tr>';
-
     endforeach;
     $html .='
     <tr>
-        <td colspan="4" rowspan="3">
+        <td colspan="4" rowspan="3"  class="cantidad" style="text-align: left;  padding-left: 35px; width: 370px;">
             '.JText::_('LBL_MONTO_LETRAS').'
             <span>'.$number2word->toCurrency('$' . number_format($this->factura->getTotalAmount(), 2)).'</span>
         </td>
-        <td class="span2">
+        <td class="span2" class="cuadro">
             '.JText::_('LBL_SUBTOTAL').'
         </td>
-        <td>
+        <td class="cuadro">
             <div class="text-right">
                 '.number_format($this->factura->subTotalAmount, 2).'
             </div>
         </td>
     </tr>
     <tr>
-        <td class="span2">
+        <td class="span2" class="cuadro">
             '.array_sum($ivasProd)/count($ivasProd) . '% ' . JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'
         </td>
-        <td>
+        <td class="cuadro">
             <div class="text-right">
                 '.number_format($this->factura->iva, 2).'
             </div>
         </td>
     </tr>
     <tr>
-        <td class="span2">
+        <td class="span2" class="cuadro">
             '.JText::_('LBL_TOTAL').'
         </td>
-        <td>
+        <td class="cuadro">
             <div class="text-right">
                 '.number_format($this->factura->getTotalAmount(), 2).'
             </div>
@@ -199,14 +212,7 @@ $html .='<table class="table" id="printFooter">
     </tr>
 </table>
 ';
-echo $html;
-?>
-
-
-
-<?php
-
 $html2pdf = new HTML2PDF();
 $html2pdf->WriteHTML($html);
-$html2pdf->Output('respaldosPDF/Factura/Factura-Num-'.$data->numOrden.'.pdf', 'F');
+$html2pdf->Output('respaldosPDF/Factura/Factura-Num-'.$integradora->getDisplayName().'.pdf', 'F');
 ?>
