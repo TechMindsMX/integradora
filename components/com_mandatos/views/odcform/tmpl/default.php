@@ -393,6 +393,7 @@ if(!isset($this->datos['confirmacion'])){
         <input type="hidden" name="paymentMethod" value="<?php echo $datos['paymentMethod']; ?>" />
         <input type="hidden" name="totalAmount"   value="<?php echo $comprobante['TOTAL']; ?>" />
         <input type="hidden" name="urlXML"        value="<?php echo $this->dataXML->urlXML; ?>" />
+        <input type="hidden" name="urlPDF"        value="<?php echo $datos['urlPDF']; ?>" />
         <input type="hidden" name="observaciones" value="<?php echo $datos['observaciones']; ?>" />
 
 
