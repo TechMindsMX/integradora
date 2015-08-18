@@ -324,6 +324,7 @@ $token = JSession::getFormToken();
 			});
 
 			jQuery('#dp_fecha_nacimiento').datepicker({
+				defaultDate: '-30y',
 				yearRange: "-90:-18",
 				minDate: "-90y",
 				maxDate: "-18y",

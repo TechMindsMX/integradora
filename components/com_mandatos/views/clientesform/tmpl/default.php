@@ -85,6 +85,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
             jQuery('#tramiteRegistro').on('change', deshabilitaregistroProp);
             datosxCP("index.php?option=com_integrado&task=sepomex&format=raw");
             jQuery('#dp_fecha_nacimiento').datepicker({
+                defaultDate: '-30y',
                 yearRange: "-90:-18",
                 minDate: "-90y",
                 maxDate: "-18y",
