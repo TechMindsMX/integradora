@@ -18,8 +18,6 @@ class reportecontabilidad{
         if ($tipo = 'odv') {
             $html = $this->odv($data);
         }
-
-
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output('respaldosPDF/ODV-Num-'.$data->numOrden.'.pdf', 'F');
@@ -271,5 +269,14 @@ class reportecontabilidad{
             $this->css = str_replace("inherit", "", $this->css);
         }
         fclose($file);
+    }
+
+    function cortaylimpiacadena($string, $charlimit){
+        $valor = substr(html_entity_decode(strip_tags($string)),0,$charlimit); $total_caracteres=strlen($string);
+        if ($total_caracteres>$charlimit)
+        {
+            $valor=$valor."...";
+        }
+        return $valor;
     }
 }
