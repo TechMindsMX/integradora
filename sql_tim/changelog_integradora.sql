@@ -23,3 +23,16 @@ CREATE TABLE IF NOT EXISTS `flpmu_integrado_pdf_qr` (
 --changeset lutek:4
 ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `urlPDF` VARCHAR(255) NULL DEFAULT NULL AFTER `urlXML`;
 --rollback ALTER TABLE `flpmu_ordenes_compra` DROP COLUMN `urlPDF`
+
+--changeset ricardolyon:5
+INSERT INTO `flpmu_assets` (`id`, `parent_id`, `lft`, `rgt`, `level`, `name`, `title`, `rules`) VALUES (127, 18, 196, 197, 2, 'com_modules.module.158', 'Bottom menu', '{"core.delete":[],"core.edit":[],"core.edit.state":[],"module.edit.frontend":[]}');
+--rollback DELETE FROM `flpmu_assets` WHERE `id` = '127';
+
+--changeset ricardolyon:6
+UPDATE `flpmu_menu` SET `title` = 'Términos y condiciones', `alias` = 'terminos-y-condiciones', `path` = 'terminos-y-condiciones', `link` = 'index.php?option=com_content&view=article&id=25', `component_id` = 22, `params` = '{"show_title":"","link_titles":"","show_intro":"","info_block_position":"","show_category":"0","link_category":"","show_parent_category":"","link_parent_category":"","show_author":"0","link_author":"","show_create_date":"0","show_modify_date":"","show_publish_date":"","show_item_navigation":"0","show_vote":"0","show_icons":"","show_print_icon":"","show_email_icon":"","show_hits":"0","show_tags":"0","show_noauth":"0","urls_position":"","menu-anchor_title":"","menu-anchor_css":"","menu_image":"","menu_text":1,"page_title":"","show_page_heading":"0","page_heading":"","pageclass_sfx":"","menu-meta_description":"","menu-meta_keywords":"","robots":"","secure":0}' WHERE `id` = 102;
+--rollback UPDATE `flpmu_menu` SET `title` = 'Author Login', `alias` = 'login', `path` = 'login', `link` = 'index.php?option=com_users&view=login', `component_id` = 25, `params` = '{\"login_redirect_url\":\"index.php?Itemid=101\",\"logindescription_show\":\"1\",\"login_description\":\"\",\"login_image\":\"\",\"logout_redirect_url\":\"\",\"logoutdescription_show\":\"1\",\"logout_description\":\"\",\"logout_image\":\"\",\"menu-anchor_title\":\"\",\"menu-anchor_css\":\"\",\"menu_image\":\"\",\"menu_text\":1,\"page_title\":\"\",\"show_page_heading\":0,\"page_heading\":\"\",\"pageclass_sfx\":\"\",\"menu-meta_description\":\"\",\"menu-meta_keywords\":\"\",\"robots\":\"\",\"secure\":0}' WHERE `id` = 102;
+
+--changeset ricardolyon:7
+INSERT INTO `flpmu_modules` (`id`, `asset_id`, `title`, `note`, `content`, `ordering`, `position`, `checked_out`, `checked_out_time`, `publish_up`, `publish_down`, `published`, `module`, `access`, `showtitle`, `params`, `client_id`, `language`)
+VALUES (158, 127, 'Bottom menu', '', '', 1, 'bottom', 0, '0001-01-01 00:00:00', '0001-01-01 00:00:00', '0001-01-01 00:00:00', 1, 'mod_menu', 1, 0, '{"menutype":"bottommenu","base":"","startLevel":"1","endLevel":"1","showAllChildren":"0","tag_id":"","class_sfx":"","window_open":"","layout":"_:default","moduleclass_sfx":"","cache":"1","cache_time":"900","cachemode":"itemid","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}', 0, 'en-GB');
+--rollback DELETE FROM `flpmu_modules` WHERE `id` = '158';
