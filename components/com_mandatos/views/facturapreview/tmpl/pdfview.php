@@ -58,7 +58,7 @@ font-size: 10px;
     </tr>
 </table>
 
-<table class="table" id="data">
+<table class="table" id="data" style="font-size: 10px">
     <tr>
         <td colspan="4"><h4>'.JText::_('LBL_FACTURA_DE_VENTA').'</h4></td>
     </tr>
@@ -165,7 +165,7 @@ $html .= '<table class="table table-bordered">
 </table>
 ';
 
-$html .='<table class="table" id="printFooter">
+$html .='<table class="table" id="printFooter" style="font-size: 10px">
     <tr>
         <td colspan="4">
             '.JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc.'
