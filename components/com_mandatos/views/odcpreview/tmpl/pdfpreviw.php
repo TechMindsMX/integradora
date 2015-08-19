@@ -20,19 +20,18 @@ ob_start();
 
 $readcss = new reportecontabilidad();
 $css = $readcss->readCss();
-echo '<style>'.$css.'</style>';
+echo '<style>'.$css.'
+}</style>';
 ?>
-
-<div id="odc_preview">
 	<table style="width: 100%" id="logo">
        <tr>
            <td style="width: 569px;">
                 <img width="200" src="<?php echo JUri::base().'images/logo_iecce.png'; ?>" />
            </td>
-           <td style="width: 80px;">
+           <td style="width: 120px;">
                <h3 class=" text-right">No. Orden</h3>
            </td>
-           <td style="width: 100px;">
+           <td >
                <h3 class=" bordes-box text-center"><?php echo $orden->numOrden; ?></h3>
            </td>
        </tr>
@@ -40,66 +39,66 @@ echo '<style>'.$css.'</style>';
 	
 	<h1><?php echo JText::_('LBL_ORDEN_DE_COMPRA'); ?></h1>
 	
-	<div class="clearfix" id="cabecera">
-		<div>
-			<div class="span2 text-right">
+	<table class="clearfix" id="cabecera">
+		<tr>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo $orden->emisor; ?>
-			</div>
-			<div class="span2 text-right">
+			</td>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_DATE_CREATED'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo $orden->createdDate; ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
+			</td>
+		</tr>
+		<tr>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_PROY'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo isset($orden->proyecto->name) ? $orden->proyecto->name : ''; ?>
-			</div>
-			<div class="span2 text-right">
+			</td>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_PAYMENT_DATE'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo $orden->paymentDate; ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
+			</td>
+		</tr>
+		<tr>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_SUBPROY'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php if (isset($orden->subproyecto->name)) { echo $orden->subproyecto->name; } ?>
-			</div>
-			<div class="span2 text-right">
+			</td>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo JText::_($orden->paymentMethod->name); ?>
-			</div>
-		</div>
-		<div>
-			<div class="span2 text-right">
+			</td>
+		</tr>
+		<tr>
+			<td class="span2 text-right">
 				<?php echo JText::_('LBL_MONEDA'); ?>
-			</div>
-			<div class="span4">
+			</td>
+			<td class="span4">
 				<?php echo isset($orden->currency)?$orden->currency:'MXN'; ?>
-			</div>
-		</div>
-	</div>
+			</td>
+		</tr>
+	</table>
 	<div class="clearfix" id="cuerpo">
 		<div class="proveedor form-group">
 
 			<div>
-				<div class="span2 text-right">
+				<div class="span2 text-right" style="width: 100px">
 					<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 				</div>
-				<div class="span10">
+				<div class="span10" style="150px">
 					<?php echo $orden->proveedor->frontName; ?>
 				</div>
 			</div>
@@ -256,7 +255,6 @@ echo '<style>'.$css.'</style>';
 			</div>
 		</div>
     </div>
-</div>
 <?php
 
 $html2 = ob_get_clean();

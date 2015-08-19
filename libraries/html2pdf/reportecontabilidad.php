@@ -24,7 +24,7 @@ class reportecontabilidad{
     }
 
     public  function readCss(){
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
+        return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
     }
 
     function odv($data){
@@ -268,6 +268,7 @@ class reportecontabilidad{
             $this->css .= fgets($file);
             $this->css = str_replace("inherit", "", $this->css);
         }
+        return $this->css;
         fclose($file);
     }
 }
