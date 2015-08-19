@@ -25,11 +25,12 @@ class MandatosModelFacturapreview extends JModelItem {
 		if (!isset($facturas)) {
 			$this->factura = new OdVenta();
 			$this->factura->setOrderFromId($this->inputVars['facturanum']);
-			$this->factura->currency = $cats[0]->code;
-			$this->factura->project = isset( $this->factura->projectId ) ? new \Integralib\Project($this->factura->projectId) : null;
-			$this->factura->subProject = isset( $this->factura->projectId2 ) ? new \Integralib\Project($this->factura->projectId2) : null;
-			$odvXML = file_get_contents($this->factura->urlXML);
-			$this->factura->datosXML = $xml->manejaXML($odvXML);
+
+			$this->factura->currency 	= $cats[0]->code;
+			$this->factura->project 	= isset( $this->factura->projectId ) ? new \Integralib\Project($this->factura->projectId) : null;
+			$this->factura->subProject 	= isset( $this->factura->projectId2 ) ? new \Integralib\Project($this->factura->projectId2) : null;
+			$odvXML 					= file_get_contents($this->factura->urlXML);
+			$this->factura->datosXML 	= $xml->manejaXML($odvXML);
 		}
 
 		// Verifica si la FACTURA exite para el integrado o redirecciona

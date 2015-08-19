@@ -152,7 +152,7 @@ $hora = $fechaHOra[1];
         <td style="text-align: right; width: 20%;"><strong>Folio fiscal:</strong> </td>
         <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['UUID']; ?></td>
         <td style="text-align: right;" colspan="2" rowspan="5">
-            <?php echo '<img src="media/qrcodes/'.$this->factura->createdDate.'-'.$this->factura->integradoId.'-'.$this->factura->id.'.png">' ?>
+            <img src="media/qrCodes/<?php echo $this->factura->qrName; ?>">
         </td>
     </tr>
     <tr>

@@ -46,8 +46,8 @@ class MandatosViewOdcform extends JViewLegacy {
             if($_FILES['facturaPdf']['size'] === 0 && $_FILES['factura']['type'] === 'application/pdf'){
                 $this->redirectforNotfiles($data);
             }else{
-                move_uploaded_file($_FILES['facturaPdf']['tmp_name'], "media/pdf_facturas/" . $_FILES['facturaPdf']['name']);
-                $this->datos['urlPDF'] = "media/pdf_facturas/" . $_FILES['facturaPdf']['name'];
+                move_uploaded_file($_FILES['facturaPdf']['tmp_name'], "media/pdf_odc/" . $_FILES['facturaPdf']['name']);
+                $this->datos['urlPDF'] = "media/pdf_odc/" . $_FILES['facturaPdf']['name'];
             }
         }else {
             if (!is_null($data['idOrden']) && $data['idOrden'] != 0) {

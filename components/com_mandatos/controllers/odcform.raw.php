@@ -26,6 +26,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
                                     'paymentMethod'  => 'STRING',
                                     'totalAmount'    => 'STRING',
                                     'urlXML'         => 'STRING',
+                                    'urlPDF'         => 'STRING',
                                     'observaciones'  => 'STRING',
                                     'bankId'         => 'INT');
 

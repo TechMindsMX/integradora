@@ -66,6 +66,7 @@ class OdCompra extends Order {
 		$this->createdDate     = (STRING)$order->createdDate;
 		$this->paymentDate     = (STRING)$order->paymentDate;
 		$this->urlXML          = (STRING)$order->urlXML;
+		$this->urlPDF          = (STRING)$order->urlPDF;
 		$this->observaciones   = (STRING)$order->observaciones;
 
 		$this->bankId          = (INT)$order->bankId;
