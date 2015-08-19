@@ -11,8 +11,6 @@ $accion = 'index.php?option=com_mandatos&view=txsinmandatoform&task=asociatxmand
 $cancelUrl = 'index.php?option=com_mandatos&view=txsinmandatolist';
 
 $order = $this->orders->order;
-
-echo $this->loadTemplate('tx_head');
 ?>
 
 <div class="row">
