@@ -14,7 +14,7 @@ if (version_compare(PHP_VERSION, '5.3.10', '<'))
 /**
  * Constant that is checked in included files to prevent direct access.
  * define() is used in the installation folder rather than "const" to not error for PHP 5.2 and lower
- */
+ */error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING );
 define('_JEXEC', 1);
 
 if (file_exists(__DIR__ . '/defines.php'))

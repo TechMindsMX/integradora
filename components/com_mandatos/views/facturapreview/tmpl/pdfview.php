@@ -27,8 +27,14 @@ $hora = $fechaHOra[1];
 $css = new reportecontabilidad();
 
 $style = $css->readCss();
-
+ob_start();
 $html ='<style>
+body{
+font-size: 10px;
+}
+ .contentpane{
+            max-width: none !important;
+        }
 .table-bordered, {
     border: 1px solid #ddd;
     font-size: 10px;
@@ -90,10 +96,10 @@ $html .= '<table class="table table-bordered">
     <tr>
         <th class="span1" class="cuadro">#</th>
         <th class="span1" class="cuadro">'.JText::_('LBL_CANTIDAD').'</th>
-        <th class="span4" class="cuadro">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+        <th class="span4" class="cuadro" style="width: 150px">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
         <th class="span2" class="cuadro">'.JText::_('LBL_UNIDAD').'</th>
-        <th class="span2" class="cuadro" style="width: 50px">'.JText::_('LBL_P_UNITARIO').'</th>
-        <th class="span2" class="cuadro" style="width: 50px">'.JText::_('LBL_IMPORTE').'</th>
+        <th class="span2" class="cuadro" style="width: 90px">'.JText::_('LBL_P_UNITARIO').'</th>
+        <th class="span2" class="cuadro" style="width: 90px">'.JText::_('LBL_IMPORTE').'</th>
     </tr>
     </thead>
     <tbody>';
@@ -110,12 +116,10 @@ $html .= '<table class="table table-bordered">
             <td class="cuadro">'.$prod->descripcion.'</td>
             <td class="cuadro">'.$prod->unidad.'</td>
             <td class="cuadro" style="text-align: left;  padding-left: 1px; width: 95px;">
-                <div class="text-right">
                     '.number_format($prod->p_unitario, 2).'
-                </div>
             </td>
             <td class="cuadro" >
-                <div class="text-right" style="text-align: left;  padding-left: 1px; width: 20px;" >
+                <div class="text-right" style="text-align: left; width: 40px;" >
                     '.number_format(floatval($prod->cantidad) * floatval($prod->p_unitario), 2).'
                 </div>
             </td>
@@ -212,7 +216,23 @@ $html .='<table class="table" id="printFooter">
     </tr>
 </table>
 ';
+
+echo $html;
+
+$html2 = ob_get_clean();
 $html2pdf = new HTML2PDF();
-$html2pdf->WriteHTML($html);
-$html2pdf->Output('respaldosPDF/Factura/Factura-Num-'.$integradora->getDisplayName().'.pdf', 'F');
+$html2pdf->WriteHTML($html2);
+$html2pdf->Output('respaldosPDF/Factura/Factura-Num-'.$xml->comprobante['FOLIO'].'.pdf', 'F');
+
 ?>
+<header>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+        jQuery(document).ready(function($){
+            var ventana_alto = jQuery(window).height();
+            jQuery('.contentpane').height(ventana_alto-10);
+        });
+    </script>
+</header>
+<embed src="<?php echo 'respaldosPDF/Factura/Factura-Num-'.$xml->comprobante['FOLIO'].'.pdf'; ?>" type="application/pdf" style="height: 100%; width: 100%">
+
