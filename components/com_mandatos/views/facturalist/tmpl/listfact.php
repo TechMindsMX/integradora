@@ -93,7 +93,6 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
                 $url_preview = JRoute::_('index.php?option=com_mandatos&view=facturapreview&facturanum='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
                 $fileName = explode('/',$value->urlXML);
-
                 echo '<tr class="client_'.$value->clientId.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$preview_button.$value->id.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->createdDate.'</td>';

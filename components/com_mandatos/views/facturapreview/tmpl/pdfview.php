@@ -32,6 +32,7 @@ $html ='<style>
 body{
 font-size: 10px;
 }
+
  .contentpane{
             max-width: none !important;
         }
