@@ -120,6 +120,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                                             $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                         }
+
                                         //fin codigo qr
                                     }
                                     $info = $this->sendEmail($newOrder);

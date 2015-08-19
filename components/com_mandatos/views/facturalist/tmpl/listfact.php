@@ -83,6 +83,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
+            <th style="text-align: center; vertical-align: middle;" >&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -92,7 +93,6 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
                 $url_preview = JRoute::_('index.php?option=com_mandatos&view=facturapreview&facturanum='.$value->id);
                 $preview_button = '<a href="'.$url_preview.'"><i class="icon-search"></i></a>';
                 $fileName = explode('/',$value->urlXML);
-
                 echo '<tr class="client_'.$value->clientId.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="margen-fila" >'.$preview_button.$value->id.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->createdDate.'</td>';
@@ -100,6 +100,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
                 echo '	<td style="text-align: center; vertical-align: middle;" class="" >$'.number_format($value->totalAmount,2).'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="" >'.$value->status->name.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="" ><a download="'.$fileName[2].'" href="'.$value->urlXML.'">Descargar XML</a></td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="" ><a href="index.php?option=com_mandatos&view=facturapreview&layout=pdfview&tmpl=component&facturanum='.$value->numOrden.'" target="_blank">Ver PDF</a></td>';
                 echo '</tr>';
             }
         }else{
