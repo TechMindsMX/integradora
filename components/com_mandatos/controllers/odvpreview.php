@@ -99,6 +99,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
                                     if($timbrar){
+
                                         //Codigo QR
                                         $xml = new xml2Array();
                                         $factura = $xml->manejaXML($xmlFactura);

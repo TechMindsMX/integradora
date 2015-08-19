@@ -28,8 +28,12 @@ class MandatosViewFacturapreview extends JViewLegacy {
 		$this->loadHelper('Mandatos');
 
 		// Boton de impresion
-		$url = 'index.php?option=com_mandatos&view=facturapreview&layout=printview&facturanum=' . $data['facturanum'];
-		$this->printBtn = MandatosHelper::getPrintButton($url);
+		if( !is_null($this->factura->qrName) ) {
+			$url = 'index.php?option=com_mandatos&view=facturapreview&layout=printview&facturanum=' . $data['facturanum'];
+            $this->printBtn = MandatosHelper::getPrintButton($url);
+        }else{
+            $this->printBtn = '<a class="btn btn-default" target="_blank" href="'.$this->factura->urlPdf.'">Imprimir</a>';
+        }
 
 		// Verifica los permisos de edición y autorización
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);

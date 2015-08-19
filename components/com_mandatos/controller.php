@@ -424,7 +424,8 @@ class MandatosController extends JControllerLegacy {
         $idCliPro       = $dataToSave['idCliPro'];
         $integradoCli   = new IntegradoSimple($idCliPro);
         $currIntegrado  = new IntegradoSimple($this->integradoId);
-        if(!empty($dataToSave)) {
+
+        if(isset($dataToSave['empresa']) || isset($dataToSave['perosnales'])) {
             $nombre = !isset($dataToSave['empresa']) ? $dataToSave['personales'][2][6] : $dataToSave['empresa'][2][5];
         }else{
             $nombre = $currIntegrado->integrados[0]->datos_personales->nombre_representante;

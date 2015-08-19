@@ -103,11 +103,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
 
-                                    $odvUPdate = new stdClass();
-                                    $odvUPdate->id = $odv->getId();
-                                    $odvUPdate->urlXML = $urlXML;
+                                    $odvUpdate = new stdClass();
+                                    $odvUpdate->id = $odv->getId();
+                                    $odvUpdate->urlXML = $urlXML;
 
-                                    $db->updateObject('#__ordenes_venta', $odvUPdate, 'id');
+                                    $db->updateObject('#__ordenes_venta', $odvUpdate, 'id');
 
                                     //Codigo QR
                                     $xml = new xml2Array();
