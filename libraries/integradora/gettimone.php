@@ -131,6 +131,16 @@ class getFromTimOne{
         return $txs;
     }
 
+    public static function getTxIntegradoConSaldo($integradoId)
+    {
+	    $dbq = JFactory::getDbo();
+        $where = 'integradoId = ' . $dbq->quote($integradoId);
+
+        $txs = self::selectDB('txs_timone_mandato',$where);
+
+        return $txs;
+    }
+
     public static function getTxConciliacionesBanco($where){
 
         $txs = self::selectDB('txs_banco_integrado',$where);
