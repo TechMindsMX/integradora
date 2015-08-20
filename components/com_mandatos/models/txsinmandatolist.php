@@ -14,7 +14,7 @@ class MandatosModelTxsinmandatolist extends JModelItem {
 		$sesion             = JFactory::getSession();
 		$integradoId        = $sesion->get('integradoId', null, 'integrado');
 
-		$txs = getFromTimOne::getTxIntegradoSinMandato($integradoId);
+		$txs = getFromTimOne::getTxIntegradoConSaldo($integradoId);
 
         $retorno = array();
 		foreach ( $txs as $trans ) {

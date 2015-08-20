@@ -42,9 +42,6 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$tx       = $model->getItem($this->vars['idTx']);
 		$this->tx = $tx[0];
 
-		$dbq = JFactory::getDbo();
-		$this->tx->relations = getFromTimOne::selectDB('txs_banco_timone_relation','id_txs_banco = '. $dbq->quote($this->tx->id) );
-
 		$unpaidOrders   = $model->getOrdersCxC($this->integradoId);
 
 		if(isset($this->vars['idOrden']) && isset($this->vars['orderType'])) {
@@ -88,13 +85,11 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		$objToInsert->idOrden   = $this->order->id;
 		$objToInsert->orderType = $this->order->orderType;
 
-		$where = 'id = ' . (INT)$this->tx->id;
-
 		$db = JFactory::getDbo();
 		$db->transactionStart();
 
 		try {
-			$db->updateObject( '#__txs_mandatos', $objToInsert, 'id' );
+			$db->insertObject( '#__txs_mandatos', $objToInsert );
 
 			if ( ($this->order->balance - $objToInsert->amount) == 0 ) {
 				$ststus = new sendToTimOne;
