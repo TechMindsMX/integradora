@@ -1,16 +1,44 @@
 <?php
 defined('JPATH_PLATFORM') or die;
+
+define('JPATH_BASE', realpath(dirname(__FILE__).'/../..'));
 jimport('joomla.html.html.bootstrap');
 jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 jimport('integradora.integralib.order');
+jimport('integradora.integrado');
 require('html2pdf.class.php');
+require('_class/Facpdf.php');
+
 
 
 
 class reportecontabilidad{
 
 
+    function __construct($integ_id = null) {
+
+        $integradora = new \Integralib\Integrado();
+        $this->integradora = new IntegradoSimple($integradora->getIntegradoraUuid() );
+
+    }
+
+    public function facturaPDF($data, $facObjOdv, $facObj, $xml){
+
+        $fileName = explode('/', $xml);
+        $fileName = explode('.', $fileName[2]);
+
+        $path = JPATH_BASE.'/media/facturas/'.$fileName[0].'.pdf';
+
+
+        $createHtml = new Facpdf();
+        $html = $createHtml->html($data, $this->integradora, $facObjOdv, $facObj);
+
+        $html2pdf = new HTML2PDF();
+        $html2pdf->WriteHTML($html);
+        $html2pdf->Output($path, 'F');
+        return $path;
+    }
 
     public function createPDF($data, $tipo)
     {
