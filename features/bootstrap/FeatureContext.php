@@ -11,6 +11,7 @@ use Behat\Gherkin\Node\PyStringNode,
 use Behat\Mink\Exception\DriverException;
 
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Testwork\Hook\Scope\AfterSuiteScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 
 /**
@@ -22,7 +23,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     const FNAME_BACKUP = 'configuration.php.bk';
 
-    const SQLFILW = 'testdb.sql';
+    const FNAME_TEST = 'configuration.php.test';
+
+    const SQLFILW = 'integraDBClear101214.sql';
+
+    const dbname = 'integra_testdb';
+    const dbuser = 'testUser';
+    const dbpass = 'pa55_4testUser';
+
+    const LIQUIBASE_JAR = 'C:\wamp\www\liquibase\mysql-connector-java-5.1.34-bin.jar';
 
     /**
      * @BeforeSuite
@@ -31,25 +40,35 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     {
         // prepare system for test suite
         // before it runs
-        $arch = fopen('aaaa.log', 'w');
-        $data = json_encode($_SERVER);
-        fwrite($arch, $data);
-        fclose($arch);
         if (file_exists(self::FNAME) ) {
             rename(self::FNAME, self::FNAME_BACKUP);
+            copy(self::FNAME_TEST, self::FNAME);
         }
-//        system('mysql --user=testUser --password=pa55_4testUser integra_testDb < ../../sql_tim/'.self::SQLFILW);
+        if (!is_dir('logs/tests')) {
+            mkdir('logs/tests');
+        }
+        if (!is_dir('tmp/tests')) {
+            mkdir('tmp/tests');
+        }
+        system('mysql -u '.self::dbuser.' -p'.self::dbpass.' '.self::dbname.' < sql_tim/'.self::SQLFILW);
+        system('liquibase --driver=com.mysql.jdbc.Driver --classpath='.self::LIQUIBASE_JAR.' --changeLogFile=sql_tim\changelog_integradora.sql --url="jdbc:mysql://localhost/'.self::dbname.'" --username='.self::dbuser.' --password="'.self::dbpass.'" migrate');
     }
 
     /**
-     * @AfterScenario @database
+     * @AfterSuite
      */
-    public function cleanDB(AfterScenarioScope $scope)
+    public static function clean(AfterSuiteScope $scope)
     {
         // clean database after scenarios,
         // tagged with @database
         if (file_exists(self::FNAME_BACKUP) ) {
             rename(self::FNAME_BACKUP, self::FNAME);
+        }
+        if (is_dir('logs/tests')) {
+            rmdir('logs/tests');
+        }
+        if (is_dir('tmp/tests')) {
+            rmdir('tmp/tests');
         }
     }
 
@@ -125,5 +144,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
             }
         })';
         $this->getSession()->executeScript($jquery);
+    }
+
+    /**
+     * @Given /^I wait for "([^"]*)" seconds$/
+     */
+    public function iWaitForSeconds($arg1)
+    {
+        $this->getSession()->wait($arg1 * 1000);
     }
 }
