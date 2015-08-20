@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
@@ -10,11 +11,48 @@ use Behat\Gherkin\Node\PyStringNode,
 use Behat\Mink\Exception\DriverException;
 
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 
 /**
  * Features context.
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext{
+
+    const FNAME = 'configuration.php';
+
+    const FNAME_BACKUP = 'configuration.php.bk';
+
+    const SQLFILW = 'testdb.sql';
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // prepare system for test suite
+        // before it runs
+        $arch = fopen('aaaa.log', 'w');
+        $data = json_encode($_SERVER);
+        fwrite($arch, $data);
+        fclose($arch);
+        if (file_exists(self::FNAME) ) {
+            rename(self::FNAME, self::FNAME_BACKUP);
+        }
+//        system('mysql --user=testUser --password=pa55_4testUser integra_testDb < ../../sql_tim/'.self::SQLFILW);
+    }
+
+    /**
+     * @AfterScenario @database
+     */
+    public function cleanDB(AfterScenarioScope $scope)
+    {
+        // clean database after scenarios,
+        // tagged with @database
+        if (file_exists(self::FNAME_BACKUP) ) {
+            rename(self::FNAME_BACKUP, self::FNAME);
+        }
+    }
+
     /**
      * @Then I should go to :arg1
      */
