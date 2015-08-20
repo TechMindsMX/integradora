@@ -7,8 +7,10 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 jimport('integradora.integralib.order');
 jimport('integradora.integrado');
+jimport('integradora.gettimone');
 require('html2pdf.class.php');
 require('_class/Facpdf.php');
+require('_class/odcPdf.php');
 
 
 
@@ -42,13 +44,26 @@ class reportecontabilidad{
 
     public function createPDF($data, $tipo)
     {
+        $path = '';
 
-        if ($tipo = 'odv') {
+        if ($tipo == 'odv') {
             $html = $this->odv($data);
         }
+
+        if($tipo == 'odc'){
+            $getHtml = new odcPdf();
+
+            $orden = getFromTimOne::getOrdenesCompra(null, $data);
+            $orden = $orden[0];
+
+            $html = $getHtml->html($orden);
+            $path = 'media/pdf_odc/'.$tipo.'-'.$data.'.pdf';
+
+        }
+
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
-        $html2pdf->Output('respaldosPDF/ODV-Num-'.$data->numOrden.'.pdf', 'F');
+        $html2pdf->Output($path, 'F');
     }
 
     public  function readCss(){

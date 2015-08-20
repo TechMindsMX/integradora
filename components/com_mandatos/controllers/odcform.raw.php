@@ -8,6 +8,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
+jimport('html2pdf.reportecontabilidad');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdcform extends JControllerLegacy {
@@ -100,6 +101,10 @@ class MandatosControllerOdcform extends JControllerLegacy {
                     'urlRedireccion' => 'index.php?option=com_mandatos&view=odcpreview&idOrden=' . $id . '&success=true',
                     'redireccion' => true
                 );
+
+                $createPDF = new reportecontabilidad();
+                $createPDF->createPDF($id, 'odc');
+
             } else {
                 $respuesta = array('redireccion' => false);
             }
