@@ -25,13 +25,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     const FNAME_TEST = 'configuration.php.test';
 
-    const SQLFILW = 'integraDBClear101214.sql';
+    const SQLFILW = 'integraDBClear200815.sql';
 
     const dbname = 'integra_testdb';
     const dbuser = 'testUser';
     const dbpass = 'pa55_4testUser';
 
     const LIQUIBASE_JAR = 'C:\wamp\www\liquibase\mysql-connector-java-5.1.34-bin.jar';
+
+    const DIRS = array('tmp/tests', 'logs/tests');
 
     /**
      * @BeforeSuite
@@ -44,12 +46,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
             rename(self::FNAME, self::FNAME_BACKUP);
             copy(self::FNAME_TEST, self::FNAME);
         }
-        if (!is_dir('logs/tests')) {
-            mkdir('logs/tests');
+        foreach (self::DIRS as $dir) {
+            if (!is_dir($dir)) {
+                mkdir($dir);
+            }
         }
-        if (!is_dir('tmp/tests')) {
-            mkdir('tmp/tests');
-        }
+
         system('mysql -u '.self::dbuser.' -p'.self::dbpass.' '.self::dbname.' < sql_tim/'.self::SQLFILW);
         system('liquibase --driver=com.mysql.jdbc.Driver --classpath='.self::LIQUIBASE_JAR.' --changeLogFile=sql_tim\changelog_integradora.sql --url="jdbc:mysql://localhost/'.self::dbname.'" --username='.self::dbuser.' --password="'.self::dbpass.'" migrate');
     }
@@ -59,16 +61,19 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
      */
     public static function clean(AfterSuiteScope $scope)
     {
-        // clean database after scenarios,
-        // tagged with @database
+        // clean system for test suite
+        // after it runs
         if (file_exists(self::FNAME_BACKUP) ) {
             rename(self::FNAME_BACKUP, self::FNAME);
         }
-        if (is_dir('logs/tests')) {
-            rmdir('logs/tests');
-        }
-        if (is_dir('tmp/tests')) {
-            rmdir('tmp/tests');
+
+        foreach (self::DIRS as $dir) {
+            if (is_dir($dir)) {
+                foreach(scandir($dir) as $file) {
+                    unlink($file);
+                }
+                rmdir($dir);
+            }
         }
     }
 
