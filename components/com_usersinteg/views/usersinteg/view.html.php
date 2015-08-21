@@ -6,12 +6,22 @@ class UsersintegViewUsersinteg extends JViewLegacy {
 	protected $challengeQuestions = array();
 	protected $allQuestions;
 
+	/**
+	 * @param null $tpl
+	 *
+	 * @return mixed|void
+	 * @throws Exception
+	 */
 	public function display($tpl = null) {
 
 		$this->allQuestions = $this->get('Questions');
 
-		if ( count($this->get('AllUserQuestions')) > 0 ) {
-			$this->challengeQuestions = $this->get('RandomQuestionsFromUserQuestions');
+		try {
+			$this->challengeQuestions = $this->get('UserQuestions');
+		} catch (\Exception $e) {
+            JLog::add($e->getMessage(), JLog::ERROR);
+            $app = JFactory::getApplication();
+            $app->redirect(JRoute::_('index.php?option=com_usersinteg&view=error'));
 		}
 
 		parent::display($tpl);
