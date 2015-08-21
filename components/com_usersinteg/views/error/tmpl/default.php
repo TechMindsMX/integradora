@@ -10,18 +10,29 @@ defined('_JEXEC') or die('Restricted Access');
                     <h2>
                         <?php echo JText::_('NO_QUESTIONS_ERROR_TITLE'); ?>
                     </h2>
-                    <p>
+                    <h4 class="alert alert-danger">
                         <?php echo JText::_('NO_QUESTIONS_ERROR_MSG'); ?>
-                    </p>
+                    </h4>
                     <h3>
                         <?php echo $this->integradora->getDisplayName(); ?>
                     </h3>
-                    <h4>
-                        <?php echo $this->integradora->getIntegradoPhone(); ?>
-                    </h4>
-                    <h4>
-                        <?php echo $this->integradora->getIntegradoEmail(); ?>
-                    </h4>
+                    <?php
+                    if ($this->integradora->getIntegradoPhone()) : ?>
+                        <h4>
+                            <span><?php echo JText::_('COM_MANDATOS_CLIENTES_PHONE'); ?>: </span>
+                            <?php echo $this->integradora->getIntegradoPhone(); ?>
+                        </h4>
+                    <?php
+                    endif;
+                    if ($this->integradora->getIntegradoEmail()) :
+                    ?>
+                        <h4>
+                            <span><?php echo JText::_('LBL_CORREO'); ?>: </span>
+                            <a href="mailto:<?php echo $this->integradora->getIntegradoEmail(); ?>"><?php echo $this->integradora->getIntegradoEmail(); ?></a>
+                        </h4>
+                    <?php
+                    endif;
+                    ?>
                     <p>
                         <?php echo $this->integradora->getAddressFormatted(); ?>
                     </p>
