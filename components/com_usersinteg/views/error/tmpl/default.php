@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted Access');
 
 <div class="content">
     <div class="well">
-        <div class="row row-fluid">
+        <div class="row-fluid">
             <div class="col-md-6 col-sm-12 text-center span6">
                 <div class="message span12">
                     <h2>
