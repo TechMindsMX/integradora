@@ -19,9 +19,12 @@ class UsersintegViewUsersinteg extends JViewLegacy {
 		try {
 			$this->challengeQuestions = $this->get('UserQuestions');
 		} catch (\Exception $e) {
-            JLog::add($e->getMessage(), JLog::ERROR);
+            JLog::add($e->getMessage(), JLog::DEBUG);
             $app = JFactory::getApplication();
-            $app->redirect(JRoute::_('index.php?option=com_usersinteg&view=error'));
+
+			if (JFactory::getUser()->guest) {
+				$app->redirect(JRoute::_('index.php?option=com_usersinteg&view=error'));
+			}
 		}
 
 		parent::display($tpl);
