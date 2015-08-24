@@ -77,7 +77,33 @@ class reportecontabilidad{
         }
 
         $css = $this->readCss();
-        $html = '<style>'.$html.'</style>'.$html;
+        $html = '<style>'.$html.'
+                body{
+                    color: #777;
+                    font-size: 13px;
+                    font-weight: normal;
+                    line-height: 24.05px;
+                }
+                table{
+                    font-size: 10px;
+                }
+
+                 .contentpane{
+                    max-width: none !important;
+                        }
+                .table-bordered, {
+                    border: 1px solid #ddd;
+                    font-size: 10px;
+                }
+                .cantidad{
+                    border: 1px solid #ddd;
+                }
+
+                .cuadro{
+                    border: 1px solid #ddd;
+                }
+
+                </style>'.$html;
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');
@@ -121,11 +147,11 @@ class reportecontabilidad{
         </table>";
 
         $html .= '
-            <table class="table" id="data">
-                <tr>
+            <table class="table" id="data" style="font-size: 10px">
+                <tr style="font-size: 10px" >
                     <td colspan="4"><h4>'.JText::_('LBL_ORDEN_DE_VENTA').'</h4></td>
                 </tr>
-                <tr>
+                <tr >
                     <td style="text-align: right; width: 17%;">'.JText::_('LBL_SOCIO_INTEG').'</td>
                     <td style="text-align: left;">'.$data->emisor->integrados[0]->datos_empresa->razon_social.'</td>
                     <td style="text-align: right;">'.JText::_('LBL_DATE_CREATED').'</td>
@@ -203,7 +229,7 @@ class reportecontabilidad{
        $html .= '</table>';
 
         $html .= '<div class="clearfix"><h6>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h6></div>
-                    <table style="border: 1px solid #ddd; width: 500px !important" class="table table-bordered">
+                    <table style="border: 1px solid #ddd; width: 500px !important; font-size= 10px" class="table table-bordered">
                         <thead style="border: 1px solid #ddd">
                         <tr style="border: 1px solid #ddd">
                             <th >#</th>
