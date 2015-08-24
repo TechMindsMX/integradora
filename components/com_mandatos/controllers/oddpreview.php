@@ -85,7 +85,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
                     $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
                     $this->orden = $orden[0];
                     $class = new reportecontabilidad();
-                    $reporte = $class->createPDF($orden, 'odd');
+                    $class->createPDF($orden, 'odd');
 
                     $this->sendNotifications();
 

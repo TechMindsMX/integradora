@@ -52,7 +52,6 @@ class reportecontabilidad{
     public function createPDF($data, $tipo)
     {
         $path = '';
-
         switch ($tipo){
             case 'odv':
                 $html = $this->odv($data);
@@ -79,7 +78,6 @@ class reportecontabilidad{
 
         $css = $this->readCss();
         $html = '<style>'.$html.'</style>'.$html;
-
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');

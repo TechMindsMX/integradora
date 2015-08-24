@@ -14,12 +14,8 @@ class oddPdf{
 
     public function createHTML($odd){
         $integrado 	    = $this->integCurrent->integrados[0];
-
         $number2string  = new AifLibNumber();
-
         $integ = new IntegradoSimple($integrado->integrado->integradoId);
-
-
         $html = '
                     <div class="clearfix" id="logo">
                         <div class="span6"><img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" /></div>
