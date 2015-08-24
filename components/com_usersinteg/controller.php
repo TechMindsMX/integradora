@@ -230,7 +230,6 @@ class UsersIntegController extends JControllerLegacy {
 		$body = JText::sprintf(
 			'COM_USERS_EMAIL_PASSWORD_RESET_BODY',
 			$data['sitename'],
-			$data['token'],
 			$data['link_text']
 		);
 
