@@ -12,6 +12,7 @@ require('html2pdf.class.php');
 require('_class/Facpdf.php');
 require('_class/odcPdf.php');
 require('_class/oddPdf.php');
+require('_class/odrPdf.php');
 
 class reportecontabilidad{
 
@@ -71,6 +72,12 @@ class reportecontabilidad{
 
                 $html = $getHtml->createHTML();
                 $path = 'media/pdf_odd/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
+                break;
+            case 'odr':
+                $getHtml = new odrPdf($data);
+
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odr/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
                 break;
             default:
                 $operacion='';
