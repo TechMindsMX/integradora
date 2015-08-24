@@ -50,3 +50,9 @@ INSERT INTO `flpmu_integrado_params` (`id` , `integradoId` , `params`) VALUES (N
 --rollback DELETE FROM `flpmu_integrado_datos_empresa` WHERE integradoId = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
 --rollback DELETE FROM `flpmu_integrado_datos_bancarios` WHERE integradoId = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
 --rollback DELETE FROM `flpmu_integrado_params` WHERE integradoId = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
+
+--changeset ricardolyon:9
+UPDATE `flpmu_integrado_datos_empresa` SET `tel_fijo` = '65505919', `sitio_web` = 'iecce.mx' WHERE `integradoId` = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
+UPDATE `flpmu_integrado_datos_personales` SET `email` = 'administracion@iecce.mx' WHERE `integradoId` = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
+--rollback UPDATE `flpmu_integrado_datos_empresa` SET `tel_fijo` = NULL, `sitio_web` = NULL WHERE `integradoId` = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';
+--rollback UPDATE `flpmu_integrado_datos_personales` SET `email` = NULL WHERE `integradoId` = 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528';

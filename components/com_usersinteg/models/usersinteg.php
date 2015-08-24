@@ -5,9 +5,18 @@ defined('_JEXEC') or die('Restricted Access');
 
 class UsersintegModelUsersinteg extends JModelLegacy {
 
+	/**
+	 * @var JUser
+     */
 	protected $user;
+	/**
+	 * @var string
+     */
 	private $salt;
 
+	/**
+	 * @throws Exception
+     */
 	function __construct() {
 		$this->user = JFactory::getUser($this->getUserFromEmail());
 		$this->salt = 'u-d-6wBa6/E?wTwqmm$}K_EQC0Dh,|y&W*+Gzx?4HV?_XaP>;q%nthuN}d+sZs54';
@@ -15,6 +24,23 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		parent::__construct();
 	}
 
+	/**
+	 * @return mixed
+	 * @throws Exception
+     */
+	public function getUserQuestions()
+	{
+		if ( count($this->getAllUserQuestions()) > 0 ) {
+			$challengeQuestions = $this->getRandomQuestionsFromUserQuestions();
+		} else {
+			throw new Exception(JText::_('ERR_418_NO_SECURITY_QUESTIONS'));
+		}
+		return $challengeQuestions;
+	}
+
+	/**
+	 * @return mixed
+     */
 	public function getRandomQuestionsFromUserQuestions() {
 		$allUserQuestions = $this->getAllUserQuestions();
 
@@ -25,6 +51,9 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $questions;
 	}
 
+	/**
+	 * @return array
+     */
 	public function getAllUserQuestions() {
 		$userQuestions = array();
 
@@ -39,6 +68,9 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $userQuestions;
 	}
 
+	/**
+	 * @return mixed
+     */
 	public function getQuestions() {
 		$db = JFactory::getDbo();
 		$query  = $db->getQuery(true);
@@ -67,7 +99,13 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		}
 	}
 
-	public function checkAnswers( $post, $postQuestions ) {
+	/**
+	 * @param $post
+	 * @param $postQuestions
+	 *
+	 * @throws Exception
+     */
+    public function checkAnswers( $post, $postQuestions ) {
 		$savedAnswers = $this->getUserSavedAnswers();
 
 		$answers = array_combine($postQuestions, $post);
@@ -79,6 +117,9 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		}
 	}
 
+	/**
+	 * @return mixed
+     */
 	public function getUserSavedAnswers() {
 		$db = JFactory::getDbo();
 
@@ -115,10 +156,18 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $userQuetionIds;
 	}
 
+	/**
+	 * @return int
+     */
 	public function countQuestionsDb() {
 		return count($this->getQuestions());
 	}
 
+	/**
+	 * @param $questions
+	 * @param $answers
+	 * @param JDatabaseDriver $db
+     */
 	public function saveUserQuestionsAndAnswers( $questions, $answers,JDatabaseDriver $db ) {
 		$tmp = array_combine($questions, $answers);
 		$userId = JFactory::getUser()->id;
@@ -133,7 +182,12 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 
 	}
 
-	public function encryptAnswer( $string ) {
+	/**
+	 * @param $string
+	 *
+	 * @return string
+     */
+    public function encryptAnswer( $string ) {
 		$key = JFactory::getConfig()->get('secret');
 
 		$salted = $this->salt . $string;
@@ -143,7 +197,12 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $encrypted;
 	}
 
-	public function decryptAnswer( $string ) {
+	/**
+	 * @param $string
+	 *
+	 * @return mixed|string
+     */
+    public function decryptAnswer( $string ) {
 		$key = JFactory::getConfig()->get('secret');
 
 		$decrypted = openssl_decrypt($string, 'AES256', $key);
@@ -153,6 +212,9 @@ class UsersintegModelUsersinteg extends JModelLegacy {
 		return $decrypted;
 	}
 
+	/**
+	 * @return mixed
+     */
 	private function getUserFromEmail() {
 		$sesion = JFactory::getSession();
 		$email = $sesion->get('resetPassEmail');
