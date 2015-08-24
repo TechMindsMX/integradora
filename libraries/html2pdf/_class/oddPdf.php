@@ -6,59 +6,85 @@
  * Time: 10:16 AM
  */
 jimport('integradora.integrado');
+jimport('joomla.application.component.view');
+
 class oddPdf{
 
     public function __construct($data){
         $this->odd = $data[0];
+        $session = JFactory::getSession();
+        $this->integradoId 	= $session->get('integradoId', null, 'integrado');
+        $this->integCurrent = new IntegradoSimple($this->integradoId);
     }
 
     public function createHTML($odd){
+
+
+
         $integrado 	    = $this->integCurrent->integrados[0];
         $number2string  = new AifLibNumber();
         $integ = new IntegradoSimple($integrado->integrado->integradoId);
-        $html = '
-                    <div class="clearfix" id="logo">
-                        <div class="span6"><img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" /></div>
-                        <h3 class="span2 text-right">No. Orden</h3><h3 class="span2 bordes-box text-center">'.$this->odd->numOrden.'</h3>
-                    </div>	
-                    
+
+        $html ='<body>
+                <style>
+                    body{
+                        color: #777;
+                        font-size: 13px;
+                        font-weight: normal;
+                        line-height: 24.05px;
+                    }
+                </style>
+                <table style="width: 100%" id="logo">
+                <tr style="font-size: 10px">
+                    <td style="width: 569px;">
+                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                    </td>
+                    <td style="width: 120px;">
+                        <h3 class=" text-right">No. Orden</h3>
+                    </td>
+                    <td >
+                        <h3 class=" bordes-box text-center">'.$this->odd->numOrden.'</h3>
+                    </td>
+                </tr>
+            </table>';
+        $html .= '
                     <h1>'.JText::_('LBL_ORDEN_DE_DEPOSITO').'</h1>
                     
                     <table class="clearfix" id="cabecera">
-                        <tr>
-                            <td class="span2 text-right">
+                        <tr style="font-size: 10px; line-height: 24.05px;">
+                            <td class="span2 text-right" style="width: 100px;">
                                 '.JText::_('LBL_SOCIO_INTEG').'
                             </td>
-                            <td class="span4">
+                            <td class="span4" style="width: 300px; line-height: 24.05px;">
                                 '.$this->odd->receptor.'
                             </td>
-                            <td class="span2 text-right">
+                            <td class="span2 text-right" style="width: 100px;">
                                 '.JText::_('LBL_DATE_CREATED').'
                             </td>
-                            <td class="span4">
+                            <td class="span4"  style="width: 200px; line-height: 24.05px;">
                                 '.$this->odd->createdDate.'
                             </td>
                         </tr>
-                        <tr>
-                            <td class="span2 text-right">
+                        <tr style="font-size: 10px;">
+                            <td class="span2 text-right" style="width: 100px; line-height: 24.05px;">
                                 '.JText::_('LBL_MONEDA').'
                             </td>
-                            <td class="span4">
+                            <td class="span4" style="width: 200px; line-height: 24.05px;">
                                 ';
                             $this->odd->currency = isset($this->odd->currency)? $this->odd->currency:'MXN';
 
                     $html .= $this->odd->currency.'
                             </td>
-                            <td class="span2 text-right">
+                            <td class="span2 text-right" style="width: 100px;">
                                 '.JText::_('LBL_PAYMENT_DATE').'
                             </td>
-                            <td class="span4">';
+                            <td class="span4" style="width: 200px;">';
 
                         if (isset($this->odd->paymentDate)) {$html .=$this->odd->paymentDate;}
 
                     $html .='</td>
                         </tr>
-                        <tr>
+                        <tr style="font-size: 10px">
                             <td class="span2 text-right">
                                 '.JText::_('COM_MANDATOS_CLIENTES_CONTACT').'
                             </td>
@@ -72,7 +98,7 @@ class oddPdf{
                                 '.JText::_($this->odd->paymentMethod->name).'
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="font-size: 10px">
                             <td class="span2 text-right">
                                 '.JText::_('COM_MANDATOS_CLIENTES_PHONE').'
                             </td>
@@ -84,7 +110,7 @@ class oddPdf{
                             <td class="span4">
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="font-size: 10px">
                             <td class="span2 text-right">
                                 '.JText::_('LBL_CORREO').'
                             </td>
@@ -110,7 +136,7 @@ class oddPdf{
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr style="font-size: 10px">
                                     <td style="border: 1px solid #ddd;">$ '.number_format($this->odd->totalAmount,2). ' ' . $this->odd->currency.'</td>
                                     <td style="border: 1px solid #ddd;">'.$number2string->toCurrency('$ '.number_format($this->odd->totalAmount,2)).'</td>
                                 </tr>
@@ -122,23 +148,31 @@ class oddPdf{
                                     '.JText::_('LBL_OBSERVACIONES').'
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                </td>
+                            </tr>
                         </table>
+
                         <table id="footer">
                             <tr class="container">
-                                <td class="control-group">
+                                <td class="control-group" style="font-size: 10px">
                                     '.JText::_('LBL_DATOS_DEPOSITO').'
                                 </td>
-                                <td class="container text-uppercase control-group">
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 15px; line-height: 24px; font-size: 10px" class="container text-uppercase control-group">
                                     '.JText::_('LBL_AUTORIZO_ODD').'
                                 </td>
                             </tr>
-                            <tr class="text-center">
-                                <td>
-                                    <p class="text-capitalize">'.JText::_('LBL_INTEGRADORA').'</p>
-                                    <p>'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
+                            <tr >
+                                <td style="line-height: 24px; font-size: 10px">
+                                    <p class="text-capitalize" style="text-align: center; ">'.JText::_('LBL_INTEGRADORA').'</p>
+                                    <p style="text-align: center">'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
                                 </td>
                             </tr>
                         </table>
+                        </body>
                 ';
         return $html;
     }
