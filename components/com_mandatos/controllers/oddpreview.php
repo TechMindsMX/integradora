@@ -7,6 +7,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
+jimport('html2pdf.reportecontabilidad');
 
 /**
  * metodo de envio a TimOne
@@ -83,6 +84,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
                     $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
                     $this->orden = $orden[0];
+                    $class = new reportecontabilidad();
+                    $reporte = $class->createPDF($orden, 'odd');
+
                     $this->sendNotifications();
 
                 }

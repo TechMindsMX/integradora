@@ -11,9 +11,7 @@ jimport('integradora.gettimone');
 require('html2pdf.class.php');
 require('_class/Facpdf.php');
 require('_class/odcPdf.php');
-
-
-
+require('_class/oddPdf.php');
 
 class reportecontabilidad{
 
@@ -23,6 +21,14 @@ class reportecontabilidad{
         $integradora = new \Integralib\Integrado();
         $this->integradora = new IntegradoSimple($integradora->getIntegradoraUuid() );
 
+        $session = JFactory::getSession();
+        $this->integradoId 	= $session->get('integradoId', null, 'integrado');
+
+        $integrado = new IntegradoSimple($this->integradoId);
+
+        $integrado->getTimOneData();
+
+        $this->integCurrent = $integrado;
     }
 
     public function facturaPDF($data, $facObjOdv, $facObj, $xml){
@@ -42,24 +48,37 @@ class reportecontabilidad{
         return $path;
     }
 
+
     public function createPDF($data, $tipo)
     {
         $path = '';
 
-        if ($tipo == 'odv') {
-            $html = $this->odv($data);
+        switch ($tipo){
+            case 'odv':
+                $html = $this->odv($data);
+                break;
+            case 'odc':
+                $getHtml = new odcPdf();
+
+                $orden = getFromTimOne::getOrdenesCompra(null, $data);
+                $orden = $orden[0];
+
+                $html = $getHtml->html($orden);
+                $path = 'media/pdf_odc/'.$tipo.'-'.$data.'.pdf';
+                break;
+            case 'odd':
+
+                $getHtml = new oddPdf($data);
+
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odd/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
+                break;
+            default:
+                $operacion='';
         }
 
-        if($tipo == 'odc'){
-            $getHtml = new odcPdf();
-
-            $orden = getFromTimOne::getOrdenesCompra(null, $data);
-            $orden = $orden[0];
-
-            $html = $getHtml->html($orden);
-            $path = 'media/pdf_odc/'.$tipo.'-'.$data.'.pdf';
-
-        }
+        $css = $this->readCss();
+        $html = '<style>'.$html.'</style>'.$html;
 
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
