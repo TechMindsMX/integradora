@@ -2517,6 +2517,9 @@ class sendToTimOne {
                 case 503:
                     $this->result->message = JText::_('SERVICE_UNABLE');
                     break;
+                case 400:
+                    $this->result->message = $this->getErrorMsg($this->result);
+                    break;
                 default:
                     $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
                     break;
@@ -2795,6 +2798,52 @@ class sendToTimOne {
         }
 
         return $response;
+    }
+
+    private function getErrorMsg($result){
+        $msg = 'JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED';
+        if(isset($result->data)) {
+            switch ($result->data) {
+                case 'Error: 1':
+                    $msg = JText::_('ACCOUNT_NOT_FOUND');
+                    break;
+                case 'Error: 2':
+                    $msg = JText::_('INVALID_AMOUNT');
+                    break;
+                case 'Error: 3':
+                    $msg = JText::_('INVALID_LENGTH');
+                    break;
+                case 'Error: 4':
+                    $msg = JText::_('NSF');
+                    break;
+                case 'Error: 5':
+                    $msg = JText::_('INVALID_PARAMETER');
+                    break;
+                case 'Error: 6':
+                    $msg = JText::_('OPERATION_NOT_ALLOWED');
+                    break;
+                case 'Error: 7':
+                    $msg = JText::_('USER_NOT_FOUND');
+                    break;
+                case 'Error: 8':
+                    $msg = JText::_('DUPLICATED_CLABE');
+                    break;
+                case 'Error: 9':
+                    $msg = JText::_('INVALID_CENTRO_COSTOS');
+                    break;
+                case 'Error: 10':
+                    $msg = JText::_('INVALID_CLABE');
+                    break;
+                case 'Error: 11':
+                    $msg = JText::_('SPEI_ERROR');
+                    break;
+                case 'Error: 13':
+                    $msg = JText::_('STP_RESPONSE_NOT_FOUND');
+                    break;
+            }
+        }
+
+        return $msg;
     }
 
 }

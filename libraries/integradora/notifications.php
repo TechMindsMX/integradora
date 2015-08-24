@@ -53,6 +53,10 @@ class Send_email{
         return $info;
     }
 
+    /**
+     * @param $error
+     * @param $servicio
+     */
     public function notificationErrors($error, $servicio){
         $mailer = JFactory :: getMailer ();
         $Config = JFactory :: getConfig ();
@@ -66,7 +70,7 @@ class Send_email{
         if(isset($error->code)){
             switch($error->code){
                 case 400:
-                    $correos = array('luis.magana@techminds.com.mx');
+                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
                     break;
                 case 503:
                     $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
