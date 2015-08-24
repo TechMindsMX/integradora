@@ -7,11 +7,11 @@ jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 jimport('integradora.integralib.order');
 jimport('integradora.integrado');
+jimport('integradora.gettimone');
 require('html2pdf.class.php');
 require('_class/Facpdf.php');
-
-
-
+require('_class/odcPdf.php');
+require('_class/oddPdf.php');
 
 class reportecontabilidad{
 
@@ -21,6 +21,14 @@ class reportecontabilidad{
         $integradora = new \Integralib\Integrado();
         $this->integradora = new IntegradoSimple($integradora->getIntegradoraUuid() );
 
+        $session = JFactory::getSession();
+        $this->integradoId 	= $session->get('integradoId', null, 'integrado');
+
+        $integrado = new IntegradoSimple($this->integradoId);
+
+        $integrado->getTimOneData();
+
+        $this->integCurrent = $integrado;
     }
 
     public function facturaPDF($data, $facObjOdv, $facObj, $xml){
@@ -40,19 +48,69 @@ class reportecontabilidad{
         return $path;
     }
 
+
     public function createPDF($data, $tipo)
     {
+        $path = '';
+        switch ($tipo){
+            case 'odv':
+                $html = $this->odv($data);
+                break;
+            case 'odc':
+                $getHtml = new odcPdf();
 
-        if ($tipo = 'odv') {
-            $html = $this->odv($data);
+                $orden = getFromTimOne::getOrdenesCompra(null, $data);
+                $orden = $orden[0];
+
+                $html = $getHtml->html($orden);
+                $path = 'media/pdf_odc/'.$tipo.'-'.$data.'.pdf';
+                break;
+            case 'odd':
+
+                $getHtml = new oddPdf($data);
+
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odd/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
+                break;
+            default:
+                $operacion='';
         }
+
+        $css = $this->readCss();
+        $html = '<style>'.$html.'
+                body{
+                    color: #777;
+                    font-size: 13px;
+                    font-weight: normal;
+                    line-height: 24.05px;
+                }
+                table{
+                    font-size: 10px;
+                }
+
+                 .contentpane{
+                    max-width: none !important;
+                        }
+                .table-bordered, {
+                    border: 1px solid #ddd;
+                    font-size: 10px;
+                }
+                .cantidad{
+                    border: 1px solid #ddd;
+                }
+
+                .cuadro{
+                    border: 1px solid #ddd;
+                }
+
+                </style>'.$html;
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
-        $html2pdf->Output('respaldosPDF/ODV-Num-'.$data->numOrden.'.pdf', 'F');
+        $html2pdf->Output($path, 'F');
     }
 
     public  function readCss(){
-        $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
+        return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
     }
 
     function odv($data){
@@ -89,11 +147,11 @@ class reportecontabilidad{
         </table>";
 
         $html .= '
-            <table class="table" id="data">
-                <tr>
+            <table class="table" id="data" style="font-size: 10px">
+                <tr style="font-size: 10px" >
                     <td colspan="4"><h4>'.JText::_('LBL_ORDEN_DE_VENTA').'</h4></td>
                 </tr>
-                <tr>
+                <tr >
                     <td style="text-align: right; width: 17%;">'.JText::_('LBL_SOCIO_INTEG').'</td>
                     <td style="text-align: left;">'.$data->emisor->integrados[0]->datos_empresa->razon_social.'</td>
                     <td style="text-align: right;">'.JText::_('LBL_DATE_CREATED').'</td>
@@ -171,7 +229,7 @@ class reportecontabilidad{
        $html .= '</table>';
 
         $html .= '<div class="clearfix"><h6>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h6></div>
-                    <table style="border: 1px solid #ddd; width: 500px !important" class="table table-bordered">
+                    <table style="border: 1px solid #ddd; width: 500px !important; font-size= 10px" class="table table-bordered">
                         <thead style="border: 1px solid #ddd">
                         <tr style="border: 1px solid #ddd">
                             <th >#</th>
@@ -296,6 +354,7 @@ class reportecontabilidad{
             $this->css .= fgets($file);
             $this->css = str_replace("inherit", "", $this->css);
         }
+        return $this->css;
         fclose($file);
     }
 }
