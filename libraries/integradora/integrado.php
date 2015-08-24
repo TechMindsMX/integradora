@@ -628,7 +628,11 @@ class IntegradoSimple extends Integrado {
     }
 
     public function getIntegradoPhone() {
-	    return isset($this->integrados[0]->datos_personales->tel_fijo) ? $this->integrados[0]->datos_personales->tel_fijo : $this->integrados[0]->datos_empresa->tel_fijo;
+	    $phone = '';
+	    if ($this->integrados[0]->datos_personales || $this->integrados[0]->datos_empresa) {
+		    $phone = isset($this->integrados[0]->datos_personales->tel_fijo) ? $this->integrados[0]->datos_personales->tel_fijo : $this->integrados[0]->datos_empresa->tel_fijo;
+	    }
+	    return $phone;
     }
 
 	public function isActive() {

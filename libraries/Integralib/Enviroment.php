@@ -126,6 +126,6 @@ class Enviroment {
 
         define( "SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/" );
 
-        define("INTEGRADORA_UUID", 'a4ac6c870f9411e5aaf3bc764e10ce72');
+        define("INTEGRADORA_UUID", 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528');
     }
 }
