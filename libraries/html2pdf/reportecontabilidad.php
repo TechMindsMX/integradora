@@ -77,14 +77,14 @@ class reportecontabilidad{
                 $getHtml = new odrPdf($data);
 
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odr/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
+                $path = 'media/pdf_odr/'.$tipo.'-'.$data->numOrden.'.pdf';
                 break;
             default:
                 $operacion='';
         }
 
         $css = $this->readCss();
-        $html = '<style>'.$html.'
+        $html = '<style>'.$css.'
                 body{
                     color: #777;
                     font-size: 13px;
@@ -111,6 +111,7 @@ class reportecontabilidad{
                 }
 
                 </style>'.$html;
+
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');

@@ -26,14 +26,6 @@ class oddPdf{
         $integ = new IntegradoSimple($integrado->integrado->integradoId);
 
         $html ='<body>
-                <style>
-                    body{
-                        color: #777;
-                        font-size: 13px;
-                        font-weight: normal;
-                        line-height: 24.05px;
-                    }
-                </style>
                 <table style="width: 100%" id="logo">
                 <tr style="font-size: 10px">
                     <td style="width: 569px;">
