@@ -109,13 +109,29 @@ class odrPdf{
                                 '.$integrado->datos_personales->email.'
                             </td>
                             <td class="span2 text-right">
-                                '.JText::_('LBL_BANCO_CUENTA').'
+                                '.JText::_('LBL_BANCOS').'
                             </td>
                             <td class="span4">';
-        if (isset($integrado->datos_bancarios[0]->banco_cuenta)) { $html .= 'XXXXXX' . substr($integrado->datos_bancarios[0]->banco_cuenta, -4, 4); }
+        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->bankName; }
         $html .='
                             </td>
                         </tr>
+                        <tr>
+                        <td style="text-align: right;">&nbsp;</td>
+                        <td style="text-align: left;">&nbsp;</td>
+                        <td style="text-align: right;">'.JText::_('LBL_BANCO_CUENTA').'</td>
+                        <td style="text-align: left;">';
+        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->banco_cuenta; }
+        $html .='</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">&nbsp;</td>
+                        <td style="text-align: left;">&nbsp;</td>
+                        <td style="text-align: right;">'.JText::_('LBL_NUMERO_CLABE').'</td>
+                        <td style="text-align: left;">';
+                        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->banco_clabe; }
+        $html .='</td>
+                    </tr>
                     </table>';
         $html .='
                         <h3>'.JText::_('LBL_DESCRIP_IMPORTE_DEPOSITAR').'</h3>
@@ -133,27 +149,15 @@ class odrPdf{
                                 </tr>
                             </tbody>
                         </table>
-                        <table class="control-group" id="tabla-bottom">
-                            <tr>
-                                <td>
-                                    '.JText::_('LBL_OBSERVACIONES').'
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                </td>
-                            </tr>
-                        </table>
-
                         <table id="footer">
                             <tr class="container">
                                 <td class="control-group" style="font-size: 10px">
-                                    '.JText::_('LBL_DATOS_DEPOSITO').'
+                                    '.JText::_('LBL_DATOS_RETIRO').'
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-left: 15px; line-height: 24px; font-size: 10px" class="container text-uppercase control-group">
-                                    '.JText::_('LBL_AUTORIZO_odr').'
+                                    '.JText::_('LBL_AUTORIZO_ODR').'
                                 </td>
                             </tr>
                             <tr >

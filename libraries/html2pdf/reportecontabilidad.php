@@ -84,7 +84,7 @@ class reportecontabilidad{
         }
 
         $css = $this->readCss();
-        $html = '<style>'.$css.'
+        $html = '<style>
                 body{
                     color: #777;
                     font-size: 13px;
