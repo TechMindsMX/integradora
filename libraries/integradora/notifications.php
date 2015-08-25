@@ -66,24 +66,7 @@ class Send_email{
             $Config['fromname']);
         $mailer->setSender($remitente);
 
-        $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
-        if(isset($error->code)){
-            switch($error->code){
-                case 400:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
-                    break;
-                case 503:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
-                    break;
-                case 0:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
-                    break;
-                default:
-                    $correos = array('luis.magana@techminds.com.mx', 'joseluis.delacruz@techminds.com.mx', 'nestor.aguilar@techminds.com.mx', 'ricardo.lyon@techminds.com.mx');
-                    break;
-
-            }
-        }
+        $correos = $this->getErrorToEmails($error);
 
         $mailer->addRecipient( $correos ) ;
         $body   = 'Se presento el siguiente error en la plataforma TIMONE llamando al servicio: '.@$servicio.'<br /> Código: '.@$error->code.'<br /> Mensaje: '.$error->message;
@@ -153,6 +136,35 @@ class Send_email{
         if ( isset($this->customEmail) ) {
             $this->recipients = array_unique( array_merge($this->recipients, $this->customEmail) );
         }
+    }
+
+    /**
+     * @param $error
+     *
+     * @return array
+     */
+    public function getErrorToEmails($error)
+    {
+        if (isset( $error->code )) {
+            switch (true) {
+                case ( $error->code > 400 && $error->code < 500 ):
+                    $integradora    = new \Integralib\Integrado;
+                    $admin          = $integradora->getIntegradoraUserData();
+                    $user           = JFactory::getUser();
+                    $correos        = array ($admin->email, $user->email);
+                    break;
+                default:
+                    $correos = array (
+                        'luis.magana@techminds.com.mx',
+                        'joseluis.delacruz@techminds.com.mx',
+                        'nestor.aguilar@techminds.com.mx',
+                        'ricardo.lyon@techminds.com.mx'
+                    );
+                    break;
+            }
+        }
+
+        return $correos;
     }
 
 }

@@ -2410,6 +2410,8 @@ class sendToTimOne {
             $verboseflag = true;
             $verbose = fopen(JFactory::getConfig()->get('log_path') . '/curl-' . date('d-m-y') . '.log', 'a+');
             $ch = curl_init();
+            $timeout = 10;
+            $token->access_token = $token->access_token.'blah';
 
             switch ($this->getHttpType()) {
                 case ('POST'):
@@ -2418,6 +2420,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_POSTFIELDS => $this->jsonData,
                         CURLOPT_HEADER => false,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
@@ -2438,6 +2441,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => true,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
@@ -2456,6 +2460,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => true,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
@@ -2474,6 +2479,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => false,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
