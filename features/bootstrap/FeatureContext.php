@@ -13,6 +13,7 @@ use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Testwork\Hook\Scope\AfterSuiteScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Features context.
@@ -84,7 +85,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
         $currUrl = explode('/', $this->getSession()->getCurrentUrl());
 
         if(strpos($currUrl[4],$arg1) === false) {
-            throw new \Symfony\Component\Config\Definition\Exception\Exception;
+            throw new Exception;
         }
     }
 
