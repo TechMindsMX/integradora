@@ -172,6 +172,7 @@ class TimOneCurl {
 		$this->result->info = curl_getinfo ($ch);
 		curl_close($ch);
 
+		$this->traceId = time();
 		JLog::add(json_encode($this), JLog::DEBUG);
 
 		switch ($this->result->code) {
@@ -187,7 +188,7 @@ class TimOneCurl {
 		}
 
         if ($this->result->code != 200) {
-            $send->notificationErrors($this->result, $this->serviceUrl);
+            $send->notificationErrors($this->result, $this->serviceUrl, $this->traceId);
         }
 
 		return $this->result;
