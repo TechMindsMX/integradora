@@ -8,8 +8,6 @@
 
 namespace Integralib;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
-
 class Enviroment
 {
 
@@ -150,7 +148,6 @@ class Enviroment
             $integradoIdSeed = $json->integrado->integradoId;
 
             $db = \JFactory::getDbo();
-            $db->transactionStart();
 
             $query = $db->getQuery(true);
             $query->select('integradoId')
@@ -163,6 +160,8 @@ class Enviroment
             try {
 
                 if ($db->getNumRows() === 0) {
+                    $db->transactionStart();
+
                     foreach ($json as $key => $value) {
                         if($key == 'instrumentos' || $key == 'datos_bancarios') {
                             foreach ($value as $key => $value) {

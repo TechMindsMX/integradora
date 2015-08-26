@@ -159,9 +159,8 @@ class TimOneCurl {
 		curl_setopt_array($ch,$options);
 
 		if($verboseflag === true) {
-			$headers = curl_getinfo( $ch,
-			                         CURLINFO_HEADER_OUT );
-			$this->result->data = curl_exec($ch);
+			$headers = curl_getinfo( $ch, CURLINFO_HEADER_OUT );
+			@$this->result->data = curl_exec($ch);
 
 			rewind( $verbose );
 			$verboseLog = stream_get_contents( $verbose );
