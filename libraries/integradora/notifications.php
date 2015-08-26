@@ -56,8 +56,9 @@ class Send_email{
     /**
      * @param $error
      * @param $servicio
+     * @param $traceId
      */
-    public function notificationErrors($error, $servicio){
+    public function notificationErrors($error, $servicio, $traceId = null){
         $mailer = JFactory :: getMailer ();
         $Config = JFactory :: getConfig ();
 
@@ -69,8 +70,7 @@ class Send_email{
         $correos = $this->getErrorToEmails($error);
 
         $mailer->addRecipient( $correos ) ;
-        $body   = 'Se presento el siguiente error en la plataforma TIMONE llamando al servicio: '.@$servicio.'<br /> Código: '.@$error->code.'<br /> Mensaje: '.$error->message;
-        $title  = 'Error de comunicacion con servicios TimOne';
+        list( $body, $title ) = $this->getErrorEmailBodyAndTitle($error, $servicio, $traceId);
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';
         $mailer->setSubject($title);
@@ -147,7 +147,7 @@ class Send_email{
     {
         if (isset( $error->code )) {
             switch (true) {
-                case ( $error->code > 400 && $error->code < 500 ):
+                case ( $error->code >= 400 && $error->code < 500 ):
                     $integradora    = new \Integralib\Integrado;
                     $admin          = $integradora->getIntegradoraUserData();
                     $user           = JFactory::getUser();
@@ -165,6 +165,32 @@ class Send_email{
         }
 
         return $correos;
+    }
+
+    /**
+     * @param $error
+     * @param $servicio
+     *
+     * @param $traceId
+     *
+     * @return array
+     */
+    public function getErrorEmailBodyAndTitle($error, $servicio, $traceId)
+    {
+        if (isset( $error->code )) {
+            switch (true) {
+                case ( $error->code > 400 && $error->code < 500 ):
+                    $title = JText::_('ERR_TIMONE_ADMIN_EMAIL_TITLE');
+                    $body  = JText::sprintf('ERR_TIMONE_ADMiN_EMAIL_BODY', $traceId);
+                    break;
+                default:
+                    $title = JText::_('ERR_TIMONE_DEVELOP_EMAIL_TITLE');
+                    $body  = JText::sprintf('ERR_TIMONE_DEVELOP_EMAIL_BODY', @$servicio, @$error->code, $error->message, $traceId);
+                    break;
+            }
+
+            return array ($body, $title);
+        }
     }
 
 }
