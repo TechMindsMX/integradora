@@ -59,9 +59,9 @@ class Integrado {
 
         $query = $db->getQuery(true);
 
-        $query->select($db->quoteName('íd'))
+        $query->select($db->quoteName('user_id'))
               ->from($db->quoteName('#__integrado_users'))
-              ->where($db->quoteName('integradoId') . ' = ' . INTEGRADORA_UUID . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
+              ->where($db->quoteName('integradoId') . ' = ' . $db->quote(INTEGRADORA_UUID) . ' AND ' . $db->quoteName('integrado_principal') . ' = 1');
         $db->setQuery($query);
 
         $integradoraUser = $db->loadResult();
