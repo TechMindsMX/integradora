@@ -1,0 +1,111 @@
+{
+  "integrado": {
+    "integradoId": "d9e9f5c4fe2e4a0ebfbfeaa46c0bc528",
+    "status": "3",
+    "pers_juridica": "1",
+    "createdDate": "1354536000"
+  },
+  "integrado_users": {
+    "user_id": "93",
+    "integrado_principal": "1",
+    "integrado_permission_level": "3"
+  },
+  "integrado_datos_personales": {
+    "nombre_representante": "Jos\u00e9 Luis Garc\u00eda Leyva Vela",
+    "nacionalidad": "146",
+    "sexo": "masculino",
+    "fecha_nacimiento": "1983-12-17",
+    "rfc": "GAVL831217V69",
+    "calle": "Tiburcio Montiel",
+    "num_exterior": "80",
+    "num_interior": "B3",
+    "cod_postal": "11850",
+    "curp": "GAVL831217HDRSRL09",
+    "email": "administracion@iecce.mx",
+    "tel_fijo": "5553318496",
+    "tel_fijo_extension": "",
+    "tel_movil": "5553318496",
+    "nom_comercial": "IECCE",
+    "url_identificacion": null,
+    "url_rfc": null,
+    "url_comprobante_domicilio": null
+  },
+  "integrado_datos_empresa": {
+    "razon_social": "Integradora de Emprendimientos Culturales S.A. de C.V.",
+    "rfc": "IEC121203FV8",
+    "calle": "Tiburcio Montiel",
+    "num_exterior": "80",
+    "num_interior": "B3",
+    "cod_postal": "11850",
+    "tel_fijo": "5565505919",
+    "tel_fijo_extension": "",
+    "tel_fax": "",
+    "sitio_web": "www.iecce.mx",
+    "testimonio_1": "19",
+    "testimonio_2": "20",
+    "poder": "21",
+    "reg_propiedad": "22",
+    "url_rfc": null
+  },
+  "datos_bancarios": {
+    "integrado_datos_bancarios": [
+      {
+        "banco_codigo": "042",
+        "banco_cuenta": "01600150886",
+        "banco_sucursal": "014",
+        "banco_clabe": "042180016001508868",
+        "banco_file": null
+      },
+      {
+        "banco_codigo": "072",
+        "banco_cuenta": "0894544882",
+        "banco_sucursal": "0559",
+        "banco_clabe": "072180008945448826",
+        "banco_file": null
+      }
+    ]
+  },
+  "integrado_params": {
+    "params": "1"
+  },
+  "instrumentos": {
+    "integrado_instrumentos": [
+      {
+        "instrum_type": "1",
+        "instrum_fecha": "2012-11-29",
+        "instrum_notaria": "122",
+        "instrum_estado": "9",
+        "instrum_num_instrumento": "39441",
+        "url_instrumento": null,
+        "instrum_nom_notario": "Arturo Talavera Autrique"
+      },
+      {
+        "instrum_type": "2",
+        "instrum_fecha": "0000-00-00",
+        "instrum_notaria": "0",
+        "instrum_estado": "15",
+        "instrum_num_instrumento": "0",
+        "url_instrumento": null,
+        "instrum_nom_notario": ""
+      },
+      {
+        "instrum_type": "3",
+        "instrum_fecha": "2013-12-03",
+        "instrum_notaria": "0",
+        "instrum_estado": "15",
+        "instrum_num_instrumento": "0",
+        "url_instrumento": null,
+        "instrum_nom_notario": ""
+      },
+      {
+        "instrum_type": "4",
+        "instrum_fecha": "2013-01-14",
+        "instrum_notaria": null,
+        "instrum_estado": "15",
+        "instrum_num_instrumento": "0",
+        "url_instrumento": null,
+        "instrum_nom_notario": null
+      }
+    ]
+  }
+}
