@@ -113,7 +113,7 @@ class Catalogos {
 
 	    $cat = $session->get('bancos', null, 'catalogos');
 
-	    if( is_null($cat) ) {
+	    if( is_null($cat) || is_null($cat[0]->banco)) {
             $curlRequest = new TimOneRequest();
 
             $catalogo = $curlRequest->getListBankCodes();

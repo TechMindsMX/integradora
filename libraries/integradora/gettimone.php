@@ -2411,7 +2411,6 @@ class sendToTimOne {
             $verbose = fopen(JFactory::getConfig()->get('log_path') . '/curl-' . date('d-m-y') . '.log', 'a+');
             $ch = curl_init();
             $timeout = 10;
-            $token->access_token = $token->access_token.'blah';
 
             switch ($this->getHttpType()) {
                 case ('POST'):
@@ -2499,7 +2498,7 @@ class sendToTimOne {
             if ($verboseflag === true) {
                 $headers = curl_getinfo($ch,
                     CURLINFO_HEADER_OUT);
-                $this->result->data = curl_exec($ch);
+                @$this->result->data = curl_exec($ch);
 
                 rewind($verbose);
                 $verboseLog = stream_get_contents($verbose);
