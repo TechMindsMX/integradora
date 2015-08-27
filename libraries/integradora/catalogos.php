@@ -99,7 +99,7 @@ class Catalogos {
     }
 
     public function getBancos(){
-        $cache = & JFactory::getCache();
+        $cache = JFactory::getCache();
 
         $bancos  = $cache->call( array( 'Catalogos', 'getBancosFromTimOne' ) );
 
