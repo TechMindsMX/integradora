@@ -17,9 +17,7 @@ class oddPdf{
         $this->integCurrent = new IntegradoSimple($this->integradoId);
     }
 
-    public function createHTML($odd){
-
-
+    public function createHTML(){
 
         $integrado 	    = $this->integCurrent->integrados[0];
         $number2string  = new AifLibNumber();

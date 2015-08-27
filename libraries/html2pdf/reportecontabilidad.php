@@ -1,18 +1,6 @@
 <?php
 defined('JPATH_PLATFORM') or die;
-
-define('JPATH_BASE', realpath(dirname(__FILE__).'/../..'));
-jimport('joomla.html.html.bootstrap');
-jimport('integradora.numberToWord');
-JHtml::_('behavior.keepalive');
-jimport('integradora.integralib.order');
-jimport('integradora.integrado');
-jimport('integradora.gettimone');
-require('html2pdf.class.php');
-require('_class/Facpdf.php');
-require('_class/odcPdf.php');
-require('_class/oddPdf.php');
-require('_class/odrPdf.php');
+require('loader.php');
 
 class reportecontabilidad{
 
@@ -36,89 +24,22 @@ class reportecontabilidad{
 
         $fileName = explode('/', $xml);
         $fileName = explode('.', $fileName[2]);
-
         $path = JPATH_BASE.'/media/facturas/'.$fileName[0].'.pdf';
-
-
         $createHtml = new Facpdf();
         $html = $createHtml->html($data, $this->integradora, $facObjOdv, $facObj);
-
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');
         return $path;
     }
 
-
     public function createPDF($data, $tipo)
     {
-        $path = '';
-        switch ($tipo){
-            case 'odv':
-                $html = $this->odv($data);
-                break;
-            case 'odc':
-                $getHtml = new odcPdf();
-
-                $orden = getFromTimOne::getOrdenesCompra(null, $data);
-                $orden = $orden[0];
-
-                $html = $getHtml->html($orden);
-                $path = 'media/pdf_odc/'.$tipo.'-'.$data.'.pdf';
-                break;
-            case 'odd':
-
-                $getHtml = new oddPdf($data);
-
-                $html = $getHtml->createHTML();
-                $path = 'media/pdf_odd/'.$tipo.'-'.$data[0]->numOrden.'.pdf';
-                break;
-            case 'odr':
-                $getHtml = new odrPdf($data);
-
-                $html = $getHtml->createHTML();
-                $path = 'media/pdf_odr/'.$tipo.'-'.$data->numOrden.'.pdf';
-                break;
-            default:
-                $operacion='';
-        }
-
-        $css = $this->readCss();
-        $html = '<style>
-                body{
-                    color: #777;
-                    font-size: 13px;
-                    font-weight: normal;
-                    line-height: 24.05px;
-                }
-                table{
-                    font-size: 10px;
-                }
-
-                 .contentpane{
-                    max-width: none !important;
-                        }
-                .table-bordered, {
-                    border: 1px solid #ddd;
-                    font-size: 10px;
-                }
-                .cantidad{
-                    border: 1px solid #ddd;
-                }
-
-                .cuadro{
-                    border: 1px solid #ddd;
-                }
-
-                </style>'.$html;
+        list($html, $path) = $this->selectTipeOrder($data, $tipo);
 
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');
-    }
-
-    public  function readCss(){
-        return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
     }
 
     function odv($data){
@@ -355,14 +276,51 @@ class reportecontabilidad{
         return $html;
     }
 
-    public  function readFile ($url){
-        $this->css = '';
-        $file = fopen($url, "r") or exit("Unable to open file!");
-        while(!feof($file)) {
-            $this->css .= fgets($file);
-            $this->css = str_replace("inherit", "", $this->css);
+    /**
+     * @param $data
+     * @param $tipo
+     * @return array
+     */
+    public function selectTipeOrder($data, $tipo)
+    {
+        $path = '';
+        switch ($tipo) {
+            case 'odv':
+                $html = $this->odv($data);
+                break;
+            case 'odc':
+                $getHtml = new odcPdf();
+                $orden = getFromTimOne::getOrdenesCompra(null, $data);
+                $orden = $orden[0];
+                $html = $getHtml->html($orden);
+                $path = 'media/pdf_odc/' . $tipo . '-' . $data . '.pdf';
+                break;
+            case 'odd':
+                $getHtml = new oddPdf($data);
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odd/' . $tipo . '-' . $data[0]->numOrden . '.pdf';
+                break;
+            case 'odr':
+                $getHtml = new odrPdf($data);
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odr/' . $tipo . '-' . $data->numOrden . '.pdf';
+                break;
+            case 'odp':
+                $getHtml = new odpPdf($data);
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_odp/' . $tipo . '-' . $data->numOrden . '.pdf';
+                break;
+            case 'table':
+                $getHtml = new mutuosPDF($data);
+                $html = $getHtml->createHTML();
+                $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
+                break;
+            default:
+                $operacion = '';
+                return array($html, $path);
         }
-        return $this->css;
-        fclose($file);
+
+
+        return array($html, $path);
     }
 }
