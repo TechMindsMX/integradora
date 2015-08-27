@@ -186,9 +186,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 $save->formatData($odp);
 
                 $saved = $save->insertDB('ordenes_prestamo');
-
-                $createPdf = new reportecontabilidad();
-                $createPdf->createPDF($odp, 'odp');
+                $arrayOdp[] = $odp;
 
                 if (!$saved) {
                     //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
@@ -202,6 +200,9 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $resultado = true;
                 }
             }
+
+            $createPdf = new reportecontabilidad();
+            $createPdf->createPDF($arrayOdp, 'odp');
         }elseif($mutuo->status == 3){
             $resultado = false;
         }

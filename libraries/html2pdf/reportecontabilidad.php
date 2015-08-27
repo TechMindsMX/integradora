@@ -42,6 +42,13 @@ class reportecontabilidad{
         $html2pdf->Output($path, 'F');
     }
 
+    public  function readCss(){
+        $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/template.css" rel="stylesheet">');
+        $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/override.css" rel="stylesheet">');
+        return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
+
+    }
+
     function odv($data){
         $this->readCss();
 
@@ -310,11 +317,11 @@ class reportecontabilidad{
                 $html = $getHtml->createHTML();
                 $path = 'media/pdf_odp/' . $tipo . '-' . $data->numOrden . '.pdf';
                 break;
-            case 'table':
-                $getHtml = new mutuosPDF($data);
-                $html = $getHtml->createHTML();
-                $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
-                break;
+           //case 'table':
+           //     $getHtml = new mutuosPDF($data);
+           //     $html = $getHtml->createHTML();
+           //     $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
+           //     break;
             default:
                 $operacion = '';
                 return array($html, $path);
@@ -322,5 +329,17 @@ class reportecontabilidad{
 
 
         return array($html, $path);
+    }
+
+    public  function readFile ($url){
+
+        $file = fopen($url, "r") or exit("Unable to open file!");
+        while(!feof($file)) {
+            $this->css .= fgets($file);
+            $this->css = str_replace("inherit", "", $this->css);
+        }
+        return $this->css;
+
+        fclose($file);
     }
 }
