@@ -225,11 +225,12 @@ class Integrado {
 
 		return $result;
 	}
-	
+
 	function getSolicitud($integ_id = null, $key){
 
 		if ($integ_id == null){
-			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
+			$this->integrados[$key] = new stdClass();
+			$this->integrados[$key]->gral = self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
 		$integradoId 					= isset($this->gral->integradoId) ? $this->gral->integradoId : $integ_id;
 

@@ -28,7 +28,7 @@ class Enviroment
         } else {
             $this->produccion();
         }
-        $this->seedIntegradora();
+        SeedIntegradora::seedIntegradora($enviroment['AMBIENTE']);
     }
 
     private function readEnviromentFile()
@@ -135,62 +135,5 @@ class Enviroment
         define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 
         define("INTEGRADORA_UUID", 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528');
-    }
-
-    public function seedIntegradora($filename = 'qaintegradora')
-    {
-        $url = getcwd() . '/libraries/Integralib/' . $filename . '.json';
-
-        if (file_exists($url)) {
-            $json = file_get_contents($url);
-            $json = json_decode($json);
-
-            $integradoIdSeed = $json->integrado->integradoId;
-
-            $db = \JFactory::getDbo();
-
-            $query = $db->getQuery(true);
-            $query->select('integradoId')
-                ->from('#__integrado')
-                ->where($db->quoteName('integradoId') . ' = ' . $db->quote($integradoIdSeed));
-
-            $db->setQuery($query);
-            $db->execute();
-
-            try {
-
-                if ($db->getNumRows() === 0) {
-                    $db->transactionStart();
-
-                    foreach ($json as $key => $value) {
-                        if($key == 'instrumentos' || $key == 'datos_bancarios') {
-                            foreach ($value as $key => $value) {
-                                foreach ($value as $datos) {
-                                    $datos->integradoId = $integradoIdSeed;
-                                    $db->insertObject('#__'.$key, $datos);
-                                }
-                            }
-                        }else{
-                            $value->integradoId = $integradoIdSeed;
-                            $db->insertObject('#__' . $key, $value);
-                        }
-                    }
-                    $db->transactionCommit();
-                }
-            } catch (\RuntimeException $e) {
-                $db->transactionRollback();
-
-                \JLog::addLogger(
-                    array(
-                        'text_file' => date('d-m-Y').'_critical_emergency.php'
-                    ),
-                    \JLog::CRITICAL + \JLog::EMERGENCY,
-                    array('enviroment')
-                );
-                \JLog::add('No se creo integradora, el sistema no puede operar, '.$e->getMessage(), \JLog::CRITICAL, 'enviroment');
-
-                die('No es posible operar con el sistema, por favor contacte a su administrador.');
-            }
-        }
     }
 }
