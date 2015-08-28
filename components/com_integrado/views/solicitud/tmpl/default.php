@@ -294,6 +294,9 @@ $token = JSession::getFormToken();
 					if ($datos->integrado->pers_juridica == 1) {
 						$readonlyRfc = '#de_rfc';
 						$idRFC = 'de_rfc';
+						?>
+						jQuery('#wrap_dp_nom_comercial').hide();
+						<?php
 					} elseif ($datos->integrado->pers_juridica == 2) {
 						$readonlyRfc = '#dp_rfc';
 						$idRFC = 'dp_rfc';
