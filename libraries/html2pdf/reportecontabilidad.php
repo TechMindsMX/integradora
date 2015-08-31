@@ -315,7 +315,7 @@ class reportecontabilidad{
             case 'odp':
                 $getHtml = new odpPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odp/' . $tipo . '-' . $data->numOrden . '.pdf';
+                $path = 'media/pdf_odp/' . $tipo . '-' . $data[0]->idMutuo . '.pdf';
                 break;
            //case 'table':
            //     $getHtml = new mutuosPDF($data);
