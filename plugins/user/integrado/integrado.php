@@ -218,4 +218,9 @@ class PlgUserIntegrado extends JPlugin
 		}
 	}
 
+	public function onUserAfterLogout()
+	{
+		JFactory::getApplication()->redirect('index.php');
+	}
+
 }

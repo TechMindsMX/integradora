@@ -7,26 +7,24 @@ class UsersIntegController extends JControllerLegacy {
 	private $homeUrl = 'index.php?option=com_content&view=article&id=8&Itemid=101';
 
 	function __construct() {
+        parent::__construct();
 
-		parent::__construct();
+        $this->app = JFactory::getApplication();
 	}
 
 	public function request() {
 		// Check the request token.
 		JSession::checkToken('post') or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app = JFactory::getApplication();
-		$vars = $app->input->get('jform', array(), 'array');
+		$vars = $this->app->input->get('jform', array(), 'array');
 
 		$sesion = JFactory::getSession();
 		$vars['email'] = $sesion->set('resetPassEmail', $vars['email']);
 
-		$app->redirect('index.php?option=com_usersinteg');
+		$this->app->redirect('index.php?option=com_usersinteg');
 	}
 
 	public function validate() {
-		$app = JFactory::getApplication();
-
 		$fields = array(
 			'answer_1'  => 'STRING',
 			'answer_2'  => 'STRING',
@@ -38,8 +36,8 @@ class UsersIntegController extends JControllerLegacy {
 
 		$model = $this->getModel();
 
-		$post = $app->input->getArray($fields);
-		$postQuestions = $app->input->getArray($fieldsquestions);
+		$post = $this->app->input->getArray($fields);
+		$postQuestions = $this->app->input->getArray($fieldsquestions);
 
 		$diccionario = array (
 			'answer_1'  => array ( 'alphaNum'   => true,    'required' => true, 'minlenght' => 5),
@@ -54,8 +52,8 @@ class UsersIntegController extends JControllerLegacy {
 			$model->checkAnswers( $post, $postQuestions );
 
 		} catch (Exception $e) {
-			$app->enqueueMessage($e->getMessage(), 'error');
-			$app->redirect( 'index.php?option=com_usersinteg' );
+			$this->app->enqueueMessage($e->getMessage(), 'error');
+			$this->app->redirect( 'index.php?option=com_usersinteg' );
 		}
 
 		$vars[JSession::getFormToken()] = '=1';
@@ -72,13 +70,11 @@ class UsersIntegController extends JControllerLegacy {
 			$type = 'error';
 			$url = $this->homeUrl;
 		}
-		$app->enqueueMessage( $msg, $type );
-		$app->redirect( $url );
+		$this->app->enqueueMessage( $msg, $type );
+		$this->app->redirect( $url );
 	}
 
 	public function savequestions() {
-		$app = JFactory::getApplication();
-
 		$fields = array(
 			'answer_1'  => 'STRING',
 			'answer_2'  => 'STRING',
@@ -96,8 +92,8 @@ class UsersIntegController extends JControllerLegacy {
 
 		$model = $this->getModel();
 
-		$answers = $app->input->getArray($fields);
-		$questions = $app->input->getArray($fieldsquestions);
+		$answers = $this->app->input->getArray($fields);
+		$questions = $this->app->input->getArray($fieldsquestions);
 
 		$db = JFactory::getDbo();
 
@@ -117,13 +113,13 @@ class UsersIntegController extends JControllerLegacy {
 		} catch (Exception $e) {
 
 			$db->transactionRollback();
-			$app->enqueueMessage($e->getMessage(), 'error');
-			$app->redirect('index.php?option=com_usersinteg&layout=questions');
+			$this->app->enqueueMessage($e->getMessage(), 'error');
+			$this->app->redirect('index.php?option=com_usersinteg&layout=questions');
 
 		}
 
-		$app->enqueueMessage( JText::_('LBL_SAVE_SUCCESSFUL') );
-		$app->redirect($this->homeUrl);
+		$this->app->enqueueMessage( JText::_('LBL_SAVE_SUCCESSFUL') );
+		$this->app->redirect($this->homeUrl);
 
 	}
 
