@@ -980,7 +980,7 @@ $token = JSession::getFormToken();
 					if( isset($value[0]) ){
 						?>
 						<div>
-							<a class="" href="<?php echo $value[0]; ?>" target="_blank"><?php echo JText::_('LBL_OPEN_FILE'); ?></a>
+							<a class="" href="<?php echo MEDIA_FILES.$value[0]; ?>" target="_blank"><?php echo JText::_('LBL_OPEN_FILE'); ?></a>
 						</div>
 					<?php
 					}
