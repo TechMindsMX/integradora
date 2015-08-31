@@ -37,3 +37,27 @@ UPDATE `flpmu_menu` SET `title` = 'Términos y condiciones', `alias` = 'terminos
 INSERT INTO `flpmu_modules` (`id`, `asset_id`, `title`, `note`, `content`, `ordering`, `position`, `checked_out`, `checked_out_time`, `publish_up`, `publish_down`, `published`, `module`, `access`, `showtitle`, `params`, `client_id`, `language`)
 VALUES (158, 127, 'Bottom menu', '', '', 1, 'bottom', 0, '0001-01-01 00:00:00', '0001-01-01 00:00:00', '0001-01-01 00:00:00', 1, 'mod_menu', 1, 0, '{"menutype":"bottommenu","base":"","startLevel":"1","endLevel":"1","showAllChildren":"0","tag_id":"","class_sfx":"","window_open":"","layout":"_:default","moduleclass_sfx":"","cache":"1","cache_time":"900","cachemode":"itemid","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}', 0, 'en-GB');
 --rollback DELETE FROM `flpmu_modules` WHERE `id` = '158';
+
+--changeset ricardolyon:8
+UPDATE `flpmu_menu` SET title = 'Altas', alias = 'altas' WHERE id = 204;
+UPDATE `flpmu_menu` SET title = 'Mi Perfíl', alias = 'mi-perfil' WHERE id = 208;
+--rollback UPDATE `flpmu_menu` SET title = 'Alta', alias = 'alta' WHERE id = 204;
+--rollback UPDATE `flpmu_menu` SET title = 'Perfíl', alias = 'perfil' WHERE id = 208;
+
+--changeset ricardolyon:9
+UPDATE `flpmu_menu` SET lft = 11, rgt = 12 WHERE alias = 'inicio' AND id = 101;
+UPDATE `flpmu_menu` SET lft = 13, rgt = 14 WHERE alias = 'operaciones' AND id = 193;
+UPDATE `flpmu_menu` SET lft = 15, rgt = 16 WHERE alias = 'autorizaciones' AND id = 205;
+UPDATE `flpmu_menu` SET lft = 17, rgt = 18 WHERE alias = 'consultas' AND id = 206;
+UPDATE `flpmu_menu` SET lft = 19, rgt = 20 WHERE alias = 'estados-financieros' AND id = 195;
+UPDATE `flpmu_menu` SET lft = 21, rgt = 22 WHERE alias = 'altas' AND id = 204;
+UPDATE `flpmu_menu` SET lft = 23, rgt = 24 WHERE alias = 'administracion' AND id = 207;
+UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'mi-perfil' AND id = 208;
+--rollback UPDATE `flpmu_menu` SET lft = 11, rgt = 12 WHERE alias = 'inicio' AND id = 101;
+--rollback UPDATE `flpmu_menu` SET lft = 13, rgt = 14 WHERE alias = 'alta' AND id = 204;
+--rollback UPDATE `flpmu_menu` SET lft = 15, rgt = 16 WHERE alias = 'operaciones' AND id = 193;
+--rollback UPDATE `flpmu_menu` SET lft = 17, rgt = 18 WHERE alias = 'autorizaciones' AND id = 205;
+--rollback UPDATE `flpmu_menu` SET lft = 19, rgt = 20 WHERE alias = 'consultas' AND id = 206;
+--rollback UPDATE `flpmu_menu` SET lft = 21, rgt = 22 WHERE alias = 'estados-financieros' AND id = 195;
+--rollback UPDATE `flpmu_menu` SET lft = 23, rgt = 24 WHERE alias = 'administracion' AND id = 207;
+--rollback UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'perfil' AND id = 208;
