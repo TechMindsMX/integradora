@@ -37,3 +37,41 @@ UPDATE `flpmu_menu` SET `title` = 'Términos y condiciones', `alias` = 'terminos
 INSERT INTO `flpmu_modules` (`id`, `asset_id`, `title`, `note`, `content`, `ordering`, `position`, `checked_out`, `checked_out_time`, `publish_up`, `publish_down`, `published`, `module`, `access`, `showtitle`, `params`, `client_id`, `language`)
 VALUES (158, 127, 'Bottom menu', '', '', 1, 'bottom', 0, '0001-01-01 00:00:00', '0001-01-01 00:00:00', '0001-01-01 00:00:00', 1, 'mod_menu', 1, 0, '{"menutype":"bottommenu","base":"","startLevel":"1","endLevel":"1","showAllChildren":"0","tag_id":"","class_sfx":"","window_open":"","layout":"_:default","moduleclass_sfx":"","cache":"1","cache_time":"900","cachemode":"itemid","module_tag":"div","bootstrap_size":"0","header_tag":"h3","header_class":"","style":"0"}', 0, 'en-GB');
 --rollback DELETE FROM `flpmu_modules` WHERE `id` = '158';
+
+--changeset ricardolyon:8
+UPDATE `flpmu_menu` SET title = 'Altas', alias = 'altas' WHERE id = 204;
+UPDATE `flpmu_menu` SET title = 'Mi Perfíl', alias = 'mi-perfil' WHERE id = 208;
+--rollback UPDATE `flpmu_menu` SET title = 'Alta', alias = 'alta' WHERE id = 204;
+--rollback UPDATE `flpmu_menu` SET title = 'Perfíl', alias = 'perfil' WHERE id = 208;
+
+--changeset ricardolyon:9
+UPDATE `flpmu_menu` SET lft = 11, rgt = 12 WHERE alias = 'inicio' AND id = 101;
+UPDATE `flpmu_menu` SET lft = 13, rgt = 14 WHERE alias = 'operaciones' AND id = 193;
+UPDATE `flpmu_menu` SET lft = 15, rgt = 16 WHERE alias = 'autorizaciones' AND id = 205;
+UPDATE `flpmu_menu` SET lft = 17, rgt = 18 WHERE alias = 'consultas' AND id = 206;
+UPDATE `flpmu_menu` SET lft = 19, rgt = 20 WHERE alias = 'estados-financieros' AND id = 195;
+UPDATE `flpmu_menu` SET lft = 21, rgt = 22 WHERE alias = 'altas' AND id = 204;
+UPDATE `flpmu_menu` SET lft = 23, rgt = 24 WHERE alias = 'administracion' AND id = 207;
+UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'mi-perfil' AND id = 208;
+--rollback UPDATE `flpmu_menu` SET lft = 11, rgt = 12 WHERE alias = 'inicio' AND id = 101;
+--rollback UPDATE `flpmu_menu` SET lft = 13, rgt = 14 WHERE alias = 'alta' AND id = 204;
+--rollback UPDATE `flpmu_menu` SET lft = 15, rgt = 16 WHERE alias = 'operaciones' AND id = 193;
+--rollback UPDATE `flpmu_menu` SET lft = 17, rgt = 18 WHERE alias = 'autorizaciones' AND id = 205;
+--rollback UPDATE `flpmu_menu` SET lft = 19, rgt = 20 WHERE alias = 'consultas' AND id = 206;
+--rollback UPDATE `flpmu_menu` SET lft = 21, rgt = 22 WHERE alias = 'estados-financieros' AND id = 195;
+--rollback UPDATE `flpmu_menu` SET lft = 23, rgt = 24 WHERE alias = 'administracion' AND id = 207;
+--rollback UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'perfil' AND id = 208;
+
+--changeset lutek:10
+ALTER TABLE `flpmu_integrado_datos_empresa` CHANGE COLUMN `url_rfc` `url_rfc` VARCHAR(100) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_integrado_datos_empresa` CHANGE COLUMN `url_rfc` `url_rfc` VARCHAR(50) NULL DEFAULT NULL ;
+
+--changeset ricardolyon:11
+UPDATE flpmu_modules SET title = 'Frontpage Guest', content = '<div class=\"row-fluid\">\r\n<div class=\"span3\">\r\n<div class=\"\"><a class=\"btn btn-primary btn-large\" href=\"index.php?option=com_integrado&amp;view=solicitud\"><img src=\"templates/meet_gavern/images/content/responsive_design.png\" alt=\"Responsive Web Design\" /><h3 class="text-white">Solicitar alta como integrado</h3></a>\r\n</div>\r\n</div>\r\n<div class=\"span9\">\r\n<div class=\"\">\r\n<h4>Te recordamos que para darte de alta debes de tener a la mano la siguiente documentación en digital:</h4>\r\n<div class=\"row-fluid\">\r\n<ul>\r\n<li>Datos personales (Nombre, teléfonos, email, dirección), RFC, CURP</li>\r\n<li>Archivo Identificación representante legal (IFE, pasaporte, cédula profesional, cartilla militar)</li>\r\n<li>Archivo RFC del representante legal</li>\r\n<li>Comprobante de domicilio del representante legal</li>\r\n<li>Encabezado de la cuenta bancaria</li>\r\n<li>Archivo cédula de identificación fiscal de la empresa (RFC)</li>\r\n<li>Archivo primer testimonio de la empresa</li>\r\n<li>Archivo último testimonio de la empresa (si aplica)</li>\r\n<li>Archivo poder del representante legal de la empresa (si aplica)</li>\r\n<li>Archivo registro público de propiedad de la empresa (si aplica)</li>\r\n<li>Encabezado de la cuenta bancaria</li>\r\n</ul>\r\n</div>\r\n</div>\r\n</div>\r\n</div>', published = 1, access = 5 WHERE id = 96;
+--rollback UPDATE flpmu_modules SET title = 'Header - frontpage', content = '<div class=\"row-fluid\">\r\n<div class=\"span3\">\r\n<div class=\"\"><a class=\"btn btn-primary btn-large\" href=\"index.php?option=com_integrado&amp;view=solicitud\"><img src=\"templates/meet_gavern/images/content/responsive_design.png\" alt=\"Responsive Web Design\" /><br />Solicitud alta de integrado</a></div>\r\n</div>\r\n<div class=\"span9\">\r\n<div class=\"\">\r\n<h4>Te recordamos que para darte de alta debes de tener a la mano la siguiente documentación en digital:</h4>\r\n<div class=\"row-fluid\">\r\n<div class=\"span6\">\r\n<ul>\r\n<li>Datos personales (Nombre, teléfonos, email, dirección), RFC, CURP</li>\r\n<li>Archivo Identificación representante legal (IFE, pasaporte, cédula profesional, cartilla militar)</li>\r\n<li>Archivo RFC del representante legal</li>\r\n<li>Comprobante de domicilio del representante legal</li>\r\n<li>Encabezado de la cuenta bancaria</li>\r\n</ul>\r\n</div>\r\n<div class=\"span6\">\r\n<ul>\r\n<li>Archivo cédula de identificación fiscal de la empresa (RFC)</li>\r\n<li>Archivo primer testimonio de la empresa</li>\r\n<li>Archivo último testimonio de la empresa (si aplica)</li>\r\n<li>Archivo poder del representante legal de la empresa (si aplica)</li>\r\n<li>Archivo registo público de propiedad de la empresa (si aplica)</li>\r\n<li>Encabezado de la cuenta bancaria</li>\r\n</ul>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>', published = 1, access = 1 WHERE id = 96;
+
+--changeset ricardolyon:12
+UPDATE flpmu_modules SET title = 'Frontpage Registered', content = '<h2>Mensajes Importantes</h2>\r\n<div class=\"well\">\r\n<ul>\r\n<li>Recuerda siempre proteger tu contraseña</li>\r\n<li>Para maximizar tus resultados siempre pide tu factura</li>\r\n<li>El 17 del mes es el día límite de pago de impuestos</li>\r\n<li>No se te olvide todos los días al antes de irte revisar que no tengas autorizaciones pendientes</li>\r\n<li>No se te olvide todos los días antes de irte de revisar tu reporte de \"Conciliación de Partidas Pendientes\"</li></div>', published = 1, access = 2 WHERE id = 97;
+UPDATE flpmu_modules_menu SET menuid = 101 WHERE moduleid = 97;
+--rollback UPDATE flpmu_modules SET title = 'HEADER - module variations', content = '<h1 class=\"gk-medium-header\">Template Module Variations</h1>', published = 1, access = 1 WHERE id = 97;
+--rollback UPDATE flpmu_modules_menu SET menuid = 145 WHERE moduleid = 97;

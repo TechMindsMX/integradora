@@ -2058,11 +2058,10 @@ class sendToTimOne {
 
             if ($result != 'verificar') {
                 $fileinfo = pathinfo( $value['name'] );
-
-                $columna = substr( $key, 3 );
-                $clave   = substr( $key, 0, 3 );
-	            $dbq = JFactory::getDbo();
-                $where   = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id);
+                $columna  = substr( $key, 3 );
+                $clave    = substr( $key, 0, 3 );
+	            $dbq      = JFactory::getDbo();
+                $where    = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id);
 
                 switch ( $clave ) {
                     case 'dp_':
@@ -2090,16 +2089,14 @@ class sendToTimOne {
                         $table = 'integrado_instrumentos';
                         $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
                         break;
-
                     default:
-
                         break;
                 }
-                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
 
-                $save[] = self::updateDB( $table, $updateSet, $where );
+                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
+                $save[]    = self::updateDB( $table, $updateSet, $where );
             }else {
-                $campos[] = $key;
+                $campos[]  = $key;
             }
         }
 
