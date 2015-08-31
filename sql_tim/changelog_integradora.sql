@@ -61,3 +61,7 @@ UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'mi-perfil' AND id = 20
 --rollback UPDATE `flpmu_menu` SET lft = 21, rgt = 22 WHERE alias = 'estados-financieros' AND id = 195;
 --rollback UPDATE `flpmu_menu` SET lft = 23, rgt = 24 WHERE alias = 'administracion' AND id = 207;
 --rollback UPDATE `flpmu_menu` SET lft = 25, rgt = 26 WHERE alias = 'perfil' AND id = 208;
+
+--changeset lutek:10
+ALTER TABLE `flpmu_integrado_datos_empresa` CHANGE COLUMN `url_rfc` `url_rfc` VARCHAR(100) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_integrado_datos_empresa` CHANGE COLUMN `url_rfc` `url_rfc` VARCHAR(50) NULL DEFAULT NULL ;
