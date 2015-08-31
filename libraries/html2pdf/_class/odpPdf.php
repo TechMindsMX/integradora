@@ -34,11 +34,17 @@ class odpPdf{
             $html .='
             <style>
               .span6{
-                width: 550px
+                width: 450px
               }
-              .span5{
-                width: 600px;
-                text-align: center;
+              table{
+                color: #777;
+                font-size: 13px;
+                font-weight: normal;
+                line-height: 24px;
+              }
+
+              .bordes-box {
+                border: 1px solid #ccc;
               }
             </style>
             <page>
@@ -55,7 +61,7 @@ class odpPdf{
                                             <td style="color: rgb(68, 68, 68); display: inline-block;">
                                                 <h3>
                                                     No. Mutuo
-                                                    <span style="border: 1px solid #ccc; color: #999;">'.$orden->idMutuo.'</span>
+                                                    <span class="border-box">'.$orden->idMutuo.'</span>
                                                 </h3>
                                             </td>
                                         </tr>
@@ -63,7 +69,7 @@ class odpPdf{
                                             <td style="display: inline-block; color: rgb(68, 68, 68);">
                                                 <h3>
                                                     No. Orden
-                                                    <span style="border: 1px solid #ccc; color: #999;">'.$orden->numOrden.'</span>
+                                                    <span class="border-box">'.$orden->numOrden.'</span>
                                                 </h3>
                                             </td>
                                         </tr>
@@ -73,25 +79,26 @@ class odpPdf{
                         </tr>
                     </tbody>
                 </table>
-                <table style="width: 650px">
-                    <tr>
-                        <td>
+                <table>
+                <tr>
+                        <td >
                             <h1 style="margin-bottom: 40px;">'.strtoupper(JText::_('LBL_ORDEN_DE_PRESTAMO')).'</h1>
                         </td>
                     </tr>
-                    <tr style="height: 27px;" >
-                        <td class="span6" style="width: 50px">Fecha de Elaboracion: <strong>'.date('d-m-Y', $orden->fecha_elaboracion).'</strong></td>
-                        <td class="span6">Fecha de depósito: <strong>'.date('d-m-Y',$orden->fecha_deposito).'</strong></td>
-                    </tr>
+                </table>
+                <table style="width: 400px">
 
-                    <tr  style="height: 34px"><td></td><td></td></tr>
+                    <tr style="height: 27px;" >
+                        <td class="span6">Fecha de Elaboracion: <strong>'.date('d-m-Y', $orden->fecha_elaboracion).'</strong></td>
+                        <td class="span6">Fecha de Deposito: <strong>'.date('d-m-Y', $orden->fecha_deposito).'</strong></td>
+                    </tr>
 
                     <tr style="height: 27px">
                         <td class="span6">Tasa: <strong>'.$orden->tasa.'</strong></td>
                         <td class="span6">Tipo Movimiento: <strong>'.$orden->tipo_movimiento.'</strong></td>
                     </tr>
 
-                    <tr  style="height: 34px"><td></td><td></td></tr>
+                    <tr  style="height: 54px"><td>&nbsp;</td><td>&nbsp;</td></tr>
 
                     <tr style="height: 27px">
                         <td class="span6">Acreedor: <strong>'.$orden->acreedor.'</strong></td>
@@ -107,7 +114,7 @@ class odpPdf{
                         <td>IVA: <strong>'.$signoAcreedor.number_format($orden->iva_intereses,2).'</strong></td>
                     </tr>
 
-                    <tr  style="height: 34px"><td></td><td></td></tr>
+                    <tr  style="height: 54px"><td>&nbsp;</td><td>&nbsp;</td></tr>
 
                     <tr style="height: 27px">
                         <td class="span6">Deudor: <strong>'.$orden->deudor.'</strong></td>
@@ -130,31 +137,36 @@ class odpPdf{
                         <td class="span6"><h3>Importe de la cantidad:</h3> <h4>$'.number_format($orden->capital,2).'</h4></td>
                         <td class="span6"><h3>Importe en letra:</h3><h4>'.$number2word->toCurrency('$'.number_format($orden->capital,2)).'</h4></td>
                     </tr>
-
-                    <tr style="margin-top: 40px;" class="clearfix">
-                        <td style="text-align: center;" colspan="2">
-                            <br/><br/><br/><table style="margin-left: 203px">
-                                <tbody>
-                                    <tr>
-                                        <td>_____________________________</td>
-                                        <td>&nbsp;</td>
-                                        <td>____________________________</td>
-                                    </tr>
-                                    <tr>
-                                        <td>(Nombre y Firma)<br>
-                                            Apoderado Legal<br>
-                                            Acreedor</td>
-                                        <td>&nbsp;</td>
-                                        <td>(Nombre y Firma)<br>
-                                            Apoderado Legal<br>
-                                            Deudor</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </table>
+                <table>
+                    <tr style="margin-top: 40px;">
+                        <td>
+                            '.strtoupper(JText::_('LBL_ORDEN_AUTORIZACION')).'
                         </td>
                     </tr>
                 </table>
-            </page>';
+                <div style="text-align: center">
+                <br/><br/><br/><br/><br/>
+                    <table style="margin-left: 203px">
+                        <tbody>
+                            <tr style="text-align= center;">
+                                <td>_____________________________</td>
+                                <td>&nbsp;</td>
+                                <td>____________________________</td>
+                            </tr>
+                            <tr>
+                                <td>(Nombre y Firma)<br>
+                                    Apoderado Legal<br>
+                                    Acreedor</td>
+                                <td>&nbsp;</td>
+                                <td>(Nombre y Firma)<br>
+                                    Apoderado Legal<br>
+                                    Deudor</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </page>';
         }
         return $html;
     }
