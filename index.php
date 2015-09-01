@@ -8,24 +8,25 @@
 
 if (version_compare(PHP_VERSION, '5.3.10', '<'))
 {
-	die('Your host needs to use PHP 5.3.10 or higher to run this version of Joomla!');
+    die('Your host needs to use PHP 5.3.10 or higher to run this version of Joomla!');
 }
 
 /**
  * Constant that is checked in included files to prevent direct access.
  * define() is used in the installation folder rather than "const" to not error for PHP 5.2 and lower
  */
+error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING );
 define('_JEXEC', 1);
 
 if (file_exists(__DIR__ . '/defines.php'))
 {
-	include_once __DIR__ . '/defines.php';
+    include_once __DIR__ . '/defines.php';
 }
 
 if (!defined('_JDEFINES'))
 {
-	define('JPATH_BASE', __DIR__);
-	require_once JPATH_BASE . '/includes/defines.php';
+    define('JPATH_BASE', __DIR__);
+    require_once JPATH_BASE . '/includes/defines.php';
 }
 
 require_once JPATH_BASE . '/includes/framework.php';
