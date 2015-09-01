@@ -1,7 +1,7 @@
 <?php
 defined('JPATH_PLATFORM') or die;
 
-define('JPATH_BASE', realpath(dirname(__FILE__).'/../..'));
+//define('JPATH_BASE', realpath(dirname(__FILE__).'/../..'));
 jimport('joomla.html.html.bootstrap');
 jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
