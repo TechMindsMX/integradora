@@ -133,6 +133,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $factObj->saveFolio($xmlFactura);
 
+                                    $createPDF = new reportecontabilidad();
                                     $factura = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
