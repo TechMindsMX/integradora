@@ -43,12 +43,12 @@ class SeedIntegradora
                         if($key == 'instrumentos' || $key == 'datos_bancarios') {
                             foreach ($value as $key => $value) {
                                 foreach ($value as $datos) {
-                                    $datos->integradoId = $integradoraRFC;
+                                    $datos->integradoId = $json->integrado->integradoId;
                                     $db->insertObject('#__'.$key, $datos);
                                 }
                             }
                         }else{
-                            $value->integradoId = $integradoraRFC;
+                            $value->integradoId = $json->integrado->integradoId;;
                             $db->insertObject('#__' . $key, $value);
                         }
                     }
