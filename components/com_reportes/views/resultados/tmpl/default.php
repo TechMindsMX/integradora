@@ -80,7 +80,7 @@ $egresos = $report->getEgresos();
             <div class="span6"><?php echo JText::_('LBL_FROM_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('d-m-Y', $report->startPeriod);
+                $default = date('Y-m-d', $report->startPeriod);
                 ?>
 	            <div class="form-group">
 		            <input type="text" name="startDate" id="startDate" class="datepicker" value="<?php echo $default; ?>" readonly />
@@ -91,7 +91,7 @@ $egresos = $report->getEgresos();
             <div class="span6"><?php echo JText::_('LBL_TO_DATE'); ?></div>
             <div class="span6">
                 <?php
-                $default = date('d-m-Y',$report->endPeriod);
+                $default = date('Y-m-d',$report->endPeriod);
                 ?>
 	            <div class="form-group">
 		            <input type="text" name="endDate" id="endDate" class="datepicker" value="<?php echo $default; ?>" readonly />
