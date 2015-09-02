@@ -317,14 +317,14 @@ class reportecontabilidad{
                 $html = $getHtml->createHTML();
                 $path = 'media/pdf_odp/' . $this->integradoId . '-' . $data[0]->idMutuo . '.pdf';
                 break;
-           //case 'table':
-           //     $getHtml = new mutuosPDF($data);
-           //     $html = $getHtml->createHTML();
-           //     $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
-           //     break;
+           case 'mutuo':
+                $getHtml = new mutuosPDF($data);
+                $html = $getHtml->generateHtml($data);
+                $path = 'media/pdf_mutuo/' . $this->integradoId . '-' . $data->id . '.pdf';
+                break;
             default:
                 $operacion = '';
-                return array($html, $path);
+                return array($operacion, $path);
         }
 
 
