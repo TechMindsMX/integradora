@@ -71,16 +71,16 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         <h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
         <div class="row-fluid">
             <div class="span6"><label for="startDate"><?php echo JText::_('LBL_FROM_DATE'); ?></label></div>
-            <div class="span6 visible-print-block"><?php echo $report->getFechaInicio(); ?></div>
+            <div class="span6 visible-print-block"><?php echo date('d-m-Y',$report->getFechaInicio()); ?></div>
             <div class="span6 hidden-print">
-	            <input class="datepicker" id="startDate" name="startDate" type="text" value="<?php echo $report->getFechaInicio(); ?>" readonly />
+	            <input class="datepicker" id="startDate" name="startDate" type="text" value="<?php echo date('Y-m-d', $report->getFechaInicio()); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6"><label for="endDate"><?php echo JText::_('LBL_TO_DATE'); ?></label></div>
-            <div class="span6 visible-print-block"><?php echo $report->getFechaFin(); ?></div>
+            <div class="span6 visible-print-block"><?php echo date('d-m-Y', $report->getFechaFin()); ?></div>
             <div class="span6">
-	            <input class="datepicker" id="endDate" name="endDate" type="text" value="<?php echo $report->getFechaFin(); ?>" readonly />
+	            <input class="datepicker" id="endDate" name="endDate" type="text" value="<?php echo date('Y-m-d', $report->getFechaFin()); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
