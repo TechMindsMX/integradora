@@ -67,17 +67,20 @@ class odcPdf
                 .text-center{
                     text-align: center;
                 }
+                h1 {
+                    font-size: 28px;
+                }
 
                 </style>';
         $html .='<table style="width: 100%" id="logo">
                 <tr>
-                    <td style="width: 569px;">
-                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                    <td style="width: 469px;">
+                        <img width="150" src="'.JUri::base().'images/logo_iecce.png'.'" />
                     </td>
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>
                     </td>
-                    <td >
+                    <td  style="border: 1px solid #ccc;  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.024) inset;    color: #999; width:73px; height: 41px;">
                         <h3 class=" bordes-box text-center">'.$orden->numOrden.'</h3>
                     </td>
                 </tr>
@@ -220,15 +223,15 @@ class odcPdf
 
                 <h3>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h3>
 
-                <table class="table table-bordered" style=" -moz-border-bottom-colors: none;    -moz-border-left-colors: none;    -moz-border-right-colors: none;    -moz-border-top-colors: none;    border-collapse: separate;    border-color: #ddd #ddd #ddd; -moz-use-text-color;    border-image: none;    border-radius: 4px; border-style: solid solid solid none; border-width: 1px 1px 1px 0; font-size: 10px">
+                <table class="table table-bordered" style=" -moz-border-bottom-colors: none;    -moz-border-left-colors: none;    -moz-border-right-colors: none;    -moz-border-top-colors: none;    border-collapse: separate;    border-color: #ddd #ddd #ddd; -moz-use-text-color;    border-image: none;    border-radius: 4px; border-style: solid solid solid none; border-width: 1px 1px 1px 0; font-size: 8px">
                     <thead>
                     <tr>
-                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">#</th>
-                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top; width: 25px">'.JText::_('LBL_CANTIDAD').'</th>
-                        <th class="span4" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
-                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_UNIDAD').'</th>
-                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top; width: 65px">'.JText::_('LBL_P_UNITARIO').'</th>
-                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_IMPORTE').'</th>
+                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">#</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 20px">'.JText::_('LBL_CANTIDAD').'</th>
+                        <th class="span4" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_UNIDAD').'</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 25px">'.JText::_('LBL_P_UNITARIO').'</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_IMPORTE').'</th>
                     </tr>
                     </thead>
                     <tbody>';
@@ -236,14 +239,14 @@ class odcPdf
         foreach ($orden->factura->conceptos as $key => $prod) :
 
             $html .='   <tr>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">';
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">';
             $html .=$key+1;
             $html .='       </td>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top; width: 25px">'.$prod['CANTIDAD'].'</td>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">'.$prod['DESCRIPCION'].'</td>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">'.$prod['UNIDAD'].'</td>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top; width: 65px">$'.number_format($prod['VALORUNITARIO'],2).'</td>
-                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">$'.number_format($prod['IMPORTE'],2).'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 20px">'.$prod['CANTIDAD'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.$prod['DESCRIPCION'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.$prod['UNIDAD'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 25px">$'.number_format($prod['VALORUNITARIO'],2).'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">$'.number_format($prod['IMPORTE'],2).'</td>
                         </tr>';
         endforeach;
         $html .='
