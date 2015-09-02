@@ -35,6 +35,8 @@ class reportecontabilidad{
 
     public function createPDF($data, $tipo)
     {
+        set_time_limit(180);
+        
         list($html, $path) = $this->selectTipeOrder($data, $tipo);
 
         $html2pdf = new HTML2PDF();
