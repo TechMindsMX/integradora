@@ -38,50 +38,28 @@ class PlgUserIntegrado extends JPlugin
 
 	protected $autoloadLanguage = true;
 
-	function getIntegradosCurrUser($instance)
-	{
-		$query = $this->db->getQuery(true)
-			->select($this->db->quoteName('integradoId'))
-			->from($this->db->quoteName('#__integrado_users'))
-			->where($this->db->quoteName('user_id') . '=' . $this->db->quote($instance->id));
-		$result = $this->db->setQuery($query)->loadObjectList();
-		
-		
-		jimport('integradora.integrado');
-		
-		$usuario = new Integrado;
-		$usuario->intergrado->ids = $result;
-		
-		return $result;
-	}
+    /**
+     * Conditional redirects
+     */
+    public function onUserAfterLogin( ) {
 
-	private function getSecurityQuestions( $instance ) {
-		return IntFactory::getsUserSecurity($instance);
-	}
+        $user = IntFactory::getExtendedUser();
+        $redirectUrl = 'index.php';
 
-	/**
-	 * @param $instance
-	 */
-	public function onUserAfterLogin( ) {
-
-		$user = JFactory::getUser();
-        $this->extendUser($user);
-		$redirectUrl = 'index.php';
-
-        if ($this->app->getName() == 'site') {
+        if ($this->app->getName() == 'site') // Check if login occurs in site front
+        {
             $changeUrl     ='index.php?option=com_integrado&view=integrado&layout=change&Itemid=207';
-            $changeFullUrl = JUri::base().$changeUrl;
-            $count = count($user->integrados);
 
+            $count = count($user->integrados);
             switch ( true ) {
-				case ( $count === 0):
-                    $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', $changeFullUrl), 'warning');
+                case ( $count === 0):
+                    $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', JUri::base().$changeUrl), 'warning');
                     break;
                 case ( $count === 1):
                     try {
                         Integrado::setIntegradoInSession(new IntegradoSimple($user->integrados[0]->integradoId));
                     } catch (Exception $e) {
-                        $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', $changeFullUrl), 'warning');
+                        $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', JUri::base().$changeUrl), 'warning');
                     }
                     break;
                 case ( $count > 1):
@@ -93,29 +71,14 @@ class PlgUserIntegrado extends JPlugin
                 $this->app->enqueueMessage(JText::_( 'NO_SECURITY_QUESTIONS' ), 'warning' );
                 $redirectUrl = 'index.php?option=com_usersinteg&view=usersinteg&layout=questions';
             }
-		}
+        }
 
-		$this->app->redirect(JRoute::_($redirectUrl));
-	}
+        $this->app->redirect(JRoute::_($redirectUrl));
+    }
 
 	public function onUserAfterLogout()
 	{
 		JFactory::getApplication()->redirect('index.php');
 	}
-
-    /**
-     * @param $instance
-     */
-    public function extendUser(JUser $instance)
-    {
-        // extiende los datos de usuario con los de integrados
-        $integrados = $this->getIntegradosCurrUser($instance);
-        $instance->set('integrados', $integrados);
-
-        // extiende los datos de usuario con las presuntas de seguridad
-        $securityQuestions = $this->getSecurityQuestions($instance);
-        $instance->set('security', $securityQuestions);
-
-    }
 
 }

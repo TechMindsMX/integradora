@@ -7,6 +7,8 @@
  */
 namespace Integralib;
 
+use Integralib\ExtendedUser;
+
 class IntFactory {
 
 	public static function getTimoneRequest(\urlAndType $datosEnvio, $objEnvio) {
@@ -33,5 +35,16 @@ class IntFactory {
         //TODO: Modificado por Lutek
 		$userSecurity = new UserSecurity();
         return $userSecurity->getUserAnswers($instance);
+	}
+
+	/**
+	 * @param null $id
+	 *
+	 * @return \JUser
+     */
+    public static function getExtendedUser($id = null)
+	{
+		$u = new ExtendedUser($id);
+		return $u->getUser();
 	}
 }
