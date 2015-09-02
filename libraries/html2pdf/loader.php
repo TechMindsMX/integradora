@@ -22,3 +22,4 @@ require('_class/oddPdf.php');
 require('_class/odrPdf.php');
 require('_class/mutuosPDF.php');
 require('_class/odpPdf.php');
+require('_class/odvPdf.php');
