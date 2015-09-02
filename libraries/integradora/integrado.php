@@ -37,6 +37,24 @@ class Integrado {
         return $result;
     }
 
+	/**
+	 * @param $integrado
+	 *
+	 * @throws Exception
+	 */
+	public static function setIntegradoInSession(IntegradoSimple $integrado)
+	{
+		$sesion = JFactory::getSession();
+		$sesion->set('integradoId', $integrado->getId(), 'integrado');
+		$sesion->set('integradoDisplayName', $integrado->getDisplayName(), 'integrado');
+
+		if (!$sesion->has('integradoId', 'integrado') || !$sesion->has('integradoDisplayName', 'integrado')) {
+			throw new Exception(JText::_('ERROR_'));
+		} else {
+            JFactory::getApplication()->enqueueMessage(JText::sprintf('LBL_CHANGED_TO_INTEGRADO', $integrado->getDisplayName()));
+        }
+	}
+
 	public static function getSessionIntegradoIdOrRedirectWithError( $instance ) {
 		$sesionIntegradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
 

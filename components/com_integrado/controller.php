@@ -747,35 +747,43 @@ class IntegradoController extends JControllerLegacy {
         $this->app = JFactory::getApplication();
 
         if (!JSession::checkToken()) {
+            $this->app->enqueueMessage( JText::_( 'LBL_ERROR' ), 'error' );
             $this->redirectToSelectIntegrado();
         } else {
             $this->id = $this->app->input->get('integradoId', null, 'STRING');
 
-            list($valid, $integrado) = $this->isValidIntegradoIdForUser();
-            if ($valid) {
+            try {
+                $integrado = $this->getIntegradoForUserByRequestId();
+                $integradoSimple = new IntegradoSimple($integrado->id);
+                Integrado::setIntegradoInSession($integradoSimple);
 
-                $sesion = JFactory::getSession();
-                $sesion->set('integradoId', $this->id, 'integrado');
-                $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
+                $this->app->redirect( 'index.php?option=com_mandatos');
 
-                $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
+            } catch (Exception $e) {
+                $this->app->enqueueMessage($e->getMessage(), 'error');
+                $this->redirectToSelectIntegrado();
             }
-
-            $this->redirectToSelectIntegrado();
         }
 
     }
 
-    public function isValidIntegradoIdForUser() {
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function getIntegradoForUserByRequestId() {
         $model = $this->getModel();
         $integrados = $model->getIntegrados();
-        $check = array_key_exists($this->id, $integrados);
 
-        return array($check, $integrados[$this->id]);
+        if (!array_key_exists($this->id, $integrados)) {
+            throw new Exception(JText::_('ERROR_'));
+        }
+
+        return $integrados[$this->id];
     }
 
     public function redirectToSelectIntegrado() {
-        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change&Itemid=207', JText::_( 'LBL_ERROR' ), 'error' );
+        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change&Itemid=207');
     }
 
     public function agregarBancoSolicitud() {
@@ -896,4 +904,5 @@ class IntegradoController extends JControllerLegacy {
         }
         return $permiso;
     }
+
 }
