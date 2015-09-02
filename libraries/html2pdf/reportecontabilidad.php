@@ -300,31 +300,31 @@ class reportecontabilidad{
                 $orden = getFromTimOne::getOrdenesCompra(null, $data);
                 $orden = $orden[0];
                 $html = $getHtml->html($orden);
-                $path = 'media/pdf_odc/' . $tipo . '-' . $data . '.pdf';
+                $path = 'media/pdf_odc/' .$this->integradoId . '-' . $data . '.pdf';
                 break;
             case 'odd':
                 $getHtml = new oddPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odd/' . $tipo . '-' . $data[0]->numOrden . '.pdf';
+                $path = 'media/pdf_odd/' . $this->integradoId . '-' . $data[0]->numOrden . '.pdf';
                 break;
             case 'odr':
                 $getHtml = new odrPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odr/' . $tipo . '-' . $data->numOrden . '.pdf';
+                $path = 'media/pdf_odr/' . $this->integradoId . '-' . $data->numOrden . '.pdf';
                 break;
             case 'odp':
                 $getHtml = new odpPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odp/' . $tipo . '-' . $data[0]->idMutuo . '.pdf';
+                $path = 'media/pdf_odp/' . $this->integradoId . '-' . $data[0]->idMutuo . '.pdf';
                 break;
-           case 'mutuo':
-                $getHtml = new mutuosPDF($data);
-                $html = $getHtml->generateHtml($data);
-                $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->id . '.pdf';
-                break;
+           //case 'table':
+           //     $getHtml = new mutuosPDF($data);
+           //     $html = $getHtml->createHTML();
+           //     $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
+           //     break;
             default:
                 $operacion = '';
-                return array($operacion, $path);
+                return array($html, $path);
         }
 
 

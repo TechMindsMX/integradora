@@ -102,8 +102,8 @@ class MandatosControllerOdcform extends JControllerLegacy {
                     'redireccion' => true
                 );
 
-//                $createPDF = new reportecontabilidad();
-//                $createPDF->createPDF($id, 'odc');
+                $createPDF = new reportecontabilidad();
+                $createPDF->createPDF($id, 'odc');
 
             } else {
                 $respuesta = array('redireccion' => false);

@@ -22,8 +22,6 @@ class odcPdf
         $sesion->clear('msg','odcCorrecta');
         $app->enqueueMessage($msg,'MESSAGE');
 
-
-        ob_start();
         $html = '<style>
                 body{
                 font-size: 10px;
@@ -35,6 +33,7 @@ class odcPdf
                 .table-bordered, {
                     border: 1px solid #ddd;
                     font-size: 10px;
+                    width: 400px;
                 }
                 .cantidad{
                     border: 1px solid #ddd;
@@ -43,23 +42,51 @@ class odcPdf
                 .cuadro{
                     border: 1px solid #ddd;
                 }
+                table{
+                    color: #777;
+                    font-size: 10px;
+                    font-weight: normal;
+                    line-height: 24px;
+                }
+                .text-right {
+                    text-align: right;
+                }
+
+                .clearfix .span2 {
+                    width: 125px;
+                }
+
+                .clearfix .span4 {
+                    box-sizing: border-box;
+                    display: block;
+                    float: left;
+                    margin-left: 2.5641%;
+                    min-height: 28px;
+                    width: 281px;
+                }
+                .text-center{
+                    text-align: center;
+                }
+                h1 {
+                    font-size: 28px;
+                }
 
                 </style>';
-            $html .='<table style="width: 100%" id="logo">
+        $html .='<table style="width: 100%" id="logo">
                 <tr>
-                    <td style="width: 569px;">
-                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                    <td style="width: 469px;">
+                        <img width="150" src="'.JUri::base().'images/logo_iecce.png'.'" />
                     </td>
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>
                     </td>
-                    <td >
+                    <td  style="border: 1px solid #ccc;  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.024) inset;    color: #999; width:73px; height: 41px;">
                         <h3 class=" bordes-box text-center">'.$orden->numOrden.'</h3>
                     </td>
                 </tr>
             </table>';
 
-           $html .= '<h1>'.JText::_('LBL_ORDEN_DE_COMPRA').'</h1>
+        $html .= '<h1>'.JText::_('LBL_ORDEN_DE_COMPRA').'</h1>
 
             <table class="clearfix" id="cabecera">
                 <tr>
@@ -83,7 +110,7 @@ class odcPdf
                     <td class="span4">
                         ';
         isset($orden->proyecto->name) ? $html .= $orden->proyecto->name : $html .='';
-                $html .='
+        $html .='
                     </td>
                     <td class="span2 text-right">
                         '.JText::_('LBL_PAYMENT_DATE').'
@@ -98,8 +125,8 @@ class odcPdf
                     </td>
                     <td class="span4">';
 
-                         if (isset($orden->subproyecto->name)) { $html .=$orden->subproyecto->name; }
-                $html .='</td>
+        if (isset($orden->subproyecto->name)) { $html .=$orden->subproyecto->name; }
+        $html .='</td>
                     <td class="span2 text-right">
                         '.JText::_('LBL_FORMA_PAGO').'
                     </td>
@@ -113,8 +140,8 @@ class odcPdf
                     </td>
                     <td class="span4">
                         ';
-            isset($orden->currency)? $html .= $orden->currency : $html .='MXN';
-            $html .='
+        isset($orden->currency)? $html .= $orden->currency : $html .='MXN';
+        $html .='
                     </td>
                 </tr>
             </table>
@@ -134,18 +161,18 @@ class odcPdf
                         </td>
                         <td class="span4">
                             ';
-                     ($orden->proveedor->type == getFromTimOne::getPersJuridica('moral')) ? $html .=$orden->proveedor->rfc : $html .=$orden->proveedor->pRFC;
-                     $html .='
+        ($orden->proveedor->type == getFromTimOne::getPersJuridica('moral')) ? $html .=$orden->proveedor->rfc : $html .=$orden->proveedor->pRFC;
+        $html .='
                         </td>
                         <td class="span2 text-right">
                             '.JText::_('LBL_BANCOS').'
                         </td>
                         <td class="span4">';
 
-                            if (isset($orden->dataBank)) {
-                                isset($orden->dataBank[0]->bankName) ? $html .=$orden->dataBank[0]->bankName: $html .='STP';
-                            }
-                    $html .='
+        if (isset($orden->dataBank)) {
+            isset($orden->dataBank[0]->bankName) ? $html .=$orden->dataBank[0]->bankName: $html .='STP';
+        }
+        $html .='
                         </td>
                     </tr>
                     <tr>
@@ -155,16 +182,16 @@ class odcPdf
                         <td class="span4">
                             '.$orden->proveedor->contact.'
                         </td>
-                        <div class="span2 text-right">
+                        <td class="span2 text-right">
                             '.JText::_('LBL_BANCO_CUENTA').'
-                        </div>
+                        </td>
                         <td class="span4">';
 
-                            if (isset($orden->dataBank)) {
-                                $banco = !isset($orden->dataBank[0]->banco_cuenta) ? 'Cuenta STP' : $orden->dataBank[0]->banco_cuenta;
-                               $html .=$banco;
-                            }
-                        $html .= '
+        if (isset($orden->dataBank)) {
+            $banco = !isset($orden->dataBank[0]->banco_cuenta) ? 'Cuenta STP' : $orden->dataBank[0]->banco_cuenta;
+            $html .=$banco;
+        }
+        $html .= '
                         </td>
                     </tr>
                     <tr>
@@ -179,9 +206,9 @@ class odcPdf
                         </td>
                         <td class="span4">
                             ';
-                        !empty($orden->dataBank) ? $html .=$orden->dataBank[0]->banco_clabe : $html .='';
+        !empty($orden->dataBank) ? $html .=$orden->dataBank[0]->banco_clabe : $html .='';
 
-                    $html .='
+        $html .='
                         </td>
                     </tr>
                     <tr class="clearfix">
@@ -196,79 +223,72 @@ class odcPdf
 
                 <h3>'.JText::_('LBL_DESCRIP_PRODUCTOS').'</h3>
 
-                <table class="table table-bordered">
+                <table class="table table-bordered" style=" -moz-border-bottom-colors: none;    -moz-border-left-colors: none;    -moz-border-right-colors: none;    -moz-border-top-colors: none;    border-collapse: separate;    border-color: #ddd #ddd #ddd; -moz-use-text-color;    border-image: none;    border-radius: 4px; border-style: solid solid solid none; border-width: 1px 1px 1px 0; font-size: 8px">
                     <thead>
                     <tr>
-                        <th class="span1">#</th>
-                        <th class="span2">'.JText::_('LBL_CANTIDAD').'</th>
-                        <th class="span4">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
-                        <th class="span1">'.JText::_('LBL_UNIDAD').'</th>
-                        <th class="span2">'.JText::_('LBL_P_UNITARIO').'</th>
-                        <th class="span2">'.JText::_('LBL_IMPORTE').'</th>
+                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">#</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 20px">'.JText::_('LBL_CANTIDAD').'</th>
+                        <th class="span4" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('COM_MANDATOS_PRODUCTOS_LBL_DESCRIPTION').'</th>
+                        <th class="span1" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_UNIDAD').'</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 25px">'.JText::_('LBL_P_UNITARIO').'</th>
+                        <th class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.JText::_('LBL_IMPORTE').'</th>
                     </tr>
                     </thead>
                     <tbody>';
 
-                    foreach ($orden->productos as $key => $prod) :
+        foreach ($orden->factura->conceptos as $key => $prod) :
 
-                        $html .=' <tr>
-                            <td>';
-                        $html .=$key+1;
-                        $html .='</td>
-                            <td>'.$prod['CANTIDAD'].'</td>
-                            <td>'.$prod['DESCRIPCION'].'</td>
-                            <td>'.$prod['UNIDAD'].'</td>
-                            <td><div class="text-right">
-                                    $'.number_format($prod['VALORUNITARIO'],2).'
-                                </div></td>
-                            <td><div class="text-right">
-                                    $'.number_format($prod['IMPORTE'],2).'
-                                </div></td>
+            $html .='   <tr>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">';
+            $html .=$key+1;
+            $html .='       </td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 20px">'.$prod['CANTIDAD'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.$prod['DESCRIPCION'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">'.$prod['UNIDAD'].'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top; width: 25px">$'.number_format($prod['VALORUNITARIO'],2).'</td>
+                            <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 10px;    padding: 5px;    text-align: left;    vertical-align: top;">$'.number_format($prod['IMPORTE'],2).'</td>
                         </tr>';
-                    endforeach;
-                $html .='
+        endforeach;
+        $html .='
                     <tr>
-                        <td colspan="4" rowspan="4">
+                        <td colspan="4" rowspan="4" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                             '.JText::_('LBL_MONTO_LETRAS').' <span>'.$number2word->toCurrency('$'.number_format($orden->totalAmount,2)).'</span>
                         </td>
-                        <td class="span2">
+                        <td class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                             '.JText::_('LBL_SUBTOTAL').'
                         </td>
-                        <td><div class="text-right">
-                                $';
-                $subtotal = $orden->totalAmount - $orden->factura->impuestos->totalTrasladados;
-                $html .=number_format($subtotal, 2);
-
-                $html .='
-                            </div></td>
+                        <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">$';
+        $subtotal = $orden->totalAmount - $orden->factura->impuestos->totalTrasladados;
+        $html .=number_format($subtotal, 2);
+        $html .='</td>
                     </tr>
                     <tr>
-                        <td class="span2">
+                        <td class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                             '.$orden->factura->impuestos->iva->tasa.'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IVA').'
                         </td>
-                        <td><div class="text-right">
+                        <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                                 $'.number_format($orden->factura->impuestos->iva->importe, 2).'
-                            </div></td>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="span2">
+                        <td class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                             '.$orden->factura->impuestos->ieps->tasa.'% '.JText::_('COM_MANDATOS_PRODUCTOS_LBL_IEPS').'
                         </td>
-                        <td><div class="text-right">
+                        <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                                 $'.number_format($orden->factura->impuestos->ieps->importe, 2).'
-                            </div></td>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="span2">
+                        <td class="span2" style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                             '.JText::_('LBL_TOTAL').'
                         </td>
-                        <td><div class="text-right">
+                        <td style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;    line-height: 18px;    padding: 8px;    text-align: left;    vertical-align: top;">
                                 $'.number_format($orden->totalAmount, 2).'
-                            </div></td>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-                <table class="control-group" id="tabla-bottom">
+                <table class="control-group" id="tabla-bottom" style="width: 450px">
                     <tr>
                         <td>
                             '.JText::_('LBL_OBSERVACIONES').'
@@ -280,22 +300,27 @@ class odcPdf
                         </td>
                     </tr>
                 </table>
-                <table id="footer">
-                    <tr class="container">
-                        <td class="control-group">
+                <br>
+                <!--table id="footer" style="padding-left: 15px; padding-right: 15px; width= 500px">
+                    <tr>
+                        <td>
                             '.JText::_('LBL_CON_FACTURA').'
                         </td>
+                    </tr>
+                    <tr>
                         <td class="container text-uppercase control-group">
                             '.JText::_('LBL_AUTORIZO_ODC').'
                         </td>
                     </tr>
+                </table>
+                <table id="footer" style="padding-left: 15px; padding-right: 15px; width= 500px">
                     <tr class="text-center">
-                        <td>
+                        <td colspan="2">
                             <p class="text-capitalize">'.JText::_('LBL_INTEGRADORA').'</p>
                             <p>'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
                         </td>
                     </tr>
-                </table>
+                </table-->
             </div>';
         return $html;
     }
