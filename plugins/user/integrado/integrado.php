@@ -66,26 +66,36 @@ class PlgUserIntegrado extends JPlugin
 
 		$user = JFactory::getUser();
         $this->extendUser($user);
+		$redirectUrl = 'index.php';
 
-		if ($this->app->getName() == 'site') {
-			if ( count( $user->security ) == 0 ) {
+        if ($this->app->getName() == 'site') {
+            $changeUrl     ='index.php?option=com_integrado&view=integrado&layout=change&Itemid=207';
+            $changeFullUrl = JUri::base().$changeUrl;
+            $count = count($user->integrados);
+
+            switch ( true ) {
+				case ( $count === 0):
+                    $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', $changeFullUrl), 'warning');
+                    break;
+                case ( $count === 1):
+                    try {
+                        Integrado::setIntegradoInSession(new IntegradoSimple($user->integrados[0]->integradoId));
+                    } catch (Exception $e) {
+                        $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', $changeFullUrl), 'warning');
+                    }
+                    break;
+                case ( $count > 1):
+                    $redirectUrl = $changeUrl;
+                    break;
+            }
+
+            if ( count( $user->security ) == 0 ) {
                 $this->app->enqueueMessage(JText::_( 'NO_SECURITY_QUESTIONS' ), 'warning' );
-				$this->app->redirect( JRoute::_( 'index.php?option=com_usersinteg&view=usersinteg&layout=questions' ));
-			}
-
-			if(count($user->integrados) === 1) {
-                try {
-                    Integrado::setIntegradoInSession(new IntegradoSimple($user->integrados[0]->integradoId));
-                } catch (Exception $e) {
-                    $this->app->enqueueMessage(JText::_('NO_INTEGRADO'), 'warning');
-                    $this->app->redirect(JRoute::_('index.php?option=com_integrado&view=integrado&layout=change&Itemid=207'));
-                }
-			}
-			if(count($user->integrados) === 0) {
-                $this->app->enqueueMessage(JText::_('NO_INTEGRADO'), 'warning');
-				$this->app->redirect(JRoute::_('index.php'));
-			}
+                $redirectUrl = 'index.php?option=com_usersinteg&view=usersinteg&layout=questions';
+            }
 		}
+
+		$this->app->redirect(JRoute::_($redirectUrl));
 	}
 
 	public function onUserAfterLogout()
