@@ -6,6 +6,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.catalogos');
+jimport('html2pdf.reportecontabilidad');
 
 /**
  * metodo de envio a TimOne
@@ -94,10 +95,17 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     if ($statusChange) {
                         $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
+
                         if ($generateOdps) {
+
+
                             $tx = $this->paymentFirstOdp();
 
                             if($tx) {
+
+                                $html2pdf = new reportecontabilidad();
+                                $html2pdf->createPDF($mutuo, 'table');
+
                                 $msgOdps = JText::_('LBL_ODPS_GENERATED');
                                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                             }else{
@@ -105,6 +113,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', 3);
                                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                             }
+
                         } else {
                             $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
                             $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY').'<br />'.$msgOdps, 'notice');
@@ -116,6 +125,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             }else{
                 // acciones cuando NO tiene permisos para autorizar
                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY'), 'warning');
+
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
@@ -176,6 +186,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 $save->formatData($odp);
 
                 $saved = $save->insertDB('ordenes_prestamo');
+                $arrayOdp[] = $odp;
 
                 if (!$saved) {
                     //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
@@ -189,6 +200,9 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $resultado = true;
                 }
             }
+
+            $createPdf = new reportecontabilidad();
+            $createPdf->createPDF($arrayOdp, 'odp');
         }elseif($mutuo->status == 3){
             $resultado = false;
         }

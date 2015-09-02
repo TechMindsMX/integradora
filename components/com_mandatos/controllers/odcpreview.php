@@ -127,9 +127,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                         $saveqrname->qrName      = $filename;
                                         $saveqrname->createdDate = time();
 
-                                        $createPDF = new reportecontabilidad();
-
-
                                         $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                     }
                                     //fin codigo qr

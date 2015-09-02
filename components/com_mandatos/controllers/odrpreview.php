@@ -8,6 +8,8 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.rutas');
 jimport('integradora.notifications');
+jimport('html2pdf.reportecontabilidad');
+
 
 /**
  * metodo de envio a TimOne
@@ -121,10 +123,15 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
                                 $comision = $this->txComision();
 
+
+
                                 if ($statusChange && $comision) { //Se realizo el cobro de la comision
                                     $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
 
                                     $this->sendNotifications();
+
+                                    $class = new reportecontabilidad();
+                                    $class->createPDF($this->orden, 'odr');
                                 }
                             } else {
                                 throw new Exception( JText::_('ORDER_NO_PAID') );
