@@ -211,7 +211,6 @@ class odvPdf{
                             <td style=" border-left: 1px solid #ddd; border-top: 1px solid #ddd;">
                                     $';
         $html .=number_format($data->totalAmount, 2);
-
         $html .='
                                 </td>
                         </tr>

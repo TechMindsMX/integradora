@@ -64,7 +64,7 @@ class reportecontabilidad{
                 $getHtml = new odvPdf();
                 $orden = getFromTimOne::getOrdenesVenta($this->integradoId, $data);
                 $html = $getHtml->odv($orden);
-                $path = 'media/pdf_odv/'. $this->integradoId. '-'.'.pdf';
+                $path = 'media/pdf_odv/'. $this->integradoId. '-'.$orden[0]->numOrden.'.pdf';
                 break;
             case 'odc':
                 $getHtml = new odcPdf();
