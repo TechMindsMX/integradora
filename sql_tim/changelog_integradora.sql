@@ -78,5 +78,5 @@ UPDATE flpmu_modules_menu SET menuid = 101 WHERE moduleid = 97;
 
 
 --changeset Lutek:13
-ALTER TABLE `integradb`.`flpmu_txs_mandatos` CHANGE COLUMN `amount` `amount` DECIMAL(38,2) NULL DEFAULT NULL ;
---rollback ALTER TABLE `integradb`.`flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;
+ALTER TABLE `flpmu_txs_mandatos` CHANGE COLUMN `amount` `amount` DECIMAL(38,2) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;
