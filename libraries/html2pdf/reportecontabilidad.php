@@ -35,6 +35,8 @@ class reportecontabilidad{
 
     public function createPDF($data, $tipo)
     {
+        set_time_limit(180);
+        
         list($html, $path) = $this->selectTipeOrder($data, $tipo);
 
         $html2pdf = new HTML2PDF();
@@ -317,14 +319,14 @@ class reportecontabilidad{
                 $html = $getHtml->createHTML();
                 $path = 'media/pdf_odp/' . $this->integradoId . '-' . $data[0]->idMutuo . '.pdf';
                 break;
-           //case 'table':
-           //     $getHtml = new mutuosPDF($data);
-           //     $html = $getHtml->createHTML();
-           //     $path = 'media/pdf_mutuo/' . $tipo . '-' . $data->numOrden . '.pdf';
-           //     break;
+           case 'mutuo':
+                $getHtml = new mutuosPDF($data);
+                $html = $getHtml->generateHtml($data);
+                $path = 'media/pdf_mutuo/' . $this->integradoId . '-' . $data->id . '.pdf';
+                break;
             default:
                 $operacion = '';
-                return array($html, $path);
+                return array($operacion, $path);
         }
 
 

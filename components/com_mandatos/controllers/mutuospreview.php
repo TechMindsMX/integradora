@@ -103,9 +103,6 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
                             if($tx) {
 
-                                $html2pdf = new reportecontabilidad();
-                                $html2pdf->createPDF($mutuo, 'table');
-
                                 $msgOdps = JText::_('LBL_ODPS_GENERATED');
                                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                             }else{
@@ -123,6 +120,8 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
             }else{
+                $html2pdf = new reportecontabilidad();
+                $html2pdf->createPDF($mutuo, 'mutuo');
                 // acciones cuando NO tiene permisos para autorizar
                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY'), 'warning');
 

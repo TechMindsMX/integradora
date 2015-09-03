@@ -9,6 +9,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 jimport('phpqrcode.qrlib');
+jimport('html2php.reportecontabilidad');
 
 /**
  * metodo de envio a TimOne
@@ -82,7 +83,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
 
-
                         $newOrder = OrderFactory::getOrder($this->parametros['idOrden'], 'odv');
 
                         if ($newOrder->getStatus()->id == 5 && $newOrder->urlXML == '') {
@@ -120,9 +120,12 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                                             $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                         }
-
+                                        $createPDF = new reportecontabilidad();
+                                        $createPDF->createPDF($order, 'odv');
                                         //fin codigo qr
                                     }
+
+
                                     $info = $this->sendEmail($newOrder);
 
                                 } catch (Exception $e) {
