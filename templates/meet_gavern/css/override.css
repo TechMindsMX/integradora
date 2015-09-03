@@ -11,7 +11,20 @@
 #gk-logo img {
 height: 70px;
 }
+
 /* manu override */
+.gk-main-menu {
+    float: none;
+}
+.gk-main-menu > ul {
+    display: table;
+    width: 100%;
+}
+.gk-main-menu > ul > li {
+    display: table-cell;
+    float: none;
+    text-align: center;
+}
 .gk-main-menu > ul > li > a {
     background: #00a4d6 !important;
     color: #fff !important;
@@ -19,6 +32,7 @@ height: 70px;
 .gk-main-menu > ul li.current > a, .gk-main-menu > ul li.active > a {
     background: #2b3e67 !important;
     color: #fff !important;
+}
 }
 /* fin manu override */
 
