@@ -33,6 +33,10 @@ height: 70px;
     background: #2b3e67 !important;
     color: #fff !important;
 }
+@media (max-width: 979px) {
+    .nav-collapse .nav > li {
+        display: table-row;
+    }
 }
 /* fin manu override */
 
