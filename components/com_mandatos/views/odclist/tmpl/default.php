@@ -133,9 +133,13 @@ if(is_null($ordenes) || empty($ordenes)){
                 }
                 $class = $value->status->id == 1 ? '' : 'status1';
                 $nombreArchivoXML = explode('/',$value->urlXML);
-                if(!is_null($value->urlPDF)) {
+
+                $namePdf = realpath(dirname(__FILE__).'/../../../../..').str_replace('xml', 'pdf', '/'.$value->urlXML);
+                $file = file_exists($namePdf);
+
+                if($file) {
                     $nombreArchivoPDF = explode('/', $value->urlPDF);
-                    $pdf = '<a download="'.$nombreArchivoPDF[2].'" href="'.$value->urlPDF.'">Descargar PDF</a>';
+                    $pdf = '<a download="'.$namePdf.'" href="'.str_replace('xml', 'pdf', $value->urlXML).'">Descargar PDF</a>';
                 }else{
                     $pdf = '';
                 }

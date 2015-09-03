@@ -127,14 +127,17 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                         $saveqrname->qrName      = $filename;
                                         $saveqrname->createdDate = time();
 
+                                        $createPDF = new reportecontabilidad();
+                                        $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
+
+                                        $saveqrname->pdfName = $namePdfCreated;
+
                                         $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                     }
                                     //fin codigo qr
 
                                     $factObj->saveFolio($xmlFactura);
 
-                                    $createPDF = new reportecontabilidad();
-                                    $factura = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
                                     JLog::add($msg, JLog::ERROR, 'error');
