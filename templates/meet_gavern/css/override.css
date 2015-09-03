@@ -24,10 +24,14 @@ height: 70px;
     display: table-cell;
     float: none;
     text-align: center;
+    min-height: 3em;
+    line-height: 3em;;
 }
 .gk-main-menu > ul > li > a {
     background: #00a4d6 !important;
     color: #fff !important;
+    border-radius: 5px;
+    margin: 0 1px;
 }
 .gk-main-menu > ul li.current > a, .gk-main-menu > ul li.active > a {
     background: #2b3e67 !important;
