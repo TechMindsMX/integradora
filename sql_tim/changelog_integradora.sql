@@ -75,3 +75,8 @@ UPDATE flpmu_modules SET title = 'Frontpage Registered', content = '<h2>Mensajes
 UPDATE flpmu_modules_menu SET menuid = 101 WHERE moduleid = 97;
 --rollback UPDATE flpmu_modules SET title = 'HEADER - module variations', content = '<h1 class=\"gk-medium-header\">Template Module Variations</h1>', published = 1, access = 1 WHERE id = 97;
 --rollback UPDATE flpmu_modules_menu SET menuid = 145 WHERE moduleid = 97;
+
+
+--changeset Lutek:13
+ALTER TABLE `integradb`.`flpmu_txs_mandatos` CHANGE COLUMN `amount` `amount` DECIMAL(38,2) NULL DEFAULT NULL ;
+--rollback ALTER TABLE `integradb`.`flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;
