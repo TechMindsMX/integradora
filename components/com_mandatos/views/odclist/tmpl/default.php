@@ -33,12 +33,12 @@ if(is_null($ordenes) || empty($ordenes)){
         jQuery("#myTable").tablesorter({
             sortList: [[0,0]],
             headers: {
-//                1:{ sorter: false },
-//                2:{ sorter: false },
-//                3:{ sorter: false },
-//                4:{ sorter: false },
-//                5:{ sorter: false },
-//                6:{ sorter: false }
+                1:{ sorter: false },
+                2:{ sorter: false },
+                3:{ sorter: false },
+                5:{ sorter: false },
+                6:{ sorter: false },
+                7:{ sorter: false }
             }
         });
     });
@@ -126,6 +126,10 @@ if(is_null($ordenes) || empty($ordenes)){
                     $auth_button = JText::_('LBL_PAID');
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
 
+                } elseif ($value->status->id == 55) {
+                    $auth_button = JText::_('LBL_CANCELED');
+                    $edit_button = JText::_('LBL_NOT_EDITABLE');
+
                 } else {
                     $auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
                     $edit_button = JText::_('LBL_NOT_EDITABLE');
@@ -152,7 +156,9 @@ if(is_null($ordenes) || empty($ordenes)){
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" ><a download="'.$nombreArchivoXML[2].'" href="'.$value->urlXML.'">Descargar XML</a></td>';
+                if($value->status->id != 55) {
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" ><a download="' . $nombreArchivoXML[2] . '" href="' . $value->urlXML . '">Descargar XML</a></td>';
+                }
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
                 echo '</tr>';
             }

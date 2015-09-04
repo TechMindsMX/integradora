@@ -28,7 +28,8 @@ class TimOneRequest extends TimOneCurl {
      */
     public function makeRequest($datosEnvio){
         unset($this->options);
-        @$this->objEnvio = isset($this->objEnvio) || is_null($this->objEnvio) ? $datosEnvio->objEnvio : $this->objEnvio;
+
+        @$this->objEnvio = !isset($this->objEnvio)  ? $datosEnvio->objEnvio : $this->objEnvio;
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
@@ -87,12 +88,14 @@ class TimOneRequest extends TimOneCurl {
     }
 
     public function sendCancelFactura($emisorRfc, $facturaUUID) {
+        $rutas          = new servicesRoute();
         $this->objEnvio = new \stdClass();
-        $this->objEnvio->uuid = $facturaUUID;
+
+        $this->objEnvio->uuid             = $facturaUUID;
         $this->objEnvio->rfcContribuyente = $emisorRfc;
         $this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
 
-        return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+        return $this->makeRequest($rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
     }
 
     /**
