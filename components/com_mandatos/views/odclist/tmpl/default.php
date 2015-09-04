@@ -137,9 +137,10 @@ if(is_null($ordenes) || empty($ordenes)){
                 $namePdf = realpath(dirname(__FILE__).'/../../../../..').str_replace('xml', 'pdf', '/'.$value->urlXML);
                 $file = file_exists($namePdf);
 
+
                 if($file) {
-                    $nombreArchivoPDF = explode('/', $value->urlPDF);
-                    $pdf = '<a download="'.$namePdf.'" href="'.str_replace('xml', 'pdf', $value->urlXML).'">Descargar PDF</a>';
+                    $nombreArchivoPDF = str_replace('xml', 'pdf', $nombreArchivoXML[2]);
+                    $pdf = '<a download="'.$nombreArchivoPDF.'" href="'.str_replace('xml', 'pdf', $value->urlXML).'">Descargar PDF</a>';
                 }else{
                     $pdf = '';
                 }
