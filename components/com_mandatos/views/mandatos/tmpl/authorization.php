@@ -84,7 +84,7 @@ $rutas = array_chunk($rutas, $perRow, true);
 							foreach ( $fila as $item ) {
 								?>
 								<div class="span<?php echo 12 / $perRow; ?>">
-									<a class="btn <?php echo $item['buttonClass']; ?> btn-large span11" id="list_proyectos"
+									<a class="btn <?php echo $item['buttonClass']; ?> btn-large span9" id="list_proyectos"
 									   href="<?php echo $item['url']; ?>"><i class="<?php echo $item['iconClass']; ?> icon-3x"></i><br /><br />
 										<?php echo JText::_( $item['label'].'_PLURAL' ),'<br />
 								<small><small>', JText::_( $item['label'].'_SUB' ); ?></small></small></a>
