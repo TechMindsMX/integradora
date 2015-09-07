@@ -23,3 +23,4 @@ require('_class/odrPdf.php');
 require('_class/mutuosPDF.php');
 require('_class/odpPdf.php');
 require('_class/odvPdf.php');
+require('_class/cashoutPDF.php');
