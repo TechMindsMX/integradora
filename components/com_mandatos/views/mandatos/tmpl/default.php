@@ -5,22 +5,54 @@ jimport('joomla.html.html.bootstrap');
 
 JHtml::_('behavior.keepalive');
 
-$rutas = array(
-	array(
-		array('label'=>'COM_MANDATOS_ORDENES_LBL_AGREGAR', 'buttonClass'=>'btn-primary', 'iconClass'=>'icon-plus-sign', 'url'=>JRoute::_('index.php?option=com_mandatos&view=odcform') ),
-		array('label'=>'COM_MANDATOS_ORDENES_RETIRO_AGREGAR', 'buttonClass'=>'btn-primary', 'iconClass'=>'icon-plus-sign', 'url'=>JRoute::_('index.php?option=com_mandatos&view=odrform') ),
-		array('label'=>'COM_MANDATOS_GO_LIQUIDACION', 'buttonClass'=>'btn-warning', 'iconClass'=>'icon-dollar', 'url'=>JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion') ),
-	),
-	array(
-		array('label'=>'COM_MANDATOS_ORV_LBL_AGREGAR', 'buttonClass'=>'btn-primary', 'iconClass'=>'icon-plus-sign', 'url'=>JRoute::_('index.php?option=com_mandatos&view=odvform') ),
-		array('label'=>'COM_MANDATOS_ORDENES_DEPOSITO_LBL_AGREGAR', 'buttonClass'=>'btn-primary', 'iconClass'=>'icon-plus-sign', 'url'=>JRoute::_('index.php?option=com_mandatos&view=oddform') ),
-		array('label'=>'COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE', 'buttonClass'=>'btn-warning', 'iconClass'=>'icon-stackexchange', 'url'=>JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist') )
-	),
-	array(
-		array('label'=>'COM_MANDATOS_MUTUOS_FORM_TITULO', 'buttonClass'=>'btn-primary', 'iconClass'=>'icon-plus-sign','url'=>JRoute::_('index.php?option=com_mandatos&view=mutuosform') ),
-	),
-	array(
-	),
+$rutas = array (
+    array (
+        array ('label'       => 'COM_MANDATOS_ORDENES_LBL_AGREGAR',
+               'buttonClass' => 'btn-primary',
+               'iconClass'   => 'icon-plus-sign',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=odcform')
+        ),
+        array ('label'       => 'COM_MANDATOS_ORV_LBL_AGREGAR',
+               'buttonClass' => 'btn-primary',
+               'iconClass'   => 'icon-plus-sign',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=odvform')
+        ),
+        array ('label'       => 'COM_MANDATOS_GO_LIQUIDACION',
+               'buttonClass' => 'btn-warning',
+               'iconClass'   => 'icon-dollar',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion')
+        ),
+    ),
+    array (
+        array ('label'       => 'COM_MANDATOS_ORDENES_RETIRO_AGREGAR',
+               'buttonClass' => 'btn-primary',
+               'iconClass'   => 'icon-plus-sign',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=odrform')
+        ),
+        array ('label'       => 'COM_MANDATOS_ORDENES_DEPOSITO_LBL_AGREGAR',
+               'buttonClass' => 'btn-primary',
+               'iconClass'   => 'icon-plus-sign',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=oddform')
+        ),
+        array ('label'       => 'COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE',
+               'buttonClass' => 'btn-warning',
+               'iconClass'   => 'icon-stackexchange',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist')
+        )
+    ),
+    array (
+        array ('label'       => 'COM_MANDATOS_MUTUOS_FORM_TITULO',
+               'buttonClass' => 'btn-primary',
+               'iconClass'   => 'icon-plus-sign',
+               'url'         => JRoute::_('index.php?option=com_mandatos&view=mutuosform')
+        ),
+        array ('buttonClass' => 'hide'),
+        array ('label'       => 'COM_INTEGRADO_CHANGE_TITLE',
+               'buttonClass' => 'btn-warning',
+               'iconClass'   => 'icon-exchange',
+               'url'         => JRoute::_('index.php?option=com_integrado&view=integrado&layout=change')
+        ),
+    ),
 );
 $perRow = 3;
 $rutas = array_chunk($rutas, $perRow, true);
