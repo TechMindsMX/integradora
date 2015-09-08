@@ -82,7 +82,7 @@ $templateParams = JFactory::getApplication()->getTemplate(true)->params;
                         <div class="controls"><input id="remember" type="checkbox" name="remember" class="inputbox" value="yes"/></div>
                     </div>
                 <?php endif; ?>
-                <div class="control-group span2">
+                <div class="control-group span2 loginPage">
                     <div class="controls">
                         <button type="submit" class="btn btn-primary btn-large"><?php echo JText::_('JLOGIN'); ?></button>
                         <gavern:fblogin><span id="fb-auth" class="btn"><small>fb icon</small><?php echo JText::_('TPL_GK_LANG_FB_LOGIN_TEXT'); ?></span><gavern:fblogin>
@@ -91,7 +91,7 @@ $templateParams = JFactory::getApplication()->getTemplate(true)->params;
                 <?php
                 $usersConfig = JComponentHelper::getParams('com_users');
                 if ($usersConfig->get('allowUserRegistration')) : ?>
-                    <div class="span2">
+                    <div class="span2 loginPage">
                         <a class="btn btn-primary btn-large" href="<?php echo JRoute::_('index.php?option=com_users&view=registration'); ?>">
                             <?php echo JText::_('COM_USERS_LOGIN_REGISTER'); ?>
                         </a>
@@ -101,7 +101,7 @@ $templateParams = JFactory::getApplication()->getTemplate(true)->params;
                 <input type="hidden" name="return" value="<?php echo base64_encode($this->params->get('login_redirect_url', $this->form->getValue('return'))); ?>" />
                 <?php echo JHtml::_('form.token'); ?>
 
-                <div class="control-group span2">
+                <div class="control-group span2 loginPage">
                     <a href="<?php echo JRoute::_('index.php?option=com_users&view=reset'); ?>">
                         <?php echo JText::_('COM_USERS_LOGIN_RESET'); ?>
                     </a>
