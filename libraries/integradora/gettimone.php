@@ -3415,13 +3415,6 @@ class makeTx {
 
         return $integradoEnvia->timoneData->timoneUuid;
     }
-
-    public function getData(){
-        $return[0] = $this->objEnvio;
-        $return[1] = $this->resultado;
-
-        return $return;
-    }
 }
 
 

@@ -43,6 +43,7 @@ class reportecontabilidad{
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');
+        return $path;
     }
 
     public  function readCss(){

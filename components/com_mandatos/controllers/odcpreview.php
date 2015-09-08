@@ -250,9 +250,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $createPDF = new reportecontabilidad();
 
-            $txDataSend = $getObjct->getData();
 
-            $namePdfCreated = $createPDF->createPDF($txDataSend, 'cashout');
+            $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
 
 
         }
