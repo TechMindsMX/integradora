@@ -1,16 +1,18 @@
 <?php
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die( 'Restricted access' );
 
 jimport('joomla.application.component.view');
 
-class MandatosViewOdcform extends JViewLegacy {
+class MandatosViewOdcform extends JViewLegacy
+{
 
     protected $integradoId;
     protected $permisos;
 
-    function display($tpl = null){
-        $app	            = JFactory::getApplication();
-        $post               = array(
+    function display($tpl = null)
+    {
+        $app               = JFactory::getApplication();
+        $post              = array (
             'idOrden'       => 'INT',
             'integradoId'   => 'STRING',
             'confirmacion'  => 'INT',
@@ -22,61 +24,69 @@ class MandatosViewOdcform extends JViewLegacy {
             'paymentMethod' => 'STRING',
             'observaciones' => 'STRING'
         );
-        $data	            = $app->input->getArray($post);
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-        $this->proyectos 	= $this->get('proyectos');
-        $this->proveedores	= $this->get('providers');
-        $this->bancos       = $this->get('CatalogoBancos');
+        $data              = $app->input->getArray($post);
+        $session           = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
 
-	    $this->catalogos = new stdClass();
-	    $this->catalogos->paymentMethods    = $this->get('Catalogos');
+        $model             = $this->getModel();
+        $this->proyectos   = $model->getProyectos();
+        $this->proveedores = $model->getProviders();
+        $this->bancos      = $model->getCatalogoBancos();
+
+        $this->catalogos                 = new stdClass();
+        $this->catalogos->paymentMethods = $model->getCatalogos();
 
         //si la confirmacion es diferente de nulo se hace el parseo del XML
-        if(!is_null($data['confirmacion'])){
+        if ( ! is_null($data['confirmacion'])) {
             $this->datos = $data;
             //validación del XML
-            if($_FILES['factura']['size'] === 0 && $_FILES['factura']['type'] === 'text/xml'){
-                $this->redirectforNotfiles($data);
-            }else {
-                $this->dataXML = $this->get('data2xml');
+            try {
+                $model->validateFileSizeAndExtension($_FILES['factura'], 'text/xml');
+                $model->validateFileSizeAndExtension($_FILES['facturaPdf'], 'application/pdf');
+
+                $this->dataXML = $model->getdata2xml($_FILES['factura']['tmp_name'], $_FILES['factura']['name']);
+
+                $emisor = new IntegradoSimple($this->datos['proveedor']);
+                $receptor = new IntegradoSimple($this->integradoId);
+                $model->checkXmlClientAndProvider($this->dataXML, $emisor, $receptor);
+
+                $model->saveOdcPdfFile($_FILES['facturaPdf']);
+
+            } catch (Exception $e) {
+                $this->redirectforNotfiles($data, $e->getMessage());
+                unlink($this->dataXml->urlXML);
             }
 
             //Validación del PDF
-            if($_FILES['facturaPdf']['size'] === 0 && $_FILES['factura']['type'] === 'application/pdf'){
-                $this->redirectforNotfiles($data);
-            }else{
-                move_uploaded_file($_FILES['facturaPdf']['tmp_name'], "media/pdf_odc/" . $_FILES['facturaPdf']['name']);
-                $this->datos['urlPDF'] = "media/pdf_odc/" . $_FILES['facturaPdf']['name'];
-            }
-        }else {
-            if (!is_null($data['idOrden']) && $data['idOrden'] != 0) {
-                $this->orden = $this->get('Orden');
+        } else {
+            if ( ! is_null($data['idOrden']) && $data['idOrden'] != 0) {
+                $this->orden = $model->getOrden();
             } else {
-                $ordenes 				= new stdClass;
+                $ordenes = new stdClass;
 
                 $ordenes->id            = '0';
-                $ordenes->proyecto		= '';
-                $ordenes->proveedor		= '';
-                $ordenes->integradoId	= '';
-                $ordenes->numOrden		= '0';
-                $ordenes->paymentDate	= '';
-                $ordenes->paymentMethod	= '';
-                $ordenes->observaciones	= '';
+                $ordenes->proyecto      = '';
+                $ordenes->proveedor     = '';
+                $ordenes->integradoId   = '';
+                $ordenes->numOrden      = '0';
+                $ordenes->paymentDate   = '';
+                $ordenes->paymentMethod = '';
+                $ordenes->observaciones = '';
 
-                $this->orden            = $ordenes;
+                $this->orden = $ordenes;
             }
         }
 
         if (count($errors = $this->get('Errors'))) {
             JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');
+
             return false;
         }
 
         $this->loadHelper('Mandatos');
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
-        if (!$this->permisos['canEdit']) {
+        if ( ! $this->permisos['canEdit']) {
             $url = 'index.php?option=com_mandatos&view=odclist';
             $msg = JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS');
             $app->redirect(JRoute::_($url), $msg, 'error');
@@ -85,13 +95,15 @@ class MandatosViewOdcform extends JViewLegacy {
         parent::display($tpl);
     }
 
-    private function redirectforNotfiles($data){
-        $sesion = JFactory::getSession();
-        $objeto = (object)$data;
+    private function redirectforNotfiles($data, $msg)
+    {
+        $sesion     = JFactory::getSession();
+        $objeto     = (object) $data;
         $objeto->id = $objeto->idOrden;
         //$sesion->set('datos',$objeto, 'misdatos');
-        $sesion->set('msg','Falta el Archivo XML', 'misdatos');
+        $sesion->set('msg', $msg, 'misdatos');
 
-        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden='.$data['idOrden']);
+        JFactory::getApplication()->redirect('index.php?option=com_mandatos&view=odcform&idOrden=' . $data['idOrden']);
     }
+
 }

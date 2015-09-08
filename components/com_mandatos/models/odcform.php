@@ -71,10 +71,9 @@ class MandatosModelOdcform extends JModelItem {
         return $respuesta;
     }
 
-    public function getdata2xml($urlFile = null){
-        if(is_null($urlFile)) {
-            move_uploaded_file($_FILES['factura']['tmp_name'], "media/archivosJoomla/" . $_FILES['factura']['name']);
-            $urlFile = "media/archivosJoomla/" . $_FILES['factura']['name'];
+    public function getdata2xml($urlFile, $destination = null){
+        if(is_null($destination)) {
+            $urlFile = $this->saveFile($urlFile, MEDIA_FILES . $destination);
         }
         $xmlFileData    = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$urlFile);
         $data 			= new xml2Array();
@@ -94,5 +93,63 @@ class MandatosModelOdcform extends JModelItem {
         return $this->catalogos->getPaymentMethods();
 
     }
+
+    /**
+     * @param $dataXml
+     * @param IntegradoSimple $receptor
+     *
+     * @throws Exception
+     * @internal param $data
+     */
+    public function checkXmlClientAndProvider($dataXml, IntegradoSimple $emisor, IntegradoSimple $receptor)
+    {
+        if ($dataXml->emisor['attrs']['RFC'] != $emisor->getIntegradoRfc() && $dataXml->receptor['attrs']['RFC'] !== $receptor->getIntegradoRfc()) {
+            throw new Exception(JText::_('ERROR_XML_INVALID_ACTORS'));
+        }
+    }
+
+    /**
+     * @param $file
+     * @param $mimeType
+     *
+     * @throws Exception
+     */
+    public function validateFileSizeAndExtension($file, $mimeType)
+    {
+        if ($file['size'] === 0 ) {
+            throw new Exception(JText::sprintf('ERROR_FILE_SIZE', $file['name']));
+        } elseif ($file['type'] !== $mimeType) {
+            throw new Exception(JText::sprintf('ERROR_FILE_TYPE', $file['name']));
+        }
+
+    }
+
+    /**
+     * @param $file
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function saveOdcPdfFile($file)
+    {
+        return $this->saveFile($file, "media/pdf_odc/" . $file['name']);
+    }
+
+    /**
+     * @param $file
+     * @param $destination
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function saveFile($file, $destination)
+    {
+        if ( !move_uploaded_file($file['tmp_name'], $destination) ) {
+            throw new Exception(JText::_());
+        }
+
+        return $destination;
+    }
+
 }
 
