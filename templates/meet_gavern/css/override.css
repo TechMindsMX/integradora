@@ -11,14 +11,38 @@
 #gk-logo img {
 height: 70px;
 }
+
 /* manu override */
+.gk-main-menu {
+    float: none;
+    margin-top: 5em;
+}
+.gk-main-menu > ul {
+    display: table;
+    width: 100%;
+    padding: .5em 0 2em;
+}
+.gk-main-menu > ul > li {
+    display: table-cell;
+    float: none;
+    text-align: center;
+    min-height: 3em;
+    line-height: 3em;;
+}
 .gk-main-menu > ul > li > a {
     background: #00a4d6 !important;
     color: #fff !important;
+    border-radius: 5px;
+    margin: 0 1px;
 }
 .gk-main-menu > ul li.current > a, .gk-main-menu > ul li.active > a {
     background: #2b3e67 !important;
     color: #fff !important;
+}
+@media (max-width: 979px) {
+    .nav-collapse .nav > li {
+        display: table-row;
+    }
 }
 /* fin manu override */
 
