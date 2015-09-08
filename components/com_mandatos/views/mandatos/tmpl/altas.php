@@ -13,43 +13,37 @@ $projectList = ($this->alta->project->count == 0) ? ['href' => '#', 'disabled' =
 	<div class="">
 		<h2 class="item-title"><?php echo JText::_('LBL_ALTAS'); ?></h2>
 
-        <h3><?php echo JText::_('LBL_CLIENTES'); ?></h3>
         <div class="row-fluid">
-			<div class="span4">
-				<a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=clientesform'); ?>" >
-					<i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_CLIENTES_PROVEEDORES_NEW'); ?>
-				</a>
-			</div>
-			<div class="span4">
-				<a class="<?php echo $buttonClass; ?>" href="<?php echo $cliprovList['href']; ?>" <?php echo $cliprovList['disabled']; ?>>
-					<i class="icon-list-ul <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_CLIENTES_PROVEEDORES_LIST'); ?>
-				</a>
-			</div>
-		</div>
+            <div class="span4">
+                <a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=clientesform'); ?>" >
+                    <i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_CLIENTES_PROVEEDORES_NEW'); ?>
+                </a>
+            </div>
+            <div class="span4">
+                <a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productosform'); ?>" >
+                    <i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PRODUCT_NEW'); ?>
+                </a>
+            </div>
+            <div class="span4">
+                <a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=proyectosform'); ?>">
+                    <i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PROJECT_NEW'); ?>
+                </a>
+            </div>
+        </div>
 
-		<br class="clearfix">
-        <h3><?php echo JText::_('LBL_PRODUCTS'); ?></h3>
+        <br class="clearfix">
+        <h2 class="item-title"><?php echo JText::_('LBL_LISTADOS'); ?></h2>
         <div class="row-fluid">
-			<div class="span4">
-				<a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=productosform'); ?>" >
-					<i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PRODUCT_NEW'); ?>
-				</a>
-			</div>
-			<div class="span4">
-				<a class="<?php echo $buttonClass; ?>" href="<?php echo $productList['href']; ?>" <?php echo $productList['disabled']; ?>>
-					<i class="icon-list-ul <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PRODUCT_LIST'); ?>
-				</a>
-			</div>
-		</div>
-
-		<br class="clearfix">
-        <h3><?php echo JText::_('LBL_PROJECTS'); ?></h3>
-        <div class="row-fluid">
-			<div class="span4">
-				<a class="<?php echo $buttonClass; ?>" href="<?php echo JRoute::_('index.php?option=com_mandatos&view=proyectosform'); ?>">
-					<i class="icon-thumbs-up <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PROJECT_NEW'); ?>
-				</a>
-			</div>
+            <div class="span4">
+                <a class="<?php echo $buttonClass; ?>" href="<?php echo $cliprovList['href']; ?>" <?php echo $cliprovList['disabled']; ?>>
+                    <i class="icon-list-ul <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_CLIENTES_PROVEEDORES_LIST'); ?>
+                </a>
+            </div>
+            <div class="span4">
+                <a class="<?php echo $buttonClass; ?>" href="<?php echo $productList['href']; ?>" <?php echo $productList['disabled']; ?>>
+                    <i class="icon-list-ul <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PRODUCT_LIST'); ?>
+                </a>
+            </div>
 			<div class="span4">
 				<a class="<?php echo $buttonClass; ?>" href="<?php echo $projectList['href']; ?>" <?php echo $projectList['disabled'] ?>>
 					<i class="icon-list-ul <?php echo $iconClass; ?>"></i><br /><br /><?php echo JText::_('LBL_PROJECT_LIST'); ?>
