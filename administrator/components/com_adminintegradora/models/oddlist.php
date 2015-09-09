@@ -54,7 +54,7 @@ class AdminintegradoraModelOddlist extends JModelList {
 
         foreach ($integrados as $value) {
             if($value->integrado->integradoId == $integardoId){
-                $return = $value->datos_personales->nom_comercial;
+                $return = $value->displayName;
             }
         }
         return $return;
