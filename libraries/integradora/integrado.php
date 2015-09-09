@@ -506,11 +506,11 @@ class IntegradoSimple extends Integrado {
 		if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
 			$name = $this->integrados[0]->datos_empresa->razon_social;
 		}
+		elseif ( isset($this->integrados[0]->datos_personales->nombre_representante) && !empty($this->integrados[0]->datos_personales->nombre_representante) ) {
+			$name = $this->integrados[0]->datos_personales->nombre_representante;
+		}
 		elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
 			$name = $this->integrados[0]->datos_personales->nom_comercial;
-		}
-		elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
-			$name = $this->integrados[0]->datos_personales->nombre_represenante;
 		}
 		else {
 			$name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
