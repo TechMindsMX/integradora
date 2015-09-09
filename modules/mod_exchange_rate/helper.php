@@ -59,4 +59,12 @@ class ModExchangeRateHelper
 
         return $resultado;
     }
+
+    public static function checkRequiredExtensionInstalled()
+    {
+        if (extension_loaded('SOAP')) {
+            throw new Exception('SOAP_EXTENSION_MISSING', 500);
+        }
+    }
+
 }
