@@ -33,7 +33,7 @@ class IntegradoModelIntegrados extends JModelList
 				 	->where($db->quoteName('d.integradoId') . ' = ' . $db->quoteName('a.integradoId')
 							.' AND '.$db->quoteName('integrado_principal').' = 1')
 				 	.'))' )
-			->where($db->quoteName('a.status'). ' IN (1,3,50,99)'
+			->where($db->quoteName('a.status'). ' IN (1,2,3,50,99)'
 				.' AND '.$db->quoteName('a.integradoId').' IN (SELECT '.$db->quoteName('#__integrado_users.integradoId').' FROM '.$db->quoteName('#__integrado_users').')'
 			  		)
 			->order($db->escape($this->getState('list.ordering', 'a.status')).' '.
