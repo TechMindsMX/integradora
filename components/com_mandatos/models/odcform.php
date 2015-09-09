@@ -1,5 +1,5 @@
 <?php
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die( 'Restricted Access' );
 
 jimport('joomla.application.component.modelitem');
 
@@ -11,23 +11,29 @@ jimport('integradora.xmlparser');
 /**
  * Modelo de datos para Formulario p/generar Ordenes de Compra de un integrado
  */
-class MandatosModelOdcform extends JModelItem {
+class MandatosModelOdcform extends JModelItem
+{
     protected $dataModelo;
     protected $catalogos;
 
-    public function __construct(){
-        $post              = array( 'idOrden' => 'INT');
-        $this->inputVars   = JFactory::getApplication()->input->getArray($post);
-        $this->id          = $this->inputVars['idOrden'];
+    public function __construct()
+    {
+        $post            = array ('idOrden' => 'INT');
+        $this->inputVars = JFactory::getApplication()->input->getArray($post);
+        $this->id        = $this->inputVars['idOrden'];
 
-        $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+        $session           = JFactory::getSession();
+        $this->integradoId = $session->get('integradoId', null, 'integrado');
 
         parent::__construct();
     }
 
-    public function getOrden(){
-        if (!isset($this->dataModelo)) {
+    /**
+     * @return mixed
+     */
+    public function getOrden()
+    {
+        if ( ! isset( $this->dataModelo )) {
             $this->dataModelo = getFromTimOne::getOrdenesCompra($this->integradoId, $this->id);
         }
         $this->dataModelo = $this->dataModelo[0];
@@ -42,28 +48,36 @@ class MandatosModelOdcform extends JModelItem {
         return $this->dataModelo;
     }
 
-    public function getProyectos(){
+    /**
+     * @return mixed
+     */
+    public function getProyectos()
+    {
         $proyectos = getFromTimOne::getActiveProyects($this->integradoId);
 
-        foreach($proyectos as $proyecto){
+        foreach ($proyectos as $proyecto) {
             $proyecto->subproyectos = getFromTimOne::getActiveSubProyects($proyecto->id_proyecto);
         }
 
         return $proyectos;
     }
 
-    public function getProviders(){
-        $proveedores = getFromTimOne::getClientes($this->integradoId,1);
-        //TODO: traer siempre los clientes/proveedores como objetos integrado
-        $respuesta = array();
+    /**
+     * @return array
+     */
+    public function getProviders()
+    {
+        $proveedores = getFromTimOne::getClientes($this->integradoId, 1);
 
-        foreach ( $proveedores as $key =>$value ) {
-            $integ = new IntegradoSimple($value->id);
+        $respuesta = array ();
+
+        foreach ($proveedores as $key => $value) {
+            $integ              = new IntegradoSimple($value->id);
             $integ->displayName = $integ->getDisplayName();
 
             $proveedores[$key] = $integ;
 
-            if($value->status != 0) {
+            if ($value->status != 0) {
                 $respuesta[$key] = $proveedores[$key];
             }
         }
@@ -71,25 +85,41 @@ class MandatosModelOdcform extends JModelItem {
         return $respuesta;
     }
 
-    public function getdata2xml($urlFile, $destination = null){
-        if(is_null($destination)) {
+    /**
+     * @param $urlFile
+     * @param null $destination
+     *
+     * @return stdClass
+     * @throws Exception
+     */
+    public function getdata2xml($urlFile, $destination = null)
+    {
+        if (is_null($destination)) {
             $urlFile = $this->saveFile($urlFile, MEDIA_FILES . $destination);
         }
-        $xmlFileData    = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$urlFile);
-        $data 			= new xml2Array();
-        $datos 			= $data->manejaXML($xmlFileData);
+        $xmlFileData   = file_get_contents(JPATH_ROOT . DIRECTORY_SEPARATOR . $urlFile);
+        $data          = new xml2Array();
+        $datos         = $data->manejaXML($xmlFileData);
         $datos->urlXML = $urlFile;
 
         return $datos;
     }
 
-    public function getCatalogoBancos(){
+    /**
+     * @return mixed
+     */
+    public function getCatalogoBancos()
+    {
         $this->catalogos = new Catalogos();
 
         return $this->catalogos->getBancos();
     }
 
-    public function getCatalogos( ){
+    /**
+     * @return mixed
+     */
+    public function getCatalogos()
+    {
         return $this->catalogos->getPaymentMethods();
 
     }
@@ -116,7 +146,7 @@ class MandatosModelOdcform extends JModelItem {
      */
     public function validateFileSizeAndExtension($file, $mimeType)
     {
-        if ($file['size'] === 0 ) {
+        if ($file['size'] === 0) {
             throw new Exception(JText::sprintf('ERROR_FILE_SIZE', $file['name']));
         } elseif ($file['type'] !== $mimeType) {
             throw new Exception(JText::sprintf('ERROR_FILE_TYPE', $file['name']));
@@ -144,7 +174,7 @@ class MandatosModelOdcform extends JModelItem {
      */
     public function saveFile($file, $destination)
     {
-        if ( !move_uploaded_file($file['tmp_name'], $destination) ) {
+        if ( ! move_uploaded_file($file['tmp_name'], $destination)) {
             throw new Exception(JText::sprintf('ERR_419_FILE_SAVE_ERRROR', $file['tmp_name']));
         }
 
