@@ -44,6 +44,8 @@ class MandatosViewOdcform extends JViewLegacy
                 $model->validateFileSizeAndExtension($_FILES['factura'], 'text/xml');
                 $model->validateFileSizeAndExtension($_FILES['facturaPdf'], 'application/pdf');
 
+                $model->sendXmlForExternalValidation($_FILES['factura']);
+
                 $this->dataXML = $model->getdata2xml($_FILES['factura']['tmp_name'], $_FILES['factura']['name']);
 
                 $emisor = new IntegradoSimple($this->datos['proveedor']);

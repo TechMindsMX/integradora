@@ -151,5 +151,26 @@ class MandatosModelOdcform extends JModelItem {
         return $destination;
     }
 
+    /**
+     * @param $xmlFileName
+     *
+     * @throws Exception
+     */
+    public function sendXmlForExternalValidation($xmlFileName)
+    {
+        if (true === false) {
+            $envio           = new \Integralib\TimOneRequest();
+            $rutas           = new servicesRoute();
+            $envio->objEnvio = new \stdClass();
+
+            $envio->objEnvio->xml = file_get_contents($xmlFileName);
+
+            $envio->makeRequest($rutas->getUrlService('facturacion', 'facturaValidate', 'create'));
+        }
+
+        if (true === false) {
+            throw new Exception(JText::_('ERROR_'));
+        }
+    }
 }
 
