@@ -13,6 +13,7 @@ $app 		= JFactory::getApplication();
 $params 	= $app->input->getArray();
 
 $integrado 	= $this->integCurrent->integrados[0];
+$integrado = new IntegradoSimple($integrado->integrado->integradoId);
 
 $number2word = new AifLibNumber();
 ?>
@@ -214,10 +215,10 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
+				<?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$integrado->integrados[0]->datos_bancarios[1]->banco_clabe); ?>
 			</div>
 			<div class="container text-uppercase control-group">
-				<?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
+				<?php echo JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()); ?>
 			</div>
 		</div>
 		<div class="text-center">
