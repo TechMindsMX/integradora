@@ -145,7 +145,7 @@ class MandatosModelOdcform extends JModelItem {
     public function saveFile($file, $destination)
     {
         if ( !move_uploaded_file($file['tmp_name'], $destination) ) {
-            throw new Exception(JText::_());
+            throw new Exception(JText::sprintf('ERR_419_FILE_SAVE_ERRROR', $file['tmp_name']));
         }
 
         return $destination;
