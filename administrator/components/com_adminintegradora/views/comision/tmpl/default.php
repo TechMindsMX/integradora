@@ -23,7 +23,7 @@ $accion = 'index.php?option=com_adminintegradora';
 	</div>
 
 	<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="comision-form" class="form-validate" autocomplete="off">
-
+		<input type="hidden" name="comId" value="<?php echo $items->id; ?>" />
 		<div class="control-group">
 			<div class="control-group">
 				<label class="control-label" for="description">
@@ -164,6 +164,9 @@ $accion = 'index.php?option=com_adminintegradora';
 				});
 			});
 
+			<?php if( !is_null($items) ){ ?>
+			jQuery('#trigger').val('<?php echo $items->trigger; ?>');
+			<?php } ?>
 		});
 
 		function checkType() {
