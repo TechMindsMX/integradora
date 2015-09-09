@@ -223,3 +223,14 @@ input.datepicker {
 .text-white {
     color: white;
 }
+
+/* mod_exchange_rate */
+.box.bg-warning {
+    background: #ff560a;
+    color: white;
+    padding: 1em;
+    border-radius: .5em;
+}
+#exchange-rate-module {
+    min-width: 200px;
+}
