@@ -11,5 +11,11 @@ defined('_JEXEC') or die;
 require_once dirname(__FILE__) . '/helper.php';
 
 ModExchangeRateHelper::checkRequiredExtensionInstalled();
-$exrate = ModExchangeRateHelper::getExchangeRate($params);
+
+$cache = JFactory::getCache();
+$cache->setCaching(true);
+$cache->setLifeTime(60);
+
+$exrate  = $cache->call( array( 'ModExchangeRateHelper', 'getExchangeRate' ) );
+
 require JModuleHelper::getLayoutPath('mod_exchange_rate');
