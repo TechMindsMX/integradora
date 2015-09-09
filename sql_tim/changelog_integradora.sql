@@ -80,3 +80,9 @@ UPDATE flpmu_modules_menu SET menuid = 101 WHERE moduleid = 97;
 --changeset Lutek:13
 ALTER TABLE `flpmu_txs_mandatos` CHANGE COLUMN `amount` `amount` DECIMAL(38,2) NULL DEFAULT NULL ;
 --rollback ALTER TABLE `flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;
+
+--chageset Lutek:14
+UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 1, `trigger` = 'odppagada', `eventFullName` = 'Orden de Prestamo Pagada' WHERE id = 5;
+INSERT INTO `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente';
+--rollback UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente' WHERE id = 5;
+--rollback DELETE FROM `flpmu_catalog_comisiones_eventos` WHERE id = (SELECT @@identity AS id);
