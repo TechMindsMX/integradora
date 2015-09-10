@@ -844,7 +844,6 @@ class IntegradoController extends JControllerLegacy {
             $integrado = new IntegradoSimple($this->integradoId);
 
             if ( $integrado->hasAllDataForValidation() ) {
-                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
                 $integrado->integrados[0]->integrado->status = 1;
                 $db->updateObject('#__integrado',$integrado->integrados[0]->integrado,'integradoId');
 
@@ -855,9 +854,13 @@ class IntegradoController extends JControllerLegacy {
                 $notificationAdmin->setAdminEmails();
                 $notifications->sendNotifications( 41, array( $integrado->getDisplayName(),date('d-m-Y') ) );
 
+                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+
             } else {
                 $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
             }
+        } else {
+            $this->app->enqueueMessage( JText::_('ERROR_SOLICITUD_VALIDACION') );
         }
 
         $this->app->redirect(JRoute::_('index.php?option=com_integrado'));
