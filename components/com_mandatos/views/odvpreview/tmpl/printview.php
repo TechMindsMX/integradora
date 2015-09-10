@@ -13,6 +13,7 @@ $app 		= JFactory::getApplication();
 $params 	= $app->input->getArray();
 
 $integrado 	= $this->integCurrent->integrados[0];
+$integrado = new IntegradoSimple($integrado->integrado->integradoId);
 
 $number2word = new AifLibNumber();
 $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
@@ -174,12 +175,12 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
 <table class="table" id="printFooter">
     <tr>
         <td>
-            <?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
+            <?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$integrado->getTimoneAccount()); ?>
         </td>
     </tr>
     <tr>
         <td>
-            <?php echo JText::_('LBL_AUTORIZO_ODV'); ?>
+            <?php echo JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()); ?>
         </td>
     </tr>
     <tr>

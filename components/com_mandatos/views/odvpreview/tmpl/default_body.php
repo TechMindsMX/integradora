@@ -215,7 +215,7 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$integrado->integrados[0]->datos_bancarios[1]->banco_clabe); ?>
+				<?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$integrado->getTimoneAccount()); ?>
 			</div>
 			<div class="container text-uppercase control-group">
 				<?php echo JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()); ?>

@@ -685,6 +685,16 @@ class IntegradoSimple extends Integrado {
 	public function hasRfc() {
 		return !is_null( $this->getIntegradoRfc() );
 	}
+
+	public function getTimoneAccount(){
+
+		$db = JFactory::getDbo();
+
+		$timoneData = getFromTimOne::selectDB( 'integrado_timone', 'integradoId = '.$db->quote($this->getId()) );
+
+
+		return $timoneData[0]->stpClabe;
+	}
 }
 
 class integrado_datos_personales {

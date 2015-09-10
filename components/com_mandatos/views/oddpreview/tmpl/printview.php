@@ -95,7 +95,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
 </table>
 <table class="table" id="printFooter">
     <tr>
-        <td><?php echo JText::_('LBL_OBSERVACIONES').'<br />'.JText::sprintf('LBL_DATOS_DEPOSITO', $integ->integrados[0]->datos_bancarios[1]->banco_clabe); ?></td>
+        <td><?php echo JText::_('LBL_OBSERVACIONES').'<br />'.JText::sprintf('LBL_DATOS_DEPOSITO', $integ->getTimoneAccount()); ?></td>
     </tr>
     <tr>
         <td><?php echo JText::sprintf('LBL_AUTORIZO_ODD', $integ->getDisplayName(), $integ->getIntegradoRfc()); ?></td>
