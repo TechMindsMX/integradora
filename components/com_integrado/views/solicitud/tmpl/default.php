@@ -992,7 +992,6 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-				<a class="btn btn-success disabled" id="finishBtn" href="" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>

@@ -204,7 +204,7 @@ class IntegradoController extends JControllerLegacy {
         if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado';
+            $url = 'index.php?option=com_integrado&view=solicitud&layout=tovalidation&Itemid=207';
         }
 
         $app->enqueueMessage($msg['msg'], $msg['type']);
