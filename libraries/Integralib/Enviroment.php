@@ -58,7 +58,8 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/');
+        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/services/');
+        define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 
@@ -95,7 +96,8 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'factura.trama.mx/facturacion/');
+        define("FACTURA_ROUTE", 'factura.trama.mx/facturacion/services');
+        define("TOKEN_FACT_ROUTE", 'factura.trama.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
@@ -113,7 +115,8 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/');
+        define("FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/services');
+        define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
 
@@ -131,7 +134,8 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/');
+        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/services');
+        define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 
