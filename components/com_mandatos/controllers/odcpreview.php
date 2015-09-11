@@ -29,9 +29,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         parent::__construct();
     }
 
-    /**
-     *
-     */
     function authorize()
     {
         $db = JFactory::getDbo();
@@ -77,7 +74,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $db->transactionStart();
 
             try{
-                $idAuth_odc = $save->insertDB( 'auth_odc',null,null,true );
+                $save->insertDB( 'auth_odc',null,null,true );
 
                 $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
                 $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
@@ -146,7 +143,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                             }
                         }
                     }
-
                 }else{
                     throw new Exception;
                 }
@@ -168,19 +164,24 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                     $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
 
-                    $this->txComision();
-                    $this->realizaTx();
+                    if( $odc->paymentMethod->id === 1 ){
+                        $this->txComision();
+                        $this->realizaTx();
 
-                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
+                        $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
 
-                    if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
-                        $save->changeOrderStatus($odvId, 'odv', 13);
+                        if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
+                            $save->changeOrderStatus($odvId, 'odv', 13);
+                        }
+
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[13]->name));
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[13]->name));
+                    }else{
+
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[5]->name));
                     }
 
                     $db->transactionCommit();
-
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[13]->name));
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[13]->name));
                     $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
                 } catch (Exception $e) {
                     $db->transactionRollback();
@@ -203,6 +204,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         }
     }
 
+    /**
+     * @param $integradoSimple
+     */
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple)
     {
         if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {

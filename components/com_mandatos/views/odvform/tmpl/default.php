@@ -272,16 +272,23 @@ $subProyects = $this->subprojects;
 
     <fieldset>
         <?php
+        $catalogos = new Catalogos();
+        $catalogos = $catalogos->getPaymentMethods();
+
         ?>
         <label for="account">Cuenta de Banco</label>
         <input class="" name="account" id="account" value="Sin identificar">
 
         <select name="paymentMethod" id="paymentMethod">
             <option value="0" <?php echo $orden->paymentMethod->id == 0 ? 'selected' : ''; ?>>Método de pago</option>
-            <option value="1" <?php echo $orden->paymentMethod->id == 1 ? 'selected' : ''; ?>>Cheque</option>
-            <option value="2" <?php echo $orden->paymentMethod->id == 2 ? 'selected' : ''; ?>>Transferencia</option>
-            <option value="3" <?php echo $orden->paymentMethod->id == 3 ? 'selected' : ''; ?>>Efectivo</option>
-            <option value="4" <?php echo $orden->paymentMethod->id == 4 ? 'selected' : ''; ?>>No Definido</option>
+            <?php foreach ($catalogos as $payment) {
+                $selected = '';
+                if($orden->paymentMethod->id == $payment->id){
+                    $selected = 'selected';
+                }
+                echo '<option value="'.$payment->id.'" '.$selected.'>'.JText::_($payment->tag).'</option>';
+            }
+            ?>
         </select>
 
         <select name="conditions">

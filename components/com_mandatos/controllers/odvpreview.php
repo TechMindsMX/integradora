@@ -219,6 +219,10 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         return $info;
     }
 
+    /**
+     * @param $productos
+     * @return int
+     */
     public function getTotalAmount($productos){
         $totalAmount = 0;
 
