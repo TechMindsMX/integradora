@@ -37,7 +37,7 @@ class IntegradoController extends JControllerLegacy {
 
         $ex = $this->search_rfc_exists( $data['rfc'] );
         if ( is_numeric($respuesta) && isset($ex) ) {
-            $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+            $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
         }
 
         $this->document->setMimeEncoding( 'application/json' );
@@ -104,19 +104,8 @@ class IntegradoController extends JControllerLegacy {
      *
      */
     public function search_rfc_exists( $rfc ) {
-        $db        = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $personales = $db->loadResult();
-
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $empresa = $db->loadResult();
-
-        $integradoId = (!is_null($personales)) ? $personales : $empresa;
+        $integradoId = \Integralib\Integrado::getIntegradoIdFromRfc( $rfc );
 
         return $integradoId;
     }
@@ -228,7 +217,7 @@ class IntegradoController extends JControllerLegacy {
         if ( isset( $respuesta ) ) {
             if ( is_array($respuesta) || isset($ex) ) {
                 if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+                    $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
                 }
                 echo json_encode($respuesta);
                 return true;
