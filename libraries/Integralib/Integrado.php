@@ -70,7 +70,7 @@ class Integrado {
     }
 
     /**
-     * Mothod searches RFCs from Integrados excluding the RFCs from
+     * Mothod searches RFCs from Integrados excluding the RFCs from personas where pers_juridica is 1
      * @param $rfc
      *
      * @return mixed
@@ -80,10 +80,10 @@ class Integrado {
         $db        = \JFactory::getDbo();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))
+        $query->select($db->quoteName('p.integradoId'))
               ->from( $db->quoteName('#__integrado_datos_personales', 'p') )
               ->join('LEFT', $db->quoteName('#__integrado', 'i') . ' ON (' . $db->quoteName('p.integradoId') . ' = ' . $db->quoteName('i.integradoId') .')')
-            ->where($db->quoteName('i.pers_juridica').' = 1 ' .' AND '.$db->quoteName('p.rfc').' = '.$db->quote($rfc) );
+            ->where($db->quoteName('i.pers_juridica').' != 1 ' .' AND '.$db->quoteName('p.rfc').' = '.$db->quote($rfc) );
         $db->setQuery($query);
         $personales = $db->loadResult();
 

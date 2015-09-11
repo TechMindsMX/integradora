@@ -105,7 +105,7 @@ class IntegradoController extends JControllerLegacy {
      */
     public function search_rfc_exists( $rfc ) {
 
-        $integradoId = \integralib\Integrado::getIntegradoIdFromRfc( $rfc );
+        $integradoId = \Integralib\Integrado::getIntegradoIdFromRfc( $rfc );
 
         return $integradoId;
     }
