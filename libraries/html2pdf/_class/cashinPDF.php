@@ -19,30 +19,30 @@ class cashinPDF{
                 </tr>
             </table>';
         $html .= '
-                    <h1>'.JText::_('LBL_CASH_OUT').'</h1>';
+                    <h1>'.JText::_('LBL_CASH_IN').'</h1>';
 
         $html .='
                         <h3>'.JText::_('LBL_DESCRIP_CASHOUT').'</h3>
                         <table style="border: 1px solid #ddd;">
                                 <tr style="border: 1px solid #ddd;">
                                     <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_USER_UUID').'</th>
-                                    <td style="border: 1px solid #ddd;">'.$data->integradoId.'</td>
+                                    <td style="border: 1px solid #ddd;">'.$data->uuid.'</td>
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
-                                    <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_CLABE').'</th>
-                                    <td style="border: 1px solid #ddd;">'.$data.'</td>
+                                    <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_ORIGIN').'</th>
+                                    <td style="border: 1px solid #ddd;"></td>
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
-                                    <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_BANCK_CODE').'</th>
-                                    <td style="border: 1px solid #ddd;">'.$data->objEnvio->bankCode.'</td>
+                                    <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_DESTINATION').'</th>
+                                    <td style="border: 1px solid #ddd;"></td>
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
                                     <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_AMOUNT').'</th>
-                                    <td style="border: 1px solid #ddd;">$ '.number_format($data->objEnvio->amount,2). ' ' . $data->currency.'</td>
+                                    <td style="border: 1px solid #ddd;">$ '.number_format($data->amount,2). ' ' . $data->currency.'</td>
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
                                     <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_TIMESTAMP').'</th>
-                                    <td style="border: 1px solid #ddd;">'.date('d-m-Y').'</td>
+                                    <td style="border: 1px solid #ddd;">'.date('d-m-Y', $data->timestamp).'</td>
                                 </tr>
                         </table>
                         <table id="footer">

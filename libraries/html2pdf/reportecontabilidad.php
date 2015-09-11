@@ -103,7 +103,7 @@ class reportecontabilidad{
             case 'cashin':
                 $getHtml = new cashinPDF();
                 $html = $getHtml->generateHtml($data);
-                $path = 'media/pdf_cashIn/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
+                $path = 'media/pdf_cashIn/'.$this->integradoId.'-'.$this->fecha.'-'.'.pdf';
                 break;
             default:
                 $operacion = '';
