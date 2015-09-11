@@ -1,4 +1,6 @@
 <?php
+use Integralib\Integrado;
+
 defined('_JEXEC') or die;
 
 class AdminintegradoraHelper {
@@ -44,5 +46,28 @@ class AdminintegradoraHelper {
         }
 
         return $result;
+    }
+
+    /**
+     * @param Integrado $integradora
+     * @return mixed
+     */
+    public static function getBancosIntegradora(Integrado $integradora)
+    {
+        $integradora->getIntegradora();
+
+        return $integradora->integrado->integrados[0]->datos_bancarios;
+    }
+
+    public static function getBanknameAccount($bancos, $idCuenta)
+    {
+        foreach ( $bancos as $banco ) {
+            if ($banco->datosBan_id == $idCuenta) {
+                $bankName = $banco->bankName;
+                $bankAccount = substr(!empty($banco->banco_cuenta) ? $banco->banco_cuenta : $banco->banco_clabe, -4, 4);
+            }
+        }
+
+        return $bankName.' - '.$bankAccount;
     }
 }
