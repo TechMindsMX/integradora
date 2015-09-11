@@ -2412,7 +2412,7 @@ class sendToTimOne {
     public function to_timone() {
         $getToken = new TimOneRequest();
 
-        if( !strpos($this->serviceUrl, 'facturacion') ) {
+        if( !strpos($this->serviceUrl, 'facturacion/services') ) {
             $token = $getToken->getAccessToken();
         }else{
             $token = $getToken->getFacturacionAccessToken();
