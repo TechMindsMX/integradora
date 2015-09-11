@@ -37,7 +37,7 @@ class IntegradoController extends JControllerLegacy {
 
         $ex = $this->search_rfc_exists( $data['rfc'] );
         if ( is_numeric($respuesta) && isset($ex) ) {
-            $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+            $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
         }
 
         $this->document->setMimeEncoding( 'application/json' );
@@ -217,7 +217,7 @@ class IntegradoController extends JControllerLegacy {
         if ( isset( $respuesta ) ) {
             if ( is_array($respuesta) || isset($ex) ) {
                 if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+                    $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
                 }
                 echo json_encode($respuesta);
                 return true;
