@@ -18,14 +18,14 @@ class reportecontabilidad{
 
         $this->integCurrent = $integrado;
 
-        $this->fecha =    date('d-m-Y');
+        $this->fecha =    date('dmY');
     }
 
     public function facturaPDF($data, $facObjOdv, $facObj, $xml){
 
         $fileName = explode('/', $xml);
         $fileName = explode('.', $fileName[2]);
-        $path = JPATH_BASE.'/media/facturas/'.$fileName[0].$this->fecha.'.pdf';
+        $path = JPATH_BASE.'/media/facturas/'.$fileName[0].'-'.$this->fecha.'-'.$facObjOdv->id.'.pdf';
         $createHtml = new Facpdf();
         $html = $createHtml->html($data, $this->integradora, $facObjOdv, $facObj);
         $html2pdf = new HTML2PDF();
@@ -66,7 +66,7 @@ class reportecontabilidad{
                 $getHtml = new odvPdf();
                 $orden = getFromTimOne::getOrdenesVenta($this->integradoId, $data);
                 $html = $getHtml->odv($orden);
-                $path = 'media/pdf_odv/'.$this->integradoId.$this->fecha.'-'.$orden[0]->numOrden.'.pdf';
+                $path = 'media/pdf_odv/'.$this->integradoId.'-'.$this->fecha.'-'.$orden[0]->numOrden.'.pdf';
                 break;
             case 'odc':
                 $getHtml = new odcPdf();
@@ -99,6 +99,11 @@ class reportecontabilidad{
                 $getHtml = new cashoutPDF($data);
                 $html = $getHtml->generateHtml();
                 $path = 'media/pdf_cashOut/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
+                break;
+            case 'cashin':
+                $getHtml = new cashinPDF();
+                $html = $getHtml->generateHtml($data);
+                $path = 'media/pdf_cashIn/'.$this->integradoId.'-'.$this->fecha.'-'.'.pdf';
                 break;
             default:
                 $operacion = '';
