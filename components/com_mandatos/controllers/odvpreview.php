@@ -97,6 +97,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
+                                    $createPDF = new reportecontabilidad();
+
                                     if($timbrar){
 
                                         //Codigo QR
@@ -118,6 +120,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                                             $saveqrname->createdDate = time();
 
                                             $db->insertObject('#__integrado_pdf_qr',$saveqrname);
+
+                                            $createPDF->facturaPDF($factura, $order, $factObj, $newOrder->urlXML);
+
                                         }
                                         //fin codigo qr
                                     }
@@ -125,7 +130,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                                     $info = $this->sendEmail($newOrder);
 
-                                    $createPDF = new reportecontabilidad();
                                     $createPDF->createPDF($numAutOrder[0]->idOrden, 'odv');
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();

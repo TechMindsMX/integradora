@@ -11,14 +11,38 @@
 #gk-logo img {
 height: 70px;
 }
+
 /* manu override */
+.gk-main-menu {
+    float: none;
+    margin-top: 5em;
+}
+.gk-main-menu > ul {
+    display: table;
+    width: 100%;
+    padding: .5em 0 2em;
+}
+.gk-main-menu > ul > li {
+    display: table-cell;
+    float: none;
+    text-align: center;
+    min-height: 3em;
+    line-height: 3em;;
+}
 .gk-main-menu > ul > li > a {
     background: #00a4d6 !important;
     color: #fff !important;
+    border-radius: 5px;
+    margin: 0 1px;
 }
 .gk-main-menu > ul li.current > a, .gk-main-menu > ul li.active > a {
     background: #2b3e67 !important;
     color: #fff !important;
+}
+@media (max-width: 979px) {
+    .nav-collapse .nav > li {
+        display: table-row;
+    }
 }
 /* fin manu override */
 
@@ -198,4 +222,34 @@ input.datepicker {
 
 .text-white {
     color: white;
+}
+
+.loginPage{
+    margin-top: 18px;
+}
+
+.loginLinks{
+    color: #000000;
+}
+
+label#username-lbl, label#password-lbl {
+    color: #FFFFFF;
+    width: 219px;
+    margin-bottom: 8px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #2b4667;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+/* mod_exchange_rate */
+.box.bg-warning {
+    background: #ff560a;
+    color: white;
+    padding: 1em;
+    border-radius: .5em;
+}
+#exchange-rate-module {
+    min-width: 200px;
 }
