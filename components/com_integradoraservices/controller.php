@@ -6,6 +6,7 @@ jimport('integradora.validator');
 jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
+jimport('html2pdf.reportecontabilidad');
 
 $app = JFactory::getApplication();
 $currUser	= JFactory::getUser();
@@ -27,10 +28,10 @@ class IntegradoraservicesController extends JControllerLegacy {
         $data = JFactory::getApplication()->input->getArray();
 
         $objeto                  = new stdClass();
-        $objeto->uuid            = $data['uuid'];
-        $objeto->reference       = $data['reference'];
-        $objeto->amount          = $data['amount'];
-        $objeto->timestamp       = $data['timestamp'];
+        $objeto->uuid            = '4f1c5618786d4e6987c43cd74a1572c3';//$data['uuid'];
+        $objeto->reference       = '';//$data['reference'];
+        $objeto->amount          = 1500000;//$data['amount'];
+        $objeto->timestamp       = 1441058400;//$data['timestamp'];
 
         $formato                 = 'json';
         $getMethod               = 'hello';
@@ -141,7 +142,11 @@ class IntegradoraservicesController extends JControllerLegacy {
 
                     $db->insertObject('#__txs_mandatos', $txs_mandatos);
 
+
                     $save->changeOrderStatus($value->id, 'odd', 13);
+
+                    $getPDF = new reportecontabilidad();
+                    $getPDF->createPDF($json, 'cashin');
 
                     $db->transactionCommit();
 
@@ -152,8 +157,6 @@ class IntegradoraservicesController extends JControllerLegacy {
                     $return = array('code' => '7');//fail
                     break;
                 }
-
-
             }
         }
 

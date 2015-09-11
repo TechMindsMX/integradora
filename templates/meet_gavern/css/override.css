@@ -224,6 +224,25 @@ input.datepicker {
     color: white;
 }
 
+.loginPage{
+    margin-top: 18px;
+}
+
+.loginLinks{
+    color: #000000;
+}
+
+label#username-lbl, label#password-lbl {
+    color: #FFFFFF;
+    width: 219px;
+    margin-bottom: 8px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #2b4667;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
 /* mod_exchange_rate */
 .box.bg-warning {
     background: #ff560a;

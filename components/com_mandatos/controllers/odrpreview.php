@@ -123,7 +123,8 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
                                 $comision = $this->txComision();
 
-
+                                $createPDF = new reportecontabilidad();
+                                $createPDF->createPDF($this->tranfer, 'cashout');
 
                                 if ($statusChange && $comision) { //Se realizo el cobro de la comision
                                     $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
@@ -216,7 +217,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
             $resultado = $tranfer->sendCreateTx();
         }
-
+        $this->tranfer = $tranfer;
         return $resultado == 200;
     }
 
