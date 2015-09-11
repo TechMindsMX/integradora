@@ -9,15 +9,17 @@ $data = $this->data;
 $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
 
 $option = '';
-foreach ($this->txs as $txs) {
-    if($txs->balance == $txs->amount){
-        $monto = number_format($txs->amount,2);
-    }else{
-        $monto = number_format($txs->balance,2);
-    }
+if (isset($this->txs)) {
+    foreach ($this->txs as $txs) {
+        if($txs->balance == $txs->amount){
+            $monto = number_format($txs->amount,2);
+        }else{
+            $monto = number_format($txs->balance,2);
+        }
 
-    $txs->dateJavascript = date('Y-m-d', ($txs->date) );
-    $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.$monto.'</option>';
+        $txs->dateJavascript = date('Y-m-d', ($txs->date) );
+        $option .= '<option value="'.$txs->id.'">'.$txs->referencia.' - $'.$monto.'</option>';
+    }
 }
 
 ?>
@@ -85,10 +87,10 @@ foreach ($this->txs as $txs) {
 
         <h3>Esta seguro de guardar los siguientes datos de conciliación</h3>
 
-        <div>Cuenta: <?php echo $data->cuenta; ?></div>
-        <div>Referencia: <?php echo $data->referencia; ?></div>
-        <div>Fecha: <?php echo $data->date; ?></div>
-        <div>Monto: $<?php echo number_format($data->amount, 2); ?></div>
+        <div>Cuenta: <?php echo AdminintegradoraHelper::getBanknameAccount(AdminintegradoraHelper::getBancosIntegradora(new \Integralib\Integrado()), $this->txs[$data->idTx]->cuenta); ?></div>
+        <div>Referencia: <?php echo $this->txs[$data->idTx]->referencia; ?></div>
+        <div>Fecha: <?php echo date('d-m-Y',$this->txs[$data->idTx]->date); ?></div>
+        <div>Monto: $<?php echo number_format($this->txs[$data->idTx]->balance, 2); ?></div>
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">

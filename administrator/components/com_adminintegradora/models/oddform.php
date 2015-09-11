@@ -37,15 +37,19 @@ class AdminIntegradoraModelOddform extends JModelList {
         $data = getFromTimOne::getOrdenesDeposito(null,$idOrden);
 
         foreach($data as $value){
-            $value->integradoName = $this->getIntegradoName($value->integradoId);
+            $integrado = $this->getIntegrado($value->integradoId);
+            $value->integradoName = $integrado->getDisplayName();
         }
+
         return $data[0];
     }
 
-    public function getIntegrados(){
-        $integrados = getFromTimOne::getintegrados();
-
-        return $integrados;
+    /**
+     * @param $integradoId
+     * @return IntegradoSimple
+     */
+    public function getIntegrado($integradoId){
+        return new IntegradoSimple($integradoId);
     }
 
     public function getIntegradoName($integardoId){
@@ -61,11 +65,10 @@ class AdminIntegradoraModelOddform extends JModelList {
 
     public function getTransacciones($integradoId = null){
         $orden      = $this->getOrden();
-//        $respuesta  = getFromTimOne::getTxIntegradoSinMandato();
         $db         = JFactory::getDbo();
         $query      = $db->getQuery(true);
 
-        $query->select( 'tm.*, bi.referencia, bi.amount, bi.integradoId' )
+        $query->select( 'tm.*, bi.referencia, bi.amount, bi.integradoId, bi.cuenta' )
             ->from($db->quoteName('#__txs_timone_mandato', 'tm'))
             ->join('LEFT', $db->quoteName('#__txs_banco_integrado', 'bi') . ' ON (bi.id = (SELECT rel.id_txs_banco FROM flpmu_txs_banco_timone_relation AS rel WHERE rel.id_txs_timone = tm.id))');
 
@@ -79,13 +82,17 @@ class AdminIntegradoraModelOddform extends JModelList {
         foreach ($result as $tx) {
             $tx->balance = $this->getTxBalance($tx);
             if( (($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0)) && ($tx->balance > 0) ) {
-                $return[] = $tx;
+                $return[$tx->id] = $tx;
             }
         }
 
         return $return;
     }
 
+    /**
+     * @param $trans
+     * @return float|int
+     */
     private function getTxBalance( $trans ) {
         $txs = new Txs();
 

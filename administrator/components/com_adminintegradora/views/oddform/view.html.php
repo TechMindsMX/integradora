@@ -6,22 +6,21 @@ jimport('joomla.application.component.view');
 class AdminintegradoraViewOddform extends JViewLegacy {
 
     public function display($tpl = null) {
+        require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
         $post = array(
-            'idTx' => 'INT',
-            'ordenPagada' => 'INT',
-            'cuenta' => 'INT',
-            'referencia' => 'STRING',
-            'date' => 'STRING',
-            'amount' => 'FLOAT',
+            'idTx'         => 'INT',
+            'ordenPagada'  => 'INT',
+            'cuenta'       => 'INT',
+            'referencia'   => 'STRING',
+            'date'         => 'STRING',
+            'amount'       => 'FLOAT',
             'confirmacion' => 'INT'
         );
 
         $data = JFactory::getApplication()->input->getArray($post);
 
         $this->orden        = $this->get('Orden');
-        $this->usuarios     = $this->get('UserIntegrado');
-        $this->integradi    = $this->get('Solicitud');
-        $this->integrados   = $this->get('Integrados');
+        $this->integrado    = $this->get('Integrado');
         $this->txs          = $this->get('Transacciones');
         $this->data         = (object) $data;
 
