@@ -19,7 +19,7 @@ $dataPDF->attscal = $attsCal;
 $dataPDF->this = $this;
 
 $getPDF = new reportecontabilidad();
-$getPDF->createPDF($dataPDF, 'flujo');
+$pathPDF = $getPDF->createPDF($dataPDF, 'flujo');
 
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"
@@ -35,8 +35,14 @@ $getPDF->createPDF($dataPDF, 'flujo');
         window.location = 'index.php?option=com_reportes&view=flujo&startDate='+fechaInicial+'&endDate='+fechaFinal;
     }
 
+    function gtPDF(){
+        e.preventDefault();
+        window.location.href = '<?php echo $pathPDF; ?>';
+    }
+
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
+        jQuery('#getPDF').on('click',gtPDF);
 	    jQuery('.datepicker').datepicker();
     });
 </script>
@@ -96,7 +102,9 @@ $getPDF->createPDF($dataPDF, 'flujo');
         </div>
         <div class="row-fluid">
             <div class="span6">&nbsp;</div>
-            <div class="span6"><input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" /> </div>
+            <div class="span6">
+                <input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" />
+                <a class="btn btn-primary" download="estado_flujo_from_<?php echo date('Y-m-d', $report->getFechaInicio()); ?>_to_<?php echo date('Y-m-d', $report->getFechaFin()); ?>.pdf" href="<?php echo $pathPDF; ?>">Descargar PDF</a> </div>
         </div>
 
         <div class="clearfix">&nbsp;</div>
