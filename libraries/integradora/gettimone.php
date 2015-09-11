@@ -1121,9 +1121,14 @@ class getFromTimOne{
         return $orders;
     }
 
+    /**
+     * @param null $intergradoId
+     * @return stdClass
+     */
     public static function getOrdersCxC( $intergradoId = null ){
         $orders = new stdClass();
         $orders->odv = self::getOrdenesVenta($intergradoId);
+        $orders->odd = self::getOrdenesDeposito($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -1153,6 +1158,12 @@ class getFromTimOne{
         return $resultados;
     }
 
+    /**
+     * @param null $integradoId
+     * @param null $idOrden
+     * @param $table
+     * @return mixed
+     */
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
 	    $dbq = JFactory::getDbo();
         $where = null;
@@ -2400,7 +2411,13 @@ class sendToTimOne {
 
     public function to_timone() {
         $getToken = new TimOneRequest();
-        $token    = $getToken->getAccessToken();
+
+        if( !strpos($this->serviceUrl, 'facturacion') ) {
+            $token = $getToken->getAccessToken();
+        }else{
+            $token = $getToken->getFacturacionAccessToken();
+        }
+
         $send     = new Send_email();
 
         if(!is_null($token)) {
