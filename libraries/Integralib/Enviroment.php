@@ -76,7 +76,8 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/');
+        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/services/');
+        define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 

@@ -2411,7 +2411,13 @@ class sendToTimOne {
 
     public function to_timone() {
         $getToken = new TimOneRequest();
-        $token    = $getToken->getAccessToken();
+
+        if( !strpos($this->serviceUrl, 'facturacion') ) {
+            $token = $getToken->getAccessToken();
+        }else{
+            $token = $getToken->getFacturacionAccessToken();
+        }
+
         $send     = new Send_email();
 
         if(!is_null($token)) {
