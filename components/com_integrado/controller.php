@@ -104,19 +104,8 @@ class IntegradoController extends JControllerLegacy {
      *
      */
     public function search_rfc_exists( $rfc ) {
-        $db        = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $personales = $db->loadResult();
-
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $empresa = $db->loadResult();
-
-        $integradoId = (!is_null($personales)) ? $personales : $empresa;
+        $integradoId = \integralib\Integrado::getIntegradoIdFromRfc( $rfc );
 
         return $integradoId;
     }
