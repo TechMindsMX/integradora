@@ -3144,11 +3144,8 @@ class Factura extends makeTx {
     public function setReceptor(OdVenta $odVenta)
     {
         $receptor = $odVenta->getReceptor();
-        if ( !$receptor->isIntegrado() ) {
-            $integradora = new Integrado();
-            $integradora->getIntegradora();
-
-            $receptor = $integradora;
+        if ( $receptor->isIntegrado() ) {
+            $receptor = new IntegradoSimple(INTEGRADORA_UUID);
         }
         return new Receptor($receptor);
     }
