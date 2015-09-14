@@ -1,4 +1,6 @@
 <?php
+use Integralib\Integrado;
+use Integralib\OdVenta;
 use Integralib\OrdenFn;
 use Integralib\TimOneRequest;
 use Integralib\IntFactory;
@@ -2961,10 +2963,10 @@ class Factura extends makeTx {
     public $format;
 	public $totales;
 
-	function __construct( \Integralib\OdVenta $orden, $timbra = false, $series = 'B' ) {
-        $integradora = new \Integralib\Integrado();
+	function __construct( OdVenta $orden, $timbra = false, $series = 'B' ) {
+        $integradora = new Integrado();
         $this->emisor = new Emisor( new IntegradoSimple($integradora->getIntegradoraUuid()) );
-        $this->receptor = new Receptor($orden->getReceptor());
+        $this->receptor = $this->setReceptor($orden);
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
 
         if(isset ($orden)) {
@@ -3132,6 +3134,24 @@ class Factura extends makeTx {
 
 		return $result;
 	}
+
+    /**
+     * @param OdVenta $odVenta
+     *
+     * @internal param Receptor $receptor
+     * @return Receptor
+     */
+    public function setReceptor(OdVenta $odVenta)
+    {
+        $receptor = $odVenta->getReceptor();
+        if ( !$receptor->isIntegrado() ) {
+            $integradora = new Integrado();
+            $integradora->getIntegradora();
+
+            $receptor = $integradora;
+        }
+        return new Receptor($receptor);
+    }
 
 }
 
