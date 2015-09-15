@@ -48,7 +48,7 @@ final class Environment
             define('TOKEN_FACT_ROUTE', $environment['TOKEN_FACT_ROUTE']);
             define('FACTURA_ROUTE', $environment['FACTURA_ROUTE']);
 
-            SeedIntegradora::seedIntegradora('integradora-seed-'.$this->filename);
+            SeedIntegradora::seedIntegradora($this->userHome, 'integradora-seed-'.$this->filename);
         } else {
             die( 'Configuration file corrupt or missing' );
         }

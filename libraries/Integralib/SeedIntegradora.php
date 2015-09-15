@@ -14,9 +14,9 @@ class SeedIntegradora
     /**
      * @param string $filename Nombre del archivo json sin extencion igual al nombre del ambiente
      */
-    public static function seedIntegradora($filename = 'qaintegradora')
+    public static function seedIntegradora($path, $filename = 'qaintegradora')
     {
-        $url = getcwd() . '/libraries/Integralib/' . $filename . '.json';
+        $url = $path . $filename . '.json';
 
         if (file_exists($url)) {
             $json = file_get_contents($url);
