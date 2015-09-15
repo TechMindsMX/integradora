@@ -35,7 +35,7 @@ final class Environment
             define('OAUTH_CLIENT_SECRET', $environment['OAUTH']['CLIENT_SECRET']);
             define('OAUTH_GRANT_TYPE', $environment['OAUTH']['GRANT_TYPE']);
 
-            SeedIntegradora::seedIntegradora($environment['AMBIENTE']);
+            SeedIntegradora::seedIntegradora('integradora-seed-'.$this->filename);
         } else {
             die( 'Configuration file corrupt or missing' );
         }
