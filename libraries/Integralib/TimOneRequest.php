@@ -130,7 +130,7 @@ class TimOneRequest extends TimOneCurl {
 //		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
 
         $this->setServiceUrl(TOKEN_ROUTE."token");
-        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setJsonData('username=' . OAUTH_USERNAME . '&password=' . OAUTH_PASSWORD . '&client_id=' . OAUTH_CLIENT_ID . '&client_secret=' . OAUTH_CLIENT_SECRET . '&grant_type=' . OAUTH_GRANT_TYPE );
         $this->setHttpType('POST');
 
         $token = $this->to_timone();
@@ -140,7 +140,7 @@ class TimOneRequest extends TimOneCurl {
 
     public function getFacturacionAccessToken() {
         $this->setServiceUrl(TOKEN_FACT_ROUTE."token");
-        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setJsonData('username=' . OAUTH_USERNAME . '&password=' . OAUTH_PASSWORD . '&client_id=' . OAUTH_CLIENT_ID . '&client_secret=' . OAUTH_CLIENT_SECRET . '&grant_type=' . OAUTH_GRANT_TYPE );
         $this->setHttpType('POST');
 
         $token = $this->to_timone();
