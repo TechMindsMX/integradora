@@ -1013,7 +1013,7 @@ class MandatosController extends JControllerLegacy {
 
         $factura = new Factura($odv, true);
 
-        if( ENVIROMENT_TIMONE == 'sandbox') {
+        if( ENVIRONMENT_TIMONE == 'sandbox') {
             $factura->setTestRFC();
         }
 

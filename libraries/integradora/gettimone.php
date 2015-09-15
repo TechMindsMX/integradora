@@ -2720,7 +2720,7 @@ class sendToTimOne {
         $data = new Factura( $newOrden , $timbra, $series );
 
         //TODO: qutar el mock cuando sea produccion
-        if( ENVIROMENT_TIMONE == 'sandbox') {
+        if( ENVIRONMENT_TIMONE == 'sandbox') {
             $data->setTestRFC();
         }
 
