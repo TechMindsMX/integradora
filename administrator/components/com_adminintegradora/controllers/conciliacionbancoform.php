@@ -70,7 +70,6 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
             JLog::add($e->getMessage(), JLog::ERROR);
 
             $app->enqueueMessage( JText::_( 'LBL_NO_SAVED' ), 'WARNING' );
-            exit;
         }
         $app->redirect('index.php?option=com_adminintegradora&view=conciliacionbancoform');
     }

@@ -224,10 +224,10 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
+				<?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$this->integCurrent->getTimoneAccount()); ?>
 			</div>
 			<div class="container text-uppercase control-group">
-				<?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
+				<?php echo JText::sprintf('LBL_AUTORIZO_ODV',$this->integCurrent->getDisplayName(),$this->integCurrent->getIntegradoRfc()); ?>
 			</div>
 		</div>
 		<div class="text-center">
