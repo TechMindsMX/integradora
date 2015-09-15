@@ -12,7 +12,7 @@ class plgSystemIntegralib extends JPlugin {
 	public function onAfterInitialise() {
 		JLoader::registerNamespace( 'Integralib', JPATH_LIBRARIES );
 
-		$integralib = new Integralib\Enviroment();
+		$integralib = new Integralib\Environment();
 		$integralib->setEnvVariables();
 
 	}

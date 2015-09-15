@@ -88,7 +88,7 @@ $uri = JURI::getInstance();
 		            <h2><?php echo JText::_('TPL_GK_LANG_ERROR_INFO'); ?> <strong><?php echo $this->error->getCode(); ?></strong></h2>
 		            <h3><?php echo JText::_('TPL_GK_LANG_ERROR_DESC'); ?></h3>
 			        <?php
-			        if (ENVIROMENT_INTEGRA != 'produccion') :
+			        if (DEBUG === 'true') :
 			        ?>
 				        <blockquote>
 							<span class="label label-inverse"><?php echo $this->error->getCode(); ?></span> <?php echo $this->error->getMessage();?>

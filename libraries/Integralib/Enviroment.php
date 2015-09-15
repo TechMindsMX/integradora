@@ -8,43 +8,51 @@
 
 namespace Integralib;
 
-class Enviroment
+final class Environment
 {
 
     protected $filename = 'integra.env';
 
+    private $userHome = 'C:/Users/Ricardo/.integradora';
+
     public function setEnvVariables()
     {
-        define("MEDIA_FILES", "media/archivosJoomla/");
+        $environment = $this->readEnviromentFile();
 
-        $enviroment = $this->readEnviromentFile();
+        define("MEDIA_FILES", $environment["MEDIA_FILES"]);
+        define('XML_FILES_PATH', $environment['XML_FILES_PATH']);
 
-        define('XML_FILES_PATH', 'media/facturas/');
-
-        if (method_exists($this, $enviroment['AMBIENTE'])) {
-            define('ENVIROMENT_INTEGRA', $enviroment['AMBIENTE']);
-            define('ENVIROMENT_TIMONE', $enviroment['AMBIENTE_TIMONE']);
-            call_user_func(array($this, strtolower($enviroment['AMBIENTE'])));
+        if (method_exists($this, $environment['AMBIENTE'])) {
+            define('DEBUG', $environment['AMBIENTE']);
+            define('ENVIROMENT_TIMONE', $environment['AMBIENTE_TIMONE']);
+            call_user_func(array($this, strtolower($environment['AMBIENTE'])));
         } else {
             $this->produccion();
         }
-        SeedIntegradora::seedIntegradora($enviroment['AMBIENTE']);
+
+        define('OAUTH_USERNAME', $environment['OAUTH_USERNAME']);
+        define('OAUTH_PASSWORD', $environment['OAUTH_PASSWORD']);
+        define('OAUTH_CLIENT_ID', $environment['OAUTH_CLIENT_ID']);
+        define('OAUTH_CLIENT_SECRET', $environment['OAUTH_CLIENT_SECRET']);
+        define('OAUTH_GRANT_TYPE', $environment['OAUTH_GRANT_TYPE']);
+
+        SeedIntegradora::seedIntegradora($environment['AMBIENTE']);
+
+        unset($environment);
     }
 
     private function readEnviromentFile()
     {
-        $filename = __DIR__ . '/' . $this->filename;
-        $buffer = array();
-        $source_file = fopen($filename, "r") or die("Couldn't open $filename");
+        $file = $this->userHome . '/' . $this->filename;
 
-        $file = fread($source_file, 4096);
-        $tmp = array_filter(explode("\n", $file));
-        foreach ($tmp as $lineNum => $line) {
-            $line = explode('=', $line);
-            $buffer[$line[0]] = trim($line[1]);
+        if (file_exists($file)) {
+            $json = file_get_contents($file);
+            $data = json_decode($json, true);
+        } else {
+            die('Configuration file missing');
         }
 
-        return $buffer;
+        return $data;
     }
 
     public function integradora()
@@ -96,7 +104,7 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'factura.trama.mx/facturacion/services/');
+        define("FACTURA_ROUTE", 'factura.trama.mx/facturacion/services');
         define("TOKEN_FACT_ROUTE", 'factura.trama.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
@@ -115,7 +123,7 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/services/');
+        define("FACTURA_ROUTE", 'facturacion.iecce.mx/facturacion/services');
         define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://sepomex.trama.mx/sepomexes/");
@@ -134,11 +142,13 @@ class Enviroment
         define("TIMONE", $controllerTimOne);
         define("TIMONE_ROUTE", $middle . $controllerTimOne . 'integra/');
         define("TOKEN_ROUTE", $middle . 'timone/oauth/');
-        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/services/');
+        define("FACTURA_ROUTE", 'api.timone-factura.mx/facturacion/services');
         define("TOKEN_FACT_ROUTE", 'api.timone-factura.mx/facturacion/oauth/');
 
         define("SEPOMEX_SERVICE", "http://api.timone-sepomex.mx/sepomexes/");
 
         define("INTEGRADORA_UUID", 'd9e9f5c4fe2e4a0ebfbfeaa46c0bc528');
     }
+
+
 }
