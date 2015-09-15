@@ -16,7 +16,7 @@ class SeedIntegradora
      */
     public static function seedIntegradora($path, $filename = 'qaintegradora')
     {
-        $url = $path . $filename . '.json';
+        $url = $path . $filename;
 
         if (file_exists($url)) {
             $json = file_get_contents($url);

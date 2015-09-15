@@ -13,7 +13,7 @@ final class Environment
 
     protected $filename = 'qa.json';
 
-    private $userHome = 'C:/Users/Ricardo/.integradora';
+    private $userHome = 'C:/Users/Ricardo/.integradora/';
 
     public function setEnvVariables()
     {
@@ -58,7 +58,7 @@ final class Environment
 
     private function readEnviromentFile()
     {
-        $file = $this->userHome . '/' . $this->filename;
+        $file = $this->userHome .  $this->filename;
 
         if (file_exists($file)) {
             $json = file_get_contents($file);
