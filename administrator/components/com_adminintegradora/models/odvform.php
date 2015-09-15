@@ -59,6 +59,14 @@ class AdminIntegradoraModelOdvform extends JModelList {
         return $return;
     }
 
+    /**
+     * @param $integradoId
+     * @return IntegradoSimple
+     */
+    public function getIntegrado($integradoId){
+        return new IntegradoSimple($integradoId);
+    }
+
     public function getTransacciones(){
         $return     = array();
         $orden      = $this->getOrden();
@@ -86,6 +94,10 @@ class AdminIntegradoraModelOdvform extends JModelList {
         return $return;
     }
 
+    /**
+     * @param $trans
+     * @return float|int
+     */
     private function getTxBalance( $trans ) {
         $txs = new Txs();
 
