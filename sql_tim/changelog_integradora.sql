@@ -94,3 +94,9 @@ UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 1, `trigger` = 'odppagada
 INSERT INTO `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente';
 --rollback UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente' WHERE id = 5;
 --rollback DELETE FROM `flpmu_catalog_comisiones_eventos` WHERE id = (SELECT @@identity AS id);--rollback ALTER TABLE `flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;
+
+--changeset ricardolyon:17
+INSERT INTO `flpmu_extensions` SET extension_id = 10093, name = 'Exchange Rate Banxico', type = 'module', element = 'mod_exchange_rate', folder = '', client_id = 0, enabled = 1, access = 1, protected = 0, manifest_cache = '{\"name\":\"Exchange Rate Banxico\",\"type\":\"module\",\"creationDate\":\"Unknown\",\"author\":\"Ricardo Lyon\",\"copyright\":\"\",\"authorEmail\":\"\",\"authorUrl\":\"\",\"version\":\"1.0.0\",\"description\":\"A simple module to chow exchange rate for Mexico using Banxico Web Services.\",\"group\":\"\",\"filename\":\"mod_exchange_rate\"}', params = '{}', custom_data = '', system_data = '', checked_out = 0, checked_out_time = '0000-00-00 00:00:00', ordering = 0, state = 0;
+--rollback DELETE FROM flpmu_extensions WHERE extension_id = 10093;
+
+changeset ricardolyon:18
