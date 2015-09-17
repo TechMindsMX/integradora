@@ -119,7 +119,7 @@ DELETE FROM `flpmu_extensions` WHERE `extension_id` = 100;
 UPDATE `flpmu_extensions` SET `protected` = 0 WHERE `name` = 'plg_editors-xtd_article' AND `type` = 'plugin' AND `element` = 'article' AND `folder` = 'editors-xtd';
 INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `description_key`, `action_key`, `language_extension`, `language_client_id`, `type`, `action_file`, `action`, `condition_file`, `condition_method`, `version_introduced`, `enabled`) VALUES (700, 'COM_CPANEL_MSG_ROBOTS_TITLE', 'COM_CPANEL_MSG_ROBOTS_BODY', '', 'com_cpanel', 1, 'message', '', '', '', '', '3.3.0', 1);
 --rollback ALTER TABLE `flpmu_user_profiles` CHANGE `profile_value` `profile_value` VARCHAR(255) NOT NULL;
---rollback DELETE FROM flpmu_postinstall_messages WHERE extension_id = 700;
+--rollback DELETE FROM flpmu_postinstall_messages WHERE title_key = 'COM_CPANEL_MSG_HTACCESS_TITLE';
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 801;
 --rollback DELETE FROM flpmu_update_sites WHERE location = 'https://raw.githubusercontent.com/joomla-extensions/weblinks/master/manifest.xml';
 --rollback DELETE FROM flpmu_update_sites_extensions WHERE extension_id = 801;
@@ -127,4 +127,4 @@ INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `descript
 --rollback ALTER TABLE `flpmu_redirect_links` MODIFY new_url varchar(255) NOT NULL;
 --rollback INSERT INTO flpmu_extensions (extension_id, name, type, element, folder, client_id, enabled, access, protected, manifest_cache, params, custom_data, system_data, checked_out, checked_out_time, ordering, state) VALUES (100, 'PHPMailer', 'library', 'phpmailer', '', 0, 1, 1, 1, '{\"name\":\"PHPMailer\",\"type\":\"library\",\"creationDate\":\"2001\",\"author\":\"PHPMailer\",\"copyright\":\"(c) 2001-2003, Brent R. Matzelle, (c) 2004-2009, Andy Prevost. All Rights Reserved., (c) 2010-2013, Jim Jagielski. All Rights Reserved.\",\"authorEmail\":\"jimjag@gmail.com\",\"authorUrl\":\"https:\\/\\/github.com\\/PHPMailer\\/PHPMailer\",\"version\":\"5.2.6\",\"description\":\"LIB_PHPMAILER_XML_DESCRIPTION\",\"group\":\"\"}', '', '', '', 0, '0000-00-00 00:00:00', 0, 0);
 --rollback UPDATE `flpmu_extensions` SET `protected` = 1 WHERE `name` = 'plg_editors-xtd_article' AND `type` = 'plugin' AND `element` = 'article' AND `folder` = 'editors-xtd';
---rollback DELETE FROM flpmu_postinstall_messages WHERE extension_id = 700;
+--rollback DELETE FROM flpmu_postinstall_messages WHERE title_key = 'COM_CPANEL_MSG_ROBOTS_TITLE';
