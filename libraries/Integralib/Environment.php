@@ -10,15 +10,10 @@ namespace Integralib;
 
 final class Environment
 {
-    protected $filename = 'qa.json';
 
-    protected $seedFilename = 'integradora-seed-qa.json';
-
-    private $userHome = 'C:/Users/Ricardo/.integradora/';
-
-    public function setEnvVariables()
+    public static function setEnvVariables($path, $filename)
     {
-        $environment = $this->readEnviromentFile();
+        $environment = self::readEnviromentFile($path, $filename);
 
         if ( isset( $environment ) && !empty( $environment ) ) {
 //            integradora
@@ -49,7 +44,6 @@ final class Environment
             define('TOKEN_FACT_ROUTE', $environment['TOKEN_FACT_ROUTE']);
             define('FACTURA_ROUTE', $environment['FACTURA_ROUTE']);
 
-            SeedIntegradora::seedIntegradora($this->userHome, $this->seedFilename);
         } else {
             die( 'Configuration file corrupt or missing' );
         }
@@ -57,9 +51,9 @@ final class Environment
         unset( $environment );
     }
 
-    private function readEnviromentFile()
+    private function readEnviromentFile($path, $filename)
     {
-        $file = $this->userHome .  $this->filename;
+        $file = $path . $filename;
 
         if (file_exists($file)) {
             $json = file_get_contents($file);
