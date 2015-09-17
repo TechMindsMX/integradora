@@ -51,7 +51,7 @@ final class Environment
         unset( $environment );
     }
 
-    private function readEnviromentFile($path, $filename)
+    private static function readEnviromentFile($path, $filename)
     {
         $file = $path . $filename;
 
