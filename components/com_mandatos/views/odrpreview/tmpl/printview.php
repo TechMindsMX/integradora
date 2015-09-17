@@ -103,7 +103,7 @@ $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printv
         </td>
     </tr>
     <tr>
-        <td><?php echo JText::_('LBL_AUTORIZO_ODR'); ?>
+        <td><?php echo JText::sprintf('LBL_AUTORIZO_ODR',$this->integCurrent->getDisplayName(), $this->integCurrent->getIntegradoRfc()); ?></td>
     </tr>
     <tr>
         <td style="text-align: center;">
