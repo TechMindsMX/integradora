@@ -108,17 +108,16 @@ INSERT INTO flpmu_assets SET id = 128, parent_id = 18, lft = 196, rgt = 197, lev
 --rollback DELETE FROM flpmu_modules WHERE id = 159;
 
 --changeset ricardolyon:19
-ALTER TABLE `flpmu_user_profiles` CHANGE `profile_value` `profile_value` TEXT NOT NULL; #administrator/components/com_admin/sql/updates/mysql/3.3.4-2014-08-03.sql
-INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `description_key`, `action_key`, `language_extension`, `language_client_id`, `type`, `action_file`, `action`, `condition_file`, `condition_method`, `version_introduced`, `enabled`) VALUES (700, 'COM_CPANEL_MSG_HTACCESS_TITLE', 'COM_CPANEL_MSG_HTACCESS_BODY', '', 'com_cpanel', 1, 'message', '', '', 'admin://components/com_admin/postinstall/htaccess.php', 'admin_postinstall_htaccess_condition', '3.4.0', 1); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-08-24.sql
-INSERT INTO `flpmu_extensions` (`extension_id`, `name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`, `protected`, `manifest_cache`, `params`, `custom_data`, `system_data`, `checked_out`, `checked_out_time`, `ordering`, `state`) VALUES (801, 'weblinks', 'package', 'pkg_weblinks', '', 0, 1, 1, 0, '', '', '', '', 0, '0000-00-00 00:00:00', 0, 0); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-09-01.sql
-INSERT INTO `flpmu_update_sites` (`name`, `type`, `location`, `enabled`) VALUES ('Weblinks Update Site', 'extension', 'https://raw.githubusercontent.com/joomla-extensions/weblinks/master/manifest.xml', 1); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-09-01.sql
-INSERT INTO `flpmu_update_sites_extensions` (`update_site_id`, `extension_id`) VALUES ((SELECT `update_site_id` FROM `flpmu_update_sites` WHERE `name` = 'Weblinks Update Site'), 801); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-09-01.sql
-ALTER TABLE `flpmu_redirect_links` ADD header smallint(3) NOT NULL DEFAULT 301; #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-09-16.sql
-ALTER TABLE `flpmu_redirect_links` MODIFY new_url varchar(255); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-09-16.sql
-DELETE FROM `flpmu_extensions` WHERE `extension_id` = 100; #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-10-20.sql
-UPDATE `flpmu_extensions` SET `protected` = 0 WHERE `name` = 'plg_editors-xtd_article' AND `type` = 'plugin' AND `element` = 'article' AND `folder` = 'editors-xtd'; #administrator/components/com_admin/sql/updates/mysql/3.4.0-2014-12-03.sql
-INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `description_key`, `action_key`, `language_extension`, `language_client_id`, `type`, `action_file`, `action`, `condition_file`, `condition_method`, `version_introduced`, `enabled`) VALUES
-  (700, 'COM_CPANEL_MSG_ROBOTS_TITLE', 'COM_CPANEL_MSG_ROBOTS_BODY', '', 'com_cpanel', 1, 'message', '', '', '', '', '3.3.0', 1); #administrator/components/com_admin/sql/updates/mysql/3.4.0-2015-01-21.sql
+ALTER TABLE `flpmu_user_profiles` CHANGE `profile_value` `profile_value` TEXT NOT NULL;
+INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `description_key`, `action_key`, `language_extension`, `language_client_id`, `type`, `action_file`, `action`, `condition_file`, `condition_method`, `version_introduced`, `enabled`) VALUES (700, 'COM_CPANEL_MSG_HTACCESS_TITLE', 'COM_CPANEL_MSG_HTACCESS_BODY', '', 'com_cpanel', 1, 'message', '', '', 'admin://components/com_admin/postinstall/htaccess.php', 'admin_postinstall_htaccess_condition', '3.4.0', 1);
+INSERT INTO `flpmu_extensions` (`extension_id`, `name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`, `protected`, `manifest_cache`, `params`, `custom_data`, `system_data`, `checked_out`, `checked_out_time`, `ordering`, `state`) VALUES (801, 'weblinks', 'package', 'pkg_weblinks', '', 0, 1, 1, 0, '', '', '', '', 0, '0000-00-00 00:00:00', 0, 0);
+INSERT INTO `flpmu_update_sites` (`name`, `type`, `location`, `enabled`) VALUES ('Weblinks Update Site', 'extension', 'https://raw.githubusercontent.com/joomla-extensions/weblinks/master/manifest.xml', 1);
+INSERT INTO `flpmu_update_sites_extensions` (`update_site_id`, `extension_id`) VALUES ((SELECT `update_site_id` FROM `flpmu_update_sites` WHERE `name` = 'Weblinks Update Site'), 801);
+ALTER TABLE `flpmu_redirect_links` ADD header smallint(3) NOT NULL DEFAULT 301;
+ALTER TABLE `flpmu_redirect_links` MODIFY new_url varchar(255);
+DELETE FROM `flpmu_extensions` WHERE `extension_id` = 100;
+UPDATE `flpmu_extensions` SET `protected` = 0 WHERE `name` = 'plg_editors-xtd_article' AND `type` = 'plugin' AND `element` = 'article' AND `folder` = 'editors-xtd';
+INSERT INTO `flpmu_postinstall_messages` (`extension_id`, `title_key`, `description_key`, `action_key`, `language_extension`, `language_client_id`, `type`, `action_file`, `action`, `condition_file`, `condition_method`, `version_introduced`, `enabled`) VALUES (700, 'COM_CPANEL_MSG_ROBOTS_TITLE', 'COM_CPANEL_MSG_ROBOTS_BODY', '', 'com_cpanel', 1, 'message', '', '', '', '', '3.3.0', 1);
 --rollback ALTER TABLE `flpmu_user_profiles` CHANGE `profile_value` `profile_value` VARCHAR(255) NOT NULL;
 --rollback DELETE FROM flpmu_postinstall_messages WHERE extension_id = 700;
 --rollback DELETE FROM flpmu_extensions WHERE extension_id = 801;
