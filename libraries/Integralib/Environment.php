@@ -23,7 +23,7 @@ final class Environment
             define('INTEGRADORA_UUID', $environment['INTEGRADORA_UUID']);
 
 //            timone
-            define("MIDDLE", 'http://' . $environment['MIDDLE']);
+            define("MIDDLE", $environment['MIDDLE']);
             define("PUERTO", $environment['PUERTOTIMONE']);
             define("TIMONE", $environment['CONTROLLERTIMONE']);
             define("TIMONE_ROUTE", MIDDLE . $environment['CONTROLLERTIMONE'] . 'integra/');
