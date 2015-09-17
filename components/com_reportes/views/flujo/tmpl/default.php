@@ -2,13 +2,24 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
-
+jimport('html2pdf.reportecontabilidad');
 $integ      = $this->integrado;
 $report     = $this->report;
 $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+$dataPDF = new stdClass();
+$dataPDF->integ = $integ;
+$dataPDF->report = $report;
+$dataPDF->input = $input;
+$dataPDF->idProyecto = $idProyecto;
+$dataPDF->attscal = $attsCal;
+$dataPDF->this = $this;
+
+$getPDF = new reportecontabilidad();
+$pathPDF = $getPDF->createPDF($dataPDF, 'flujo');
 
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"
@@ -24,8 +35,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         window.location = 'index.php?option=com_reportes&view=flujo&startDate='+fechaInicial+'&endDate='+fechaFinal;
     }
 
+    function gtPDF(){
+        e.preventDefault();
+        window.location.href = '<?php echo $pathPDF; ?>';
+    }
+
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
+        jQuery('#getPDF').on('click',gtPDF);
 	    jQuery('.datepicker').datepicker();
     });
 </script>
@@ -85,7 +102,9 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         </div>
         <div class="row-fluid">
             <div class="span6">&nbsp;</div>
-            <div class="span6"><input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" /> </div>
+            <div class="span6">
+                <input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" />
+                <a class="btn btn-primary" download="estado_flujo_from_<?php echo date('Y-m-d', $report->getFechaInicio()); ?>_to_<?php echo date('Y-m-d', $report->getFechaFin()); ?>.pdf" href="<?php echo $pathPDF; ?>">Descargar PDF</a> </div>
         </div>
 
         <div class="clearfix">&nbsp;</div>
@@ -152,7 +171,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
-	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
+	            <td><?php //echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
 	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
@@ -224,7 +243,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
-	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
+	            <td><?php //echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
 	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>

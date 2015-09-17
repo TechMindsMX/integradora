@@ -26,6 +26,16 @@ class odvPdf{
 
         $number2word = new AifLibNumber();
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
+        $proyects = new getFromTimOne();
+        $proyect = $proyects->getProyects($data->integradoId, $data->projectId );
+        $subproyect = $proyects->getAllSubProyects($data->proyectId);
+        foreach ($subproyect as $key  => $value ) {
+            if($value->id_proyecto == $data->projectId2){
+                $subproyecto = $value->name;
+            }
+        }
+
+
         $html = "<style>
             table{
                 color: #777;
@@ -60,7 +70,7 @@ class odvPdf{
                 <tr>
                     <td style="text-align: right;">'.JText::_('LBL_PROY').'</td>
                     <td style="text-align: left; margin-left: 15px">&nbsp;&nbsp;&nbsp;';
-        isset( $data->proyecto->name ) ? $html .= $data->proyecto->name : $html .='';
+        isset( $proyect[$data->projectId]->name ) ? $html .= $proyect[$data->projectId]->name : $html .='';
 
         $html .= '</td>
                     <td style="text-align: right;">'.JText::_('LBL_PAYMENT_DATE').'</td>
@@ -69,7 +79,7 @@ class odvPdf{
                 <tr>
                     <td style="text-align: right;">'.JText::_('LBL_SUBPROY').'</td>
                     <td style="text-align: left; margin-left: 15px">&nbsp;&nbsp;&nbsp;';
-        isset($data->subproyecto->name) ? $html .=$data->subproyecto->name : $html .='';
+        isset($subproyecto) ? $html .= $subproyecto : $html .='';
 
         $html .= '</td>
                     <td style="text-align: right;">'.JText::_('LBL_FORMA_PAGO').'</td>

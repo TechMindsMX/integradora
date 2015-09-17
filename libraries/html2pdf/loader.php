@@ -30,3 +30,4 @@ require('_class/odpPdf.php');
 require('_class/odvPdf.php');
 require('_class/cashoutPDF.php');
 require('_class/cashinPDF.php');
+require('_class/flujoPDF.php');
