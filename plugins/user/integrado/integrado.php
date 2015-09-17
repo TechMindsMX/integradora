@@ -48,7 +48,7 @@ class PlgUserIntegrado extends JPlugin
 
         if ($this->app->getName() == 'site') // Check if login occurs in site front
         {
-            $changeUrl     ='index.php?option=com_integrado&view=integrado&layout=change&Itemid=207';
+            $changeUrl     ='index.php?option=com_integrado&view=solicitud&Itemid=207';
 
             $count = count($user->integrados);
             switch ( true ) {

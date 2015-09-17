@@ -1,4 +1,6 @@
 <?php
+use Integralib\Integrado;
+use Integralib\OdVenta;
 use Integralib\OrdenFn;
 use Integralib\TimOneRequest;
 use Integralib\IntFactory;
@@ -1121,9 +1123,14 @@ class getFromTimOne{
         return $orders;
     }
 
+    /**
+     * @param null $intergradoId
+     * @return stdClass
+     */
     public static function getOrdersCxC( $intergradoId = null ){
         $orders = new stdClass();
         $orders->odv = self::getOrdenesVenta($intergradoId);
+        $orders->odd = self::getOrdenesDeposito($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -1153,6 +1160,12 @@ class getFromTimOne{
         return $resultados;
     }
 
+    /**
+     * @param null $integradoId
+     * @param null $idOrden
+     * @param $table
+     * @return mixed
+     */
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
 	    $dbq = JFactory::getDbo();
         $where = null;
@@ -2400,7 +2413,13 @@ class sendToTimOne {
 
     public function to_timone() {
         $getToken = new TimOneRequest();
-        $token    = $getToken->getAccessToken();
+
+        if( !strpos($this->serviceUrl, 'facturacion/services') ) {
+            $token = $getToken->getAccessToken();
+        }else{
+            $token = $getToken->getFacturacionAccessToken();
+        }
+
         $send     = new Send_email();
 
         if(!is_null($token)) {
@@ -2944,10 +2963,10 @@ class Factura extends makeTx {
     public $format;
 	public $totales;
 
-	function __construct( \Integralib\OdVenta $orden, $timbra = false, $series = 'B' ) {
-        $integradora = new \Integralib\Integrado();
+	function __construct( OdVenta $orden, $timbra = false, $series = 'B' ) {
+        $integradora = new Integrado();
         $this->emisor = new Emisor( new IntegradoSimple($integradora->getIntegradoraUuid()) );
-        $this->receptor = new Receptor($orden->getReceptor());
+        $this->receptor = $this->setReceptor($orden);
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
 
         if(isset ($orden)) {
@@ -3115,6 +3134,21 @@ class Factura extends makeTx {
 
 		return $result;
 	}
+
+    /**
+     * @param OdVenta $odVenta
+     *
+     * @internal param Receptor $receptor
+     * @return Receptor
+     */
+    public function setReceptor(OdVenta $odVenta)
+    {
+        $receptor = $odVenta->getReceptor();
+        if ( $receptor->isIntegrado() ) {
+            $receptor = new IntegradoSimple(INTEGRADORA_UUID);
+        }
+        return new Receptor($receptor);
+    }
 
 }
 

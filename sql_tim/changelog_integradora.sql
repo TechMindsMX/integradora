@@ -88,3 +88,9 @@ UPDATE flpmu_modules SET content = '<div class=\"row-fluid\">\r\n<div class=\"sp
 --changeset Lutek:15
 UPDATE flpmu_menu SET access = 2 WHERE id = 101;
 --rollback UPDATE flpmu_menu SET access = 5 WHERE id = 101;
+
+--chageset Lutek:16
+UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 1, `trigger` = 'odppagada', `eventFullName` = 'Orden de Prestamo Pagada' WHERE id = 5;
+INSERT INTO `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente';
+--rollback UPDATE `flpmu_catalog_comisiones_eventos` SET `type` = 0, `trigger` = 'fecha', `eventFullName` = 'Recurrente' WHERE id = 5;
+--rollback DELETE FROM `flpmu_catalog_comisiones_eventos` WHERE id = (SELECT @@identity AS id);--rollback ALTER TABLE `flpmu_txs_mandatos`CHANGE COLUMN `amount` `amount` FLOAT NULL DEFAULT NULL ;

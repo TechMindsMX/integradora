@@ -37,7 +37,7 @@ class IntegradoController extends JControllerLegacy {
 
         $ex = $this->search_rfc_exists( $data['rfc'] );
         if ( is_numeric($respuesta) && isset($ex) ) {
-            $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+            $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
         }
 
         $this->document->setMimeEncoding( 'application/json' );
@@ -104,19 +104,8 @@ class IntegradoController extends JControllerLegacy {
      *
      */
     public function search_rfc_exists( $rfc ) {
-        $db        = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $personales = $db->loadResult();
-
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $empresa = $db->loadResult();
-
-        $integradoId = (!is_null($personales)) ? $personales : $empresa;
+        $integradoId = \Integralib\Integrado::getIntegradoIdFromRfc( $rfc );
 
         return $integradoId;
     }
@@ -204,7 +193,7 @@ class IntegradoController extends JControllerLegacy {
         if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado';
+            $url = 'index.php?option=com_integrado&view=solicitud&layout=tovalidation&Itemid=207';
         }
 
         $app->enqueueMessage($msg['msg'], $msg['type']);
@@ -228,7 +217,7 @@ class IntegradoController extends JControllerLegacy {
         if ( isset( $respuesta ) ) {
             if ( is_array($respuesta) || isset($ex) ) {
                 if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+                    $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
                 }
                 echo json_encode($respuesta);
                 return true;
@@ -844,7 +833,6 @@ class IntegradoController extends JControllerLegacy {
             $integrado = new IntegradoSimple($this->integradoId);
 
             if ( $integrado->hasAllDataForValidation() ) {
-                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
                 $integrado->integrados[0]->integrado->status = 1;
                 $db->updateObject('#__integrado',$integrado->integrados[0]->integrado,'integradoId');
 
@@ -855,9 +843,13 @@ class IntegradoController extends JControllerLegacy {
                 $notificationAdmin->setAdminEmails();
                 $notifications->sendNotifications( 41, array( $integrado->getDisplayName(),date('d-m-Y') ) );
 
+                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+
             } else {
                 $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
             }
+        } else {
+            $this->app->enqueueMessage( JText::_('ERROR_SOLICITUD_VALIDACION') );
         }
 
         $this->app->redirect(JRoute::_('index.php?option=com_integrado'));

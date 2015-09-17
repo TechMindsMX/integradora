@@ -104,11 +104,10 @@ if ( ! empty( $this->txs ) ) {
 
         <h3>Esta seguro de guardar los siguientes datos de conciliación</h3>
 
-        <div>Orden pagada: <?php echo is_null($data->ordenPagada)?'No':'Si'; ?></div>
-        <div>Cuenta: <?php echo $data->cuenta; ?></div>
-        <div>Número de cheque: <?php echo $data->referencia; ?></div>
-        <div>Fecha: <?php echo $data->date; ?></div>
-        <div>Monto: $<?php echo number_format($data->amount, 2); ?></div>
+        <div>Cuenta: <?php echo AdminintegradoraHelper::getBanknameAccount(AdminintegradoraHelper::getBancosIntegradora(new \Integralib\Integrado()), $this->txs[$data->idTx]->cuenta); ?></div>
+        <div>Referencia: <?php echo $this->txs[$data->idTx]->referencia; ?></div>
+        <div>Fecha: <?php echo date('d-m-Y',$this->txs[$data->idTx]->date); ?></div>
+        <div>Monto: $<?php echo number_format($this->txs[$data->idTx]->balance, 2); ?></div>
 
         <div class="clearfix">&nbsp;</div>
         <div class="clearfix">

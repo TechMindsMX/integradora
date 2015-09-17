@@ -142,7 +142,7 @@ $hora = $fechaHOra[1];
 <table class="table" id="printFooter">
     <tr>
         <td colspan="4">
-            <?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
+            <?php echo JText::sprintf('LBL_AUTORIZO_ODV',$this->integCurrent->getDisplayName(),$this->integCurrent->getIntegradoRfc()); ?>
         </td>
     </tr>
     <tr>

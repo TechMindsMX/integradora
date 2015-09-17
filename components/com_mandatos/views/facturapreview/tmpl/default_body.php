@@ -16,6 +16,8 @@ $integradora = new \Integralib\Integrado();
 $integradora = new IntegradoSimple( $integradora->getIntegradoraUuid() );
 $number2word = new AifLibNumber();
 
+$fecha = new DateTime($this->factura->datosXML->comprobante['FECHA']);
+
 ?>
 
 <div class="hidden-print form-group">
@@ -39,13 +41,13 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_SOCIO_INTEG'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $integradora->getDisplayName(); ?>
+			<?php echo $this->factura->datosXML->emisor['attrs']['NOMBRE']; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_DATE_CREATED'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->getCreatedDate(); ?>
+			<?php echo $fecha->format('d-m-Y'); ?>
 		</div>
 	</div>
 	<div>
@@ -94,7 +96,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RAZON_SOCIAL'); ?>
 		</div>
 		<div class="span10">
-			<?php echo $this->factura->proveedor->tradeName; ?>
+			<?php echo $this->factura->datosXML->receptor['attrs']['NOMBRE']; ?>
 		</div>
 	</div>
 	<div>
@@ -102,7 +104,7 @@ $number2word = new AifLibNumber();
 			<?php echo JText::_('LBL_RFC'); ?>
 		</div>
 		<div class="span4">
-			<?php echo $this->factura->getReceptor()->getIntegradoRfc();; ?>
+			<?php echo $this->factura->datosXML->receptor['attrs']['RFC']; ?>
 		</div>
 		<div class="span2 text-right">
 			<?php echo JText::_('LBL_BANCOS'); ?>
@@ -224,10 +226,11 @@ $number2word = new AifLibNumber();
 	<div id="footer">
 		<div class="container">
 			<div class="control-group">
-				<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
+				<?php echo JText::sprintf('LBL_DATOS_DEPOSITO',$this->integCurrent->getTimoneAccount()); ?>
 			</div>
 			<div class="container text-uppercase control-group">
-				<?php echo JText::_('LBL_AUTORIZO_ODV').$this->integCurrent->getDisplayName().' con RFC: '.$this->integCurrent->integrados[0]->datos_empresa->rfc; ?>
+				<p><?php echo JText::sprintf('LBL_AUTORIZO_ODV',$this->factura->getEmisor()->getDisplayName(),$this->factura->getEmisor()->getIntegradoRfc()); ?></p>
+				<p><?php echo JText::sprintf('LBL_AUTORIZO_ODV',$this->factura->getReceptor()->getDisplayName(),$this->factura->getReceptor()->getIntegradoRfc()); ?></p>
 			</div>
 		</div>
 		<div class="text-center">

@@ -111,7 +111,7 @@ $odvs = $this->ordenes;
                     <tr class="row1 integrado_<?php echo $value->integradoId; ?>">
                         <td> <?php echo @$value->numOrden; ?></td>
                         <td> <?php echo @$value->createdDate; ?><input type="hidden" id="fecha" value="<?php echo strtotime($value->createdDate); ?>" /> </td>
-                        <td> <?php echo @$value->integradoName; ?></td>
+                        <td> <?php echo @$value->emisor->getDisplayName(); ?></td>
                         <td> <?php echo @$value->proveedor->frontName; ?></td>
                         <td>$<?php echo @number_format($value->totalAmount,2); ?></td>
                         <td>$<?php echo @number_format($value->balance,2); ?></td>

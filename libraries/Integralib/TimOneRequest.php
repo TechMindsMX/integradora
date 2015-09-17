@@ -138,6 +138,16 @@ class TimOneRequest extends TimOneCurl {
         return json_decode($token->data);
     }
 
+    public function getFacturacionAccessToken() {
+        $this->setServiceUrl(TOKEN_FACT_ROUTE."token");
+        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setHttpType('POST');
+
+        $token = $this->to_timone();
+
+        return json_decode($token->data);
+    }
+
 	public function getListBankCodes( ){
 		$serviceUrl = MIDDLE . TIMONE . 'stp/listBankCodes';
 		$jsonData = '';

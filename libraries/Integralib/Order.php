@@ -141,4 +141,14 @@ abstract class Order {
 		}
 
 	}
+
+	/**
+	 * @return bool
+     */
+	public function isAuthorized()
+	{
+		$orderStatus = $this->getStatus();
+
+		return in_array($orderStatus->id, array(5,8));
+	}
 }

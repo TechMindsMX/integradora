@@ -6,16 +6,12 @@ jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
-$document	= JFactory::getDocument();
-$app 		= JFactory::getApplication();
-
-// Datos
-$params 	= $app->input->getArray();
-
-$integrado 	= $this->integCurrent->integrados[0];
-
+$document  = JFactory::getDocument();
+$app 	   = JFactory::getApplication();
+$params    = $app->input->getArray();
+$integrado = $this->integCurrent->integrados[0];
+$integrado = new IntegradoSimple($integrado->integrado->integradoId);
 $number2word = new AifLibNumber();
-
 ?>
 
 <div class="hidden-print form-group">
@@ -146,7 +142,7 @@ $number2word = new AifLibNumber();
 					<?php echo JText::_('LBL_DATOS_RETIRO'); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO_ODR'); ?>
+					<?php echo JText::sprintf('LBL_AUTORIZO_ODR',$integrado->getDisplayName(), $integrado->getIntegradoRfc()); ?>
 				</div>
 			</div>
 			<div class="text-center">
