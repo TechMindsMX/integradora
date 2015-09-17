@@ -12,11 +12,11 @@ defined('_JEXEC') or die;
 
 class plgSystemIntegralib extends JPlugin {
 
+    private $path = 'C:/Users/Ricardo/.integradora/';
+
     protected $filename = 'qa.json';
 
     protected $seedFilename = 'integradora-seed-qa.json';
-
-    private $path = 'C:/Users/Ricardo/.integradora/';
 
     /**
      * Method to include namespace Integralib, load environment variables and make seed
