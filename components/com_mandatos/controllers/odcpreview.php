@@ -243,8 +243,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
             $txData = new Cashout($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount, array('accountId' => $orden->bankId));
             $txDone = $txData->sendCreateTx();
-            $createPDF = new reportecontabilidad();
-            $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
+
+            if($txDone){
+                $createPDF = new reportecontabilidad();
+                $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
+            }
 
 
         }

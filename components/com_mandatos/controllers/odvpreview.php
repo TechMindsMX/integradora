@@ -130,7 +130,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                                     $info = $this->sendEmail($newOrder);
 
-                                    $createPDF->createPDF($numAutOrder[0]->idOrden, 'odv');
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
                                     JLog::add($msg, JLog::ERROR, 'error');
