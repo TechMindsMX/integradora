@@ -29,6 +29,8 @@ class ReportesViewResultados extends JViewLegacy
         $this->integradora                  = new IntegradoSimple($integradora->getIntegradoraUuid());
         $this->reporte                      = $this->get('Reporte');
         $this->proyectos                    = $this->get('Proyectos');
+		$this->fechaInicio = $this->reporte->getFechaInicio();
+		$this->fechaFin	= $this->reporte->getFechaFin();
 
 		if (count($errors = $this->get('Errors'))){
 			JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

@@ -2,6 +2,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
+jimport('html2pdf.reportecontabilidad');
 
 $this->document->addScript('//code.jquery.com/ui/1.11.3/jquery-ui.js');
 $this->document->addScript('libraries/integradora/js/tim-datepicker-defaults.js');
@@ -16,6 +17,15 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
 $ingresos = $report->getIngresos();
 $egresos = $report->getEgresos();
+
+$dataPDF = new stdClass();
+$dataPDF->reporte = $this->reporte;
+$dataPDF->inicio = $this->fechaInicio;
+$dataPDF->fin   = $this->fechaFin;
+
+$reportPDF = new reportecontabilidad();
+$reportPDF->createPDF($dataPDF, 'result');
+
 ?>
 <script>
 
@@ -253,3 +263,4 @@ $egresos = $report->getEgresos();
 
         </table>
     </div>
+</div>

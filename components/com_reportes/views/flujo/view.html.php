@@ -58,7 +58,7 @@ class ReportesViewFlujo extends JViewLegacy
 
 			return false;
 		}
-
+		$this->fechas = $vars;
         $this->permisos = Integrado::checkPermisos(__CLASS__, JFactory::getUser()->id, $vars['integradoId']);
 		// Display the view
 		parent::display($tpl);
