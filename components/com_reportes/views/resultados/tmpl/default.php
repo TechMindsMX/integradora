@@ -16,6 +16,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 
 $ingresos = $report->getIngresos();
 $egresos = $report->getEgresos();
+
 ?>
 <script>
 
@@ -253,3 +254,4 @@ $egresos = $report->getEgresos();
 
         </table>
     </div>
+</div>

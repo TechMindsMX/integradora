@@ -92,7 +92,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"></span> </th>
-            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"></span> </th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
         </tr>
         </thead>
         <tbody>
@@ -138,16 +138,9 @@ if(is_null($ordenes) || empty($ordenes)){
                 $class = $value->status->id == 1 ? '' : 'status1';
                 $nombreArchivoXML = explode('/',$value->urlXML);
 
-                $namePdf = realpath(dirname(__FILE__).'/../../../../..').str_replace('xml', 'pdf', '/'.$value->urlXML);
-                $file = file_exists($namePdf);
+                $namePdf = 'media/pdf_odc/'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'.pdf';
+                $pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$namePdf.'">Descargar PDF</a>';
 
-
-                if($file) {
-                    $nombreArchivoPDF = str_replace('xml', 'pdf', $nombreArchivoXML[2]);
-                    $pdf = '<a download="'.$nombreArchivoPDF.'" href="'.str_replace('xml', 'pdf', $value->urlXML).'">Descargar PDF</a>';
-                }else{
-                    $pdf = '';
-                }
 
                 echo '<tr class="type_'.$value->status->id.'" data-tipo="'.$value->status->id.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';

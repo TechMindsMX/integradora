@@ -105,6 +105,16 @@ class reportecontabilidad{
                 $html = $getHtml->generateHtml($data);
                 $path = 'media/pdf_cashIn/'.$this->integradoId.'-'.$this->fecha.'-'.'.pdf';
                 break;
+            case 'flujo':
+                $getHtml = new flujoPDF();
+                $html = $getHtml->generateHtml($data);
+                $path = 'media/pdf_flujo/'.$this->integradoId.'-'.$this->fecha.'-start '.$data->this->fechas['startDate'].'-end '.$data->this->fechas['endDate'].'.pdf';
+                break;
+            case 'result':
+                $getHtml = new resultPDF(null, $data);
+                $html = $getHtml->generateHtml();
+                $path = 'media/pdf_result/'.$this->integradoId.'-'.$this->fecha.'-start '.$data->inicio.'-end '.$data->fin.'.pdf';
+                break;
             default:
                 $operacion = '';
                 return array($operacion, $path);
