@@ -5,8 +5,9 @@
  * Date: 02/09/2015
  * Time: 03:49 PM
  */
+jimport('integradora.gettimone');
 
-class odvPdf{
+class odvPdf {
 
     function odv($data){
 
@@ -23,6 +24,8 @@ class odvPdf{
             'print' => '1',
             'Itemid' => NULL,
         );
+
+        $integrado = new IntegradoSimple($data->integradoId);
 
         $number2word = new AifLibNumber();
         $document->addStyleSheet( JURI::base() . 'templates/' . $template . '/css/printviewcss.css' );
@@ -229,11 +232,11 @@ class odvPdf{
                     <br><br>
                     <table class="table" id="printFooter">
                         <tr>
-                            <td>'.JText::_('LBL_DATOS_DEPOSITO').'</td>
+                            <td>'.JText::sprintf('LBL_DATOS_DEPOSITO',$integrado->getTimoneAccount()).'</td>
                         </tr>
                         <tr>
                             <td>
-                                <p class="text-capitalize">'.JText::_('LBL_AUTORIZO_ODV').'</p>
+                                <p class="text-capitalize">'.JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()).'</p>
                             </td>
                         </tr>
                         <tr>
