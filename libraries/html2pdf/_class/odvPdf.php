@@ -38,7 +38,6 @@ class odvPdf {
             }
         }
 
-
         $html = "<style>
             table{
                 color: #777;
