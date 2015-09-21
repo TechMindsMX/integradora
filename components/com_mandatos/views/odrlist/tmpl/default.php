@@ -90,7 +90,7 @@ jQuery(document).ready(function(){
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} elseif ($value->status->id == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-				} elseif ($value->status->id == 5) {
+				} elseif ( ($value->status->id == 5) || ($value->status->id == 13) ) {
 					$auth_button = JText::_('LBL_AUTHORIZED');
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} else {

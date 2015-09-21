@@ -11,11 +11,15 @@ class MandatosViewOdrform extends JViewLegacy {
     function display($tpl = null){
         $this->loadHelper('Mandatos');
 
-        $app 				        = JFactory::getApplication();
-        $data				        = $app->input->getArray();
-
-        $session                    = JFactory::getSession();
-        $this->integradoId          = $session->get( 'integradoId', null, 'integrado' );
+        $app 			                 = JFactory::getApplication();
+        $data			                 = $app->input->getArray();
+        $session                         = JFactory::getSession();
+        $this->integradoId               = $session->get( 'integradoId', null, 'integrado' );
+        $this->integrado                 = new stdClass();
+        $this->integrado->blockedBalance = MandatosHelper::getBlockedBalance();
+        $this->integrado->balance        = $this->get('balance');
+        $this->actionUrl                 = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1') : '#';
+        $this->datos                     = $data;
 
         if( isset($data['idOrden']) && $data['idOrden'] != '' ) {
             $this->odr = $this->get('ordenes');
@@ -27,13 +31,6 @@ class MandatosViewOdrform extends JViewLegacy {
                 }
             }
         }
-
-        $this->integrado = new stdClass();
-        $this->integrado->blockedBalance = MandatosHelper::getBlockedBalance();
-        $this->integrado->balance   = $this->get('balance');
-
-        $this->actionUrl            = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1') : '#';
-        $this->datos                = $data;
 
         if(isset($data['confirmacion'])){
             $this->confirmacion = true;
