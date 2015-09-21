@@ -294,7 +294,7 @@ if(!isset($this->datos['confirmacion'])){
                     <?php echo JText::_('COM_MANDATOS_ODC_PAYMENTFORM'); ?>:
                 </div>
                 <div class="span4">
-                    <?php echo $this->datos['paymentMethod']==0?'SPEI':'Cheque'; ?>
+                    <?php echo JText::_($this->catalogos->paymentMethods[$this->datos['paymentMethod']]->tag); ?>
                 </div>
             </div>
             <div>
