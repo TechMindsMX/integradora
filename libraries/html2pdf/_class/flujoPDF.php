@@ -5,8 +5,6 @@
  * Date: 11/09/2015
  * Time: 10:29 AM
  */
-
-
 class flujoPDF{
     function generateHtml($data){
         $integ      = $data->integ;
@@ -45,6 +43,11 @@ table{
 </style>
 
             <table class="header">
+                <tr>
+                    <td colspan="3" style="width: 569px;">
+                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                    </td>
+                </tr>
                 <tr class="span6">
                     <td style="width: 350px">
                         <h3>
@@ -208,9 +211,9 @@ table{
         <table style=" border: 1px solid #ddd;">
             <thead>
             <tr class="row">
-                <th style=" border: 1px solid #ddd; width: 200px" >'.JText::_('LBL_FECHA').'</th>
-                <th style=" border: 1px solid #ddd; width: 350px" >'.JText::_('LBL_CONCEPTO').'</th>
-                <th style=" border: 1px solid #ddd; width: 200px" >'.JText::_('LBL_TOTAL').'</th>
+                <th style=" border: 1px solid #ddd;" >'.JText::_('LBL_FECHA').'</th>
+                <th style=" border: 1px solid #ddd;" >'.JText::_('LBL_CONCEPTO').'</th>
+                <th style=" border: 1px solid #ddd;" >'.JText::_('LBL_TOTAL').'</th>
             </tr>
             </thead>
             <tbody>';
@@ -277,9 +280,9 @@ table{
         <table style=" border: 1px solid #ddd;">
             <thead>
             <tr class="row">
-                <th style=" border: 1px solid #ddd; width: 200px">'.JText::_('LBL_FECHA').'</th>
-                <th style=" border: 1px solid #ddd; width: 200px">'.JText::_('LBL_CONCEPTO').'</th>
-                <th style=" border: 1px solid #ddd; width: 350px">'.JText::_('LBL_TOTAL').'</th>
+                <th style=" border: 1px solid #ddd;">'.JText::_('LBL_FECHA').'</th>
+                <th style=" border: 1px solid #ddd;">'.JText::_('LBL_CONCEPTO').'</th>
+                <th style=" border: 1px solid #ddd;">'.JText::_('LBL_TOTAL').'</th>
             </tr>
             </thead>
             <tbody>';
@@ -288,9 +291,9 @@ table{
                 foreach ($report->getTxs('Integralib\OdRetiro') as $k => $tx) {
 
                     $html .='<tr class="row">
-                        <td style=" border: 1px solid #ddd;">'.date('d-m-Y', $tx->timestamp / 1000).'</td>
-                        <td style=" border: 1px solid #ddd;">'.$tx->order->getReceptor()->getDisplayName().'</td>
-                        <td style=" border: 1px solid #ddd;">$'.number_format($tx->order->txs[$k]->detalleTx->amount,2) .'</td>
+                        <td style=" border: 1px solid #ddd; width: 200px">'.date('d-m-Y', $tx->timestamp / 1000).'</td>
+                        <td style=" border: 1px solid #ddd; width: 200px" >'.$tx->order->getReceptor()->getDisplayName().'</td>
+                        <td style=" border: 1px solid #ddd; width: 350px">$'.number_format($tx->order->txs[$k]->detalleTx->amount,2) .'</td>
                     </tr>';
                 }
             }

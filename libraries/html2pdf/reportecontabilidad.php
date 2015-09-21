@@ -113,7 +113,7 @@ class reportecontabilidad{
             case 'result':
                 $getHtml = new resultPDF(null, $data);
                 $html = $getHtml->generateHtml();
-                $path = 'media/pdf_result/'.$this->integradoId.'-'.$this->fecha.'-start '.$data->reporte->startDate.'-end '.$data->reporte->endDate.'.pdf';
+                $path = 'media/pdf_result/'.$this->integradoId.'-'.$this->fecha.'-start '.$data->inicio.'-end '.$data->fin.'.pdf';
                 break;
             default:
                 $operacion = '';
