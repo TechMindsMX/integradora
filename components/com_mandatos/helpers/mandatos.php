@@ -1,5 +1,7 @@
 <?php
 
+use Integralib\Txs;
+
 defined('_JEXEC') or die('Restricted Access');
 
 jimport('integradora.integrado');
@@ -89,4 +91,46 @@ class MandatosHelper {
 		return $validacion;
 	}
 
+	public static function getTXsinMandato( ){
+		$sesion             = JFactory::getSession();
+		$integradoId        = $sesion->get('integradoId', null, 'integrado');
+
+		$txs = getFromTimOne::getTxIntegradoConSaldo($integradoId);
+
+		$retorno = array();
+		foreach ( $txs as $trans ) {
+			$trans->balance = self::getTxBalance($trans);
+
+			if($trans->balance > 0) {
+				$retorno[] = $trans;
+			}
+		}
+
+		return $retorno;
+	}
+
+	/**
+	 * @param $trans
+	 * se traen los mandatos a los que esta asosciada la Tx
+	 * @return mixed
+	 */
+	private static function getTxBalance( $trans ) {
+		$txs = new Txs();
+
+		return $txs->calculateBalance($trans);
+	}
+
+	/**
+	 * @return int
+     */
+	public static function getBlockedBalance(){
+		$txs = self::getTXsinMandato();
+		$blockedBalance = 0;
+
+		foreach($txs as $value){
+			$blockedBalance = $value->balance + $blockedBalance;
+		}
+
+		return $blockedBalance;
+	}
 }

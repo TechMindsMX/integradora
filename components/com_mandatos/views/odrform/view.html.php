@@ -9,8 +9,10 @@ class MandatosViewOdrform extends JViewLegacy {
     protected $permisos;
 
     function display($tpl = null){
-		$app 				        = JFactory::getApplication();
-		$data				        = $app->input->getArray();
+        $this->loadHelper('Mandatos');
+
+        $app 				        = JFactory::getApplication();
+        $data				        = $app->input->getArray();
 
         $session                    = JFactory::getSession();
         $this->integradoId          = $session->get( 'integradoId', null, 'integrado' );
@@ -18,16 +20,18 @@ class MandatosViewOdrform extends JViewLegacy {
         if( isset($data['idOrden']) && $data['idOrden'] != '' ) {
             $this->odr = $this->get('ordenes');
         } else {
-	        $sesData = json_decode( $session->get('data', null, 'odr'), true );
-	        if ( isset( $data['idOrden'] ) ) {
-		        if ( $sesData['idOrden'] == $data['idOrden'] && $data['confirmacion'] == 1 ) {
-			        $data = array_replace_recursive($data, $sesData);
-		        }
-	        }
+            $sesData = json_decode( $session->get('data', null, 'odr'), true );
+            if ( isset( $data['idOrden'] ) ) {
+                if ( $sesData['idOrden'] == $data['idOrden'] && $data['confirmacion'] == 1 ) {
+                    $data = array_replace_recursive($data, $sesData);
+                }
+            }
         }
 
         $this->integrado = new stdClass();
-		$this->integrado->balance   = $this->get('balance');
+        $this->integrado->blockedBalance = MandatosHelper::getBlockedBalance();
+        $this->integrado->balance   = $this->get('balance');
+
         $this->actionUrl            = !isset($data['confirmacion']) ? JRoute::_('index.php?option=com_mandatos&view=odrform&confirmacion=1') : '#';
         $this->datos                = $data;
 
@@ -44,9 +48,8 @@ class MandatosViewOdrform extends JViewLegacy {
             return false;
         }
 
-		$this->loadHelper('Mandatos');
 
-		// Verifica los permisos de edición y autorización
+        // Verifica los permisos de edición y autorización
 		$this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if(!$this->permisos['canAuth'] && !$this->permisos['canEdit'] ){
