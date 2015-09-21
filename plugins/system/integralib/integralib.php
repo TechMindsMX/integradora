@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 class plgSystemIntegralib extends JPlugin {
 
-    private $path = 'C:/Users/Ricardo/.integradora/';
+    private $path = 'C:/Users/lutek/.integradora/';
 
     protected $filename = 'qa.json';
 

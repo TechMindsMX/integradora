@@ -3270,7 +3270,7 @@ class UserTimone {
     public $name  = '';
     public $email = '';
 
-    function __construct( Integrado $integrado ) {
+    function __construct( IntegradoSimple $integrado ) {
         $user = $integrado->getUsuarioPrincipal($integrado->integrados[0]->integrado->integradoId);
 
         $this->name = $user->name;
