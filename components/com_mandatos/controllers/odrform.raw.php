@@ -134,8 +134,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
 	private function getBalance() {
 		$model = $this->getModel('odrform');
 		$balance = $model->getBalance();
+        $blocked = MandatosHelper::getBlockedBalance();
 
-		return $balance;
+		return $balance - $blocked;
 	}
 
 	private function enoughFunds() {
@@ -148,8 +149,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	private function validaDatos() {
 		$validacion = new validador();
-
-		$this->getBalance();
 
 		$parametros = $this->parametros;
 

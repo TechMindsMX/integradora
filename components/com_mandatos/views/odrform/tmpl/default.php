@@ -101,8 +101,14 @@ if(!$this->confirmacion){
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></h1>
 <div style="margin-bottom: 10px;">
 	<h4>
-		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_TOTAL'); ?></span>
 		<span>$<?php echo number_format($this->integrado->balance,2); ?></span>
+		<br />
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_BLOCKED'); ?></span>
+		<span>$<?php echo number_format($this->integrado->blockedBalance,2); ?></span>
+		<br />
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
+		<span>$<?php echo number_format($this->integrado->balance - $this->integrado->blockedBalance,2); ?></span>
 	</h4>
 </div>
 
