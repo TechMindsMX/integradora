@@ -4,6 +4,8 @@ require('loader.php');
 
 class reportecontabilidad{
 
+    protected $fecha;
+
     function __construct($integ_id = null) {
 
         $integradora = new \Integralib\Integrado();
@@ -17,11 +19,11 @@ class reportecontabilidad{
         $integrado->getTimOneData();
 
         $this->integCurrent = $integrado;
-
-        $this->fecha =    date('dmY');
     }
 
-    public function facturaPDF($data, $facObjOdv, $facObj, $xml){
+    public function facturaPDF($data, $facObjOdv, $facObj, $xml) {
+
+        $this->fecha = $facObjOdv->createdDate;
 
         $fileName = explode('/', $xml);
         $fileName = explode('.', $fileName[2]);
@@ -66,34 +68,34 @@ class reportecontabilidad{
                 $getHtml = new odvPdf();
                 $orden = getFromTimOne::getOrdenesVenta($this->integradoId, $data);
                 $html = $getHtml->odv($orden);
-                $path = 'media/pdf_odv/'.$this->integradoId.'-'.$this->fecha.'-'.$orden[0]->numOrden.'.pdf';
+                $path = 'media/pdf_odv/'.$this->integradoId.'-'.$orden[0]->createdDate.'-'.$orden[0]->numOrden.'.pdf';
                 break;
             case 'odc':
                 $getHtml = new odcPdf();
                 $orden = getFromTimOne::getOrdenesCompra(null, $data);
                 $orden = $orden[0];
                 $html = $getHtml->html($orden);
-                $path = 'media/pdf_odc/'.$this->integradoId.'-'.$this->fecha.'-'.$data.'.pdf';
+                $path = 'media/pdf_odc/'.$this->integradoId.'-'.$orden->createdDate.'-'.$data.'.pdf';
                 break;
             case 'odd':
                 $getHtml = new oddPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odd/'.$this->integradoId.'-'.$this->fecha.'-'.$data[0]->numOrden.'.pdf';
+                $path = 'media/pdf_odd/'.$this->integradoId.'-'.$data[0]->createdDate.'-'.$data[0]->numOrden.'.pdf';
                 break;
             case 'odr':
                 $getHtml = new odrPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odr/'.$this->integradoId.'-'.$this->fecha.'-'.$data->numOrden.'.pdf';
+                $path = 'media/pdf_odr/'.$this->integradoId.'-'.$data->createdDate.'-'.$data->numOrden.'.pdf';
                 break;
             case 'odp':
                 $getHtml = new odpPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odp/'.$this->integradoId.'-'.$this->fecha.'-'.$data[0]->idMutuo.'.pdf';
+                $path = 'media/pdf_odp/'.$this->integradoId.'-'.$data->createdDate.'-'.$data[0]->idMutuo.'.pdf';
                 break;
            case 'mutuo':
                 $getHtml = new mutuosPDF($data);
                 $html = $getHtml->generateHtml($data);
-                $path = 'media/pdf_mutuo/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
+                $path = 'media/pdf_mutuo/'.$this->integradoId.'-'.$data->createdDate.'-'.$data->id.'.pdf';
                 break;
             case 'cashout':
                 $getHtml = new cashoutPDF($data);
