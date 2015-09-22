@@ -152,7 +152,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 if($value->status->id != 55) {
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" ><a download="' . $nombreArchivoXML[2] . '" href="' . $value->urlXML . '">Descargar XML</a></td>';
                 }
-                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
+//                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
                 echo '</tr>';
             }
         }else{

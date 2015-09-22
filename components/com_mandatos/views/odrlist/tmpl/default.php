@@ -110,7 +110,7 @@ jQuery(document).ready(function(){
 				echo '	<td class="'.$class.'" >'.$value->status->name.'</td>';
 				echo '	<td class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td class="'.$class.'" >'.$edit_button.'</td>';
-				echo '	<td class="'.$class.'" >'.$pdf.'</td>';
+//				echo '	<td class="'.$class.'" >'.$pdf.'</td>';
 				echo '</tr>';
 			}
 		}else{

@@ -108,7 +108,7 @@ if(is_null($ordenes) || empty($ordenes)){
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $value->status->name . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $auth_button . '</td>';
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $edit_button . '</td>';
-                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $pdf . '</td>';
+//                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" >' . $pdf . '</td>';
                     echo '</tr>';
             }
         }else{
