@@ -47,7 +47,7 @@ class Facpdf{
                 <table class="table">
                     <tr>
                         <td>
-                            <div><img width="200" src="'.$_SERVER['DOCUMENT_ROOT'].'/integradora/images/logo_iecce.png"/></div>
+                            <div><img width="200" src="'.JUri::base().'/images/logo_iecce.png"/></div>
                         </td>
                     </tr>
                 </table>
