@@ -22,7 +22,7 @@ class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
         $conciliacion->saveRelations();
         $this->order = $order;
         $this->sendEmail();
-        JFactory::getApplication()->redirect('index.php?option=com_adminintegradora&view=oddlist');
+        JFactory::getApplication()->redirect('index.php?option=com_adminintegradora&view='.$input['orderType'].'list');
     }
 
     /**
@@ -76,7 +76,7 @@ class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
 
         $getCurrUser     = new IntegradoSimple($this->integradoId);
         $titleArray      = array( $this->order->numOrden);
-        $name = $this->order->receptor;
+        $name = $this->order->receptor->getDisplayName();
 
         $array           = array(
             $name,

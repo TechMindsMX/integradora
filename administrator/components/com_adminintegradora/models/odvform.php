@@ -73,7 +73,7 @@ class AdminIntegradoraModelOdvform extends JModelList {
         $db         = JFactory::getDbo();
         $query      = $db->getQuery(true);
 
-        $query->select( 'tm.*, bi.referencia, bi.amount, bi.integradoId' )
+        $query->select( 'tm.*, bi.referencia, bi.amount, bi.integradoId, bi.cuenta' )
             ->from($db->quoteName('#__txs_timone_mandato', 'tm'))
             ->join('LEFT', $db->quoteName('#__txs_banco_integrado', 'bi') . ' ON (bi.id = (SELECT rel.id_txs_banco FROM flpmu_txs_banco_timone_relation AS rel WHERE rel.id_txs_timone = tm.id))');
 
@@ -87,7 +87,7 @@ class AdminIntegradoraModelOdvform extends JModelList {
         foreach ($result as $tx) {
             $tx->balance = $this->getTxBalance($tx);
             if( (($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0)) && (round($tx->balance,2) > 0) ) {
-                $return[] = $tx;
+                $return[$tx->id] = $tx;
             }
         }
 
