@@ -4,9 +4,9 @@ defined('_JEXEC') or die('Restricted access');
 $buttonClass = "button btn btn-large btn-primary span9";
 $iconClass = "icon-3x";
 
-$cliprovList = ($this->alta->cliprov->count == 0) ? ['href' => '#', 'disabled' => 'disabled="disabled"'] : ['href' => JRoute::_('index.php?option=com_mandatos&view=clienteslist'), 'disabled' => ''];
-$productList = ($this->alta->product->count == 0) ? ['href' => '#', 'disabled' => 'disabled="disabled"'] : ['href' => JRoute::_('index.php?option=com_mandatos&view=productoslist'), 'disabled' => ''];
-$projectList = ($this->alta->project->count == 0) ? ['href' => '#', 'disabled' => 'disabled="disabled"'] : ['href' => JRoute::_('index.php?option=com_mandatos&view=proyectoslist'), 'disabled' => ''];
+$cliprovList = ($this->alta->cliprov->count == 0) ? array('href' => '#', 'disabled' => 'disabled="disabled"') : array('href' => JRoute::_('index.php?option=com_mandatos&view=clienteslist'), 'disabled' => '');
+$productList = ($this->alta->product->count == 0) ? array('href' => '#', 'disabled' => 'disabled="disabled"') : array('href' => JRoute::_('index.php?option=com_mandatos&view=productoslist'), 'disabled' => '');
+$projectList = ($this->alta->project->count == 0) ? array('href' => '#', 'disabled' => 'disabled="disabled"') : array('href' => JRoute::_('index.php?option=com_mandatos&view=proyectoslist'), 'disabled' => '');
 ?>
 
 <div class="container">
