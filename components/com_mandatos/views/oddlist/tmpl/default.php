@@ -68,7 +68,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Autorización</span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
-            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
+<!--            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>-->
         </tr>
         </thead>
         <tbody>
