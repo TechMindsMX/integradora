@@ -121,7 +121,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                                             $db->insertObject('#__integrado_pdf_qr',$saveqrname);
 
-                                            $createPDF->facturaPDF($factura, $order, $factObj, $newOrder->urlXML);
+                                            $createPDF->facturaPDF($factura, $newOrder, $factObj, $newOrder->urlXML);
 
                                         }
                                         //fin codigo qr
