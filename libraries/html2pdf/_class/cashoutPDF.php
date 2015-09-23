@@ -11,10 +11,10 @@ class cashoutPDF{
     public function __construct($data){
         $this->tx = new stdClass();
 
-        $propGetter = Closure::bind(  function($prop){return $this->$prop;}, $data, $data );
+//        $propGetter = Closure::bind( function($prop){return $this->$prop;}, $data, $data );
 
-        $this->tx->objEnvio = $propGetter('objEnvio');
-        $this->tx->result = $propGetter('resultado');
+        $this->tx->objEnvio = $data->getOobjEnvio();
+        $this->tx->result = $data->getResultado();
 
         $session = JFactory::getSession();
         $this->integradoId 	= $session->get('integradoId', null, 'integrado');
