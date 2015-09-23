@@ -3384,6 +3384,22 @@ class makeTx {
     protected $objEnvio;
     protected $resultado;
 
+    /**
+     * @return mixed
+     */
+    public function getObjEnvio()
+    {
+        return $this->objEnvio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResultado()
+    {
+        return $this->resultado;
+    }
+
     protected function create($datosEnvio){
         unset($this->options);
 
