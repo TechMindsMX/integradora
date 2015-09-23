@@ -45,14 +45,13 @@ class reportecontabilidad{
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
         $html2pdf->Output($path, 'F');
-        return $path;
+        $this->path = $path ;
     }
 
     public  function readCss(){
         $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/template.css" rel="stylesheet">');
         $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/override.css" rel="stylesheet">');
         return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
-
     }
 
     /**
@@ -75,7 +74,7 @@ class reportecontabilidad{
                 $orden = getFromTimOne::getOrdenesCompra(null, $data);
                 $orden = $orden[0];
                 $html = $getHtml->html($orden);
-                $path = 'media/pdf_odc/'.$this->integradoId.'-'.$orden->createdDate.'-'.$data.'.pdf';
+                $path = 'media/pdf_odc/'.$this->integradoId.'-'.$orden->createdDate.'-'.$orden->numOrden.'.pdf';
                 break;
             case 'odd':
                 $getHtml = new oddPdf($data);

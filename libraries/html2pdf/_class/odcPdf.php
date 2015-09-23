@@ -21,6 +21,7 @@ class odcPdf
         $msg         = $sesion->get('msg',null,'odcCorrecta');
         $sesion->clear('msg','odcCorrecta');
         $app->enqueueMessage($msg,'MESSAGE');
+        $integrado = new IntegradoSimple($orden->integradoId);
 
         $html = '<style>
                 body{
@@ -80,7 +81,7 @@ class odcPdf
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>
                     </td>
-                    <td  style="border: 1px solid #ccc;  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.024) inset;    color: #999; width:73px; height: 41px;">
+                    <td  style="color: #999; width:73px;">
                         <h3 class=" bordes-box text-center">'.$orden->numOrden.'</h3>
                     </td>
                 </tr>
@@ -301,26 +302,28 @@ class odcPdf
                     </tr>
                 </table>
                 <br>
-                <!--table id="footer" style="padding-left: 15px; padding-right: 15px; width= 500px">
+                <table id="footer" style="padding-left: 15px; padding-right: 15px;">
                     <tr>
                         <td>
                             '.JText::_('LBL_CON_FACTURA').'
                         </td>
                     </tr>
                     <tr>
-                        <td class="container text-uppercase control-group">
-                            '.JText::_('LBL_AUTORIZO_ODC').'
+                        <td style="text-transform: uppercase;">
+                            '.JText::sprintf('LBL_AUTORIZO_ODC', $integrado->getDisplayName(), $integrado->getIntegradoRfc()).'
                         </td>
                     </tr>
-                </table>
-                <table id="footer" style="padding-left: 15px; padding-right: 15px; width= 500px">
-                    <tr class="text-center">
-                        <td colspan="2">
-                            <p class="text-capitalize">'.JText::_('LBL_INTEGRADORA').'</p>
-                            <p>'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
+                     <tr>
+                        <td style="text-align: center; text-transform: uppercase;">
+                            '.JText::_('LBL_INTEGRADORA').'
                         </td>
                     </tr>
-                </table-->
+                    <tr>
+                        <td style="text-align: center">
+                            '.JText::_('LBL_INTEGRADORA_DIRECCION').'
+                        </td>
+                    </tr>
+                </table>.
             </div>';
         return $html;
     }

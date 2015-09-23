@@ -105,6 +105,9 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 $createPDF = new reportecontabilidad();
                 $createPDF->createPDF($id, 'odc');
 
+
+
+
             } else {
                 $respuesta = array('redireccion' => false);
             }
@@ -112,6 +115,10 @@ class MandatosControllerOdcform extends JControllerLegacy {
             $respuesta['idOrden'] = $id;
 
             $db->transactionCommit();
+
+            if($createPDF){
+                $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$datos['numOrden']);
+            }
 
             echo json_encode($respuesta);
         }catch (Exception $e){

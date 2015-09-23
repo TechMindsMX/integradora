@@ -92,7 +92,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"></span> </th>
-<!--            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>-->
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
         </tr>
         </thead>
         <tbody>
@@ -138,8 +138,9 @@ if(is_null($ordenes) || empty($ordenes)){
                 $class = $value->status->id == 1 ? '' : 'status1';
                 $nombreArchivoXML = explode('/',$value->urlXML);
 
-                $namePdf = 'media/pdf_odc/'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'.pdf';
-                $pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$namePdf.'">Descargar PDF</a>';
+                if($value->urlPDFOrden){
+                    $pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$value->urlPDFOrden.'">Descargar PDF</a>';
+                }
 
 
                 echo '<tr class="type_'.$value->status->id.'" data-tipo="'.$value->status->id.'">';
@@ -152,7 +153,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 if($value->status->id != 55) {
                     echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" ><a download="' . $nombreArchivoXML[2] . '" href="' . $value->urlXML . '">Descargar XML</a></td>';
                 }
-//                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
                 echo '</tr>';
             }
         }else{
