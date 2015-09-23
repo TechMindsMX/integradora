@@ -354,12 +354,18 @@ class Integrado {
 			->where($db->quoteName('integradoId') . '=' . $db->quote($integradoId) . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
 
-		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
-		if(is_null($perm_level)) {
-			$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
-		}
+        if ($app->getName() == 'site') {
+            // si el usuario no pertenece al integrado se redirecciona // debe entrar en el log de eventos
+            if(is_null($perm_level)) {
+                $app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
+            }
+        } elseif ($app->getName() == 'administrator') {
 
-		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
+        } else {
+            throw new Exception('Enviroment error');
+        }
+
+        $permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
 
 		// verifica si puede editar
 		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_auth']);
