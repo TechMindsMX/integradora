@@ -45,7 +45,6 @@ class odvPdf {
                 font-weight: normal;
                 line-height: 24px;
             }
-
         </style>
         <table class=\"table\">
             <tr>
@@ -235,12 +234,12 @@ class odvPdf {
                         </tr>
                         <tr>
                             <td>
-                                <p class="text-capitalize">'.JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()).'</p>
+                                <p style="text-transform: uppercase;">'.JText::sprintf('LBL_AUTORIZO_ODV', $integrado->getDisplayName(), $integrado->getIntegradoRfc()).'</p>
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: center;">
-                                <p class="text-capitalize">'.JText::_('LBL_INTEGRADORA').'</p>
+                                <p style="text-transform: uppercase;">'.JText::_('LBL_INTEGRADORA').'</p>
                                 <p>'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
                             </td>
                         </tr>

@@ -100,7 +100,11 @@ class MandatosControllerOdvform extends JControllerAdmin {
         if ($saved) {
             $this->sendMail($this->data);
 			$createPDF = new reportecontabilidad();
-			$createPDF->createPDF($numOrden, 'odv');
+			$createPDF->createPDF($this->data['id'], 'odv');
+
+			if($createPDF){
+				$save->updateDB('ordenes_venta', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$numOrden);
+			}
 		}
 
         $url = 'index.php?option=com_mandatos&view=odvpreview&idOrden='.$this->data['id'];

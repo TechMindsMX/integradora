@@ -137,4 +137,8 @@ UPDATE flpmu_modules SET content = '<div class=\"row-fluid\">\r\n<div class=\"sp
 ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `urlPDF`;
 --rollback ALTER TABLE `flpmu_ordenes_compra` DROP COLUMN `urlPDFOrden`;
 
+--changeset Ismael:22
+ALTER TABLE `flpmu_ordenes_venta` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `urlXML`;
+--rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
+
 
