@@ -21,6 +21,7 @@ final class Environment
             define("MEDIA_FILES", $environment["MEDIA_FILES"]);
             define('XML_FILES_PATH', $environment['XML_FILES_PATH']);
             define('INTEGRADORA_UUID', $environment['INTEGRADORA_UUID']);
+            define('INTEGRADOID_CONCENTRADORA', $environment['INTEGRADOID_CONCENTRADORA']);
 
 //            timone
             define("MIDDLE", $environment['MIDDLE']);

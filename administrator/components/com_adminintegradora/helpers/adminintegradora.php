@@ -12,6 +12,12 @@ class AdminintegradoraHelper {
         );
 
         JHtmlSidebar::addEntry(
+            JText::_('COM_FACTURAS_LISTADO_TX_NI'),
+            'index.php?option=com_adminintegradora&view=txni',
+            $vName == 'listadotxni'
+        );
+
+        JHtmlSidebar::addEntry(
             JText::_('COM_FACTURAS_LISTADO_ODD'),
             'index.php?option=com_adminintegradora&view=oddlist',
             $vName == 'listadoODD'

@@ -33,7 +33,7 @@ class IntegradoModelSolicitud extends JModelItem {
             $status = array(1,3,50,99);
             if(isset($this->dataModelo->integrados[0]->integrado->status)) {
                 if (in_array($this->dataModelo->integrados[0]->integrado->status, $status)) {
-                    JFactory::getApplication()->redirect('index.php?option=com_mandatos', 'El status de la solicitud no permite edición');
+                    JFactory::getApplication()->redirect('index.php?option=com_integrado&Itemid=207', 'El status de la solicitud no permite edición');
                 }
             }
 		}
