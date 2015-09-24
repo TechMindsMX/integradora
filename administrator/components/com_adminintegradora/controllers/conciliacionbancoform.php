@@ -80,6 +80,9 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         if (!array_key_exists($this->data['integradoId'], $integrados)) {
             // Si el id de integrado no es correcto, se asocia la TX con la Integradora
             $this->data['integradoId'] = $integradoConcentradora->getId();
+            $this->data['identified'] = 0;
+        }else{
+            $this->data['identified'] = 1;
         }
     }
 
@@ -131,7 +134,9 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
         $result   = $transfer->sendCreateTx(false);
 
-        $this->saveTxsRelation( $transfer->getTransferData(), $this->id_tx_banco );
+        if( $dataObj->integradoId !=  INTEGRADOID_CONCENTRADORA ) {
+            $this->saveTxsRelation($transfer->getTransferData(), $this->id_tx_banco);
+        }
 
         if($result != 200) {
             throw new Exception('Fallo al hacer la Tx Integradora Integrado');

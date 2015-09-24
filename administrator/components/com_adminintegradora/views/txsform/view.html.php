@@ -3,7 +3,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class AdminintegradoraViewtxslist extends JViewLegacy {
+class AdminintegradoraViewtxsform extends JViewLegacy {
 
     public function display($tpl = null) {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
@@ -25,7 +25,7 @@ class AdminintegradoraViewtxslist extends JViewLegacy {
 
     protected function addToolbar() {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
-        JToolBarHelper::title(JText::_('COM_TXS_CONCILIACION_TITLE'), '');
+        JToolBarHelper::title(JText::_('COM_TXS_CONCILIACION'), '');
 
     }
 }

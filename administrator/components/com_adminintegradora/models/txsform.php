@@ -8,7 +8,7 @@ jimport('integradora.gettimone');
 /**
  * Methods supporting a list of Facturas records.
  */
-class AdminintegradoraModeltxslist extends JModelList {
+class AdminintegradoraModeltxsform extends JModelList {
 
     public function __construct($config = array()) {
 
