@@ -13,7 +13,7 @@ class AdminintegradoraHelper {
 
         JHtmlSidebar::addEntry(
             JText::_('COM_FACTURAS_LISTADO_TX_NI'),
-            'index.php?option=com_adminintegradora&view=txni',
+            'index.php?option=com_adminintegradora&view=txslist',
             $vName == 'listadotxni'
         );
 
