@@ -115,7 +115,7 @@ class MandatosControllerMutuosform extends JControllerLegacy {
                 'totalAmount'       => array('float'        => true, 'maxlength' => '100'),
                 'interes'           => array('float'        => true, 'maxlength' => '5',     'notEmpty' => true),
                 'banco_codigo'      => array('alphaNumber'  => true, 'length'    => 3,       'required' => true),
-                'banco_cuenta'      => array('required'     => true),
+                'banco_cuenta'      => array('required'     => true, 'length'    => 11),
                 'banco_sucursal'    => array('required'     => true),
                 'banco_clabe'       => array('banco_clabe'  => $parametros->banco_codigo, 'length' => 18, 'required' => true));
         }elseif($parametros->existe === 'true'){

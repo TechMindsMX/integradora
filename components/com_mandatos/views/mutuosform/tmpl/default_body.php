@@ -257,7 +257,7 @@ $existe = is_null($datos->id)?'false':'true';
             </div>
             <div class="form-group">
                 <label for="banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?></label>
-                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="10" value="<?php echo isset($datos_banco->banco_cuenta)?$datos_banco->banco_cuenta:'' ?>" />
+                <input name="banco_cuenta" id="banco_cuenta" type="text" maxlength="11" value="<?php echo isset($datos_banco->banco_cuenta)?$datos_banco->banco_cuenta:'' ?>" />
             </div>
             <div class="form-group">
                 <label for="banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?></label>
