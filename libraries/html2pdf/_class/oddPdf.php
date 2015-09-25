@@ -23,10 +23,10 @@ class oddPdf{
         if($this->odd->paymentMethod==1){
             $metodoPago = JText::_('LBL_SPEI');
         }
-        if($datos->paymentMethod==2) {
+        if($this->odd->paymentMethod==2) {
             $metodoPago = JText::_('LBL_DEPOSIT');
         }
-        if($datos->paymentMethod==3) {
+        if($this->odd->paymentMethod==3) {
             $metodoPago = JText::_('LBL_CHEQUE');
         }
 
