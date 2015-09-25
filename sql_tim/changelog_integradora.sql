@@ -144,3 +144,7 @@ ALTER TABLE `flpmu_ordenes_venta` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEF
 --changeset Ismael:23
 ALTER TABLE `flpmu_ordenes_retiro` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
 --rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
+
+--changeset Ismael:24
+ALTER TABLE `flpmu_ordenes_deposito` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
+--rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
