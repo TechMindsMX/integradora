@@ -99,7 +99,9 @@ class MandatosControllerOdrform extends JControllerLegacy {
 	        $this->session->clear('data', 'odr');
 
             $class = new reportecontabilidad();
-            $class->createPDF($datos, 'odr');
+            $data = new stdClass();
+            $data->datos = (object) $datos;
+            $class->createPDF($data->datos, 'odr');
 
             if($class){
                 $save->updateDB('ordenes_retiro', array('urlPDFOrden = "'.$class->path.'"'), 'numOrden = '.$idOrden);
