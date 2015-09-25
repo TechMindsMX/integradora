@@ -131,8 +131,6 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
                                     $this->sendNotifications();
 
-                                    $class = new reportecontabilidad();
-                                    $class->createPDF($this->orden, 'odr');
                                 }
                             } else {
                                 throw new Exception( JText::_('ORDER_NO_PAID') );
