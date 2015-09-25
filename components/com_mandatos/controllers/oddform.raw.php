@@ -4,6 +4,9 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
+jimport('html2pdf.reportecontabilidad');
+
+
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOddform extends JControllerLegacy {
@@ -49,6 +52,14 @@ class MandatosControllerOddform extends JControllerLegacy {
         }
 
         if($salvado) {
+
+            $class = new reportecontabilidad();
+            $class->createPDF($datos, 'odd');
+
+            if($class){
+                $save->updateDB('ordenes_deposito', array('urlPDFOrden = "'.$class->path.'"'), 'numOrden = '.$datos->numOrden);
+            }
+
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&idOrden=' . $salvado.'&success=true',
                 'redireccion' => true);
         }else{

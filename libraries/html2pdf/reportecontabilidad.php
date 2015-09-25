@@ -79,7 +79,7 @@ class reportecontabilidad{
             case 'odd':
                 $getHtml = new oddPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odd/'.$this->integradoId.'-'.$data[0]->createdDate.'-'.$data[0]->numOrden.'.pdf';
+                $path = 'media/pdf_odd/'.$this->integradoId.'-'.$data->createdDate.'-'.$data->numOrden.'.pdf';
                 break;
             case 'odr':
                 $getHtml = new odrPdf($data);
