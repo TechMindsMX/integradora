@@ -9,11 +9,16 @@ var_dump($integrados);
 ?>
 
 <form>
-    <div>
+    <div class="form-control">
+        <label for="integradoId">Integrados</label>
         <select id="integradoId" name="integradoId">
-            <?php foreach ($integrados as $key => $integrados) { ?>
-
+            <option value="">Selecione su opción</option>
+            <?php foreach ($integrados as $key => $integrados) {
+                $integrado = new IntegradoSimple($integrados->integradoId);
+                ?>
+                <option value="<?php echo $integrados->getId(); ?>"><?php echo $integrados->getDisplayName(); ?></option>
             <?php } ?>
         </select>
     </div>
+    <input type="submit" value="Identificar">
 </form>
