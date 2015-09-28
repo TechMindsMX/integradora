@@ -385,7 +385,7 @@ class IntegradoControllerIntegrado extends JControllerForm {
 		$project->setStatus(1);
 		$project->setParentId(0);
 
-		$create = $project->checkDuplicatedProjectNameForIntegrado((array)$project, 'crear', $this->integradoId);
+		$create = $project->checkDuplicatedProjectNameForIntegrado($project, 'crear', $this->integradoId);
 
 		if($create === 'crear') {
 			$save = __METHOD__.' | '.$project->save();
