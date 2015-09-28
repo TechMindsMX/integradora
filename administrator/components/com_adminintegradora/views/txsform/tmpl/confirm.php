@@ -2,7 +2,13 @@
 defined('_JEXEC') or die('Restricted access');
 ?>
 <script>
-
+ jQuery(document).ready(function(){
+     jQuery(document).ready(function(){
+        jQuery('#cancelar').click(function(){
+            window.history.back();
+        });
+     });
+ });
 </script>
 <h1><?php echo JText::_('IDENTIFICAR_CONFIRMACION'); ?></h1>
 
@@ -22,5 +28,5 @@ defined('_JEXEC') or die('Restricted access');
     <input type="hidden" name="integradoId" value="" />
 
     <input type="submit" class="btn btn-primary" value="Confirmar" />
-    <input type="button" class="btn btn-danger" id="cancelar" value="Cancelar" />
+    <input type="button" class="btn btn-danger cancelar" id="cancelar" value="Cancelar" />
 </form>

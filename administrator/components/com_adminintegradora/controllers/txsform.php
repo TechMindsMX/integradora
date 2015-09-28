@@ -1,10 +1,9 @@
 <?php
 /**
  * @version     1.0.1
- * @package     com_donde_comprar
  * @copyright   Copyright (C) 2014. Todos los derechos reservados.
  * @license     Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- * @author      ismael <aguilar_2001@hotmail.com> - http://
+ * @author      Lutek <luis.magana@techminds.com.mx>
  */
 
 // No direct access.
@@ -20,6 +19,6 @@ class AdminintegradoraControllertxsform extends JControllerAdmin{
     protected $data;
 
     public function save(){
-
+    	JFactory::getApplication()->input->getArrya();
     }
 }
