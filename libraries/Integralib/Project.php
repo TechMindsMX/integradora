@@ -40,21 +40,21 @@ class Project {
 	}
 
 	/**
-	 * @param $post
+	 * @param $project
 	 * @param $currentValidations
 	 * @param $integradoId
 	 *
 	 * @return mixed
 	 */
-	public static function checkDuplicatedProjectNameForIntegrado( $post, $currentValidations, $integradoId ) {
-		if ( isset( $integradoId ) ) {
+	public function checkDuplicatedProjectNameForIntegrado(Project $project, $currentValidations, $integradoId ) {
+		if ( !isset( $integradoId ) ) {
 			$integradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
 		}
 
 		$projects = getFromTimOne::getProyects( $integradoId );
 
 		foreach ( $projects as $value ) {
-			if ( strtoupper( $value->name ) == strtoupper( $post['name'] ) && $value->id_proyecto != $post['id_proyecto'] ) {
+			if ( strtoupper( $value->name ) == strtoupper( $project->name ) && $value->id_proyecto != $project->getIdProyecto() ) {
 				$validacion['success'] = false;
 				$validacion['msg']     = JText::_( 'ERROR_PROJECT_NAME_DUPLICATED' );
 			}
@@ -133,8 +133,8 @@ class Project {
 	/**
 	 * @return null
 	 */
-	public function getIdProyyecto() {
-		return $this->id_proyyecto;
+	public function getIdProyecto() {
+		return $this->id_proyecto;
 	}
 
 }

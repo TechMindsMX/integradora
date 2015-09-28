@@ -19,9 +19,19 @@ class odrPdf{
     }
 
     public function createHTML(){
+        if($this->odr->paymentMethod==1){
+            $metodoPago = JText::_('LBL_SPEI');
+        }
+        if($this->odr->paymentMethod==2) {
+            $metodoPago = JText::_('LBL_DEPOSIT');
+        }
+        if($this->odr->paymentMethod==3) {
+            $metodoPago = JText::_('LBL_CHEQUE');
+        }
+
         $integrado = $this->integCurrent->integrados[0];
         $number2string = new AifLibNumber();
-
+        $receptor = new IntegradoSimple($this->odr->integradoId);
         $this->odr->currency = isset($this->odr->currency)? $this->odr->currency:'MXN';
 
         $html ='<body>
@@ -47,13 +57,13 @@ class odrPdf{
                                 '.JText::_('LBL_SOCIO_INTEG').'
                             </td>
                             <td class="span4" style="width: 300px; line-height: 24.05px;">
-                                '.$this->odr->receptor.'
+                                '.$receptor->integrados[0]->datos_empresa->razon_social.'
                             </td>
                             <td class="span2 text-right" style="width: 100px;">
                                 '.JText::_('LBL_DATE_CREATED').'
                             </td>
                             <td class="span4"  style="width: 200px; line-height: 24.05px;">
-                                '.$this->odr->createdDate.'
+                                '.date('d-m-Y', $this->odr->createdDate).'
                             </td>
                         </tr>
                         <tr style="font-size: 10px;">
@@ -71,7 +81,7 @@ class odrPdf{
                             </td>
                             <td class="span4" style="width: 200px;">';
 
-        if (isset($this->odr->paymentDate)) {$html .=$this->odr->paymentDate;}
+        if (isset($this->odr->paymentDate)) {$html .= date('d-m-Y', $this->odr->paymentDate);}
 
         $html .='</td>
                         </tr>
@@ -86,7 +96,7 @@ class odrPdf{
                                 '.JText::_('LBL_FORMA_PAGO').'
                             </td>
                             <td class="span4">
-                                '.JText::_($this->odr->paymentMethod->name).'
+                                '.JText::_($metodoPago).'
                             </td>
                         </tr>
                         <tr style="font-size: 10px">
@@ -112,24 +122,24 @@ class odrPdf{
                                 '.JText::_('LBL_BANCOS').'
                             </td>
                             <td class="span4">';
-        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->bankName; }
+        if (isset($receptor->integrados[0]->datos_bancarios[0])) { $html .=$receptor->integrados[0]->datos_bancarios[0]->bankName; }
         $html .='
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="font-size: 10px">
                         <td style="text-align: right;">&nbsp;</td>
                         <td style="text-align: left;">&nbsp;</td>
                         <td style="text-align: right;">'.JText::_('LBL_BANCO_CUENTA').'</td>
                         <td style="text-align: left;">';
-        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->banco_cuenta; }
+        if (isset($receptor->integrados[0]->datos_bancarios[0])) { $html .=$receptor->integrados[0]->datos_bancarios[0]->banco_cuenta; }
         $html .='</td>
                     </tr>
-                    <tr>
+                    <tr style="font-size: 10px">
                         <td style="text-align: right;">&nbsp;</td>
                         <td style="text-align: left;">&nbsp;</td>
                         <td style="text-align: right;">'.JText::_('LBL_NUMERO_CLABE').'</td>
                         <td style="text-align: left;">';
-                        if (isset($this->odr->cuenta)) { $html .=$this->odr->cuenta->banco_clabe; }
+                        if (isset($receptor->integrados[0]->datos_bancarios[0])) { $html .=$receptor->integrados[0]->datos_bancarios[0]->banco_clabe; }
         $html .='</td>
                     </tr>
                     </table>';
@@ -157,12 +167,12 @@ class odrPdf{
                             </tr>
                             <tr>
                                 <td style="padding-left: 15px; line-height: 24px; font-size: 10px" class="container text-uppercase control-group">
-                                    '.JText::_('LBL_AUTORIZO_ODR').'
+                                    '.JText::sprintf('LBL_AUTORIZO_ODR',$receptor->getDisplayName(), $receptor->getIntegradoRfc()).'
                                 </td>
                             </tr>
                             <tr >
                                 <td style="line-height: 24px; font-size: 10px">
-                                    <p class="text-capitalize" style="text-align: center; ">'.JText::_('LBL_INTEGRADORA').'</p>
+                                    <p class="text-capitalize" style="text-transform: capitalize; text-align: center; ">'.JText::_('LBL_INTEGRADORA').'</p>
                                     <p style="text-align: center">'.JText::_('LBL_INTEGRADORA_DIRECCION').'</p>
                                 </td>
                             </tr>

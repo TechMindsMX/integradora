@@ -35,7 +35,8 @@ class IntegradoController extends JControllerLegacy {
 
         $respuesta = $this->rfc_type($data['rfc']);
 
-        $ex = $this->search_rfc_exists( $data['rfc'] );
+        $ex = $this->search_rfc_integrado_exist($data['rfc']);
+
         if ( is_numeric($respuesta) && isset($ex) ) {
             $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
         }
@@ -74,6 +75,11 @@ class IntegradoController extends JControllerLegacy {
         }
     }
 
+    /**
+     * @param $rfc
+     *
+     * @return int|array
+     */
     public function rfc_type($rfc) {
 
         $diccionarioFisica = array( 'rfc' => array( 'rfc_fisica' => true, 'required' => true ) );
@@ -207,27 +213,34 @@ class IntegradoController extends JControllerLegacy {
      * @throws Exception
      */
     function saveform(){
-        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
-
-        if($data['busqueda_rfc']) {
-            $respuesta = $this->rfc_type($data['busqueda_rfc']);
-            $ex = $this->search_rfc_exists( $data['busqueda_rfc'] );
-        }
-
-        if ( isset( $respuesta ) ) {
-            if ( is_array($respuesta) || isset($ex) ) {
-                if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
-                }
-                echo json_encode($respuesta);
-                return true;
-            }
-        }
-
         if (JSession::checkToken() === false) {
             $response = array('success' => false, 'msg'=>'Token Invalido' );
             echo json_encode($response);
             return true;
+        }
+
+        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
+
+        if($data['busqueda_rfc']) {
+            if ( is_array( $this->rfc_type($data['busqueda_rfc']) ) || !is_null( $this->search_rfc_integrado_exist( $data['busqueda_rfc'] ) ) ) {
+                $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
+                echo json_encode($respuesta);
+                return true;
+            }
+
+            // Si el RFC existe como Cliente/Proveedor asigna el integradoId en la sesion
+            $integrado_id = $this->search_rfc_exists($data['busqueda_rfc']);
+
+            if ( !is_null($integrado_id) ) {
+                $this->sesion->set('integradoId', $integrado_id, 'integrado');
+                $this->integradoId = $integrado_id;
+
+                $resultado['safeComplete']  = true;
+                $resultado['integradoId'] = $integrado_id;
+
+//                echo json_encode($resultado);
+//                return true;
+            }
         }
 
         $input 	= JFactory::getApplication()->input;
@@ -895,6 +908,24 @@ class IntegradoController extends JControllerLegacy {
             }
         }
         return $permiso;
+    }
+
+    /**
+     * @param $rfc
+     *
+     * @return string|null
+     */
+    private function search_rfc_integrado_exist($rfc)
+    {
+        $ex = $this->search_rfc_exists($rfc);
+
+        if ( ! empty( $ex )) {
+            $integrado = new IntegradoSimple($ex);
+
+            $ex = $integrado->isIntegrado() ? $integrado : null;
+        }
+
+        return $ex;
     }
 
 }

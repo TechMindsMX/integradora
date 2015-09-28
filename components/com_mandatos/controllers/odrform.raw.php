@@ -4,6 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
+jimport('html2pdf.reportecontabilidad');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -96,6 +97,15 @@ class MandatosControllerOdrform extends JControllerLegacy {
         if($salvado) {
             $this->session->set('msg','Datos Almacenados', 'odr');
 	        $this->session->clear('data', 'odr');
+
+            $class = new reportecontabilidad();
+            $data = new stdClass();
+            $data->datos = (object) $datos;
+            $class->createPDF($data->datos, 'odr');
+
+            if($class){
+                $save->updateDB('ordenes_retiro', array('urlPDFOrden = "'.$class->path.'"'), 'numOrden = '.$idOrden);
+            }
 
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $idOrden.'&success=true',
                 'redireccion' => true);

@@ -361,6 +361,7 @@ $token = JSession::getFormToken();
 
 				if(typeof response.busqueda_rfc === 'number') {
 					jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
+					jQuery('#pers-juridica').find('.error').remove();
 					jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success"><?php echo JText::_('RFC_VALIDO'); ?></span>');
 					jQuery('#juridica').prop('disabled', false).removeClass('disabled');
 				}

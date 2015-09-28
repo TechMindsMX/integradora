@@ -70,7 +70,7 @@ jQuery(document).ready(function(){
 				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
                 <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
-<!--				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>-->
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -100,8 +100,7 @@ jQuery(document).ready(function(){
 				}
 				$class = $value->status->id == 1?'':'status1';
 
-				$namePdf = 'media/pdf_odr/'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'.pdf';
-				$pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$namePdf.'">Descargar PDF</a>';
+				$pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$value->urlPDFOrden.'">Descargar PDF</a>';
 
 				echo '<tr class="type_'.$value->status->id.'" data-filtro="'.$value->status->id.'">';
 				echo '	<td class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
@@ -110,7 +109,7 @@ jQuery(document).ready(function(){
 				echo '	<td class="'.$class.'" >'.$value->status->name.'</td>';
 				echo '	<td class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td class="'.$class.'" >'.$edit_button.'</td>';
-//				echo '	<td class="'.$class.'" >'.$pdf.'</td>';
+				echo '	<td class="'.$class.'" >'.$pdf.'</td>';
 				echo '</tr>';
 			}
 		}else{
