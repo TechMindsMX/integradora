@@ -26,8 +26,6 @@ class IntegradoModelSolicitud extends JModelItem {
 				JFactory::getApplication()->redirect('index.php?option=com_mandatos', 'no tienes permisos para ver este elemento');
 			}
 			
-//			$integrado = new ReflectionClass('integradoSimple');
-//			$this->dataModelo = $integrado->newInstance($this->integradoId);
 			$this->dataModelo = new IntegradoSimple($this->integradoId);
 
             $status = array(1,3,50,99);
