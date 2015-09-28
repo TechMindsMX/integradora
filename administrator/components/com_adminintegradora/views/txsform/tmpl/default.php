@@ -4,19 +4,16 @@ defined('_JEXEC') or die('Restricted Access');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
 $integrados = $this->integrados;
-
-var_dump($integrados);
 ?>
 
-<form>
+<form action="index.php?option=com_adminintegradora&view=txsform&layout=confirm" method="post">
+    <input type="hidden" value="<?php echo $this->input['idtx']; ?>" name="idtx">
     <div class="form-control">
         <label for="integradoId">Integrados</label>
         <select id="integradoId" name="integradoId">
-            <option value="">Selecione su opción</option>
-            <?php foreach ($integrados as $key => $integrados) {
-                $integrado = new IntegradoSimple($integrados->integradoId);
-                ?>
-                <option value="<?php echo $integrados->getId(); ?>"><?php echo $integrados->getDisplayName(); ?></option>
+            <option value="">Selecione su opci&oacute;n</option>
+            <?php foreach ($integrados as $key => $integrados) { ?>
+                <option value="<?php echo $integrados->integradoId; ?>"><?php echo $integrados->displayName; ?></option>
             <?php } ?>
         </select>
     </div>
