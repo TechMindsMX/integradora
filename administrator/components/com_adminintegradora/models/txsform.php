@@ -49,6 +49,7 @@ class AdminintegradoraModeltxsform extends JModelList {
 
         $query->select('*')->from($db->quoteName('#__txs_banco_integrado'))->where($db->quoteName('id') . ' = ' . $db->quote($input['idtx']));
         $db->setQuery($query);
+
         $txInfo               = $db->loadObject();
         $respuesta->integrado = new IntegradoSimple($input['integradoId']);
         $txInfo->date         = date('d-m-Y', $txInfo->date);

@@ -23,9 +23,13 @@ defined('_JEXEC') or die('Restricted access');
 </div>
 <br />
 
-<form action="index.php?option=com_adminintegradora&view=txsform&task=save">
-    <input type="hidden" name="idtx" value="" />
-    <input type="hidden" name="integradoId" value="" />
+<form action="index.php?option=com_adminintegradora&view=txsform" method="post">
+    <input type="hidden" name="task" value="txsform.save" />
+    <input type="hidden" name="idtx" value="<?php echo $this->datosConfirmacion->txInfo->id; ?>" />
+    <input type="hidden" name="integradoId" value="<?php echo $this->datosConfirmacion->integrado->getId(); ?>" />
+    <input type="hidden" name="integradoIdPagador" value="<?php echo $this->datosConfirmacion->txInfo->integradoId; ?>" />
+    <input type="hidden" name="monto" value="<?php echo $this->datosConfirmacion->txInfo->amount; ?>" />
+    <input type="hidden" name="cuenta" value="<?php echo $this->datosConfirmacion->txInfo->cuenta->datosBan_id; ?>" />
 
     <input type="submit" class="btn btn-primary" value="Confirmar" />
     <input type="button" class="btn btn-danger cancelar" id="cancelar" value="Cancelar" />

@@ -17,5 +17,5 @@ $integrados = $this->integrados;
             <?php } ?>
         </select>
     </div>
-    <input type="submit" value="Identificar">
+    <input type="submit" class="btn btn-primary" value="Identificar">
 </form>
