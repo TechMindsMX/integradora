@@ -18,4 +18,6 @@ $cache->setLifeTime(60);
 
 $exrate  = $cache->call( array( 'ModExchangeRateHelper', 'getExchangeRate' ) );
 
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+
 require JModuleHelper::getLayoutPath('mod_exchange_rate');
