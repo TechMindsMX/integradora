@@ -249,7 +249,9 @@ class JFile
 		// Check src path
 		if (!is_readable($src))
 		{
-			return JText::_('JLIB_FILESYSTEM_CANNOT_FIND_SOURCE_FILE');
+			JLog::add(JText::_('JLIB_FILESYSTEM_CANNOT_FIND_SOURCE_FILE'), JLog::WARNING, 'jerror');
+
+			return false;
 		}
 
 		if ($use_streams)
@@ -440,16 +442,17 @@ class JFile
 	/**
 	 * Moves an uploaded file to a destination folder
 	 *
-	 * @param   string   $src           The name of the php (temporary) uploaded file
-	 * @param   string   $dest          The path (including filename) to move the uploaded file to
-	 * @param   boolean  $use_streams   True to use streams
-	 * @param   boolean  $allow_unsafe  Allow the upload of unsafe files
+	 * @param   string   $src              The name of the php (temporary) uploaded file
+	 * @param   string   $dest             The path (including filename) to move the uploaded file to
+	 * @param   boolean  $use_streams      True to use streams
+	 * @param   boolean  $allow_unsafe     Allow the upload of unsafe files
+	 * @param   boolean  $safeFileOptions  Options to JFilterInput::isSafeFile
 	 *
 	 * @return  boolean  True on success
 	 *
 	 * @since   11.1
 	 */
-	public static function upload($src, $dest, $use_streams = false, $allow_unsafe = false)
+	public static function upload($src, $dest, $use_streams = false, $allow_unsafe = false, $safeFileOptions = array())
 	{
 		if (!$allow_unsafe)
 		{
@@ -461,7 +464,7 @@ class JFile
 				'size'     => '',
 			);
 
-			$isSafe = JFilterInput::isSafeFile($descriptor);
+			$isSafe = JFilterInput::isSafeFile($descriptor, $safeFileOptions);
 
 			if (!$isSafe)
 			{
