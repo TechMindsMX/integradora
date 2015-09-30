@@ -191,10 +191,10 @@ class validador{
         return $respuesta;
     }
 
-	public function banco_clabe () {
+    public function banco_clabe () {
         $respuesta = false;
 
-        if ( ! empty( $this->dataPost[ $this->currentKey ]  ) && strlen($this->dataPost[ $this->currentKey ])==18 ) {
+        if ( ! empty( $this->dataPost[ $this->currentKey ]  ) && strlen($this->dataPost[ $this->currentKey ])==18 && $this->check_cuenta_in_clabe()) {
             $clabe = $this->dataPost[$this->currentKey];
             $paso3 = 0;
             $clabeTmp = str_split ($clabe,17);
@@ -227,7 +227,12 @@ class validador{
         return $respuesta;
     }
 
-	protected function number () {
+    private function check_cuenta_in_clabe()
+    {
+        return substr($this->dataPost['db_banco_clabe'], 6, 11) == $this->dataPost['db_banco_cuenta'];
+    }
+
+    protected function number () {
         $regex = '/^[0-9\ ]+$/';
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
             $respuesta = true;
@@ -238,7 +243,7 @@ class validador{
         return $respuesta;
     }
 
-	protected function float () {
+    protected function float () {
         $regex  = '/^-?(?:\d+|\d*\.\d+)$/';
         if(preg_match($regex, $this->dataPost[$this->currentKey]) == 1){
             $respuesta = true;
@@ -249,7 +254,7 @@ class validador{
         return $respuesta;
     }
 
-	protected function string () {
+    protected function string () {
         $regex = '/^[a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ \ . \']+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -261,7 +266,7 @@ class validador{
         return $respuesta;
     }
 
-	protected function alphaNumber () {
+    protected function alphaNumber () {
         $regex = '/^[0-9a-zA-Z ñ Ñ á Á éÉ íÍ óÓ úÚ . \- \_]+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -273,7 +278,7 @@ class validador{
         return $respuesta;
     }
 
-	protected function text(){
+    protected function text(){
         $regex = '/[A-Za-z0-9  ñ Ñ á Á éÉ íÍ óÓ úÚ äÄ ëË ïÏ öÖ üÜ . \- \_~\-!@#\$%\^&\*\(\) ((.*)\n*)]+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -285,7 +290,7 @@ class validador{
         return $respuesta;
     }
 
-	protected function referenciaBancaria () {
+    protected function referenciaBancaria () {
         $regex = '/^[0-9a-zA-Z\-]{21}+$/';
 
         if (preg_match ($regex, $this->dataPost[$this->currentKey]) == 1) {
@@ -297,12 +302,12 @@ class validador{
         return $respuesta;
     }
 
-	protected function required( ){
+    protected function required( ){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
         return $this->notNull();
     }
 
-	protected function notEmpty (){
+    protected function notEmpty (){
         $this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
 
 		$input = $this->dataPost[$this->currentKey];
@@ -313,13 +318,13 @@ class validador{
 		return ($input ==="0"|| $input);
 	}
 
-	public function notNull() {
+    public function notNull() {
 		$this->errorMsg[__FUNCTION__] = JText::_('VALIDATION_FIELD_IS_REQUIRED');
 
 		return !is_null($this->dataPost[$this->currentKey]) && $this->notEmpty();
 	}
 
-	protected function phone(){
+    protected function phone(){
         $regex =   '/^[1-9]{1}?[0-9]{9}$/';
 
         if(preg_match($regex, $this->dataPost[$this->currentKey])){
@@ -331,13 +336,13 @@ class validador{
         return $respuesta;
     }
 
-	protected function min()
+    protected function min()
     {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MIN_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) >= $this->diccionario_value;
     }
 
-	protected function max()
+    protected function max()
     {
         $this->errorMsg[__FUNCTION__] = JText::sprintf('VALIDATION_MAX_VALUE', $this->diccionario_value);
         return floatval($this->dataPost[$this->currentKey]) <= $this->diccionario_value;

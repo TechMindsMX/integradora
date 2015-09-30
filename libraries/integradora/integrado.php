@@ -109,7 +109,7 @@ class Integrado {
 			$validator   = new validador();
 			$diccionario = array (
 				'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
-				'db_banco_cuenta'   => array ( 'required' => true, 'length' => 11 ),
+				'db_banco_cuenta'   => array('check_cuenta_in_clabe' => $data['db_banco_cuenta'], 'alphaNumber' => true, 'maxlength' => 11,  'minlength'=>11,   'required' => true),
 				'db_banco_sucursal' => array ( 'required' => true ),
 				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18, 'required' => true )
 			);
