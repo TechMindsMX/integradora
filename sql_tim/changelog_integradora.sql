@@ -141,10 +141,14 @@ ALTER TABLE `flpmu_ordenes_compra` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DE
 ALTER TABLE `flpmu_ordenes_venta` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `urlXML`;
 --rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
 
---changeset Ismael:23
-ALTER TABLE `flpmu_ordenes_retiro` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
---rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
+--changeset Lutek:23
+ALTER TABLE `flpmu_txs_banco_integrado` ADD COLUMN `identified` INT(10) NULL AFTER `integradoId`;
+--rollback ALTER TABLE `flpmu_txs_banco_integrado` DROP COLUMN `identified`;
 
 --changeset Ismael:24
+ALTER TABLE `flpmu_ordenes_retiro` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
+--rollback ALTER TABLE `flpmu_ordenes_retiro` DROP COLUMN `urlPDFOrden`;
+
+--changeset Ismael:25
 ALTER TABLE `flpmu_ordenes_deposito` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
---rollback ALTER TABLE `flpmu_ordenes_venta` DROP COLUMN `urlPDFOrden`;
+--rollback ALTER TABLE `flpmu_ordenes_deposito` DROP COLUMN `urlPDFOrden`;

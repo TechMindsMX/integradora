@@ -23,7 +23,7 @@ class AdminintegradoraViewOdvform extends JViewLegacy {
         $model = $this->getModel();
 	    $this->orden     = $model->getOrden();
         $this->integrado = $model->getIntegrado($data['integradoId']);
-	    $this->txs       = $model->getTransacciones();
+	    $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
 	    $this->data      = (object) $data;
 
 	    if (count($errors = $this->get('Errors'))) {

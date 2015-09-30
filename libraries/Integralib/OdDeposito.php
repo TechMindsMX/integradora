@@ -52,7 +52,7 @@ class OdDeposito extends Order {
 		$this->setReceptor($this);
 
 		$fn = new OrdenFn();
-		$this->totalCalculated = $fn->calculateBalance($this);
+		$this->balance = $fn->calculateBalance($this);
 
 		getFromTimOne::convierteFechas($this);
 	}
@@ -72,6 +72,6 @@ class OdDeposito extends Order {
 	 * @return void
 	 */
 	protected function setReceptor( $order ) {
-		$this->receptor =  new \IntegradoSimple( 93 );
+		$this->receptor =  new \IntegradoSimple( $order->integradoId );
 	}
 }

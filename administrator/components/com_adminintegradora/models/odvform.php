@@ -1,7 +1,4 @@
 <?php
-use Integralib\OdVenta;
-use Integralib\Txs;
-
 defined('_JEXEC') or die;
 jimport('joomla.application.component.modellist');
 jimport('integradora.integrado');
@@ -65,42 +62,5 @@ class AdminIntegradoraModelOdvform extends JModelList {
      */
     public function getIntegrado($integradoId){
         return new IntegradoSimple($integradoId);
-    }
-
-    public function getTransacciones(){
-        $return     = array();
-        $orden      = $this->getOrden();
-        $db         = JFactory::getDbo();
-        $query      = $db->getQuery(true);
-
-        $query->select( 'tm.*, bi.referencia, bi.amount, bi.integradoId, bi.cuenta' )
-            ->from($db->quoteName('#__txs_timone_mandato', 'tm'))
-            ->join('LEFT', $db->quoteName('#__txs_banco_integrado', 'bi') . ' ON (bi.id = (SELECT rel.id_txs_banco FROM flpmu_txs_banco_timone_relation AS rel WHERE rel.id_txs_timone = tm.id))');
-
-        try{
-            $db->setQuery($query);
-            $result = $db->loadObjectList();
-        }catch (Exception $e){
-            var_dump($e);
-        }
-
-        foreach ($result as $tx) {
-            $tx->balance = $this->getTxBalance($tx);
-            if( (($orden->integradoId == $tx->integradoId) || ($tx->integradoId == 0)) && (round($tx->balance,2) > 0) ) {
-                $return[$tx->id] = $tx;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param $trans
-     * @return float|int
-     */
-    private function getTxBalance( $trans ) {
-        $txs = new Txs();
-
-        return $txs->calculateBalance($trans);
     }
 }
