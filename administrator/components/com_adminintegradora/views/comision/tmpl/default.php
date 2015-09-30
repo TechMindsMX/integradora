@@ -4,6 +4,7 @@ defined( '_JEXEC' ) or die( 'Restricted Access' );
 JHtml::_( 'bootstrap.tooltip' );
 
 $items = $this->comision;
+$input = !is_null($items) ? '<input type="hidden" name="comId" value="' . $items->id . '" />':'';
 
 // triggers recurrent
 $triggersRecurrent['fecha'] = array_pop($this->cats->triggers);
@@ -23,7 +24,7 @@ $accion = 'index.php?option=com_adminintegradora';
 	</div>
 
 	<form action="<?php echo $accion; ?>" method="post" name="adminForm" id="comision-form" class="form-validate" autocomplete="off">
-		<input type="hidden" name="comId" value="<?php echo $items->id; ?>" />
+		<?php echo $input; ?>
 		<div class="control-group">
 			<div class="control-group">
 				<label class="control-label" for="description">
