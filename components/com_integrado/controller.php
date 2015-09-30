@@ -137,16 +137,32 @@ class IntegradoController extends JControllerLegacy {
 
     /**
      * Salva la alta de usuarios a un integrado
+     *
      * @throws Exception
      */
     function saveAltaNewUserOfInteg(){
-        $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
 
+        $data = $this->addUserToIntegrado(false, $data);
+
+        $this->sendEmail($data['type']);
+
+        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
+    }
+
+    /**
+     * @param boolean $principal
+     * @param $data array [permission_level, userId, integrado_id]
+     *
+     * @return array
+     */
+    private function addUserToIntegrado($principal, $data)
+    {
+        $db = JFactory::getDbo();
         $columnas	= array('integradoId','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($db->quote($this->integradoId), $data['userId'], 0, $data['permission_level']);
+        $valores	= array($db->quote($this->integradoId), $data['userId'], $principal, $data['permission_level']);
 
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
 
@@ -158,9 +174,7 @@ class IntegradoController extends JControllerLegacy {
             $data['type']='edit';
         }
 
-        $this->sendEmail($data['type']);
-
-        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
+        return $data;
     }
 
     /**
@@ -232,14 +246,19 @@ class IntegradoController extends JControllerLegacy {
             $integrado_id = $this->search_rfc_exists($data['busqueda_rfc']);
 
             if ( !is_null($integrado_id) ) {
+                $integrado = new IntegradoSimple($integrado_id);
+                if ( !$integrado->isIntegrado() ) {
+                    $this->addUserToIntegrado(true, ['permission_level' => 3, 'userId' => JFactory::getUser()->id, 'integrado_id' => $integrado_id]);
+                }
+
                 $this->sesion->set('integradoId', $integrado_id, 'integrado');
                 $this->integradoId = $integrado_id;
 
                 $resultado['safeComplete']  = true;
                 $resultado['integradoId'] = $integrado_id;
 
-//                echo json_encode($resultado);
-//                return true;
+                echo json_encode($resultado);
+                return true;
             }
         }
 
