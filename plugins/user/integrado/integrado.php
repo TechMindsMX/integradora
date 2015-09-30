@@ -53,8 +53,8 @@ class PlgUserIntegrado extends JPlugin
             $count = count($user->integrados);
             switch ( true ) {
                 case ( $count === 0):
-                    $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', JUri::base().$redirectUrl), 'warning');
                     $redirectUrl     ='index.php?option=com_integrado&view=solicitud&Itemid=207';
+                    $this->app->enqueueMessage(JText::sprintf('NO_INTEGRADO', JUri::base().$redirectUrl), 'warning');
                     break;
                 case ( $count === 1):
                     try {
