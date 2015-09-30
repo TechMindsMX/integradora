@@ -112,7 +112,7 @@ $templateParams = JFactory::getApplication()->getTemplate(true)->params;
             </div>
     </form>
     <?php
-    $document = &JFactory::getDocument();
+    $document = JFactory::getDocument();
     $renderer = $document->loadRenderer('modules');
     $options = array('style'=>'raw');
     echo $renderer->render('guest-pos',$options,null);
