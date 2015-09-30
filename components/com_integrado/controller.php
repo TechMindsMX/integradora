@@ -243,19 +243,18 @@ class IntegradoController extends JControllerLegacy {
             }
 
             // Si el RFC existe como Cliente/Proveedor asigna el integradoId en la sesion
-            $integrado_id = $this->search_rfc_exists($data['busqueda_rfc']);
+            $this->integradoId = $this->search_rfc_exists($data['busqueda_rfc']);
 
-            if ( !is_null($integrado_id) ) {
-                $integrado = new IntegradoSimple($integrado_id);
+            if ( !is_null($this->integradoId) ) {
+                $integrado = new IntegradoSimple($this->integradoId);
                 if ( !$integrado->isIntegrado() ) {
-                    $this->addUserToIntegrado(true, ['permission_level' => 3, 'userId' => JFactory::getUser()->id, 'integrado_id' => $integrado_id]);
+                    $this->addUserToIntegrado(true, ['permission_level' => 3, 'userId' => JFactory::getUser()->id, 'integrado_id' => $this->integradoId]);
                 }
 
-                $this->sesion->set('integradoId', $integrado_id, 'integrado');
-                $this->integradoId = $integrado_id;
+                $this->sesion->set('integradoId', $this->integradoId, 'integrado');
 
                 $resultado['safeComplete']  = true;
-                $resultado['integradoId'] = $integrado_id;
+                $resultado['integradoId'] = $this->integradoId;
 
                 echo json_encode($resultado);
                 return true;
