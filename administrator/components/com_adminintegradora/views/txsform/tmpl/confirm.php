@@ -18,7 +18,7 @@ defined('_JEXEC') or die('Restricted access');
     <div>Datos de la transacción:</div>
     <div>Fecha: <?php echo $this->datosConfirmacion->txInfo->date; ?></div>
     <div>Banco: <?php echo $this->datosConfirmacion->txInfo->cuenta->bankName; ?></div>
-    <div>Cuneta: <?php echo $this->datosConfirmacion->txInfo->cuenta->banco_cuenta; ?></div>
+    <div>Cuenta: <?php echo $this->datosConfirmacion->txInfo->cuenta->banco_cuenta; ?></div>
     <div>Monto: $<?php echo number_format($this->datosConfirmacion->txInfo->amount,2); ?></div>
 </div>
 <br />

@@ -21,7 +21,7 @@ class AdminintegradoraViewOddform extends JViewLegacy {
 
         $model = $this->getModel();
         $this->orden     = $model->getOrden();
-        $this->integrado = $model->getIntegrado($data['integradoId']);
+        $this->integrado = $model->getIntegrado($this->orden->integradoId);
         $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
         $this->data         = (object) $data;
 
