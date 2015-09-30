@@ -117,12 +117,11 @@ class Integrado {
 
 			if ( $validator->allPassed() ) {
 				$table = 'integrado_datos_bancarios';
-				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe->banco_clabe);
-
 				if ( is_null( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
 					$newId = $db->insertid();
 				} else {
+					$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe->banco_clabe);
 					unset($datosQuery['setUpdate'][0]);
 					unset($datosQuery['setUpdate'][1]);
 					unset($datosQuery['setUpdate'][3]);
