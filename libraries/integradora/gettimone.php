@@ -730,6 +730,11 @@ class getFromTimOne{
         return $acceptedCurrenciesList;
     }
 
+    /**
+     * @param $banco_clabe
+     *
+     * @return stdClass|null
+     */
     public static function searchBancoByClabe( $banco_clabe ) {
         $db = JFactory::getDbo();
 
@@ -741,7 +746,7 @@ class getFromTimOne{
         $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($banco_clabe);
         $existe = getFromTimOne::selectDB( $table, $where );
 
-        return !empty($existe)?$existe[0]:null;
+        return !empty($existe) ? $existe[0] :null;
     }
 
     public static function getPersJuridica( $string ) {
@@ -2318,7 +2323,7 @@ class sendToTimOne {
         return $return;
     }
 
-    public function updateDB($table, $set=null, $condicion=null){
+    public function updateDB($table, $set=null, $condicion=null, $returnObject = false){
         $scope = JFactory::getApplication()->scope;
         JLog::addLogger(array('text_file' => date('d-m-Y').'_'.$scope.'_errors.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::ALL & ~JLog::WARNING & ~JLog::INFO & ~JLog::DEBUG);
 
@@ -2333,8 +2338,17 @@ class sendToTimOne {
 
         try {
             $db->setQuery($query);
-            $db->execute();
-            $return = true;
+            $return = $db->execute();
+            if ($returnObject === true) {
+                $query = $db->getQuery(true);
+
+                $query->select('*')
+                    ->from($db->quoteName('#__'.$table))
+                    ->where($condicion);
+                $db->setQuery($query);
+
+                $return = $db->loadObject();
+            }
         }catch (Exception $e){
             $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');

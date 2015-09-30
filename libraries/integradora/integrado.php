@@ -97,7 +97,7 @@ class Integrado {
 		) );
 		JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 
-		if ( empty( $existe ) ) {
+		if ( is_null( $existe ) || $existe->integradoId === $integradoId) {
 			$columnas[] = 'integradoId';
 			$valores[]  = $db->quote($integradoId);
 
@@ -117,13 +117,18 @@ class Integrado {
 
 			if ( $validator->allPassed() ) {
 				$table = 'integrado_datos_bancarios';
-				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe['banco_clabe']);
+				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe->banco_clabe);
 
-				if ( empty( $existe ) ) {
+				if ( is_null( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
 					$newId = $db->insertid();
 				} else {
-					$save->updateDB( $table, $datosQuery['setUpdate'], $where );
+					unset($datosQuery['setUpdate'][0]);
+					unset($datosQuery['setUpdate'][1]);
+					unset($datosQuery['setUpdate'][3]);
+					$update = $save->updateDB( $table, $datosQuery['setUpdate'], $where, true );
+
+					$newId = $update->datosBan_id;
 				}
 
 				$respuesta['success']        = true;
