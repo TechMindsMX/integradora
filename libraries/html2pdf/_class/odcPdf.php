@@ -76,7 +76,7 @@ class odcPdf
         $html .='<table style="width: 100%" id="logo">
                 <tr>
                     <td style="width: 469px;">
-                        <img width="150" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                        <img width="150" src="images/logo_iecce.png" />
                     </td>
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>

@@ -49,7 +49,7 @@ class odvPdf {
         <table class=\"table\">
             <tr>
                 <td style='width: 570px;'>
-                    <img width=\"200\" src=\"". JUri::base() . 'images/logo_iecce.png'."\"/>
+                    <img width=\"200\" src=\"images/logo_iecce.png\"/>
                 </td>
                 <td style=\"text-align: right\">
                     <h3 class=\"text-right\">No. Orden ". $data->numOrden."</h3>

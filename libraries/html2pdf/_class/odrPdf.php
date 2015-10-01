@@ -38,7 +38,7 @@ class odrPdf{
                 <table style="width: 100%" id="logo">
                 <tr style="font-size: 10px">
                     <td style="width: 569px;">
-                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                        <img width="200" src="images/logo_iecce.png" />
                     </td>
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>

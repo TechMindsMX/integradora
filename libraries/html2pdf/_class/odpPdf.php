@@ -52,7 +52,7 @@ class odpPdf{
                     <tbody>
                         <tr>
                             <td style="width: 490px;">
-                                <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'">
+                                <img width="200" src="images/logo_iecce.png">
                             </td>
                             <td>
                                 <table>

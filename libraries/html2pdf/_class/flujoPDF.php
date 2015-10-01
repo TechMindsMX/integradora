@@ -45,7 +45,7 @@ table{
             <table class="header">
                 <tr>
                     <td colspan="3" style="width: 569px;">
-                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                        <img width="200" src="images/logo_iecce.png" />
                     </td>
                 </tr>
                 <tr class="span6">

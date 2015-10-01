@@ -173,7 +173,7 @@ class mutuosPDF{
                     <tbody>
                         <tr>
                             <td style="width: 390px;">
-                                <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'">
+                                <img width="200" src="images/logo_iecce.png">
                             </td>
                             <td>
                                 <table>
@@ -207,7 +207,7 @@ class mutuosPDF{
                     <tbody>
                         <tr>
                             <td style="width: 390px;">
-                                <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'">
+                                <img width="200" src="images/logo_iecce.png">
                             </td>
                             <td>
                                 <table>
@@ -260,7 +260,7 @@ class mutuosPDF{
                                         <tbody>
                                             <tr>
                                                 <td style="width: 390px;">
-                                                    <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'">
+                                                    <img width="200" src="images/logo_iecce.png">
                                                 </td>
                                                 <td>
                                                     <table>
