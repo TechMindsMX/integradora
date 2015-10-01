@@ -140,6 +140,8 @@ if(is_null($ordenes) || empty($ordenes)){
 
                 if($value->urlPDFOrden){
                     $pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$value->urlPDFOrden.'">Descargar PDF</a>';
+                }else{
+                    $pdf = 'Falta Autorización';
                 }
 
 
