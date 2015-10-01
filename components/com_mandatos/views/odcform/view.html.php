@@ -5,6 +5,9 @@ jimport('joomla.application.component.view');
 
 class MandatosViewOdcform extends JViewLegacy {
 
+    public $catalogos;
+    public $datos;
+    public $orden;
     protected $integradoId;
     protected $permisos;
 
@@ -24,13 +27,13 @@ class MandatosViewOdcform extends JViewLegacy {
         );
         $data	            = $app->input->getArray($post);
         $session            = JFactory::getSession();
-        $this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
+        $this->integradoId  = $session->get('integradoId', null, 'integrado');
         $this->proyectos 	= $this->get('proyectos');
         $this->proveedores	= $this->get('providers');
         $this->bancos       = $this->get('CatalogoBancos');
 
-	    $this->catalogos = new stdClass();
-	    $this->catalogos->paymentMethods    = $this->get('Catalogos');
+        $this->catalogos = new stdClass();
+        $this->catalogos->paymentMethods    = $this->get('Catalogos');
 
         //si la confirmacion es diferente de nulo se hace el parseo del XML
         if(!is_null($data['confirmacion'])){

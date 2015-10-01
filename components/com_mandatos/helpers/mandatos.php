@@ -133,4 +133,15 @@ class MandatosHelper {
 
 		return $blockedBalance;
 	}
+
+	/**
+	 * @param $integradoId
+	 * @return mixed
+     */
+	public static function getBalance( $integradoId ){
+		$integrado = new IntegradoSimple($integradoId);
+		$integrado->getTimOneData();
+
+		return $integrado->timoneData->balance;
+	}
 }

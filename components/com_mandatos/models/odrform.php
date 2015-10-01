@@ -44,13 +44,6 @@ class MandatosModelOdrform extends JModelItem {
 	    return $this->dataOrden;
     }
 
-	public function getBalance( ){
-        $integrado = new IntegradoSimple($this->integradoId);
-		$integrado->getTimOneData();
-
-        return $integrado->timoneData->balance;
-	}
-
 	private function verifyStatusEditable() {
 		if($this->dataOrden->status->id != 1){
 			$url = 'index.php?option=com_mandatos&view=odrlist&integradoId='.$this->integradoId;

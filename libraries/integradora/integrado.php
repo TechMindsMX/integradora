@@ -579,7 +579,10 @@ class IntegradoSimple extends Integrado {
         return $this->integrados[0]->address;
     }
 
-    public function getTimOneData()
+	/**
+	 *
+     */
+	public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
         $db = JFactory::getDbo();
