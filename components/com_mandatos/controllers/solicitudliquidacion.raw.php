@@ -75,8 +75,6 @@ class MandatosControllersolicitudliquidacion extends JControllerAdmin {
     }
 
 	private function getBalance() {
-		$model = $this->getModel('Solicitudliquidacion');
-
-		return $model->balanceLiquidable();
+		return MandatosHelper::getBalance($this->integradoId);
 	}
 }

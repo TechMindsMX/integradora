@@ -75,8 +75,8 @@ $saldo = $this->saldo;
 <h1 style="margin-bottom: 40px;"><?php echo JText::_('COM_MANDATOS_GO_LIQUIDACION'); ?></h1>
 <form id="form_solicitudLiquidacion" autocomplete="off">
     <div>
-        <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $<span id="saldoNuevo">'.number_format($saldo->subtotalTotalOperaciones,2); ?></span></h4>
-        <h4><?php echo JText::_('COM_MANDATOS_SALDO_IMPUESTOS').': $'.number_format($saldo->totalImpuestos,2); ?></h4>
+        <h4><?php echo JText::_('COM_MANDATOS_LIQUIDACION_SALDO').': $<span id="saldoNuevo">'.number_format($this->integrado->balance,2); ?></span></h4>
+<!--        <h4>--><?php //echo JText::_('COM_MANDATOS_SALDO_IMPUESTOS').': $'.number_format($saldo->totalImpuestos,2); ?><!--</h4>-->
         <input type="hidden" id="saldoLiquidacion" class="saldoliquidacion" name="saldo"       value="<?php echo $saldo->subtotalTotalOperaciones; ?>" />
         <input type="hidden" id="integradoId"      class="integradoId"      name="integradoId" value="<?php echo $this->integradoId; ?>" />
     </div>

@@ -10,16 +10,22 @@ class MandatosViewSolicitudliquidacion extends JViewLegacy {
 	protected $operaciones;
 	protected $saldo;
 
+	/**
+	 * @param null $tpl
+	 * @return bool
+     */
 	function display($tpl = null){
-
-		$session            = JFactory::getSession();
-		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
+		$this->loadHelper('Mandatos');
 		$model = $this->getModel();
+
+		$session            				   = JFactory::getSession();
+		$this->integradoId  				   = $session->get( 'integradoId', null, 'integrado' );
 		$model->setIntegradoid($this->integradoId);
-		$this->integrado    = $model->getIntegrado();
-		$this->operaciones  = $model->getOperaciones();
-		$this->saldo 		= $model->getSaldoOperaciones($this->operaciones);
+		$this->integrado    				   = $model->getIntegrado();
+		$this->integrado->blockedBalance	   = MandatosHelper::getBlockedBalance();
+		$this->integrado->balance       	   = MandatosHelper::getBalance($this->integradoId);
+		$this->operaciones  				   = $model->getOperaciones();
+		$this->saldo 						   = $model->getSaldoOperaciones($this->operaciones);
 		$this->saldo->subtotalTotalOperaciones = $model->balanceLiquidable();
 
 		$this->loadHelper('Mandatos');
