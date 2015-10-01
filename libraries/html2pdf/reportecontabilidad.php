@@ -49,9 +49,9 @@ class reportecontabilidad{
     }
 
     public  function readCss(){
-        $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/template.css" rel="stylesheet">');
-        $this->readFile('<link type="text/css" href="http://localhost/integradora/templates/meet_gavern/css/override.css" rel="stylesheet">');
-        return $this->readFile('http://localhost/integradora/templates/meet_gavern/bootstrap/output/bootstrap.css');
+        $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/template.css" rel="stylesheet">');
+        $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/override.css" rel="stylesheet">');
+        return $this->readFile(JUri::base().'/templates/meet_gavern/bootstrap/output/bootstrap.css');
     }
 
     /**
