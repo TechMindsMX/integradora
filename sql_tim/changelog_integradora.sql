@@ -152,3 +152,15 @@ ALTER TABLE `flpmu_ordenes_retiro` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DE
 --changeset Ismael:25
 ALTER TABLE `flpmu_ordenes_deposito` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL DEFAULT NULL AFTER `status`;
 --rollback ALTER TABLE `flpmu_ordenes_deposito` DROP COLUMN `urlPDFOrden`;
+
+--changeset ricardolyon:26
+CREATE TABLE IF NOT EXISTS `flpmu_integradora_config` (
+  `id` INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL ,
+  `name` VARCHAR(50) NOT NULL ,
+  `value` VARCHAR(100) NOT NULL
+);
+INSERT INTO `flpmu_integradora_config` SET `name` = 'path', `value` = 'llenar';
+INSERT INTO `flpmu_integradora_config` SET `name` = 'filename', `value` = 'qa.json';
+INSERT INTO `flpmu_integradora_config` SET `name` = 'seedFilename', `value` = 'integradora-seed-qa.json';
+INSERT INTO `flpmu_integradora_config` SET `name` = 'seedConcentradoraFilename', `value` = 'concentradora-seed-qa.json';
+--rollback DROP TABLE `flpmu_integradora_config`;
