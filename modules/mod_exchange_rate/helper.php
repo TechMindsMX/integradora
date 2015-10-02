@@ -14,7 +14,7 @@ class ModExchangeRateHelper
      *
      * @return stdClass
      */
-    public static function getExchangeRate($params)
+    public static function getExchangeRate()
     {
         $resultado = self::getData();
 

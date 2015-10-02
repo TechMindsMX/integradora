@@ -8,6 +8,7 @@
  */
 
 use Integralib\IntFactory;
+use Integralib\JUserHelper;
 
 defined('_JEXEC') or die;
 
@@ -48,9 +49,12 @@ class PlgUserIntegrado extends JPlugin
 
         if ($this->app->getName() == 'site') // Check if login occurs in site front
         {
-            $redirectUrl     ='index.php';
+            $app = JFactory::getApplication();
+            $menu = $app->getMenu();
+            $defaultMenu = $menu->getDefault();
+            $redirectUrl = $defaultMenu->link . '&Itemid=' . $defaultMenu->id;
 
-            $count = count($user->integrados);
+            $count = count( JUserHelper::getActiveIntegrados($user) );
             switch ( true ) {
                 case ( $count === 0):
                     $redirectUrl     ='index.php?option=com_integrado&view=solicitud&Itemid=207';
@@ -74,7 +78,7 @@ class PlgUserIntegrado extends JPlugin
             }
         }
 
-        $this->app->redirect(JRoute::_($redirectUrl));
+        $this->app->redirect(JRoute::_($redirectUrl, false));
     }
 
 	public function onUserAfterLogout()
