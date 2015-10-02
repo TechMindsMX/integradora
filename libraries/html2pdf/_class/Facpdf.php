@@ -162,7 +162,7 @@ class Facpdf{
         $html .='<table class="table" id="printFooter" style="font-size: 10px">
     <tr>
         <td colspan="4">
-            '.JText::_('LBL_AUTORIZO_ODV').$data->emisor['attrs']['NOMBRE'].' con RFC: '.$data->emisor['attrs']['RFC'].'
+            '.JText::sprintf('LBL_AUTORIZO_ODV',$data->emisor['attrs']['NOMBRE'],$data->emisor['attrs']['RFC']).'
         </td>
     </tr>
     <tr>
