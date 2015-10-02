@@ -99,12 +99,12 @@ class reportecontabilidad{
             case 'cashout':
                 $getHtml = new cashoutPDF($data);
                 $html = $getHtml->generateHtml();
-                $path = 'media/pdf_cashOut/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
+                $path = 'media/pdf_cashout/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
                 break;
             case 'cashin':
                 $getHtml = new cashinPDF();
                 $html = $getHtml->generateHtml($data);
-                $path = 'media/pdf_cashIn/'.$this->integradoId.'-'.$this->fecha.'-'.'.pdf';
+                $path = 'media/pdf_cashin/'.$this->integradoId.'-'.$this->fecha.'-'.'.pdf';
                 break;
             case 'flujo':
                 $getHtml = new flujoPDF();
