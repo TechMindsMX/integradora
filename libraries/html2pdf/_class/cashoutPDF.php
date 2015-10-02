@@ -13,7 +13,7 @@ class cashoutPDF{
 
 //        $propGetter = Closure::bind( function($prop){return $this->$prop;}, $data, $data );
 
-        $this->tx->objEnvio = $data->getOobjEnvio();
+        $this->tx->objEnvio = $data->getObjEnvio();
         $this->tx->result = $data->getResultado();
 
         $session = JFactory::getSession();
