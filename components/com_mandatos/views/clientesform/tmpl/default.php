@@ -634,7 +634,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
-                        <input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="10" />
+                        <input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
@@ -668,7 +668,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-                        <input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="10" />
+                        <input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
@@ -701,7 +701,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-                        <input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="10" />
+                        <input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
