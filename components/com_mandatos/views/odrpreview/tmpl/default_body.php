@@ -60,7 +60,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_personales->nombre_representante; ?>
+				<?php echo $integrado->integrados[0]->datos_personales->nombre_representante; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -86,7 +86,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_CORREO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_personales->email; ?>
+				<?php echo $integrado->integrados[0]->datos_personales->email; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_BANCOS'); ?>
