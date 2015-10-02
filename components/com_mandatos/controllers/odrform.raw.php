@@ -143,7 +143,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	private function getBalance() {
 		$model = $this->getModel('odrform');
-		$balance = $model->getBalance();
+		$balance = MandatosHelper::getBalance( $model->integradoId );
         $blocked = MandatosHelper::getBlockedBalance();
 
 		return $balance - $blocked;
