@@ -4,6 +4,7 @@ require('loader.php');
 
 class PdfsIntegradora{
 
+    public $path;
     protected $fecha;
 
     function __construct($integ_id = null) {
@@ -49,9 +50,11 @@ class PdfsIntegradora{
     }
 
     public function readCss(){
-        $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/template.css" rel="stylesheet">');
-        $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/override.css" rel="stylesheet">');
-        return $this->readFile(JUri::base().'/templates/meet_gavern/bootstrap/output/bootstrap.css');
+        $assets = [];
+        array_push($assets, $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/template.css" rel="stylesheet">') );
+        array_push($assets, $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/override.css" rel="stylesheet">') );
+        array_push($assets, $this->readFile(JUri::base().'/templates/meet_gavern/bootstrap/output/bootstrap.css') );
+        return implode($assets);
     }
 
     /**
@@ -121,19 +124,19 @@ class PdfsIntegradora{
                 return array($operacion, $path);
         }
 
-
         return array($html, $path);
     }
 
-    public  function readFile ($url){
+    private function readFile ($url) {
+        $css = '';
 
         $file = fopen($url, "r") or exit("Unable to open file!");
         while(!feof($file)) {
-            $this->css .= fgets($file);
-            $this->css = str_replace("inherit", "", $this->css);
+            $tmp = fgets($file);
+            $css .= str_replace("inherit", "", $tmp);
         }
-        return $this->css;
-
         fclose($file);
+
+        return $css;
     }
 }
