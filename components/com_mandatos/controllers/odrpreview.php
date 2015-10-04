@@ -8,7 +8,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.rutas');
 jimport('integradora.notifications');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 
 /**
@@ -123,7 +123,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
                                 $comision = $this->txComision();
 
-                                $createPDF = new reportecontabilidad();
+                                $createPDF = new PdfsIntegradora();
                                 $createPDF->createPDF($this->tranfer, 'cashout');
 
                                 if ($statusChange && $comision) { //Se realizo el cobro de la comision

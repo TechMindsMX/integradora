@@ -9,7 +9,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 jimport('phpqrcode.qrlib');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 /**
  * metodo de envio a TimOne
  * @property mixed parametros
@@ -97,7 +97,7 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
-                                    $createPDF = new reportecontabilidad();
+                                    $createPDF = new PdfsIntegradora();
 
                                     if($timbrar){
 

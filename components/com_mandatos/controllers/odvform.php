@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.validator');
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -99,7 +99,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 
         if ($saved) {
             $this->sendMail($this->data);
-			$createPDF = new reportecontabilidad();
+			$createPDF = new PdfsIntegradora();
 			$createPDF->createPDF($this->data['id'], 'odv');
 
 			if($createPDF){

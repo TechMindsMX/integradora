@@ -6,7 +6,7 @@ jimport('integradora.validator');
 jimport('integradora.integrado');
 jimport('integradora.imagenes');
 jimport('integradora.gettimone');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 $app = JFactory::getApplication();
 $currUser	= JFactory::getUser();
@@ -145,7 +145,7 @@ class IntegradoraservicesController extends JControllerLegacy {
 
                     $save->changeOrderStatus($value->id, 'odd', 13);
 
-                    $getPDF = new reportecontabilidad();
+                    $getPDF = new PdfsIntegradora();
                     $getPDF->createPDF($json, 'cashin');
 
                     $db->transactionCommit();

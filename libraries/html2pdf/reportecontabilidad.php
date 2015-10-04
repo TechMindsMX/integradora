@@ -2,7 +2,7 @@
 defined('JPATH_PLATFORM') or die;
 require('loader.php');
 
-class reportecontabilidad{
+class PdfsIntegradora{
 
     protected $fecha;
 
@@ -40,7 +40,7 @@ class reportecontabilidad{
     {
         set_time_limit(180);
 
-        list($html, $path) = $this->selectTipeOrder($data, $tipo);
+        list($html, $path) = $this->selectOrderType($data, $tipo);
 
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
@@ -48,7 +48,7 @@ class reportecontabilidad{
         $this->path = $path ;
     }
 
-    public  function readCss(){
+    public function readCss(){
         $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/template.css" rel="stylesheet">');
         $this->readFile('<link type="text/css" href="'.JUri::base().'/templates/meet_gavern/css/override.css" rel="stylesheet">');
         return $this->readFile(JUri::base().'/templates/meet_gavern/bootstrap/output/bootstrap.css');
@@ -59,7 +59,7 @@ class reportecontabilidad{
      * @param $tipo
      * @return array
      */
-    public function selectTipeOrder($data, $tipo)
+    private function selectOrderType($data, $tipo)
     {
         $path = '';
         switch ($tipo) {

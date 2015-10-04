@@ -5,7 +5,7 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla view library
 jimport('joomla.application.component.view');
 jimport('integradora.integrado');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 jimport('integradora.gettimone');
 
 /**
@@ -32,7 +32,7 @@ class ReportesViewReportecontabilidad extends JViewLegacy
         $ordenes                            = new getFromTimOne();
 
         $this->odv                      = $ordenes->getOrdenesVenta();
-        $createPdf                          = new reportecontabilidad();
+        $createPdf                          = new PdfsIntegradora();
 
 
 

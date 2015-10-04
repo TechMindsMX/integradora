@@ -2,7 +2,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 $integ      = $this->integrado;
 $report     = $this->report;
 $params     = array('proyecto' => 'INT');
@@ -18,7 +18,7 @@ $dataPDF->idProyecto = $idProyecto;
 $dataPDF->attscal = $attsCal;
 $dataPDF->this = $this;
 
-$getPDF = new reportecontabilidad();
+$getPDF = new PdfsIntegradora();
 $pathPDF = $getPDF->createPDF($dataPDF, 'flujo');
 
 ?>

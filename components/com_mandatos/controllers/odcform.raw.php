@@ -8,7 +8,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
 class MandatosControllerOdcform extends JControllerLegacy {
@@ -102,7 +102,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
                     'redireccion' => true
                 );
 
-                $createPDF = new reportecontabilidad();
+                $createPDF = new PdfsIntegradora();
                 $createPDF->createPDF($id, 'odc');
 
 

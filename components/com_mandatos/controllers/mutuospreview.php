@@ -6,7 +6,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.catalogos');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 /**
  * metodo de envio a TimOne
@@ -120,7 +120,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
             }else{
-                $html2pdf = new reportecontabilidad();
+                $html2pdf = new PdfsIntegradora();
                 $html2pdf->createPDF($mutuo, 'mutuo');
                 // acciones cuando NO tiene permisos para autorizar
                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY'), 'warning');
@@ -200,7 +200,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                 }
             }
 
-            $createPdf = new reportecontabilidad();
+            $createPdf = new PdfsIntegradora();
             $createPdf->createPDF($arrayOdp, 'odp');
         }elseif($mutuo->status == 3){
             $resultado = false;

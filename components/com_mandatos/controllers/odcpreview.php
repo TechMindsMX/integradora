@@ -7,7 +7,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 jimport('phpqrcode.qrlib');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 /**
  * metodo de envio a TimOne
  * @property mixed parametros
@@ -124,7 +124,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                         $saveqrname->qrName      = $filename;
                                         $saveqrname->createdDate = time();
 
-                                        $createPDF = new reportecontabilidad();
+                                        $createPDF = new PdfsIntegradora();
                                         $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
 
                                         $saveqrname->pdfName = $namePdfCreated;
@@ -249,7 +249,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $txDone = $txData->sendCreateTx();
 
             if($txDone){
-                $createPDF = new reportecontabilidad();
+                $createPDF = new PdfsIntegradora();
                 $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
             }
 

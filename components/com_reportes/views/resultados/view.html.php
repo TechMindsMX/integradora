@@ -5,7 +5,7 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla view library
 jimport('joomla.application.component.view');
 jimport('integradora.integrado');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 
 /**
@@ -50,7 +50,7 @@ class ReportesViewResultados extends JViewLegacy
 
 		$dataPDF = $this->getDataforPDF();
 
-		$reportPDF = new reportecontabilidad();
+		$reportPDF = new PdfsIntegradora();
 		$reportPDF->createPDF($dataPDF, 'result');
 
 		if (count($errors = $this->get('Errors'))){

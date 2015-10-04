@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -98,7 +98,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $this->session->set('msg','Datos Almacenados', 'odr');
 	        $this->session->clear('data', 'odr');
 
-            $class = new reportecontabilidad();
+            $class = new PdfsIntegradora();
             $data = new stdClass();
             $data->datos = (object) $datos;
             $class->createPDF($data->datos, 'odr');
