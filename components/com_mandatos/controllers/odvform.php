@@ -103,7 +103,7 @@ class MandatosControllerOdvform extends JControllerAdmin {
 			$createPDF->createPDF($this->data['id'], 'odv');
 
 			if($createPDF){
-				$save->updateDB('ordenes_venta', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$numOrden);
+				$save->updateDB('ordenes_venta', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$this->data['id']);
 			}
 		}
 

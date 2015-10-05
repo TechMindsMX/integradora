@@ -57,7 +57,7 @@ class MandatosControllerOddform extends JControllerLegacy {
             $class->createPDF($datos, 'odd');
 
             if($class){
-                $save->updateDB('ordenes_deposito', array('urlPDFOrden = "'.$class->path.'"'), 'numOrden = '.$datos->numOrden);
+                $save->updateDB('ordenes_deposito', array('urlPDFOrden = "'.$class->path.'"'), 'id = '.$salvado);
             }
 
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=oddpreview&idOrden=' . $salvado.'&success=true',

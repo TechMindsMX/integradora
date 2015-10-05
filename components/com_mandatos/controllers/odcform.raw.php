@@ -105,7 +105,7 @@ class MandatosControllerOdcform extends JControllerLegacy {
                 $createPDF = new PdfsIntegradora();
                 $createPDF->createPDF($id, 'odc');
                 if($createPDF){
-                    $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$datos['numOrden']);
+                    $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$id);
                 }
 
             } else {
