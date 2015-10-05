@@ -106,6 +106,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $db->updateObject('#__ordenes_venta', $odvUpdate, 'id');
 
+                                    $createPDF = new PdfsIntegradora();
+                                    $createPDF->createPDF($odc->id, 'odc');
+                                    if($createPDF){
+                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$odc->numOrden);
+                                    }
+
                                     //Codigo QR
                                     $xml = new xml2Array();
                                     $factura = $xml->manejaXML($xmlFactura);
@@ -118,13 +124,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     QRcode::png($qrData,$pngPath);
                                     if(file_exists($pngPath)){
-                                       $saveqrname = new stdClass();
+                                        $saveqrname = new stdClass();
 
                                         $saveqrname->integradoId = $odv->integradoId;
                                         $saveqrname->qrName      = $filename;
                                         $saveqrname->createdDate = time();
 
-                                        $createPDF = new PdfsIntegradora();
                                         $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
 
                                         $saveqrname->pdfName = $namePdfCreated;

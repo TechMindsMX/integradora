@@ -278,12 +278,17 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             $odc->status        = 3;
             $odc->bankId        = $odv->account;
 
-
             $db->insertObject('#__ordenes_compra', $odc);
 
             $relation = new stdClass();
             $relation->id_odv = $odv->getId();
             $relation->id_odc = $db->insertid();
+
+            $createPDF = new PdfsIntegradora();
+            $createPDF->createPDF($relation->id_odc, 'odc');
+            if($createPDF){
+                $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$odc->numOrden);
+            }
 
             $db->insertObject('#__ordenes_odv_odc_relation', $relation);
 
