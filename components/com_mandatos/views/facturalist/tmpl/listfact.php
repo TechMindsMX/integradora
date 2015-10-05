@@ -99,7 +99,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
                 if(count($tmp) <= 1 ){
                     $pdfName = explode('.', $fileName[2]);
 
-                    $pathpdf = $pdfName[0].'-'.date('dmY').'-'.$value->id;
+                    $pathpdf = $pdfName[0].'-'.$value->createdDate.'-'.$value->id;
                 }
 
                 echo '<tr class="client_'.$value->clientId.'">';
