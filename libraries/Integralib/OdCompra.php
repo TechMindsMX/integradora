@@ -79,8 +79,8 @@ class OdCompra extends Order {
 
 		$this->subTotalAmount  = (float)$this->factura->comprobante['SUBTOTAL'];
 		$this->totalAmount     = $this->factura->comprobante['TOTAL'];
-		$this->iva             = $this->factura->impuestos->iva->importe;
-		$this->ieps            = $this->factura->impuestos->ieps->importe;
+		$this->iva             = isset($this->factura->impuestos->iva->importe) ? $this->factura->impuestos->iva->importe : 0;
+		$this->ieps            = isset($this->factura->impuestos->ieps->importe) ? $this->factura->impuestos->ieps->importe : 0;
 
 		$o = new OrdenFn();
 		$this->balance = $o->calculateBalance($this);

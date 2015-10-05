@@ -25,6 +25,7 @@ class MandatosViewOdvform extends JViewLegacy {
             $this->orden = $this->get('Orden');
         }else{
             @$orden = new stdClass();
+            $orden->paymentMethod = new stdClass();
 
             $orden->id            = '';
             $orden->integradoId   = $this->integradoId;
