@@ -92,12 +92,12 @@ class PdfsIntegradora{
             case 'odp':
                 $getHtml = new odpPdf($data);
                 $html = $getHtml->createHTML();
-                $path = 'media/pdf_odp/'.$this->integradoId.'-'.$data->createdDate.'-'.$data[0]->idMutuo.'.pdf';
+                $path = 'media/pdf_odp/'.$this->integradoId.'-'.$data->createdDate.'-'.$data->id.'.pdf';
                 break;
            case 'mutuo':
                 $getHtml = new mutuosPDF($data);
                 $html = $getHtml->generateHtml($data);
-                $path = 'media/pdf_mutuo/'.$this->integradoId.'-'.$data->createdDate.'-'.$data->id.'.pdf';
+                $path = 'media/pdf_mutuo/'.$this->integradoId.'-'.$data->id.'.pdf';
                 break;
             case 'cashout':
                 $getHtml = new cashoutPDF($data);

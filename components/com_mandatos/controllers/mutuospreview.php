@@ -184,7 +184,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
                 $save->formatData($odp);
 
-                $saved = $save->insertDB('ordenes_prestamo');
+                $saved = $save->insertDB('ordenes_prestamo', null,null,true);
                 $arrayOdp[] = $odp;
 
                 if (!$saved) {
@@ -197,11 +197,12 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     break;
                 } else {
                     $resultado = true;
+                    $createPdf = new PdfsIntegradora();
+                    $odp->id = $saved;
+                    $odp->createdDate = date('d-m-Y',$odp->fecha_elaboracion);
+                    $createPdf->createPDF($odp, 'odp');
                 }
             }
-
-            $createPdf = new PdfsIntegradora();
-            $createPdf->createPDF($arrayOdp, 'odp');
         }elseif($mutuo->status == 3){
             $resultado = false;
         }

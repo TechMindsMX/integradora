@@ -30,7 +30,7 @@ class odpPdf{
             $signoDeudor = '-$';
         }
         $html ='';
-        foreach ($this->odp as $key => $orden) {
+
             $html .='
             <style>
               .span6{
@@ -167,7 +167,7 @@ class odpPdf{
                     </table>
                 </div>
         </page>';
-        }
+
         return $html;
     }
 }
