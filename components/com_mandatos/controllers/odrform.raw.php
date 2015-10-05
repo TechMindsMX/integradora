@@ -106,7 +106,7 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $class->createPDF($data->datos, 'odr');
 
             if($class){
-                $save->updateDB('ordenes_retiro', array('urlPDFOrden = "'.$class->path.'"'), 'numOrden = '.$idOrden);
+                $save->updateDB('ordenes_retiro', array('urlPDFOrden = "'.$class->path.'"'), 'id = '.$idOrden);
             }
 
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $idOrden.'&success=true',
