@@ -33,7 +33,6 @@ $attsCal = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19
         jQuery('.row1').show();
     }
     jQuery(document).ready(function(){
-        jQuery('#integrado').on('change',filtrointegrado);
         jQuery('#filtrofecha').on('click', filtro_fechas);
         jQuery('#llenatabla').on('click', limpiaFiltro);
     });

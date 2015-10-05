@@ -364,6 +364,7 @@ class Integrado {
                 $app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
             }
         } elseif ($app->getName() == 'administrator') {
+	        $perm_level = new stdClass();
             $perm_level->integrado_permission_level = 4;
 
         } else {
