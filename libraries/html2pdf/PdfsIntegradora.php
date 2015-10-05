@@ -22,18 +22,18 @@ class PdfsIntegradora{
         $this->integCurrent = $integrado;
     }
 
-    public function facturaPDF($data, $facObjOdv, $facObj, $xml) {
+    public function facturaPDF($data, \Integralib\OdVenta $odVenta, $facObj, $xml) {
 
-        $this->fecha = $facObjOdv->createdDate;
+        $this->fecha = $odVenta->createdDate;
 
         $fileName = explode('/', $xml);
         $fileName = explode('.', $fileName[2]);
-        $path = JPATH_BASE.'/media/facturas/'.$fileName[0].'-'.$this->fecha.'-'.$facObjOdv->id.'.pdf';
+        $path = 'media/facturas/'.$fileName[0].'-'.$this->fecha.'-'.$odVenta->id.'.pdf';
         $createHtml = new Facpdf();
-        $html = $createHtml->html($data, $this->integradora, $facObjOdv, $facObj);
+        $html = $createHtml->html($data, $this->integradora, $odVenta, $facObj);
         $html2pdf = new HTML2PDF();
         $html2pdf->WriteHTML($html);
-        $html2pdf->Output($path, 'F');
+        $html2pdf->Output(JPATH_BASE . DIRECTORY_SEPARATOR . $path, 'F');
         return $path;
     }
 

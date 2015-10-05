@@ -143,9 +143,8 @@ if(is_null($ordenes) || empty($ordenes)){
                 }else{
                     $pdf = 'Falta Autorización';
                 }
-                if (isset( $this->urlPDF )) {
-                    $urlPDFlink = '<a download="'.$this->urlPDF.'" href="'.$value->urlPDF.'">Descargar PDF Factura</a>';
-                };
+
+                $urlPDFlink = isset( $value->urlPDF) ? '<a download="'.$value->urlPDF.'" href="'.$value->urlPDF.'">Descargar PDF Factura</a>' : '';
 
 
                 echo '<tr class="type_'.$value->status->id.'" data-tipo="'.$value->status->id.'">';
@@ -156,7 +155,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
                 if($value->status->id != 55) {
-                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" ><a download="' . $nombreArchivoXML[2] . '" href="' . $value->urlXML . '">Descargar XML</a>'. $urlPDFlink .'</td>';
+                    echo '	<td style="text-align: center; vertical-align: middle;" class="' . $class . '" ><a download="' . $nombreArchivoXML[2] . '" href="' . $value->urlXML . '">Descargar XML</a><br />'. $urlPDFlink .'</td>';
                 }
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
                 echo '</tr>';

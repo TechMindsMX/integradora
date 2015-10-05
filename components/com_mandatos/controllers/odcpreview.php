@@ -133,6 +133,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                         $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
 
                                         $saveqrname->pdfName = $namePdfCreated;
+                                        $save->updateDB('ordenes_compra', array('urlPDF = "'.$namePdfCreated.'"'), 'numOrden = '.$odc->numOrden);
 
                                         $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                     }
