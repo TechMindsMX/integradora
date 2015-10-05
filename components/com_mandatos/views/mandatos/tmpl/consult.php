@@ -17,7 +17,12 @@ $rutas = array (
 		       'iconClass'   => 'icon-list-ul',
 		       'url'         => JRoute::_('index.php?option=com_mandatos&view=odvlist')
 		),
-		array ('label'       => 'COM_MANDATOS_AUTH_TX_SIN_MANDATO',
+//		array ('label'       => 'COM_MANDATOS_GO_LIQUIDACION',
+//		       'buttonClass' => 'btn-primary',
+//		       'iconClass'   => 'icon-dollar',
+//		       'url'         => JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion')
+//		),
+		array ('label'       => 'COM_MANDATOS_LIST_TX_SIN_MANDATO_TITLE',
 		       'buttonClass' => 'btn-primary',
 		       'iconClass'   => 'icon-stackexchange',
 		       'url'         => JRoute::_('index.php?option=com_mandatos&view=txsinmandatolist')
@@ -33,11 +38,6 @@ $rutas = array (
 		       'buttonClass' => 'btn-primary',
 		       'iconClass'   => 'icon-list-ul',
 		       'url'         => JRoute::_('index.php?option=com_mandatos&view=oddlist')
-		),
-		array ('label'       => 'COM_MANDATOS_AUTH_LIQUIDACION',
-		       'buttonClass' => 'btn-primary',
-		       'iconClass'   => 'icon-dollar',
-		       'url'         => JRoute::_('index.php?option=com_mandatos&view=solicitudliquidacion')
 		),
 	),
 	array (
