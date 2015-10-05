@@ -101,6 +101,8 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $class = new PdfsIntegradora();
             $data = new stdClass();
             $data->datos = (object) $datos;
+            $data->datos->idOrden = $idOrden;
+            $data->datos->createdDate = date('d-m-Y',$data->datos->createdDate);
             $class->createPDF($data->datos, 'odr');
 
             if($class){

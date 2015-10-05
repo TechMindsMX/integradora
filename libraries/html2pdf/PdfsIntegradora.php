@@ -102,7 +102,7 @@ class PdfsIntegradora{
             case 'cashout':
                 $getHtml = new cashoutPDF($data);
                 $html = $getHtml->generateHtml();
-                $path = 'media/pdf_cashout/'.$this->integradoId.'-'.$this->fecha.'-'.$data->id.'.pdf';
+                $path = 'media/pdf_cashout/'.$this->integradoId.'-'.$data->fecha.'-'.$data->getResultado()->data.'.pdf';
                 break;
             case 'cashin':
                 $getHtml = new cashinPDF();

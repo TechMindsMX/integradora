@@ -215,7 +215,10 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
             $resultado = $tranfer->sendCreateTx();
         }
+
         $this->tranfer = $tranfer;
+        $this->tranfer->fecha = date('d-m-Y');
+
         return $resultado == 200;
     }
 
