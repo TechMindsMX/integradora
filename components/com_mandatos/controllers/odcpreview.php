@@ -109,7 +109,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                     $createPDF = new PdfsIntegradora();
                                     $createPDF->createPDF($odc->id, 'odc');
                                     if($createPDF){
-                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$odc->numOrden);
+                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$odc->id);
                                     }
 
                                     //Codigo QR

@@ -63,7 +63,7 @@ class odrPdf{
                                 '.JText::_('LBL_DATE_CREATED').'
                             </td>
                             <td class="span4"  style="width: 200px; line-height: 24.05px;">
-                                '.date('d-m-Y', $this->odr->createdDate).'
+                                '.$this->odr->createdDate.'
                             </td>
                         </tr>
                         <tr style="font-size: 10px;">
