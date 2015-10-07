@@ -157,8 +157,10 @@ class ReportFlujo extends ReportOrders {
 
 		$expenseOrders = $this->getOrderForTxs( $expenseTxs );
 		foreach ( $expenseTxs as $val ) {
-			$val->order = OrderFactory::getOrder( $expenseOrders[ $val->uuid ]->idOrden,
-			                                      $expenseOrders[ $val->uuid ]->orderType );
+			if (isset($expenseOrders[$val->uuid]->idOrden)) {
+				$val->order = OrderFactory::getOrder( $expenseOrders[ $val->uuid ]->idOrden,
+                                                      $expenseOrders[ $val->uuid ]->orderType );
+			}
 			if ( isset( $val->order ) ) {
 				$val->order->setTxsByUuid();
 			}
@@ -172,7 +174,9 @@ class ReportFlujo extends ReportOrders {
 
 		$orders = $this->getOrderForTxs( $incomeTxs );
 		foreach ( $incomeTxs as $val ) {
-			$order      = OrderFactory::getOrder( $orders[ $val->uuid ]->idOrden, $orders[ $val->uuid ]->orderType );
+			if (isset($orders[$val->uuid]->idOrden)) {
+				$order      = OrderFactory::getOrder( $orders[ $val->uuid ]->idOrden, $orders[ $val->uuid ]->orderType );
+			}
 			$val->order = $this->getOdvFromOdc( $order );
 			if ( isset( $val->order ) ) {
 				$val->order->setTxsByUuid();

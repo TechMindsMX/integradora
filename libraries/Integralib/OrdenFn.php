@@ -111,17 +111,22 @@ class OrdenFn {
     }
 
 	public static function sumaOrders( $orders ) {
-		$obj                = new stdClass();
+		$obj                 = new stdClass();
+		$obj->nominal		 = new stdClass();
+		$obj->pagado		 = new stdClass();
+		$obj->saldo 		 = new stdClass();
 
-		$obj->nominal->neto     = array ();
-		$obj->nominal->iva      = array ();
-		$obj->nominal->total    = array ();
-		$obj->pagado->total     = array ();
-		$obj->pagado->iva       = array ();
-		$obj->pagado->neto      = array ();
+		$obj->nominal->neto  = array ();
+		$obj->nominal->iva   = array ();
+		$obj->nominal->total = array ();
+		$obj->pagado->total  = array ();
+		$obj->pagado->iva    = array ();
+		$obj->pagado->neto   = array ();
 
 		if ( ! empty( $orders ) ) {
 			foreach ( $orders as $order ) {
+                $order->saldo = new stdClass();
+
 				$obj->nominal->neto[]   = $order->subTotalAmount;
 				$obj->nominal->iva[]    = $order->iva;
 				$obj->nominal->total[]   = $order->getTotalAmount();

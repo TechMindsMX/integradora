@@ -13,6 +13,7 @@ jimport('integradora.gettimone');
 class MandatosViewTxsinmandatoform extends JViewLegacy {
 
 	protected $integradoId;
+	protected $integrado;
 
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
@@ -27,6 +28,7 @@ class MandatosViewTxsinmandatoform extends JViewLegacy {
 		$this->integradoId        = $sesion->get('integradoId', null, 'integrado');
 
 		$integ = new IntegradoSimple($this->integradoId);
+		$this->integrado = new stdClass();
 		$this->integrado->displayName = $integ->getDisplayName();
 
 		// get the model

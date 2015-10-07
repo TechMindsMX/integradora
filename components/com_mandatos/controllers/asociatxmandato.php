@@ -104,9 +104,10 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 				$status = new sendToTimOne;
 				if($this->order->orderType == 'odv'){
 					$odcid = OrdenFn::getRelatedOdcIdFromOdvId($this->order->id);
-					$odc = new OdCompra(null, $odcid);
-
-					$status->changeOrderStatus($odcid, $odc->getOrderType(), 13);
+					if( !is_null($odcid) ) {
+						$odc = new OdCompra(null, $odcid);
+						$status->changeOrderStatus($odcid, $odc->getOrderType(), 13);
+					}
 				}
 
 				if (!$status->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
@@ -181,10 +182,18 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 	 */
 	private function checkOppssingOdc()
 	{
-		$odcid = OrdenFn::getRelatedOdcIdFromOdvId($this->order->id);
-		$odc = new OdCompra(null, $odcid);
+		$respuesta = false;
 
-		return $odc->isAuthorized();
+		$odcid = OrdenFn::getRelatedOdcIdFromOdvId($this->order->id);
+
+		if( !is_null($odcid) ) {
+			$odc = new OdCompra(null, $odcid);
+			$respuesta = $odc->isAuthorized();
+		}else{
+			$respuesta = true;
+		}
+
+		return $respuesta;
 	}
 
 }

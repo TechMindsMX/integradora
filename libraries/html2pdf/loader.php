@@ -18,8 +18,10 @@ jimport('integradora.integrado');
 jimport('integradora.gettimone');
 require('html2pdf.class.php');
 
-if( ($_GET['task'] == 'odvpreview.authorize') || ($_GET['task'] == 'odcpreview.authorize') ){
-    require('_class/Facpdf.php');
+if (isset($_GET['task'])) {
+    if( ($_GET['task'] == 'odvpreview.authorize') || ($_GET['task'] == 'odcpreview.authorize') ){
+        require('_class/Facpdf.php');
+    }
 }
 
 require('_class/odcPdf.php');
