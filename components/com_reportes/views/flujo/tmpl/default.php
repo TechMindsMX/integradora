@@ -2,13 +2,24 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.html.html.bootstrap');
-
+jimport('html2pdf.PdfsIntegradora');
 $integ      = $this->integrado;
 $report     = $this->report;
 $params     = array('proyecto' => 'INT');
 $input      = (object)JFactory::getApplication()->input->getArray($params);
 $idProyecto = !is_null($input->proyecto) ? $input->proyecto : 0;
 $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19', 'disabled'=>'1');
+
+$dataPDF = new stdClass();
+$dataPDF->integ = $integ;
+$dataPDF->report = $report;
+$dataPDF->input = $input;
+$dataPDF->idProyecto = $idProyecto;
+$dataPDF->attscal = $attsCal;
+$dataPDF->this = $this;
+
+$getPDF = new PdfsIntegradora();
+$pathPDF = $getPDF->createPDF($dataPDF, 'flujo');
 
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"
@@ -24,8 +35,14 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         window.location = 'index.php?option=com_reportes&view=flujo&startDate='+fechaInicial+'&endDate='+fechaFinal;
     }
 
+    function gtPDF(){
+        e.preventDefault();
+        window.location.href = '<?php echo $pathPDF; ?>';
+    }
+
     jQuery(document).ready(function(){
         jQuery('#changePeriod').on('click',cambiarPeriodo);
+        jQuery('#getPDF').on('click',gtPDF);
 	    jQuery('.datepicker').datepicker();
     });
 </script>
@@ -71,21 +88,23 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
         <h3><?php echo JText::_('LBL_PERIOD'); ?></h3>
         <div class="row-fluid">
             <div class="span6"><label for="startDate"><?php echo JText::_('LBL_FROM_DATE'); ?></label></div>
-            <div class="span6 visible-print-block"><?php echo $report->getFechaInicio(); ?></div>
+            <div class="span6 visible-print-block"><?php echo date('d-m-Y',$report->getFechaInicio()); ?></div>
             <div class="span6 hidden-print">
-	            <input class="datepicker" id="startDate" name="startDate" type="text" value="<?php echo $report->getFechaInicio(); ?>" readonly />
+	            <input class="datepicker" id="startDate" name="startDate" type="text" value="<?php echo date('Y-m-d', $report->getFechaInicio()); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6"><label for="endDate"><?php echo JText::_('LBL_TO_DATE'); ?></label></div>
-            <div class="span6 visible-print-block"><?php echo $report->getFechaFin(); ?></div>
+            <div class="span6 visible-print-block"><?php echo date('d-m-Y', $report->getFechaFin()); ?></div>
             <div class="span6">
-	            <input class="datepicker" id="endDate" name="endDate" type="text" value="<?php echo $report->getFechaFin(); ?>" readonly />
+	            <input class="datepicker" id="endDate" name="endDate" type="text" value="<?php echo date('Y-m-d', $report->getFechaFin()); ?>" readonly />
             </div>
         </div>
         <div class="row-fluid">
             <div class="span6">&nbsp;</div>
-            <div class="span6"><input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" /> </div>
+            <div class="span6">
+                <input type="button" class="btn btn-primary" id="changePeriod" value="Cambiar Periodo" />
+                <a class="btn btn-primary" download="estado_flujo_from_<?php echo date('Y-m-d', $report->getFechaInicio()); ?>_to_<?php echo date('Y-m-d', $report->getFechaFin()); ?>.pdf" href="<?php echo $pathPDF; ?>">Descargar PDF</a> </div>
         </div>
 
         <div class="clearfix">&nbsp;</div>
@@ -152,7 +171,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
-	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
+	            <td><?php //echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
 	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>
@@ -224,7 +243,7 @@ $attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>
 	        ?>
 	        <tr class="row">
 	            <td><?php echo date('d-m-Y', $tx->timestamp / 1000); ?></td>
-	            <td><?php echo $tx->order->getReceptor()->getDisplayName(); ?></td>
+	            <td><?php //echo $tx->order->getReceptor()->getDisplayName(); ?></td>
 	            <td><?php echo $tx->order->getFacturaUuid(); ?></td>
 	            <td><?php echo $tx->order->getProjectName().' '.$tx->order->getSubProjectName();  ?></td>
 	            <td><div class="text-right">$<?php echo number_format($tx->order->txs[$k]->detalleTx->net, 2); ?></div></td>

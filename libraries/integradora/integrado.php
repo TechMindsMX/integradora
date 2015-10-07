@@ -1,4 +1,6 @@
 <?php
+use Integralib\Txs;
+
 defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.user.user');
@@ -36,6 +38,24 @@ class Integrado {
         $result = JFactory::getUser($result);
         return $result;
     }
+
+	/**
+	 * @param $integrado
+	 *
+	 * @throws Exception
+	 */
+	public static function setIntegradoInSession(IntegradoSimple $integrado)
+	{
+		$sesion = JFactory::getSession();
+		$sesion->set('integradoId', $integrado->getId(), 'integrado');
+		$sesion->set('integradoDisplayName', $integrado->getDisplayName(), 'integrado');
+
+		if (!$sesion->has('integradoId', 'integrado') || !$sesion->has('integradoDisplayName', 'integrado')) {
+			throw new Exception(JText::_('ERROR_'));
+		} else {
+            JFactory::getApplication()->enqueueMessage(JText::sprintf('LBL_CHANGED_TO_INTEGRADO', $integrado->getDisplayName()));
+        }
+	}
 
 	public static function getSessionIntegradoIdOrRedirectWithError( $instance ) {
 		$sesionIntegradoId = JFactory::getSession()->get( 'integradoId', null, 'integrado' );
@@ -79,7 +99,7 @@ class Integrado {
 		) );
 		JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
 
-		if ( empty( $existe ) ) {
+		if ( is_null( $existe ) || $existe->integradoId === $integradoId) {
 			$columnas[] = 'integradoId';
 			$valores[]  = $db->quote($integradoId);
 
@@ -91,7 +111,7 @@ class Integrado {
 			$validator   = new validador();
 			$diccionario = array (
 				'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
-				'db_banco_cuenta'   => array ( 'required' => true ),
+				'db_banco_cuenta'   => array('check_cuenta_in_clabe' => $data['db_banco_cuenta'], 'alphaNumber' => true, 'maxlength' => 11,  'minlength'=>11,   'required' => true),
 				'db_banco_sucursal' => array ( 'required' => true ),
 				'db_banco_clabe'    => array ( 'banco_clabe' => $data['db_banco_codigo'], 'length' => 18, 'required' => true )
 			);
@@ -99,13 +119,17 @@ class Integrado {
 
 			if ( $validator->allPassed() ) {
 				$table = 'integrado_datos_bancarios';
-				$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe['banco_clabe']);
-
-				if ( empty( $existe ) ) {
+				if ( is_null( $existe ) ) {
 					$save->insertDB( $table, $datosQuery['columnas'], $datosQuery['valores'] );
 					$newId = $db->insertid();
 				} else {
-					$save->updateDB( $table, $datosQuery['setUpdate'], $where );
+					$where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($existe->banco_clabe);
+					unset($datosQuery['setUpdate'][0]);
+					unset($datosQuery['setUpdate'][1]);
+					unset($datosQuery['setUpdate'][3]);
+					$update = $save->updateDB( $table, $datosQuery['setUpdate'], $where, true );
+
+					$newId = $update->datosBan_id;
 				}
 
 				$respuesta['success']        = true;
@@ -225,11 +249,12 @@ class Integrado {
 
 		return $result;
 	}
-	
+
 	function getSolicitud($integ_id = null, $key){
 
 		if ($integ_id == null){
-			$this->integrados[$key]->gral 				= self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
+			$this->integrados[$key] = new stdClass();
+			$this->integrados[$key]->gral = self::selectDataSolicitud('integrado_users', 'user_id', JFactory::getUser()->id);
 		}
 		$integradoId 					= isset($this->gral->integradoId) ? $this->gral->integradoId : $integ_id;
 
@@ -335,12 +360,20 @@ class Integrado {
 			->where($db->quoteName('integradoId') . '=' . $db->quote($integradoId) . ' AND '.$db->quoteName('user_id') . '=' .$userId);
 		$perm_level = $db->setQuery($query)->loadObject();
 
-		// si el usurio no pertenece al integrado se redirecciona // debe entrar en el log de eventos
-		if(is_null($perm_level)) {
-			$app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
-		}
+        if ($app->getName() == 'site') {
+            // si el usuario no pertenece al integrado se redirecciona // debe entrar en el log de eventos
+            if(is_null($perm_level)) {
+                $app->redirect('index.php?option=com_content&view=article&id=8&Itemid=101', JText::_('LBL_SECURITY_PROBLEM'), 'error');
+            }
+        } elseif ($app->getName() == 'administrator') {
+	        $perm_level = new stdClass();
+            $perm_level->integrado_permission_level = 4;
 
-		$permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
+        } else {
+            throw new Exception('Enviroment error');
+        }
+
+        $permisos['canEdit'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_edit'] );
 
 		// verifica si puede editar
 		$permisos['canAuth'] = in_array($perm_level->integrado_permission_level, $lvls['lvls_to_auth']);
@@ -481,17 +514,19 @@ class IntegradoSimple extends Integrado {
 		$this->ordersAtuhorizationParams = !empty($result)?$result[0]->params:array();
 	}
 
-
+	/**
+	 * @return string
+     */
 	public function getDisplayName() {
 
 		if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
 			$name = $this->integrados[0]->datos_empresa->razon_social;
 		}
+		elseif ( isset($this->integrados[0]->datos_personales->nombre_representante) && !empty($this->integrados[0]->datos_personales->nombre_representante) ) {
+			$name = $this->integrados[0]->datos_personales->nombre_representante;
+		}
 		elseif ( isset($this->integrados[0]->datos_personales->nom_comercial) && !empty($this->integrados[0]->datos_personales->nom_comercial) ) {
 			$name = $this->integrados[0]->datos_personales->nom_comercial;
-		}
-		elseif ( isset($this->integrados[0]->datos_personales->nombre_represenante) && isset($this->integrados[0]->datos_personales->nombre_represenante) ) {
-			$name = $this->integrados[0]->datos_personales->nombre_represenante;
 		}
 		else {
 			$name = JText::_('LBL_NO_HA_COMPLETADO_SOLICITUD');
@@ -500,7 +535,10 @@ class IntegradoSimple extends Integrado {
 		return $name;
 	}
 
-    public function getContactName() {
+	/**
+	 * @return string
+     */
+	public function getContactName() {
 // TODO Revisar cuales son los datos de contacto y su prioridad para mostrar
         if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
             $name = $this->integrados[0]->datos_empresa->razon_social;
@@ -518,7 +556,7 @@ class IntegradoSimple extends Integrado {
         return $name;
     }
 
-    public function setMainAddressFormatted() {
+	public function setMainAddressFormatted() {
         $codPostal = null;
         $address = null;
 
@@ -549,7 +587,10 @@ class IntegradoSimple extends Integrado {
         return $this->integrados[0]->address;
     }
 
-    public function getTimOneData()
+	/**
+	 *
+     */
+	public function getTimOneData()
     {
 	    $this->timoneData = new TimOneData();
         $db = JFactory::getDbo();
@@ -602,12 +643,16 @@ class IntegradoSimple extends Integrado {
 
     }
 
-	public function getAccountData( $account_id ) {
+	public function getAccountData( $account_id = null ) {
 		$result = null;
 		foreach ( $this->integrados[0]->datos_bancarios as $key => $banco ) {
 			if ($banco->datosBan_id == $account_id) {
 				$result = $banco;
 			}
+		}
+
+		if(is_null($account_id)){
+			$result = $this->integrados[0]->datos_bancarios;
 		}
 
 		return $result;
@@ -666,6 +711,72 @@ class IntegradoSimple extends Integrado {
 	public function hasRfc() {
 		return !is_null( $this->getIntegradoRfc() );
 	}
+
+	public function getTimoneAccount(){
+
+		$db = JFactory::getDbo();
+
+		$timoneData = getFromTimOne::selectDB( 'integrado_timone', 'integradoId = '.$db->quote($this->getId()) );
+
+
+		return $timoneData[0]->stpClabe;
+	}
+
+	/**
+	 * @param $integradoId
+	 * @return mixed
+	 */
+	public function getBalance(){
+		$integrado = new IntegradoSimple($this->id);
+		$integrado->getTimOneData();
+
+		return $integrado->timoneData->balance;
+	}
+
+	/**
+	 * @return int
+     */
+	public function getBlockedBalance(){
+		$txs = self::getTXsinMandato( $this->id );
+		$blockedBalance = 0;
+
+		foreach($txs as $value){
+			$blockedBalance = $value->balance + $blockedBalance;
+		}
+
+		return $blockedBalance;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getTXsinMandato( $integradoId ){
+
+		$txs = getFromTimOne::getTxIntegradoConSaldo($integradoId);
+
+		$retorno = array();
+		foreach ( $txs as $trans ) {
+			$trans->balance = self::getTxBalance($trans);
+
+			if($trans->balance > 0) {
+				$retorno[] = $trans;
+			}
+		}
+
+		return $retorno;
+	}
+
+	/**
+	 * @param $trans
+	 * se traen los mandatos a los que esta asosciada la Tx
+	 * @return mixed
+	 */
+	private static function getTxBalance( $trans ) {
+		$txs = new Txs();
+
+		return $txs->calculateBalance($trans);
+	}
+
 }
 
 class integrado_datos_personales {

@@ -35,7 +35,6 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 
 	public function getOrdersCxC() {
 		$this->orders = getFromTimOne::getOrdersCxC($this->integradoId);
-		$this->orders = $this->getUnpaidODDs($this->integradoId);
 
 		return $this->orders;
 	}
@@ -54,19 +53,23 @@ class MandatosModelTxsinmandatoform extends JModelItem {
 		return $order;
 	}
 
-	public static function getUnpaidODDs( $intergradoId ){
-		$orders = new stdClass();
-		$orders->odd = getFromTimOne::getOrdenesDeposito($intergradoId);
-
-		if ( ! empty( $orders->odd ) ) {
-			foreach ( $orders as $key => $values ) {
-				$values = array_filter($values, function ($v) { return $v->balance > 0;} );
-				$orders->$key = getFromTimOne::filterOrdersByStatus($values, array(5,8));
-			}
-		}
-
-		return $orders;
-	}
+//	/**
+//	 * @param $intergradoId
+//	 * @return stdClass
+//     */
+//	public static function getUnpaidODDs( $intergradoId ){
+//		$orders = new stdClass();
+//		$orders->odd = getFromTimOne::getOrdenesDeposito($intergradoId);
+//
+//		if ( ! empty( $orders->odd ) ) {
+//			foreach ( $orders as $key => $values ) {
+//				$values = array_filter($values, function ($v) { return $v->balance > 0;} );
+//				$orders->$key = getFromTimOne::filterOrdersByStatus($values, array(5,8));
+//			}
+//		}
+//
+//		return $orders->odd;
+//	}
 
 	private function getTxBalance( $trans ) {
 		$txs = new Txs();

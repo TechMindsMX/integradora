@@ -50,7 +50,6 @@ $url_resultados = 'index.php?option=com_reportes&view=resultados&'.$formToken;
                     <button id="greporte_flujo" class="btn btn-primary span2" type="submit">Generar Reporte  </button>
                 </div>
                 <div style="margin: auto;">
-                    <button id="fecha2" onclick="showhide(this.id)" class="btn btn-primary span2" type="button" disabled><?php echo JText::_('LBL_GENERAR_REPORTE'); ?></button>
 	                <a class="btn btn-danger" href="<?php echo 'index.php?option=com_reportes&view=reporteslistados'; ?>"><?php echo JText::_('JCANCEL'); ?></a>
                 </div>
             </div>

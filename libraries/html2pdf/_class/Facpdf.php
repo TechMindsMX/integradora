@@ -14,13 +14,14 @@ jimport('integradora.numberToWord');
 
 class Facpdf{
 
-    public function html($data, $integradora, $factura, $facObj){
+    public function html($data, $integradora, \Integralib\OdVenta $odVenta, $facObj){
 
         $number2word = new AifLibNumber();
         $fechaHOra = explode('T',$data->comprobante['FECHA']);
         $fecha = explode('-',$fechaHOra[0]);
         $fecha = $fecha[2].'/'.$fecha[1].'/'.$fecha[0];
         $hora = $fechaHOra[1];
+        $leyendaReceptor = $odVenta->getReceptor()->isIntegrado() ? '<br />'.JText::sprintf('LBL_AUTORIZO_ODV',$odVenta->getReceptor()->getDisplayName(),$odVenta->getReceptor()->getIntegradoRfc()) : '';
 
         $html ='<style>
                 body{
@@ -47,7 +48,7 @@ class Facpdf{
                 <table class="table">
                     <tr>
                         <td>
-                            <div><img width="200" src="'.$_SERVER['DOCUMENT_ROOT'].'/integradora/images/logo_iecce.png"/></div>
+                            <div><img width="200" src="images/logo_iecce.png"/></div>
                         </td>
                     </tr>
                 </table>
@@ -99,7 +100,7 @@ class Facpdf{
                     </thead>
                     <tbody>';
 
-                        foreach ($factura->productosData as $key => $prod) :
+                        foreach ($odVenta->productosData as $key => $prod) :
                             $ivasProd = array();
                             array_push($ivasProd, floatval($prod->iva) );
 
@@ -131,7 +132,7 @@ class Facpdf{
                         </td>
                         <td class="cuadro">
                             <div class="text-right">
-                                '.number_format($factura->subTotalAmount, 2).'
+                                '.number_format($odVenta->subTotalAmount, 2).'
                             </div>
                         </td>
                     </tr>
@@ -141,7 +142,7 @@ class Facpdf{
                         </td>
                         <td class="cuadro">
                             <div class="text-right">
-                                '.number_format($factura->iva, 2).'
+                                '.number_format($odVenta->iva, 2).'
                             </div>
                         </td>
                     </tr>
@@ -162,7 +163,8 @@ class Facpdf{
         $html .='<table class="table" id="printFooter" style="font-size: 10px">
     <tr>
         <td colspan="4">
-            '.JText::_('LBL_AUTORIZO_ODV').$data->emisor['attrs']['NOMBRE'].' con RFC: '.$data->emisor['attrs']['RFC'].'
+            '.JText::sprintf('LBL_AUTORIZO_ODV',$odVenta->getEmisor()->getDisplayName(),$odVenta->getEmisor()->getIntegradoRfc()) .'
+            '.$leyendaReceptor.'
         </td>
     </tr>
     <tr>
@@ -172,7 +174,7 @@ class Facpdf{
         <td style="text-align: right; width: 20%;"><strong>Folio fiscal:</strong> </td>
         <td style="text-align: left;">'.$data->complemento['children'][0]['attrs']['UUID'].'</td>
         <td style="text-align: right;" colspan="2" rowspan="5">
-            <img src="media/qrcodes/'.$factura->createdDate.'-'.$factura->integradoId.'-'.$factura->id.'.png">
+            <img src="media/qrcodes/'.$odVenta->createdDate.'-'.$odVenta->integradoId.'-'.$odVenta->id.'.png">
     </td>
     </tr>
     <tr>

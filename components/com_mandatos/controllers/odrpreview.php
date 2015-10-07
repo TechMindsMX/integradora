@@ -8,6 +8,8 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.rutas');
 jimport('integradora.notifications');
+jimport('html2pdf.PdfsIntegradora');
+
 
 /**
  * metodo de envio a TimOne
@@ -121,10 +123,14 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odr', '13');
                                 $comision = $this->txComision();
 
+                                $createPDF = new PdfsIntegradora();
+                                $createPDF->createPDF($this->tranfer, 'cashout');
+
                                 if ($statusChange && $comision) { //Se realizo el cobro de la comision
                                     $this->app->enqueueMessage(JText::sprintf('ORDER_PAID', $this->orden->numOrden));
 
                                     $this->sendNotifications();
+
                                 }
                             } else {
                                 throw new Exception( JText::_('ORDER_NO_PAID') );
@@ -209,6 +215,9 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
             $resultado = $tranfer->sendCreateTx();
         }
+
+        $this->tranfer = $tranfer;
+        $this->tranfer->fecha = date('d-m-Y');
 
         return $resultado == 200;
     }

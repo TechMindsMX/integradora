@@ -1,4 +1,6 @@
 <?php
+use Integralib\Integrado;
+use Integralib\OdVenta;
 use Integralib\OrdenFn;
 use Integralib\TimOneRequest;
 use Integralib\IntFactory;
@@ -728,6 +730,11 @@ class getFromTimOne{
         return $acceptedCurrenciesList;
     }
 
+    /**
+     * @param $banco_clabe
+     *
+     * @return stdClass|null
+     */
     public static function searchBancoByClabe( $banco_clabe ) {
         $db = JFactory::getDbo();
 
@@ -739,7 +746,7 @@ class getFromTimOne{
         $where  = $db->quoteName( 'banco_clabe' ) . ' = ' . $db->quote($banco_clabe);
         $existe = getFromTimOne::selectDB( $table, $where );
 
-        return !empty($existe)?$existe[0]:null;
+        return !empty($existe) ? $existe[0] :null;
     }
 
     public static function getPersJuridica( $string ) {
@@ -1121,9 +1128,14 @@ class getFromTimOne{
         return $orders;
     }
 
+    /**
+     * @param null $intergradoId
+     * @return stdClass
+     */
     public static function getOrdersCxC( $intergradoId = null ){
         $orders = new stdClass();
         $orders->odv = self::getOrdenesVenta($intergradoId);
+        $orders->odd = self::getOrdenesDeposito($intergradoId);
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $key => $values ) {
@@ -1153,6 +1165,12 @@ class getFromTimOne{
         return $resultados;
     }
 
+    /**
+     * @param null $integradoId
+     * @param null $idOrden
+     * @param $table
+     * @return mixed
+     */
     public static function getOrdenes($integradoId = null, $idOrden = null, $table){
 	    $dbq = JFactory::getDbo();
         $where = null;
@@ -1257,7 +1275,7 @@ class getFromTimOne{
             $value->subTotalAmount  = (float)$value->factura->comprobante['SUBTOTAL'];
             $value->totalAmount     = $value->factura->comprobante['TOTAL'];
             $value->iva             = isset($value->factura->impuestos->iva) ? $value->factura->impuestos->iva->importe : 0;
-            $value->ieps            = $value->factura->impuestos->ieps->importe;
+            $value->ieps            = isset($value->factura->impuestos->ieps->importe) ? $value->factura->impuestos->ieps->importe : 0;
 
             $o = new OrdenFn();
             $value->balance = $o->calculateBalance($value);
@@ -2054,15 +2072,16 @@ class sendToTimOne {
         }
 
         foreach ($_FILES as $key => $value) {
-            $result = manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
+            if($value['size'] > 0) {
+                $result = manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
+            }
 
-            if ($result != 'verificar') {
+            if (isset($result)) {
                 $fileinfo = pathinfo( $value['name'] );
-
-                $columna = substr( $key, 3 );
-                $clave   = substr( $key, 0, 3 );
-	            $dbq = JFactory::getDbo();
-                $where   = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id);
+                $columna  = substr( $key, 3 );
+                $clave    = substr( $key, 0, 3 );
+	            $dbq      = JFactory::getDbo();
+                $where    = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id);
 
                 switch ( $clave ) {
                     case 'dp_':
@@ -2090,16 +2109,14 @@ class sendToTimOne {
                         $table = 'integrado_instrumentos';
                         $where = $db->quoteName( 'integradoId' ) . ' = ' . $dbq->quote($integrado_id) . ' AND ' . $db->quoteName( 'instrum_type' ) . ' = 4';
                         break;
-
                     default:
-
                         break;
                 }
-                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( "media/archivosJoomla/" . $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
 
-                $save[] = self::updateDB( $table, $updateSet, $where );
+                $updateSet = array( $db->quoteName( $columna ) . ' = ' . $db->quote( $integrado_id . '_' . $key . "." . strtolower($fileinfo['extension']) ) );
+                $save[]    = self::updateDB( $table, $updateSet, $where );
             }else {
-                $campos[] = $key;
+                $campos[]  = $key;
             }
         }
 
@@ -2308,7 +2325,7 @@ class sendToTimOne {
         return $return;
     }
 
-    public function updateDB($table, $set=null, $condicion=null){
+    public function updateDB($table, $set=null, $condicion=null, $returnObject = false){
         $scope = JFactory::getApplication()->scope;
         JLog::addLogger(array('text_file' => date('d-m-Y').'_'.$scope.'_errors.php', 'text_entry_format' => '{DATETIME} {PRIORITY} {MESSAGE} {CLIENTIP}'), JLog::ALL & ~JLog::WARNING & ~JLog::INFO & ~JLog::DEBUG);
 
@@ -2323,8 +2340,17 @@ class sendToTimOne {
 
         try {
             $db->setQuery($query);
-            $db->execute();
-            $return = true;
+            $return = $db->execute();
+            if ($returnObject === true) {
+                $query = $db->getQuery(true);
+
+                $query->select('*')
+                    ->from($db->quoteName('#__'.$table))
+                    ->where($condicion);
+                $db->setQuery($query);
+
+                $return = $db->loadObject();
+            }
         }catch (Exception $e){
             $logdata = implode(' | ',array(JFactory::getUser()->id, $this->integradoId, __METHOD__.':'.__LINE__, json_encode( $e->getMessage() ) ) );
             JLog::add($logdata,JLog::ERROR,'Error INTEGRADORA DB');
@@ -2403,13 +2429,20 @@ class sendToTimOne {
 
     public function to_timone() {
         $getToken = new TimOneRequest();
-        $token    = $getToken->getAccessToken();
+
+        if( !strpos($this->serviceUrl, 'facturacion/services') ) {
+            $token = $getToken->getAccessToken();
+        }else{
+            $token = $getToken->getFacturacionAccessToken();
+        }
+
         $send     = new Send_email();
 
         if(!is_null($token)) {
             $verboseflag = true;
             $verbose = fopen(JFactory::getConfig()->get('log_path') . '/curl-' . date('d-m-y') . '.log', 'a+');
             $ch = curl_init();
+            $timeout = 10;
 
             switch ($this->getHttpType()) {
                 case ('POST'):
@@ -2418,6 +2451,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_POSTFIELDS => $this->jsonData,
                         CURLOPT_HEADER => false,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
@@ -2438,6 +2472,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => true,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
@@ -2456,6 +2491,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => true,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
@@ -2474,6 +2510,7 @@ class sendToTimOne {
                         CURLOPT_URL => $this->serviceUrl,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_CONNECTTIMEOUT => $timeout,
                         CURLOPT_HEADER => false,
                         //			CURLOPT_USERPWD        => ($credentials['username'] . ':' . $credentials['password']),
                         CURLOPT_FOLLOWLOCATION => false,
@@ -2493,7 +2530,7 @@ class sendToTimOne {
             if ($verboseflag === true) {
                 $headers = curl_getinfo($ch,
                     CURLINFO_HEADER_OUT);
-                $this->result->data = curl_exec($ch);
+                @$this->result->data = curl_exec($ch);
 
                 rewind($verbose);
                 $verboseLog = stream_get_contents($verbose);
@@ -2504,8 +2541,9 @@ class sendToTimOne {
             $this->result->info = curl_getinfo($ch);
             curl_close($ch);
 
+            $this->traceId = time();
             JLog::add(json_encode($this), JLog::DEBUG);
-            JLog::add($verbose, JLog::DEBUG);
+            JLog::add($verboseLog, JLog::DEBUG);
 
             switch ($this->result->code) {
                 case 200:
@@ -2517,13 +2555,16 @@ class sendToTimOne {
                 case 503:
                     $this->result->message = JText::_('SERVICE_UNABLE');
                     break;
+                case 400:
+                    $this->result->message = $this->getErrorMsg($this->result);
+                    break;
                 default:
                     $this->result->message = JText::_('JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED');
                     break;
             }
 
             if ($this->result->code != 200) {
-                $send->notificationErrors($this->result, $this->serviceUrl);
+                $send->notificationErrors($this->result, $this->serviceUrl, $this->traceId);
             }
         }
         return $this->result;
@@ -2695,7 +2736,7 @@ class sendToTimOne {
         $data = new Factura( $newOrden , $timbra, $series );
 
         //TODO: qutar el mock cuando sea produccion
-        if( ENVIROMENT_TIMONE == 'sandbox') {
+        if( ENVIRONMENT_TIMONE == 'sandbox') {
             $data->setTestRFC();
         }
 
@@ -2797,6 +2838,52 @@ class sendToTimOne {
         return $response;
     }
 
+    private function getErrorMsg($result){
+        $msg = 'JGLOBAL_AUTH_UNKNOWN_ACCESS_DENIED';
+        if(isset($result->data)) {
+            switch ($result->data) {
+                case 'Error: 1':
+                    $msg = JText::_('ACCOUNT_NOT_FOUND');
+                    break;
+                case 'Error: 2':
+                    $msg = JText::_('INVALID_AMOUNT');
+                    break;
+                case 'Error: 3':
+                    $msg = JText::_('INVALID_LENGTH');
+                    break;
+                case 'Error: 4':
+                    $msg = JText::_('NSF');
+                    break;
+                case 'Error: 5':
+                    $msg = JText::_('INVALID_PARAMETER');
+                    break;
+                case 'Error: 6':
+                    $msg = JText::_('OPERATION_NOT_ALLOWED');
+                    break;
+                case 'Error: 7':
+                    $msg = JText::_('USER_NOT_FOUND');
+                    break;
+                case 'Error: 8':
+                    $msg = JText::_('DUPLICATED_CLABE');
+                    break;
+                case 'Error: 9':
+                    $msg = JText::_('INVALID_CENTRO_COSTOS');
+                    break;
+                case 'Error: 10':
+                    $msg = JText::_('INVALID_CLABE');
+                    break;
+                case 'Error: 11':
+                    $msg = JText::_('SPEI_ERROR');
+                    break;
+                case 'Error: 13':
+                    $msg = JText::_('STP_RESPONSE_NOT_FOUND');
+                    break;
+            }
+        }
+
+        return $msg;
+    }
+
 }
 
 class comisionEvent {
@@ -2892,10 +2979,10 @@ class Factura extends makeTx {
     public $format;
 	public $totales;
 
-	function __construct( \Integralib\OdVenta $orden, $timbra = false, $series = 'B' ) {
-        $integradora = new \Integralib\Integrado();
+	function __construct( OdVenta $orden, $timbra = false, $series = 'B' ) {
+        $integradora = new Integrado();
         $this->emisor = new Emisor( new IntegradoSimple($integradora->getIntegradoraUuid()) );
-        $this->receptor = new Receptor($orden->getReceptor());
+        $this->receptor = $this->setReceptor($orden);
         $this->datosDeFacturacion = new datosDeFacturacion($orden);
 
         if(isset ($orden)) {
@@ -3064,6 +3151,21 @@ class Factura extends makeTx {
 		return $result;
 	}
 
+    /**
+     * @param OdVenta $odVenta
+     *
+     * @internal param Receptor $receptor
+     * @return Receptor
+     */
+    public function setReceptor(OdVenta $odVenta)
+    {
+        $receptor = $odVenta->getReceptor();
+        if ( $receptor->isIntegrado() ) {
+            $receptor = new IntegradoSimple(INTEGRADORA_UUID);
+        }
+        return new Receptor($receptor);
+    }
+
 }
 
 class Concepto
@@ -3184,7 +3286,7 @@ class UserTimone {
     public $name  = '';
     public $email = '';
 
-    function __construct( Integrado $integrado ) {
+    function __construct( IntegradoSimple $integrado ) {
         $user = $integrado->getUsuarioPrincipal($integrado->integrados[0]->integrado->integradoId);
 
         $this->name = $user->name;
@@ -3298,6 +3400,22 @@ class makeTx {
     protected $objEnvio;
     protected $resultado;
 
+    /**
+     * @return mixed
+     */
+    public function getObjEnvio()
+    {
+        return $this->objEnvio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResultado()
+    {
+        return $this->resultado;
+    }
+
     protected function create($datosEnvio){
         unset($this->options);
 
@@ -3363,7 +3481,8 @@ class makeTx {
 
         return $integradoEnvia->timoneData->timoneUuid;
     }
-
-
 }
+
+
+
 

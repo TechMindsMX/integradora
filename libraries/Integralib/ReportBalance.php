@@ -40,6 +40,7 @@ class ReportBalance extends ReportOrders {
 	}
 
 	public function calculateActivos(){
+		$this->activos = new \stdClass();
 		$this->activos->ivaCompras          = $this->expense->pagado->iva;
 		$this->activos->netoSaldoVentas     = $this->income->saldo->neto;
 
@@ -48,6 +49,7 @@ class ReportBalance extends ReportOrders {
 	}
 
 	public function calculatePasivos(){
+		$this->pasivos = new \stdClass();
 		$this->pasivos->cuentasPorPagar = $this->expense->saldo->neto;
 		$this->pasivos->ivaEnVentas     = $this->income->pagado->iva;
 
@@ -60,10 +62,14 @@ class ReportBalance extends ReportOrders {
 	}
 
 	public function calculateCapital(){
+		$this->capital = new \stdClass();
 		$this->capital->total = $this->getResultadoAnterior() + $this->pasivos->resultado;
 	}
 
 	public function calculatePastExcersises() {
+		$this->depositos = new \stdClass();
+		$this->retiros   = new \stdClass();
+
 		$this->pasivos->ejecicioAnterior = $this->getResultadoAnterior();
 		$this->depositos->ejecicioAnterior = $this->getPastDeposits();
 		$this->retiros->ejecicioAnterior = $this->calculatePastWithdrwals();

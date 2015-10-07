@@ -35,9 +35,10 @@ class IntegradoController extends JControllerLegacy {
 
         $respuesta = $this->rfc_type($data['rfc']);
 
-        $ex = $this->search_rfc_exists( $data['rfc'] );
+        $ex = $this->search_rfc_integrado_exist($data['rfc']);
+
         if ( is_numeric($respuesta) && isset($ex) ) {
-            $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
+            $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
         }
 
         $this->document->setMimeEncoding( 'application/json' );
@@ -74,6 +75,11 @@ class IntegradoController extends JControllerLegacy {
         }
     }
 
+    /**
+     * @param $rfc
+     *
+     * @return int|array
+     */
     public function rfc_type($rfc) {
 
         $diccionarioFisica = array( 'rfc' => array( 'rfc_fisica' => true, 'required' => true ) );
@@ -104,19 +110,8 @@ class IntegradoController extends JControllerLegacy {
      *
      */
     public function search_rfc_exists( $rfc ) {
-        $db        = JFactory::getDbo();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_personales')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $personales = $db->loadResult();
-
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))->from('#__integrado_datos_empresa')->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $empresa = $db->loadResult();
-
-        $integradoId = (!is_null($personales)) ? $personales : $empresa;
+        $integradoId = \Integralib\Integrado::getIntegradoIdFromRfc( $rfc );
 
         return $integradoId;
     }
@@ -142,16 +137,32 @@ class IntegradoController extends JControllerLegacy {
 
     /**
      * Salva la alta de usuarios a un integrado
+     *
      * @throws Exception
      */
     function saveAltaNewUserOfInteg(){
-        $db = JFactory::getDbo();
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
 
+        $data = $this->addUserToIntegrado(false, $data);
+
+        $this->sendEmail($data['type']);
+
+        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
+    }
+
+    /**
+     * @param boolean $principal
+     * @param $data array [permission_level, userId, integrado_id]
+     *
+     * @return array
+     */
+    private function addUserToIntegrado($principal, $data)
+    {
+        $db = JFactory::getDbo();
         $columnas	= array('integradoId','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($db->quote($this->integradoId), $data['userId'], 0, $data['permission_level']);
+        $valores	= array($db->quote($this->integradoId), $data['userId'], $principal, $data['permission_level']);
 
         $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
 
@@ -163,9 +174,7 @@ class IntegradoController extends JControllerLegacy {
             $data['type']='edit';
         }
 
-        $this->sendEmail($data['type']);
-
-        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
+        return $data;
     }
 
     /**
@@ -204,7 +213,7 @@ class IntegradoController extends JControllerLegacy {
         if($this->integradoId == ''){
             $url = 'index.php?option=com_integrado&view=solicitud&Itemid=207';
         }else{
-            $url = 'index.php?option=com_integrado';
+            $url = 'index.php?option=com_integrado&view=solicitud&layout=tovalidation&Itemid=207';
         }
 
         $app->enqueueMessage($msg['msg'], $msg['type']);
@@ -218,27 +227,38 @@ class IntegradoController extends JControllerLegacy {
      * @throws Exception
      */
     function saveform(){
-        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
-
-        if($data['busqueda_rfc']) {
-            $respuesta = $this->rfc_type($data['busqueda_rfc']);
-            $ex = $this->search_rfc_exists( $data['busqueda_rfc'] );
-        }
-
-        if ( isset( $respuesta ) ) {
-            if ( is_array($respuesta) || isset($ex) ) {
-                if (isset($ex)) {
-                    $respuesta = array('success' => false, 'msg' => JText::_('LBL_RFC_EXISTE'));
-                }
-                echo json_encode($respuesta);
-                return true;
-            }
-        }
-
         if (JSession::checkToken() === false) {
             $response = array('success' => false, 'msg'=>'Token Invalido' );
             echo json_encode($response);
             return true;
+        }
+
+        $data = $this->input->getArray( array( 'integradoId' => 'INT', 'busqueda_rfc' => 'STRING' ) );
+
+        if($data['busqueda_rfc']) {
+            if ( is_array( $this->rfc_type($data['busqueda_rfc']) ) || !is_null( $this->search_rfc_integrado_exist( $data['busqueda_rfc'] ) ) ) {
+                $respuesta = array('success' => false, 'msg' => JText::_('MSG_RFC_EXISTE'));
+                echo json_encode($respuesta);
+                return true;
+            }
+
+            // Si el RFC existe como Cliente/Proveedor asigna el integradoId en la sesion
+            $this->integradoId = $this->search_rfc_exists($data['busqueda_rfc']);
+
+            if ( !is_null($this->integradoId) ) {
+                $integrado = new IntegradoSimple($this->integradoId);
+                if ( !$integrado->isIntegrado() ) {
+                    $this->addUserToIntegrado(true, ['permission_level' => 3, 'userId' => JFactory::getUser()->id, 'integrado_id' => $this->integradoId]);
+                }
+
+                $this->sesion->set('integradoId', $this->integradoId, 'integrado');
+
+                $resultado['safeComplete']  = true;
+                $resultado['integradoId'] = $this->integradoId;
+
+                echo json_encode($resultado);
+                return true;
+            }
         }
 
         $input 	= JFactory::getApplication()->input;
@@ -392,18 +412,18 @@ class IntegradoController extends JControllerLegacy {
                     'de_tel_fax'                 => array('alphaNumber' => true,        'maxlength' => 10,      ),
                     'de_sitio_web'               => array(/*'string'      => true*/     'maxlength' => 150,     ),
                     't1_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      'required' => true),
-                    't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
+                    't1_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       'required' => true),
                     't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
                     'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,       ),
                     't2_instrum_fecha'           => array('date'        => true,       	'maxlength' => 10,      ),
-                    't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
+                    't2_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 18,      ),
                     'pn_instrum_fecha'           => array('date'        => true,      	'maxlength' => 10,      ),
-                    'pn_instrum_notaria'         => array('alphaNumber' => true, 	    'maxlength' => 18,      ),
+                    'pn_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       ),
                     'pn_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 255,     ),
                     'pn_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     'pn_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
@@ -416,7 +436,7 @@ class IntegradoController extends JControllerLegacy {
             case 'banco':
                 $diccionario = array(
                     'db_banco_clabe'             => array('banco_clabe' => $data['db_banco_codigo'],    'maxlength' => 18,  'minlength'=>18,   'required' => true),
-                    'db_banco_cuenta'            => array('alphaNumber' => true,                        'maxlength' => 11,  'minlength'=>11,   'required' => true),
+                    'db_banco_cuenta'            => array('check_cuenta_in_clabe' => $data['db_banco_cuenta'], 'alphaNumber' => true, 'maxlength' => 11,  'minlength'=>11,   'required' => true),
                     'db_banco_codigo'            => array('alphaNumber' => true,	                    'maxlength' => 3,   'required' => true),
                     'db_banco_sucursal'          => array('alphaNumber' => true,	                    'maxlength' => 10,  'required' => true),
                 );
@@ -747,35 +767,43 @@ class IntegradoController extends JControllerLegacy {
         $this->app = JFactory::getApplication();
 
         if (!JSession::checkToken()) {
+            $this->app->enqueueMessage( JText::_( 'LBL_ERROR' ), 'error' );
             $this->redirectToSelectIntegrado();
         } else {
             $this->id = $this->app->input->get('integradoId', null, 'STRING');
 
-            list($valid, $integrado) = $this->isValidIntegradoIdForUser();
-            if ($valid) {
+            try {
+                $integrado = $this->getIntegradoForUserByRequestId();
+                $integradoSimple = new IntegradoSimple($integrado->id);
+                Integrado::setIntegradoInSession($integradoSimple);
 
-                $sesion = JFactory::getSession();
-                $sesion->set('integradoId', $this->id, 'integrado');
-                $sesion->set('integradoDisplayName', $integrado->displayName, 'integrado');
+                $this->app->redirect( 'index.php?option=com_mandatos');
 
-                $this->app->redirect( 'index.php?option=com_mandatos', JText::sprintf( 'LBL_CHANGED_TO_INTEGRADO' , $integrado->displayName) );
+            } catch (Exception $e) {
+                $this->app->enqueueMessage($e->getMessage(), 'error');
+                $this->redirectToSelectIntegrado();
             }
-
-            $this->redirectToSelectIntegrado();
         }
 
     }
 
-    public function isValidIntegradoIdForUser() {
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function getIntegradoForUserByRequestId() {
         $model = $this->getModel();
         $integrados = $model->getIntegrados();
-        $check = array_key_exists($this->id, $integrados);
 
-        return array($check, $integrados[$this->id]);
+        if (!array_key_exists($this->id, $integrados)) {
+            throw new Exception(JText::_('ERROR_'));
+        }
+
+        return $integrados[$this->id];
     }
 
     public function redirectToSelectIntegrado() {
-        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change&Itemid=207', JText::_( 'LBL_ERROR' ), 'error' );
+        $this->app->redirect( 'index.php?option=com_integrado&view=integrado&layout=change&Itemid=207');
     }
 
     public function agregarBancoSolicitud() {
@@ -836,7 +864,6 @@ class IntegradoController extends JControllerLegacy {
             $integrado = new IntegradoSimple($this->integradoId);
 
             if ( $integrado->hasAllDataForValidation() ) {
-                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
                 $integrado->integrados[0]->integrado->status = 1;
                 $db->updateObject('#__integrado',$integrado->integrados[0]->integrado,'integradoId');
 
@@ -847,9 +874,13 @@ class IntegradoController extends JControllerLegacy {
                 $notificationAdmin->setAdminEmails();
                 $notifications->sendNotifications( 41, array( $integrado->getDisplayName(),date('d-m-Y') ) );
 
+                $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_COMPLETE') );
+
             } else {
                 $this->app->enqueueMessage( JText::_('LBL_DATA_VALIDATION_INTEGRADO_MISSING') );
             }
+        } else {
+            $this->app->enqueueMessage( JText::_('ERROR_SOLICITUD_VALIDACION') );
         }
 
         $this->app->redirect(JRoute::_('index.php?option=com_integrado'));
@@ -896,4 +927,23 @@ class IntegradoController extends JControllerLegacy {
         }
         return $permiso;
     }
+
+    /**
+     * @param $rfc
+     *
+     * @return string|null
+     */
+    private function search_rfc_integrado_exist($rfc)
+    {
+        $ex = $this->search_rfc_exists($rfc);
+
+        if ( ! empty( $ex )) {
+            $integrado = new IntegradoSimple($ex);
+
+            $ex = $integrado->isIntegrado() ? $integrado : null;
+        }
+
+        return $ex;
+    }
+
 }

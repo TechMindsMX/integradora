@@ -37,15 +37,19 @@ class MandatosControllerFacturapreview extends JControllerAdmin {
                     $userRfc = $orden->getEmisor()->getIntegradoRfc();
                     $xmlUUID = $orden->getfacturaUUID();
 
-                    $request = new \Integralib\TimOneRequest();
+                    if(!$xmlUUID){
+                        throw new Exception(JText::_('LBL_FACT_CANCELED_NOT_POSSIBLE'));
+                    }else {
+                        $request = new \Integralib\TimOneRequest();
 
-                    $canceled = $request->sendCancelFactura($userRfc, $xmlUUID);
+                        $canceled = $request->sendCancelFactura($userRfc, $xmlUUID);
 
-                    if ($canceled) {
-                        $this->app->enqueueMessage(JText::_('LBL_FACT_CANCELED_SUCCESSFULY'));
-                        $this->sendEmail();
-                    } else {
-                        throw new Exception(JText::_('LBL_FACT_CANCELED_FAILED')) ;
+                        if ($canceled) {
+                            $this->app->enqueueMessage(JText::_('LBL_FACT_CANCELED_SUCCESSFULY'));
+                            $this->sendEmail();
+                        } else {
+                            throw new Exception(JText::_('LBL_FACT_CANCELED_FAILED'));
+                        }
                     }
                 }
 

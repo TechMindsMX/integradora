@@ -46,9 +46,10 @@ class AdminintegradoraModelConciliacionBancoForm extends JModelLegacy {
         return $bancoArray;
     }
 
+    /**
+     * @return mixed
+     */
     public function getBancosIntegradora(){
-        $this->integradora->getIntegradora();
-
-        return $this->integradora->integrado->integrados[0]->datos_bancarios;
+        return AdminintegradoraHelper::getBancosIntegradora($this->integradora);
     }
 }

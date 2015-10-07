@@ -132,7 +132,6 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
             </div>
 
         </form>
-
     </div>
 <?php }else { ?>
     <form id="conciliacionbanco" action="index.php?option=com_adminintegradora&task=conciliacionbancoform.save" method="post" autocomplete="off">
@@ -144,17 +143,9 @@ echo '<script src="../libraries/integradora/js/tim-validation.js"> </script>';
 
         <h3><?php echo JText::_('CON_CONCILIACIONBANCO_CONFIRM_MSG'); ?></h3>
 
-	    <?php
-	    foreach ( $this->bancosIntegradora as $banco ) {
-		    if ($banco->datosBan_id == $data->cuenta) {
-			    $bankName = $banco->bankName;
-			    $bankAccount = substr(!empty($banco->banco_cuenta) ? $banco->banco_cuenta : $banco->banco_clabe, -4, 4);
-		    }
-	    }
+	    <?php  ?>
 
-	    ?>
-
-        <div>Banco - Cuenta : <?php echo $bankName, ' - ', $bankAccount; ?></div>
+        <div>Banco - Cuenta : <?php echo AdminintegradoraHelper::getBanknameAccount($this->bancosIntegradora, $data->cuenta); ?></div>
         <div>Referencia : <?php echo $data->referencia ?></div>
         <div>Fecha : <?php echo $data->date ?></div>
         <div>Monto: $<?php echo number_format($data->amount,2); ?></div>

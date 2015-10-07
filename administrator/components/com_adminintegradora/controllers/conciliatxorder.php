@@ -22,7 +22,7 @@ class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
         $conciliacion->saveRelations();
         $this->order = $order;
         $this->sendEmail();
-        JFactory::getApplication()->redirect('index.php?option=com_adminintegradora&view=oddlist');
+        JFactory::getApplication()->redirect('index.php?option=com_adminintegradora&view='.$input['orderType'].'list');
     }
 
     /**
@@ -46,16 +46,7 @@ class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
     }
 
     private function getOrder($post){
-        switch($post['orderType']){
-            case 'odd':
-                $order =getFromTimOne::getOrdenesDeposito(null, $post['idOrden']);
-                break;
-            case 'odv':
-                $order =getFromTimOne::getOrdenesVenta(null, $post['idOrden']);
-                break;
-        }
-
-        return $order[0];
+        return \Integralib\OrderFactory::getOrder($post['idOrden'],$post['orderType']);
     }
 
     public function sendEmail(){
@@ -76,13 +67,13 @@ class AdminintegradoraControllerConciliaTxOrder extends JControllerAdmin {
 
         $getCurrUser     = new IntegradoSimple($this->integradoId);
         $titleArray      = array( $this->order->numOrden);
-        $name = $this->order->receptor;
+        $name = $this->order->getReceptor()->getDisplayName();
 
         $array           = array(
             $name,
             $this->order->numOrden,
             date('d-m-Y'),
-            '$'.number_format($this->order->totalAmount, 2),
+            '$'.number_format($this->order->getTotalAmount(), 2),
             $metodoPago
         );
 

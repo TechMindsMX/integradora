@@ -101,7 +101,7 @@ class MandatosController extends JControllerLegacy {
 	    $validator   = new validador();
 	    $diccionario = array (
 		    'db_banco_codigo'   => array ( 'alphaNumber' => true, 'length' => 3, 'required' => true ),
-		    'db_banco_cuenta'   => array ( 'required' => true ),
+		    'db_banco_cuenta'   => array ( 'required' => true, 'length' => 11 ),
 		    'db_banco_sucursal' => array ( 'required' => true ),
 		    'db_banco_clabe'    => array ( 'banco_clabe' => $this->post['db_banco_codigo'], 'length' => 18, 'required' => true )
 	    );
@@ -116,7 +116,9 @@ class MandatosController extends JControllerLegacy {
 			    list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
 			    $existe = (OBJECT)$respuesta;
 			    $existe->datosBan_id = $newId;
-		    } else {
+		    } elseif ($this->post['integradoId'] == $existe->integradoId) {
+                $respuesta['success'] = true;
+            } else {
                 $respuesta['success'] = false;
                 $respuesta['msg'] = array('db_banco_clabe' => array('success' => false,'msg' => 'Esta cuenta ya fue dada de alta') );
 		    }
@@ -130,7 +132,7 @@ class MandatosController extends JControllerLegacy {
 			    $tableRelacion 		= 'integrado_clientes_proveedor';
 			    $db = JFactory::getDbo();
 			    $whereRelacion      = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
-			    $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
+			    $relacion           = getFromTimOne::selectDB($tableRelacion, $whereRelacion);
 
 			    if ( ! empty( $relacion[0] ) ) {
 				    $relacion           = $relacion[0];
@@ -964,18 +966,18 @@ class MandatosController extends JControllerLegacy {
                     'de_num_exterior'            => array('alphaNumber' => true,	    'maxlength' => 20,      'required' => true),
                     'de_cod_postal'              => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
                     't1_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      'required' => true),
-                    't1_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 45,      'required' => true),
+                    't1_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       'required' => true),
                     't1_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 5,       'required' => true),
                     't1_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     'required' => true),
                     't1_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      'required' => true),
                     'de_num_interior'            => array('alphaNumber' => true,	    'maxlength' => 5,),
                     't2_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
-                    't2_instrum_notaria'         => array('alphaNumber' => true,	    'maxlength' => 13,      ),
+                    't2_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       ),
                     't2_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     't2_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 18,      ),
                     'pn_instrum_fecha'           => array('date' => true,	        	'maxlength' => 10,      ),
-                    'pn_instrum_notaria'         => array('alphaNumber' => true, 	    'maxlength' => 18,      ),
+                    'pn_instrum_notaria'         => array('number'      => true,	    'maxlength' => 3,       ),
                     'pn_instrum_estado'          => array('alphaNumber' => true,	    'maxlength' => 255,     ),
                     'pn_instrum_nom_notario'     => array('alphaNumber' => true,	    'maxlength' => 100,     ),
                     'pn_instrum_num_instrumento' => array('alphaNumber' => true,	    'maxlength' => 10,      ),
@@ -1013,7 +1015,7 @@ class MandatosController extends JControllerLegacy {
 
         $factura = new Factura($odv, true);
 
-        if( ENVIROMENT_TIMONE == 'sandbox') {
+        if( ENVIRONMENT_TIMONE == 'sandbox') {
             $factura->setTestRFC();
         }
 

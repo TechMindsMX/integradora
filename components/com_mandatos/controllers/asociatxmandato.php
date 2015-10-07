@@ -6,6 +6,9 @@
  * Time: 3:35 PM
  */
 
+use Integralib\OdCompra;
+use Integralib\OrdenFn;
+
 defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
@@ -46,6 +49,12 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 
 		if(isset($this->vars['idOrden']) && isset($this->vars['orderType'])) {
 			$this->order = $model->getOrderByIdAndType($unpaidOrders, $this->vars['idOrden'], $this->vars['orderType']);
+
+			if($this->vars['orderType'] == 'odv') {
+				if (!$this->checkOppssingOdc()) {
+					$this->exitWithRedirect($redirectUrl, 'ERR_419_MANDATOSCONTROLLERASOCIATXMANDATOODC', 'error');
+				}
+			}
 		} else {
 			$this->exitWithRedirect($redirectUrl, 'ERR_413_MANDATOSCONTROLLERASOCIATXMANDATO', 'error');
 		}
@@ -92,8 +101,16 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 			$db->insertObject( '#__txs_mandatos', $objToInsert );
 
 			if ( ($this->order->balance - $objToInsert->amount) == 0 ) {
-				$ststus = new sendToTimOne;
-				if (!$ststus->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
+				$status = new sendToTimOne;
+				if($this->order->orderType == 'odv'){
+					$odcid = OrdenFn::getRelatedOdcIdFromOdvId($this->order->id);
+					if( !is_null($odcid) ) {
+						$odc = new OdCompra(null, $odcid);
+						$status->changeOrderStatus($odcid, $odc->getOrderType(), 13);
+					}
+				}
+
+				if (!$status->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
 					throw new Exception('LBL_CHANGE_STATUS_FAILED');
 				}
 			}
@@ -108,9 +125,9 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 
 			$result = false;
 		}
-        if($result==true){
-            $this->sendmail();
-        }
+		if($result==true){
+			$this->sendmail();
+		}
 		return $result;
 	}
 
@@ -118,46 +135,65 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		return $this->tx->balance > $this->order->balance ? $this->order->balance : $this->tx->balance;
 	}
 
-    private function sendmail() {
+	private function sendmail() {
 
-        /*
+		/*
          * NOTIFICACIONES 35
          */
 
-        $info           = array();
-        if($this->order->paymentMethod->id==1){
-            $metodoPago = JText::_('LBL_SPEI');
-        }
-        if($this->order->paymentMethod->id==2) {
-            $metodoPago = JText::_('LBL_DEPOSIT');
-        }
-        if($this->order->paymentMethod->id==3) {
-            $metodoPago = JText::_('LBL_CHEQUE');
-        }
+		$info           = array();
+		if($this->order->paymentMethod->id==1){
+			$metodoPago = JText::_('LBL_SPEI');
+		}
+		if($this->order->paymentMethod->id==2) {
+			$metodoPago = JText::_('LBL_DEPOSIT');
+		}
+		if($this->order->paymentMethod->id==3) {
+			$metodoPago = JText::_('LBL_CHEQUE');
+		}
 
-        $getCurrUser         = new IntegradoSimple($this->integradoId);
+		$getCurrUser         = new IntegradoSimple($this->integradoId);
 
-        $titleArray          = array($this->orden->numOrden);
+		$titleArray          = array($this->orden->numOrden);
 
-        $array           = array(
-            $getCurrUser->getDisplayName(),
-            $this->order->numOrden,
-            date('d-m-Y'),
-            '$'.number_format($this->order->totalAmount, 2),
-            $metodoPago);
+		$array           = array(
+			$getCurrUser->getDisplayName(),
+			$this->order->numOrden,
+			date('d-m-Y'),
+			'$'.number_format($this->order->totalAmount, 2),
+			$metodoPago);
 
-        $send                = new Send_email();
-        $send->setIntegradoEmailsArray($getCurrUser);
-        $info[]              = $send->sendNotifications('35', $array, $titleArray);
+		$send                = new Send_email();
+		$send->setIntegradoEmailsArray($getCurrUser);
+		$info[]              = $send->sendNotifications('35', $array, $titleArray);
 
-        /*
+		/*
          * NOTIFICACIONES 32
          */
 
-        $titleArrayAdmin     = array($getCurrUser->getDisplayName(), $this->orden->numOrden);
+		$titleArrayAdmin     = array($getCurrUser->getDisplayName(), $this->orden->numOrden);
 
-        $send->setAdminEmails();
-        $info[]             = $send->sendNotifications('36', $array, $titleArrayAdmin);
-    }
+		$send->setAdminEmails();
+		$info[]             = $send->sendNotifications('36', $array, $titleArrayAdmin);
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function checkOppssingOdc()
+	{
+		$respuesta = false;
+
+		$odcid = OrdenFn::getRelatedOdcIdFromOdvId($this->order->id);
+
+		if( !is_null($odcid) ) {
+			$odc = new OdCompra(null, $odcid);
+			$respuesta = $odc->isAuthorized();
+		}else{
+			$respuesta = true;
+		}
+
+		return $respuesta;
+	}
 
 }

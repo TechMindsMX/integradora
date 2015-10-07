@@ -70,6 +70,7 @@ jQuery(document).ready(function(){
 				<th><span class="etiqueta"><?php echo JText::_('LBL_ORDER_STATUS'); ?> </span> </th>
 				<th><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
                 <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
+				<th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -90,7 +91,7 @@ jQuery(document).ready(function(){
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} elseif ($value->status->id == 1 && !$this->permisos['canAuth'] && $this->permisos['canEdit']){
 					$auth_button = JText::_("LBL_CANT_AUTHORIZE") ;
-				} elseif ($value->status->id == 5) {
+				} elseif ( ($value->status->id == 5) || ($value->status->id == 13) ) {
 					$auth_button = JText::_('LBL_AUTHORIZED');
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				} else {
@@ -98,7 +99,9 @@ jQuery(document).ready(function(){
 					$edit_button = JText::_('LBL_NOT_EDITABLE');
 				}
 				$class = $value->status->id == 1?'':'status1';
-				
+
+				$pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$value->urlPDFOrden.'">Descargar PDF</a>';
+
 				echo '<tr class="type_'.$value->status->id.'" data-filtro="'.$value->status->id.'">';
 				echo '	<td class="'.$class.'" >'.$preview_button.$value->numOrden.'</td>';
 				echo '	<td class="rfc '.$class.'" >'.$value->createdDate.'</td>';
@@ -106,6 +109,7 @@ jQuery(document).ready(function(){
 				echo '	<td class="'.$class.'" >'.$value->status->name.'</td>';
 				echo '	<td class="'.$class.'" >'.$auth_button.'</td>';
 				echo '	<td class="'.$class.'" >'.$edit_button.'</td>';
+				echo '	<td class="'.$class.'" >'.$pdf.'</td>';
 				echo '</tr>';
 			}
 		}else{

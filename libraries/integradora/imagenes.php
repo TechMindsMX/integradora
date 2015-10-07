@@ -4,17 +4,16 @@ class manejoImagenes {
 
     public static function cargar_imagen($tipo, $usuario, $archivos, $key) {
 
-        $validaciones =self::validExtension($archivos);
-        $extension = strtolower(substr($archivos['name'],-4));
+        list($validaciones, $extension) =self::validExtension($archivos);
 
         if ($validaciones && getimagesize($archivos["tmp_name"])) {
-            move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . $extension);
-            $regreso = MEDIA_FILES . $usuario.'_'.$key . $extension;
+            move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . '.' . $extension);
+            $regreso = MEDIA_FILES . $usuario.'_'.$key . '.' . $extension;
         } elseif($validaciones) {
             move_uploaded_file($archivos["tmp_name"], MEDIA_FILES . $usuario.'_'.$key . ".pdf");
             $regreso = MEDIA_FILES . $usuario.'_'.$key . ".pdf";
         } else{
-            $regreso = 'verificar';
+            $regreso = null;
         }
 
         $logdata = implode(' | ',array(JFactory::getUser()->id, JFactory::getSession()->get('integradoId', null, 'integrado'), __METHOD__.':'.__LINE__, json_encode( array($tipo, $archivos, $validaciones, $regreso) ) ) );
@@ -133,6 +132,7 @@ class manejoImagenes {
             'image/png'
         );
 
-        return in_array(strstr($info, ';', true) , $validMimes);
+        $mime = strstr($info, ';', true);
+        return [ in_array($mime , $validMimes), end(explode('/',$mime)) ];
     }
 }

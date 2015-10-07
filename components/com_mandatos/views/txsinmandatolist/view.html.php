@@ -9,7 +9,8 @@ class MandatosViewTxsinmandatolist extends JViewLegacy {
 	protected $integradoId;
 
 	function display($tpl = null){
-		$this->txs 		    = $this->get('items');
+		$this->loadHelper('Mandatos');
+		$this->txs 		    = MandatosHelper::getTXsinMandato();
 
 		$sesion             = JFactory::getSession();
 		$this->integradoId  = $sesion->get('integradoId', null, 'integrado');

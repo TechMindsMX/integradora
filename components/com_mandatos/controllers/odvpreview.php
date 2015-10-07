@@ -9,7 +9,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 jimport('phpqrcode.qrlib');
-
+jimport('html2pdf.PdfsIntegradora');
 /**
  * metodo de envio a TimOne
  * @property mixed parametros
@@ -82,7 +82,6 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odv', $newStatusId);
 
-
                         $newOrder = OrderFactory::getOrder($this->parametros['idOrden'], 'odv');
 
                         if ($newOrder->getStatus()->id == 5 && $newOrder->urlXML == '') {
@@ -98,6 +97,8 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 	                                $newOrder->urlXML = $save->saveXMLFile($xmlFactura);
 	                                $factObj->saveFolio($xmlFactura);
 	                                $newOrder->XML = $xmlFactura;
+                                    $createPDF = new PdfsIntegradora();
+
                                     if($timbrar){
 
                                         //Codigo QR
@@ -119,10 +120,14 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
                                             $saveqrname->createdDate = time();
 
                                             $db->insertObject('#__integrado_pdf_qr',$saveqrname);
-                                        }
 
+                                            $createPDF->facturaPDF($factura, $newOrder, $factObj, $newOrder->urlXML);
+
+                                        }
                                         //fin codigo qr
                                     }
+
+
                                     $info = $this->sendEmail($newOrder);
 
                                 } catch (Exception $e) {
@@ -217,6 +222,10 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
         return $info;
     }
 
+    /**
+     * @param $productos
+     * @return int
+     */
     public function getTotalAmount($productos){
         $totalAmount = 0;
 
@@ -269,12 +278,17 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
             $odc->status        = 3;
             $odc->bankId        = $odv->account;
 
-
             $db->insertObject('#__ordenes_compra', $odc);
 
             $relation = new stdClass();
             $relation->id_odv = $odv->getId();
             $relation->id_odc = $db->insertid();
+
+            $createPDF = new PdfsIntegradora();
+            $createPDF->createPDF($relation->id_odc, 'odc');
+            if($createPDF){
+                $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'numOrden = '.$odc->numOrden);
+            }
 
             $db->insertObject('#__ordenes_odv_odc_relation', $relation);
 

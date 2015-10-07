@@ -36,7 +36,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 1:{ sorter: false },
                 2:{ sorter: false },
                 3:{ sorter: false },
-                4:{ sorter: false },
+                //4:{ sorter: false },
                 5:{ sorter: false }
             }
         });
@@ -72,6 +72,7 @@ if(is_null($ordenes) || empty($ordenes)){
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta"><?php echo JText::_('COM_MANDATOS_ORDENES_ACEPTAR_ORDEN'); ?> </span> </th>
             <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Edición</span> </th>
+            <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
         </tr>
         </thead>
         <tbody>
@@ -104,6 +105,8 @@ if(is_null($ordenes) || empty($ordenes)){
                 }
                 $class = $value->status->id == 1?'':'status1';
 
+                $pdf = '<a download="'.$this->integradoId.'-'.str_replace('-', '', $value->createdDate).'-'.$value->numOrden.'" href="'.$value->urlPDFOrden.'">Descargar PDF</a>';
+
                 echo '<tr class="type_'.$value->status->id.'" data-filtro="'.$value->status->id.'">';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$preview_button.' '.$value->numOrden.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="rfc '.$class.'" >'.$value->createdDate.'</td>';
@@ -111,6 +114,7 @@ if(is_null($ordenes) || empty($ordenes)){
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >$'.number_format($value->totalAmount,2).'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$auth_button.'</td>';
                 echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$edit_button.'</td>';
+                echo '	<td style="text-align: center; vertical-align: middle;" class="'.$class.'" >'.$pdf.'</td>';
                 echo '</tr>';
             }
         }else{

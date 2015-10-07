@@ -6,16 +6,12 @@ jimport('integradora.numberToWord');
 
 JHtml::_('behavior.keepalive');
 
-$document	= JFactory::getDocument();
-$app 		= JFactory::getApplication();
-
-// Datos
-$params 	= $app->input->getArray();
-
-$integrado 	= $this->integCurrent->integrados[0];
-
+$document  = JFactory::getDocument();
+$app 	   = JFactory::getApplication();
+$params    = $app->input->getArray();
+$integrado = $this->integCurrent->integrados[0];
+$integrado = new IntegradoSimple($integrado->integrado->integradoId);
 $number2word = new AifLibNumber();
-
 ?>
 
 <div class="hidden-print form-group">
@@ -64,7 +60,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('COM_MANDATOS_CLIENTES_CONTACT'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_personales->nombre_representante; ?>
+				<?php echo $integrado->integrados[0]->datos_personales->nombre_representante; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_FORMA_PAGO'); ?>
@@ -90,7 +86,7 @@ $number2word = new AifLibNumber();
 				<?php echo JText::_('LBL_CORREO'); ?>
 			</div>
 			<div class="span4">
-				<?php echo $integrado->datos_personales->email; ?>
+				<?php echo $integrado->integrados[0]->datos_personales->email; ?>
 			</div>
 			<div class="span2 text-right">
 				<?php echo JText::_('LBL_BANCOS'); ?>
@@ -146,7 +142,7 @@ $number2word = new AifLibNumber();
 					<?php echo JText::_('LBL_DATOS_RETIRO'); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO_ODR'); ?>
+					<?php echo JText::sprintf('LBL_AUTORIZO_ODR',$integrado->getDisplayName(), $integrado->getIntegradoRfc()); ?>
 				</div>
 			</div>
 			<div class="text-center">

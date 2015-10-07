@@ -377,21 +377,28 @@ class IntegradoControllerIntegrado extends JControllerForm {
     }
 
 	private function createDefaultProject() {
-		$project = new \Integralib\Project();
+        $app = JFactory::getApplication();
 
-		$project->setIntegradoId($this->integradoId);
-		$project->name = JText::_('DEFAULT_PTOJECT_NAME');
-		$project->description = JText::_('DEFAULT_PROJECT_DESC');
-		$project->setStatus(1);
-		$project->setParentId(0);
+        $project = new \Integralib\Project();
 
-		$create = $project->checkDuplicatedProjectNameForIntegrado((array)$project, 'crear', $this->integradoId);
+        $project->setIntegradoId($this->integradoId);
+        $project->name = JText::_('DEFAULT_PROJECT_NAME');
+        $project->description = JText::_('DEFAULT_PROJECT_DESC');
+        $project->setStatus(1);
+        $project->setParentId(0);
 
-		if($create === 'crear') {
-			$save = __METHOD__.' | '.$project->save();
-		} else {
-			$save = __METHOD__." | ya existe el proyecto por defecto para el integrado ".$this->integradoId;
-		}
+        $create = $project->checkDuplicatedProjectNameForIntegrado($project, 'crear', $this->integradoId);
+
+        if($create === 'crear') {
+            if ($save = $project->save()) {
+                $app->enqueueMessage( JText::sprintf('DEFAULT_PROJECT_CREATED', $project->name) );
+                $save = __METHOD__.' | '.$save;
+            } else {
+                $app->enqueueMessage( JText::sprintf('DEFAULT_PROJECT_CANT_BE_CREATED', $project->name) );
+            }
+        } else {
+            $save = __METHOD__." | ya existe el proyecto por defecto para el integrado ".$this->integradoId;
+        }
 
 		JLog::add(json_encode($save), JLog::DEBUG);
 	}

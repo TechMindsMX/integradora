@@ -294,6 +294,9 @@ $token = JSession::getFormToken();
 					if ($datos->integrado->pers_juridica == 1) {
 						$readonlyRfc = '#de_rfc';
 						$idRFC = 'de_rfc';
+						?>
+						jQuery('#wrap_dp_nom_comercial').hide();
+						<?php
 					} elseif ($datos->integrado->pers_juridica == 2) {
 						$readonlyRfc = '#dp_rfc';
 						$idRFC = 'dp_rfc';
@@ -358,7 +361,8 @@ $token = JSession::getFormToken();
 
 				if(typeof response.busqueda_rfc === 'number') {
 					jQuery('#perFisicaMoral'+response.busqueda_rfc).prop('checked', true);
-					jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success">El RFC es correcto puede continuar hancdo click en el botón envíar.</span>');
+					jQuery('#pers-juridica').find('.error').remove();
+					jQuery('#busqueda_rfc_btn').after('<span class="alert alert-success"><?php echo JText::_('RFC_VALIDO'); ?></span>');
 					jQuery('#juridica').prop('disabled', false).removeClass('disabled');
 				}
 			});
@@ -470,7 +474,7 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary disabled" id="juridica" disabled><?php echo JText::_('LBL_GUARDAR'); ?></button>
+			<button type="button" class="btn btn-primary disabled" id="juridica" disabled><?php echo JText::_('LBL_CONTINUAL'); ?></button>
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
@@ -721,8 +725,7 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
+			<button type="button" class="btn btn-primary" id="empresa"><?php echo JText::_('LBL_CONTINUAL'); ?></button>
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 		<?php
@@ -869,8 +872,7 @@ $token = JSession::getFormToken();
 		</fieldset>
 
 		<div class="form-actions">
-			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-<!--			<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
+			<button type="button" class="btn btn-primary" id="personales"><?php echo JText::_('LBL_CONTINUAL'); ?></button>
 			<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 		</div>
 
@@ -925,8 +927,7 @@ $token = JSession::getFormToken();
 			</div>
 
 			<div class="form-actions">
-				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-<!--				<a class="btn btn-success" href="--><?php //echo $finishUrl; ?><!--" >--><?php //echo JText::_('LBL_FIN'); ?><!--</a>-->
+				<button type="button" class="btn btn-primary" id="nextTab"><?php echo JText::_('LBL_CONTINUAL'); ?></button>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>
@@ -977,7 +978,7 @@ $token = JSession::getFormToken();
 					if( isset($value[0]) ){
 						?>
 						<div>
-							<a class="" href="<?php echo $value[0]; ?>" target="_blank"><?php echo JText::_('LBL_OPEN_FILE'); ?></a>
+							<a class="" href="<?php echo MEDIA_FILES.$value[0]; ?>" target="_blank"><?php echo JText::_('LBL_OPEN_FILE'); ?></a>
 						</div>
 					<?php
 					}
@@ -989,7 +990,6 @@ $token = JSession::getFormToken();
 
 			<div class="form-actions">
 				<button type="submit" class="btn btn-primary" id="files"><?php echo JText::_('LBL_GUARDAR'); ?></button>
-				<a class="btn btn-success disabled" id="finishBtn" href="" ><?php echo JText::_('LBL_FIN'); ?></a>
 				<a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>
 			</div>
 		</fieldset>

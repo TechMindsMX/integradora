@@ -28,7 +28,8 @@ class TimOneRequest extends TimOneCurl {
      */
     public function makeRequest($datosEnvio){
         unset($this->options);
-        @$this->objEnvio = isset($this->objEnvio) || is_null($this->objEnvio) ? $datosEnvio->objEnvio : $this->objEnvio;
+
+        @$this->objEnvio = !isset($this->objEnvio)  ? $datosEnvio->objEnvio : $this->objEnvio;
 
         $request = new sendToTimOne();
         $request->setServiceUrl($datosEnvio->url);
@@ -87,12 +88,14 @@ class TimOneRequest extends TimOneCurl {
     }
 
     public function sendCancelFactura($emisorRfc, $facturaUUID) {
+        $rutas          = new servicesRoute();
         $this->objEnvio = new \stdClass();
-        $this->objEnvio->uuid = $facturaUUID;
+
+        $this->objEnvio->uuid             = $facturaUUID;
         $this->objEnvio->rfcContribuyente = $emisorRfc;
         $this->objEnvio->rfcContribuyente = 'AAD990814BP7';//		TODO: quitar mock FinkOK para producción
 
-        return $this->makeRequest($this->rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
+        return $this->makeRequest($rutas->getUrlService('facturacion', 'facturaCancel', 'create'));
     }
 
     /**
@@ -101,7 +104,7 @@ class TimOneRequest extends TimOneCurl {
      *
      * @return object resultado
      */
-    public function sendCashInTx($uuidEmisor,$uuidReceptor, $amount, $reference) {
+    public function sendCashInTx($uuidEmisor, $amount) {
         $servicesRoute = new servicesRoute();
         $url = $servicesRoute->getUrlService('timone', 'txCashIn', 'create');
 
@@ -127,7 +130,17 @@ class TimOneRequest extends TimOneCurl {
 //		$serviceRoute = IntFactory::getServiceRoute('timone', 'token', 'create');
 
         $this->setServiceUrl(TOKEN_ROUTE."token");
-        $this->setJsonData('username=integradora&password=165b3c87&client_id=integra&client_secret=e6e68d8a-baf9-4880-aece-7774ffd4fb22&grant_type=password');
+        $this->setJsonData('username=' . OAUTH_USERNAME . '&password=' . OAUTH_PASSWORD . '&client_id=' . OAUTH_CLIENT_ID . '&client_secret=' . OAUTH_CLIENT_SECRET . '&grant_type=' . OAUTH_GRANT_TYPE );
+        $this->setHttpType('POST');
+
+        $token = $this->to_timone();
+
+        return json_decode($token->data);
+    }
+
+    public function getFacturacionAccessToken() {
+        $this->setServiceUrl(TOKEN_FACT_ROUTE."token");
+        $this->setJsonData('username=' . OAUTH_USERNAME . '&password=' . OAUTH_PASSWORD . '&client_id=' . OAUTH_CLIENT_ID . '&client_secret=' . OAUTH_CLIENT_SECRET . '&grant_type=' . OAUTH_GRANT_TYPE );
         $this->setHttpType('POST');
 
         $token = $this->to_timone();

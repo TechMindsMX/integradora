@@ -232,7 +232,7 @@ $app->enqueueMessage($msg,'MESSAGE');
 					<?php echo JText::_('LBL_CON_FACTURA'); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO_ODC'); ?>
+					<?php echo JText::sprintf('LBL_AUTORIZO_ODC', $this->integCurrent->getDisplayName(), $this->integCurrent->getIntegradoRfc()); ?>
 				</div>
 			</div>
 			<div class="text-center">

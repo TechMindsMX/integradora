@@ -7,7 +7,7 @@ require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.notifications');
 jimport('phpqrcode.qrlib');
-jimport('html2pdf.reportecontabilidad');
+jimport('html2pdf.PdfsIntegradora');
 /**
  * metodo de envio a TimOne
  * @property mixed parametros
@@ -29,9 +29,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         parent::__construct();
     }
 
-    /**
-     *
-     */
     function authorize()
     {
         $db = JFactory::getDbo();
@@ -77,7 +74,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $db->transactionStart();
 
             try{
-                $idAuth_odc = $save->insertDB( 'auth_odc',null,null,true );
+                $save->insertDB( 'auth_odc',null,null,true );
 
                 $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
                 $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
@@ -109,6 +106,12 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $db->updateObject('#__ordenes_venta', $odvUpdate, 'id');
 
+                                    $createPDF = new PdfsIntegradora();
+                                    $createPDF->createPDF($odc->id, 'odc');
+                                    if($createPDF){
+                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$odc->id);
+                                    }
+
                                     //Codigo QR
                                     $xml = new xml2Array();
                                     $factura = $xml->manejaXML($xmlFactura);
@@ -121,14 +124,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     QRcode::png($qrData,$pngPath);
                                     if(file_exists($pngPath)){
-                                       $saveqrname = new stdClass();
+                                        $saveqrname = new stdClass();
 
                                         $saveqrname->integradoId = $odv->integradoId;
                                         $saveqrname->qrName      = $filename;
                                         $saveqrname->createdDate = time();
 
-                                        $createPDF = new reportecontabilidad();
+                                        $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
 
+                                        $saveqrname->pdfName = $namePdfCreated;
+                                        $save->updateDB('ordenes_compra', array('urlPDF = "'.$namePdfCreated.'"'), 'numOrden = '.$odc->numOrden);
 
                                         $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                     }
@@ -136,7 +141,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                                     $factObj->saveFolio($xmlFactura);
 
-                                    $factura = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
                                 } catch (Exception $e) {
                                     $msg = $e->getMessage();
                                     JLog::add($msg, JLog::ERROR, 'error');
@@ -145,7 +149,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                             }
                         }
                     }
-
                 }else{
                     throw new Exception;
                 }
@@ -167,19 +170,24 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                     $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
 
-                    $this->txComision();
-                    $this->realizaTx();
+                    if( $odc->paymentMethod->id === 1 ){
+                        $this->txComision();
+                        $this->realizaTx();
 
-                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
+                        $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
 
-                    if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
-                        $save->changeOrderStatus($odvId, 'odv', 13);
+                        if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
+                            $save->changeOrderStatus($odvId, 'odv', 13);
+                        }
+
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[13]->name));
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[13]->name));
+                    }else{
+
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[5]->name));
                     }
 
                     $db->transactionCommit();
-
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED',  $catalogoStatus[13]->name));
-                    $this->app->enqueueMessage(JText::sprintf('ORDER_PAID_AUTHORIZED', $catalogoStatus[13]->name));
                     $this->app->redirect($this->returnUrl, JText::_('LBL_ORDER_AUTHORIZED'));
                 } catch (Exception $e) {
                     $db->transactionRollback();
@@ -202,6 +210,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         }
     }
 
+    /**
+     * @param $integradoSimple
+     */
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple)
     {
         if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
@@ -239,8 +250,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
             $txDone = $txData->sendCreateTx();
         } else {
+
             $txData = new Cashout($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount, array('accountId' => $orden->bankId));
             $txDone = $txData->sendCreateTx();
+
+            if($txDone){
+                $createPDF = new PdfsIntegradora();
+                $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
+            }
+
+
         }
 
         if (!$txDone) {

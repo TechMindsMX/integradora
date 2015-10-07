@@ -4,6 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('integradora.gettimone');
 jimport('integradora.validator');
 jimport('integradora.notifications');
+jimport('html2pdf.PdfsIntegradora');
 
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 
@@ -97,6 +98,17 @@ class MandatosControllerOdrform extends JControllerLegacy {
             $this->session->set('msg','Datos Almacenados', 'odr');
 	        $this->session->clear('data', 'odr');
 
+            $class = new PdfsIntegradora();
+            $data = new stdClass();
+            $data->datos = (object) $datos;
+            $data->datos->idOrden = $idOrden;
+            $data->datos->createdDate = date('d-m-Y',$data->datos->createdDate);
+            $class->createPDF($data->datos, 'odr');
+
+            if($class){
+                $save->updateDB('ordenes_retiro', array('urlPDFOrden = "'.$class->path.'"'), 'id = '.$idOrden);
+            }
+
             $respuesta = array('urlRedireccion' => 'index.php?option=com_mandatos&view=odrpreview&idOrden=' . $idOrden.'&success=true',
                 'redireccion' => true);
         }else{
@@ -133,9 +145,10 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	private function getBalance() {
 		$model = $this->getModel('odrform');
-		$balance = $model->getBalance();
+		$balance = MandatosHelper::getBalance( $model->integradoId );
+        $blocked = MandatosHelper::getBlockedBalance();
 
-		return $balance;
+		return $balance - $blocked;
 	}
 
 	private function enoughFunds() {
@@ -148,8 +161,6 @@ class MandatosControllerOdrform extends JControllerLegacy {
 
 	private function validaDatos() {
 		$validacion = new validador();
-
-		$this->getBalance();
 
 		$parametros = $this->parametros;
 

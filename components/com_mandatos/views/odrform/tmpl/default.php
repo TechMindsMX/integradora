@@ -6,12 +6,13 @@ jimport('joomla.html.html.bootstrap');
 jimport('integradora.numberToWord');
 JHtml::_('behavior.keepalive');
 
-$document	= JFactory::getDocument();
-$app 		= JFactory::getApplication();
-$attsCal    = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
-
-$default    = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
-$amount     = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
+$document = JFactory::getDocument();
+$app 	  = JFactory::getApplication();
+$attsCal  = array('class'=>'inputbox forceinline', 'size'=>'25', 'maxlength'=>'19');
+$default  = isset($this->odr->paymentDate) ? $this->odr->paymentDate : date('Y-m-d');
+$amount   = isset($this->odr->totalAmount) ? $this->odr->totalAmount : '';
+$cat 	  = new Catalogos();
+$cat 	  = $cat->getPaymentMethods()
 ?>
 	<script src="libraries/integradora/js/tim-validation.js"> </script>
 	<script>
@@ -101,8 +102,14 @@ if(!$this->confirmacion){
 <h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_AGREGAR'); ?></h1>
 <div style="margin-bottom: 10px;">
 	<h4>
-		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_TOTAL'); ?></span>
 		<span>$<?php echo number_format($this->integrado->balance,2); ?></span>
+		<br />
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_BLOCKED'); ?></span>
+		<span>$<?php echo number_format($this->integrado->blockedBalance,2); ?></span>
+		<br />
+		<span class="label-default"><?php echo JText::_('LBL_BALANCE_AVAILABLE'); ?></span>
+		<span>$<?php echo number_format($this->integrado->balance - $this->integrado->blockedBalance,2); ?></span>
 	</h4>
 </div>
 
@@ -122,8 +129,7 @@ if(!$this->confirmacion){
         <label for="paymentMethod"><?php echo JText::_('LBL_FORMA_PAGO'); ?></label>
         <select id="paymentMethod" name="paymentMethod">
 	        <?php
-	        $cat = new Catalogos();
-	        foreach ( $cat->getPaymentMethods() as $key => $val ) {
+	        foreach ( $cat as $key => $val ) {
 		        if ( isset( $this->odr->paymentMethod ) ) {
 			        $selected = ($this->odr->paymentMethod->id == $key) ? ' selected ' : '';
 		        }
@@ -149,14 +155,13 @@ if(!$this->confirmacion){
 	// confirmación de orden
 } else {
     $datos = $this->datos;
-    $formadepago = array( JText::_('LBL_SPEI'), JText::_('LBL_CHEQUE') );
 ?>
 	<h1><?php echo JText::_('COM_MANDATOS_ORDENES_RETIRO_LBL_CONFIMACION'); ?></h1>
 
 	<div class="form-group">
 		<span class="label-default"><?php echo JText::_('LBL_FORMA_PAGO'); ?>: </span>
     <span>
-        <?php echo $formadepago[$datos['paymentMethod']]; ?>
+        <?php echo JText::_($cat[$datos['paymentMethod']]->tag); ?>
     </span>
 	</div>
 	<div class="form-group">

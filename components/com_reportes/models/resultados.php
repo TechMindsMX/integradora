@@ -13,19 +13,21 @@ jimport('integradora.gettimone');
  */
 class ReportesModelResultados extends JModelItem {
 
-    protected $input;
+    public $input;
 
     function __construct() {
+		$month       = date('m');
+		$year 		 = date('Y');
+		$post 		 = array ('startDate' => 'STRING', 'endDate' => 'STRING', 'project' => 'INT');
+		$this->input = JFactory::getApplication();
+		$this->input = (object) $this->input->input->getArray( $post);
+		$starDate 	 = date('d-m-Y', mktime(0,0,0, $month, 1, $year));
+		$endDate 	 = date("d", mktime(0,0,0, $month+1, 0, $year)).'-'.$month.'-'.$year;
 
-	    $this->input            = (object) JFactory::getApplication()->input->getArray( array (
-		                                                                                    'startDate'   => 'STRING',
-		                                                                                    'endDate'     => 'STRING',
-		                                                                                    'project'     => 'INT'
-	                                                                                    ) );
-	    $this->input->startDate   = ! is_null( $this->input->startDate ) ? strtotime( $this->input->startDate ) : null;
-	    $this->input->endDate     = ! is_null( $this->input->endDate ) ? strtotime( $this->input->endDate ) : null;
+		$this->input->startDate = !is_null( $this->input->startDate ) ? strtotime( $this->input->startDate ) : strtotime($starDate);
+	    $this->input->endDate   = !is_null( $this->input->endDate )   ? strtotime( $this->input->endDate )   : strtotime($endDate);
 
-	    $session = JFactory::getSession();
+		$session = JFactory::getSession();
 	    $this->input->integradoId = $session->get('integradoId', null, 'integrado');
 
 	    parent::__construct();

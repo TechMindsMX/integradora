@@ -11,33 +11,36 @@ jimport('joomla.application.component.view');
 class oddPdf{
 
     public function __construct($data){
-        $this->odd = $data[0];
+        $this->odd = $data;
         $session = JFactory::getSession();
         $this->integradoId 	= $session->get('integradoId', null, 'integrado');
         $this->integCurrent = new IntegradoSimple($this->integradoId);
+
     }
 
-    public function createHTML($odd){
+    public function createHTML(){
 
-
+        if($this->odd->paymentMethod==1){
+            $metodoPago = JText::_('LBL_SPEI');
+        }
+        if($this->odd->paymentMethod==2) {
+            $metodoPago = JText::_('LBL_DEPOSIT');
+        }
+        if($this->odd->paymentMethod==3) {
+            $metodoPago = JText::_('LBL_CHEQUE');
+        }
 
         $integrado 	    = $this->integCurrent->integrados[0];
         $number2string  = new AifLibNumber();
         $integ = new IntegradoSimple($integrado->integrado->integradoId);
 
+        $receptor = new IntegradoSimple($this->odd->integradoId);
+
         $html ='<body>
-                <style>
-                    body{
-                        color: #777;
-                        font-size: 13px;
-                        font-weight: normal;
-                        line-height: 24.05px;
-                    }
-                </style>
                 <table style="width: 100%" id="logo">
                 <tr style="font-size: 10px">
                     <td style="width: 569px;">
-                        <img width="200" src="'.JUri::base().'images/logo_iecce.png'.'" />
+                        <img width="200" src="images/logo_iecce.png" />
                     </td>
                     <td style="width: 120px;">
                         <h3 class=" text-right">No. Orden</h3>
@@ -56,13 +59,13 @@ class oddPdf{
                                 '.JText::_('LBL_SOCIO_INTEG').'
                             </td>
                             <td class="span4" style="width: 300px; line-height: 24.05px;">
-                                '.$this->odd->receptor.'
+                                '.$receptor->integrados[0]->datos_empresa->razon_social.'
                             </td>
                             <td class="span2 text-right" style="width: 100px;">
                                 '.JText::_('LBL_DATE_CREATED').'
                             </td>
                             <td class="span4"  style="width: 200px; line-height: 24.05px;">
-                                '.$this->odd->createdDate.'
+                                '.date('d-m-Y',$this->odd->createdDate).'
                             </td>
                         </tr>
                         <tr style="font-size: 10px;">
@@ -80,7 +83,7 @@ class oddPdf{
                             </td>
                             <td class="span4" style="width: 200px;">';
 
-                        if (isset($this->odd->paymentDate)) {$html .=$this->odd->paymentDate;}
+                        if (isset($this->odd->paymentDate)) {$html .=date('d-m-Y',$this->odd->paymentDate);}
 
                     $html .='</td>
                         </tr>
@@ -95,7 +98,7 @@ class oddPdf{
                                 '.JText::_('LBL_FORMA_PAGO').'
                             </td>
                             <td class="span4">
-                                '.JText::_($this->odd->paymentMethod->name).'
+                                '.JText::_($metodoPago).'
                             </td>
                         </tr>
                         <tr style="font-size: 10px">
@@ -157,12 +160,12 @@ class oddPdf{
                         <table id="footer">
                             <tr class="container">
                                 <td class="control-group" style="font-size: 10px">
-                                    '.JText::_('LBL_DATOS_DEPOSITO').'
+                                    '.JText::sprintf('LBL_DATOS_DEPOSITO', $integ->getTimoneAccount()).'
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-left: 15px; line-height: 24px; font-size: 10px" class="container text-uppercase control-group">
-                                    '.JText::_('LBL_AUTORIZO_ODD').'
+                                    '.JText::sprintf('LBL_AUTORIZO_ODD', $integ->getDisplayName(), $integ->getIntegradoRfc()).'
                                 </td>
                             </tr>
                             <tr >

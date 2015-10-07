@@ -124,10 +124,10 @@ $integ = new IntegradoSimple($integrado->integrado->integradoId);
 		<div id="footer">
 			<div class="container">
 				<div class="control-group">
-					<?php echo JText::_('LBL_DATOS_DEPOSITO'); ?>
+					<?php echo JText::sprintf('LBL_DATOS_DEPOSITO', $integ->getTimoneAccount()); ?>
 				</div>
 				<div class="container text-uppercase control-group">
-					<?php echo JText::_('LBL_AUTORIZO_ODD'); ?>
+					<?php echo JText::sprintf('LBL_AUTORIZO_ODD', $integ->getDisplayName(), $integ->getIntegradoRfc()); ?>
 				</div>
 			</div>
 			<div class="text-center">

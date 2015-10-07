@@ -180,6 +180,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     jQuery.each(campo, function(k,v) {
                         extractTab(v);
                     });
+                    jQuery('#nextTab').remove();
+                    jQuery('#search').remove();
                     activeTab( '#tipo_alta' );
 
                 } else if (response.bu_rfc.success == 'invalid') { <?php //RFC MAL?>
@@ -634,7 +636,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="t1_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?> *</label>
-                        <input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="10" />
+                        <input name="t1_instrum_notaria" id="t1_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
@@ -668,7 +670,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="t2_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-                        <input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="10" />
+                        <input name="t2_instrum_notaria" id="t2_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
@@ -701,7 +703,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     </div>
                     <div class="form-group">
                         <label for="pn_instrum_notaria"><?php echo JText::_('LBL_NOTARIA'); ?></label>
-                        <input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="10" />
+                        <input name="pn_instrum_notaria" id="pn_instrum_notaria" type="text" maxlength="3" />
                     </div>
 
                     <div class="form-group">
@@ -978,7 +980,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 </div>
                 <div class="form-group">
                     <label for="db_banco_cuenta"><?php echo JText::_('LBL_BANCO_CUENTA'); ?> *</label>
-                    <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="10" />
+                    <input name="db_banco_cuenta" id="db_banco_cuenta" type="text" maxlength="11" />
                 </div>
                 <div class="form-group">
                     <label for="db_banco_sucursal"><?php echo JText::_('LBL_BANCO_SUCURSAL'); ?> *</label>
@@ -1027,7 +1029,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     <input name="dp_url_identificacion" type="file" maxlength="" />
                 </div>
                 <div class="form-group">
-                    <label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?> *</label>
+                    <label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE_REP_LGL'); ?> *</label>
                     <input name="dp_url_rfc" type="file" maxlength="" />
                 </div>
 
@@ -1052,7 +1054,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 </div>
 
                 <div class="form-group">
-                    <label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+                    <label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO3_FILE'); ?></label>
                     <input name="pn_url_instrumento" type="file" maxlength="" />
                 </div>
 

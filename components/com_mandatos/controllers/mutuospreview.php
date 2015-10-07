@@ -6,6 +6,7 @@ defined('_JEXEC') or die('Restricted access');
 require_once JPATH_COMPONENT . '/helpers/mandatos.php';
 jimport('integradora.gettimone');
 jimport('integradora.catalogos');
+jimport('html2pdf.PdfsIntegradora');
 
 /**
  * metodo de envio a TimOne
@@ -94,10 +95,14 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     if ($statusChange) {
                         $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
+
                         if ($generateOdps) {
+
+
                             $tx = $this->paymentFirstOdp();
 
                             if($tx) {
+
                                 $msgOdps = JText::_('LBL_ODPS_GENERATED');
                                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                             }else{
@@ -105,6 +110,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                                 $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'mutuo', 3);
                                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZED') . '<br />' . $msgOdps, 'notice');
                             }
+
                         } else {
                             $msgOdps = JText::_('LBL_ODPS_NO_GENERATED');
                             $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY').'<br />'.$msgOdps, 'notice');
@@ -114,8 +120,11 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
             }else{
+                $html2pdf = new PdfsIntegradora();
+                $html2pdf->createPDF($mutuo, 'mutuo');
                 // acciones cuando NO tiene permisos para autorizar
                 $this->app->redirect($redirectUrl, JText::_('LBL_ORDER_AUTHORIZE_STANDBY'), 'warning');
+
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
@@ -175,7 +184,8 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
                 $save->formatData($odp);
 
-                $saved = $save->insertDB('ordenes_prestamo');
+                $saved = $save->insertDB('ordenes_prestamo', null,null,true);
+                $arrayOdp[] = $odp;
 
                 if (!$saved) {
                     //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
@@ -187,6 +197,10 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                     break;
                 } else {
                     $resultado = true;
+                    $createPdf = new PdfsIntegradora();
+                    $odp->id = $saved;
+                    $odp->createdDate = date('d-m-Y',$odp->fecha_elaboracion);
+                    $createPdf->createPDF($odp, 'odp');
                 }
             }
         }elseif($mutuo->status == 3){

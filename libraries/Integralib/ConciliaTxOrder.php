@@ -24,8 +24,8 @@ class ConciliaTxOrder {
 
         $objToInsert->id = $this->tx->id;
         $objToInsert->amount = $this->setAmountTxToAssign();
-        $objToInsert->idOrden = $this->order->id;
-        $objToInsert->orderType = $this->order->orderType;
+        $objToInsert->idOrden = $this->order->getId();
+        $objToInsert->orderType = $this->order->getOrderType();
 
         $db = \JFactory::getDbo();
         $db->transactionStart();
@@ -35,7 +35,7 @@ class ConciliaTxOrder {
 
             if ( ($this->order->balance - $objToInsert->amount) === 0.0 ) {
                 $ststus = new \sendToTimOne;
-                if (!$ststus->changeOrderStatus($this->order->id, $this->order->orderType, 13) ) {
+                if (!$ststus->changeOrderStatus($this->order->getId(), $this->order->getOrderType(), 13) ) {
                     throw new \Exception('LBL_CHANGE_STATUS_FAILED');
                 }
             }

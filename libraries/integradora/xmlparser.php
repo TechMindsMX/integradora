@@ -71,7 +71,11 @@ class xml2Array {
         return $datosXML;
     }
 
-    public function trasladados($datosXML,$impuestos){
+    public function trasladados($datosXML, $impuestos){
+        $datosXML->impuestos = new stdClass();
+        $datosXML->impuestos->iva = new stdClass();
+        $datosXML->impuestos->ieps = new stdClass();
+
         if(isset($impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'])){
             $datosXML->impuestos->totalTrasladados  = (FLOAT)$impuestos['attrs']['TOTALIMPUESTOSTRASLADADOS'];
         }else{
@@ -88,7 +92,7 @@ class xml2Array {
             }
         }
 
-        if( !isset($datosXML->impuestos->ieps) ){
+        if( empty($datosXML->impuestos->ieps) ){
             $datosXML->impuestos->ieps->tasa    = 0;
             $datosXML->impuestos->ieps->importe = 0;
         }

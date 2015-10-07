@@ -61,6 +61,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Estatus</th>
         <th>Autorización / Ordenes de Pago</th>
         <th>Edición</th>
+        <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
     </tr>
     </thead>
     <tbody>
@@ -91,6 +92,10 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             $edit   = '<a class="btn btn-primary disabled">Editar</a>';
             $odp    = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
+
+        $namePdfE = 'media/pdf_mutuo/'.$value->integradoIdE.'-'.$value->id.'.pdf';
+        $pdfE = '<a download="'.$value->integradoIdE.'-'.$value->id.'" href="'.$namePdfE.'">Descargar PDF</a>';
+
         ?>
         <tr class="row" <?php echo $style;?> >
             <td><?php echo $preview_button.' '.$value->integradoDeudor->nombre; ?></td>
@@ -102,6 +107,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo $value->status->name; ?></td>
             <?php echo $odp; ?>
             <td><?php echo $edit; ?></td>
+            <td><?php echo $pdfE; ?></td>
         </tr>
     <?php }?>
     </tbody>
@@ -120,6 +126,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
         <th>Duración</th>
         <th>Estatus</th>
         <th>Autorización / Ordenes de Pago</th>
+        <th style="text-align: center; vertical-align: middle;" ><span class="etiqueta">Archivo PDF</span> </th>
     </tr>
     </thead>
     <tbody>
@@ -149,7 +156,11 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             $style  = 'style="color: #FF0000;"';
             $odp    = '<td><a class="btn btn-primary" href="index.php?option=com_mandatos&view=odplist&id='.$value->id.'">'.JText::_('LBL_VER_ODPS').'</a></td>';
         }
+        $namePdfE = 'media/pdf_mutuo/'.$value->integradoIdE.'-'.$value->id.'.pdf';
+        $pdfE = '<a download="'.$value->integradoIdE.'-'.$value->id.'" href="'.$namePdfE.'">Descargar PDF</a>';
         ?>
+
+
         <tr class="row" <?php echo $style; ?>>
             <td><?php echo $preview_button.' '.$value->integradoAcredor->nombre; ?></td>
             <td>$<?php echo number_format($value->totalCapital+$value->totalIva+$value->totalInteres,2); ?></td>
@@ -159,6 +170,7 @@ $document->addScript('libraries/integradora/js/jquery.tablesorter.min.js');
             <td><?php echo number_format($value->duracion,2); ?> años</td>
             <td><?php echo $value->status->name; ?></td>
             <?php echo $odp; ?>
+            <td><?php echo $pdfE; ?></td>
         </tr>
     <?php }?>
 
