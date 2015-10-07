@@ -180,3 +180,9 @@ INSERT INTO flpmu_modules_menu SET moduleid = 160, menuid = 101;
 --changeset ricardolyon:29
 UPDATE `flpmu_modules` SET position = 'mainbody_bottom', title = 'Tipo de cambio', showtitle = '1', params = '{\"moduleclass_sfx\":\"span12\", \"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\"}' WHERE id = 159 AND title = 'ExRateBanxico';
 --rollback UPDATE `flpmu_modules` SET position = 'mainbody_top', title = 'ExRateBanxico', showtitle = '0', params = '{\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\"}', client_id = 0, `language` = '*' WHERE id = 159 AND title = 'Tipo de cambio';
+
+--changeset ricardolyon:30
+ALTER TABLE `flpmu_users_security_questions` DROP FOREIGN KEY `flpmu_users_security_questions_ibfk_1`;
+ALTER TABLE `flpmu_users_security_questions` ADD CONSTRAINT `flpmu_users_security_questions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `integradb`.`flpmu_users` (`id`) ON DELETE CASCADE;
+--rollback ALTER TABLE `flpmu_users_security_questions` DROP FOREIGN KEY `flpmu_users_security_questions_ibfk_1`;
+--rollback ALTER TABLE `flpmu_users_security_questions` ADD CONSTRAINT `flpmu_users_security_questions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `integradb`.`flpmu_users` (`id`);
