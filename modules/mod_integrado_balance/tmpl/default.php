@@ -13,21 +13,30 @@ defined('_JEXEC') or die;
     <div id="exchange-rate-module" class="<?php echo $moduleclass_sfx; ?> bg-warning box pull-left">
         <div class="row-fluid">
             <span class="span6">
-                <?php echo JText::_('EXCH_RATE_DATE'); ?>
+                <?php echo JText::_('LBL_TOTAL'); ?>
             </span>
             <span class="span6 text-right">
-                <?php echo $exrate->fecha_tc; ?>
+                <?php echo number_format($balances['total'], 2); ?> MXN
             </span>
         </div>
 
         <div class="row-fluid">
             <span class="span6">
-                <?php echo JText::_('EXCH_RATE'); ?>
+                <?php echo JText::_('LBL_BLOCKED'); ?>
             </span>
             <span class="span6 text-right">
-                <?php echo $exrate->tc; ?> MXN/USD
+                <?php echo number_format($balances['blocked'], 2); ?> MXN
             </span>
         </div>
-        <div class="text-center"><small><i><?php echo JText::_('EXCH_RATE_LEGEND'); ?></i></small></div>
+
+        <div class="row-fluid">
+            <span class="span6">
+                <?php echo JText::_('LBL_AVAILABLE'); ?>
+            </span>
+            <span class="span6 text-right">
+                <?php echo number_format($balances['available'], 2); ?> MXN
+            </span>
+        </div>
+
     </div>
 </div>
