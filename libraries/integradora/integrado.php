@@ -636,12 +636,16 @@ class IntegradoSimple extends Integrado {
 
     }
 
-	public function getAccountData( $account_id ) {
+	public function getAccountData( $account_id = null ) {
 		$result = null;
 		foreach ( $this->integrados[0]->datos_bancarios as $key => $banco ) {
 			if ($banco->datosBan_id == $account_id) {
 				$result = $banco;
 			}
+		}
+
+		if(is_null($account_id)){
+			$result = $this->integrados[0]->datos_bancarios;
 		}
 
 		return $result;

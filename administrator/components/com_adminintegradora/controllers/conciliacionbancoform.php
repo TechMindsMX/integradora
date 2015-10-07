@@ -8,6 +8,8 @@
  */
 
 // No direct access.
+use Integralib\RelacionaTx;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
@@ -102,40 +104,14 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
         return $result;
     }
 
-    private function saveTxsRelation($txTimone, $id_tx_banco) {
-        $db          = JFactory::getDbo();
-        $query       = $db->getQuery(true);
-        $integradoId = $this->data['integradoId'];
-
-        $values = array($db->quote($txTimone), $db->quote(time()), $db->quote($integradoId));
-
-        $query->insert($db->quoteName('#__txs_timone_mandato'));
-        $query->columns($db->quoteName(array('idTx', 'date', 'integradoId')));
-        $query->values(implode(',',$values));
-
-        $db->setQuery($query);
-        $db->execute();
-        $id_tx_timone = $db->insertid();
-
-        $query = $db->getQuery(true);
-
-        $values = array($db->quote($id_tx_banco), $db->quote($id_tx_timone));
-
-        $query->insert($db->quoteName('#__txs_banco_timone_relation'));
-        $query->columns($db->quoteName(array('id_txs_banco', 'id_txs_timone')));
-        $query->values(implode(',',$values));
-
-        $db->setQuery($query);
-        $db->execute();
-    }
-
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
         $integradora = new \Integralib\Integrado();
         $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
         $result   = $transfer->sendCreateTx(false);
 
         if( $dataObj->integradoId !=  INTEGRADOID_CONCENTRADORA ) {
-            $this->saveTxsRelation($transfer->getTransferData(), $this->id_tx_banco);
+            $asociacion = new RelacionaTx();
+            $asociacion->asociacionTxs($transfer->getTransferData(), $this->id_tx_banco, $this->data['integradoId']);
         }
 
         if($result != 200) {

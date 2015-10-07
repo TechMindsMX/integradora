@@ -1,4 +1,6 @@
 <?php
+use Integralib\RelacionaTx;
+
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.controller');
@@ -25,16 +27,15 @@ class IntegradoraservicesController extends JControllerLegacy {
     }
 
     public function cashin() {
-        $data = JFactory::getApplication()->input->getArray();
-
-        $objeto                  = new stdClass();
-        $objeto->uuid            = '4f1c5618786d4e6987c43cd74a1572c3';//$data['uuid'];
-        $objeto->reference       = '';//$data['reference'];
-        $objeto->amount          = 1500000;//$data['amount'];
-        $objeto->timestamp       = 1441058400;//$data['timestamp'];
-
-        $formato                 = 'json';
-        $getMethod               = 'hello';
+        $data              = JFactory::getApplication()->input->getArray();
+        $objeto            = new stdClass();
+        $objeto->uuid      = $data['uuid'];
+        $objeto->uuidTx    = $data['uuidtx'];
+        $objeto->reference = $data['reference'];
+        $objeto->amount    = $data['amount'];
+        $objeto->timestamp = $data['timestamp'];
+        $formato           = 'json';
+        $getMethod         = 'hello';
 
         $HTTPS_required          = false;
         $authentication_required = false;
@@ -109,55 +110,46 @@ class IntegradoraservicesController extends JControllerLegacy {
         $save           = new sendToTimOne();
         $post           = $json;
         $data_integrado = getFromTimOne::getIntegradoId($post->uuid);
+        $integrado = new IntegradoSimple($data_integrado[0]->integradoId);
 
         if ( empty( $data_integrado ) ) {
             // error no existe el integrado
             return array('code' => '8');
         }
 
-
-        //TODO se deben traer solamente las ordenes no pagadas
-        $odds           = getFromTimOne::getOrdenesDeposito($data_integrado[0]->integradoId);
-
-        foreach ($odds as $value) {
-            if( ($post->timestamp == $value->timestamps->paymentDate) && ($post->amount == $value->totalAmount) && ($value->status->id == 5) ){
-
-                $dataTXMandato = new stdClass();
-                $dataTXMandato->idTx        = $post->reference;
-                $dataTXMandato->integradoId = $value->integradoId;
-                $dataTXMandato->date        = time();
-                $dataTXMandato->idComision  = 1;
-
-                $db->transactionStart();
-
-                try {
-                    $db->insertObject('#__txs_timone_mandato',$dataTXMandato);
-                    $idTx = $db->insertid();
-
-                    $txs_mandatos = new stdClass();
-                    $txs_mandatos->id = $idTx;
-                    $txs_mandatos->amount = $post->amount;
-                    $txs_mandatos->orderType = 'odd';
-                    $txs_mandatos->idOrden = $value->id;
-
-                    $db->insertObject('#__txs_mandatos', $txs_mandatos);
-
-
-                    $save->changeOrderStatus($value->id, 'odd', 13);
-
-                    $getPDF = new PdfsIntegradora();
-                    $getPDF->createPDF($json, 'cashin');
-
-                    $db->transactionCommit();
-
-                    $return = array('code' => '1');//succes
-                    break;
-                }catch (Exception $e) {
-                    $db->transactionRollback();
-                    $return = array('code' => '7');//fail
-                    break;
-                }
+        foreach ($integrado->getAccountData() as $banco) {
+            if($banco->bankName == 'STP' && $banco->banco_clabe == $integrado->getTimoneAccount()){
+                $idCuenta = $banco->datosBan_id;
             }
+        }
+
+        $db->transactionStart();
+
+        try {
+            $dataTX = new stdClass();
+            $dataTX->cuenta      = $idCuenta;
+            $dataTX->referencia  = $post->reference;
+            $dataTX->date        = time();
+            $dataTX->amount      = $post->amount;
+            $dataTX->integradoId = $integrado->getId();
+            $dataTX->identified  = 1;
+
+            $db->insertObject('#__txs_banco_integrado',$dataTX);
+            $id_tx_banco = $db->insertid();
+
+            $asociacion = new RelacionaTx();
+            $asociacion->asociacionTxs($post->reference,$id_tx_banco,$integrado->getId());
+
+            $getPDF = new PdfsIntegradora();
+            $json->currency = 'MXN';
+            $getPDF->createPDF($json, 'cashin');
+
+            $db->transactionCommit();
+
+            $return = array('code' => '1');//succes
+        }catch (Exception $e) {
+            $db->transactionRollback();
+            $return = array('code' => '7');//fail
         }
 
         if( !isset($return) ){

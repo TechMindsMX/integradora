@@ -38,7 +38,7 @@ class cashinPDF{
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
                                     <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_AMOUNT').'</th>
-                                    <td style="border: 1px solid #ddd;">$ '.number_format($data->amount,2). ' ' . $data->currency.'</td>
+                                    <td style="border: 1px solid #ddd;">$ '.number_format($data->amount,2). ' ' .$data->currency.'</td>
                                 </tr>
                                 <tr style="border: 1px solid #ddd;">
                                     <th style="border: 1px solid #ddd; width: 350px">'.JText::_('LBL_TIMESTAMP').'</th>
