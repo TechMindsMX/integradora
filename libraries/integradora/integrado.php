@@ -1,4 +1,6 @@
 <?php
+use Integralib\Txs;
+
 defined('JPATH_PLATFORM') or die;
 
 jimport('joomla.user.user');
@@ -511,7 +513,9 @@ class IntegradoSimple extends Integrado {
 		$this->ordersAtuhorizationParams = !empty($result)?$result[0]->params:array();
 	}
 
-
+	/**
+	 * @return string
+     */
 	public function getDisplayName() {
 
 		if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
@@ -530,7 +534,10 @@ class IntegradoSimple extends Integrado {
 		return $name;
 	}
 
-    public function getContactName() {
+	/**
+	 * @return string
+     */
+	public function getContactName() {
 // TODO Revisar cuales son los datos de contacto y su prioridad para mostrar
         if ( isset($this->integrados[0]->datos_empresa->razon_social) && !empty($this->integrados[0]->datos_empresa->razon_social) ) {
             $name = $this->integrados[0]->datos_empresa->razon_social;
@@ -548,7 +555,7 @@ class IntegradoSimple extends Integrado {
         return $name;
     }
 
-    public function setMainAddressFormatted() {
+	public function setMainAddressFormatted() {
         $codPostal = null;
         $address = null;
 
@@ -709,6 +716,62 @@ class IntegradoSimple extends Integrado {
 
 		return $timoneData[0]->stpClabe;
 	}
+
+	/**
+	 * @param $integradoId
+	 * @return mixed
+	 */
+	public function getBalance(){
+		$integrado = new IntegradoSimple($this->id);
+		$integrado->getTimOneData();
+
+		return $integrado->timoneData->balance;
+	}
+
+	/**
+	 * @return int
+     */
+	public function getBlockedBalance(){
+		$txs = self::getTXsinMandato( $this->id );
+		$blockedBalance = 0;
+
+		foreach($txs as $value){
+			$blockedBalance = $value->balance + $blockedBalance;
+		}
+
+		return $blockedBalance;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function getTXsinMandato( $integradoId ){
+
+		$txs = getFromTimOne::getTxIntegradoConSaldo($integradoId);
+
+		$retorno = array();
+		foreach ( $txs as $trans ) {
+			$trans->balance = self::getTxBalance($trans);
+
+			if($trans->balance > 0) {
+				$retorno[] = $trans;
+			}
+		}
+
+		return $retorno;
+	}
+
+	/**
+	 * @param $trans
+	 * se traen los mandatos a los que esta asosciada la Tx
+	 * @return mixed
+	 */
+	private static function getTxBalance( $trans ) {
+		$txs = new Txs();
+
+		return $txs->calculateBalance($trans);
+	}
+
 }
 
 class integrado_datos_personales {

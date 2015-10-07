@@ -7,6 +7,8 @@
  */
 namespace Integralib;
 
+jimport('integradora.integrado');
+
 use Integralib\ExtendedUser;
 
 class IntFactory {
@@ -46,5 +48,10 @@ class IntFactory {
 	{
 		$u = new ExtendedUser($id);
 		return $u->getUser();
+	}
+
+	public static function getIntegrdoSimple($integradoId)
+	{
+		return new \IntegradoSimple($integradoId);
 	}
 }
