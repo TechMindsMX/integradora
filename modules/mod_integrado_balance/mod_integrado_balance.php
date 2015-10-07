@@ -10,14 +10,12 @@ defined('_JEXEC') or die;
 
 require_once dirname(__FILE__) . '/helper.php';
 
-ModExchangeRateHelper::checkRequiredExtensionInstalled();
-
 $cache = JFactory::getCache();
 $cache->setCaching(true);
 $cache->setLifeTime(60);
 
-$exrate  = $cache->call( array( 'ModExchangeRateHelper', 'getExchangeRate' ) );
+$balances = $cache->call( array( 'ModIntegradoBalanceHelper', 'getBalances' ) );
 
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
-require JModuleHelper::getLayoutPath('mod_exchange_rate');
+require JModuleHelper::getLayoutPath('mod_integrado_balance');

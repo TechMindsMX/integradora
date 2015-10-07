@@ -6,65 +6,26 @@
  * Date: 09-Sep-15
  * Time: 12:07 PM
  */
-class ModExchangeRateHelper
+class ModIntegradoBalanceHelper
 {
-
     /**
-     * @param $params
-     *
-     * @return stdClass
+     * @return array
      */
-    public static function getExchangeRate()
+    public static function getBalances()
     {
-        $resultado = self::getData();
+        $sesion = JFactory::getSession();
+        $integradoId = $sesion->get('integradoId', null, 'integrado');
 
-        if ( ! empty( $resultado )) {
-            $dom = new DomDocument();
-            $dom->loadXML($resultado);
-            $xmlDatos = $dom->getElementsByTagName("Obs");
-            if ($xmlDatos->length > 1) {
-                $data = new stdClass();
+        $integrado = \Integralib\IntFactory::getIntegrdoSimple( $integradoId );
 
-                $item     = $xmlDatos->item(1);
-                $date = new DateTime($item->getAttribute('TIME_PERIOD'));
-                $data->fecha_tc = $date->format('d-M-Y');
-                $data->tc       = $item->getAttribute('OBS_VALUE');
-            }
-            return $data;
-        }
+        $balances = [
+            'total' => $integrado->getBalance(),
+            'blocked' => $integrado->getBlockedBalance(),
+        ];
 
-    }
+        $balances['available'] = $balances['total'] - $balances['blocked'];
 
-    /**
-     * @return string
-     */
-    private static function getData()
-    {
-        $resultado = '';
-        $fecha_tc  = '';
-        $tc        = '';
-        $client    = new SoapClient(null, array (
-            'location' => 'http://www.banxico.org.mx:80/DgieWSWeb/DgieWS?WSDL',
-            'uri'      => 'http://DgieWSWeb/DgieWS?WSDL',
-            'encoding' => 'ISO-8859-1',
-            'trace'    => 1
-        ));
-        try {
-            $resultado = $client->tiposDeCambioBanxico();
-
-            return $resultado;
-        } catch (SoapFault $exception) {
-
-        }
-
-        return $resultado;
-    }
-
-    public static function checkRequiredExtensionInstalled()
-    {
-        if (!extension_loaded('SOAP')) {
-            throw new Exception('SOAP_EXTENSION_MISSING', 500);
-        }
+        return $balances;
     }
 
 }
