@@ -23,7 +23,7 @@ class MandatosViewOddform extends JViewLegacy {
                 $this->file['name'] = $_FILES['attachment']['name'];
                 $this->file['ruta'] = manejoImagenes::cargar_imagen('image/jpeg', $this->integradoId, $_FILES['attachment'], 'odd_attachment');
 
-                if( isset($this->file['ruta'])) {
+                if( !isset($this->file['ruta']) ) {
                     $msg = JText::_('UNSUPPORTED_FILE').'<br /> '.JText::sprintf('LBL_FILE_TYPES_ALLOWED', 'JPG, PNG, GIF, PDF').'. '.JText::sprintf('LBL_MAX_FILE_SIZE', '10MB').'. ';
                     $app->redirect('index.php?option=com_mandatos&view=oddform', $msg, 'error');
                 }
