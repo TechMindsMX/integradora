@@ -11,6 +11,10 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.keepalive');
 $templateParams = JFactory::getApplication()->getTemplate(true)->params;
 
+// Override de archivo XML
+$this->form->reset( true ); // to reset the form xml loaded by the view
+$this->form->loadFile( dirname(__FILE__) . DIRECTORY_SEPARATOR . "login.xml"); // to load in our own version of login.xml
+
 ?>
 <div class="login <?php echo $this->pageclass_sfx?>">
     <?php if ($this->params->get('show_page_heading')) : ?>
