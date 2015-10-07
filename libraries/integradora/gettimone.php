@@ -2072,9 +2072,11 @@ class sendToTimOne {
         }
 
         foreach ($_FILES as $key => $value) {
-            $result = manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
+            if($value['size'] > 0) {
+                $result = manejoImagenes::cargar_imagen($value['type'], $integrado_id, $value, $key);
+            }
 
-            if ($result != 'verificar') {
+            if (isset($result)) {
                 $fileinfo = pathinfo( $value['name'] );
                 $columna  = substr( $key, 3 );
                 $clave    = substr( $key, 0, 3 );
