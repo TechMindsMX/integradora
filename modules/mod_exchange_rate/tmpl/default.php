@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 ?>
 <div class="row-fluid">
-    <div id="exchange-rate-module" class="<?php echo $moduleclass_sfx; ?> bg-warning box pull-left span3">
+    <div id="exchange-rate-module" class="<?php echo $moduleclass_sfx; ?> bg-warning box pull-left">
         <div class="row-fluid">
             <span class="span6">
                 <?php echo JText::_('EXCH_RATE_DATE'); ?>

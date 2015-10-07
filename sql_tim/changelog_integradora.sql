@@ -155,12 +155,28 @@ ALTER TABLE `flpmu_ordenes_deposito` ADD COLUMN `urlPDFOrden` VARCHAR(255) NULL 
 
 --changeset ricardolyon:26
 CREATE TABLE IF NOT EXISTS `flpmu_integradora_config` (
-  `id` INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL ,
-  `name` VARCHAR(50) NOT NULL ,
-  `value` VARCHAR(100) NOT NULL
+`id` INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL ,
+`name` VARCHAR(50) NOT NULL ,
+`value` VARCHAR(100) NOT NULL
 );
 INSERT INTO `flpmu_integradora_config` SET `name` = 'path', `value` = 'llenar';
 INSERT INTO `flpmu_integradora_config` SET `name` = 'filename', `value` = 'qa.json';
 INSERT INTO `flpmu_integradora_config` SET `name` = 'seedFilename', `value` = 'integradora-seed-qa.json';
 INSERT INTO `flpmu_integradora_config` SET `name` = 'seedConcentradoraFilename', `value` = 'concentradora-seed-qa.json';
 --rollback DROP TABLE `flpmu_integradora_config`;
+
+--changeset ricardolyon:27
+INSERT INTO `flpmu_extensions` SET extension_id = 10094, `name` = 'Integrado Balance', type = 'module', element = 'mod_integrado_balance', folder = '', client_id = 0, enabled = 1, access = 1, protected = 0, manifest_cache = '{\"name\":\"Integrado Balance\",\"type\":\"module\",\"creationDate\":\"Unknown\",\"author\":\"Ricardo Lyon\",\"copyright\":\"\",\"authorEmail\":\"\",\"authorUrl\":\"\",\"version\":\"1.0.0\",\"description\":\"A simple module to show Integrado balance.\",\"group\":\"\",\"filename\":\"mod_integrado_balance\"}', params = '{}', custom_data = '', system_data = '', checked_out = 0, checked_out_time = '0000-00-00 00:00:00', ordering = 0, state = 0;
+--rollback DELETE FROM flpmu_extensions WHERE extension_id = 10094;
+
+--changeset ricardolyon:28
+INSERT INTO flpmu_assets SET id = 130, parent_id = 18, lft = 196, rgt = 197, level = 2, name = 'com_modules.module.160', title = 'Integrado Balance', rules = '{\"core.delete\":{\"6\":1,\"7\":0},\"core.edit\":{\"6\":1,\"7\":0,\"4\":1},\"core.edit.state\":{\"6\":1,\"7\":0,\"5\":1},\"module.edit.frontend\":[]}';
+INSERT INTO `flpmu_modules` SET id = 160, asset_id = 130, title = 'Saldos Integrado', note = '', content = '', ordering = 1, position = 'mainbody_bottom', checked_out = 0, checked_out_time = '0000-00-00 00:00:00', publish_up = '0000-00-00 00:00:00', publish_down = '0000-00-00 00:00:00', published = 1, module = 'mod_integrado_balance', access = 2, showtitle = '1', params = '{\"moduleclass_sfx\":\"span12\", \"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\"}', client_id = 0, `language` = '*';
+INSERT INTO flpmu_modules_menu SET moduleid = 160, menuid = 101;
+--rollback DELETE FROM flpmu_assets WHERE id = 130;
+--rollback DELETE FROM flpmu_modules WHERE id = 160;
+--rollback DELETE FROM flpmu_modules_menu WHERE moduleid = 160;
+
+--changeset ricardolyon:29
+UPDATE `flpmu_modules` SET position = 'mainbody_bottom', title = 'Tipo de cambio', showtitle = '1', params = '{\"moduleclass_sfx\":\"span12\", \"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\"}' WHERE id = 159 AND title = 'ExRateBanxico';
+--rollback UPDATE `flpmu_modules` SET position = 'mainbody_top', title = 'ExRateBanxico', showtitle = '0', params = '{\"module_tag\":\"div\",\"bootstrap_size\":\"0\",\"header_tag\":\"h3\",\"header_class\":\"\",\"style\":\"0\"}', client_id = 0, `language` = '*' WHERE id = 159 AND title = 'Tipo de cambio';
