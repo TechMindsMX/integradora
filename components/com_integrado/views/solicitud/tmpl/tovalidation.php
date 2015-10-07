@@ -30,5 +30,5 @@ if ($integrado->hasAllDataForValidation()) {
     <h2><?php echo $msg; ?></h2>
 </div>
 
-<a class="btn btn-success <?php echo $disable; ?>" id="finishBtn" href="<?php echo $url; ?>" ><?php echo JText::_('LBL_FIN'); ?></a>
+<a class="btn btn-success <?php echo $disable; ?>" id="finishBtn" href="<?php echo $url; ?>" ><?php echo JText::_('LBL_FIN_Y_ENVIAR'); ?></a>
 <a class="btn btn-danger" href="<?php echo $cancelUrl; ?>" ><?php echo JText::_('JCANCEL'); ?></a>

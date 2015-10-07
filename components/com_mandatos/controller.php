@@ -116,7 +116,9 @@ class MandatosController extends JControllerLegacy {
 			    list( $respuesta, $existe, $newId, $db, $data, $save ) = Integrado::saveBankIfNew($this->post['integradoId']);
 			    $existe = (OBJECT)$respuesta;
 			    $existe->datosBan_id = $newId;
-		    } else {
+		    } elseif ($this->post['integradoId'] == $existe->integradoId) {
+                $respuesta['success'] = true;
+            } else {
                 $respuesta['success'] = false;
                 $respuesta['msg'] = array('db_banco_clabe' => array('success' => false,'msg' => 'Esta cuenta ya fue dada de alta') );
 		    }
@@ -130,7 +132,7 @@ class MandatosController extends JControllerLegacy {
 			    $tableRelacion 		= 'integrado_clientes_proveedor';
 			    $db = JFactory::getDbo();
 			    $whereRelacion      = $db->quoteName('integradoId').' = '. $db->quote($this->integradoId) .' && '.$db->quoteName('integradoIdCliente').' = '. $db->quote($this->post['integradoId']);
-			    $relacion           = getFromTimOne::selectDB($tableRelacion,$whereRelacion);
+			    $relacion           = getFromTimOne::selectDB($tableRelacion, $whereRelacion);
 
 			    if ( ! empty( $relacion[0] ) ) {
 				    $relacion           = $relacion[0];
