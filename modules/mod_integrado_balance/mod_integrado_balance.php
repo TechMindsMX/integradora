@@ -10,11 +10,7 @@ defined('_JEXEC') or die;
 
 require_once dirname(__FILE__) . '/helper.php';
 
-$cache = JFactory::getCache();
-$cache->setCaching(true);
-$cache->setLifeTime(60);
-
-$balances = $cache->call( array( 'ModIntegradoBalanceHelper', 'getBalances' ) );
+$balances = ModIntegradoBalanceHelper::getBalances();
 
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 
