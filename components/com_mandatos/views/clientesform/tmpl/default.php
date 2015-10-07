@@ -180,6 +180,8 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     jQuery.each(campo, function(k,v) {
                         extractTab(v);
                     });
+                    jQuery('#nextTab').remove();
+                    jQuery('#search').remove();
                     activeTab( '#tipo_alta' );
 
                 } else if (response.bu_rfc.success == 'invalid') { <?php //RFC MAL?>
@@ -1027,7 +1029,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                     <input name="dp_url_identificacion" type="file" maxlength="" />
                 </div>
                 <div class="form-group">
-                    <label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE'); ?> *</label>
+                    <label for="dp_url_rfc"><?php echo JText::_('LBL_RFC_FILE_REP_LGL'); ?> *</label>
                     <input name="dp_url_rfc" type="file" maxlength="" />
                 </div>
 
@@ -1052,7 +1054,7 @@ echo '<script src="libraries/integradora/js/file_validation.js"> </script>';
                 </div>
 
                 <div class="form-group">
-                    <label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO1_FILE'); ?></label>
+                    <label for="pn_url_instrumento"><?php echo JText::_('LBL_TESTIMONIO3_FILE'); ?></label>
                     <input name="pn_url_instrumento" type="file" maxlength="" />
                 </div>
 
