@@ -138,7 +138,7 @@ class IntegradoraservicesController extends JControllerLegacy {
             $id_tx_banco = $db->insertid();
 
             $asociacion = new RelacionaTx();
-            $asociacion->asociacionTxs($post->reference,$id_tx_banco,$integrado->getId());
+            $asociacion->asociacionTxs($post->uuidTx, $id_tx_banco, $integrado->getId());
 
             $getPDF = new PdfsIntegradora();
             $json->currency = 'MXN';
