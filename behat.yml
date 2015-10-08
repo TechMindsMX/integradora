@@ -9,15 +9,15 @@ default:
           goutte: ~
         mink_javascript_session:
           selenium2: ~
-  suites:
-    core_features:
-      paths:    [ %paths.base%/features/core ]
-      contexts: [ CoreDomainContext ]
-    user_features:
-      paths:    [ %paths.base%/features/web ]
-      filters:  { role: user }
-      contexts: [ UserContext ]
-    admin_features:
-      paths:    [ %paths.base%/features/web ]
-      filters:  { role: admin }
-      contexts: [ AdminContext ]
+#  suites:
+#    core_features:
+#      paths:    [ %paths.base%/features/core ]
+#      contexts: [ CoreDomainContext ]
+#    user_features:
+#      paths:    [ %paths.base%/features/web ]
+#      filters:  { role: user }
+#      contexts: [ UserContext ]
+#    admin_features:
+#      paths:    [ %paths.base%/features/web ]
+#      filters:  { role: admin }
+#      contexts: [ AdminContext ]

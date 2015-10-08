@@ -34,7 +34,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     const LIQUIBASE_JAR = 'C:\wamp\www\liquibase\mysql-connector-java-5.1.34-bin.jar';
 
-    const DIRS = array('tmp/tests', 'logs/tests');
+    private $dirs = array('tmp/tests', 'logs/tests');
 
     /**
      * @BeforeSuite
@@ -47,7 +47,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
             rename(self::FNAME, self::FNAME_BACKUP);
             copy(self::FNAME_TEST, self::FNAME);
         }
-        foreach (self::DIRS as $dir) {
+        foreach (self::$dirs as $dir) {
             if (!is_dir($dir)) {
                 mkdir($dir);
             }
@@ -68,7 +68,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
             rename(self::FNAME_BACKUP, self::FNAME);
         }
 
-        foreach (self::DIRS as $dir) {
+        foreach (self::$dirs as $dir) {
             if (is_dir($dir)) {
                 foreach(scandir($dir) as $file) {
                     unlink($file);
