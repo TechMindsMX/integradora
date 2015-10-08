@@ -34,7 +34,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     const LIQUIBASE_JAR = 'C:\wamp\www\liquibase\mysql-connector-java-5.1.34-bin.jar';
 
-    private $dirs = array('tmp/tests', 'logs/tests');
+    private static $dirs = array('tmp/tests', 'logs/tests');
 
     /**
      * @BeforeSuite
