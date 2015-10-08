@@ -38,6 +38,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @BeforeSuite
+     *
+     * @param BeforeSuiteScope $scope
      */
     public static function prepare(BeforeSuiteScope $scope)
     {
@@ -59,6 +61,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @AfterSuite
+     *
+     * @param AfterSuiteScope $scope
      */
     public static function clean(AfterSuiteScope $scope)
     {
@@ -80,6 +84,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Then I should go to :arg1
+     *
+     * @param $arg1
      */
     public function iShouldGoTo($arg1){
         $currUrl = explode('/', $this->getSession()->getCurrentUrl());
@@ -91,6 +97,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Given I am logged whith user :usuario and pass :password
+     *
+     * @param $usuario
+     * @param $password
      */
     public function iAmLoggedWhithUserAndPass($usuario, $password){
         $this->visit('index.php?option=com_users&view=login');
@@ -103,6 +112,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @When Yo deberia de ir a esta pinche pagina :url
+     *
+     * @param $url
      */
     public function yoDeberiaDeIrAEstaPinchePagina($url){
         $this->iShouldGoTo($url);
@@ -110,6 +121,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @When I select :option from :select
+     *
+     * @param $option
+     * @param $select
      */
     public function iSelectFrom($option, $select){
         $this->selectOption($select, $option);
@@ -117,6 +131,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Then I should see :texto
+     *
+     * @param $texto
      */
     public function iShouldSee($texto){
         $this->assertPageContainsText($texto);
@@ -124,13 +140,18 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Then I wating for a :arg1
+     *
+     * @param $arg1
      */
     public function iWatingForA($arg1){
-        $this->getSession()->wait(5000);
+        $this->getSession()->wait($arg1);
     }
 
     /**
      * @Given I am logged in admin with user :arg1 and  pass :arg2
+     *
+     * @param $arg1
+     * @param $arg2
      */
     public function iAmLoggedInAdminWithUserAndPass($arg1, $arg2){
         $this->visit('/administrator');
@@ -141,6 +162,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Then I check radio with value :arg1
+     *
+     * @param $arg1
      */
     public function iCheckRadioWithValue($arg1){
         $jquery = 'jQuery.each(jQuery("input:radio"),function(key, value){
@@ -154,6 +177,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
 
     /**
      * @Given /^I wait for "([^"]*)" seconds$/
+     * @param $arg1
      */
     public function iWaitForSeconds($arg1)
     {
