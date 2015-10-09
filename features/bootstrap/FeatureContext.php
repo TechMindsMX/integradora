@@ -41,46 +41,48 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
      *
      * @param BeforeSuiteScope $scope
      */
-    public static function prepare(BeforeSuiteScope $scope)
-    {
-        // prepare system for test suite
-        // before it runs
-        if (file_exists(self::FNAME) ) {
-            rename(self::FNAME, self::FNAME_BACKUP);
-            copy(self::FNAME_TEST, self::FNAME);
-        }
-        foreach (self::$dirs as $dir) {
-            if (!is_dir($dir)) {
-                mkdir($dir);
-            }
-        }
-
-        system('mysql -u '.self::dbuser.' -p'.self::dbpass.' '.self::dbname.' < sql_tim/'.self::SQLFILW);
-        system('liquibase --driver=com.mysql.jdbc.Driver --classpath='.self::LIQUIBASE_JAR.' --changeLogFile=sql_tim\changelog_integradora.sql --url="jdbc:mysql://localhost/'.self::dbname.'" --username='.self::dbuser.' --password="'.self::dbpass.'" migrate');
-    }
-
-    /**
-     * @AfterSuite
-     *
-     * @param AfterSuiteScope $scope
-     */
-    public static function clean(AfterSuiteScope $scope)
-    {
-        // clean system for test suite
-        // after it runs
-        if (file_exists(self::FNAME_BACKUP) ) {
-            rename(self::FNAME_BACKUP, self::FNAME);
-        }
-
-        foreach (self::$dirs as $dir) {
-            if (is_dir($dir)) {
-                foreach(scandir($dir) as $file) {
-                    unlink($file);
-                }
-                rmdir($dir);
-            }
-        }
-    }
+//    public static function prepare(BeforeSuiteScope $scope)
+//    {
+//        // prepare system for test suite
+//        // before it runs
+//        if (file_exists(self::FNAME) ) {
+//            rename(self::FNAME, self::FNAME_BACKUP);
+//            copy(self::FNAME_TEST, self::FNAME);
+//        }
+//        foreach (self::$dirs as $dir) {
+//            if (!is_dir($dir)) {
+//                mkdir($dir);
+//            }
+//        }
+//
+////        system('mysql -u '.self::dbuser.' -p'.self::dbpass.' '.self::dbname.' < sql_tim/'.self::SQLFILW);
+////        system('liquibase --driver=com.mysql.jdbc.Driver --classpath='.self::LIQUIBASE_JAR.' --changeLogFile=sql_tim\changelog_integradora.sql --url="jdbc:mysql://localhost/'.self::dbname.'" --username='.self::dbuser.' --password="'.self::dbpass.'" migrate');
+//    }
+//
+//    /**
+//     * @AfterSuite
+//     *
+//     * @param AfterSuiteScope $scope
+//     */
+//    public static function clean(AfterSuiteScope $scope)
+//    {
+//        // clean system for test suite
+//        // after it runs
+//        if (file_exists(self::FNAME_BACKUP) ) {
+//            rename(self::FNAME_BACKUP, self::FNAME);
+//        }
+//
+//        foreach (self::$dirs as $dir) {
+//            if (is_dir($dir)) {
+//                foreach(scandir($dir) as $file) {
+//                    if (!is_dir($file)) {
+//                        unlink($file);
+//                    }
+//                }
+//                rmdir($dir);
+//            }
+//        }
+//    }
 
     /**
      * @Then I should go to :arg1
@@ -154,7 +156,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
      * @param $arg2
      */
     public function iAmLoggedInAdminWithUserAndPass($arg1, $arg2){
-        $this->visit('/administrator');
+        $this->visit('/administrator/index.php?jedi=master');
         $this->fillField('username',$arg1);
         $this->fillField('passwd',$arg2);
         $this->pressButton('Conectar');;

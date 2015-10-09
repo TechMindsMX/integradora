@@ -1,10 +1,10 @@
-Feature: Administrator test
+Feature: Administrador Integrar empresa
   I am go to administrator page and make a success login
-  I am change integrado status
+  I am change integrado all status
 
   @javascript
   Scenario: Login into administrator page
-    Given I am on "/administrator/index.php"
+    Given I am on "/administrator/index.php?jedi=master"
     When I fill in "username" with "Thor"
       And I fill in "passwd" with "ADMINt1m2014"
       And I press "Conectar"
@@ -12,10 +12,10 @@ Feature: Administrator test
     Then Yo deberia de ir a esta pinche pagina "administrator"
 
   @javascript
-  Scenario: Change integrado status
+  Scenario: Change integrado status to Para contrato
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    When I check radio with value "95647168a20e4878b8813499cdc7c220"
+    When I check radio with value "b6e2b111b04a490682d058e347d8c872"
       And I press "Parametrización"
       And I fill in "params" with "1"
       And I check "factura_pagada"
@@ -23,10 +23,11 @@ Feature: Administrator test
       And I check "odr_pagada"
       And I check "odd_pagada"
       And I press "Guardar y cerrar"
-      And I wating for a "Send data and change page"
+      And I wating for a "5000"
     Then I should see text matching "Datos Almacenados"
-      And I check radio with value "95647168a20e4878b8813499cdc7c220"
+      And I check radio with value "b6e2b111b04a490682d058e347d8c872"
     When I press "Validación de Integrado"
+      And I check radio with value "Cancelado"
       And I check "integrado_datos_personales_nombre_representante"
       And I check "integrado_datos_personales_nacionalidad"
       And I check "integrado_datos_personales_sexo"
@@ -53,6 +54,26 @@ Feature: Administrator test
       And I check "integrado_datos_empresa_tel_fijo_extension"
       And I check "integrado_datos_empresa_tel_fax"
       And I check "integrado_datos_empresa_sitio_web"
+      And I check "integrado_datos_empresa_testimonio_1_instrum_type"
+      And I check "integrado_datos_empresa_testimonio_1_instrum_fecha"
+      And I check "integrado_datos_empresa_testimonio_1_instrum_notaria"
+      And I check "integrado_datos_empresa_testimonio_1_instrum_num_instrumento"
+      And I check "integrado_datos_empresa_testimonio_1_instrum_nom_notario"
+      And I check "integrado_datos_empresa_testimonio_2_instrum_type"
+      And I check "integrado_datos_empresa_testimonio_2_instrum_fecha"
+      And I check "integrado_datos_empresa_testimonio_2_instrum_notaria"
+      And I check "integrado_datos_empresa_testimonio_2_instrum_num_instrumento"
+      And I check "integrado_datos_empresa_testimonio_2_instrum_nom_notario"
+      And I check "integrado_datos_empresa_poder_instrum_type"
+      And I check "integrado_datos_empresa_poder_instrum_fecha"
+      And I check "integrado_datos_empresa_poder_instrum_notaria"
+      And I check "integrado_datos_empresa_poder_instrum_num_instrumento"
+      And I check "integrado_datos_empresa_poder_instrum_nom_notario"
+      And I check "integrado_datos_empresa_reg_propiedad_instrum_type"
+      And I check "integrado_datos_empresa_reg_propiedad_instrum_fecha"
+      And I check "integrado_datos_empresa_reg_propiedad_instrum_notaria"
+      And I check "integrado_datos_empresa_reg_propiedad_instrum_num_instrumento"
+      And I check "integrado_datos_empresa_reg_propiedad_instrum_nom_notario"
       And I follow "Datos bancarios"
       And I check "integrado_datos_bancarios_banco_cuenta"
       And I check "integrado_datos_bancarios_banco_sucursal"
@@ -63,3 +84,54 @@ Feature: Administrator test
       And I press "Guardar y cerrar"
     Then I should see text matching "El elemento ha sido enviado correctamente."
       And I wating for a "que vean que si se guardo y mando el mensaje"
+
+  @javascript
+  Scenario: Change integrado status to Cancelado
+    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
+    Then I follow "Administración de Integrados"
+    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I press "Validación de Integrado"
+    And I check radio with value "99"
+    And I press "Guardar y cerrar"
+    Then I should see text matching "El elemento ha sido enviado correctamente."
+
+  @javascript
+  Scenario: Change integrado status to Revision
+    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
+    Then I follow "Administración de Integrados"
+    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I press "Validación de Integrado"
+    And I check radio with value "1"
+    And I press "Guardar y cerrar"
+    Then I should see text matching "El elemento ha sido enviado correctamente."
+
+  @javascript
+  Scenario: Change integrado status to Devuelto
+    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
+    Then I follow "Administración de Integrados"
+    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I press "Validación de Integrado"
+    And I check radio with value "2"
+    And I fill in "comments" with "esto es desde el test"
+    And I press "Guardar y cerrar"
+    Then I should see text matching "El elemento ha sido enviado correctamente."
+
+  @javascript
+  Scenario: Change integrado status to Revision
+    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
+    Then I follow "Administración de Integrados"
+    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I press "Validación de Integrado"
+    And I check radio with value "1"
+    And I press "Guardar y cerrar"
+    Then I should see text matching "El elemento ha sido enviado correctamente."
+
+  @javascript
+  Scenario: Change integrado status to Integrado
+    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
+    Then I follow "Administración de Integrados"
+    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I press "Validación de Integrado"
+    And I check radio with value "1"
+    And I press "Guardar y cerrar"
+    Then I should see text matching "El elemento ha sido enviado correctamente."
