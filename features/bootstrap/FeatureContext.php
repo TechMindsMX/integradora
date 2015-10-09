@@ -122,13 +122,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     }
 
     /**
-     * @When I select :option from :select
-     *
-     * @param $option
-     * @param $select
+     * @Then I select option :arg1 select :arg2
      */
-    public function iSelectFrom($option, $select){
-        $this->selectOption($select, $option);
+    public function iSelectOptionSelect($arg1, $arg2)
+    {
+        $this->selectOption($arg2,$arg1);
     }
 
     /**
@@ -146,7 +144,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
      * @param $arg1
      */
     public function iWatingForA($arg1){
-        $this->getSession()->wait($arg1);
+        if($arg1 == 'que responda el ajax'){
+            $time = 5000;
+        }elseif($arg1 == 'que vean que si se guardo y mando el mensaje'){
+            $time = 9000;
+        }
+
+        $this->getSession()->wait($time);
     }
 
     /**
@@ -178,6 +182,17 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     }
 
     /**
+     * @When I check radio where razon social is :arg1
+     */
+    public function iCheckRadioWhereRazonSocialIs($arg1)
+    {
+        $jquery = 'var nombre = "'.$arg1.'";
+                   jQuery("td:contains("+nombre+")").parent().find("input:radio").prop("checked", true)';
+
+        $this->getSession()->executeScript($jquery);
+    }
+
+    /**
      * @Given /^I wait for "([^"]*)" seconds$/
      * @param $arg1
      */
@@ -185,4 +200,18 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext{
     {
         $this->getSession()->wait($arg1 * 1000);
     }
+
+    /**
+     * @Then I Click over integradoraButton :arg1
+     */
+    public function iClickOverIntegradorabutton($arg1)
+    {
+        $jquery = 'var text = "'.$arg1.'";
+                   var href = jQuery("a.btn:contains("+text+")").prop("href");
+                   window.location.href = href;';
+
+        $this->getSession()->executeScript($jquery);
+    }
+
+
 }

@@ -4,11 +4,13 @@ Feature: Login from index page
   @javascript
   Scenario: I am login from Index
     Given I am on "index.php"
-    And I press "Ingresar"
-    And I fill in "Usuario" with "luis"
-    And I fill in "Contraseña" with "Luis#01prueba"
-    And I press "Submit"
-    Then I wating for a "Modal Window"
+      And I fill in "Usuario" with "luis"
+      And I fill in "Contraseña" with "Luis#01prueba"
+      And I press "Ingresar"
     When I am on "index.php"
     Then I follow "Administración"
-    And I follow "Operar con otro integrado"
+      And I Click over integradoraButton "Operar con otro integrado"
+      And I select option "Integrado1" select "integradoId"
+      And I wait for "5" seconds
+    And I press "Aceptar"
+    Then I should see text matching "Integrado1"

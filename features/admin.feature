@@ -6,16 +6,16 @@ Feature: Administrador Integrar empresa
   Scenario: Login into administrator page
     Given I am on "/administrator/index.php?jedi=master"
     When I fill in "username" with "Thor"
-      And I fill in "passwd" with "ADMINt1m2014"
-      And I press "Conectar"
-      And I wating for a "algo"
+    And I fill in "passwd" with "ADMINt1m2014"
+    And I press "Conectar"
+    And I wating for a "algo"
     Then Yo deberia de ir a esta pinche pagina "administrator"
 
   @javascript
   Scenario: Change integrado status to Para contrato
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    When I check radio with value "b6e2b111b04a490682d058e347d8c872"
+    When I check radio where razon social is "Integrado1"
       And I press "Parametrización"
       And I fill in "params" with "1"
       And I check "factura_pagada"
@@ -23,11 +23,11 @@ Feature: Administrador Integrar empresa
       And I check "odr_pagada"
       And I check "odd_pagada"
       And I press "Guardar y cerrar"
-      And I wating for a "5000"
+      And I wating for a "que responda el ajax"
     Then I should see text matching "Datos Almacenados"
-      And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+      And I check radio where razon social is "Integrado1"
     When I press "Validación de Integrado"
-      And I check radio with value "Cancelado"
+      And I check radio with value "3"
       And I check "integrado_datos_personales_nombre_representante"
       And I check "integrado_datos_personales_nacionalidad"
       And I check "integrado_datos_personales_sexo"
@@ -89,49 +89,39 @@ Feature: Administrador Integrar empresa
   Scenario: Change integrado status to Cancelado
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+      And I check radio where razon social is "Integrado1"
     When I press "Validación de Integrado"
-    And I check radio with value "99"
-    And I press "Guardar y cerrar"
+      And I check radio with value "99"
+      And I press "Guardar y cerrar"
     Then I should see text matching "El elemento ha sido enviado correctamente."
 
   @javascript
   Scenario: Change integrado status to Revision
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+      And I check radio where razon social is "Integrado1"
     When I press "Validación de Integrado"
-    And I check radio with value "1"
-    And I press "Guardar y cerrar"
+      And I check radio with value "1"
+      And I press "Guardar y cerrar"
     Then I should see text matching "El elemento ha sido enviado correctamente."
 
   @javascript
   Scenario: Change integrado status to Devuelto
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+      And I check radio where razon social is "Integrado1"
     When I press "Validación de Integrado"
-    And I check radio with value "2"
-    And I fill in "comments" with "esto es desde el test"
-    And I press "Guardar y cerrar"
-    Then I should see text matching "El elemento ha sido enviado correctamente."
-
-  @javascript
-  Scenario: Change integrado status to Revision
-    Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
-    Then I follow "Administración de Integrados"
-    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
-    When I press "Validación de Integrado"
-    And I check radio with value "1"
-    And I press "Guardar y cerrar"
+      And I check radio with value "2"
+      And I fill in "comments" with "esto es desde el test"
+      And I press "Guardar y cerrar"
     Then I should see text matching "El elemento ha sido enviado correctamente."
 
   @javascript
   Scenario: Change integrado status to Integrado
     Given I am logged in admin with user "thor" and  pass "ADMINt1m2014"
     Then I follow "Administración de Integrados"
-    And I check radio with value "b6e2b111b04a490682d058e347d8c872"
+      And I check radio where razon social is "Integrado1"
     When I press "Validación de Integrado"
-    And I check radio with value "1"
-    And I press "Guardar y cerrar"
+      And I check radio with value "50"
+      And I press "Guardar y cerrar"
     Then I should see text matching "El elemento ha sido enviado correctamente."
