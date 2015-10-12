@@ -224,7 +224,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
      */
     private function checkSaldoSuficienteOrRedirectWithError($integradoSimple)
     {
-        $integradoSimple->timoneData->balance = 50000;
         if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
             $this->app->redirect($this->returnUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
         }
