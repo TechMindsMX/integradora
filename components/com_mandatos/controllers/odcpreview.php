@@ -151,9 +151,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     }
                 }
                 elseif ($auths->emisor > count($numAutOrder) && count($numAutOrder) != 0) {
-                    $this->app->enquemessage(JText::_('LBL_ORDER_AUTHORIZED'));
-                    $this->app->enquemessage(JText::_('LBL_ORDER_NEED_MORE_AUTHS'));
-                    $this->app->redirect($this->returnUrl);
+                    $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
+                    $this->app->enqueueMessage(JText::_('LBL_ORDER_NEED_MORE_AUTHS'));
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 3);
                 }
                 else{
                     throw new Exception('AUTHS: '. $auths->emisor .', '. count($numAutOrder) );
