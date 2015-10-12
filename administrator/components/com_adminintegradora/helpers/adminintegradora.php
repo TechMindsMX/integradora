@@ -90,7 +90,8 @@ class AdminintegradoraHelper {
             $db->setQuery($query);
             $result = $db->loadObjectList();
         }catch (Exception $e){
-            var_dump($e);
+            $msg = $e->getMessage();
+            JLog::add($msg, JLog::ERROR, 'error');
         }
 
         foreach ($result as $tx) {

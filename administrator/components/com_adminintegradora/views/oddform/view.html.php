@@ -17,12 +17,19 @@ class AdminintegradoraViewOddform extends JViewLegacy {
             'confirmacion' => 'INT'
         );
 
-        $data = JFactory::getApplication()->input->getArray($post);
+        $app  = JFactory::getApplication();;
+        $data = $app->input->getArray($post);
 
         $model = $this->getModel();
         $this->orden     = $model->getOrden();
         $this->integrado = $model->getIntegrado($this->orden->integradoId);
         $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
+
+        if (count($this->txs) == 0) {
+            $app->enqueueMessage(JText::sprintf('LBL_INTEGRADO_SIN_TXS_A_CONCILIAR', $this->integrado->getDisplayName() ), 'error');
+            $app->redirect('index.php?option=com_adminintegradora&view=oddlist');
+        }
+
         $this->data         = (object) $data;
 
         if (count($errors = $this->get('Errors'))) {
