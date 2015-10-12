@@ -66,6 +66,9 @@ class MandatosControllerOddpreview extends JControllerAdmin {
 
                 $db->transactionCommit();
             }catch (Exception $e){
+                $msg = $e->getMessage();
+                JLog::add($msg, JLog::ERROR, 'error');
+
                 $db->transactionRollback();
                 exit;
             }
