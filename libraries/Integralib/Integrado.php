@@ -75,28 +75,20 @@ class Integrado {
      *
      * @return mixed
      */
-    public static function getIntegradoIdFromRfc($rfc)
+    public static function getIntegradoIdByRfc($rfc)
     {
         $db        = \JFactory::getDbo();
 
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('p.integradoId'))
-              ->from( $db->quoteName('#__integrado_datos_personales', 'p') )
-              ->join('LEFT', $db->quoteName('#__integrado', 'i') . ' ON (' . $db->quoteName('p.integradoId') . ' = ' . $db->quoteName('i.integradoId') .')')
-            ->where($db->quoteName('i.pers_juridica').' != 1 ' .' AND '.$db->quoteName('p.rfc').' = '.$db->quote($rfc) );
+        $query->select($db->quoteName('i.integradoId'))
+              ->from( $db->quoteName('#__integrado', 'i') )
+              ->join('LEFT', $db->quoteName('#__integrado_datos_personales', 'p') . ' ON (' . $db->quoteName('p.integradoId') . ' = ' . $db->quoteName('i.integradoId') .')')
+              ->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'e') . ' ON (' . $db->quoteName('e.integradoId') . ' = ' . $db->quoteName('i.integradoId') .')')
+              ->where( '('. $db->quoteName('i.pers_juridica').' != 1 ' .' AND '.$db->quoteName('p.rfc').' = '.$db->quote($rfc) .') OR (' . $db->quoteName('i.pers_juridica').' = 1 ' .' AND '.$db->quoteName('e.rfc').' = '.$db->quote($rfc) . ')' );
         $db->setQuery($query);
-        $personales = $db->loadResult();
+        $id = $db->loadResult();
 
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('integradoId'))
-            ->from('#__integrado_datos_empresa')
-            ->where($db->quoteName('rfc').' = '.$db->quote($rfc));
-        $db->setQuery($query);
-        $empresa = $db->loadResult();
-
-        $integradoId = (!is_null($personales)) ? $personales : $empresa;
-
-        return $integradoId;
+        return $id;
     }
 
 
