@@ -253,3 +253,7 @@ label#username-lbl, label#password-lbl {
 #exchange-rate-module {
     min-width: 200px;
 }
+
+.text-capitalize {
+    text-transform:  capitalize;
+}

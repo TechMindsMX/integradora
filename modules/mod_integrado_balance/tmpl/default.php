@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 <div class="row-fluid">
     <div id="exchange-rate-module" class="<?php echo $moduleclass_sfx; ?> bg-warning box pull-left">
         <div class="row-fluid">
-            <span class="span6">
+            <span class="span6 text-capitalize">
                 <?php echo JText::_('LBL_TOTAL'); ?>
             </span>
             <span class="span6 text-right">
@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
         </div>
 
         <div class="row-fluid">
-            <span class="span6">
+            <span class="span6 text-capitalize">
                 <?php echo JText::_('LBL_BLOCKED'); ?>
             </span>
             <span class="span6 text-right">
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;
         </div>
 
         <div class="row-fluid">
-            <span class="span6">
+            <span class="span6 text-capitalize">
                 <?php echo JText::_('LBL_AVAILABLE'); ?>
             </span>
             <span class="span6 text-right">
