@@ -3369,10 +3369,13 @@ class Cashout extends makeTx {
 class transferFunds extends makeTx {
     protected $objEnvio;
 
-    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
+    function __construct($orden, IntegradoSimple $pagador, $idBeneficiario, $totalAmount){
+
+        $this->checkEnoughBalance($pagador, $totalAmount);
+
         $this->orden    = $orden;
 
-        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
+        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($pagador->getId());
         $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
         $this->objEnvio->amount           = (float)$totalAmount;
     }
