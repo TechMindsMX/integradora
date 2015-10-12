@@ -8,6 +8,8 @@
  */
 
 // No direct access.
+use Integralib\Integrado;
+use Integralib\IntFactory;
 use Integralib\RelacionaTx;
 
 defined('_JEXEC') or die;
@@ -89,7 +91,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     private function makeTxTimone() {
-        $integradora = new \Integralib\Integrado();
+        $integradora = new Integrado();
 
         $emisor = new IntegradoSimple($integradora->getIntegradoraUuid());
         $emisor->getTimOneData();
@@ -105,8 +107,9 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
-        $integradora = new \Integralib\Integrado();
-        $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
+        $integrado = new Integrado();
+        $integradora = IntFactory::getIntegrdoSimple( $integrado->getIntegradoraUuid() );
+        $transfer = new transferFunds( '', $integradora, $dataObj->integradoId, $dataObj->amount );
         $result   = $transfer->sendCreateTx(false);
 
         if( $dataObj->integradoId !=  INTEGRADOID_CONCENTRADORA ) {
@@ -121,7 +124,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function sendNotification(){
         $getCurrUser = new IntegradoSimple($this->data['integradoId']);
-        $integradora = new \Integralib\Integrado();
+        $integradora = new Integrado();
         $integradora->getIntegradora();
 
         foreach ($integradora->integrado->integrados[0]->datos_bancarios as $dataBank) {

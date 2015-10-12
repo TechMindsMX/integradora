@@ -748,6 +748,8 @@ class IntegradoSimple extends Integrado {
 	}
 
 	/**
+	 * @param $integradoId
+	 *
 	 * @return array
 	 */
 	public static function getTXsinMandato( $integradoId ){
