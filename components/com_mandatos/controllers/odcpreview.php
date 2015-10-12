@@ -155,6 +155,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                 $db->transactionCommit();
             }catch (Exception $e){
+                $msg = $e->getMessage();
+                JLog::add($msg, JLog::ERROR, 'error');
+
                 $db->transactionRollback();
                 $pagar = false;
                 $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
