@@ -25,6 +25,8 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         $session                     = JFactory::getSession();
         $db                          = JFactory::getDbo();
 
+        $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
+
         $this->parametros['idOrden'] = $this->app->input->get('idOrden', null, 'INT');
         $this->integradoId           = $session->get('integradoId', null,'integrado');
         $this->permisos              = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
@@ -45,7 +47,7 @@ class MandatosControllerOddpreview extends JControllerAdmin {
             $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
 
             if($check){
-                $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_USER_AUTHORIZED'), 'error');
+                $this->app->enqueueMessage(JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
             try{
@@ -60,11 +62,15 @@ class MandatosControllerOddpreview extends JControllerAdmin {
                 if($auths->emisor == count($numAutOrder)) {
                     $pagar = true;
                 }else{
-                    $save->changeOrderStatus($this->parametros['idOrden'],'odd',3);
+                    $newStatusId = 3;
+                    $save->changeOrderStatus($this->parametros['idOrden'], 'odd', $newStatusId);
+                    $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+
                     $pagar = false;
                 }
 
                 $db->transactionCommit();
+                $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
             }catch (Exception $e){
                 $msg = $e->getMessage();
                 JLog::add($msg, JLog::ERROR, 'error');
@@ -73,35 +79,33 @@ class MandatosControllerOddpreview extends JControllerAdmin {
                 exit;
             }
 
-
             if($pagar){
                 if($resultado) {
-                // autorización guardada
+                    // autorización guardada
 
-                $catalogoStatus = getFromTimOne::getOrderStatusCatalog();
-                $newStatusId  = 5;
-                $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', $newStatusId);
-	            if ($statusChange){
-		            $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
+                    $newStatusId  = 5;
+                    $statusChange = $save->changeOrderStatus($this->parametros['idOrden'], 'odd', $newStatusId);
+                    if ($statusChange){
+                        $this->app->enqueueMessage(JText::sprintf('ORDER_STATUS_CHANGED', $catalogoStatus[$newStatusId]->name));
 
-                    $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
-                    $this->orden = $orden[0];
+                        $orden       = getFromTimOne::getOrdenesDeposito(null, $this->parametros['idOrden']);
+                        $this->orden = $orden[0];
 
-                    $this->sendNotifications();
+                        $this->sendNotifications();
 
+                    }
+
+                    $this->app->enqueueMessage(JText::_('LBL_ORDER_AUTHORIZED'));
+                }else{
+                    $this->app->enqueueMessage( JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
                 }
-
-                $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_AUTHORIZED'));
-            }else{
-                $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_ORDER_NOT_AUTHORIZED'), 'error');
-            }
-            }else{
-                $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
             }
         } else {
             // acciones cuando NO tiene permisos para autorizar
-            $this->app->redirect('index.php?option=com_mandatos&view=oddlist', JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
+            $this->app->enqueueMessage(JText::_('LBL_DOES_NOT_HAVE_PERMISSIONS'), 'error');
         }
+
+        $this->app->redirect('index.php?option=com_mandatos&view=oddlist');
     }
 
     private function sendNotifications( ) {
@@ -148,14 +152,4 @@ class MandatosControllerOddpreview extends JControllerAdmin {
         $info[]             = $send->sendNotifications('32', $array, $titleArrayAdmin);
     }
 
-    private function logEvent( $info, $dato ) {
-        $logdata = implode( ' | ', array (
-            JFactory::getUser()->id,
-            $this->integradoId,
-            __METHOD__.':'.__LINE__,
-            json_encode( array ( $info, $dato  ) )
-        ) );
-        JLog::add( $logdata, JLog::DEBUG, 'bitacora' );
-
-    }
 }
