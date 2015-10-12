@@ -3301,11 +3301,11 @@ class Cashout extends makeTx {
     /**
      * @param $orden
      * @param $pagador
-     * @param $idBeneficiario
+     * @param $beneficiario
      * @param $totalAmount
      * @param $options array(accountId => (INT), paymentMethod => (INT) )
      */
-    function __construct($orden, IntegradoSimple $pagador, $idBeneficiario, $totalAmount, $options)
+    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $options)
     {
         $this->checkEnoughBalance($pagador, $totalAmount);
 
@@ -3314,11 +3314,10 @@ class Cashout extends makeTx {
 
         $this->objEnvio->amount   = (FLOAT)$totalAmount;
         $this->objEnvio->uuid     = parent::getTimOneUuid($pagador->getId());
-        $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
+        $this->setDataBeneficiario($beneficiario, $options['accountId']);
     }
 
-    private function setDataBeneficiario( $idBenefiario, $accountId){
-        $beneficiario = new IntegradoSimple($idBenefiario);
+    private function setDataBeneficiario(IntegradoSimple $beneficiario, $accountId){
 
         foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
             if($accountId == $banco->datosBan_id){
@@ -3369,14 +3368,14 @@ class Cashout extends makeTx {
 class transferFunds extends makeTx {
     protected $objEnvio;
 
-    function __construct($orden, IntegradoSimple $pagador, $idBeneficiario, $totalAmount){
+    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount){
 
         $this->checkEnoughBalance($pagador, $totalAmount);
 
         $this->orden    = $orden;
 
         $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($pagador->getId());
-        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($beneficiario->getId());
         $this->objEnvio->amount           = (float)$totalAmount;
     }
 

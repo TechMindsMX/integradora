@@ -107,9 +107,12 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
-        $integrado = new Integrado();
-        $integradora = IntFactory::getIntegrdoSimple( $integrado->getIntegradoraUuid() );
-        $transfer = new transferFunds( '', $integradora, $dataObj->integradoId, $dataObj->amount );
+        $integradora = new Integrado();
+        $integradora = IntFactory::getIntegradoSimple( $integradora->getIntegradoraUuid() );
+
+        $integrado = IntFactory::getIntegradoSimple( $dataObj->integradoId );
+
+        $transfer = new transferFunds( '', $integradora, $integrado, $dataObj->amount );
         $result   = $transfer->sendCreateTx(false);
 
         if( $dataObj->integradoId !=  INTEGRADOID_CONCENTRADORA ) {
