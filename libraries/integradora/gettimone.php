@@ -3295,23 +3295,25 @@ class UserTimone {
     }
 }
 
-class Cashout extends makeTx{
+class Cashout extends makeTx {
     protected $objEnvio;
 
     /**
      * @param $orden
-     * @param $idPagador
+     * @param $pagador
      * @param $idBeneficiario
      * @param $totalAmount
      * @param $options array(accountId => (INT), paymentMethod => (INT) )
      */
-    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount, $options)
+    function __construct($orden, IntegradoSimple $pagador, $idBeneficiario, $totalAmount, $options)
     {
+        $this->checkEnoughBalance($pagador, $totalAmount);
+
         $this->options  = $options;
         $this->orden    = $orden;
 
         $this->objEnvio->amount   = (FLOAT)$totalAmount;
-        $this->objEnvio->uuid     = parent::getTimOneUuid($idPagador);
+        $this->objEnvio->uuid     = parent::getTimOneUuid($pagador->getId());
         $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
     }
 
@@ -3414,6 +3416,21 @@ class makeTx {
     public function getResultado()
     {
         return $this->resultado;
+    }
+
+    /**
+     * @param IntegradoSimple $pagador
+     * @param $totalAmount
+     *
+     * @throws Exception
+     */
+    public function checkEnoughBalance(IntegradoSimple $pagador, $totalAmount)
+    {
+        if (( $pagador->getBalance() - $pagador->getBlockedBalance() ) < $totalAmount) {
+            $msg = JText::_('LBL_INSUFFIENT_FUND');
+            JFactory::getApplication()->enqueueMessage($msg);
+            throw new Exception($msg);
+        }
     }
 
     protected function create($datosEnvio){
