@@ -18,12 +18,17 @@ class AdminintegradoraViewOdvform extends JViewLegacy {
             'amount'        => 'FLOAT'
         );
 
-	    $data = JFactory::getApplication()->input->getArray($post);
+        $app = JFactory::getApplication();
+        $data = $app->input->getArray($post);
 
         $model = $this->getModel();
-	    $this->orden     = $model->getOrden();
+        $this->orden     = $model->getOrden();
         $this->integrado = $model->getIntegrado($data['integradoId']);
-	    $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
+        $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
+        if (count($this->txs) == 0) {
+            $app->enqueueMessage(JText::sprintf('LBL_INTEGRADO_SIN_TXS_A_CONCILIAR', $this->integrado->getDisplayName() ), 'error');
+            $app->redirect('index.php?option=com_adminintegradora&view=odvlist');
+        }
 	    $this->data      = (object) $data;
 
 	    if (count($errors = $this->get('Errors'))) {
