@@ -1,4 +1,5 @@
 <?php
+use Integralib\OdPrestamo;
 use Integralib\OrdenFn;
 
 defined('_JEXEC') or die('Restricted access');
@@ -96,7 +97,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
                         $generateOdps = $this->generateODP($this->parametros['idOrden'], JFactory::getUser()->id);
 
                         if ($generateOdps) {
-                            $tx = $this->paymentFirstOdp();
+                            $tx = $this->paymentFirstOdp($this->parametros['idOrden']);
 
                             if($tx) {
                                 $msgOdps = JText::_('LBL_ODPS_GENERATED');
@@ -124,77 +125,16 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         }
     }
 
-    function generateODP($idMutuo,$userId){
-        $timezone  = new DateTimeZone('America/Mexico_City');
-        $mutuos    = getFromTimOne::getMutuos(null,$idMutuo);
-        $mutuo     = $mutuos[0];
+    /**
+     * @param $idMutuo
+     * @param $userId
+     *
+     * @return bool
+     */
+    function generateODP($idMutuo, $userId) {
+        $odp = new OdPrestamo();
 
-        if($mutuo->status == 5) {
-            $jsontabla = json_decode($mutuo->jsonTabla);
-            $save = new sendToTimOne();
-
-            if (isset($jsontabla->amortizacion_capital_fijo)) {
-                $tabla = $jsontabla->amortizacion_capital_fijo;
-            } else {
-                $tabla = $jsontabla->amortizacion_cuota_fija;
-            }
-
-            $elemento0 = new stdClass();
-
-            $elemento0->periodo = 0;
-            $elemento0->inicial = $mutuo->totalAmount;
-            $elemento0->cuota = $mutuo->totalAmount;
-            $elemento0->intiva = 0;
-            $elemento0->intereses = 0;
-            $elemento0->iva = 0;
-            $elemento0->acapital = $mutuo->totalAmount;
-            $elemento0->final = 0;
-
-            array_unshift($tabla, $elemento0);
-
-            foreach ($tabla as $key => $objeto) {
-                $odp = new stdClass();
-                $fecha = new DateTime('now', $timezone);
-
-                $odp->idMutuo           = $idMutuo;
-                $odp->numOrden          = $idMutuo . '-' . ($key);
-                $odp->fecha_elaboracion = $fecha->getTimestamp();
-                $fechaDeposito          = $this->calcFechaDeposito($fecha, $mutuo->paymentPeriod, $key);
-                $odp->fecha_deposito    = $fechaDeposito->getTimestamp();
-                $odp->tasa              = $jsontabla->tasa_periodo;
-                $odp->tipo_movimiento   = 'Integrado a Integrado';
-                $odp->integradoIdA      = $mutuo->integradoIdE;
-                $odp->acreedor          = $mutuo->integradoAcredor->nombre;
-                $odp->a_rfc             = $mutuo->integradoAcredor->rfc;
-                $odp->integradoIdD      = $mutuo->integradoIdR;
-                $odp->deudor            = $mutuo->integradoDeudor->nombre;
-                $odp->d_rfc             = $mutuo->integradoDeudor->rfc;
-                $odp->capital           = $objeto->cuota;
-                $odp->intereses         = $objeto->intereses;
-                $odp->iva_intereses     = $objeto->iva;
-                $odp->status            = 5;
-
-                $save->formatData($odp);
-
-                $saved = $save->insertDB('ordenes_prestamo');
-
-                if (!$saved) {
-                    //Si existe un error al generar la ODP se eliminan todas las odps creadas asi como las autorizaciones y se regresa al status 3
-                    $save->deleteDB('ordenes_prestamo', 'idMutuo=' . $idMutuo);
-                    $save->changeOrderStatus($idMutuo, 'mutuo', '3');
-                    $save->deleteDB('auth_mutuo', 'idOrden = ' . $idMutuo . ' && userId = ' . $userId.' && integradoId = '.JFactory::getSession()->get('integradoId',null,'integrado'));
-
-                    $resultado = false;
-                    break;
-                } else {
-                    $resultado = true;
-                }
-            }
-        }elseif($mutuo->status == 3){
-            $resultado = false;
-        }
-
-        return $resultado;
+        return $odp->generate($idMutuo, $userId);
     }
 
     public function calcFechaDeposito($fechaAutorizacionMutuo, $periodoPagos, $orderKey){
@@ -208,28 +148,10 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
         return $fechaAutorizacionMutuo;
     }
 
-    private function paymentFirstOdp(){
-        $odpsGenerated     = getFromTimOne::getOrdenesPrestamo($this->parametros['idOrden']);
-        $orden             = $odpsGenerated[0];
-        $deudor            = new IntegradoSimple($orden->integradoIdD);
-        $save              = new sendToTimOne();
-        $orden->orderType  = 'odp';
+    private function paymentFirstOdp($orderId){
+        $odp = new OdPrestamo($orderId);
 
-        if( !empty($deudor->usuarios) ) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden, $orden->integradoIdA, $orden->integradoIdD, $orden->capital);
-            $txDone = $txData->sendCreateTx();
-        }else{
-            $txData = new Cashout($orden,$orden->integradoIdA,$orden->integradoIdD,$orden->capital, array('accountId' => $orden->deudorDataBank->datosBan_id));
-            $txDone = $txData->sendCreateTx();
-        }
-
-        if($txDone){
-            $save->updateDB('ordenes_prestamo',array('status = 13'),'id = '.$orden->id);
-        }else{
-            $save->updateDB('ordenes_prestamo',array('status = 1'),'id = '.$orden->id);
-        }
-
-        return $txDone;
+        return $odp->pay();
     }
 
     private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){

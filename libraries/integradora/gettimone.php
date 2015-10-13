@@ -561,16 +561,16 @@ class getFromTimOne{
             $orden->tipo_movimiento   = (STRING)$value->tipo_movimiento;
 
             $orden->integradoIdA      = (STRING)$value->integradoIdA;
-            $integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
+            $orden->integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
             $orden->acreedor          = (STRING)$value->acreedor;
             $orden->a_rfc             = (STRING)$value->a_rfc;
-            $orden->acreedorDataBank  = $integradoAcreedor->integrados[0]->datos_bancarios[0];
+            $orden->acreedorDataBank  = $orden->integradoAcreedor->integrados[0]->datos_bancarios[0];
 
             $orden->integradoIdD      = (STRING)$value->integradoIdD;
-            $integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
+            $orden->integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
             $orden->deudor            = (STRING)$value->deudor;
             $orden->d_rfc             = (STRING)$value->d_rfc;
-            $orden->deudorDataBank    = $integradoDeudor->integrados[0]->datos_bancarios[0];
+            $orden->deudorDataBank    = $orden->integradoDeudor->integrados[0]->datos_bancarios[0];
 
             $orden->capital           = (FLOAT)$value->capital;
             $orden->intereses         = (FLOAT)$value->intereses;
