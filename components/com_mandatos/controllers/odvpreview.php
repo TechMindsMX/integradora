@@ -67,6 +67,9 @@ class MandatosControllerOdvpreview extends JControllerLegacy {
 
                 $db->transactionCommit();
             }catch (Exception $e){
+                $msg = $e->getMessage();
+                JLog::add($msg, JLog::ERROR, 'error');
+
                 $db->transactionRollback();
                 $this->app->redirect($redirectUrl, 'no se pudo autorizar', 'error');
             }

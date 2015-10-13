@@ -94,7 +94,7 @@ class MandatosController extends JControllerLegacy {
      */
     public function search_rfc_exists( $rfc ) {
 
-        $integradoId = \integralib\Integrado::getIntegradoIdFromRfc( $rfc );
+        $integradoId = \integralib\Integrado::getIntegradoIdByRfc( $rfc );
 
         return $integradoId;
     }

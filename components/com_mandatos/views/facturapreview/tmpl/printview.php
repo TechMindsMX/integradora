@@ -43,12 +43,12 @@ $hora = $fechaHOra[1];
     <tr>
         <td style="text-align: right; width: 17%;"><?php echo $integradora->integrados[0]->datos_empresa->rfc ?></td>
         <td style="text-align: left;"></td>
-        <td style="text-align: right;">Folio: </td>
+        <td style="text-align: right;"><?php echo JText::_('LBL_FOLIO'); ?></td>
         <td style="text-align: left; width: 20%;"><?php echo $xml->comprobante['FOLIO']; ?></td>
     </tr>
     <tr>
         <td style="text-align: left; padding-left: 35px;" colspan="2"><?php echo $integradora->integrados[0]->address; ?></td>
-        <td style="text-align: right;">Elaboraci&oacute;n</td>
+        <td style="text-align: right;"><?php echo JText::_('LBL_ELABORATION'); ?></td>
         <td style="text-align: left;"><?php echo $fecha ?></td>
     </tr>
     <tr>
@@ -149,43 +149,43 @@ $hora = $fechaHOra[1];
         <td colspan="4" style="border-top: 1px solid rgba(0, 0, 0, 0.21); margin-top: 2px;">&nbsp;</td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 20%;"><strong>Folio fiscal:</strong> </td>
+        <td style="text-align: right; width: 20%;"><strong><?php echo JText::_('LBL_FOLIO_FISCAL'); ?></strong> </td>
         <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['UUID']; ?></td>
         <td style="text-align: right;" colspan="2" rowspan="5">
             <img src="media/qrCodes/<?php echo $this->factura->qrName; ?>">
         </td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 20%;"><strong>No. serie de CSD del emisor:</strong> </td>
+        <td style="text-align: right; width: 20%;"><strong><?php echo JText::_('LBL_ISSUING_SERIES_NUMBER'); ?></strong> </td>
         <td style="text-align: left;"><?php echo $xml->comprobante['NOCERTIFICADO']; ?></td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 20%;"><strong>Fecha y hora de certificaci&oacute;n</strong>:</td>
+        <td style="text-align: right; width: 20%;"><strong><?php echo JText::_('LBL_CERTIF_DATE'); ?></strong>:</td>
         <td style="text-align: left;"><?php echo $fecha.' '.$hora; ?></td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 20%;"><strong>Fecha y hora de emisi&oacute;n:</strong> </td>
+        <td style="text-align: right; width: 20%;"><strong><?php echo JText::_('LBL_CREATION_DATETIME'); ?></strong> </td>
         <td style="text-align: left;"><?php echo $fecha.' '.$hora; ?></td>
     </tr>
     <tr>
-        <td style="text-align: right; width: 20%;"><strong>No. serie del CSD del SAT:</strong> </td>
+        <td style="text-align: right; width: 20%;"><strong><?php echo JText::_('LBL_SAT_SERIES_NUMBER'); ?></strong> </td>
         <td style="text-align: left;"><?php echo $xml->complemento['children'][0]['attrs']['NOCERTIFICADOSAT']; ?></td>
     </tr>
     <tr>
         <td colspan="4">
-            <p><span><strong>Sello Digital del CFDI:</strong></span></p>
+            <p><span><strong><?php echo JText::_('LBL_CFDI_STAMP'); ?></strong></span></p>
             <p style="font-size: 5px;"><?php echo $xml->complemento['children'][0]['attrs']['SELLOCFD']; ?></p>
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <p><span><strong>Cadena Original del COmplemento de Certificaci&oacute;n digital del SAT:</strong></span></p>
+            <p><span><strong><?php echo JText::_('LBL_SAT_ORIGINAL_STRING'); ?></strong></span></p>
             <p style="font-size: 5px;"><?php echo chunk_split($xml->comprobante['CERTIFICADO'], 200); ?></p>
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <p><span><strong>Sello del SAT:</strong></span></p>
+            <p><span><strong><?php echo JText::_('LBL_SAT_STAMP'); ?></strong></span></p>
             <p style="font-size: 5px;"><?php echo $xml->complemento['children'][0]['attrs']['SELLOSAT']; ?></p>
         </td>
     </tr>
