@@ -157,8 +157,14 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
     }
 
     private function paymentFirstOdp($orderId){
-            $odp = new OdPrestamo($orderId);
+        $odp = new OdPrestamo($orderId);
 
-            return $odp->pay();
+        if(!$odp->integradoDeudor->isIntegrado()) {
+            $formaPago = new Cashout($odp, $odp->integradoAcreedor, $odp->integradoDeudor, $odp->capital, array('accountId' => $odp->deudorDataBank->datosBan_id));
+        }else{
+            $formaPago = new transferFunds($odp, $odp->integradoAcreedor, $odp->integradoDeudor, $odp->capital);
+        }
+
+        return $odp->pay($formaPago);
     }
 }
