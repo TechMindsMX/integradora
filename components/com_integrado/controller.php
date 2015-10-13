@@ -144,11 +144,11 @@ class IntegradoController extends JControllerLegacy {
         $app = JFactory::getApplication();
         $data = $app->input->getArray();
 
-        $data = $this->addUserToIntegrado(false, $data);
+        $data = $this->addUserToIntegrado(0, $data);
 
         $this->sendEmail($data['type']);
 
-        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207', false);
+        $this->app->redirect('index.php?option=com_integrado&view=altausuarios&Itemid=207');
     }
 
     /**
