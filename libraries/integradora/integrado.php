@@ -779,6 +779,22 @@ class IntegradoSimple extends Integrado {
 		return $txs->calculateBalance($trans);
 	}
 
+	/**
+	 * @param $totalOperacion
+	 * @throws Exception
+	 */
+	public function checkSaldoSuficiente($totalOperacion)
+	{
+		$balance = $this->getBalance();
+		$blockedBalance = $this->getBlockedBalance();
+		$available = $balance - $blockedBalance;
+
+		if($available < $totalOperacion){
+			JLog::add('Integrado : '.$this->getId().', Balance: '.$balance.' Blocked balance: '.$blockedBalance.' Available: '.$available.' $Monto operación: '.$totalOperacion, JLog::DEBUG);
+			throw new Exception(JText::_('LBL_INSUFFIENT_FUND'));
+		}
+	}
+
 }
 
 class integrado_datos_personales {

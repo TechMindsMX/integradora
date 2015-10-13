@@ -2000,16 +2000,7 @@ class getFromTimOne{
 
     public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
 
-        $comision = self::getAplicableComision($tipoOrden, $comisiones);
 
-        // TODO: verificar $orden->totalAmount con el comprobante del xml
-        $catalogo = new Catalogos();
-
-        $ivas = (int)$catalogo->getFullIva();
-
-        $montoComision = isset($comision) ? (FLOAT) $orden->totalAmount * ((FLOAT)$comision->rate / 100) * (1+($ivas/100)) : null;
-
-        return $montoComision;
     }
 
     public function getUnpaidOrderStatusCatalog() {
@@ -3368,9 +3359,10 @@ class Cashout extends makeTx {
 class transferFunds extends makeTx {
     protected $objEnvio;
 
-    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount){
+    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $isComision = false){
 
         $this->checkEnoughBalance($pagador, $totalAmount);
+        $this->isComision = $isComision;
 
         $this->orden    = $orden;
 
@@ -3476,8 +3468,8 @@ class makeTx {
 
             $txsMandatosRel->id = $db->insertid();
             $txsMandatosRel->amount = $this->objEnvio->amount;
-            $txsMandatosRel->orderType = $this->orden->orderType;
-            $txsMandatosRel->idOrden = $this->orden->id;
+            $txsMandatosRel->orderType = $this->isComision ? 'CCom-' . $this->orden->getOrderType() : $this->orden->getOrderType();
+            $txsMandatosRel->idOrden = $this->orden->getId();
 
             $db->insertObject('#__txs_mandatos',$txsMandatosRel);
 

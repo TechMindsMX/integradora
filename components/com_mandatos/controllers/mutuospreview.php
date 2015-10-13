@@ -62,11 +62,12 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             if($check){
                 $this->app->redirect($redirectUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
-            $this->checkSaldoSuficienteOrRedirectWithError($integradoE);
             $db = JFactory::getDbo();
 
             try{
                 $db->transactionStart();
+
+                $integradoE->checkSaldoSuficiente($this->orden->totalAmount);
 
                 $mutuo = $this->orden;
                 $resultado = $save->insertDB('auth_mutuo');
@@ -83,6 +84,7 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
 
                 $db->transactionCommit();
             }catch (Exception $e){
+                $this->app->enqueueMessage($e->getMessage(), 'ERROR');
                 $db->transactionRollback();
                 $pagar = false;
             }
@@ -158,30 +160,5 @@ class MandatosControllerMutuospreview extends JControllerAdmin {
             $odp = new OdPrestamo($orderId);
 
             return $odp->pay();
-    }
-
-    private function checkSaldoSuficienteOrRedirectWithError(IntegradoSimple $integradoSimple){
-        $integradoSimple->getTimOneData();
-        if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
-            $this->app->redirect($this->redirectUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
-        }
-    }
-
-    private function totalOperacionOdc(){
-        $orden = $this->orden;
-        $comisiones = getFromTimOne::getComisionesOfIntegrado($orden->integradoIdE);
-
-        $montoComision = 0;
-        if (isset($comisiones)) {
-            $montoComision = getFromTimOne::calculaComision($orden, 'MUTUO', $comisiones);
-        }
-
-        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
-
-        return $totalOperacion;
-    }
-
-    private function sendMail(){
-
     }
 }
