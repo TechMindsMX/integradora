@@ -71,15 +71,17 @@ class MandatosModelOdcform extends JModelItem {
         return $respuesta;
     }
 
-    public function getdata2xml($urlFile = null){
-        if(is_null($urlFile)) {
-            move_uploaded_file($_FILES['factura']['tmp_name'], "media/archivosJoomla/" . $_FILES['factura']['name']);
-            $urlFile = "media/archivosJoomla/" . $_FILES['factura']['name'];
-        }
-        $xmlFileData    = file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.$urlFile);
+    public function getdata2xml($urlFile){
+        $xmlFileData    = file_get_contents($urlFile);
         $data 			= new xml2Array();
         $datos 			= $data->manejaXML($xmlFileData);
+
+        if(!stristr($urlFile, $datos->complemento['children'][0]['attrs']['UUID'])){
+            move_uploaded_file($_FILES['factura']['tmp_name'], XML_FILES_PATH . $datos->complemento['children'][0]['attrs']['UUID'].'.xml');
+            $urlFile = XML_FILES_PATH . $datos->complemento['children'][0]['attrs']['UUID'].'.xml';
+        }
         $datos->urlXML = $urlFile;
+
 
         return $datos;
     }
