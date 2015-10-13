@@ -92,9 +92,8 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     $pagar = true;
 
                     if (isset($odv)) {
-                        $verificador = explode('/',$odv->urlXML);
 
-                        if ($verificador[1] == 'facturas') {
+                        if ($odv->hasToCreateInvoice()) {
                             $factObj = $save->generaObjetoFactura($odv);
 
                             if ($factObj != false) {

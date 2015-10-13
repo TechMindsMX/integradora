@@ -223,4 +223,12 @@ class OdVenta extends Order {
     public function setId($id){
         $this->id = $id;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasToCreateInvoice()
+    {
+        return is_string(stristr($this->urlXML,'tmp_'));
+    }
 }

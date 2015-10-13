@@ -3451,7 +3451,7 @@ class makeTx {
         $db = JFactory::getDbo();
         $request = new sendToTimOne();
         $comisionesOfIntegrado = getFromTimOne::getComisionesOfIntegrado($this->orden->integradoId);
-        $comisionAplicable = getFromTimOne::getAplicableComision($this->orden->orderType,$comisionesOfIntegrado);
+        $comisionAplicable = getFromTimOne::getAplicableComision($this->orden->getOrderType(),$comisionesOfIntegrado);
 
         $txsTimoneMandatoObj = new stdClass();
         $txsTimoneMandatoObj->idTx = $this->resultado->data;
