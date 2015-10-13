@@ -773,8 +773,8 @@ class getFromTimOne{
         $payMethod = new stdClass();
 
         if ( in_array($paymentMethodId, array_keys($names) ) ) {
-            $payMethod->id = $paymentMethodId;
-            $payMethod->name = $names[ $paymentMethodId ]->tag;
+            $payMethod->id = (INT)$paymentMethodId;
+            $payMethod->name = (STRING)$names[ $paymentMethodId ]->tag;
         } else {
             throw new Exception(JText::_('ERR_PAYMENT_METHOD_INVALID'));
         }

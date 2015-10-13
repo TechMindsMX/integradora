@@ -79,7 +79,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function verifyIntegrado() {
         $integradoConcentradora = new IntegradoSimple(INTEGRADOID_CONCENTRADORA);
-        $integrados  = Integrado::getAllIds();
+        $integrados  = \Integrado::getAllIds();
 
         if (!array_key_exists($this->data['integradoId'], $integrados)) {
             // Si el id de integrado no es correcto, se asocia la TX con la Integradora
