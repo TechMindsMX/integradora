@@ -2,6 +2,7 @@
 use Integralib\Integrado;
 use Integralib\OdVenta;
 use Integralib\OrdenFn;
+use Integralib\PaymentInterface;
 use Integralib\TimOneRequest;
 use Integralib\IntFactory;
 use Integralib\Txs;
@@ -3286,7 +3287,7 @@ class UserTimone {
     }
 }
 
-class Cashout extends makeTx {
+class Cashout extends makeTx implements PaymentInterface{
     protected $objEnvio;
 
     /**
@@ -3356,7 +3357,7 @@ class Cashout extends makeTx {
     }
 }
 
-class transferFunds extends makeTx {
+class transferFunds extends makeTx implements PaymentInterface {
     protected $objEnvio;
 
     function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $isComision = false){

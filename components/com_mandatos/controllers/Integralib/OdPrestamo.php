@@ -42,18 +42,11 @@ class OdPrestamo
         }
     }
 
-    public function pay()
+    public function pay(PaymentInterface $payment)
     {
         $save = new sendToTimOne();
 
-        if ( ! empty( $this->integradoDeudor->usuarios )) { //operacion de transfer entre integrados
-            $txData = new transferFunds($this, $this->integradoAcreedor, $this->integradoDeudor, $this->capital);
-            $txDone = $txData->sendCreateTx();
-        } else {
-            $txData = new Cashout($this, $this->integradoAcreedor, $this->integradoDeudor, $this->capital,
-                array ('accountId' => $this->deudorDataBank->datosBan_id));
-            $txDone = $txData->sendCreateTx();
-        }
+        $txDone = $payment->sendCreateTx();
 
         if ($txDone) {
             $save->updateDB('ordenes_prestamo', array ('status = 13'), 'id = ' . $this->id);
