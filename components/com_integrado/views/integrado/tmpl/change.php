@@ -11,7 +11,7 @@ defined('_JEXEC') or die('Restricted access');
 			<option value="0">Seleccione Integrado</option>
 			<?php
 			foreach ($this->items as $integrado) {
-				echo '<option value="'.$integrado->id.'">'.$integrado->displayName.'</option>';
+				echo '<option value="'.$integrado->getId().'">'.$integrado->getDisplayName().' ('. $integrado->getIntegradoRfc() .')</option>';
 			}
 			?>
 		</select>
