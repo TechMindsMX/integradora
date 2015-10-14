@@ -133,6 +133,10 @@ class manejoImagenes {
         );
 
         $mime = strstr($info, ';', true);
-        return [ in_array($mime , $validMimes), end(explode('/',$mime)) ];
+        $inArray = in_array($mime , $validMimes);
+        $explode = explode('/',$mime);
+        $end = end($explode);
+
+        return @[$inArray, $end];
     }
 }

@@ -42,7 +42,8 @@ class MandatosViewOdcform extends JViewLegacy {
             if($_FILES['factura']['size'] === 0 && $_FILES['factura']['type'] === 'text/xml'){
                 $this->redirectforNotfiles($data);
             }else {
-                $this->dataXML = $this->get('data2xml');
+                $model = $this->getModel();
+                $this->dataXML = $model->getdata2xml($_FILES['factura']['tmp_name']);
             }
 
             //Validación del PDF

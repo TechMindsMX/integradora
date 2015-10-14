@@ -8,6 +8,9 @@
 
 namespace Integralib;
 
+use Catalogos;
+use getFromTimOne;
+
 defined('_JEXEC') or die('Restricted access');
 
 abstract class Order {
@@ -106,14 +109,14 @@ abstract class Order {
             }
         }
 
-		$proyectos = \getFromTimOne::getProyects( null, $order->proyecto );
+		$proyectos = getFromTimOne::getProyects( null, $order->proyecto );
 
 		if (!isset($order->proyecto) || $order->proyecto == 0 ) {
 			$this->proyecto    = '';
 			$this->subproyecto = '';
 		} elseif ( $proyectos[ $order->proyecto ]->parentId != 0 ) {
 			$this->subproyecto = $proyectos[ $order->proyecto ];
-			$proyecto          = \getFromTimOne::getProyects( null, $proyectos[ $order->proyecto ]->parentId );
+			$proyecto          = getFromTimOne::getProyects( null, $proyectos[ $order->proyecto ]->parentId );
 			$this->proyecto    = $proyecto[ $this->subproyecto->parentId ];
 		} elseif ($order->proyecto != 0) {
 			$this->proyecto    = $proyectos[ $order->proyecto ];
@@ -150,5 +153,23 @@ abstract class Order {
 		$orderStatus = $this->getStatus();
 
 		return in_array($orderStatus->id, array(5,8));
+	}
+
+	/**
+	 * @param $comisiones
+	 * @return float|null
+     */
+	public function calculaComision($comisiones)
+	{
+		$comision = getFromTimOne::getAplicableComision($this->orderType, $comisiones);
+
+		// TODO: verificar $orden->totalAmount con el comprobante del xml
+		$catalogo = new Catalogos();
+
+		$ivas = (int)$catalogo->getFullIva();
+
+		$montoComision = isset($comision) ? (FLOAT) $this->totalAmount * ((FLOAT)$comision->rate / 100) * (1+($ivas/100)) : null;
+
+		return $montoComision;
 	}
 }

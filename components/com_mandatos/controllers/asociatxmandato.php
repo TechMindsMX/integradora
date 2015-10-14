@@ -71,6 +71,9 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		}
 	}
 
+	/**
+	 * @return bool
+     */
 	private function doValidations() {
 		$return = true;
 		if ($this->order->balance <= 0 || $this->tx->balance <= 0 ) {
@@ -80,6 +83,11 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		return $return;
 	}
 
+	/**
+	 * @param $url
+	 * @param $msg
+	 * @param string $msgType
+     */
 	public function exitWithRedirect($url, $msg, $msgType = 'message') {
 		$this->app->redirect($url, JText::_($msg), $msgType);
 	}
@@ -131,10 +139,16 @@ class MandatosControllerAsociatxmandato extends JControllerLegacy {
 		return $result;
 	}
 
+	/**
+	 * @return mixed
+     */
 	private function setAmountTxToAssign() {
 		return $this->tx->balance > $this->order->balance ? $this->order->balance : $this->tx->balance;
 	}
 
+	/**
+	 *
+     */
 	private function sendmail() {
 
 		/*

@@ -1,4 +1,7 @@
 <?php
+use Integralib\Integrado;
+use Integralib\IntFactory;
+
 defined('_JEXEC') or die('Restricted access');
 
 
@@ -44,6 +47,9 @@ class FacturasporcobrarControllerFactdata extends JControllerAdmin{
         echo $return;
     }
 
+    /**
+     * @return bool
+     */
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
         $orden          = $this->getOrden();
@@ -51,7 +57,10 @@ class FacturasporcobrarControllerFactdata extends JControllerAdmin{
 
         $orden->orderType = 'FACTURA';
 
-        $txComision     = new transferFunds($orden,$orden->integradoId,1,$montoComision);
+        $integrado = new Integrado();
+        $integradora = IntFactory::getIntegradoSimple( $integrado->getIntegradoraUuid() );
+        $pagador = IntFactory::getIntegradoSimple( $orden->integradoId );
+        $txComision     = new transferFunds($orden, $pagador, $integradora->getId(), $montoComision);
 
         return $txComision->sendCreateTx();
     }

@@ -16,7 +16,7 @@ class ModIntegradoBalanceHelper
         $sesion = JFactory::getSession();
         $integradoId = $sesion->get('integradoId', null, 'integrado');
 
-        $integrado = \Integralib\IntFactory::getIntegrdoSimple( $integradoId );
+        $integrado = \Integralib\IntFactory::getIntegradoSimple( $integradoId );
 
         $balances = [
             'total' => $integrado->getBalance(),

@@ -8,6 +8,8 @@
  */
 
 // No direct access.
+use Integralib\Integrado;
+use Integralib\IntFactory;
 use Integralib\RelacionaTx;
 
 defined('_JEXEC') or die;
@@ -77,7 +79,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function verifyIntegrado() {
         $integradoConcentradora = new IntegradoSimple(INTEGRADOID_CONCENTRADORA);
-        $integrados  = Integrado::getAllIds();
+        $integrados  = \Integrado::getAllIds();
 
         if (!array_key_exists($this->data['integradoId'], $integrados)) {
             // Si el id de integrado no es correcto, se asocia la TX con la Integradora
@@ -89,7 +91,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     private function makeTxTimone() {
-        $integradora = new \Integralib\Integrado();
+        $integradora = new Integrado();
 
         $emisor = new IntegradoSimple($integradora->getIntegradoraUuid());
         $emisor->getTimOneData();
@@ -105,8 +107,12 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
     }
 
     public function makeTransferIntegradoraIntegrado( $dataObj ) {
-        $integradora = new \Integralib\Integrado();
-        $transfer = new transferFunds( '', $integradora->getIntegradoraUuid(), $dataObj->integradoId, $dataObj->amount );
+        $integradora = new Integrado();
+        $integradora = IntFactory::getIntegradoSimple( $integradora->getIntegradoraUuid() );
+
+        $integrado = IntFactory::getIntegradoSimple( $dataObj->integradoId );
+
+        $transfer = new transferFunds( '', $integradora, $integrado, $dataObj->amount );
         $result   = $transfer->sendCreateTx(false);
 
         if( $dataObj->integradoId !=  INTEGRADOID_CONCENTRADORA ) {
@@ -121,7 +127,7 @@ class AdminintegradoraControllerConciliacionBancoForm extends JControllerAdmin{
 
     private function sendNotification(){
         $getCurrUser = new IntegradoSimple($this->data['integradoId']);
-        $integradora = new \Integralib\Integrado();
+        $integradora = new Integrado();
         $integradora->getIntegradora();
 
         foreach ($integradora->integrado->integrados[0]->datos_bancarios as $dataBank) {

@@ -1,4 +1,6 @@
 <?php
+use Integralib\IntFactory;
+use Integralib\OdCompra;
 use Integralib\OrdenFn;
 
 defined('_JEXEC') or die('Restricted access');
@@ -19,6 +21,9 @@ jimport('html2pdf.PdfsIntegradora');
 class MandatosControllerOdcpreview extends JControllerAdmin
 {
 
+    protected $odc;
+    protected $currentIntegrado;
+
     function __construct(){
         $post = array('idOrden' => 'INT');
         $this->app = JFactory::getApplication();
@@ -36,10 +41,16 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $this->permisos = MandatosHelper::checkPermisos(__CLASS__, $this->integradoId);
 
         if ($this->permisos['canAuth']) {
-            $integradoSimple = new IntegradoSimple($this->integradoId);
-            $integradoSimple->getTimOneData();
+            $this->odc = new OdCompra(null, $this->parametros['idOrden']);
+            $this->currentIntegrado = new IntegradoSimple($this->integradoId);
+            $this->currentIntegrado->getTimOneData();
 
-            $this->checkSaldoSuficienteOrRedirectWithError($integradoSimple);
+            try{
+                $this->currentIntegrado->checkSaldoSuficiente($this->totalOperacionOdc());
+            }catch (Exception $e){
+                $this->app->enqueueMessage($e->getMessage(), 'ERROR');
+                $this->app->redirect('index.php?option=com_mandatos&view=odclist');
+            }
 
             // acciones cuando tiene permisos para autorizar
             $user = JFactory::getUser();
@@ -58,13 +69,11 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 $this->app->redirect($this->returnUrl, JText::_('LBL_USER_AUTHORIZED'), 'error');
             }
 
-            $odc        = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
-            $odc        = $odc[0];
-            $proveedor  = new IntegradoSimple(isset($odc->proveedor->integrado->integradoId) ? $odc->proveedor->integrado->integradoId : $odc->proveedor->id);
-            $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($odc->id);
+            $odvId      = OrdenFn::getRelatedOdvIdFromOdcId($this->odc->getId());
 
 	        if (!is_null($odvId)) {
 		        $odv = \Integralib\OrderFactory::getOrder($odvId, 'odv');
+
 		        if ( $odv->getStatus()->id != 5 ) {
 			        $this->app->enqueueMessage(JText::_('ERR_416_AUTH_ODC'), 'error');
 					$this->app->redirect($this->returnUrl);
@@ -76,16 +85,15 @@ class MandatosControllerOdcpreview extends JControllerAdmin
             try{
                 $save->insertDB( 'auth_odc',null,null,true );
 
-                $auths       = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $this->integradoId ), $odc->receptor );
-                $numAutOrder = getFromTimOne::getOrdenAuths($odc->id, 'odc_auth');
+                $auths       = OrdenFn::getCantidadAutRequeridas( $this->odc->getEmisor(), $this->odc->getReceptor() );
+                $numAutOrder = getFromTimOne::getOrdenAuths($this->odc->getId(), 'odc_auth');
 
                 if($auths->emisor == count($numAutOrder)) {
                     $pagar = true;
 
                     if (isset($odv)) {
-                        $verificador = explode('/',$odv->urlXML);
 
-                        if ($verificador[1] == 'facturas') {
+                        if ($odv->hasToCreateInvoice()) {
                             $factObj = $save->generaObjetoFactura($odv);
 
                             if ($factObj != false) {
@@ -95,7 +103,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                     $urlXML = $save->saveXMLFile($xmlFactura);
                                     $dataUpdate = new stdClass();
 
-                                    $dataUpdate->id = $odc->id;
+                                    $dataUpdate->id = $this->odc->getId();
                                     $dataUpdate->urlXML = $urlXML;
 
                                     $db->updateObject('#__ordenes_compra', $dataUpdate, 'id');
@@ -107,9 +115,9 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                     $db->updateObject('#__ordenes_venta', $odvUpdate, 'id');
 
                                     $createPDF = new PdfsIntegradora();
-                                    $createPDF->createPDF($odc->id, 'odc');
+                                    $createPDF->createPDF($this->odc->getId(), 'odc');
                                     if($createPDF){
-                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$odc->id);
+                                        $save->updateDB('ordenes_compra', array('urlPDFOrden = "'.$createPDF->path.'"'), 'id = '.$this->odc->getId());
                                     }
 
                                     //Codigo QR
@@ -133,7 +141,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                                         $namePdfCreated = $createPDF->facturaPDF($factura, $odv, $factObj, $urlXML);
 
                                         $saveqrname->pdfName = $namePdfCreated;
-                                        $save->updateDB('ordenes_compra', array('urlPDF = "'.$namePdfCreated.'"'), 'numOrden = '.$odc->numOrden);
+                                        $save->updateDB('ordenes_compra', array('urlPDF = "'.$namePdfCreated.'"'), 'id = '.$this->odc->getId());
 
                                         $db->insertObject('#__integrado_pdf_qr',$saveqrname);
                                     }
@@ -179,13 +187,13 @@ class MandatosControllerOdcpreview extends JControllerAdmin
 
                     $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 5);
 
-                    if( $odc->paymentMethod->id === 1 ){
+                    if( $this->odc->paymentMethod->id === 1 ){
                         $this->txComision();
                         $this->realizaTx();
 
                         $save->changeOrderStatus($this->parametros['idOrden'], 'odc', 13);
 
-                        if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
+                        if ($this->odc->getReceptor()->isIntegrado()) { //operacion de transfer entre integrados
                             $save->changeOrderStatus($odvId, 'odv', 13);
                         }
 
@@ -202,7 +210,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                     $db->transactionRollback();
 
                     $save->changeOrderStatus($this->parametros['idOrden'],'odc',3);
-                    $save->deleteDB('auth_odc', 'idOrden = '.$odc->id.' AND integradoId = '.$db->quote($this->integradoId));
+                    $save->deleteDB('auth_odc', 'idOrden = '.$this->odc->getId().' AND integradoId = '.$db->quote($this->integradoId));
 
                     $msg = $e->getMessage();
                     JLog::add($msg, JLog::ERROR, 'error');
@@ -220,55 +228,34 @@ class MandatosControllerOdcpreview extends JControllerAdmin
     }
 
     /**
-     * @param $integradoSimple
-     */
-    private function checkSaldoSuficienteOrRedirectWithError($integradoSimple)
-    {
-        if ($integradoSimple->timoneData->balance < $this->totalOperacionOdc()) {
-            $this->app->redirect($this->returnUrl, 'ERROR_SALDO_INSUFICIENTE', 'error');
-        }
-    }
-
-    /**
      * @return array
      */
     private function totalOperacionOdc()
     {
-        $orden = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
-        $orden = $orden[0];
-
         $montoComision = 0;
         if (isset($this->comisiones)) {
-            $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
+            $montoComision = $this->odc->calculaComision($this->comisiones);
         }
 
-        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
+        $totalOperacion = (float)$this->odc->getTotalAmount() + (float)$montoComision;
 
         return $totalOperacion;
     }
 
     private function realizaTx()
     {
-        $orden = $this->getOrden();
-
-        $idProveedor = $orden->receptor->id;
-
-        $proveedor = new IntegradoSimple($idProveedor);
-
-        if ($proveedor->isIntegrado()) { //operacion de transfer entre integrados
-            $txData = new transferFunds($orden, $orden->integradoId, $proveedor->getId(), $orden->totalAmount);
+        if ($this->odc->getReceptor()->isIntegrado()) { //operacion de transfer entre integrados
+            $txData = new transferFunds($this->odc, $this->odc->getEmisor(), $this->odc->getReceptor(), $this->odc->getTotalAmount());
             $txDone = $txData->sendCreateTx();
         } else {
 
-            $txData = new Cashout($orden, $orden->integradoId, $orden->proveedor->id, $orden->totalAmount, array('accountId' => $orden->bankId));
+            $txData = new Cashout($this->odc, $this->odc->getEmisor(), $this->odc->getReceptor(), $this->odc->getTotalAmount(), array('accountId' => $this->odc->bankId));
             $txDone = $txData->sendCreateTx();
 
             if($txDone){
                 $createPDF = new PdfsIntegradora();
-                $namePdfCreated = $createPDF->createPDF($txData, 'cashout');
+                $createPDF->createPDF($txData, 'cashout');
             }
-
-
         }
 
         if (!$txDone) {
@@ -285,16 +272,13 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $integradora = new \Integralib\Integrado();
 
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
-        $orden = $this->getOrden();
-        $montoComision = getFromTimOne::calculaComision($orden, 'ODC', $this->comisiones);
-
-        $orden->orderType = 'CCom-' . $orden->orderType;
+        $montoComision  = $this->odc->calculaComision($this->comisiones);
 
         if (!is_null($montoComision)) {
             if (!$reverse) {
-                $txComision = new transferFunds($orden, $orden->integradoId, $integradora->getIntegradoraUuid(), $montoComision);
+                $txComision = new transferFunds($this->odc, $this->odc->getEmisor(), IntFactory::getIntegradoSimple($integradora->getIntegradoraUuid()), $montoComision, true);
             } else {
-                $txComision = new transferFunds($orden, $integradora->getIntegradoraUuid(), $orden->integradoId, $montoComision);
+                $txComision = new transferFunds($this->odc, IntFactory::getIntegradoSimple($integradora->getIntegradoraUuid()), $this->odc->getEmisor(), $montoComision, true);
                 $saveTx = false;
             }
 
@@ -302,14 +286,6 @@ class MandatosControllerOdcpreview extends JControllerAdmin
                 throw new Exception(JText::_('ERR_412_TXCOMISION_FAILED'));
             }
         }
-    }
-
-    private function getOrden()
-    {
-        $orden = getFromTimOne::getOrdenesCompra(null, $this->parametros['idOrden']);
-        $orden = $orden[0];
-
-        return $orden;
     }
 
     function logEvents($metodo, $info, $data)
@@ -330,34 +306,30 @@ class MandatosControllerOdcpreview extends JControllerAdmin
          *  NOTIFICACIONES 14&33
          */
 
-        $odc = getFromTimOne::getOrdenesCompra($this->integradoId, $this->parametros['idOrden']);
-        $odc = $odc[0];
-
         $info = array();
 
-        $getCurrUser = new IntegradoSimple($this->integradoId);
-        $titleArray = array($odc->numOrden);
+        $titleArray = array($this->odc->numOrden);
 
         $array = array(
-            $getCurrUser->getDisplayName(),
-            $odc->numOrden,
+            $this->currentIntegrado->getDisplayName(),
+            $this->odc->numOrden,
             JFactory::getUser()->name,
             date('d-m-Y'),
-            '$' . number_format($odc->totalAmount, 2),
-            strtoupper($odc->receptor->getDisplayName()));
+            '$' . number_format($this->odc->getTotalAmount(), 2),
+            strtoupper($this->odc->getReceptor()->getDisplayName()));
 
         $arrayNotificacion33 = array(
-            $getCurrUser->getDisplayName(),
-            $odc->numOrden,
+            $this->currentIntegrado->getDisplayName(),
+            $this->odc->numOrden,
             date('d-m-Y'),
-            '$' . number_format($odc->totalAmount, 2),
-            strtoupper($odc->receptor->getDisplayName()),
+            '$' . number_format($this->odc->getTotalAmount(), 2),
+            strtoupper($this->odc->getReceptor()->getDisplayName()),
             $txData->orden->pastData
         );
 
         $send = new Send_email();
 
-        $send->setIntegradoEmailsArray($getCurrUser);
+        $send->setIntegradoEmailsArray($this->currentIntegrado);
         $info[] = $send->sendNotifications('14', $array, $titleArray);
         $info[] = $send->sendNotifications('33', $arrayNotificacion33, $titleArray);
 
@@ -365,7 +337,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
          * Notificaciones 15&34
          */
 
-        $titleArrayAdmin = array($getCurrUser->getDisplayName(), $odc->numOrden);
+        $titleArrayAdmin = array($this->currentIntegrado->getDisplayName(), $this->odc->numOrden);
 
         $send->setAdminEmails();
         $info[] = $send->sendNotifications('15', $array, $titleArrayAdmin);
