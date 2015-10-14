@@ -162,9 +162,9 @@ class IntegradoController extends JControllerLegacy {
         $db = JFactory::getDbo();
         $columnas	= array('integradoId','user_id', 'integrado_principal', 'integrado_permission_level');
         $update		= array( $db->quoteName('integrado_permission_level').'= '.$db->quote($data['permission_level']));
-        $valores	= array($db->quote($this->integradoId), $data['userId'], $principal, $data['permission_level']);
+        $valores	= array($db->quote($this->integradoId), (INT)$data['userId'], (INT)$principal, $data['permission_level']);
 
-        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. (INT)$data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
+        $existe = self::checkData('integrado_users', $db->quoteName('user_id').' = '. $data['userId'].' AND '.$db->quoteName('integradoId').' = '. $db->quote($data['integrado_id']) );
 
         if( empty($existe) ){
             self::insertData('integrado_users', $columnas, $valores);
