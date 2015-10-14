@@ -7,6 +7,8 @@
  */
 
 // No direct access.
+use Integralib\IntFactory;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
@@ -27,7 +29,7 @@ class AdminintegradoraControllertxsform extends JControllerAdmin{
             'cuenta'             => 'INT'
         );
     	$data     = JFactory::getApplication()->input->getArray($post);
-        $transfer = new transferFunds( '', $data['integradoIdPagador'], $data['integradoId'], $data['monto'] );
+        $transfer = new transferFunds( '', IntFactory::getIntegradoSimple($data['integradoIdPagador']), IntFactory::getIntegradoSimple($data['integradoId']), $data['monto'] );
         $result   = $transfer->sendCreateTx(false);
 
         if($result){

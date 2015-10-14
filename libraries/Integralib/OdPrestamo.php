@@ -9,6 +9,7 @@
 namespace Integralib;
 
 use Cashout;
+use Catalogos;
 use getFromTimOne;
 use PdfsIntegradora;
 use sendToTimOne;
@@ -135,5 +136,39 @@ class OdPrestamo
         }
 
         return $resultado;
+    }
+
+    /**
+     * @param \DateTime $fecha
+     * @param $paymentPeriod
+     * @param $key
+     * @return \DateTime
+     */
+    private function calcFechaDeposito(\DateTime $fecha, $paymentPeriod, $key)
+    {
+        $catalogos = new Catalogos();
+        $catalogoPeriodos = $catalogos->getTiposPeriodos();
+
+        $strInterval = 'P' . $catalogoPeriodos[$paymentPeriod]->multiplicador * $key . $catalogoPeriodos[$paymentPeriod]->nombreCiclo;
+        $interval = new \DateInterval($strInterval);
+        $fecha->add($interval);
+
+        return $fecha;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderType()
+    {
+        return $this->orderType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

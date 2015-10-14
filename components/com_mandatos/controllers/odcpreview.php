@@ -272,7 +272,7 @@ class MandatosControllerOdcpreview extends JControllerAdmin
         $integradora = new \Integralib\Integrado();
 
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
-        $montoComision = getFromTimOne::calculaComision($this->odc, 'ODC', $this->comisiones);
+        $montoComision  = $this->odc->calculaComision($this->comisiones);
 
         if (!is_null($montoComision)) {
             if (!$reverse) {

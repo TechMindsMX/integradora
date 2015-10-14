@@ -1,4 +1,5 @@
 <?php
+use Integralib\IntFactory;
 use Integralib\OdRetiro;
 use Integralib\OrdenFn;
 
@@ -170,7 +171,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $this->orden->status->id = 5;
 
         if($this->orden->status->id == 5){
-            $tranfer = new Cashout($this->orden, $this->orden->getEmisor(), $this->orden->getEmisor(), $this->orden->getTotalAmount(), array('accountId' => $this->orden->cuenta->id));
+            $tranfer = new Cashout($this->orden, $this->orden->getReceptor(), $this->orden->getReceptor(), $this->orden->getTotalAmount(), array('accountId' => $this->orden->cuenta->datosBan_id));
             $resultado = $tranfer->sendCreateTx();
         }
 
@@ -182,10 +183,9 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
-        $integradora    = new \Integralib\Integrado();
         $montoComision  = $this->orden->calculaComision($this->comisiones);
 
-        $txComision     = new transferFunds($this->orden, $this->orden->getEmisor(),\Integralib\IntFactory::getIntegradoSimple($integradora->getIntegradoraUuid()),$montoComision, true);
+        $txComision     = new transferFunds($this->orden, $this->orden->getReceptor(), $this->orden->getEmisor(),$montoComision, true);
 
         return $txComision->sendCreateTx();
     }

@@ -28,7 +28,7 @@ if ( ! empty( $this->txs ) ) {
 
 <?php if( is_null($data->confirmacion) ){?>
     <div class="div-formODC">
-        <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=odvform&confirmacion=1&idOrden=<?php echo $orden->id; ?>" autocomplete="off">
+        <form id="form_admin_odd" class="form" method="post" action="index.php?option=com_adminintegradora&view=odvform&confirmacion=1&idOrden=<?php echo $orden->getId(); ?>" autocomplete="off">
             <div class="form-group marcarOrden">
                 <label for="ordenPagada">
                     <h3><?php echo JText::_('COM_FACTURAS_FROM_ODD_PAGADA'); ?>
@@ -59,11 +59,11 @@ if ( ! empty( $this->txs ) ) {
     <div class="div-detalleODC">
         <div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_NUM_ORDEN').':</h3> '.$orden->numOrden; ?></div>
-            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->totalAmount,2 ); ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_MONTO_ORDEN').':</h3> $'.number_format($orden->getTotalAmount(),2 ); ?></div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_SALDO_ORDEN').':</h3> $'.number_format($orden->balance,2 ); ?></div>
             <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ORDENES_FECHA_ORDEN').':</h3> '.$orden->createdDate; ?></div>
-            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_EMISOR').':</h3> '.$orden->integradoName; ?></div>
-            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_RECEPTOR').':</h3> '.$orden->proveedor->frontName; ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_EMISOR').':</h3> '.$orden->getEmisor()->getDisplayName(); ?></div>
+            <div class="col-forms-ordenes"><h3><?php echo JText::_('COM_MANDATOS_ODV_INTEGRADO_RECEPTOR').':</h3> '.$orden->getReceptor()->getDisplayName(); ?></div>
         </div>
         <div class="clearfix"></div>
         <div class="div-detalleProductos">

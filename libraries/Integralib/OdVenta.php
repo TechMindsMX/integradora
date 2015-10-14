@@ -175,7 +175,7 @@ class OdVenta extends Order {
         $this->ieps     = $subTotalIeps;
 
         $o = new OrdenFn();
-        $order->balance = $o->calculateBalance($this);
+        $this->balance = $o->calculateBalance($this);
 
         $this->setEmisor($order);
         $this->setReceptor($order);

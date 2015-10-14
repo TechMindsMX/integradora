@@ -580,6 +580,7 @@ class getFromTimOne{
 
             $orden->statusName = getFromTimOne::getOrderStatusName($orden->status);
 
+            $orden->integradoId       = $value->integradoIdA;
             $odps[] = $orden;
         }
 
@@ -3358,6 +3359,7 @@ class Cashout extends makeTx implements PaymentInterface{
 }
 
 class transferFunds extends makeTx implements PaymentInterface {
+    public $isComision;
     protected $objEnvio;
 
     function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $isComision = false){
@@ -3394,6 +3396,7 @@ class transferFunds extends makeTx implements PaymentInterface {
  * @property  object resultado
  */
 class makeTx {
+    public $orden;
     protected $objEnvio;
     protected $resultado;
 
