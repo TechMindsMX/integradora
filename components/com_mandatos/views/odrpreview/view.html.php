@@ -11,15 +11,10 @@ class MandatosViewOdrpreview extends JViewLegacy {
 	function display($tpl = null){
 		$app 				= JFactory::getApplication();
 		$data				= $app->input->getArray( array('idOrden' => 'INT') );
-
 		$session            = JFactory::getSession();
 		$this->integradoId  = $session->get( 'integradoId', null, 'integrado' );
-
 		$this->odr		 	= $this->get('ordenes');
-
 		$this->integCurrent = $this->get('integrado');
-        $this->odr->cuenta = $this->integCurrent->integrados[0]->datos_bancarios[$this->odr->cuentaId];
-
 
         if (count($errors = $this->get('Errors'))) {
                 JLog::add(implode('<br />', $errors), JLog::WARNING, 'jerror');

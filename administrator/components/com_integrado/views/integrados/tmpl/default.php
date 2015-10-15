@@ -91,6 +91,9 @@ JHtml::_('behavior.tooltip');
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_R_SOCIAL'); ?>
 			</th>
 			<th>
+			<?php echo JText::_('RFC'); ?>
+			</th>
+			<th>
 			<?php echo JText::_('COM_INTEGRADO_INTEGRADO_HEADING_NOM_COMERCIAL'); ?>
 			</th>
 			<th>
@@ -121,6 +124,9 @@ JHtml::_('behavior.tooltip');
                     $nombre = ($item -> razon_social) ? $item -> razon_social : $item -> nombre_representante;
                     echo $nombre;
                 ?>
+			</td>
+			<td>
+			    <?php if ($item -> pers_juridica == 1) { echo $item -> rfc_empr; } else { echo $item -> rfc_pers; } ?>
 			</td>
 			<td>
 			    <?php echo $item -> nom_comercial; ?>

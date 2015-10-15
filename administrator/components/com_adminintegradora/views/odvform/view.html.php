@@ -5,10 +5,13 @@ jimport('joomla.application.component.view');
 
 class AdminintegradoraViewOdvform extends JViewLegacy {
 
+    public $data;
+
     public function display($tpl = null) {
         require_once JPATH_COMPONENT . '/helpers/adminintegradora.php';
         $post = array(
 	        'id'            => 'INT',
+            'idOrden'       => 'INT',
             'idTx'          => 'INT',
             'ordenPagada'   => 'INT',
             'cuenta'        => 'INT',
@@ -18,20 +21,18 @@ class AdminintegradoraViewOdvform extends JViewLegacy {
             'amount'        => 'FLOAT'
         );
 
-        $app = JFactory::getApplication();
-        $data = $app->input->getArray($post);
-
-        $model = $this->getModel();
-        $this->orden     = $model->getOrden();
-        $this->integrado = $model->getIntegrado($data['integradoId']);
+        $app        = JFactory::getApplication();
+        $this->data = (object)$app->input->getArray($post);
+        $model           = $this->getModel();
+        $this->orden     = $model->getOrden($this->data->idOrden);
         $this->txs       = AdminintegradoraHelper::getTransacciones($this->orden);
+
         if (count($this->txs) == 0) {
             $app->enqueueMessage(JText::sprintf('LBL_INTEGRADO_SIN_TXS_A_CONCILIAR', $this->integrado->getDisplayName() ), 'error');
             $app->redirect('index.php?option=com_adminintegradora&view=odvlist');
         }
-	    $this->data      = (object) $data;
 
-	    if (count($errors = $this->get('Errors'))) {
+        if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
         }
 

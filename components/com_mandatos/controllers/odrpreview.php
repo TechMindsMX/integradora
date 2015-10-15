@@ -1,4 +1,5 @@
 <?php
+use Integralib\IntFactory;
 use Integralib\OdRetiro;
 use Integralib\OrdenFn;
 
@@ -36,16 +37,13 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
         $currentIntegrado       = new IntegradoSimple($this->integradoId);
         $currentIntegrado->getTimOneData();
         $this->currentIntegrado = $currentIntegrado;
-
-        $orden                  = getFromTimOne::getOrdenesRetiro(null,$this->parametros['idOrden']);
-        $this->orden            = $orden[0];
+        $this->orden            = new OdRetiro(null, $this->parametros['idOrden']);
 
         parent::__construct(array());
     }
 
     function authorize() {
         if($this->permisos['canAuth']) {
-            $enoughBalance                   = $this->enoughBalance();
             $user                            = JFactory::getUser();
             $save                            = new sendToTimOne();
             $this->parametros['userId']      = (INT)$user->id;
@@ -53,24 +51,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             $this->parametros['integradoId'] = $this->integradoId;
             $db                              = JFactory::getDbo();
 
-            $logdata                      = implode(
-                ' | ',
-                array(
-                    JFactory::getUser()->id,
-	                $this->integradoId,
-                    __METHOD__,
-                    json_encode( array($this->orden->id, $enoughBalance)
-                    )
-                )
-            );
-            JLog::add($logdata, JLog::DEBUG, 'bitacora');
-
             $save->formatData($this->parametros);
-
-            //Si no tiene Fondos se redirecciona.
-            if (!$enoughBalance) {
-                $this->app->redirect('index.php?option=com_mandatos&view=odrlist', JText::_('LBL_INSUFFIENT_FUND'), 'error');
-            }
 
             $auths = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
             $check = getFromTimOne::checkUserAuth($auths, $this->integradoId);
@@ -82,7 +63,8 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
             try{
                 $db->transactionStart();
 
-                $odr        = new OdRetiro(null, $this->parametros['idOrden']);
+                $this->currentIntegrado->checkSaldoSuficiente($this->orden->calculaComision($this->comisiones) + $this->orden->getTotalAmount());
+
                 $logdata    = implode(' | ',
                     array(JFactory::getUser()->id,
                           JFactory::getSession()->get('integradoId', null, 'integrado'),
@@ -95,7 +77,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
                 $resultado = $save->insertDB('auth_odr');
                 $auths     = getFromTimOne::getOrdenAuths($this->parametros['idOrden'],'odr_auth');
-                $authsReq  = OrdenFn::getCantidadAutRequeridas( new IntegradoSimple( $odr->getEmisor()->id ), new IntegradoSimple( $odr->getReceptor()->id ) );
+                $authsReq  = OrdenFn::getCantidadAutRequeridas($this->orden->getEmisor(), $this->orden->getReceptor() );
 
                 if($authsReq->emisor == count($auths)) {
                     $pagar = true;
@@ -106,8 +88,8 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
                 $db->transactionCommit();
             }catch (Exception $e){
+                $this->app->enqueueMessage($e->getMessage());
                 $db->transactionRollback();
-                exit;
             }
 
             if($pagar){
@@ -167,7 +149,7 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
         $getCurrUser         = new IntegradoSimple($this->integradoId);
         $titleArray          = array($this->orden->numOrden);
-        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), '$'.number_format($this->orden->totalAmount,2), $this->cuenta->banco_cuenta, $this->orden->numOrden);
+        $array               = array($getCurrUser->getUserPrincipal()->name, $this->orden->numOrden, date('d-m-Y'), '$'.number_format($this->orden->getTotalAmount(),2), $this->cuenta->banco_cuenta, $this->orden->numOrden);
 
         $send                   = new Send_email();
         $send->setIntegradoEmailsArray($getCurrUser);
@@ -185,34 +167,11 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     }
 
-    private function enoughBalance() {
-
-        $balance = $this->currentIntegrado->timoneData->balance;
-
-        $orden = getFromTimOne::getOrdenesRetiro(null, $this->parametros['idOrden']);
-        $orden = $orden[0];
-
-        $montoComision = 0;
-        if (isset($this->comisiones)) {
-            $montoComision = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
-        }
-
-        $totalOperacion = (float)$orden->totalAmount + (float)$montoComision;
-
-        if($balance >= $totalOperacion){
-            $respuesta = true;
-        }else{
-            $respuesta = false;
-        }
-
-        return $respuesta;
-    }
-
     private function cashout(){
         $this->orden->status->id = 5;
 
         if($this->orden->status->id == 5){
-            $tranfer = new Cashout($this->orden, $this->orden->integradoId, $this->orden->integradoId, $this->orden->totalAmount, array('accountId' => $this->orden->cuenta->datosBan_id));
+            $tranfer = new Cashout($this->orden, $this->orden->getReceptor(), $this->orden->getReceptor(), $this->orden->getTotalAmount(), array('accountId' => $this->orden->cuenta->datosBan_id));
             $resultado = $tranfer->sendCreateTx();
         }
 
@@ -224,13 +183,9 @@ class MandatosControllerOdrpreview extends JControllerAdmin {
 
     private function txComision(){
         //Metodo para realizar el cobro de comisiones Transfer de integrado a Integradora.
-        $integradora    = new \Integralib\Integrado();
-        $orden          = $this->orden;
-        $montoComision  = getFromTimOne::calculaComision($orden, 'ODR', $this->comisiones);
+        $montoComision  = $this->orden->calculaComision($this->comisiones);
 
-        $orden->orderType = 'CCom-'.$orden->orderType;
-
-        $txComision     = new transferFunds($orden,$orden->integradoId,$integradora->getIntegradoraUuid(),$montoComision);
+        $txComision     = new transferFunds($this->orden, $this->orden->getReceptor(), $this->orden->getEmisor(),$montoComision, true);
 
         return $txComision->sendCreateTx();
     }

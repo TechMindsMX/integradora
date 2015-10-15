@@ -52,7 +52,8 @@ class OdRetiro extends Order {
 		$this->paymentDate      = (STRING)$order->paymentDate;
 		$this->cuentaId         = 0;
 
-		$this->cuenta           = $this->getReceptor()->getAccountData($this->cuentaId);
+		$cuenta		            = $this->getReceptor()->getAccountData();
+		$this->cuenta			= $cuenta[0];
 
 		getFromTimOne::convierteFechas($this);
 		$o = new OrdenFn();

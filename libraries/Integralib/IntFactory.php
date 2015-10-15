@@ -50,7 +50,7 @@ class IntFactory {
 		return $u->getUser();
 	}
 
-	public static function getIntegrdoSimple($integradoId)
+	public static function getIntegradoSimple($integradoId)
 	{
 		return new \IntegradoSimple($integradoId);
 	}

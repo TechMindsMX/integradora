@@ -29,14 +29,8 @@ class AdminIntegradoraModelOdvform extends JModelList {
         return $this->dataModelo;
     }
 
-    public function getOrden(){
-        $idOrden = $this->data['idOrden'];
-        $data = getFromTimOne::getOrdenesVenta(null,$idOrden);
-
-        foreach($data as $value){
-            $value->integradoName = $this->getIntegradoName($value->integradoId);
-        }
-        return $data[0];
+    public function getOrden($idOrden){
+        return new \Integralib\OdVenta(null, $idOrden);
     }
 
     public function getIntegrados(){

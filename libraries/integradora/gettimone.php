@@ -2,6 +2,7 @@
 use Integralib\Integrado;
 use Integralib\OdVenta;
 use Integralib\OrdenFn;
+use Integralib\PaymentInterface;
 use Integralib\TimOneRequest;
 use Integralib\IntFactory;
 use Integralib\Txs;
@@ -561,16 +562,16 @@ class getFromTimOne{
             $orden->tipo_movimiento   = (STRING)$value->tipo_movimiento;
 
             $orden->integradoIdA      = (STRING)$value->integradoIdA;
-            $integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
+            $orden->integradoAcreedor        = new IntegradoSimple($orden->integradoIdA);
             $orden->acreedor          = (STRING)$value->acreedor;
             $orden->a_rfc             = (STRING)$value->a_rfc;
-            $orden->acreedorDataBank  = $integradoAcreedor->integrados[0]->datos_bancarios[0];
+            $orden->acreedorDataBank  = $orden->integradoAcreedor->integrados[0]->datos_bancarios[0];
 
             $orden->integradoIdD      = (STRING)$value->integradoIdD;
-            $integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
+            $orden->integradoDeudor          = new IntegradoSimple($orden->integradoIdD);
             $orden->deudor            = (STRING)$value->deudor;
             $orden->d_rfc             = (STRING)$value->d_rfc;
-            $orden->deudorDataBank    = $integradoDeudor->integrados[0]->datos_bancarios[0];
+            $orden->deudorDataBank    = $orden->integradoDeudor->integrados[0]->datos_bancarios[0];
 
             $orden->capital           = (FLOAT)$value->capital;
             $orden->intereses         = (FLOAT)$value->intereses;
@@ -579,6 +580,7 @@ class getFromTimOne{
 
             $orden->statusName = getFromTimOne::getOrderStatusName($orden->status);
 
+            $orden->integradoId       = $value->integradoIdA;
             $odps[] = $orden;
         }
 
@@ -773,8 +775,8 @@ class getFromTimOne{
         $payMethod = new stdClass();
 
         if ( in_array($paymentMethodId, array_keys($names) ) ) {
-            $payMethod->id = $paymentMethodId;
-            $payMethod->name = $names[ $paymentMethodId ]->tag;
+            $payMethod->id = (INT)$paymentMethodId;
+            $payMethod->name = (STRING)$names[ $paymentMethodId ]->tag;
         } else {
             throw new Exception(JText::_('ERR_PAYMENT_METHOD_INVALID'));
         }
@@ -2000,16 +2002,7 @@ class getFromTimOne{
 
     public static function calculaComision( $orden, $tipoOrden, $comisiones ) {
 
-        $comision = self::getAplicableComision($tipoOrden, $comisiones);
 
-        // TODO: verificar $orden->totalAmount con el comprobante del xml
-        $catalogo = new Catalogos();
-
-        $ivas = (int)$catalogo->getFullIva();
-
-        $montoComision = isset($comision) ? (FLOAT) $orden->totalAmount * ((FLOAT)$comision->rate / 100) * (1+($ivas/100)) : null;
-
-        return $montoComision;
     }
 
     public function getUnpaidOrderStatusCatalog() {
@@ -3295,28 +3288,29 @@ class UserTimone {
     }
 }
 
-class Cashout extends makeTx{
+class Cashout extends makeTx implements PaymentInterface{
     protected $objEnvio;
 
     /**
      * @param $orden
-     * @param $idPagador
-     * @param $idBeneficiario
+     * @param $pagador
+     * @param $beneficiario
      * @param $totalAmount
      * @param $options array(accountId => (INT), paymentMethod => (INT) )
      */
-    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount, $options)
+    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $options)
     {
+        $this->checkEnoughBalance($pagador, $totalAmount);
+
         $this->options  = $options;
         $this->orden    = $orden;
 
         $this->objEnvio->amount   = (FLOAT)$totalAmount;
-        $this->objEnvio->uuid     = parent::getTimOneUuid($idPagador);
-        $this->setDataBeneficiario($idBeneficiario, $options['accountId']);
+        $this->objEnvio->uuid     = parent::getTimOneUuid($pagador->getId());
+        $this->setDataBeneficiario($beneficiario, $options['accountId']);
     }
 
-    private function setDataBeneficiario( $idBenefiario, $accountId){
-        $beneficiario = new IntegradoSimple($idBenefiario);
+    private function setDataBeneficiario(IntegradoSimple $beneficiario, $accountId){
 
         foreach ( $beneficiario->integrados[0]->datos_bancarios as $banco ) {
             if($accountId == $banco->datosBan_id){
@@ -3364,14 +3358,19 @@ class Cashout extends makeTx{
     }
 }
 
-class transferFunds extends makeTx {
+class transferFunds extends makeTx implements PaymentInterface {
+    public $isComision;
     protected $objEnvio;
 
-    function __construct($orden, $idPagador, $idBeneficiario, $totalAmount){
+    function __construct($orden, IntegradoSimple $pagador, IntegradoSimple $beneficiario, $totalAmount, $isComision = false){
+
+        $this->checkEnoughBalance($pagador, $totalAmount);
+        $this->isComision = $isComision;
+
         $this->orden    = $orden;
 
-        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($idPagador);
-        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($idBeneficiario);
+        $this->objEnvio->uuidOrigin       = parent::getTimOneUuid($pagador->getId());
+        $this->objEnvio->uuidDestination  = parent::getTimOneUuid($beneficiario->getId());
         $this->objEnvio->amount           = (float)$totalAmount;
     }
 
@@ -3397,6 +3396,7 @@ class transferFunds extends makeTx {
  * @property  object resultado
  */
 class makeTx {
+    public $orden;
     protected $objEnvio;
     protected $resultado;
 
@@ -3414,6 +3414,21 @@ class makeTx {
     public function getResultado()
     {
         return $this->resultado;
+    }
+
+    /**
+     * @param IntegradoSimple $pagador
+     * @param $totalAmount
+     *
+     * @throws Exception
+     */
+    public function checkEnoughBalance(IntegradoSimple $pagador, $totalAmount)
+    {
+        if (( $pagador->getBalance() - $pagador->getBlockedBalance() ) < $totalAmount) {
+            $msg = JText::_('LBL_INSUFFIENT_FUND');
+            JFactory::getApplication()->enqueueMessage($msg);
+            throw new Exception($msg);
+        }
     }
 
     protected function create($datosEnvio){
@@ -3440,7 +3455,7 @@ class makeTx {
         $db = JFactory::getDbo();
         $request = new sendToTimOne();
         $comisionesOfIntegrado = getFromTimOne::getComisionesOfIntegrado($this->orden->integradoId);
-        $comisionAplicable = getFromTimOne::getAplicableComision($this->orden->orderType,$comisionesOfIntegrado);
+        $comisionAplicable = getFromTimOne::getAplicableComision($this->orden->getOrderType(),$comisionesOfIntegrado);
 
         $txsTimoneMandatoObj = new stdClass();
         $txsTimoneMandatoObj->idTx = $this->resultado->data;
@@ -3457,8 +3472,8 @@ class makeTx {
 
             $txsMandatosRel->id = $db->insertid();
             $txsMandatosRel->amount = $this->objEnvio->amount;
-            $txsMandatosRel->orderType = $this->orden->orderType;
-            $txsMandatosRel->idOrden = $this->orden->id;
+            $txsMandatosRel->orderType = $this->isComision ? 'CCom-' . $this->orden->getOrderType() : $this->orden->getOrderType();
+            $txsMandatosRel->idOrden = $this->orden->getId();
 
             $db->insertObject('#__txs_mandatos',$txsMandatosRel);
 

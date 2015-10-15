@@ -23,7 +23,9 @@ class IntegradoModelIntegrados extends JModelList
         $query 	= $db->getQuery(true);
 		$q2		= $db->getQuery(true);
         $query
-            ->select($db->quoteName(array('a.integradoId','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'p.nom_comercial', 'c.name', 'p.nombre_representante')))
+            ->select($db->quoteName(['a.integradoId','a.status','a.pers_juridica', 'a.createdDate', 'b.razon_social', 'p.nom_comercial', 'c.name', 'p.nombre_representante']))
+	        ->select($db->quoteName('b.rfc', 'rfc_empr'))
+	        ->select($db->quoteName('p.rfc', 'rfc_pers'))
             ->from($db->quoteName('#__integrado', 'a'))
 			->join('LEFT', $db->quoteName('#__integrado_datos_empresa', 'b') . ' ON ('. $db->quoteName('a.integradoId') . ' = ' . $db->quoteName('b.integradoId') .')' )
 			->join('LEFT', $db->quoteName('#__integrado_datos_personales', 'p') . ' ON ('. $db->quoteName('a.integradoId') . ' = ' . $db->quoteName('p.integradoId') .')' )

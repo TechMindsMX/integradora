@@ -18,9 +18,7 @@ class IntegradoModelIntegrado extends JModelItem {
 			$integrado = new IntegradoSimple( $value->integradoId );
 
 			if ( $integrado->isIntegrado() && $integrado->hasRfc() ) {
-				$integrados[$value->integradoId]               = new stdClass();
-				$integrados[$value->integradoId]->id           = $integrado->getId();
-				$integrados[$value->integradoId]->displayName  = $integrado->getDisplayName();
+				$integrados[$value->integradoId]               = $integrado;
 			}
 		}
 		return $integrados;
