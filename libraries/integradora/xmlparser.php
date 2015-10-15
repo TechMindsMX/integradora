@@ -92,7 +92,7 @@ class xml2Array {
             }
         }
 
-        if( empty($datosXML->impuestos->ieps) ){
+        if( !isset($datosXML->impuestos->ieps->tasa) && !isset($datosXML->impuestos->ieps->importe)){
             $datosXML->impuestos->ieps->tasa    = 0;
             $datosXML->impuestos->ieps->importe = 0;
         }
